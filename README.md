@@ -23,7 +23,7 @@ MWS Cloud Platform SDK for Go.
 ## Installation
 
 ```shell
-go get go.nws.cloud/go-sdk/go/pkg/sdk/mws
+go get go.mws.cloud/go-sdk/go/pkg/sdk/mws
 ```
 
 ## Getting Started
@@ -43,7 +43,7 @@ go mod init my-mws-project
 **Install SDK**
 
 ```shell
-go get go.nws.cloud/go-sdk/go/pkg/sdk/mws
+go get go.mws.cloud/go-sdk/go/pkg/sdk/mws
 ```
 
 **Write Code**
@@ -60,9 +60,9 @@ import (
 
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	computeclient "go.nws.cloud/go-sdk/service/compute/client"
-	computesdk "go.nws.cloud/go-sdk/go/mws-public/sdk/compute/sdk"
-	"go.nws.cloud/go-sdk/go/pkg/sdk/mws"
+	computeclient "go.mws.cloud/go-sdk/service/compute/client"
+	computesdk "go.mws.cloud/go-sdk/go/mws-public/sdk/compute/sdk"
+	"go.mws.cloud/go-sdk/go/pkg/sdk/mws"
 )
 
 func main() {
