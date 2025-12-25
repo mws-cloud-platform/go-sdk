@@ -1,0 +1,2 @@
+RawJSON: "Ff:00:2b:01:02:03:04:05"
+ParsedMACString: ff:00:2b:01:02:03:04:05

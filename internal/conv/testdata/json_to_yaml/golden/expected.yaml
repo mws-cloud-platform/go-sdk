@@ -1,0 +1,10 @@
+ref: hello/world
+test:
+  object:
+    kk: testdata_kk
+    aa: testdata_aa
+    hh: testdata_hh
+  b: 121
+  g: testdata_g
+id: foo/bar
+ip: 192.0.2.0/24
