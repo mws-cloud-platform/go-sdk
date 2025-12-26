@@ -61,7 +61,7 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	computeclient "go.mws.cloud/go-sdk/service/compute/client"
-	computesdk "go.mws.cloud/go-sdk/go/mws-public/sdk/compute/sdk"
+	computesdk "go.mws.cloud/go-sdk/service/compute/sdk"
 	"go.mws.cloud/go-sdk/go/pkg/sdk/mws"
 )
 
