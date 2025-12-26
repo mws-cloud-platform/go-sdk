@@ -10,17 +10,17 @@ import (
 // Real OAPI model name: VmTypeDisksSpec
 type VmTypeDisksSpecOptionalResponse struct {
 	// Максимальное количество IOPS на ВМ. Зависит от количества vCPU на ВМ.
-	TotalIops commonclient.Optional[string] `json:"totalIops,omitempty" yaml:"totalIops,omitempty"`
+	TotalIops commonclient.Optional[int32] `json:"totalIops,omitempty,string" yaml:"totalIops,omitempty"`
 }
 
-func (m *VmTypeDisksSpecOptionalResponse) GetTotalIops() *string {
+func (m *VmTypeDisksSpecOptionalResponse) GetTotalIops() *int32 {
 	if m != nil && m.TotalIops.IsSet() {
 		return &m.TotalIops.Value
 	}
 	return nil
 }
 
-func (m *VmTypeDisksSpecOptionalResponse) GetTotalIopsOr(val string) string {
+func (m *VmTypeDisksSpecOptionalResponse) GetTotalIopsOr(val int32) int32 {
 	if m != nil && m.TotalIops.IsSet() {
 		return m.TotalIops.Value
 	}

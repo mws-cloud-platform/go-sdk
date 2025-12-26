@@ -10,17 +10,17 @@ import (
 // Real OAPI model name: VmTypeCpuSpec
 type VmTypeCpuSpecOptionalResponse struct {
 	// Количество виртуальных ядер.
-	VcpuCount commonclient.Optional[string] `json:"vcpuCount,omitempty" yaml:"vcpuCount,omitempty"`
+	VcpuCount commonclient.Optional[int32] `json:"vcpuCount,omitempty,string" yaml:"vcpuCount,omitempty"`
 }
 
-func (m *VmTypeCpuSpecOptionalResponse) GetVcpuCount() *string {
+func (m *VmTypeCpuSpecOptionalResponse) GetVcpuCount() *int32 {
 	if m != nil && m.VcpuCount.IsSet() {
 		return &m.VcpuCount.Value
 	}
 	return nil
 }
 
-func (m *VmTypeCpuSpecOptionalResponse) GetVcpuCountOr(val string) string {
+func (m *VmTypeCpuSpecOptionalResponse) GetVcpuCountOr(val int32) int32 {
 	if m != nil && m.VcpuCount.IsSet() {
 		return m.VcpuCount.Value
 	}

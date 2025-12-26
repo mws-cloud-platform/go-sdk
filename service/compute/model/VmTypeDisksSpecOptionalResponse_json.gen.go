@@ -29,7 +29,7 @@ func (m *VmTypeDisksSpecOptionalResponse) Encode(e *jx.Encoder) {
 func (m *VmTypeDisksSpecOptionalResponse) encodeFields(e *jx.Encoder) {
 	if m.TotalIops.IsSet() {
 		e.FieldStart("totalIops")
-		e.Str(m.TotalIops.Value)
+		conv.EncodeStringInt(e, m.TotalIops.Value)
 	}
 }
 
@@ -45,7 +45,7 @@ func (m *VmTypeDisksSpecOptionalResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "totalIops":
-			v, err := decode.Str(d)
+			v, err := decode.StringInt32(d)
 			if err != nil {
 				return err
 			}

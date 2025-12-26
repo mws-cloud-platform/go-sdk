@@ -29,7 +29,7 @@ func (m *VmTypeCpuSpecOptionalResponse) Encode(e *jx.Encoder) {
 func (m *VmTypeCpuSpecOptionalResponse) encodeFields(e *jx.Encoder) {
 	if m.VcpuCount.IsSet() {
 		e.FieldStart("vcpuCount")
-		e.Str(m.VcpuCount.Value)
+		conv.EncodeStringInt(e, m.VcpuCount.Value)
 	}
 }
 
@@ -45,7 +45,7 @@ func (m *VmTypeCpuSpecOptionalResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "vcpuCount":
-			v, err := decode.Str(d)
+			v, err := decode.StringInt32(d)
 			if err != nil {
 				return err
 			}

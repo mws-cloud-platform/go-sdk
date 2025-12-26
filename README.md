@@ -62,7 +62,7 @@ import (
 
 	computeclient "go.mws.cloud/go-sdk/service/compute/client"
 	computesdk "go.mws.cloud/go-sdk/service/compute/sdk"
-	"go.mws.cloud/go-sdk/go/pkg/sdk/mws"
+	"go.mws.cloud/go-sdk/mws"
 )
 
 func main() {

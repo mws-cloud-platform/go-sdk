@@ -35,7 +35,19 @@ func DateTime(d *jx.Decoder) (time.Time, error) {
 	return time.Parse(time.RFC3339, v)
 }
 
-func StringInt(d *jx.Decoder) (int64, error) {
+func StringInt32(d *jx.Decoder) (int32, error) {
+	s, err := d.StrBytes()
+	if err != nil {
+		return 0, errorWithRawValue(err, d)
+	}
+	v, err := jx.DecodeBytes(s).Int32()
+	if err != nil {
+		return 0, errorWithRawValue(err, d)
+	}
+	return v, nil
+}
+
+func StringInt64(d *jx.Decoder) (int64, error) {
 	s, err := d.StrBytes()
 	if err != nil {
 		return 0, errorWithRawValue(err, d)

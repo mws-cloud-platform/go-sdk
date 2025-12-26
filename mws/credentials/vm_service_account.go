@@ -81,6 +81,9 @@ func (p *VMServiceAccountProvider) provide(ctx context.Context) (Credentials, er
 	if err = json.Unmarshal([]byte(tokenJSON), &token); err != nil {
 		return Credentials{}, fmt.Errorf("unmarshal token: %w", err)
 	}
+
+	p.logger.Info("token received", zap.Int64("access_token_expires_in", token.ExpiresIn))
+
 	return Credentials{
 		AccessToken: token.AccessToken,
 		ExpiresAt:   p.clock.Now().Add(time.Duration(token.ExpiresIn) * time.Second),

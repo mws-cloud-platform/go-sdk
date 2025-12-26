@@ -60,6 +60,8 @@ func (p *provider) do(key string, fn func() (Credentials, error)) (Credentials, 
 	}
 	creds := res.(Credentials)
 
+	p.logger.Info("credentials issued", zap.Time("access_token_expires_at", creds.ExpiresAt))
+
 	return creds, p.cache.Store(key, creds)
 }
 
