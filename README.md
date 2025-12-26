@@ -23,14 +23,14 @@ MWS Cloud Platform SDK for Go.
 ## Installation
 
 ```shell
-go get go.mws.cloud/go-sdk/go/pkg/sdk/mws
+go get go.mws.cloud/go-sdk/mws
 ```
 
 ## Getting Started
 
 To get started, you need to setup project with Go modules and install the MWS Go
 SDK dependency. This example demonstrates how to list virtual machines inside
-the project (see [runnable example](../examples/vm_list_test.go)).
+the project (see [runnable example](./examples/vm_list_test.go)).
 
 **Setup Project**
 
@@ -43,7 +43,7 @@ go mod init my-mws-project
 **Install SDK**
 
 ```shell
-go get go.mws.cloud/go-sdk/go/pkg/sdk/mws
+go get go.mws.cloud/go-sdk/mws
 ```
 
 **Write Code**
@@ -154,7 +154,7 @@ on the environment variables and configuration defaults.
 
 ## Examples
 
-Check more examples in the [examples](../examples) directory.
+Check more examples in the [examples](./examples) directory.
 
 ## Documentation
 
