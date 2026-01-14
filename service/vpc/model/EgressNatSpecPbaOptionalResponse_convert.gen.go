@@ -14,5 +14,8 @@ func EgressNatSpecPbaRequestToOptionalResponse(request *EgressNatSpecPbaRequest)
 	if request.BlockSize != nil {
 		response.BlockSize = commonclient.NewOptional(*request.BlockSize)
 	}
+	if request.BlocksPerClient != nil {
+		response.BlocksPerClient = commonclient.NewOptional(*request.BlocksPerClient)
+	}
 	return &response, nil
 }

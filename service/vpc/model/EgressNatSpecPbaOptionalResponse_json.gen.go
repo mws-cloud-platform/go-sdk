@@ -31,6 +31,11 @@ func (m *EgressNatSpecPbaOptionalResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("blockSize")
 		e.Int32(m.BlockSize.Value)
 	}
+
+	if m.BlocksPerClient.IsSet() {
+		e.FieldStart("blocksPerClient")
+		e.Int32(m.BlocksPerClient.Value)
+	}
 }
 
 func (m *EgressNatSpecPbaOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -51,6 +56,14 @@ func (m *EgressNatSpecPbaOptionalResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.BlockSize.SetTo(v)
+			return nil
+		case "blocksPerClient":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.BlocksPerClient.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

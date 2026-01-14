@@ -11,6 +11,8 @@ import (
 type EgressNatSpecPbaOptionalResponse struct {
 	// Размер блока портов.
 	BlockSize commonclient.Optional[int32] `json:"blockSize,omitempty" yaml:"blockSize,omitempty"`
+	// Максимальное количество блоков портов для одного клиента.
+	BlocksPerClient commonclient.Optional[int32] `json:"blocksPerClient,omitempty" yaml:"blocksPerClient,omitempty"`
 }
 
 func (m *EgressNatSpecPbaOptionalResponse) GetBlockSize() *int32 {
@@ -23,6 +25,20 @@ func (m *EgressNatSpecPbaOptionalResponse) GetBlockSize() *int32 {
 func (m *EgressNatSpecPbaOptionalResponse) GetBlockSizeOr(val int32) int32 {
 	if m != nil && m.BlockSize.IsSet() {
 		return m.BlockSize.Value
+	}
+	return val
+}
+
+func (m *EgressNatSpecPbaOptionalResponse) GetBlocksPerClient() *int32 {
+	if m != nil && m.BlocksPerClient.IsSet() {
+		return &m.BlocksPerClient.Value
+	}
+	return nil
+}
+
+func (m *EgressNatSpecPbaOptionalResponse) GetBlocksPerClientOr(val int32) int32 {
+	if m != nil && m.BlocksPerClient.IsSet() {
+		return m.BlocksPerClient.Value
 	}
 	return val
 }

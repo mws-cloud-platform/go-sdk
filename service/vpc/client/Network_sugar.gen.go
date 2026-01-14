@@ -87,9 +87,11 @@ func (x *NetworkSugared) respHandlerDeleteNetwork(resp *DeleteNetworkResponse) e
 
 func (x *NetworkSugared) waitDeleteNetwork(ctx context.Context, request GetNetworkRequest, opts ...wait.WaiterOption) error {
 	callback := func(ctx context.Context) (*model.NetworkOptionalResponse, bool, error) {
-		response, err := x.GetNetwork(ctx, request)
-		stop := mwserrors.IsAPIErrorNotFoundStatus(err)
-		return response, stop, err
+		_, err := x.GetNetwork(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
 	}
 	waiter := wait.NewWaiter(callback, opts...)
 	_, err := waiter.Wait(ctx)

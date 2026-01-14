@@ -87,9 +87,11 @@ func (x *OneToOneNatSugared) respHandlerDeleteOneToOneNat(resp *DeleteOneToOneNa
 
 func (x *OneToOneNatSugared) waitDeleteOneToOneNat(ctx context.Context, request GetOneToOneNatRequest, opts ...wait.WaiterOption) error {
 	callback := func(ctx context.Context) (*model.OneToOneNatOptionalResponse, bool, error) {
-		response, err := x.GetOneToOneNat(ctx, request)
-		stop := mwserrors.IsAPIErrorNotFoundStatus(err)
-		return response, stop, err
+		_, err := x.GetOneToOneNat(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
 	}
 	waiter := wait.NewWaiter(callback, opts...)
 	_, err := waiter.Wait(ctx)

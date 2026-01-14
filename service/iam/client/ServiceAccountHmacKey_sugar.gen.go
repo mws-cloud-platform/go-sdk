@@ -87,9 +87,11 @@ func (x *ServiceAccountHmacKeySugared) respHandlerDeleteHmacKey(resp *DeleteHmac
 
 func (x *ServiceAccountHmacKeySugared) waitDeleteHmacKey(ctx context.Context, request GetHmacKeyRequest, opts ...wait.WaiterOption) error {
 	callback := func(ctx context.Context) (*model.HmacKeyResponse, bool, error) {
-		response, err := x.GetHmacKey(ctx, request)
-		stop := mwserrors.IsAPIErrorNotFoundStatus(err)
-		return response, stop, err
+		_, err := x.GetHmacKey(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
 	}
 	waiter := wait.NewWaiter(callback, opts...)
 	_, err := waiter.Wait(ctx)

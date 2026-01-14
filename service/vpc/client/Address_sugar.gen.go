@@ -87,9 +87,11 @@ func (x *AddressSugared) respHandlerDeleteAddress(resp *DeleteAddressResponse) e
 
 func (x *AddressSugared) waitDeleteAddress(ctx context.Context, request GetAddressRequest, opts ...wait.WaiterOption) error {
 	callback := func(ctx context.Context) (*model.AddressOptionalResponse, bool, error) {
-		response, err := x.GetAddress(ctx, request)
-		stop := mwserrors.IsAPIErrorNotFoundStatus(err)
-		return response, stop, err
+		_, err := x.GetAddress(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
 	}
 	waiter := wait.NewWaiter(callback, opts...)
 	_, err := waiter.Wait(ctx)

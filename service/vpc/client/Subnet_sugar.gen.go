@@ -87,9 +87,11 @@ func (x *SubnetSugared) respHandlerDeleteSubnet(resp *DeleteSubnetResponse) erro
 
 func (x *SubnetSugared) waitDeleteSubnet(ctx context.Context, request GetSubnetRequest, opts ...wait.WaiterOption) error {
 	callback := func(ctx context.Context) (*model.SubnetOptionalResponse, bool, error) {
-		response, err := x.GetSubnet(ctx, request)
-		stop := mwserrors.IsAPIErrorNotFoundStatus(err)
-		return response, stop, err
+		_, err := x.GetSubnet(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
 	}
 	waiter := wait.NewWaiter(callback, opts...)
 	_, err := waiter.Wait(ctx)

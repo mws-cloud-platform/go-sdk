@@ -3,6 +3,7 @@ package wait
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	commonerrors "go.mws.cloud/go-sdk/mws/errors"
@@ -80,12 +81,15 @@ func (w *Waiter[T]) Wait(ctx context.Context) (T, error) {
 		select {
 		case <-ticker.Chan():
 			response, stop, err := w.callback(ctx)
-			if err != nil || stop {
+			if err != nil {
 				return response, err
+			}
+			if stop {
+				return response, nil
 			}
 		case <-ctx.Done():
 			var response T
-			return response, ctx.Err()
+			return response, fmt.Errorf("operation canceled: %w", ctx.Err())
 		}
 	}
 }

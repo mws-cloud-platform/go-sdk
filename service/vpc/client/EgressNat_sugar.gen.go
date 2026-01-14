@@ -87,9 +87,11 @@ func (x *EgressNatSugared) respHandlerDeleteEgressNat(resp *DeleteEgressNatRespo
 
 func (x *EgressNatSugared) waitDeleteEgressNat(ctx context.Context, request GetEgressNatRequest, opts ...wait.WaiterOption) error {
 	callback := func(ctx context.Context) (*model.EgressNatOptionalResponse, bool, error) {
-		response, err := x.GetEgressNat(ctx, request)
-		stop := mwserrors.IsAPIErrorNotFoundStatus(err)
-		return response, stop, err
+		_, err := x.GetEgressNat(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
 	}
 	waiter := wait.NewWaiter(callback, opts...)
 	_, err := waiter.Wait(ctx)

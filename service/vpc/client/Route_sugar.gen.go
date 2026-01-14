@@ -87,9 +87,11 @@ func (x *RouteSugared) respHandlerDeleteRoute(resp *DeleteRouteResponse) error {
 
 func (x *RouteSugared) waitDeleteRoute(ctx context.Context, request GetRouteRequest, opts ...wait.WaiterOption) error {
 	callback := func(ctx context.Context) (*model.RouteOptionalResponse, bool, error) {
-		response, err := x.GetRoute(ctx, request)
-		stop := mwserrors.IsAPIErrorNotFoundStatus(err)
-		return response, stop, err
+		_, err := x.GetRoute(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
 	}
 	waiter := wait.NewWaiter(callback, opts...)
 	_, err := waiter.Wait(ctx)

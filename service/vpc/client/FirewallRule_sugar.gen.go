@@ -87,9 +87,11 @@ func (x *FirewallRuleSugared) respHandlerDeleteFirewallRule(resp *DeleteFirewall
 
 func (x *FirewallRuleSugared) waitDeleteFirewallRule(ctx context.Context, request GetFirewallRuleRequest, opts ...wait.WaiterOption) error {
 	callback := func(ctx context.Context) (*model.FirewallRuleOptionalResponse, bool, error) {
-		response, err := x.GetFirewallRule(ctx, request)
-		stop := mwserrors.IsAPIErrorNotFoundStatus(err)
-		return response, stop, err
+		_, err := x.GetFirewallRule(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
 	}
 	waiter := wait.NewWaiter(callback, opts...)
 	_, err := waiter.Wait(ctx)

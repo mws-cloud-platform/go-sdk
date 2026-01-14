@@ -11,12 +11,17 @@ import (
 type UpdateEgressNatSpecPbaRequest struct {
 	// Размер блока портов.
 	BlockSize commonclient.Optional[int32] `json:"blockSize" yaml:"blockSize"`
+	// Максимальное количество блоков портов для одного клиента.
+	BlocksPerClient commonclient.Optional[int32] `json:"blocksPerClient" yaml:"blocksPerClient"`
 }
 
 func (m *EgressNatSpecPbaRequest) AsUpdateModel() UpdateEgressNatSpecPbaRequest {
 	var u UpdateEgressNatSpecPbaRequest
 	if m.BlockSize != nil {
 		u.BlockSize = commonclient.NewOptional(m.GetBlockSizeOr(0))
+	}
+	if m.BlocksPerClient != nil {
+		u.BlocksPerClient = commonclient.NewOptional(m.GetBlocksPerClientOr(0))
 	}
 	return u
 }
@@ -27,6 +32,7 @@ func (m *EgressNatSpecPbaRequest) Diff(src *EgressNatSpecPbaRequest) UpdateEgres
 	upd := UpdateEgressNatSpecPbaRequest{}
 	if !nilDiffers {
 		upd.BlockSize = m.diffBlockSize(src)
+		upd.BlocksPerClient = m.diffBlocksPerClient(src)
 	}
 	return upd
 }
@@ -40,15 +46,24 @@ func (m *EgressNatSpecPbaRequest) WithChanges(u UpdateEgressNatSpecPbaRequest) E
 	if u.BlockSize.IsSet() {
 		out.BlockSize = ptr.Get(u.BlockSize.Value)
 	}
+	if u.BlocksPerClient.IsSet() {
+		out.BlocksPerClient = ptr.Get(u.BlocksPerClient.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateEgressNatSpecPbaRequest) HasChanges() bool {
-	return m.BlockSize.Set
+	return m.BlockSize.Set ||
+		m.BlocksPerClient.Set
 }
 
 func (m *EgressNatSpecPbaRequest) diffBlockSize(src *EgressNatSpecPbaRequest) commonclient.Optional[int32] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetBlockSize(), m.GetBlockSize(), nilDiffers)
+}
+
+func (m *EgressNatSpecPbaRequest) diffBlocksPerClient(src *EgressNatSpecPbaRequest) commonclient.Optional[int32] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetBlocksPerClient(), m.GetBlocksPerClient(), nilDiffers)
 }

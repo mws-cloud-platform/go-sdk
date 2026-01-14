@@ -15,5 +15,8 @@ func (m *EgressNatSpecPbaRequest) WithDefaults() EgressNatSpecPbaRequest {
 	if out.BlockSize == nil {
 		out.BlockSize = ptr.Get(int32(256))
 	}
+	if out.BlocksPerClient == nil {
+		out.BlocksPerClient = ptr.Get(int32(1))
+	}
 	return out
 }

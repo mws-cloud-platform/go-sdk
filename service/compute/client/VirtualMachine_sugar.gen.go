@@ -91,9 +91,11 @@ func (x *VirtualMachineSugared) respHandlerDeleteVirtualMachine(resp *DeleteVirt
 
 func (x *VirtualMachineSugared) waitDeleteVirtualMachine(ctx context.Context, request GetVirtualMachineRequest, opts ...wait.WaiterOption) error {
 	callback := func(ctx context.Context) (*model.VirtualMachineOptionalResponse, bool, error) {
-		response, err := x.GetVirtualMachine(ctx, request)
-		stop := mwserrors.IsAPIErrorNotFoundStatus(err)
-		return response, stop, err
+		_, err := x.GetVirtualMachine(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
 	}
 	waiter := wait.NewWaiter(callback, opts...)
 	_, err := waiter.Wait(ctx)
