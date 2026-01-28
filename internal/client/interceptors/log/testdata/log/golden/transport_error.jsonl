@@ -1,0 +1,1 @@
+{"level":"ERROR","message":"request failed","bool":true,"int":42,"float":128,"string":"foo","bools":[true,false,true],"ints":[1,2,3],"floats":[1,2],"strings":["a","b"],"client_req_attempt":0,"client_req_duration":0.512,"error":"error"}

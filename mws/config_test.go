@@ -34,7 +34,8 @@ func TestLoadConfig(t *testing.T) {
 					"MWS_ZONE":          "ru-central1-b",
 					"MWS_TOKEN":         "my-token",
 					"MWS_SERVICE_ACCOUNT_AUTHORIZED_KEY_PATH": "/path/to/key.json",
-					"MWS_TIMEOUT": "1m",
+					"MWS_TIMEOUT":   "1m",
+					"MWS_LOG_LEVEL": "debug",
 				}),
 			},
 			expected: &mws.Config{
@@ -44,6 +45,7 @@ func TestLoadConfig(t *testing.T) {
 				Token:                           "my-token",
 				ServiceAccountAuthorizedKeyPath: "/path/to/key.json",
 				Timeout:                         time.Minute,
+				LogLevel:                        "debug",
 			},
 		},
 		{

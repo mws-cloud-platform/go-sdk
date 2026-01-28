@@ -8,7 +8,7 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 )
 
-// Deprecated: schema marks this type as deprecated
+// Deprecated: Тип устарел
 type UpdateAddressGroupSpecOrRefRequest struct {
 	// Спецификация группы адресов.
 	Spec commonclient.OptionalNil[UpdateAddressGroupSpecRequest] `json:"spec" yaml:"spec"`

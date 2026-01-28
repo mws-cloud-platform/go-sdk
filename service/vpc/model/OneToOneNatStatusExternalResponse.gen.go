@@ -15,7 +15,7 @@ type OneToOneNatStatusExternalResponse struct {
 	Address ResourceExternalAddressStatusResponse `json:"address" yaml:"address"`
 	// false если ссылка на внешний адрес был указана в спецификации, true если адрес был создан. Deprecated в пользу  managed параметра в поле address.
 	//
-	// Deprecated: schema marks this field as deprecated.
+	// Deprecated: Поле устарело
 	Managed *bool `json:"managed,omitempty" yaml:"managed,omitempty"`
 }
 
@@ -30,7 +30,7 @@ func (m *OneToOneNatStatusExternalResponse) SetAddress(val ResourceExternalAddre
 	m.Address = val
 }
 
-// Deprecated: schema marks this field as deprecated.
+// Deprecated: Поле устарело
 func (m *OneToOneNatStatusExternalResponse) GetManaged() *bool {
 	if m != nil {
 		return m.Managed
@@ -38,12 +38,12 @@ func (m *OneToOneNatStatusExternalResponse) GetManaged() *bool {
 	return nil
 }
 
-// Deprecated: schema marks this field as deprecated.
+// Deprecated: Поле устарело
 func (m *OneToOneNatStatusExternalResponse) SetManaged(val *bool) {
 	m.Managed = val
 }
 
-// Deprecated: schema marks this field as deprecated.
+// Deprecated: Поле устарело
 func (m *OneToOneNatStatusExternalResponse) GetManagedOr(val bool) bool {
 	if m != nil && m.Managed != nil {
 		return *m.Managed

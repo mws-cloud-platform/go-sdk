@@ -9,7 +9,6 @@ import (
 
 	"go.mws.cloud/go-sdk/mws"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
-	"go.mws.cloud/go-sdk/service/common/model"
 	computeclient "go.mws.cloud/go-sdk/service/compute/client"
 	computemodel "go.mws.cloud/go-sdk/service/compute/model"
 	computesdk "go.mws.cloud/go-sdk/service/compute/sdk"
@@ -85,7 +84,7 @@ func createDiskFromSnapshot(ctx context.Context, sdk *mws.SDK, diskName string, 
 				Source:    source,
 			},
 		},
-	})
+	}, computeclient.WithWait())
 	if err != nil {
 		log.Panicln("create disk:", err)
 	}
@@ -94,19 +93,9 @@ func createDiskFromSnapshot(ctx context.Context, sdk *mws.SDK, diskName string, 
 	deleteDisk := func() {
 		err = diskClient.DeleteDisk(ctx, computeclient.DeleteDiskRequest{
 			Disk: diskName,
-		})
+		}, computeclient.WithWait())
 		if err != nil {
 			log.Panicln("delete disk:", err)
-		}
-
-		// Wait for disk deletion.
-		err = waitForDeletion(ctx, func(c context.Context) (any, error) {
-			return diskClient.GetDisk(c, computeclient.GetDiskRequest{
-				Disk: diskName,
-			})
-		})
-		if err != nil {
-			log.Panicln("wait for disk deletion:", err)
 		}
 		fmt.Println("disk deleted:", disk.GetMetadata().GetId().ResourceName())
 	}
@@ -138,51 +127,18 @@ func createSnapshot(ctx context.Context, sdk *mws.SDK, snapshotName string, disk
 				},
 			},
 		},
-	})
+	}, computeclient.WithWait())
 	if err != nil {
 		log.Panicln("create snapshot:", err)
 	}
 	fmt.Println("snapshot created:", snapshot.GetMetadata().GetId().ResourceName())
 
-	// Wait for snapshot status ready.
-	err = wait(ctx,
-		func(c context.Context) (*computemodel.SnapshotOptionalResponse, error) {
-			return snapshotClient.GetSnapshot(c, computeclient.GetSnapshotRequest{
-				Snapshot: snapshotName,
-			})
-		},
-		func(snapshot *computemodel.SnapshotOptionalResponse, err error) (bool, error) {
-			state := snapshot.GetStatus().GetReady().State
-			return state != model.ResourceStatusState_PROCESSING, err
-		},
-	)
-	if err != nil {
-		log.Panicln("wait for snapshot ready:", err)
-	}
-	if status := snapshot.GetStatus().GetReady(); status.State != model.ResourceStatusState_OK {
-		message := ""
-		if status.GetMessage() != nil {
-			message = *status.GetMessage()
-		}
-		log.Panicf("invalid snapshot status %s: %s", status.State, message)
-	}
-
 	deleteSnapshot := func() {
 		err = snapshotClient.DeleteSnapshot(ctx, computeclient.DeleteSnapshotRequest{
 			Snapshot: snapshotName,
-		})
+		}, computeclient.WithWait())
 		if err != nil {
 			log.Panicln("delete snapshot:", err)
-		}
-
-		// Wait for snapshot deletion.
-		err = waitForDeletion(ctx, func(c context.Context) (any, error) {
-			return snapshotClient.GetSnapshot(c, computeclient.GetSnapshotRequest{
-				Snapshot: snapshotName,
-			})
-		})
-		if err != nil {
-			log.Panicln("wait for snapshot deletion:", err)
 		}
 		fmt.Println("snapshot deleted:", snapshot.GetMetadata().GetId().ResourceName())
 	}

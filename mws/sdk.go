@@ -10,6 +10,7 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	authinterceptor "go.mws.cloud/go-sdk/internal/client/interceptors/auth"
+	loginterceptor "go.mws.cloud/go-sdk/internal/client/interceptors/log"
 	recoveryinterceptor "go.mws.cloud/go-sdk/internal/client/interceptors/recovery"
 	retryinterceptor "go.mws.cloud/go-sdk/internal/client/interceptors/retry"
 	"go.mws.cloud/go-sdk/mws/credentials"
@@ -88,6 +89,7 @@ func (s *SDK) ClientOptions() []commonclient.Option {
 			commonclient.IdempotencyKeyInjector,
 			commonclient.DefaultsInjector(s.defaultProject, s.defaultZone),
 			authinterceptor.New(s.credentials),
+			loginterceptor.New(s.logger.Named("client")),
 			retryinterceptor.New(retryinterceptor.WithRetryer(s.retryer)),
 			commonclient.ErrorWrapper,
 		),

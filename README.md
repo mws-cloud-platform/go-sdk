@@ -3,7 +3,7 @@
 [![PkgGoDev](https://pkg.go.dev/badge/go.mws.cloud/go-sdk)](https://pkg.go.dev/go.mws.cloud/go-sdk)
 [![Go Report Card](https://goreportcard.com/badge/go.mws.cloud/go-sdk)](https://goreportcard.com/report/go.mws.cloud/go-sdk)
 ![Last Commit](https://img.shields.io/github/last-commit/mws-cloud-platform/go-sdk)
-![Go Version](https://img.shields.io/badge/Go-1.25.4%2B-blue)
+![Go Version](https://img.shields.io/badge/Go-1.25.6%2B-blue)
 
 MWS Cloud Platform SDK for Go.
 
@@ -136,6 +136,7 @@ can provide this information using environment variables and functional options.
 - `MWS_TOKEN` - IAM token for authentication. If not empty, it will be used in all client requests that require authentication.
 - `MWS_SERVICE_ACCOUNT_AUTHORIZED_KEY_PATH` - Path to the service account authorized key file used for authentication. Has no effect if `MWS_TOKEN` is not empty.
 - `MWS_TIMEOUT` - Timeout for all client requests (default: `5s`).
+- `MWS_LOG_LEVEL` - If set, enables SDK operations logging at the specified level. Available levels: `debug`, `info`, `warn`, `error`, `fatal`.
 
 ### Functional Options
 

@@ -5,7 +5,7 @@ package model
 // Критерий применимости правила, описывает пункт назначения пакета.
 // Real OAPI model name: AddressGroupSpecOrRef
 //
-// Deprecated: schema marks this type as deprecated
+// Deprecated: Тип устарел
 type AddressGroupSpecOrRefRequest struct {
 	// Спецификация группы адресов.
 	Spec *AddressGroupSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`

@@ -22,6 +22,7 @@ const (
 	TokenEnv                           = "MWS_TOKEN"
 	ServiceAccountAuthorizedKeyPathEnv = "MWS_SERVICE_ACCOUNT_AUTHORIZED_KEY_PATH"
 	TimeoutEnv                         = "MWS_TIMEOUT"
+	LogLevelEnv                        = "MWS_LOG_LEVEL"
 )
 
 // Config is an SDK configuration.
@@ -47,6 +48,9 @@ type Config struct {
 	// HTTP client request timeout. Can be specified using the `MWS_TIMEOUT`
 	// environment variable.
 	Timeout time.Duration `yaml:"timeout,omitempty"`
+	// Log level for the SDK. Can be specified using the `MWS_LOG_LEVEL`
+	// environment variable.
+	LogLevel string `yaml:"log_level,omitempty"`
 }
 
 // LoadConfig loads SDK configuration from environment variables and sensible
@@ -74,6 +78,7 @@ func LoadConfig(opts ...LoadConfigOption) (config *Config, err error) {
 		Token:                           o.env.Getenv(TokenEnv),
 		ServiceAccountAuthorizedKeyPath: o.env.Getenv(ServiceAccountAuthorizedKeyPathEnv),
 		Timeout:                         timeout,
+		LogLevel:                        o.env.Getenv(LogLevelEnv),
 	}, nil
 }
 

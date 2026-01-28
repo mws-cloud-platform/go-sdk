@@ -54,9 +54,14 @@ type ListSnapshotsRequest struct {
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
-	// Строка фильтра
+	// Строка фильтра.
+	// Для фильтрации используется ограниченная реализация AIP-160 (https://google.aip.dev/160).
+	// Она включает в себя операции =, !=, OR, AND и (), фильтрацию свойств вложенных объектов и wildcard-поиск подстрок
 	Filter *string // query: "filter"
-	// Строка сортировки
+	// Строка сортировки.
+	// Для сортировки используется реализация AIP-132 (https://google.aip.dev/132#ordering).
+	// Указывается перечислением полей с направлением сортировки (asc, desc) через запятую.
+	// По умолчанию используется сортировка по возрастанию (asc)
 	OrderBy *string // query: "orderBy"
 }
 
@@ -267,6 +272,14 @@ func (m *DeleteSnapshotRequest) SetProject(project string) {
 	m.Project = project
 }
 
+func (m *DeleteSnapshotRequest) getSnapshotRequest() GetSnapshotRequest {
+	return GetSnapshotRequest{
+		Authorization: m.Authorization,
+		Project:       m.Project,
+		Snapshot:      m.Snapshot,
+	}
+}
+
 type DeleteSnapshotResponse struct {
 	Code        int
 	Response204 bool // empty response
@@ -399,6 +412,14 @@ func (m *UpsertSnapshotRequest) SetProject(project string) {
 	m.Project = project
 }
 
+func (m *UpsertSnapshotRequest) getSnapshotRequest() GetSnapshotRequest {
+	return GetSnapshotRequest{
+		Authorization: m.Authorization,
+		Project:       m.Project,
+		Snapshot:      m.Snapshot,
+	}
+}
+
 type UpdateSnapshotRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -422,6 +443,14 @@ func (m UpdateSnapshotRequest) GetProject() string {
 
 func (m *UpdateSnapshotRequest) SetProject(project string) {
 	m.Project = project
+}
+
+func (m *UpdateSnapshotRequest) getSnapshotRequest() GetSnapshotRequest {
+	return GetSnapshotRequest{
+		Authorization: m.Authorization,
+		Project:       m.Project,
+		Snapshot:      m.Snapshot,
+	}
 }
 
 type UpsertSnapshotResponse struct {

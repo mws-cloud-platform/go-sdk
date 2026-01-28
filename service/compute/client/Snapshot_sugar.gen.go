@@ -53,13 +53,24 @@ func (x *SnapshotSugared) respHandlerListSnapshots(resp *ListSnapshotsResponse) 
 // DeleteSnapshot позволяет удалить снимок.
 //
 // Путь: DELETE /compute/v1/projects/{project}/snapshots/{snapshot}
-func (x *SnapshotSugared) DeleteSnapshot(ctx context.Context, request DeleteSnapshotRequest) error {
+func (x *SnapshotSugared) DeleteSnapshot(ctx context.Context, request DeleteSnapshotRequest, opts ...Option) error {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.DeleteSnapshot(ctx, request)
 	if err != nil {
 		return err
 	}
 
-	return x.respHandlerDeleteSnapshot(resp)
+	err = x.respHandlerDeleteSnapshot(resp)
+	if err != nil {
+		return err
+	}
+
+	if !config.wait {
+		return nil
+	}
+
+	return x.waitDeleteSnapshot(ctx, request.getSnapshotRequest(), config.waitOptions...)
 }
 
 func (x *SnapshotSugared) respHandlerDeleteSnapshot(resp *DeleteSnapshotResponse) error {
@@ -72,6 +83,19 @@ func (x *SnapshotSugared) respHandlerDeleteSnapshot(resp *DeleteSnapshotResponse
 	}
 
 	return mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *SnapshotSugared) waitDeleteSnapshot(ctx context.Context, request GetSnapshotRequest, opts ...wait.WaiterOption) error {
+	callback := func(ctx context.Context) (*model.SnapshotOptionalResponse, bool, error) {
+		_, err := x.GetSnapshot(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	_, err := waiter.Wait(ctx)
+	return err
 }
 
 // GetSnapshot позволяет получить информацию о снимке.
@@ -122,13 +146,24 @@ func (x *SnapshotSugared) waitGetSnapshot(ctx context.Context, request GetSnapsh
 // UpsertSnapshot позволяет создать или изменить снимок.
 //
 // Путь: POST /compute/v1/projects/{project}/snapshots/{snapshot}
-func (x *SnapshotSugared) UpsertSnapshot(ctx context.Context, request UpsertSnapshotRequest) (*model.SnapshotOptionalResponse, error) {
+func (x *SnapshotSugared) UpsertSnapshot(ctx context.Context, request UpsertSnapshotRequest, opts ...Option) (*model.SnapshotOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.UpsertSnapshot(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertSnapshot(resp)
+	sugaredResponse, err := x.respHandlerUpsertSnapshot(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertSnapshot(ctx, request.getSnapshotRequest(), config.waitOptions...)
 }
 
 func (x *SnapshotSugared) respHandlerUpsertSnapshot(resp *UpsertSnapshotResponse) (*model.SnapshotOptionalResponse, error) {
@@ -143,28 +178,60 @@ func (x *SnapshotSugared) respHandlerUpsertSnapshot(resp *UpsertSnapshotResponse
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+func (x *SnapshotSugared) waitUpsertSnapshot(ctx context.Context, request GetSnapshotRequest, opts ...wait.WaiterOption) (*model.SnapshotOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.SnapshotOptionalResponse, bool, error) {
+		response, err := x.GetSnapshot(ctx, request)
+		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
+		return response, stop, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	return waiter.Wait(ctx)
+}
+
 // CreateSnapshot позволяет создать или изменить снимок.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /compute/v1/projects/{project}/snapshots/{snapshot}?createOnly=true
-func (x *SnapshotSugared) CreateSnapshot(ctx context.Context, request UpsertSnapshotRequest) (*model.SnapshotOptionalResponse, error) {
+func (x *SnapshotSugared) CreateSnapshot(ctx context.Context, request UpsertSnapshotRequest, opts ...Option) (*model.SnapshotOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.CreateSnapshot(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertSnapshot(resp)
+	sugaredResponse, err := x.respHandlerUpsertSnapshot(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertSnapshot(ctx, request.getSnapshotRequest(), config.waitOptions...)
 }
 
 // UpdateSnapshot позволяет создать или изменить снимок.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /compute/v1/projects/{project}/snapshots/{snapshot}?updateOnly=true
-func (x *SnapshotSugared) UpdateSnapshot(ctx context.Context, request UpdateSnapshotRequest) (*model.SnapshotOptionalResponse, error) {
+func (x *SnapshotSugared) UpdateSnapshot(ctx context.Context, request UpdateSnapshotRequest, opts ...Option) (*model.SnapshotOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.UpdateSnapshot(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertSnapshot(resp)
+	sugaredResponse, err := x.respHandlerUpsertSnapshot(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertSnapshot(ctx, request.getSnapshotRequest(), config.waitOptions...)
 }

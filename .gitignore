@@ -18,6 +18,13 @@ profile.cov
 go.work
 go.work.sum
 
+# Golang
+/bin/
+/tmp/
+/.devp/
+/.build/
+/vendor/
+
 # env file
 .env
 

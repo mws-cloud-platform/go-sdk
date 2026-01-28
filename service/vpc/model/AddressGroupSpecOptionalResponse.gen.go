@@ -9,7 +9,7 @@ import (
 // Спецификация группы адресов.
 // Real OAPI model name: AddressGroupSpec
 //
-// Deprecated: schema marks this type as deprecated
+// Deprecated: Тип устарел
 type AddressGroupSpecOptionalResponse struct {
 	// Диапазоны IPv4 адресов, которые входят в группу.
 	Cidrs []cidraddress.CIDR4Address `json:"cidrs" yaml:"cidrs"`

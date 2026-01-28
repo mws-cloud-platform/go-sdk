@@ -77,13 +77,24 @@ func (x *ImageSugared) respHandlerListImages(resp *ListImagesResponse) (*ListIma
 // DeleteImage позволяет удалить образ.
 //
 // Путь: DELETE /compute/v1/projects/{project}/images/{image}
-func (x *ImageSugared) DeleteImage(ctx context.Context, request DeleteImageRequest) error {
+func (x *ImageSugared) DeleteImage(ctx context.Context, request DeleteImageRequest, opts ...Option) error {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.DeleteImage(ctx, request)
 	if err != nil {
 		return err
 	}
 
-	return x.respHandlerDeleteImage(resp)
+	err = x.respHandlerDeleteImage(resp)
+	if err != nil {
+		return err
+	}
+
+	if !config.wait {
+		return nil
+	}
+
+	return x.waitDeleteImage(ctx, request.getImageRequest(), config.waitOptions...)
 }
 
 func (x *ImageSugared) respHandlerDeleteImage(resp *DeleteImageResponse) error {
@@ -96,6 +107,19 @@ func (x *ImageSugared) respHandlerDeleteImage(resp *DeleteImageResponse) error {
 	}
 
 	return mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *ImageSugared) waitDeleteImage(ctx context.Context, request GetImageRequest, opts ...wait.WaiterOption) error {
+	callback := func(ctx context.Context) (*model.ImageOptionalResponse, bool, error) {
+		_, err := x.GetImage(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	_, err := waiter.Wait(ctx)
+	return err
 }
 
 // GetImage позволяет получить информацию об образе.
@@ -146,13 +170,24 @@ func (x *ImageSugared) waitGetImage(ctx context.Context, request GetImageRequest
 // UpsertImage позволяет создать или изменить образ.
 //
 // Путь: POST /compute/v1/projects/{project}/images/{image}
-func (x *ImageSugared) UpsertImage(ctx context.Context, request UpsertImageRequest) (*model.ImageOptionalResponse, error) {
+func (x *ImageSugared) UpsertImage(ctx context.Context, request UpsertImageRequest, opts ...Option) (*model.ImageOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.UpsertImage(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertImage(resp)
+	sugaredResponse, err := x.respHandlerUpsertImage(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertImage(ctx, request.getImageRequest(), config.waitOptions...)
 }
 
 func (x *ImageSugared) respHandlerUpsertImage(resp *UpsertImageResponse) (*model.ImageOptionalResponse, error) {
@@ -167,28 +202,60 @@ func (x *ImageSugared) respHandlerUpsertImage(resp *UpsertImageResponse) (*model
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+func (x *ImageSugared) waitUpsertImage(ctx context.Context, request GetImageRequest, opts ...wait.WaiterOption) (*model.ImageOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.ImageOptionalResponse, bool, error) {
+		response, err := x.GetImage(ctx, request)
+		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
+		return response, stop, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	return waiter.Wait(ctx)
+}
+
 // CreateImage позволяет создать или изменить образ.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /compute/v1/projects/{project}/images/{image}?createOnly=true
-func (x *ImageSugared) CreateImage(ctx context.Context, request UpsertImageRequest) (*model.ImageOptionalResponse, error) {
+func (x *ImageSugared) CreateImage(ctx context.Context, request UpsertImageRequest, opts ...Option) (*model.ImageOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.CreateImage(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertImage(resp)
+	sugaredResponse, err := x.respHandlerUpsertImage(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertImage(ctx, request.getImageRequest(), config.waitOptions...)
 }
 
 // UpdateImage позволяет создать или изменить образ.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /compute/v1/projects/{project}/images/{image}?updateOnly=true
-func (x *ImageSugared) UpdateImage(ctx context.Context, request UpdateImageRequest) (*model.ImageOptionalResponse, error) {
+func (x *ImageSugared) UpdateImage(ctx context.Context, request UpdateImageRequest, opts ...Option) (*model.ImageOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.UpdateImage(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertImage(resp)
+	sugaredResponse, err := x.respHandlerUpsertImage(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertImage(ctx, request.getImageRequest(), config.waitOptions...)
 }

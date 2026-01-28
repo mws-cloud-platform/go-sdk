@@ -167,7 +167,10 @@ func (o *loadSDKOptions) setDefaults(ctx context.Context, sdk *SDK) (err error) 
 		sdk.defaultZone = o.config.Zone
 	}
 	if sdk.logger == nil {
-		sdk.logger = zap.NewNop()
+		sdk.logger, err = o.buildLogger(o.config.LogLevel)
+		if err != nil {
+			return fmt.Errorf("build logger: %w", err)
+		}
 	}
 	if sdk.client == nil {
 		sdk.client = o.buildClient()
@@ -187,6 +190,26 @@ func (o *loadSDKOptions) setDefaults(ctx context.Context, sdk *SDK) (err error) 
 		}
 	}
 	return nil
+}
+
+func (o *loadSDKOptions) buildLogger(level string) (*zap.Logger, error) {
+	if level == "" {
+		return zap.NewNop(), nil
+	}
+
+	lvl, err := zap.ParseAtomicLevel(o.config.LogLevel)
+	if err != nil {
+		return nil, fmt.Errorf("parse log level: %w", err)
+	}
+
+	cfg := zap.NewProductionConfig()
+	cfg.Level = lvl
+	logger, err := cfg.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	return logger.Named("sdk"), nil
 }
 
 func (o *loadSDKOptions) buildClient() *http.Client {

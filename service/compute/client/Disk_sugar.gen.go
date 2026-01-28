@@ -53,13 +53,24 @@ func (x *DiskSugared) respHandlerListDisks(resp *ListDisksResponse) (*ListDisksR
 // DeleteDisk позволяет удалить диск.
 //
 // Путь: DELETE /compute/v1/projects/{project}/disks/{disk}
-func (x *DiskSugared) DeleteDisk(ctx context.Context, request DeleteDiskRequest) error {
+func (x *DiskSugared) DeleteDisk(ctx context.Context, request DeleteDiskRequest, opts ...Option) error {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.DeleteDisk(ctx, request)
 	if err != nil {
 		return err
 	}
 
-	return x.respHandlerDeleteDisk(resp)
+	err = x.respHandlerDeleteDisk(resp)
+	if err != nil {
+		return err
+	}
+
+	if !config.wait {
+		return nil
+	}
+
+	return x.waitDeleteDisk(ctx, request.getDiskRequest(), config.waitOptions...)
 }
 
 func (x *DiskSugared) respHandlerDeleteDisk(resp *DeleteDiskResponse) error {
@@ -72,6 +83,19 @@ func (x *DiskSugared) respHandlerDeleteDisk(resp *DeleteDiskResponse) error {
 	}
 
 	return mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *DiskSugared) waitDeleteDisk(ctx context.Context, request GetDiskRequest, opts ...wait.WaiterOption) error {
+	callback := func(ctx context.Context) (*model.DiskOptionalResponse, bool, error) {
+		_, err := x.GetDisk(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	_, err := waiter.Wait(ctx)
+	return err
 }
 
 // GetDisk позволяет получить информацию о диске.
@@ -122,13 +146,24 @@ func (x *DiskSugared) waitGetDisk(ctx context.Context, request GetDiskRequest, o
 // UpsertDisk позволяет создать или изменить диск.
 //
 // Путь: POST /compute/v1/projects/{project}/disks/{disk}
-func (x *DiskSugared) UpsertDisk(ctx context.Context, request UpsertDiskRequest) (*model.DiskOptionalResponse, error) {
+func (x *DiskSugared) UpsertDisk(ctx context.Context, request UpsertDiskRequest, opts ...Option) (*model.DiskOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.UpsertDisk(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertDisk(resp)
+	sugaredResponse, err := x.respHandlerUpsertDisk(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertDisk(ctx, request.getDiskRequest(), config.waitOptions...)
 }
 
 func (x *DiskSugared) respHandlerUpsertDisk(resp *UpsertDiskResponse) (*model.DiskOptionalResponse, error) {
@@ -143,28 +178,60 @@ func (x *DiskSugared) respHandlerUpsertDisk(resp *UpsertDiskResponse) (*model.Di
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+func (x *DiskSugared) waitUpsertDisk(ctx context.Context, request GetDiskRequest, opts ...wait.WaiterOption) (*model.DiskOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.DiskOptionalResponse, bool, error) {
+		response, err := x.GetDisk(ctx, request)
+		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
+		return response, stop, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	return waiter.Wait(ctx)
+}
+
 // CreateDisk позволяет создать или изменить диск.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /compute/v1/projects/{project}/disks/{disk}?createOnly=true
-func (x *DiskSugared) CreateDisk(ctx context.Context, request UpsertDiskRequest) (*model.DiskOptionalResponse, error) {
+func (x *DiskSugared) CreateDisk(ctx context.Context, request UpsertDiskRequest, opts ...Option) (*model.DiskOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.CreateDisk(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertDisk(resp)
+	sugaredResponse, err := x.respHandlerUpsertDisk(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertDisk(ctx, request.getDiskRequest(), config.waitOptions...)
 }
 
 // UpdateDisk позволяет создать или изменить диск.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /compute/v1/projects/{project}/disks/{disk}?updateOnly=true
-func (x *DiskSugared) UpdateDisk(ctx context.Context, request UpdateDiskRequest) (*model.DiskOptionalResponse, error) {
+func (x *DiskSugared) UpdateDisk(ctx context.Context, request UpdateDiskRequest, opts ...Option) (*model.DiskOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.UpdateDisk(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertDisk(resp)
+	sugaredResponse, err := x.respHandlerUpsertDisk(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertDisk(ctx, request.getDiskRequest(), config.waitOptions...)
 }

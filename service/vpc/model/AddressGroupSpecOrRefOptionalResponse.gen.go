@@ -9,7 +9,7 @@ import (
 // Критерий применимости правила, описывает пункт назначения пакета.
 // Real OAPI model name: AddressGroupSpecOrRef
 //
-// Deprecated: schema marks this type as deprecated
+// Deprecated: Тип устарел
 type AddressGroupSpecOrRefOptionalResponse struct {
 	// Спецификация группы адресов.
 	Spec commonclient.OptionalNil[AddressGroupSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
