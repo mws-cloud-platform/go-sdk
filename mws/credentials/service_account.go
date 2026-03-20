@@ -64,11 +64,11 @@ func (p *ServiceAccountProvider) provide(ctx context.Context, id string) (Creden
 		return Credentials{}, err
 	}
 
-	req := client.IssueServiceAccountTokenRequest{
+	req := client.IssueServiceAccountTokenV2Request{
 		Authorization:  &signed,
 		ServiceAccount: &id,
 	}
-	token, err := p.tokenIssuer.IssueServiceAccountToken(ctx, req)
+	token, err := p.tokenIssuer.IssueServiceAccountTokenV2(ctx, req)
 	if err != nil {
 		return Credentials{}, fmt.Errorf("issue token: %w", err)
 	}

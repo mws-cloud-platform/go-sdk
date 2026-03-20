@@ -43,13 +43,13 @@ func TestServiceAccountProvider(t *testing.T) {
 
 	serviceAccountTokenIssuer := mockclient.NewMockIssueServiceAccountToken(ctrl)
 	serviceAccountTokenIssuer.EXPECT().
-		IssueServiceAccountToken(
+		IssueServiceAccountTokenV2(
 			gomock.Any(),
 			gomock.Cond(matchIssueServiceAccountTokenRequest(serviceAccount.String())),
 		).
-		Return(&client.IssueServiceAccountTokenResponse{
+		Return(&client.IssueServiceAccountTokenV2Response{
 			Code:        http.StatusOK,
-			Response200: &model.SuccessTokenResponse{AccessToken: token},
+			Response200: &model.SuccessTokenV2Response{AccessToken: token},
 		}, nil)
 
 	clock := fakeclock.NewFake(fakeclock.WithStartAt(now))
@@ -67,7 +67,7 @@ func TestServiceAccountProvider(t *testing.T) {
 
 func matchIssueServiceAccountTokenRequest(serviceAccount string) func(any) bool {
 	return func(x any) bool {
-		req, ok := x.(client.IssueServiceAccountTokenRequest)
+		req, ok := x.(client.IssueServiceAccountTokenV2Request)
 		if !ok {
 			return false
 		}
