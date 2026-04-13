@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"os"
 	"regexp"
 	"time"
 )
@@ -89,6 +90,23 @@ func ServiceAccountAuthorizedKeyFromContext(ctx context.Context) (ServiceAccount
 type ServiceAccountAuthorizedKey struct {
 	ServiceAccount ServiceAccount
 	AuthorizedKey  AuthorizedKey
+}
+
+// ServiceAccountAuthorizedKeyFromFile reads a service account authorized key
+// from a file.
+func ServiceAccountAuthorizedKeyFromFile(path string) (ServiceAccountAuthorizedKey, error) {
+	var key ServiceAccountAuthorizedKey
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return ServiceAccountAuthorizedKey{}, fmt.Errorf("read file: %w", err)
+	}
+
+	if err = json.Unmarshal(data, &key); err != nil {
+		return ServiceAccountAuthorizedKey{}, fmt.Errorf("unmarshal: %w", err)
+	}
+
+	return key, nil
 }
 
 // Reference returns a reference to the service account authorized key.

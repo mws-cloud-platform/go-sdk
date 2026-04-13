@@ -15,6 +15,10 @@ MWS Cloud Platform SDK for Go.
 	- [Configuration](#configuration)
 		- [Environment Variables](#environment-variables)
 		- [Functional Options](#functional-options)
+	- [Authentication](#authentication)
+		- [IAM Token](#iam-token)
+		- [Service Account Authorized Key](#service-account-authorized-key)
+		- [Custom Credentials Provider](#custom-credentials-provider)
 	- [Examples](#examples)
 	- [Documentation](#documentation)
 	- [Get Help](#get-help)
@@ -143,7 +147,7 @@ can provide this information using environment variables and functional options.
 You can also configure SDK using functional options `mws.LoadSDKOption`, for example:
 
 ```go
-sdk, err := mws.LoadSDK(
+sdk, err := mws.Load(ctx,
 	mws.WithDefaultProject("my-project"),
 	mws.WithDefaultZone("ru-central1-a"),
 	mws.WithTimeout(5 * time.Second),
@@ -152,6 +156,49 @@ sdk, err := mws.LoadSDK(
 
 Note that functional options have highest priority and overrides behavior based
 on the environment variables and configuration defaults.
+
+## Authentication
+
+MWS Go SDK supports various authentication methods.
+
+### IAM Token
+
+You can set [IAM token](https://mws.ru/docs/cloud-platform/iam/sa-get-access-token.html) using the `MWS_TOKEN` environment variable. 
+
+Alternatively, this can be done directly in code:
+
+```go
+sdk, err := mws.Load(ctx, mws.WithCredentials(
+	credentials.StaticProvider(credentials.Credentials{
+		AccessToken: "mws-iam-token",
+	})
+))
+```
+
+Please note that the token lifetime is limited.
+
+### Service Account Authorized Key
+
+To autheticate as a service account, you can set the path to its [authorized key](https://mws.ru/docs/cloud-platform/iam/keys.html#authkey) using the `MWS_SERVICE_ACCOUNT_AUTHORIZED_KEY_PATH` environmet variable.
+
+Alternatively, this can be done directly in code:
+
+```go
+key, err := iam.ServiceAccountAuthorizedKeyFromFile("/path/to/key.json")
+if err != nil {
+	log.Panicln("read service account authorized key from file", err)
+}
+
+sdk, err := mws.Load(ctx, mws.WithServiceAccountAuthorizedKey(key))
+```
+
+### Custom Credentials Provider
+
+You can completly customize authentication by providing your own [credentials.Provider](https://pkg.go.dev/go.mws.cloud/go-sdk/mws/credentials#Provider) implementation:
+
+```go
+sdk, err := mws.Load(ctx, mws.WithCredentials(CustomProvider{}))
+```
 
 ## Examples
 

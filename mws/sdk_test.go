@@ -72,3 +72,25 @@ func ExampleSDK_withServiceAccountAuthorizedKey() {
 
 	fmt.Println(creds.AccessToken)
 }
+
+func ExampleSDK_serviceAccountAuthorizedKeyFromFile() {
+	ctx := context.Background()
+
+	key, err := iam.ServiceAccountAuthorizedKeyFromFile("/path/to/key.json")
+	if err != nil {
+		log.Panic(err)
+	}
+
+	sdk, err := mws.Load(ctx, mws.WithServiceAccountAuthorizedKey(key))
+	if err != nil {
+		log.Panic(err)
+	}
+	defer sdk.Close(ctx)
+
+	creds, err := sdk.CredentialsProvider().Provide(ctx)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	fmt.Println(creds.AccessToken)
+}

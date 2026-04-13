@@ -3,11 +3,9 @@ package mws
 import (
 	"cmp"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
-	"os"
 	"runtime/debug"
 	"time"
 
@@ -256,17 +254,10 @@ func (o *loadSDKOptions) buildCredentials(ctx context.Context, sdk *SDK) (creden
 			AccessToken: o.config.Token,
 		}), nil
 	case o.config.ServiceAccountAuthorizedKeyPath != "":
-		var key iam.ServiceAccountAuthorizedKey
-
-		data, err := os.ReadFile(o.config.ServiceAccountAuthorizedKeyPath)
+		key, err := iam.ServiceAccountAuthorizedKeyFromFile(o.config.ServiceAccountAuthorizedKeyPath)
 		if err != nil {
-			return nil, fmt.Errorf("read service account authorized key file: %w", err)
+			return nil, fmt.Errorf("read service account authorized key from file: %w", err)
 		}
-
-		if err = json.Unmarshal(data, &key); err != nil {
-			return nil, fmt.Errorf("unmarshal service account authorized key: %w", err)
-		}
-
 		return o.buildServiceAccountAuthorizedKeyCredentials(ctx, sdk, key)
 	default:
 		return credentials.AnonymousProvider(), nil
