@@ -2,14 +2,14 @@
 
 package model
 
-// Запрашиваемые базовые и дополнительные IOPS
+// Запрашиваемое базовое и дополнительное количество операций ввода-вывода в секунду (IOPS)
 // Real OAPI model name: DiskStatusIops
 type DiskStatusIopsResponse struct {
-	// Базовые IOPS
+	// Базовое количество операций ввода-вывода в секунду (IOPS)
 	Base Iops `json:"base" yaml:"base"`
-	// Дополнительные IOPS
-	Extra Iops `json:"extra" yaml:"extra"`
-	// Общее количество IOPS
+	// Дополнительное количество операций ввода-вывода в секунду (IOPS)
+	Extra PossiblyZeroIops `json:"extra" yaml:"extra"`
+	// Общее количество операций ввода-вывода в секунду (IOPS)
 	Total Iops `json:"total" yaml:"total"`
 }
 
@@ -24,14 +24,14 @@ func (m *DiskStatusIopsResponse) SetBase(val Iops) {
 	m.Base = val
 }
 
-func (m *DiskStatusIopsResponse) GetExtra() Iops {
+func (m *DiskStatusIopsResponse) GetExtra() PossiblyZeroIops {
 	if m != nil {
 		return m.Extra
 	}
 	return 0
 }
 
-func (m *DiskStatusIopsResponse) SetExtra(val Iops) {
+func (m *DiskStatusIopsResponse) SetExtra(val PossiblyZeroIops) {
 	m.Extra = val
 }
 

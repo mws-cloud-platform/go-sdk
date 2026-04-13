@@ -4,7 +4,7 @@ package model
 
 // Real OAPI model name: Usage
 type UsageResponse struct {
-	// Тип связи, стандартные own и use могут быть расширены сервисоспецифичными
+	// Тип связи. Помимо стандартных own и use могут быть добавлены специализированные типы для конкретных сервисов
 	UsageType string `json:"usageType" yaml:"usageType"`
 	// Имя связи, требуется для модификации коллекции
 	Name string `json:"name" yaml:"name"`

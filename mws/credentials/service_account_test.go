@@ -27,10 +27,10 @@ func TestServiceAccountProvider(t *testing.T) {
 		Project: "project",
 		Name:    "test",
 	}
-	serviceAccountKey := iam.ServiceAccountKey{
+	serviceAccountAuthorizedKey := iam.ServiceAccountAuthorizedKey{
 		ServiceAccount: serviceAccount,
 		AuthorizedKey: iam.AuthorizedKey{
-			ID:         "id",
+			Name:       "key",
 			PrivateKey: getTestPrivateKey(t),
 		},
 	}
@@ -54,7 +54,7 @@ func TestServiceAccountProvider(t *testing.T) {
 
 	clock := fakeclock.NewFake(fakeclock.WithStartAt(now))
 	provider := credentials.NewServiceAccountProvider(
-		serviceAccountKey,
+		serviceAccountAuthorizedKey,
 		serviceAccountTokenIssuer,
 		credentials.WithServiceAccountProviderClock(clock),
 		credentials.WithServiceAccountProviderCache(credentials.NewNoopCache()),

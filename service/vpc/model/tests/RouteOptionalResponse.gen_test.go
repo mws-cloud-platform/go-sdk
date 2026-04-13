@@ -13,6 +13,7 @@ import (
 )
 
 func TestRouteOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initRouteOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -15,6 +15,7 @@ import (
 )
 
 func TestIssueServiceAccountTokenSugared_IssueServiceAccountTokenV2(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestIssueServiceAccountTokenSugared_IssueServiceAccountTokenV2(t *testing.T
 }
 
 func TestIssueServiceAccountTokenSugared_IssueServiceAccountToken(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

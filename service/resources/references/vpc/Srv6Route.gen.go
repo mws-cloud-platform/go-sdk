@@ -89,6 +89,10 @@ func (m *Srv6RouteID) ID() string {
 	return m.ServiceSlug() + "/srv6Routes/" + m.srv6Route
 }
 
+func (m *Srv6RouteID) String() string {
+	return m.ID()
+}
+
 func (m *Srv6RouteID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *Srv6RouteRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *Srv6RouteRef) String() string {
+	return m.IDPath()
 }
 
 func (m *Srv6RouteRef) Parse(ctx context.Context) error {

@@ -11,3 +11,7 @@ const (
 	RetryTimeoutScale_PROGRESSIVE RetryTimeoutScale = "PROGRESSIVE"
 	RetryTimeoutScale_EXPONENTIAL RetryTimeoutScale = "EXPONENTIAL"
 )
+
+func (m RetryTimeoutScale) String() string {
+	return string(m)
+}

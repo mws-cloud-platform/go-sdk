@@ -2,21 +2,13 @@
 
 package model
 
-import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
-)
-
 func AddressDnsSpecRequestToOptionalResponse(request *AddressDnsSpecRequest) (*AddressDnsSpecOptionalResponse, error) {
 	if request == nil {
 		return nil, nil
 	}
 	var response AddressDnsSpecOptionalResponse
 	response.Name = request.Name
-	if request.Ttl != nil {
-		response.Ttl = commonclient.NewOptional(*request.Ttl)
-	}
-	if request.Ptr != nil {
-		response.Ptr = commonclient.NewOptional(*request.Ptr)
-	}
+	response.Ttl = request.Ttl
+	response.Ptr = request.Ptr
 	return &response, nil
 }

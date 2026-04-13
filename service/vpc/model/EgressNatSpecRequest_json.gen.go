@@ -32,6 +32,11 @@ func (m *EgressNatSpecRequest) encodeFields(e *jx.Encoder) {
 	e.FieldStart("external")
 	m.External.Encode(e)
 
+	if m.PortAllocation != nil {
+		e.FieldStart("portAllocation")
+		m.PortAllocation.Encode(e)
+	}
+
 	if m.Pba != nil {
 		e.FieldStart("pba")
 		m.Pba.Encode(e)
@@ -70,6 +75,18 @@ func (m *EgressNatSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.External = v
 			requiredFilled["external"] = true
+			return nil
+		case "portAllocation":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v EgressNatSpecPortAllocationRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.PortAllocation = &v
 			return nil
 		case "pba":
 			if d.Next() == jx.Null {

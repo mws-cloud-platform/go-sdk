@@ -13,16 +13,14 @@ import (
 )
 
 type UpdateAddressSpecOrRefWithAttachmentsRequest struct {
-	Address commonclient.OptionalNil[UpdateAddressSpecOrRefRequest] `json:"address" yaml:"address"`
+	Address commonclient.Optional[UpdateAddressSpecOrRefRequest] `json:"address" yaml:"address"`
 	// NAT правило для связи внутреннего адреса с внешним адресом
 	OneToOneNat commonclient.OptionalNil[UpdateComputeOneToOneNatSpecRequest] `json:"oneToOneNat" yaml:"oneToOneNat"`
 }
 
 func (m *AddressSpecOrRefWithAttachmentsRequest) AsUpdateModel() UpdateAddressSpecOrRefWithAttachmentsRequest {
 	var u UpdateAddressSpecOrRefWithAttachmentsRequest
-	if m.Address != nil {
-		u.Address = commonclient.NewOptionalNil(m.Address.AsUpdateModel())
-	}
+	u.Address = commonclient.NewOptional(m.Address.AsUpdateModel())
 	if m.OneToOneNat != nil {
 		u.OneToOneNat = commonclient.NewOptionalNil(m.OneToOneNat.AsUpdateModel())
 	}
@@ -51,9 +49,7 @@ func (m *AddressSpecOrRefWithAttachmentsRequest) WithChanges(u UpdateAddressSpec
 	}
 
 	if u.Address.IsSet() {
-		out.Address = ptr.Get(out.Address.WithChanges(u.Address.Value))
-	} else if u.Address.IsNull() {
-		out.Address = nil
+		out.Address = out.Address.WithChanges(u.Address.Value)
 	}
 	if u.OneToOneNat.IsSet() {
 		out.OneToOneNat = ptr.Get(out.OneToOneNat.WithChanges(u.OneToOneNat.Value))
@@ -89,13 +85,14 @@ func (m *UpdateAddressSpecOrRefWithAttachmentsRequest) Parse(ctx context.Context
 	return nil
 }
 
-func (m *AddressSpecOrRefWithAttachmentsRequest) diffAddress(src *AddressSpecOrRefWithAttachmentsRequest) (commonclient.OptionalNil[UpdateAddressSpecOrRefRequest], error) {
-	nilDiffers := src != nil && m == nil
-	value, err := m.GetAddress().Diff(src.GetAddress())
+func (m *AddressSpecOrRefWithAttachmentsRequest) diffAddress(src *AddressSpecOrRefWithAttachmentsRequest) (commonclient.Optional[UpdateAddressSpecOrRefRequest], error) {
+	from := src.GetAddress()
+	to := m.GetAddress()
+	value, err := to.Diff(&from)
 	if err != nil {
-		return commonclient.OptionalNil[UpdateAddressSpecOrRefRequest]{}, err
+		return commonclient.Optional[UpdateAddressSpecOrRefRequest]{}, err
 	}
-	return commonclient.NewDirectOptionalNil[UpdateAddressSpecOrRefRequest](value, nilDiffers || value.HasChanges(), nilDiffers), nil
+	return commonclient.NewDirectOptional[UpdateAddressSpecOrRefRequest](value, value.HasChanges()), nil
 }
 
 func (m *AddressSpecOrRefWithAttachmentsRequest) diffOneToOneNat(src *AddressSpecOrRefWithAttachmentsRequest) commonclient.OptionalNil[UpdateComputeOneToOneNatSpecRequest] {

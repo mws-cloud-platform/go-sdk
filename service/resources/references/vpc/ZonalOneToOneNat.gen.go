@@ -146,6 +146,10 @@ func (m *ZonalOneToOneNatID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalNetworks/" + m.zonalNetwork + "/zonalOneToOneNats/" + m.zonalOneToOneNat
 }
 
+func (m *ZonalOneToOneNatID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalOneToOneNatID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -296,6 +300,10 @@ func (m *ZonalOneToOneNatRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalOneToOneNatRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalOneToOneNatRef) Parse(ctx context.Context) error {

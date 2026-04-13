@@ -23,7 +23,7 @@ type DiskSpecOptionalResponse struct {
 	Source commonclient.OptionalNil[DiskSpecSourceOptionalResponse] `json:"source,omitempty" yaml:"source,omitempty"`
 	// ID типа диска
 	DiskType commonclient.Optional[compute.DiskTypeRef] `json:"diskType,omitempty" yaml:"diskType,omitempty"`
-	// Запрашиваемая пользователем IOPS
+	// Запрашиваемое пользователем количество операций ввода-вывода в секунду (IOPS)
 	Iops commonclient.Optional[Iops] `json:"iops,omitempty" yaml:"iops,omitempty"`
 	// Размер блока диска
 	BlockSize commonclient.Optional[bytesize.ByteSize] `json:"blockSize,omitempty" yaml:"blockSize,omitempty"`

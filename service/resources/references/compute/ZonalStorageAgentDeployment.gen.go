@@ -108,6 +108,10 @@ func (m *ZonalStorageAgentDeploymentID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/storageAgentDeployments/" + m.agent
 }
 
+func (m *ZonalStorageAgentDeploymentID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalStorageAgentDeploymentID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ZonalStorageAgentDeploymentRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalStorageAgentDeploymentRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalStorageAgentDeploymentRef) Parse(ctx context.Context) error {

@@ -13,6 +13,7 @@ import (
 )
 
 func TestSubnetSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initSubnetSpecRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

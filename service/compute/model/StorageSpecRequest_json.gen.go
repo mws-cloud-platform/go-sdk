@@ -26,14 +26,12 @@ func (m *StorageSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *StorageSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.Disks != nil {
-		e.FieldStart("disks")
-		e.ArrStart()
-		for _, elem := range m.Disks {
-			elem.Encode(e)
-		}
-		e.ArrEnd()
+	e.FieldStart("disks")
+	e.ArrStart()
+	for _, elem := range m.Disks {
+		elem.Encode(e)
 	}
+	e.ArrEnd()
 }
 
 func (m *StorageSpecRequest) UnmarshalJSON(b []byte) error {
@@ -45,7 +43,10 @@ func (m *StorageSpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("StorageSpecRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	requiredFilled := map[string]bool{
+		"disks": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "disks":
 			c := make([]StorageDiskSpecOrRefWithAttachmentsRequest, 0)
@@ -61,9 +62,15 @@ func (m *StorageSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Disks = c
+			requiredFilled["disks"] = true
 			return nil
 		default:
 			return d.Skip()
 		}
 	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

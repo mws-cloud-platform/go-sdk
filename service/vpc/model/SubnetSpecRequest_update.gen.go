@@ -3,20 +3,17 @@
 package model
 
 import (
-	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 )
 
 type UpdateSubnetSpecRequest struct {
-	Cidr        commonclient.Optional[cidraddress.CIDR4Address]          `json:"cidr" yaml:"cidr"`
 	DhcpOptions commonclient.OptionalNil[UpdateSubnetDhcpOptionsRequest] `json:"dhcpOptions" yaml:"dhcpOptions"`
 }
 
 func (m *SubnetSpecRequest) AsUpdateModel() UpdateSubnetSpecRequest {
 	var u UpdateSubnetSpecRequest
-	u.Cidr = commonclient.NewOptional(m.GetCidr())
 	if m.DhcpOptions != nil {
 		u.DhcpOptions = commonclient.NewOptionalNil(m.DhcpOptions.AsUpdateModel())
 	}
@@ -28,7 +25,6 @@ func (m *SubnetSpecRequest) Diff(src *SubnetSpecRequest) UpdateSubnetSpecRequest
 	nilDiffers := src != nil && m == nil
 	upd := UpdateSubnetSpecRequest{}
 	if !nilDiffers {
-		upd.Cidr = m.diffCidr(src)
 		upd.DhcpOptions = m.diffDhcpOptions(src)
 	}
 	return upd
@@ -40,9 +36,6 @@ func (m *SubnetSpecRequest) WithChanges(u UpdateSubnetSpecRequest) SubnetSpecReq
 		out = *m
 	}
 
-	if u.Cidr.IsSet() {
-		out.Cidr = u.Cidr.Value
-	}
 	if u.DhcpOptions.IsSet() {
 		out.DhcpOptions = ptr.Get(out.DhcpOptions.WithChanges(u.DhcpOptions.Value))
 	} else if u.DhcpOptions.IsNull() {
@@ -53,13 +46,7 @@ func (m *SubnetSpecRequest) WithChanges(u UpdateSubnetSpecRequest) SubnetSpecReq
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateSubnetSpecRequest) HasChanges() bool {
-	return m.Cidr.Set ||
-		m.DhcpOptions.Set
-}
-
-func (m *SubnetSpecRequest) diffCidr(src *SubnetSpecRequest) commonclient.Optional[cidraddress.CIDR4Address] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffEquatableIfaceRequired(src.GetCidr(), m.GetCidr(), nilDiffers)
+	return m.DhcpOptions.Set
 }
 
 func (m *SubnetSpecRequest) diffDhcpOptions(src *SubnetSpecRequest) commonclient.OptionalNil[UpdateSubnetDhcpOptionsRequest] {

@@ -146,6 +146,10 @@ func (m *ZonalNat46ID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalNetworks/" + m.zonalNetwork + "/zonalNats46/" + m.zonalNat46
 }
 
+func (m *ZonalNat46ID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalNat46ID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -296,6 +300,10 @@ func (m *ZonalNat46Ref) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalNat46Ref) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalNat46Ref) Parse(ctx context.Context) error {

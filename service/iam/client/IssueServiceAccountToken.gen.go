@@ -11,11 +11,12 @@ import (
 )
 
 type IssueServiceAccountToken interface {
-	// IssueServiceAccountTokenV2 issue token for service account.
+	// IssueServiceAccountTokenV2 позволяет выпустить токен для сервисного аккаунта.
 	//
 	// Путь: GET /iam/v2/tokens/:issueServiceAccountToken
 	IssueServiceAccountTokenV2(context.Context, IssueServiceAccountTokenV2Request) (*IssueServiceAccountTokenV2Response, error)
-	// IssueServiceAccountToken issue token for service account.
+	// Deprecated: Переходим на v2-версию метода.
+	// IssueServiceAccountToken позволяет выпустить токен для сервисного аккаунта.
 	//
 	// Путь: GET /iam/v1/tokens/:issueServiceAccountToken
 	IssueServiceAccountToken(context.Context, IssueServiceAccountTokenRequest) (*IssueServiceAccountTokenResponse, error)
@@ -35,7 +36,9 @@ type IssueServiceAccountTokenV2Response struct {
 	Code        int
 	Response200 *model.SuccessTokenV2Response
 	Response400 *common.InvalidRequestError
-	Response500 *common.BaseError
+	Response401 *common.ApiError
+	Response403 *common.ApiError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -52,6 +55,12 @@ func (m *IssueServiceAccountTokenV2Response) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
@@ -79,7 +88,9 @@ type IssueServiceAccountTokenResponse struct {
 	Code        int
 	Response200 *model.SuccessTokenResponse
 	Response400 *common.InvalidRequestError
-	Response500 *common.BaseError
+	Response401 *common.ApiError
+	Response403 *common.ApiError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -96,6 +107,12 @@ func (m *IssueServiceAccountTokenResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)

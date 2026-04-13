@@ -127,6 +127,10 @@ func (m *ServiceEndpointID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/networks/" + m.network + "/serviceEndpoints/" + m.serviceEndpoint
 }
 
+func (m *ServiceEndpointID) String() string {
+	return m.ID()
+}
+
 func (m *ServiceEndpointID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *ServiceEndpointRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ServiceEndpointRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ServiceEndpointRef) Parse(ctx context.Context) error {

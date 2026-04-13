@@ -12,50 +12,36 @@ import (
 
 // Real OAPI model name: VirtualMachineSpec
 type VirtualMachineSpecRequest struct {
-	Zone     *string              `json:"zone,omitempty" yaml:"zone,omitempty"`
-	VmType   *compute.VmTypeRef   `json:"vmType,omitempty" yaml:"vmType,omitempty"`
+	Zone     string               `json:"zone" yaml:"zone"`
+	VmType   compute.VmTypeRef    `json:"vmType" yaml:"vmType"`
 	Hardware *HardwareSpecRequest `json:"hardware,omitempty" yaml:"hardware,omitempty"`
 	Os       *OsSpecRequest       `json:"os,omitempty" yaml:"os,omitempty"`
-	Storage  *StorageSpecRequest  `json:"storage,omitempty" yaml:"storage,omitempty"`
-	Network  *NetworkSpecRequest  `json:"network,omitempty" yaml:"network,omitempty"`
+	Storage  StorageSpecRequest   `json:"storage" yaml:"storage"`
+	Network  NetworkSpecRequest   `json:"network" yaml:"network"`
 	// Ссылка на сервис аккаунт привязанный к виртуальной машине.
-	ServiceAccount *iam.ServiceAccountRef `json:"serviceAccount" yaml:"serviceAccount"`
+	ServiceAccount *iam.ServiceAccountRef `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
 }
 
-func (m *VirtualMachineSpecRequest) GetZone() *string {
+func (m *VirtualMachineSpecRequest) GetZone() string {
 	if m != nil {
 		return m.Zone
 	}
-	return nil
+	return ""
 }
 
-func (m *VirtualMachineSpecRequest) SetZone(val *string) {
+func (m *VirtualMachineSpecRequest) SetZone(val string) {
 	m.Zone = val
 }
 
-func (m *VirtualMachineSpecRequest) GetZoneOr(val string) string {
-	if m != nil && m.Zone != nil {
-		return *m.Zone
-	}
-	return val
-}
-
-func (m *VirtualMachineSpecRequest) GetVmType() *compute.VmTypeRef {
+func (m *VirtualMachineSpecRequest) GetVmType() compute.VmTypeRef {
 	if m != nil {
 		return m.VmType
 	}
-	return nil
+	return compute.VmTypeRef{}
 }
 
-func (m *VirtualMachineSpecRequest) SetVmType(val *compute.VmTypeRef) {
+func (m *VirtualMachineSpecRequest) SetVmType(val compute.VmTypeRef) {
 	m.VmType = val
-}
-
-func (m *VirtualMachineSpecRequest) GetVmTypeOr(val compute.VmTypeRef) compute.VmTypeRef {
-	if m != nil && m.VmType != nil {
-		return *m.VmType
-	}
-	return val
 }
 
 func (m *VirtualMachineSpecRequest) GetHardware() *HardwareSpecRequest {
@@ -94,40 +80,26 @@ func (m *VirtualMachineSpecRequest) GetOsOr(val OsSpecRequest) OsSpecRequest {
 	return val
 }
 
-func (m *VirtualMachineSpecRequest) GetStorage() *StorageSpecRequest {
+func (m *VirtualMachineSpecRequest) GetStorage() StorageSpecRequest {
 	if m != nil {
 		return m.Storage
 	}
-	return nil
+	return StorageSpecRequest{}
 }
 
-func (m *VirtualMachineSpecRequest) SetStorage(val *StorageSpecRequest) {
+func (m *VirtualMachineSpecRequest) SetStorage(val StorageSpecRequest) {
 	m.Storage = val
 }
 
-func (m *VirtualMachineSpecRequest) GetStorageOr(val StorageSpecRequest) StorageSpecRequest {
-	if m != nil && m.Storage != nil {
-		return *m.Storage
-	}
-	return val
-}
-
-func (m *VirtualMachineSpecRequest) GetNetwork() *NetworkSpecRequest {
+func (m *VirtualMachineSpecRequest) GetNetwork() NetworkSpecRequest {
 	if m != nil {
 		return m.Network
 	}
-	return nil
+	return NetworkSpecRequest{}
 }
 
-func (m *VirtualMachineSpecRequest) SetNetwork(val *NetworkSpecRequest) {
+func (m *VirtualMachineSpecRequest) SetNetwork(val NetworkSpecRequest) {
 	m.Network = val
-}
-
-func (m *VirtualMachineSpecRequest) GetNetworkOr(val NetworkSpecRequest) NetworkSpecRequest {
-	if m != nil && m.Network != nil {
-		return *m.Network
-	}
-	return val
 }
 
 func (m *VirtualMachineSpecRequest) GetServiceAccount() *iam.ServiceAccountRef {
@@ -154,15 +126,11 @@ func (m *VirtualMachineSpecRequest) Clone() *VirtualMachineSpecRequest {
 	}
 
 	clone := *m
-	if m.Zone != nil {
-		cloneZone := *m.Zone
-		clone.Zone = &cloneZone
-	}
-	clone.VmType = m.VmType.Clone()
+	clone.VmType = *m.VmType.Clone()
 	clone.Hardware = m.Hardware.Clone()
 	clone.Os = m.Os.Clone()
-	clone.Storage = m.Storage.Clone()
-	clone.Network = m.Network.Clone()
+	clone.Storage = *m.Storage.Clone()
+	clone.Network = *m.Network.Clone()
 	clone.ServiceAccount = m.ServiceAccount.Clone()
 	return &clone
 }

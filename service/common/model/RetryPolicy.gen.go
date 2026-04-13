@@ -6,15 +6,15 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 )
 
-// Политика ретраев при ошибке.
+// Правила выполнения повторных попыток в случае ошибки
 type RetryPolicy struct {
-	// Максимальное количество ретраев. 0 - значение по-умолчанию.
+	// Максимальное количество повторных попыток. 0 - значение по-умолчанию
 	RetryCount int `json:"retryCount" yaml:"retryCount"`
-	// Пауза между ретраями.
+	// Пауза между повторными попытками
 	RetryTimeout duration.Duration `json:"retryTimeout" yaml:"retryTimeout"`
 	// Шаг увеличения таймаута
 	RetryTimeoutScale *RetryTimeoutScale `json:"retryTimeoutScale,omitempty" yaml:"retryTimeoutScale,omitempty"`
-	// Максимальная длительность таймаута.
+	// Максимальная длительность таймаута
 	MaxRetryTimeout *duration.Duration `json:"maxRetryTimeout,omitempty" yaml:"maxRetryTimeout,omitempty"`
 }
 

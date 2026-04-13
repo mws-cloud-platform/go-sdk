@@ -2,29 +2,11 @@
 
 package model
 
-import (
-	"time"
-
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
-	commonclient "go.mws.cloud/go-sdk/internal/client"
-)
-
 type UpdateApiKeySpecRequest struct {
-	// Время истечения срока действия ключа.
-	ExpireTime commonclient.Optional[time.Time] `json:"expireTime" yaml:"expireTime"`
-	// Время последней аутентификации.
-	LastAuthTime commonclient.Optional[time.Time] `json:"lastAuthTime" yaml:"lastAuthTime"`
 }
 
 func (m *ApiKeySpecRequest) AsUpdateModel() UpdateApiKeySpecRequest {
 	var u UpdateApiKeySpecRequest
-	if m.ExpireTime != nil {
-		u.ExpireTime = commonclient.NewOptional(m.GetExpireTimeOr(time.Unix(0, 0).UTC()))
-	}
-	if m.LastAuthTime != nil {
-		u.LastAuthTime = commonclient.NewOptional(m.GetLastAuthTimeOr(time.Unix(0, 0).UTC()))
-	}
 	return u
 }
 
@@ -33,8 +15,6 @@ func (m *ApiKeySpecRequest) Diff(src *ApiKeySpecRequest) UpdateApiKeySpecRequest
 	nilDiffers := src != nil && m == nil
 	upd := UpdateApiKeySpecRequest{}
 	if !nilDiffers {
-		upd.ExpireTime = m.diffExpireTime(src)
-		upd.LastAuthTime = m.diffLastAuthTime(src)
 	}
 	return upd
 }
@@ -45,27 +25,10 @@ func (m *ApiKeySpecRequest) WithChanges(u UpdateApiKeySpecRequest) ApiKeySpecReq
 		out = *m
 	}
 
-	if u.ExpireTime.IsSet() {
-		out.ExpireTime = ptr.Get(u.ExpireTime.Value)
-	}
-	if u.LastAuthTime.IsSet() {
-		out.LastAuthTime = ptr.Get(u.LastAuthTime.Value)
-	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateApiKeySpecRequest) HasChanges() bool {
-	return m.ExpireTime.Set ||
-		m.LastAuthTime.Set
-}
-
-func (m *ApiKeySpecRequest) diffExpireTime(src *ApiKeySpecRequest) commonclient.Optional[time.Time] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetExpireTime(), m.GetExpireTime(), nilDiffers)
-}
-
-func (m *ApiKeySpecRequest) diffLastAuthTime(src *ApiKeySpecRequest) commonclient.Optional[time.Time] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetLastAuthTime(), m.GetLastAuthTime(), nilDiffers)
+	return false
 }

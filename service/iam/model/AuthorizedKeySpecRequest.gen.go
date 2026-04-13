@@ -15,6 +15,8 @@ type AuthorizedKeySpecRequest struct {
 	KeyAlgorithm string `json:"keyAlgorithm" yaml:"keyAlgorithm"`
 	// Время истечения срока действия ключа.
 	ExpirationTime *time.Time `json:"expirationTime,omitempty" yaml:"expirationTime,omitempty"`
+	// Флаг активности ключа.
+	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
 func (m *AuthorizedKeySpecRequest) GetPublicKey() *string {
@@ -64,6 +66,24 @@ func (m *AuthorizedKeySpecRequest) GetExpirationTimeOr(val time.Time) time.Time 
 	return val
 }
 
+func (m *AuthorizedKeySpecRequest) GetActive() *bool {
+	if m != nil {
+		return m.Active
+	}
+	return nil
+}
+
+func (m *AuthorizedKeySpecRequest) SetActive(val *bool) {
+	m.Active = val
+}
+
+func (m *AuthorizedKeySpecRequest) GetActiveOr(val bool) bool {
+	if m != nil && m.Active != nil {
+		return *m.Active
+	}
+	return val
+}
+
 func (m *AuthorizedKeySpecRequest) Clone() *AuthorizedKeySpecRequest {
 	if m == nil {
 		return nil
@@ -73,6 +93,10 @@ func (m *AuthorizedKeySpecRequest) Clone() *AuthorizedKeySpecRequest {
 	if m.PublicKey != nil {
 		clonePublicKey := *m.PublicKey
 		clone.PublicKey = &clonePublicKey
+	}
+	if m.Active != nil {
+		cloneActive := *m.Active
+		clone.Active = &cloneActive
 	}
 	return &clone
 }

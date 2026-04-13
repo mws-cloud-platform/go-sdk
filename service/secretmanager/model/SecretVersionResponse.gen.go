@@ -12,7 +12,7 @@ import (
 // Real OAPI model name: SecretVersion
 type SecretVersionResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
-	// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata *common.CommonTypedResourceMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Spec     SecretVersionSpecResponse                   `json:"spec" yaml:"spec"`
 	Status   SecretVersionStatusResponse                 `json:"status" yaml:"status"`

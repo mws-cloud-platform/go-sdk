@@ -12,7 +12,7 @@ func StorageSpecRequestToOptionalResponse(request *StorageSpecRequest) (*Storage
 		if err != nil {
 			return nil, err
 		}
-		response.Disks.SetTo(append(response.Disks.Value, *tmp))
+		response.Disks = append(response.Disks, *tmp)
 	}
 	return &response, nil
 }

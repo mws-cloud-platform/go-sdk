@@ -15,6 +15,7 @@ import (
 )
 
 func TestAddressSugared_ListAddresses(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestAddressSugared_ListAddresses(t *testing.T) {
 }
 
 func TestAddressSugared_DeleteAddress(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestAddressSugared_DeleteAddress(t *testing.T) {
 }
 
 func TestAddressSugared_GetAddress(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestAddressSugared_GetAddress(t *testing.T) {
 }
 
 func TestAddressSugared_UpsertAddress(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestAddressSugared_UpsertAddress(t *testing.T) {
 }
 
 func TestAddressSugared_CreateAddress(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestAddressSugared_CreateAddress(t *testing.T) {
 }
 
 func TestAddressSugared_UpdateAddress(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

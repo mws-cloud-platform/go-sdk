@@ -9,3 +9,7 @@ const (
 	CertificateRenewalStatus_RENEWAL_FAILED CertificateRenewalStatus = "RENEWAL_FAILED"
 	CertificateRenewalStatus_RENEWING       CertificateRenewalStatus = "RENEWING"
 )
+
+func (m CertificateRenewalStatus) String() string {
+	return string(m)
+}

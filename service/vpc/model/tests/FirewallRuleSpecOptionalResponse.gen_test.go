@@ -12,6 +12,7 @@ import (
 )
 
 func TestFirewallRuleSpecOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initFirewallRuleSpecOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -14,9 +14,9 @@ type FirewallRuleSpecRequest struct {
 	// Состояние правила. True - правило активно и контролирует поведение трафика. False - правило не активно.
 	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 	// Критерий применимости правила, описывает источник отправления пакета.
-	Source AddressGroupSpecOrRefRequest `json:"source" yaml:"source"`
+	Source FirewallRuleSourceRequest `json:"source" yaml:"source"`
 	// Критерий применимости правила, описывает пункт назначения пакета.
-	Destination AddressGroupSpecOrRefRequest `json:"destination" yaml:"destination"`
+	Destination FirewallRuleDestinationRequest `json:"destination" yaml:"destination"`
 	// Критерий применимости правила. Определяет список протоколов и соответствующих портов (если применимо) назначения пакета. Значение по умолчанию - пустое значение. Означает любой протокол и порт.
 	ProtoPorts []string `json:"protoPorts,omitempty" yaml:"protoPorts,omitempty"`
 }
@@ -79,25 +79,25 @@ func (m *FirewallRuleSpecRequest) GetActiveOr(val bool) bool {
 	return val
 }
 
-func (m *FirewallRuleSpecRequest) GetSource() AddressGroupSpecOrRefRequest {
+func (m *FirewallRuleSpecRequest) GetSource() FirewallRuleSourceRequest {
 	if m != nil {
 		return m.Source
 	}
-	return AddressGroupSpecOrRefRequest{}
+	return FirewallRuleSourceRequest{}
 }
 
-func (m *FirewallRuleSpecRequest) SetSource(val AddressGroupSpecOrRefRequest) {
+func (m *FirewallRuleSpecRequest) SetSource(val FirewallRuleSourceRequest) {
 	m.Source = val
 }
 
-func (m *FirewallRuleSpecRequest) GetDestination() AddressGroupSpecOrRefRequest {
+func (m *FirewallRuleSpecRequest) GetDestination() FirewallRuleDestinationRequest {
 	if m != nil {
 		return m.Destination
 	}
-	return AddressGroupSpecOrRefRequest{}
+	return FirewallRuleDestinationRequest{}
 }
 
-func (m *FirewallRuleSpecRequest) SetDestination(val AddressGroupSpecOrRefRequest) {
+func (m *FirewallRuleSpecRequest) SetDestination(val FirewallRuleDestinationRequest) {
 	m.Destination = val
 }
 
@@ -153,6 +153,10 @@ const (
 	FirewallRuleSpecActionRequest_DENY  FirewallRuleSpecActionRequest = "DENY"
 )
 
+func (m FirewallRuleSpecActionRequest) String() string {
+	return string(m)
+}
+
 // Представление поля Direction enum типа структуры FirewallRuleSpec
 // Real OAPI model name: FirewallRuleSpecDirection
 type FirewallRuleSpecDirectionRequest string
@@ -161,3 +165,7 @@ const (
 	FirewallRuleSpecDirectionRequest_INGRESS FirewallRuleSpecDirectionRequest = "INGRESS"
 	FirewallRuleSpecDirectionRequest_EGRESS  FirewallRuleSpecDirectionRequest = "EGRESS"
 )
+
+func (m FirewallRuleSpecDirectionRequest) String() string {
+	return string(m)
+}

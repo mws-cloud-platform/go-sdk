@@ -20,25 +20,22 @@ import (
 // Real OAPI model name: AddressSpec
 type AddressSpecOptionalResponse struct {
 	// Подсеть облачной сети, к которой принадлежит внутренний адрес
-	Subnet commonclient.Optional[vpc.SubnetRef] `json:"subnet,omitempty" yaml:"subnet,omitempty"`
+	Subnet vpc.SubnetRef `json:"subnet" yaml:"subnet"`
 	// Желаемый адрес. Если не указан, то будет выделен из пула адресов подсети.
 	IpAddress commonclient.Optional[ipaddress.IPAddress] `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
 	// Настройки DNS
 	Dns commonclient.Optional[[]AddressDnsSpecOptionalResponse] `json:"dns,omitempty" yaml:"dns,omitempty"`
 }
 
-func (m *AddressSpecOptionalResponse) GetSubnet() *vpc.SubnetRef {
-	if m != nil && m.Subnet.IsSet() {
-		return &m.Subnet.Value
+func (m *AddressSpecOptionalResponse) GetSubnet() vpc.SubnetRef {
+	if m != nil {
+		return m.Subnet
 	}
-	return nil
+	return vpc.SubnetRef{}
 }
 
-func (m *AddressSpecOptionalResponse) GetSubnetOr(val vpc.SubnetRef) vpc.SubnetRef {
-	if m != nil && m.Subnet.IsSet() {
-		return m.Subnet.Value
-	}
-	return val
+func (m *AddressSpecOptionalResponse) SetSubnet(val vpc.SubnetRef) {
+	m.Subnet = val
 }
 
 func (m *AddressSpecOptionalResponse) GetIpAddress() *ipaddress.IPAddress {
@@ -75,9 +72,7 @@ func (m *AddressSpecOptionalResponse) Clone() *AddressSpecOptionalResponse {
 	}
 
 	clone := *m
-	if clone.Subnet.IsSet() {
-		clone.Subnet.Value = *m.Subnet.Value.Clone()
-	}
+	clone.Subnet = *m.Subnet.Clone()
 	if clone.IpAddress.IsSet() {
 		clone.IpAddress.Value = *m.IpAddress.Value.Clone()
 	}
@@ -95,10 +90,8 @@ func (m *AddressSpecOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Subnet.IsSet() {
-		if err := m.Subnet.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Subnet", err)
-		}
+	if err := m.Subnet.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Subnet", err)
 	}
 
 	return nil

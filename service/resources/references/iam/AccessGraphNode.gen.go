@@ -89,6 +89,10 @@ func (m *AccessGraphNodeID) ID() string {
 	return m.ServiceSlug() + "/accessGraphNodes/" + m.accessGraphNode
 }
 
+func (m *AccessGraphNodeID) String() string {
+	return m.ID()
+}
+
 func (m *AccessGraphNodeID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *AccessGraphNodeRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *AccessGraphNodeRef) String() string {
+	return m.IDPath()
 }
 
 func (m *AccessGraphNodeRef) Parse(ctx context.Context) error {

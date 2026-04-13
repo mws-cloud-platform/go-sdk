@@ -15,6 +15,7 @@ import (
 )
 
 func TestSubnetSugared_ListSubnets(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestSubnetSugared_ListSubnets(t *testing.T) {
 }
 
 func TestSubnetSugared_DeleteSubnet(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestSubnetSugared_DeleteSubnet(t *testing.T) {
 }
 
 func TestSubnetSugared_GetSubnet(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestSubnetSugared_GetSubnet(t *testing.T) {
 }
 
 func TestSubnetSugared_UpsertSubnet(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestSubnetSugared_UpsertSubnet(t *testing.T) {
 }
 
 func TestSubnetSugared_CreateSubnet(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestSubnetSugared_CreateSubnet(t *testing.T) {
 }
 
 func TestSubnetSugared_UpdateSubnet(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

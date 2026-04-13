@@ -11,14 +11,22 @@ import (
 
 // Real OAPI model name: VirtualMachineStatus
 type VirtualMachineStatusResponse struct {
+	common.ResourceStatusResponse `yaml:"-,inline"`
 	// Deprecated: Отказываемся, поле временно остается для совместимости
-	Id             string                              `json:"id" yaml:"id"`
-	Hardware       HardwareStatusResponse              `json:"hardware" yaml:"hardware"`
-	Os             OsStatusResponse                    `json:"os" yaml:"os"`
-	Storage        StorageStatusResponse               `json:"storage" yaml:"storage"`
-	Network        VirtualMachineNetworkStatusResponse `json:"network" yaml:"network"`
-	Ready          ObservationResponse                 `json:"ready" yaml:"ready"`
-	ServiceAccount *common.ResourceStatusResponse      `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
+	Id       string                              `json:"id" yaml:"id"`
+	Hardware HardwareStatusResponse              `json:"hardware" yaml:"hardware"`
+	Os       OsStatusResponse                    `json:"os" yaml:"os"`
+	Storage  StorageStatusResponse               `json:"storage" yaml:"storage"`
+	Network  VirtualMachineNetworkStatusResponse `json:"network" yaml:"network"`
+	// Cтатус привязанного сервисного аккаунта
+	ServiceAccount *ServiceAccountStatusResponse `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
+}
+
+func (m *VirtualMachineStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+	if m != nil {
+		return m.ResourceStatusResponse.GetReady()
+	}
+	return common.ResourceStatusReadyResponse{}
 }
 
 // Deprecated: Отказываемся, поле временно остается для совместимости
@@ -29,20 +37,11 @@ func (m *VirtualMachineStatusResponse) GetId() string {
 	return ""
 }
 
-// Deprecated: Отказываемся, поле временно остается для совместимости
-func (m *VirtualMachineStatusResponse) SetId(val string) {
-	m.Id = val
-}
-
 func (m *VirtualMachineStatusResponse) GetHardware() HardwareStatusResponse {
 	if m != nil {
 		return m.Hardware
 	}
 	return HardwareStatusResponse{}
-}
-
-func (m *VirtualMachineStatusResponse) SetHardware(val HardwareStatusResponse) {
-	m.Hardware = val
 }
 
 func (m *VirtualMachineStatusResponse) GetOs() OsStatusResponse {
@@ -52,19 +51,11 @@ func (m *VirtualMachineStatusResponse) GetOs() OsStatusResponse {
 	return OsStatusResponse{}
 }
 
-func (m *VirtualMachineStatusResponse) SetOs(val OsStatusResponse) {
-	m.Os = val
-}
-
 func (m *VirtualMachineStatusResponse) GetStorage() StorageStatusResponse {
 	if m != nil {
 		return m.Storage
 	}
 	return StorageStatusResponse{}
-}
-
-func (m *VirtualMachineStatusResponse) SetStorage(val StorageStatusResponse) {
-	m.Storage = val
 }
 
 func (m *VirtualMachineStatusResponse) GetNetwork() VirtualMachineNetworkStatusResponse {
@@ -74,33 +65,14 @@ func (m *VirtualMachineStatusResponse) GetNetwork() VirtualMachineNetworkStatusR
 	return VirtualMachineNetworkStatusResponse{}
 }
 
-func (m *VirtualMachineStatusResponse) SetNetwork(val VirtualMachineNetworkStatusResponse) {
-	m.Network = val
-}
-
-func (m *VirtualMachineStatusResponse) GetReady() ObservationResponse {
-	if m != nil {
-		return m.Ready
-	}
-	return ObservationResponse{}
-}
-
-func (m *VirtualMachineStatusResponse) SetReady(val ObservationResponse) {
-	m.Ready = val
-}
-
-func (m *VirtualMachineStatusResponse) GetServiceAccount() *common.ResourceStatusResponse {
+func (m *VirtualMachineStatusResponse) GetServiceAccount() *ServiceAccountStatusResponse {
 	if m != nil {
 		return m.ServiceAccount
 	}
 	return nil
 }
 
-func (m *VirtualMachineStatusResponse) SetServiceAccount(val *common.ResourceStatusResponse) {
-	m.ServiceAccount = val
-}
-
-func (m *VirtualMachineStatusResponse) GetServiceAccountOr(val common.ResourceStatusResponse) common.ResourceStatusResponse {
+func (m *VirtualMachineStatusResponse) GetServiceAccountOr(val ServiceAccountStatusResponse) ServiceAccountStatusResponse {
 	if m != nil && m.ServiceAccount != nil {
 		return *m.ServiceAccount
 	}
@@ -113,12 +85,13 @@ func (m *VirtualMachineStatusResponse) Clone() *VirtualMachineStatusResponse {
 	}
 
 	clone := *m
+	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
 	clone.Hardware = *m.Hardware.Clone()
 	clone.Os = *m.Os.Clone()
 	clone.Storage = *m.Storage.Clone()
 	clone.Network = *m.Network.Clone()
-	clone.Ready = *m.Ready.Clone()
 	clone.ServiceAccount = m.ServiceAccount.Clone()
+
 	return &clone
 }
 
@@ -133,6 +106,10 @@ func (m *VirtualMachineStatusResponse) Parse(ctx context.Context) error {
 
 	if err := m.Network.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Network", err)
+	}
+
+	if err := m.ServiceAccount.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("ServiceAccount", err)
 	}
 
 	return nil

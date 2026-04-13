@@ -127,6 +127,10 @@ func (m *ZonalNatGatewayID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalNatGateways/" + m.zonalNatGateway
 }
 
+func (m *ZonalNatGatewayID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalNatGatewayID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *ZonalNatGatewayRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalNatGatewayRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalNatGatewayRef) Parse(ctx context.Context) error {

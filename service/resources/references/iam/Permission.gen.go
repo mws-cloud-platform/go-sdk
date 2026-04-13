@@ -89,6 +89,10 @@ func (m *PermissionID) ID() string {
 	return m.ServiceSlug() + "/permissions/" + m.permission
 }
 
+func (m *PermissionID) String() string {
+	return m.ID()
+}
+
 func (m *PermissionID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *PermissionRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *PermissionRef) String() string {
+	return m.IDPath()
 }
 
 func (m *PermissionRef) Parse(ctx context.Context) error {

@@ -26,10 +26,8 @@ func (m *ComputeOneToOneNatSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *ComputeOneToOneNatSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.External != nil {
-		e.FieldStart("external")
-		m.External.Encode(e)
-	}
+	e.FieldStart("external")
+	m.External.Encode(e)
 }
 
 func (m *ComputeOneToOneNatSpecRequest) UnmarshalJSON(b []byte) error {
@@ -41,24 +39,29 @@ func (m *ComputeOneToOneNatSpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("ComputeOneToOneNatSpecRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	requiredFilled := map[string]bool{
+		"external": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "external":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			var v ComputeOneToOneNatSpecExternalRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.External = &v
+			m.External = v
+			requiredFilled["external"] = true
 			return nil
 		default:
 			return d.Skip()
 		}
 	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }
 
 func (m ComputeOneToOneNatSpecExternalRequest) MarshalJSON() ([]byte, error) {
@@ -78,10 +81,8 @@ func (m *ComputeOneToOneNatSpecExternalRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *ComputeOneToOneNatSpecExternalRequest) encodeFields(e *jx.Encoder) {
-	if m.Address != nil {
-		e.FieldStart("address")
-		m.Address.Encode(e)
-	}
+	e.FieldStart("address")
+	m.Address.Encode(e)
 }
 
 func (m *ComputeOneToOneNatSpecExternalRequest) UnmarshalJSON(b []byte) error {
@@ -93,22 +94,27 @@ func (m *ComputeOneToOneNatSpecExternalRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("ComputeOneToOneNatSpecExternalRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	requiredFilled := map[string]bool{
+		"address": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "address":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			var v OneToOneNatAddressSpecOrRefRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Address = &v
+			m.Address = v
+			requiredFilled["address"] = true
 			return nil
 		default:
 			return d.Skip()
 		}
 	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

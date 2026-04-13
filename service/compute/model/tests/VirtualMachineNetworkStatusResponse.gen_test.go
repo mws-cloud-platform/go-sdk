@@ -12,6 +12,7 @@ import (
 )
 
 func TestVirtualMachineNetworkStatusResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initVirtualMachineNetworkStatusResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

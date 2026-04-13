@@ -3,13 +3,9 @@
 package model
 
 import (
-	"context"
-	"fmt"
-
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -30,18 +26,14 @@ func (m *AddressRequest) AsUpdateModel() UpdateAddressRequest {
 }
 
 // Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *AddressRequest) Diff(src *AddressRequest) (UpdateAddressRequest, error) {
-	var err error
+func (m *AddressRequest) Diff(src *AddressRequest) UpdateAddressRequest {
 	nilDiffers := src != nil && m == nil
 	upd := UpdateAddressRequest{}
 	if !nilDiffers {
 		upd.Metadata = m.diffMetadata(src)
-		upd.Spec, err = m.diffSpec(src)
-		if err != nil {
-			return UpdateAddressRequest{}, fmt.Errorf("Spec: %w", err)
-		}
+		upd.Spec = m.diffSpec(src)
 	}
-	return upd, nil
+	return upd
 }
 
 func (m *AddressRequest) WithChanges(u UpdateAddressRequest) AddressRequest {
@@ -67,32 +59,15 @@ func (m UpdateAddressRequest) HasChanges() bool {
 		m.Spec.Set
 }
 
-func (m *UpdateAddressRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Spec.IsSet() {
-		if err := m.Spec.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Spec", err)
-		}
-	}
-
-	return nil
-}
-
 func (m *AddressRequest) diffMetadata(src *AddressRequest) commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
 	return commonclient.NewDirectOptionalNil[common.UpdateCommonTypedResourceMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
 }
 
-func (m *AddressRequest) diffSpec(src *AddressRequest) (commonclient.Optional[UpdateVpcAddressSpecRequest], error) {
+func (m *AddressRequest) diffSpec(src *AddressRequest) commonclient.Optional[UpdateVpcAddressSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
-	value, err := to.Diff(&from)
-	if err != nil {
-		return commonclient.Optional[UpdateVpcAddressSpecRequest]{}, err
-	}
-	return commonclient.NewDirectOptional[UpdateVpcAddressSpecRequest](value, value.HasChanges()), nil
+	value := to.Diff(&from)
+	return commonclient.NewDirectOptional[UpdateVpcAddressSpecRequest](value, value.HasChanges())
 }

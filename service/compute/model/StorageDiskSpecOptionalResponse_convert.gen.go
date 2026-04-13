@@ -14,11 +14,11 @@ func StorageDiskSpecRequestToOptionalResponse(request *StorageDiskSpecRequest) (
 	if request.Size != nil {
 		response.Size = commonclient.NewOptional(*request.Size)
 	}
-	tmpSource, err := StorageDiskSpecSourceRequestToOptionalResponse(request.Source)
-	if err != nil {
-		return nil, err
-	}
 	if request.Source != nil {
+		tmpSource, err := StorageDiskSpecSourceRequestToOptionalResponse(request.Source)
+		if err != nil {
+			return nil, err
+		}
 		response.Source = commonclient.NewOptionalNil(*tmpSource)
 	}
 	if request.DiskType != nil {

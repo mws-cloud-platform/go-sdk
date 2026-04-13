@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateOneToOneNatAddressSpecOrRefRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initOneToOneNatAddressSpecOrRefRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

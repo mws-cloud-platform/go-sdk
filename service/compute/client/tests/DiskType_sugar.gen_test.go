@@ -15,6 +15,7 @@ import (
 )
 
 func TestDiskTypeSugared_ListDiskTypes(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestDiskTypeSugared_ListDiskTypes(t *testing.T) {
 }
 
 func TestDiskTypeSugared_GetDiskType(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

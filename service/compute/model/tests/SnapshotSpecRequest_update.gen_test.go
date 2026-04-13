@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateSnapshotSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initSnapshotSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -91,10 +91,6 @@ func (m *AuthorizedKeyRequest) diffSpec(src *AuthorizedKeyRequest) commonclient.
 
 type UpdateAuthorizedKeyMetadataRequest struct {
 	common.UpdateTypedResourceMetadataRequest
-	// Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта.
-	//
-	// Deprecated: Отказываемся в пользу metadata.id
-	Name commonclient.Optional[string] `json:"name" yaml:"name"`
 }
 
 func (m *AuthorizedKeyMetadataRequest) AsUpdateModel() UpdateAuthorizedKeyMetadataRequest {
@@ -120,9 +116,6 @@ func (m *AuthorizedKeyMetadataRequest) AsUpdateModel() UpdateAuthorizedKeyMetada
 	if m.Description != nil {
 		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
 	}
-	if m.Name != nil {
-		u.Name = commonclient.NewOptional(m.GetNameOr(""))
-	}
 	return u
 }
 
@@ -135,7 +128,6 @@ func (m *AuthorizedKeyMetadataRequest) Diff(src *AuthorizedKeyMetadataRequest) U
 		upd.Usages = m.diffUsages(src)
 		upd.Etag = m.diffEtag(src)
 		upd.Description = m.diffDescription(src)
-		upd.Name = m.diffName(src)
 	}
 	return upd
 }
@@ -158,9 +150,6 @@ func (m *AuthorizedKeyMetadataRequest) WithChanges(u UpdateAuthorizedKeyMetadata
 	if u.Description.IsSet() {
 		out.Description = ptr.Get(u.Description.Value)
 	}
-	if u.Name.IsSet() {
-		out.Name = ptr.Get(u.Name.Value)
-	}
 	return out
 }
 
@@ -169,13 +158,7 @@ func (m UpdateAuthorizedKeyMetadataRequest) HasChanges() bool {
 	return m.DisplayName.Set ||
 		m.Usages.Set ||
 		m.Etag.Set ||
-		m.Description.Set ||
-		m.Name.Set
-}
-
-// SetName is used in the Diff function for NamedArray
-func (m *UpdateAuthorizedKeyMetadataRequest) SetName(name string) {
-	m.Name = commonclient.NewOptional(name)
+		m.Description.Set
 }
 
 func (m *UpdateAuthorizedKeyMetadataRequest) Parse(ctx context.Context) error {
@@ -213,9 +196,4 @@ func (m *AuthorizedKeyMetadataRequest) diffEtag(src *AuthorizedKeyMetadataReques
 func (m *AuthorizedKeyMetadataRequest) diffDescription(src *AuthorizedKeyMetadataRequest) commonclient.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
-}
-
-func (m *AuthorizedKeyMetadataRequest) diffName(src *AuthorizedKeyMetadataRequest) commonclient.Optional[string] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetName(), m.GetName(), nilDiffers)
 }

@@ -108,6 +108,10 @@ func (m *ZonalCephStorageHostID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/cephStorageHosts/" + m.host
 }
 
+func (m *ZonalCephStorageHostID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalCephStorageHostID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ZonalCephStorageHostRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalCephStorageHostRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalCephStorageHostRef) Parse(ctx context.Context) error {

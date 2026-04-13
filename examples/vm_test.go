@@ -81,18 +81,18 @@ func createVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachi
 		VirtualMachine: virtualMachineName,
 		Body: computemodel.VirtualMachineRequest{
 			Spec: computemodel.VirtualMachineSpecRequest{
-				VmType: ptr.Get(computeref.NewVmTypeRef("gen-2-8")),
-				Zone:   ptr.Get("ru-central1-a"),
+				VmType: computeref.NewVmTypeRef("gen-2-8"),
+				Zone:   "ru-central1-a",
 				Hardware: &computemodel.HardwareSpecRequest{
 					Power:                   ptr.Get(computemodel.HardwareSpecPowerRequest_OFF),
 					GracefulShutdownTimeout: ptr.Get(duration.NewFromTimeDuration(90 * time.Second)),
 				},
-				Storage: &computemodel.StorageSpecRequest{
+				Storage: computemodel.StorageSpecRequest{
 					Disks: []computemodel.StorageDiskSpecOrRefWithAttachmentsRequest{
 						{
 							Name: "boot",
 							Boot: ptr.Get(true),
-							Disk: &computemodel.StorageDiskSpecOrRefRequest{
+							Disk: computemodel.StorageDiskSpecOrRefRequest{
 								Spec: &computemodel.StorageDiskSpecRequest{
 									DiskType: ptr.Get(computeref.NewDiskTypeRef("nbs-pl2")),
 									Iops:     ptr.Get(computemodel.Iops(1000)),
@@ -108,21 +108,21 @@ func createVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachi
 						},
 					},
 				},
-				Network: &computemodel.NetworkSpecRequest{
+				Network: computemodel.NetworkSpecRequest{
 					NetworkInterfaces: []computemodel.NetworkInterfaceSpecRequest{
 						{
 							Name:    virtualMachineName + "-network-interface-primary",
 							Primary: ptr.Get(true),
 							Addresses: []computemodel.AddressSpecOrRefWithAttachmentsRequest{
 								{
-									Address: &computemodel.AddressSpecOrRefRequest{
+									Address: computemodel.AddressSpecOrRefRequest{
 										Spec: &computemodel.AddressSpecRequest{
-											Subnet: &subnetRef,
+											Subnet: subnetRef,
 										},
 									},
 									OneToOneNat: &computemodel.ComputeOneToOneNatSpecRequest{
-										External: &computemodel.ComputeOneToOneNatSpecExternalRequest{
-											Address: &computemodel.OneToOneNatAddressSpecOrRefRequest{
+										External: computemodel.ComputeOneToOneNatSpecExternalRequest{
+											Address: computemodel.OneToOneNatAddressSpecOrRefRequest{
 												Ref: &externalAddressRef,
 											},
 										},

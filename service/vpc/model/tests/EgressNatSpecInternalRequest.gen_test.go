@@ -13,6 +13,7 @@ import (
 )
 
 func TestEgressNatSpecInternalRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initEgressNatSpecInternalRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

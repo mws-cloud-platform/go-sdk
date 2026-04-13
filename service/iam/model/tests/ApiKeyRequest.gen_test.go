@@ -12,6 +12,7 @@ import (
 )
 
 func TestApiKeyRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initApiKeyRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

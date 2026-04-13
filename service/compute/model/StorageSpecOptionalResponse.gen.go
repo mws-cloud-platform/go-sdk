@@ -6,27 +6,23 @@ import (
 	"context"
 	"fmt"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Real OAPI model name: StorageSpec
 type StorageSpecOptionalResponse struct {
-	Disks commonclient.Optional[[]StorageDiskSpecOrRefWithAttachmentsOptionalResponse] `json:"disks,omitempty" yaml:"disks,omitempty"`
+	Disks []StorageDiskSpecOrRefWithAttachmentsOptionalResponse `json:"disks" yaml:"disks"`
 }
 
 func (m *StorageSpecOptionalResponse) GetDisks() []StorageDiskSpecOrRefWithAttachmentsOptionalResponse {
-	if m != nil && m.Disks.IsSet() {
-		return m.Disks.Value
+	if m != nil {
+		return m.Disks
 	}
 	return nil
 }
 
-func (m *StorageSpecOptionalResponse) GetDisksOr(val []StorageDiskSpecOrRefWithAttachmentsOptionalResponse) []StorageDiskSpecOrRefWithAttachmentsOptionalResponse {
-	if m != nil && m.Disks.IsSet() {
-		return m.Disks.Value
-	}
-	return val
+func (m *StorageSpecOptionalResponse) SetDisks(val []StorageDiskSpecOrRefWithAttachmentsOptionalResponse) {
+	m.Disks = val
 }
 
 func (m *StorageSpecOptionalResponse) Clone() *StorageSpecOptionalResponse {
@@ -35,10 +31,10 @@ func (m *StorageSpecOptionalResponse) Clone() *StorageSpecOptionalResponse {
 	}
 
 	clone := *m
-	if m.Disks.Value != nil {
-		clone.Disks.Value = make([]StorageDiskSpecOrRefWithAttachmentsOptionalResponse, len(m.Disks.Value))
-		for i, v := range m.Disks.Value {
-			clone.Disks.Value[i] = *v.Clone()
+	if m.Disks != nil {
+		clone.Disks = make([]StorageDiskSpecOrRefWithAttachmentsOptionalResponse, len(m.Disks))
+		for i, v := range m.Disks {
+			clone.Disks[i] = *v.Clone()
 		}
 	}
 	return &clone
@@ -49,11 +45,9 @@ func (m *StorageSpecOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Disks.IsSet() {
-		for index := range m.Disks.Value {
-			if err := m.Disks.Value[index].Parse(ctx); err != nil {
-				return reserrors.NewPathAccumulatorError("Disks"+fmt.Sprint("[", index, "]"), err)
-			}
+	for index := range m.Disks {
+		if err := m.Disks[index].Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Disks"+fmt.Sprint("[", index, "]"), err)
 		}
 	}
 

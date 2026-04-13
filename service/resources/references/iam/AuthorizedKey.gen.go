@@ -127,6 +127,10 @@ func (m *AuthorizedKeyID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/serviceAccounts/" + m.serviceAccount + "/authorizedKeys/" + m.authorizedKey
 }
 
+func (m *AuthorizedKeyID) String() string {
+	return m.ID()
+}
+
 func (m *AuthorizedKeyID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *AuthorizedKeyRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *AuthorizedKeyRef) String() string {
+	return m.IDPath()
 }
 
 func (m *AuthorizedKeyRef) Parse(ctx context.Context) error {

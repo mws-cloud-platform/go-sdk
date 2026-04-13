@@ -8,3 +8,7 @@ type CertificateProvider string
 const (
 	CertificateProvider_LETS_ENCRYPT CertificateProvider = "LETS_ENCRYPT"
 )
+
+func (m CertificateProvider) String() string {
+	return string(m)
+}

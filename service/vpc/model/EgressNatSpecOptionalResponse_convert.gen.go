@@ -21,11 +21,18 @@ func EgressNatSpecRequestToOptionalResponse(request *EgressNatSpecRequest) (*Egr
 		return nil, err
 	}
 	response.External = *tmpExternal
-	tmpPba, err := EgressNatSpecPbaRequestToOptionalResponse(request.Pba)
-	if err != nil {
-		return nil, err
+	if request.PortAllocation != nil {
+		tmpPortAllocation, err := EgressNatSpecPortAllocationRequestToOptionalResponse(request.PortAllocation)
+		if err != nil {
+			return nil, err
+		}
+		response.PortAllocation = commonclient.NewOptionalNil(*tmpPortAllocation)
 	}
 	if request.Pba != nil {
+		tmpPba, err := EgressNatSpecPbaRequestToOptionalResponse(request.Pba)
+		if err != nil {
+			return nil, err
+		}
 		response.Pba = commonclient.NewOptionalNil(*tmpPba)
 	}
 	return &response, nil

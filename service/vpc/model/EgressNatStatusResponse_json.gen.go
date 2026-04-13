@@ -39,6 +39,11 @@ func (m *EgressNatStatusResponse) encodeFields(e *jx.Encoder) {
 		m.External.Encode(e)
 	}
 
+	if m.PortAllocation != nil {
+		e.FieldStart("portAllocation")
+		m.PortAllocation.Encode(e)
+	}
+
 	if m.Pba != nil {
 		e.FieldStart("pba")
 		m.Pba.Encode(e)
@@ -87,6 +92,18 @@ func (m *EgressNatStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.External = &v
+			return nil
+		case "portAllocation":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v EgressNatStatusPortAllocationResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.PortAllocation = &v
 			return nil
 		case "pba":
 			if d.Next() == jx.Null {

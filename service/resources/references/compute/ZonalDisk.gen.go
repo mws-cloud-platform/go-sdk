@@ -127,6 +127,10 @@ func (m *ZonalDiskID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalDisks/" + m.disk
 }
 
+func (m *ZonalDiskID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalDiskID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *ZonalDiskRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalDiskRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalDiskRef) Parse(ctx context.Context) error {

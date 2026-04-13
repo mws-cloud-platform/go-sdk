@@ -8,6 +8,5 @@ func HmacKeySpecRequestToResponse(request *HmacKeySpecRequest) (*HmacKeySpecResp
 	}
 	var response HmacKeySpecResponse
 	response.ExpirationTime = request.ExpirationTime
-	response.LastAuthTime = request.LastAuthTime
 	return &response, nil
 }

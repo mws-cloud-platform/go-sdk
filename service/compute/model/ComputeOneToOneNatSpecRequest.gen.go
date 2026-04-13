@@ -12,25 +12,18 @@ import (
 // Real OAPI model name: ComputeOneToOneNatSpec
 type ComputeOneToOneNatSpecRequest struct {
 	// Информация о внешнем адресе
-	External *ComputeOneToOneNatSpecExternalRequest `json:"external,omitempty" yaml:"external,omitempty"`
+	External ComputeOneToOneNatSpecExternalRequest `json:"external" yaml:"external"`
 }
 
-func (m *ComputeOneToOneNatSpecRequest) GetExternal() *ComputeOneToOneNatSpecExternalRequest {
+func (m *ComputeOneToOneNatSpecRequest) GetExternal() ComputeOneToOneNatSpecExternalRequest {
 	if m != nil {
 		return m.External
 	}
-	return nil
+	return ComputeOneToOneNatSpecExternalRequest{}
 }
 
-func (m *ComputeOneToOneNatSpecRequest) SetExternal(val *ComputeOneToOneNatSpecExternalRequest) {
+func (m *ComputeOneToOneNatSpecRequest) SetExternal(val ComputeOneToOneNatSpecExternalRequest) {
 	m.External = val
-}
-
-func (m *ComputeOneToOneNatSpecRequest) GetExternalOr(val ComputeOneToOneNatSpecExternalRequest) ComputeOneToOneNatSpecExternalRequest {
-	if m != nil && m.External != nil {
-		return *m.External
-	}
-	return val
 }
 
 func (m *ComputeOneToOneNatSpecRequest) Clone() *ComputeOneToOneNatSpecRequest {
@@ -39,7 +32,7 @@ func (m *ComputeOneToOneNatSpecRequest) Clone() *ComputeOneToOneNatSpecRequest {
 	}
 
 	clone := *m
-	clone.External = m.External.Clone()
+	clone.External = *m.External.Clone()
 	return &clone
 }
 
@@ -58,25 +51,18 @@ func (m *ComputeOneToOneNatSpecRequest) Parse(ctx context.Context) error {
 // Представление поля External анонимного типа структуры ComputeOneToOneNatSpec
 // Real OAPI model name: ComputeOneToOneNatSpecExternal
 type ComputeOneToOneNatSpecExternalRequest struct {
-	Address *OneToOneNatAddressSpecOrRefRequest `json:"address,omitempty" yaml:"address,omitempty"`
+	Address OneToOneNatAddressSpecOrRefRequest `json:"address" yaml:"address"`
 }
 
-func (m *ComputeOneToOneNatSpecExternalRequest) GetAddress() *OneToOneNatAddressSpecOrRefRequest {
+func (m *ComputeOneToOneNatSpecExternalRequest) GetAddress() OneToOneNatAddressSpecOrRefRequest {
 	if m != nil {
 		return m.Address
 	}
-	return nil
+	return OneToOneNatAddressSpecOrRefRequest{}
 }
 
-func (m *ComputeOneToOneNatSpecExternalRequest) SetAddress(val *OneToOneNatAddressSpecOrRefRequest) {
+func (m *ComputeOneToOneNatSpecExternalRequest) SetAddress(val OneToOneNatAddressSpecOrRefRequest) {
 	m.Address = val
-}
-
-func (m *ComputeOneToOneNatSpecExternalRequest) GetAddressOr(val OneToOneNatAddressSpecOrRefRequest) OneToOneNatAddressSpecOrRefRequest {
-	if m != nil && m.Address != nil {
-		return *m.Address
-	}
-	return val
 }
 
 func (m *ComputeOneToOneNatSpecExternalRequest) Clone() *ComputeOneToOneNatSpecExternalRequest {
@@ -85,7 +71,7 @@ func (m *ComputeOneToOneNatSpecExternalRequest) Clone() *ComputeOneToOneNatSpecE
 	}
 
 	clone := *m
-	clone.Address = m.Address.Clone()
+	clone.Address = *m.Address.Clone()
 	return &clone
 }
 

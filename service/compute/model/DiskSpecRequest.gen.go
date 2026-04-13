@@ -22,7 +22,7 @@ type DiskSpecRequest struct {
 	Source *DiskSpecSourceRequest `json:"source,omitempty" yaml:"source,omitempty"`
 	// ID типа диска
 	DiskType *compute.DiskTypeRef `json:"diskType,omitempty" yaml:"diskType,omitempty"`
-	// Запрашиваемая пользователем IOPS
+	// Запрашиваемое пользователем количество операций ввода-вывода в секунду (IOPS)
 	Iops *Iops `json:"iops,omitempty" yaml:"iops,omitempty"`
 	// Размер блока диска
 	BlockSize *bytesize.ByteSize `json:"blockSize,omitempty" yaml:"blockSize,omitempty"`

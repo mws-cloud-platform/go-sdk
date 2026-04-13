@@ -108,6 +108,10 @@ func (m *ZonalKittyStoreClusterID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/kittyStoreClusters/" + m.cluster
 }
 
+func (m *ZonalKittyStoreClusterID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalKittyStoreClusterID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ZonalKittyStoreClusterRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalKittyStoreClusterRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalKittyStoreClusterRef) Parse(ctx context.Context) error {

@@ -6,13 +6,11 @@ import (
 	"time"
 )
 
-// Спецификация api-key.
+// Спецификация API-ключа
 // Real OAPI model name: ApiKeySpec
 type ApiKeySpecResponse struct {
 	// Время истечения срока действия ключа.
 	ExpireTime *time.Time `json:"expireTime,omitempty" yaml:"expireTime,omitempty"`
-	// Время последней аутентификации.
-	LastAuthTime *time.Time `json:"lastAuthTime,omitempty" yaml:"lastAuthTime,omitempty"`
 }
 
 func (m *ApiKeySpecResponse) GetExpireTime() *time.Time {
@@ -29,24 +27,6 @@ func (m *ApiKeySpecResponse) SetExpireTime(val *time.Time) {
 func (m *ApiKeySpecResponse) GetExpireTimeOr(val time.Time) time.Time {
 	if m != nil && m.ExpireTime != nil {
 		return *m.ExpireTime
-	}
-	return val
-}
-
-func (m *ApiKeySpecResponse) GetLastAuthTime() *time.Time {
-	if m != nil {
-		return m.LastAuthTime
-	}
-	return nil
-}
-
-func (m *ApiKeySpecResponse) SetLastAuthTime(val *time.Time) {
-	m.LastAuthTime = val
-}
-
-func (m *ApiKeySpecResponse) GetLastAuthTimeOr(val time.Time) time.Time {
-	if m != nil && m.LastAuthTime != nil {
-		return *m.LastAuthTime
 	}
 	return val
 }

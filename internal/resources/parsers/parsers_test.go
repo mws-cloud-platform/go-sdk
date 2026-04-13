@@ -11,6 +11,7 @@ import (
 )
 
 var (
+	// testService/foos/fo/{foo}/projects/{project}/networks/{network}
 	template1 = Template{
 		{
 			Value:       "network",
@@ -54,6 +55,7 @@ var (
 		},
 	}
 
+	// testService/projects/{project}/quotas/serviceAccountCount
 	template2 = Template{
 		{
 			Value:       "serviceAccountCount",
@@ -73,6 +75,30 @@ var (
 		{
 			Value:       "projects",
 			IsConstant:  true,
+			SearchAfter: false,
+		},
+		{
+			Value:       "testService",
+			IsConstant:  true,
+			SearchAfter: false,
+		},
+	}
+
+	// testService/{scopeType}/{scopeId}/discounts
+	template3 = Template{
+		{
+			Value:       "discounts",
+			IsConstant:  true,
+			SearchAfter: false,
+		},
+		{
+			Value:       "scopeId",
+			IsConstant:  false,
+			SearchAfter: false,
+		},
+		{
+			Value:       "scopeType",
+			IsConstant:  false,
 			SearchAfter: false,
 		},
 		{
@@ -240,6 +266,61 @@ func TestReference(t *testing.T) {
 				return ctx
 			},
 			err: ErrReferenceParsing,
+		},
+		{
+			name:     "full reference parses to scope params",
+			path:     "testService/type/id/discounts",
+			template: template3,
+			result: map[string]string{
+				"scopeType": "type",
+				"scopeId":   "id",
+			},
+			err: nil,
+		},
+		{
+			name:     "short reference without context fails",
+			path:     "discounts",
+			template: template3,
+			err:      ErrReferenceParsing,
+		},
+		{
+			name:     "short reference with context succeeds",
+			path:     "discounts",
+			template: template3,
+			ctxFillFunc: func(ctx context.Context) context.Context {
+				ctx = values.With(ctx, "scopeType", "type")
+				ctx = values.With(ctx, "scopeId", "id")
+				return ctx
+			},
+			result: map[string]string{
+				"scopeType": "type",
+				"scopeId":   "id",
+			},
+			err: nil,
+		},
+		{
+			name:     "partial reference with context succeeds",
+			path:     "id/discounts",
+			template: template3,
+			ctxFillFunc: func(ctx context.Context) context.Context {
+				ctx = values.With(ctx, "scopeType", "type")
+				return ctx
+			},
+			result: map[string]string{
+				"scopeType": "type",
+				"scopeId":   "id",
+			},
+			err: nil,
+		},
+		{
+			name:     "full reference without slug succeeds",
+			path:     "type/id/discounts",
+			template: template3,
+			result: map[string]string{
+				"scopeType": "type",
+				"scopeId":   "id",
+			},
+			err: nil,
 		},
 	} {
 		t.Run(testCase.name, func(t *testing.T) {

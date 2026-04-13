@@ -34,6 +34,10 @@ func (m *CreateSecretWithSecretVersionRequest) encodeFields(e *jx.Encoder) {
 
 	e.FieldStart("data")
 	m.Data.Encode(e)
+	if m.Encryption != nil {
+		e.FieldStart("encryption")
+		m.Encryption.Encode(e)
+	}
 }
 
 func (m *CreateSecretWithSecretVersionRequest) UnmarshalJSON(b []byte) error {
@@ -66,6 +70,18 @@ func (m *CreateSecretWithSecretVersionRequest) Decode(d *jx.Decoder) error {
 
 			m.Data = v
 			requiredFilled["data"] = true
+			return nil
+		case "encryption":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v EncryptionSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Encryption = &v
 			return nil
 		default:
 			return d.Skip()

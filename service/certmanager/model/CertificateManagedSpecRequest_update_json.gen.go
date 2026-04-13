@@ -27,15 +27,6 @@ func (m *UpdateCertificateManagedSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *UpdateCertificateManagedSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.PreferredChallengeType.IsSet() {
-		e.FieldStart("preferredChallengeType")
-		m.PreferredChallengeType.Value.Encode(e)
-	}
-
-	if m.Provider.IsSet() {
-		e.FieldStart("provider")
-		m.Provider.Value.Encode(e)
-	}
 
 	if m.Domains.IsSet() {
 		e.FieldStart("domains")
@@ -58,22 +49,6 @@ func (m *UpdateCertificateManagedSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "preferredChallengeType":
-			var v CertificateChallengeType
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.PreferredChallengeType.SetTo(v)
-			return nil
-		case "provider":
-			var v CertificateProvider
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Provider.SetTo(v)
-			return nil
 		case "domains":
 			c := make([]string, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {

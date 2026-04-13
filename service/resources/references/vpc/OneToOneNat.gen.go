@@ -127,6 +127,10 @@ func (m *OneToOneNatID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/networks/" + m.network + "/oneToOneNats/" + m.oneToOneNat
 }
 
+func (m *OneToOneNatID) String() string {
+	return m.ID()
+}
+
 func (m *OneToOneNatID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *OneToOneNatRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *OneToOneNatRef) String() string {
+	return m.IDPath()
 }
 
 func (m *OneToOneNatRef) Parse(ctx context.Context) error {

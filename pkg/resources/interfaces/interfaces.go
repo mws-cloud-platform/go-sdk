@@ -1,5 +1,5 @@
 // Package interfaces provides interfaces for resource references and IDs.
-package interfaces //nolint:revive // leave a name for backward compatibility
+package interfaces
 
 // ResourceName is the type used in IDs and refs.
 type ResourceName string

@@ -127,6 +127,10 @@ func (m *FederationRoleBindingID) ID() string {
 	return m.ServiceSlug() + "/organizations/" + m.organization + "/userFederations/" + m.userFederation + "/roleBindings/" + m.roleBinding
 }
 
+func (m *FederationRoleBindingID) String() string {
+	return m.ID()
+}
+
 func (m *FederationRoleBindingID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *FederationRoleBindingRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *FederationRoleBindingRef) String() string {
+	return m.IDPath()
 }
 
 func (m *FederationRoleBindingRef) Parse(ctx context.Context) error {

@@ -109,6 +109,10 @@ func (m *FlagMclickhousePreviewID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/services/iam/quotas/flag_mclickhousePreview"
 }
 
+func (m *FlagMclickhousePreviewID) String() string {
+	return m.ID()
+}
+
 func (m *FlagMclickhousePreviewID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -232,6 +236,10 @@ func (m *FlagMclickhousePreviewRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *FlagMclickhousePreviewRef) String() string {
+	return m.IDPath()
 }
 
 func (m *FlagMclickhousePreviewRef) Parse(ctx context.Context) error {

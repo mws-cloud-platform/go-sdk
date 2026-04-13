@@ -27,12 +27,12 @@ func FirewallRuleSpecRequestToOptionalResponse(request *FirewallRuleSpecRequest)
 	if request.Active != nil {
 		response.Active = commonclient.NewOptional(*request.Active)
 	}
-	tmpSource, err := AddressGroupSpecOrRefRequestToOptionalResponse(&request.Source)
+	tmpSource, err := FirewallRuleSourceRequestToOptionalResponse(&request.Source)
 	if err != nil {
 		return nil, err
 	}
 	response.Source = *tmpSource
-	tmpDestination, err := AddressGroupSpecOrRefRequestToOptionalResponse(&request.Destination)
+	tmpDestination, err := FirewallRuleDestinationRequestToOptionalResponse(&request.Destination)
 	if err != nil {
 		return nil, err
 	}

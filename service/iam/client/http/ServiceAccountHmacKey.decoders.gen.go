@@ -100,7 +100,7 @@ func decodeListHmacKeyResponse(resp *http.Response) (*client.ListHmacKeyResponse
 		case "application/json":
 			result := &client.ListHmacKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -188,7 +188,7 @@ func decodeDeleteHmacKeyResponse(resp *http.Response) (*client.DeleteHmacKeyResp
 		case "application/json":
 			result := &client.DeleteHmacKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -290,7 +290,7 @@ func decodeGetHmacKeyResponse(resp *http.Response) (*client.GetHmacKeyResponse, 
 		case "application/json":
 			result := &client.GetHmacKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -430,7 +430,7 @@ func decodeUpsertHmacKeyResponse(resp *http.Response) (*client.UpsertHmacKeyResp
 		case "application/json":
 			result := &client.UpsertHmacKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

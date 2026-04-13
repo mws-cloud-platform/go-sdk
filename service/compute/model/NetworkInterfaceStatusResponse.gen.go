@@ -11,9 +11,11 @@ import (
 
 // Real OAPI model name: NetworkInterfaceStatus
 type NetworkInterfaceStatusResponse struct {
-	// alias сетевого интерфейса (адаптера) уникальный в рамках VM
-	Name      string                                `json:"name" yaml:"name"`
-	Addresses []VirtualMachineAddressStatusResponse `json:"addresses" yaml:"addresses"`
+	// Уникальный в рамках ВМ псевдоним (alias) сетевого интерфейса
+	Name string `json:"name" yaml:"name"`
+	// Признак, может ли сетевой интерфейс (адаптер) принимать трафик с нецелевого ip
+	IpForwardingEnabled *bool                                 `json:"ipForwardingEnabled,omitempty" yaml:"ipForwardingEnabled,omitempty"`
+	Addresses           []VirtualMachineAddressStatusResponse `json:"addresses" yaml:"addresses"`
 }
 
 func (m *NetworkInterfaceStatusResponse) GetName() string {
@@ -25,6 +27,24 @@ func (m *NetworkInterfaceStatusResponse) GetName() string {
 
 func (m *NetworkInterfaceStatusResponse) SetName(val string) {
 	m.Name = val
+}
+
+func (m *NetworkInterfaceStatusResponse) GetIpForwardingEnabled() *bool {
+	if m != nil {
+		return m.IpForwardingEnabled
+	}
+	return nil
+}
+
+func (m *NetworkInterfaceStatusResponse) SetIpForwardingEnabled(val *bool) {
+	m.IpForwardingEnabled = val
+}
+
+func (m *NetworkInterfaceStatusResponse) GetIpForwardingEnabledOr(val bool) bool {
+	if m != nil && m.IpForwardingEnabled != nil {
+		return *m.IpForwardingEnabled
+	}
+	return val
 }
 
 func (m *NetworkInterfaceStatusResponse) GetAddresses() []VirtualMachineAddressStatusResponse {
@@ -44,6 +64,10 @@ func (m *NetworkInterfaceStatusResponse) Clone() *NetworkInterfaceStatusResponse
 	}
 
 	clone := *m
+	if m.IpForwardingEnabled != nil {
+		cloneIpForwardingEnabled := *m.IpForwardingEnabled
+		clone.IpForwardingEnabled = &cloneIpForwardingEnabled
+	}
 	if m.Addresses != nil {
 		clone.Addresses = make([]VirtualMachineAddressStatusResponse, len(m.Addresses))
 		for i, v := range m.Addresses {

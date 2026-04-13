@@ -109,6 +109,10 @@ func (m *TotalHmacKeyCountID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/services/iam/quotas/totalHmacKeyCount"
 }
 
+func (m *TotalHmacKeyCountID) String() string {
+	return m.ID()
+}
+
 func (m *TotalHmacKeyCountID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -232,6 +236,10 @@ func (m *TotalHmacKeyCountRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *TotalHmacKeyCountRef) String() string {
+	return m.IDPath()
 }
 
 func (m *TotalHmacKeyCountRef) Parse(ctx context.Context) error {

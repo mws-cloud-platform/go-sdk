@@ -26,7 +26,7 @@ func (x *OneToOneNatSugared) Impl() OneToOneNat {
 	return x.impl
 }
 
-// ListOneToOneNats позволяет получить список One-to-One NAT-шлюзов.
+// ListOneToOneNats позволяет получить список One-to-One NAT.
 //
 // Путь: GET /vpc/v1/projects/{project}/networks/{network}/oneToOneNats
 func (x *OneToOneNatSugared) ListOneToOneNats(ctx context.Context, request ListOneToOneNatsRequest) (*model.ListOneToOneNatResponseOptionalResponse, error) {
@@ -50,7 +50,7 @@ func (x *OneToOneNatSugared) respHandlerListOneToOneNats(resp *ListOneToOneNatsR
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// DeleteOneToOneNat позволяет удалить One-to-One NAT-шлюз.
+// DeleteOneToOneNat позволяет удалить One-to-One NAT.
 //
 // Путь: DELETE /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}
 func (x *OneToOneNatSugared) DeleteOneToOneNat(ctx context.Context, request DeleteOneToOneNatRequest, opts ...Option) error {
@@ -98,7 +98,7 @@ func (x *OneToOneNatSugared) waitDeleteOneToOneNat(ctx context.Context, request 
 	return err
 }
 
-// GetOneToOneNat позволяет получить информацию о One-to-One NAT-шлюзе.
+// GetOneToOneNat позволяет получить информацию о One-to-One NAT.
 //
 // Путь: GET /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}
 func (x *OneToOneNatSugared) GetOneToOneNat(ctx context.Context, request GetOneToOneNatRequest, opts ...Option) (*model.OneToOneNatOptionalResponse, error) {
@@ -143,7 +143,7 @@ func (x *OneToOneNatSugared) waitGetOneToOneNat(ctx context.Context, request Get
 	return waiter.Wait(ctx)
 }
 
-// UpsertOneToOneNat позволяет создать или изменить One-to-One NAT-шлюз.
+// UpsertOneToOneNat позволяет создать или изменить One-to-One NAT.
 //
 // Путь: POST /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}
 func (x *OneToOneNatSugared) UpsertOneToOneNat(ctx context.Context, request UpsertOneToOneNatRequest, opts ...Option) (*model.OneToOneNatOptionalResponse, error) {
@@ -188,7 +188,7 @@ func (x *OneToOneNatSugared) waitUpsertOneToOneNat(ctx context.Context, request 
 	return waiter.Wait(ctx)
 }
 
-// CreateOneToOneNat позволяет создать или изменить One-to-One NAT-шлюз.
+// CreateOneToOneNat позволяет создать или изменить One-to-One NAT.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}?createOnly=true
@@ -212,7 +212,7 @@ func (x *OneToOneNatSugared) CreateOneToOneNat(ctx context.Context, request Upse
 	return x.waitUpsertOneToOneNat(ctx, request.getOneToOneNatRequest(), config.waitOptions...)
 }
 
-// UpdateOneToOneNat позволяет создать или изменить One-to-One NAT-шлюз.
+// UpdateOneToOneNat позволяет создать или изменить One-to-One NAT.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}?updateOnly=true

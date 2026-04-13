@@ -29,7 +29,7 @@ type DiskType interface {
 type ListDiskTypesRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -90,7 +90,7 @@ func (m *ListDiskTypesResponse) SetErrorWrapper(f func(err error) error) {
 // ListDiskTypesResponse200 is a nested type
 type ListDiskTypesResponse200 struct {
 	Items []model.DiskTypeResponse `json:"items" yaml:"items"`
-	// Строка, которую нужно передать в следующий запрос, чтобы получить следующую страницу. Для последней страницы не задан
+	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
 	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
@@ -231,7 +231,7 @@ type GetDiskTypeRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к типу диска
 	Type string // path: "type"
-	// Текущий etag объекта, при передаче сервис будет дожидаться изменений в ресурсе (смены etag)
+	// Текущее значение ETag. При передаче параметра сервис будет ждать изменений в ресурсе до тех пор, пока значение ETag не будет изменено
 	WaitNew *string // query: "waitNew"
 }
 

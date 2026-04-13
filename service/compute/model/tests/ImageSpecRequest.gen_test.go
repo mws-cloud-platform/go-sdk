@@ -12,6 +12,7 @@ import (
 )
 
 func TestImageSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initImageSpecRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -89,6 +89,10 @@ func (m *TrashDiskID) ID() string {
 	return m.ServiceSlug() + "/trashDisks/" + m.id
 }
 
+func (m *TrashDiskID) String() string {
+	return m.ID()
+}
+
 func (m *TrashDiskID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *TrashDiskRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *TrashDiskRef) String() string {
+	return m.IDPath()
 }
 
 func (m *TrashDiskRef) Parse(ctx context.Context) error {

@@ -15,6 +15,7 @@ import (
 )
 
 func TestOneToOneNatSugared_ListOneToOneNats(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestOneToOneNatSugared_ListOneToOneNats(t *testing.T) {
 }
 
 func TestOneToOneNatSugared_DeleteOneToOneNat(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestOneToOneNatSugared_DeleteOneToOneNat(t *testing.T) {
 }
 
 func TestOneToOneNatSugared_GetOneToOneNat(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestOneToOneNatSugared_GetOneToOneNat(t *testing.T) {
 }
 
 func TestOneToOneNatSugared_UpsertOneToOneNat(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestOneToOneNatSugared_UpsertOneToOneNat(t *testing.T) {
 }
 
 func TestOneToOneNatSugared_CreateOneToOneNat(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestOneToOneNatSugared_CreateOneToOneNat(t *testing.T) {
 }
 
 func TestOneToOneNatSugared_UpdateOneToOneNat(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

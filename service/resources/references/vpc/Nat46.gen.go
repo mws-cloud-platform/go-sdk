@@ -127,6 +127,10 @@ func (m *Nat46ID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/networks/" + m.network + "/nats46/" + m.nat46
 }
 
+func (m *Nat46ID) String() string {
+	return m.ID()
+}
+
 func (m *Nat46ID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *Nat46Ref) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *Nat46Ref) String() string {
+	return m.IDPath()
 }
 
 func (m *Nat46Ref) Parse(ctx context.Context) error {

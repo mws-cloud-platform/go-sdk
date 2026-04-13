@@ -127,6 +127,10 @@ func (m *SubnetID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/networks/" + m.network + "/subnets/" + m.subnet
 }
 
+func (m *SubnetID) String() string {
+	return m.ID()
+}
+
 func (m *SubnetID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *SubnetRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *SubnetRef) String() string {
+	return m.IDPath()
 }
 
 func (m *SubnetRef) Parse(ctx context.Context) error {

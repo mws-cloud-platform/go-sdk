@@ -13,6 +13,7 @@ import (
 )
 
 func TestOneToOneNatStatusExternalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initOneToOneNatStatusExternalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

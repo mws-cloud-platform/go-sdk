@@ -12,6 +12,7 @@ import (
 )
 
 func TestBaseErrorMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initBaseError()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

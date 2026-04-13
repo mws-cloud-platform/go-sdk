@@ -357,13 +357,13 @@ func parseSimple(s string) (uint64, error) {
 }
 
 func uint64ToTimeDuration(d uint64, isNegative bool) (time.Duration, error) {
-	if isNegative {
-		return -time.Duration(d), nil
-	}
-	if d > maxDuration {
+	if (!isNegative && d > maxDuration) || (isNegative && d > maxDuration+1) {
 		return 0, fmt.Errorf("%w: overflow", ErrInvalidDurationString)
 	}
-	return time.Duration(d), nil
+	if isNegative {
+		return -time.Duration(d), nil //nolint:gosec // overflow is checked above
+	}
+	return time.Duration(d), nil //nolint:gosec // overflow is checked above
 }
 
 type number struct {

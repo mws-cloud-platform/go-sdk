@@ -14,25 +14,25 @@ import (
 	"go.mws.cloud/go-sdk/service/certmanager/client"
 )
 
-// GetChallengeContent retrieves the challenge content associated with the given certificate reference and token.
+// GetChallengeToken retrieves the challenge content associated with the given certificate reference and token.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
-// Путь: GET /certmanager/v1/projects/{project}/certificates/{name}/{token}
-func (c *Challenge) GetChallengeContent(ctx context.Context, request client.GetChallengeContentRequest) (r *client.GetChallengeContentResponse, err error) {
-	ctx = c.setGetChallengeContentAttributes(ctx)
-	r = &client.GetChallengeContentResponse{}
+// Путь: GET /certmanager/v1/projects/{project}/certificates/{name}/tokens/{token}
+func (c *Challenge) GetChallengeToken(ctx context.Context, request client.GetChallengeTokenRequest) (r *client.GetChallengeTokenResponse, err error) {
+	ctx = c.setGetChallengeTokenAttributes(ctx)
+	r = &client.GetChallengeTokenResponse{}
 
-	if err = c.client.Intercept(ctx, &request, r, c.getChallengeContentInvoker); err != nil {
+	if err = c.client.Intercept(ctx, &request, r, c.getChallengeTokenInvoker); err != nil {
 		return nil, err
 	}
 
 	return r, nil
 }
 
-func (c *Challenge) setGetChallengeContentAttributes(ctx context.Context) context.Context {
+func (c *Challenge) setGetChallengeTokenAttributes(ctx context.Context) context.Context {
 	a := []commonattribute.KeyValue{
-		commonattribute.String(commonattribute.Method, "GetChallengeContent"),
-		commonattribute.String(commonattribute.PathTemplate, "/certmanager/v1/projects/{project}/certificates/{name}/{token}"),
+		commonattribute.String(commonattribute.Method, "GetChallengeToken"),
+		commonattribute.String(commonattribute.PathTemplate, "/certmanager/v1/projects/{project}/certificates/{name}/tokens/{token}"),
 		commonattribute.String(commonattribute.ProjectName, "certmanager"),
 		commonattribute.String(commonattribute.ServiceName, "challenge"),
 	}
@@ -40,8 +40,8 @@ func (c *Challenge) setGetChallengeContentAttributes(ctx context.Context) contex
 	return commonattribute.WithContext(ctx, a...)
 }
 
-func (c *Challenge) getChallengeContentInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
-	request := anyReq.(*client.GetChallengeContentRequest)
+func (c *Challenge) getChallengeTokenInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.GetChallengeTokenRequest)
 
 	requestURL, _ := url.JoinPath(c.serverURL.String(),
 		"certmanager",
@@ -50,6 +50,7 @@ func (c *Challenge) getChallengeContentInvoker(ctx context.Context, anyReq any, 
 		request.Project,
 		"certificates",
 		request.Name,
+		"tokens",
 		request.Token)
 
 	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)
@@ -71,12 +72,12 @@ func (c *Challenge) getChallengeContentInvoker(ctx context.Context, anyReq any, 
 		}
 	}()
 
-	decodedResp, err := decodeGetChallengeContentResponse(httpResp)
+	decodedResp, err := decodeGetChallengeTokenResponse(httpResp)
 	if err != nil {
 		return err
 	}
 
-	respPtr := response.(*client.GetChallengeContentResponse)
+	respPtr := response.(*client.GetChallengeTokenResponse)
 	*respPtr = *decodedResp
 
 	return nil

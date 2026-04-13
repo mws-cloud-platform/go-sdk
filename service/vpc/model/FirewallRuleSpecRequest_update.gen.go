@@ -20,9 +20,9 @@ type UpdateFirewallRuleSpecRequest struct {
 	// Состояние правила. True - правило активно и контролирует поведение трафика. False - правило не активно.
 	Active commonclient.Optional[bool] `json:"active" yaml:"active"`
 	// Критерий применимости правила, описывает источник отправления пакета.
-	Source commonclient.Optional[UpdateAddressGroupSpecOrRefRequest] `json:"source" yaml:"source"`
+	Source commonclient.Optional[UpdateFirewallRuleSourceRequest] `json:"source" yaml:"source"`
 	// Критерий применимости правила, описывает пункт назначения пакета.
-	Destination commonclient.Optional[UpdateAddressGroupSpecOrRefRequest] `json:"destination" yaml:"destination"`
+	Destination commonclient.Optional[UpdateFirewallRuleDestinationRequest] `json:"destination" yaml:"destination"`
 	// Критерий применимости правила. Определяет список протоколов и соответствующих портов (если применимо) назначения пакета. Значение по умолчанию - пустое значение. Означает любой протокол и порт.
 	ProtoPorts commonclient.Optional[[]string] `json:"protoPorts" yaml:"protoPorts"`
 }
@@ -122,18 +122,18 @@ func (m *FirewallRuleSpecRequest) diffActive(src *FirewallRuleSpecRequest) commo
 	return commonclient.DiffPrimitiveNonRequired(src.GetActive(), m.GetActive(), nilDiffers)
 }
 
-func (m *FirewallRuleSpecRequest) diffSource(src *FirewallRuleSpecRequest) commonclient.Optional[UpdateAddressGroupSpecOrRefRequest] {
+func (m *FirewallRuleSpecRequest) diffSource(src *FirewallRuleSpecRequest) commonclient.Optional[UpdateFirewallRuleSourceRequest] {
 	from := src.GetSource()
 	to := m.GetSource()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateAddressGroupSpecOrRefRequest](value, value.HasChanges())
+	return commonclient.NewDirectOptional[UpdateFirewallRuleSourceRequest](value, value.HasChanges())
 }
 
-func (m *FirewallRuleSpecRequest) diffDestination(src *FirewallRuleSpecRequest) commonclient.Optional[UpdateAddressGroupSpecOrRefRequest] {
+func (m *FirewallRuleSpecRequest) diffDestination(src *FirewallRuleSpecRequest) commonclient.Optional[UpdateFirewallRuleDestinationRequest] {
 	from := src.GetDestination()
 	to := m.GetDestination()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateAddressGroupSpecOrRefRequest](value, value.HasChanges())
+	return commonclient.NewDirectOptional[UpdateFirewallRuleDestinationRequest](value, value.HasChanges())
 }
 
 func (m *FirewallRuleSpecRequest) diffProtoPorts(src *FirewallRuleSpecRequest) commonclient.Optional[[]string] {

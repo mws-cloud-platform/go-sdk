@@ -12,6 +12,7 @@ import (
 )
 
 func TestValidationDetailResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initValidationDetailResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

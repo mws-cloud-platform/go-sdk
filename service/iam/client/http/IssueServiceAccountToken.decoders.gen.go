@@ -57,12 +57,46 @@ func decodeIssueServiceAccountTokenV2Response(resp *http.Response) (*client.Issu
 			_, _ = io.Copy(io.Discard, resp.Body)
 			return nil, clienterrors.InvalidContentType(ct)
 		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.IssueServiceAccountTokenV2Response{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 403:
+		switch ct {
+		case "application/json":
+			result := &client.IssueServiceAccountTokenV2Response{
+				Code:        resp.StatusCode,
+				Response403: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
 	case 500:
 		switch ct {
 		case "application/json":
 			result := &client.IssueServiceAccountTokenV2Response{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -121,12 +155,46 @@ func decodeIssueServiceAccountTokenResponse(resp *http.Response) (*client.IssueS
 			_, _ = io.Copy(io.Discard, resp.Body)
 			return nil, clienterrors.InvalidContentType(ct)
 		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.IssueServiceAccountTokenResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 403:
+		switch ct {
+		case "application/json":
+			result := &client.IssueServiceAccountTokenResponse{
+				Code:        resp.StatusCode,
+				Response403: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
 	case 500:
 		switch ct {
 		case "application/json":
 			result := &client.IssueServiceAccountTokenResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

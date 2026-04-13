@@ -15,20 +15,20 @@ import (
 type ServiceAccountProvider struct {
 	*provider
 
-	saKey       iam.ServiceAccountKey
-	tokenIssuer *client.IssueServiceAccountTokenSugared
+	saAuthorizedKey iam.ServiceAccountAuthorizedKey
+	tokenIssuer     *client.IssueServiceAccountTokenSugared
 }
 
 // NewServiceAccountProvider creates a new service account credentials provider.
 func NewServiceAccountProvider(
-	saKey iam.ServiceAccountKey,
+	saAuthorizedKey iam.ServiceAccountAuthorizedKey,
 	tokenIssuer client.IssueServiceAccountToken,
 	opts ...ServiceAccountProviderOption,
 ) Provider {
 	p := &ServiceAccountProvider{
-		provider:    newProvider(),
-		saKey:       saKey,
-		tokenIssuer: client.NewIssueServiceAccountTokenSugared(tokenIssuer),
+		provider:        newProvider(),
+		saAuthorizedKey: saAuthorizedKey,
+		tokenIssuer:     client.NewIssueServiceAccountTokenSugared(tokenIssuer),
 	}
 	for _, opt := range opts {
 		opt(p)
@@ -41,7 +41,7 @@ func NewServiceAccountProvider(
 // Provide returns the corresponding credentials for the service account
 // specified in the key.
 func (p *ServiceAccountProvider) Provide(ctx context.Context) (Credentials, error) {
-	id := p.saKey.ServiceAccount.String()
+	id := p.saAuthorizedKey.ServiceAccount.String()
 	return p.do(id, func() (Credentials, error) {
 		return p.provide(ctx, id)
 	})
@@ -49,7 +49,7 @@ func (p *ServiceAccountProvider) Provide(ctx context.Context) (Credentials, erro
 
 // InvalidateCredentials invalidates cached credentials.
 func (p *ServiceAccountProvider) InvalidateCredentials(context.Context) error {
-	id := p.saKey.ServiceAccount.String()
+	id := p.saAuthorizedKey.ServiceAccount.String()
 	return p.invalidateCredentials(id)
 }
 
@@ -59,7 +59,7 @@ func (p *ServiceAccountProvider) Close(ctx context.Context) error {
 }
 
 func (p *ServiceAccountProvider) provide(ctx context.Context, id string) (Credentials, error) {
-	signed, err := p.saKey.AuthorizedKey.JWS(p.clock.Now, id)
+	signed, err := p.saAuthorizedKey.AuthorizedKey.JWS(p.clock.Now, id)
 	if err != nil {
 		return Credentials{}, err
 	}

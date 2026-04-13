@@ -146,6 +146,10 @@ func (m *ZonalSubnetID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalNetworks/" + m.zonalNetwork + "/zonalSubnets/" + m.zonalSubnet
 }
 
+func (m *ZonalSubnetID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalSubnetID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -296,6 +300,10 @@ func (m *ZonalSubnetRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalSubnetRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalSubnetRef) Parse(ctx context.Context) error {

@@ -12,11 +12,11 @@ func AddressRequestToOptionalResponse(request *AddressRequest) (*AddressOptional
 		return nil, nil
 	}
 	var response AddressOptionalResponse
-	tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
-	if err != nil {
-		return nil, err
-	}
 	if request.Metadata != nil {
+		tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
+		if err != nil {
+			return nil, err
+		}
 		response.Metadata = commonclient.NewOptionalNil(*tmpMetadata)
 	}
 	tmpSpec, err := VpcAddressSpecRequestToOptionalResponse(&request.Spec)

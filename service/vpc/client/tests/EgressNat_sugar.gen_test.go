@@ -15,6 +15,7 @@ import (
 )
 
 func TestEgressNatSugared_ListEgressNats(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestEgressNatSugared_ListEgressNats(t *testing.T) {
 }
 
 func TestEgressNatSugared_DeleteEgressNat(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestEgressNatSugared_DeleteEgressNat(t *testing.T) {
 }
 
 func TestEgressNatSugared_GetEgressNat(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestEgressNatSugared_GetEgressNat(t *testing.T) {
 }
 
 func TestEgressNatSugared_UpsertEgressNat(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestEgressNatSugared_UpsertEgressNat(t *testing.T) {
 }
 
 func TestEgressNatSugared_CreateEgressNat(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestEgressNatSugared_CreateEgressNat(t *testing.T) {
 }
 
 func TestEgressNatSugared_UpdateEgressNat(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

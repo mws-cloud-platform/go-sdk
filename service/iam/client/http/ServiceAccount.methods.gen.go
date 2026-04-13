@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/iam/client"
 )
 
-// ListServiceAccount список сервисных аккаунтов в проекте.
+// ListServiceAccount позволяет получить список сервисных аккаунтов в проекте.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts
@@ -111,7 +111,79 @@ func (c *ServiceAccount) headerListServiceAccount(req *http.Request, request *cl
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// GetServiceAccount get service account.
+// DeleteServiceAccount удаление сервисного аккаунта.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}
+func (c *ServiceAccount) DeleteServiceAccount(ctx context.Context, request client.DeleteServiceAccountRequest) (r *client.DeleteServiceAccountResponse, err error) {
+	ctx = c.setDeleteServiceAccountAttributes(ctx)
+	r = &client.DeleteServiceAccountResponse{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.deleteServiceAccountInvoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *ServiceAccount) setDeleteServiceAccountAttributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "DeleteServiceAccount"),
+		commonattribute.String(commonattribute.PathTemplate, "/iam/v1/projects/{project}/serviceAccounts/{serviceAccount}"),
+		commonattribute.String(commonattribute.ProjectName, "iam"),
+		commonattribute.String(commonattribute.ServiceName, "serviceAccount"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *ServiceAccount) deleteServiceAccountInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.DeleteServiceAccountRequest)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"iam",
+		"v1",
+		"projects",
+		request.Project,
+		"serviceAccounts",
+		request.ServiceAccount)
+
+	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerDeleteServiceAccount(httpReq, request)
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeDeleteServiceAccountResponse(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.DeleteServiceAccountResponse)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *ServiceAccount) headerDeleteServiceAccount(req *http.Request, request *client.DeleteServiceAccountRequest) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+}
+
+// GetServiceAccount позволяет получить информацию о сервисном аккаунте.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}
@@ -186,7 +258,7 @@ func (c *ServiceAccount) headerGetServiceAccount(req *http.Request, request *cli
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpsertServiceAccount update(or create) service account.
+// UpsertServiceAccount позволяет создать или обновить сервисный аккаунт.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}
@@ -273,7 +345,7 @@ func (c *ServiceAccount) headerUpsertServiceAccount(req *http.Request, request *
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// CreateServiceAccount update(or create) service account.
+// CreateServiceAccount позволяет создать или обновить сервисный аккаунт.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -362,7 +434,7 @@ func (c *ServiceAccount) headerCreateServiceAccount(req *http.Request, request *
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpdateServiceAccount update(or create) service account.
+// UpdateServiceAccount позволяет создать или обновить сервисный аккаунт.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

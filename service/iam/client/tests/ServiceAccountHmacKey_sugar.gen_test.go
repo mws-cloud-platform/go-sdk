@@ -15,6 +15,7 @@ import (
 )
 
 func TestServiceAccountHmacKeySugared_ListHmacKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestServiceAccountHmacKeySugared_ListHmacKey(t *testing.T) {
 }
 
 func TestServiceAccountHmacKeySugared_DeleteHmacKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestServiceAccountHmacKeySugared_DeleteHmacKey(t *testing.T) {
 }
 
 func TestServiceAccountHmacKeySugared_GetHmacKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestServiceAccountHmacKeySugared_GetHmacKey(t *testing.T) {
 }
 
 func TestServiceAccountHmacKeySugared_UpsertHmacKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestServiceAccountHmacKeySugared_UpsertHmacKey(t *testing.T) {
 }
 
 func TestServiceAccountHmacKeySugared_CreateHmacKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestServiceAccountHmacKeySugared_CreateHmacKey(t *testing.T) {
 }
 
 func TestServiceAccountHmacKeySugared_UpdateHmacKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

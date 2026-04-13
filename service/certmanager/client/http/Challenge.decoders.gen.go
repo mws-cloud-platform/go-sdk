@@ -15,7 +15,7 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
-func decodeGetChallengeContentResponse(resp *http.Response) (*client.GetChallengeContentResponse, error) {
+func decodeGetChallengeTokenResponse(resp *http.Response) (*client.GetChallengeTokenResponse, error) {
 	ct, err := commonclient.GetContentType(resp)
 	if err != nil {
 		return nil, err
@@ -25,7 +25,7 @@ func decodeGetChallengeContentResponse(resp *http.Response) (*client.GetChalleng
 	case 200:
 		switch ct {
 		case "application/json":
-			result := &client.GetChallengeContentResponse{
+			result := &client.GetChallengeTokenResponse{
 				Code:        resp.StatusCode,
 				Response200: new(string),
 			}
@@ -42,7 +42,7 @@ func decodeGetChallengeContentResponse(resp *http.Response) (*client.GetChalleng
 	case 404:
 		switch ct {
 		case "application/json":
-			result := &client.GetChallengeContentResponse{
+			result := &client.GetChallengeTokenResponse{
 				Code:        resp.StatusCode,
 				Response404: &common.ApiError{},
 			}
@@ -59,9 +59,9 @@ func decodeGetChallengeContentResponse(resp *http.Response) (*client.GetChalleng
 	case 500:
 		switch ct {
 		case "application/json":
-			result := &client.GetChallengeContentResponse{
+			result := &client.GetChallengeTokenResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

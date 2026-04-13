@@ -28,10 +28,8 @@ func (m *AddressSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *AddressSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.Subnet != nil {
-		e.FieldStart("subnet")
-		m.Subnet.Encode(e)
-	}
+	e.FieldStart("subnet")
+	m.Subnet.Encode(e)
 
 	if m.IpAddress != nil {
 		e.FieldStart("ipAddress")
@@ -57,7 +55,10 @@ func (m *AddressSpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("AddressSpecRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	requiredFilled := map[string]bool{
+		"subnet": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "subnet":
 			var v vpc.SubnetRef
@@ -65,7 +66,8 @@ func (m *AddressSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Subnet = &v
+			m.Subnet = v
+			requiredFilled["subnet"] = true
 			return nil
 		case "ipAddress":
 			var v ipaddress.IPAddress
@@ -94,4 +96,9 @@ func (m *AddressSpecRequest) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

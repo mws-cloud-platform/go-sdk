@@ -61,6 +61,23 @@ func decodeAddSecretVersionResponse(resp *http.Response) (*client.AddSecretVersi
 			_, _ = io.Copy(io.Discard, resp.Body)
 			return nil, clienterrors.InvalidContentType(ct)
 		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.AddSecretVersionResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
 	case 403:
 		switch ct {
 		case "application/json":
@@ -215,7 +232,7 @@ func decodeListSecretVersionsResponse(resp *http.Response) (*client.ListSecretVe
 		case "application/json":
 			result := &client.ListSecretVersionsResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.SecretVersionListResponse{},
+				Response200: &model.SecretVersionListOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -240,6 +257,23 @@ func decodeListSecretVersionsResponse(resp *http.Response) (*client.ListSecretVe
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.ListSecretVersionsResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
@@ -397,6 +431,23 @@ func decodeGetDataResponse(resp *http.Response) (*client.GetDataResponse, error)
 			_, _ = io.Copy(io.Discard, resp.Body)
 			return nil, clienterrors.InvalidContentType(ct)
 		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.GetDataResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
 	case 403:
 		switch ct {
 		case "application/json":
@@ -536,6 +587,23 @@ func decodeDeleteSecretVersionResponse(resp *http.Response) (*client.DeleteSecre
 			_, _ = io.Copy(io.Discard, resp.Body)
 			return nil, clienterrors.InvalidContentType(ct)
 		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.DeleteSecretVersionResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
 	case 403:
 		switch ct {
 		case "application/json":
@@ -656,7 +724,7 @@ func decodeGetSecretVersionResponse(resp *http.Response) (*client.GetSecretVersi
 		case "application/json":
 			result := &client.GetSecretVersionResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.SecretVersionResponse{},
+				Response200: &model.SecretVersionOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -681,6 +749,23 @@ func decodeGetSecretVersionResponse(resp *http.Response) (*client.GetSecretVersi
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.GetSecretVersionResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
@@ -809,7 +894,7 @@ func decodeUpsertSecretVersionResponse(resp *http.Response) (*client.UpsertSecre
 		case "application/json":
 			result := &client.UpsertSecretVersionResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.SecretVersionResponse{},
+				Response200: &model.SecretVersionOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -834,6 +919,23 @@ func decodeUpsertSecretVersionResponse(resp *http.Response) (*client.UpsertSecre
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.UpsertSecretVersionResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

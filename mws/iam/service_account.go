@@ -11,16 +11,16 @@ import (
 	"time"
 )
 
-var serviceAccountKeyIDRe = regexp.MustCompile(`^projects/(.*)/serviceAccounts/(.*)/authorizedKeys/(.*)$`)
+var serviceAccountAuthorizedKeyIDRe = regexp.MustCompile(`^projects/(.*)/serviceAccounts/(.*)/authorizedKeys/(.*)$`)
 
-// InvalidServiceAccountKeyIDError is returned when the service account key id
-// is invalid.
-type InvalidServiceAccountKeyIDError struct {
+// InvalidServiceAccountAuthorizedKeyIDError is returned when the service
+// account authorized key id is invalid.
+type InvalidServiceAccountAuthorizedKeyIDError struct {
 	ID string
 }
 
-func (e InvalidServiceAccountKeyIDError) Error() string {
-	return fmt.Sprintf("invalid service account key id: %s", e.ID)
+func (e InvalidServiceAccountAuthorizedKeyIDError) Error() string {
+	return fmt.Sprintf("invalid service account authorized key id: %s", e.ID)
 }
 
 // UnsupportedAlgorithmError is returned when the crypto algorithm is not
@@ -64,38 +64,40 @@ func (s ServiceAccount) String() string {
 
 func (s ServiceAccount) impersonable() {}
 
-type serviceAccountKeyCtxKey struct{}
+type serviceAccountAuthorizedKeyCtxKey struct{}
 
-// WithServiceAccountKey adds given service account key to the context.
-func WithServiceAccountKey(ctx context.Context, key ServiceAccountKey) context.Context {
-	return context.WithValue(ctx, serviceAccountKeyCtxKey{}, key)
+// WithServiceAccountAuthorizedKey adds given service account authorized key to
+// the context.
+func WithServiceAccountAuthorizedKey(ctx context.Context, key ServiceAccountAuthorizedKey) context.Context {
+	return context.WithValue(ctx, serviceAccountAuthorizedKeyCtxKey{}, key)
 }
 
-// ServiceAccountKeyFromContext retrieves service account key from the context.
-func ServiceAccountKeyFromContext(ctx context.Context) (ServiceAccountKey, bool) {
+// ServiceAccountAuthorizedKeyFromContext retrieves service account authorized
+// key from the context.
+func ServiceAccountAuthorizedKeyFromContext(ctx context.Context) (ServiceAccountAuthorizedKey, bool) {
 	if ctx == nil {
-		return ServiceAccountKey{}, false
+		return ServiceAccountAuthorizedKey{}, false
 	}
-	v, ok := ctx.Value(serviceAccountKeyCtxKey{}).(ServiceAccountKey)
+	v, ok := ctx.Value(serviceAccountAuthorizedKeyCtxKey{}).(ServiceAccountAuthorizedKey)
 	if !ok {
-		return ServiceAccountKey{}, false
+		return ServiceAccountAuthorizedKey{}, false
 	}
 	return v, true
 }
 
-// ServiceAccountKey contains a service account and it's authorized key.
-type ServiceAccountKey struct {
+// ServiceAccountAuthorizedKey contains a service account and it's authorized key.
+type ServiceAccountAuthorizedKey struct {
 	ServiceAccount ServiceAccount
 	AuthorizedKey  AuthorizedKey
 }
 
 // Reference returns a reference to the service account authorized key.
-func (k ServiceAccountKey) Reference() string {
+func (k ServiceAccountAuthorizedKey) Reference() string {
 	return fmt.Sprintf("projects/%s/serviceAccounts/%s/authorizedKeys/%s",
-		k.ServiceAccount.Project, k.ServiceAccount.Name, k.AuthorizedKey.ID)
+		k.ServiceAccount.Project, k.ServiceAccount.Name, k.AuthorizedKey.Name)
 }
 
-func (k *ServiceAccountKey) UnmarshalJSON(data []byte) error {
+func (k *ServiceAccountAuthorizedKey) UnmarshalJSON(data []byte) error {
 	v := struct {
 		ID             string `json:"keyId"`
 		PrivateKey     string `json:"privateKey"`
@@ -112,16 +114,16 @@ func (k *ServiceAccountKey) UnmarshalJSON(data []byte) error {
 	}
 	k.AuthorizedKey.Algorithm = v.Algorithm
 
-	matches := serviceAccountKeyIDRe.FindStringSubmatch(v.ID)
+	matches := serviceAccountAuthorizedKeyIDRe.FindStringSubmatch(v.ID)
 	if len(matches) != 4 { //nolint:mnd // regex has 4 groups
-		return InvalidServiceAccountKeyIDError{ID: v.ID}
+		return InvalidServiceAccountAuthorizedKeyIDError{ID: v.ID}
 	}
 
 	k.ServiceAccount = ServiceAccount{
 		Project: matches[1],
 		Name:    matches[2],
 	}
-	k.AuthorizedKey.ID = matches[3]
+	k.AuthorizedKey.Name = matches[3]
 
 	decoded, err := base64.StdEncoding.DecodeString(v.PrivateKey)
 	if err != nil {

@@ -12,11 +12,11 @@ func ExternalAddressRequestToOptionalResponse(request *ExternalAddressRequest) (
 		return nil, nil
 	}
 	var response ExternalAddressOptionalResponse
-	tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
-	if err != nil {
-		return nil, err
-	}
 	if request.Metadata != nil {
+		tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
+		if err != nil {
+			return nil, err
+		}
 		response.Metadata = commonclient.NewOptionalNil(*tmpMetadata)
 	}
 	tmpSpec, err := VpcExternalAddressSpecRequestToOptionalResponse(&request.Spec)

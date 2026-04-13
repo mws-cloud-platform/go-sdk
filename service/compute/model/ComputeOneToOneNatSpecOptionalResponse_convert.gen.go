@@ -2,22 +2,16 @@
 
 package model
 
-import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
-)
-
 func ComputeOneToOneNatSpecRequestToOptionalResponse(request *ComputeOneToOneNatSpecRequest) (*ComputeOneToOneNatSpecOptionalResponse, error) {
 	if request == nil {
 		return nil, nil
 	}
 	var response ComputeOneToOneNatSpecOptionalResponse
-	tmpExternal, err := ComputeOneToOneNatSpecExternalRequestToOptionalResponse(request.External)
+	tmpExternal, err := ComputeOneToOneNatSpecExternalRequestToOptionalResponse(&request.External)
 	if err != nil {
 		return nil, err
 	}
-	if request.External != nil {
-		response.External = commonclient.NewOptionalNil(*tmpExternal)
-	}
+	response.External = *tmpExternal
 	return &response, nil
 }
 
@@ -26,12 +20,10 @@ func ComputeOneToOneNatSpecExternalRequestToOptionalResponse(request *ComputeOne
 		return nil, nil
 	}
 	var response ComputeOneToOneNatSpecExternalOptionalResponse
-	tmpAddress, err := OneToOneNatAddressSpecOrRefRequestToOptionalResponse(request.Address)
+	tmpAddress, err := OneToOneNatAddressSpecOrRefRequestToOptionalResponse(&request.Address)
 	if err != nil {
 		return nil, err
 	}
-	if request.Address != nil {
-		response.Address = commonclient.NewOptionalNil(*tmpAddress)
-	}
+	response.Address = *tmpAddress
 	return &response, nil
 }

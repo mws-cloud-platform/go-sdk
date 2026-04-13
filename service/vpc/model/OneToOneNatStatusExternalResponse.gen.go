@@ -13,10 +13,6 @@ import (
 type OneToOneNatStatusExternalResponse struct {
 	// Спецификация внешнего адреса, через который будет осуществляться трансляция.
 	Address ResourceExternalAddressStatusResponse `json:"address" yaml:"address"`
-	// false если ссылка на внешний адрес был указана в спецификации, true если адрес был создан. Deprecated в пользу  managed параметра в поле address.
-	//
-	// Deprecated: Поле устарело
-	Managed *bool `json:"managed,omitempty" yaml:"managed,omitempty"`
 }
 
 func (m *OneToOneNatStatusExternalResponse) GetAddress() ResourceExternalAddressStatusResponse {
@@ -30,27 +26,6 @@ func (m *OneToOneNatStatusExternalResponse) SetAddress(val ResourceExternalAddre
 	m.Address = val
 }
 
-// Deprecated: Поле устарело
-func (m *OneToOneNatStatusExternalResponse) GetManaged() *bool {
-	if m != nil {
-		return m.Managed
-	}
-	return nil
-}
-
-// Deprecated: Поле устарело
-func (m *OneToOneNatStatusExternalResponse) SetManaged(val *bool) {
-	m.Managed = val
-}
-
-// Deprecated: Поле устарело
-func (m *OneToOneNatStatusExternalResponse) GetManagedOr(val bool) bool {
-	if m != nil && m.Managed != nil {
-		return *m.Managed
-	}
-	return val
-}
-
 func (m *OneToOneNatStatusExternalResponse) Clone() *OneToOneNatStatusExternalResponse {
 	if m == nil {
 		return nil
@@ -58,10 +33,6 @@ func (m *OneToOneNatStatusExternalResponse) Clone() *OneToOneNatStatusExternalRe
 
 	clone := *m
 	clone.Address = *m.Address.Clone()
-	if m.Managed != nil {
-		cloneManaged := *m.Managed
-		clone.Managed = &cloneManaged
-	}
 	return &clone
 }
 

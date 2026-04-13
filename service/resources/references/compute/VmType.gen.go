@@ -89,6 +89,10 @@ func (m *VmTypeID) ID() string {
 	return m.ServiceSlug() + "/vmTypes/" + m.vmType
 }
 
+func (m *VmTypeID) String() string {
+	return m.ID()
+}
+
 func (m *VmTypeID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *VmTypeRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *VmTypeRef) String() string {
+	return m.IDPath()
 }
 
 func (m *VmTypeRef) Parse(ctx context.Context) error {

@@ -12,6 +12,7 @@ import (
 )
 
 func TestCommonTypedResourceMetadataRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initCommonTypedResourceMetadataRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -12,6 +12,7 @@ import (
 )
 
 func TestIopsMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initIops()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

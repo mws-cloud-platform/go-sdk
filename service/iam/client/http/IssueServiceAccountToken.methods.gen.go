@@ -15,7 +15,7 @@ import (
 	"go.mws.cloud/go-sdk/service/iam/client"
 )
 
-// IssueServiceAccountTokenV2 issue token for service account.
+// IssueServiceAccountTokenV2 позволяет выпустить токен для сервисного аккаунта.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /iam/v2/tokens/:issueServiceAccountToken
@@ -97,7 +97,8 @@ func (c *IssueServiceAccountToken) headerIssueServiceAccountTokenV2(req *http.Re
 	}
 }
 
-// IssueServiceAccountToken issue token for service account.
+// Deprecated: Переходим на v2-версию метода.
+// IssueServiceAccountToken позволяет выпустить токен для сервисного аккаунта.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /iam/v1/tokens/:issueServiceAccountToken

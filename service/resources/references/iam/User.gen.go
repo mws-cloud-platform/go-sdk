@@ -89,6 +89,10 @@ func (m *UserID) ID() string {
 	return m.ServiceSlug() + "/users/" + m.user
 }
 
+func (m *UserID) String() string {
+	return m.ID()
+}
+
 func (m *UserID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *UserRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *UserRef) String() string {
+	return m.IDPath()
 }
 
 func (m *UserRef) Parse(ctx context.Context) error {

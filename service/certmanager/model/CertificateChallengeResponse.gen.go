@@ -13,7 +13,7 @@ type CertificateChallengeResponse struct {
 	// Время создания проверки.
 	CreatedAt time.Time `json:"createdAt" yaml:"createdAt"`
 	// Время последнего обновления проверки.
-	UpdatedAt *time.Time `json:"updatedAt,omitempty" yaml:"updatedAt,omitempty"`
+	UpdatedAt time.Time `json:"updatedAt" yaml:"updatedAt"`
 	// Время последней проверки.
 	LastValidatedAt *time.Time `json:"lastValidatedAt,omitempty" yaml:"lastValidatedAt,omitempty"`
 	// Текущий статус проверки. Возможные значения: PENDING, VALID, INVALID, CANCELED, SUBMITTED.
@@ -41,29 +41,22 @@ func (m *CertificateChallengeResponse) GetCreatedAt() time.Time {
 	if m != nil {
 		return m.CreatedAt
 	}
-	return time.Unix(0, 0).UTC()
+	return time.Time{}
 }
 
 func (m *CertificateChallengeResponse) SetCreatedAt(val time.Time) {
 	m.CreatedAt = val
 }
 
-func (m *CertificateChallengeResponse) GetUpdatedAt() *time.Time {
+func (m *CertificateChallengeResponse) GetUpdatedAt() time.Time {
 	if m != nil {
 		return m.UpdatedAt
 	}
-	return nil
+	return time.Time{}
 }
 
-func (m *CertificateChallengeResponse) SetUpdatedAt(val *time.Time) {
+func (m *CertificateChallengeResponse) SetUpdatedAt(val time.Time) {
 	m.UpdatedAt = val
-}
-
-func (m *CertificateChallengeResponse) GetUpdatedAtOr(val time.Time) time.Time {
-	if m != nil && m.UpdatedAt != nil {
-		return *m.UpdatedAt
-	}
-	return val
 }
 
 func (m *CertificateChallengeResponse) GetLastValidatedAt() *time.Time {

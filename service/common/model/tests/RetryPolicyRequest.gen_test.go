@@ -13,6 +13,7 @@ import (
 )
 
 func TestRetryPolicyRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initRetryPolicyRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

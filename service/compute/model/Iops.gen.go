@@ -2,5 +2,5 @@
 
 package model
 
-// IOPS
+// Количество операций ввода-вывода в секунду (IOPS)
 type Iops int64

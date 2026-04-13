@@ -16,6 +16,8 @@ type UpdateEgressNatSpecRequest struct {
 	Internal commonclient.Optional[UpdateEgressNatSpecInternalRequest] `json:"internal" yaml:"internal"`
 	// Группирующий элемент для всего, что касается внешней части (ресурсов, доступных извне).
 	External commonclient.Optional[UpdateEgressNatSpecExternalRequest] `json:"external" yaml:"external"`
+	// Описывает настройки управления портами.
+	PortAllocation commonclient.OptionalNil[UpdateEgressNatSpecPortAllocationRequest] `json:"portAllocation" yaml:"portAllocation"`
 	// Описывает настройки управления портами (Port Block Allocation).
 	Pba commonclient.OptionalNil[UpdateEgressNatSpecPbaRequest] `json:"pba" yaml:"pba"`
 }
@@ -24,6 +26,9 @@ func (m *EgressNatSpecRequest) AsUpdateModel() UpdateEgressNatSpecRequest {
 	var u UpdateEgressNatSpecRequest
 	u.Internal = commonclient.NewOptional(m.Internal.AsUpdateModel())
 	u.External = commonclient.NewOptional(m.External.AsUpdateModel())
+	if m.PortAllocation != nil {
+		u.PortAllocation = commonclient.NewOptionalNil(m.PortAllocation.AsUpdateModel())
+	}
 	if m.Pba != nil {
 		u.Pba = commonclient.NewOptionalNil(m.Pba.AsUpdateModel())
 	}
@@ -37,6 +42,7 @@ func (m *EgressNatSpecRequest) Diff(src *EgressNatSpecRequest) UpdateEgressNatSp
 	if !nilDiffers {
 		upd.Internal = m.diffInternal(src)
 		upd.External = m.diffExternal(src)
+		upd.PortAllocation = m.diffPortAllocation(src)
 		upd.Pba = m.diffPba(src)
 	}
 	return upd
@@ -54,6 +60,11 @@ func (m *EgressNatSpecRequest) WithChanges(u UpdateEgressNatSpecRequest) EgressN
 	if u.External.IsSet() {
 		out.External = out.External.WithChanges(u.External.Value)
 	}
+	if u.PortAllocation.IsSet() {
+		out.PortAllocation = ptr.Get(out.PortAllocation.WithChanges(u.PortAllocation.Value))
+	} else if u.PortAllocation.IsNull() {
+		out.PortAllocation = nil
+	}
 	if u.Pba.IsSet() {
 		out.Pba = ptr.Get(out.Pba.WithChanges(u.Pba.Value))
 	} else if u.Pba.IsNull() {
@@ -66,6 +77,7 @@ func (m *EgressNatSpecRequest) WithChanges(u UpdateEgressNatSpecRequest) EgressN
 func (m UpdateEgressNatSpecRequest) HasChanges() bool {
 	return m.Internal.Set ||
 		m.External.Set ||
+		m.PortAllocation.Set ||
 		m.Pba.Set
 }
 
@@ -101,6 +113,12 @@ func (m *EgressNatSpecRequest) diffExternal(src *EgressNatSpecRequest) commoncli
 	to := m.GetExternal()
 	value := to.Diff(&from)
 	return commonclient.NewDirectOptional[UpdateEgressNatSpecExternalRequest](value, value.HasChanges())
+}
+
+func (m *EgressNatSpecRequest) diffPortAllocation(src *EgressNatSpecRequest) commonclient.OptionalNil[UpdateEgressNatSpecPortAllocationRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetPortAllocation().Diff(src.GetPortAllocation())
+	return commonclient.NewDirectOptionalNil[UpdateEgressNatSpecPortAllocationRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
 }
 
 func (m *EgressNatSpecRequest) diffPba(src *EgressNatSpecRequest) commonclient.OptionalNil[UpdateEgressNatSpecPbaRequest] {

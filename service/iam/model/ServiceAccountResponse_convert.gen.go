@@ -39,6 +39,5 @@ func ServiceAccountMetadataRequestToResponse(request *ServiceAccountMetadataRequ
 	}
 	response.Etag = request.Etag
 	response.Description = request.Description
-	response.LastAuthDateTime = request.LastAuthDateTime
 	return &response, nil
 }

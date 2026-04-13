@@ -109,6 +109,10 @@ func (m *OrganizationCountID) ID() string {
 	return m.ServiceSlug() + "/users/" + m.user + "/services/iam/quotas/organizationCount"
 }
 
+func (m *OrganizationCountID) String() string {
+	return m.ID()
+}
+
 func (m *OrganizationCountID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -232,6 +236,10 @@ func (m *OrganizationCountRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *OrganizationCountRef) String() string {
+	return m.IDPath()
 }
 
 func (m *OrganizationCountRef) Parse(ctx context.Context) error {

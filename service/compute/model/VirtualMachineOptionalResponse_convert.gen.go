@@ -12,11 +12,11 @@ func VirtualMachineRequestToOptionalResponse(request *VirtualMachineRequest) (*V
 		return nil, nil
 	}
 	var response VirtualMachineOptionalResponse
-	tmpMetadata, err := VirtualMachineMetadataRequestToOptionalResponse(request.Metadata)
-	if err != nil {
-		return nil, err
-	}
 	if request.Metadata != nil {
+		tmpMetadata, err := VirtualMachineMetadataRequestToOptionalResponse(request.Metadata)
+		if err != nil {
+			return nil, err
+		}
 		response.Metadata = commonclient.NewOptionalNil(*tmpMetadata)
 	}
 	tmpSpec, err := VirtualMachineSpecRequestToOptionalResponse(&request.Spec)

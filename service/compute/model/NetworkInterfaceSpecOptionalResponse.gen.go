@@ -12,14 +12,15 @@ import (
 
 // Real OAPI model name: NetworkInterfaceSpec
 type NetworkInterfaceSpecOptionalResponse struct {
-	Name    string                      `json:"name" yaml:"name"`
-	Primary commonclient.Optional[bool] `json:"primary,omitempty" yaml:"primary,omitempty"`
+	Name                string                      `json:"name" yaml:"name"`
+	Primary             commonclient.Optional[bool] `json:"primary,omitempty" yaml:"primary,omitempty"`
+	IpForwardingEnabled commonclient.Optional[bool] `json:"ipForwardingEnabled,omitempty" yaml:"ipForwardingEnabled,omitempty"`
 	// К одному сетевому интерфейсу можно подключить одновременно 4 разных сетевых адреса
 	// - IPv4 internal
 	// - IPv4 external
 	// - IPv6 internal
 	// - IPv6 external
-	Addresses commonclient.Optional[[]AddressSpecOrRefWithAttachmentsOptionalResponse] `json:"addresses,omitempty" yaml:"addresses,omitempty"`
+	Addresses []AddressSpecOrRefWithAttachmentsOptionalResponse `json:"addresses" yaml:"addresses"`
 }
 
 func (m *NetworkInterfaceSpecOptionalResponse) GetName() string {
@@ -47,18 +48,29 @@ func (m *NetworkInterfaceSpecOptionalResponse) GetPrimaryOr(val bool) bool {
 	return val
 }
 
-func (m *NetworkInterfaceSpecOptionalResponse) GetAddresses() []AddressSpecOrRefWithAttachmentsOptionalResponse {
-	if m != nil && m.Addresses.IsSet() {
-		return m.Addresses.Value
+func (m *NetworkInterfaceSpecOptionalResponse) GetIpForwardingEnabled() *bool {
+	if m != nil && m.IpForwardingEnabled.IsSet() {
+		return &m.IpForwardingEnabled.Value
 	}
 	return nil
 }
 
-func (m *NetworkInterfaceSpecOptionalResponse) GetAddressesOr(val []AddressSpecOrRefWithAttachmentsOptionalResponse) []AddressSpecOrRefWithAttachmentsOptionalResponse {
-	if m != nil && m.Addresses.IsSet() {
-		return m.Addresses.Value
+func (m *NetworkInterfaceSpecOptionalResponse) GetIpForwardingEnabledOr(val bool) bool {
+	if m != nil && m.IpForwardingEnabled.IsSet() {
+		return m.IpForwardingEnabled.Value
 	}
 	return val
+}
+
+func (m *NetworkInterfaceSpecOptionalResponse) GetAddresses() []AddressSpecOrRefWithAttachmentsOptionalResponse {
+	if m != nil {
+		return m.Addresses
+	}
+	return nil
+}
+
+func (m *NetworkInterfaceSpecOptionalResponse) SetAddresses(val []AddressSpecOrRefWithAttachmentsOptionalResponse) {
+	m.Addresses = val
 }
 
 func (m *NetworkInterfaceSpecOptionalResponse) Clone() *NetworkInterfaceSpecOptionalResponse {
@@ -67,10 +79,10 @@ func (m *NetworkInterfaceSpecOptionalResponse) Clone() *NetworkInterfaceSpecOpti
 	}
 
 	clone := *m
-	if m.Addresses.Value != nil {
-		clone.Addresses.Value = make([]AddressSpecOrRefWithAttachmentsOptionalResponse, len(m.Addresses.Value))
-		for i, v := range m.Addresses.Value {
-			clone.Addresses.Value[i] = *v.Clone()
+	if m.Addresses != nil {
+		clone.Addresses = make([]AddressSpecOrRefWithAttachmentsOptionalResponse, len(m.Addresses))
+		for i, v := range m.Addresses {
+			clone.Addresses[i] = *v.Clone()
 		}
 	}
 	return &clone
@@ -81,11 +93,9 @@ func (m *NetworkInterfaceSpecOptionalResponse) Parse(ctx context.Context) error 
 		return nil
 	}
 
-	if m.Addresses.IsSet() {
-		for index := range m.Addresses.Value {
-			if err := m.Addresses.Value[index].Parse(ctx); err != nil {
-				return reserrors.NewPathAccumulatorError("Addresses"+fmt.Sprint("[", index, "]"), err)
-			}
+	for index := range m.Addresses {
+		if err := m.Addresses[index].Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Addresses"+fmt.Sprint("[", index, "]"), err)
 		}
 	}
 

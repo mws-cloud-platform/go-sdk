@@ -127,6 +127,10 @@ func (m *SecretVersionID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/secrets/" + m.secretName + "/secretVersions/" + m.version
 }
 
+func (m *SecretVersionID) String() string {
+	return m.ID()
+}
+
 func (m *SecretVersionID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *SecretVersionRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *SecretVersionRef) String() string {
+	return m.IDPath()
 }
 
 func (m *SecretVersionRef) Parse(ctx context.Context) error {

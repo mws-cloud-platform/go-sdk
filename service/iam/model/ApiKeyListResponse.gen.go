@@ -12,7 +12,7 @@ import (
 
 // Real OAPI model name: ApiKeyList
 type ApiKeyListResponse struct {
-	// Строка, которую нужно передать в следующий запрос, чтобы получить следующую страницу. Для последней страницы не задан
+	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
 	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 	Items         []ApiKeyResponse      `json:"items" yaml:"items"`
 }

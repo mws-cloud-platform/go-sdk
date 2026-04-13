@@ -127,6 +127,10 @@ func (m *AddressGroupID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/networks/" + m.network + "/addressGroups/" + m.addressGroup
 }
 
+func (m *AddressGroupID) String() string {
+	return m.ID()
+}
+
 func (m *AddressGroupID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *AddressGroupRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *AddressGroupRef) String() string {
+	return m.IDPath()
 }
 
 func (m *AddressGroupRef) Parse(ctx context.Context) error {

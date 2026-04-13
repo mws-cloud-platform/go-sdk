@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/vpc/client"
 )
 
-// ListEgressNats позволяет получить список Egress NAT-шлюзов.
+// ListEgressNats позволяет получить список Egress NAT.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /vpc/v1/projects/{project}/networks/{network}/egressNats
@@ -111,7 +111,7 @@ func (c *EgressNat) headerListEgressNats(req *http.Request, request *client.List
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// DeleteEgressNat позволяет удалить Egress NAT-шлюз.
+// DeleteEgressNat позволяет удалить Egress NAT.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: DELETE /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}
@@ -188,7 +188,7 @@ func (c *EgressNat) headerDeleteEgressNat(req *http.Request, request *client.Del
 	}
 }
 
-// GetEgressNat позволяет получить информацию об Egress NAT-шлюзе.
+// GetEgressNat позволяет получить информацию об Egress NAT.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}
@@ -266,7 +266,7 @@ func (c *EgressNat) headerGetEgressNat(req *http.Request, request *client.GetEgr
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpsertEgressNat позволяет создать или изменить Egress NAT-шлюз.
+// UpsertEgressNat позволяет создать или изменить Egress NAT.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}
@@ -359,7 +359,7 @@ func (c *EgressNat) headerUpsertEgressNat(req *http.Request, request *client.Ups
 	}
 }
 
-// CreateEgressNat позволяет создать или изменить Egress NAT-шлюз.
+// CreateEgressNat позволяет создать или изменить Egress NAT.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -454,7 +454,7 @@ func (c *EgressNat) headerCreateEgressNat(req *http.Request, request *client.Ups
 	}
 }
 
-// UpdateEgressNat позволяет создать или изменить Egress NAT-шлюз.
+// UpdateEgressNat позволяет создать или изменить Egress NAT.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

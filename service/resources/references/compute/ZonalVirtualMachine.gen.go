@@ -127,6 +127,10 @@ func (m *ZonalVirtualMachineID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalVirtualMachines/" + m.virtualMachine
 }
 
+func (m *ZonalVirtualMachineID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalVirtualMachineID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *ZonalVirtualMachineRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalVirtualMachineRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalVirtualMachineRef) Parse(ctx context.Context) error {

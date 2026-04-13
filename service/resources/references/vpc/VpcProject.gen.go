@@ -89,6 +89,10 @@ func (m *VpcProjectID) ID() string {
 	return m.ServiceSlug() + "/vpcProjects/" + m.project
 }
 
+func (m *VpcProjectID) String() string {
+	return m.ID()
+}
+
 func (m *VpcProjectID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *VpcProjectRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *VpcProjectRef) String() string {
+	return m.IDPath()
 }
 
 func (m *VpcProjectRef) Parse(ctx context.Context) error {

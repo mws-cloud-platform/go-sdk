@@ -108,6 +108,10 @@ func (m *BorderHostID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/borderHosts/" + m.borderHost
 }
 
+func (m *BorderHostID) String() string {
+	return m.ID()
+}
+
 func (m *BorderHostID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *BorderHostRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *BorderHostRef) String() string {
+	return m.IDPath()
 }
 
 func (m *BorderHostRef) Parse(ctx context.Context) error {

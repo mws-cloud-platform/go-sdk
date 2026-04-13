@@ -12,6 +12,7 @@ import (
 )
 
 func TestOsSpecOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initOsSpecOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

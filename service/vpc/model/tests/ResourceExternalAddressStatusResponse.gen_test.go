@@ -13,6 +13,7 @@ import (
 )
 
 func TestResourceExternalAddressStatusResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initResourceExternalAddressStatusResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

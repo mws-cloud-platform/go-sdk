@@ -12,6 +12,7 @@ import (
 )
 
 func TestSuccessTokenV2ResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initSuccessTokenV2Response()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

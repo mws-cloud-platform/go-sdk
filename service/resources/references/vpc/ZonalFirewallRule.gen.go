@@ -146,6 +146,10 @@ func (m *ZonalFirewallRuleID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalNetworks/" + m.zonalNetwork + "/zonalFirewallRules/" + m.zonalFirewallRule
 }
 
+func (m *ZonalFirewallRuleID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalFirewallRuleID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -296,6 +300,10 @@ func (m *ZonalFirewallRuleRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalFirewallRuleRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalFirewallRuleRef) Parse(ctx context.Context) error {

@@ -29,15 +29,11 @@ func (m *VirtualMachineSpecOptionalResponse) Encode(e *jx.Encoder) {
 }
 
 func (m *VirtualMachineSpecOptionalResponse) encodeFields(e *jx.Encoder) {
-	if m.Zone.IsSet() {
-		e.FieldStart("zone")
-		e.Str(m.Zone.Value)
-	}
+	e.FieldStart("zone")
+	e.Str(m.Zone)
 
-	if m.VmType.IsSet() {
-		e.FieldStart("vmType")
-		m.VmType.Value.Encode(e)
-	}
+	e.FieldStart("vmType")
+	m.VmType.Encode(e)
 
 	if m.Hardware.IsSet() {
 		e.FieldStart("hardware")
@@ -57,23 +53,11 @@ func (m *VirtualMachineSpecOptionalResponse) encodeFields(e *jx.Encoder) {
 		}
 	}
 
-	if m.Storage.IsSet() {
-		e.FieldStart("storage")
-		if m.Storage.IsNull() {
-			e.Null()
-		} else {
-			m.Storage.Value.Encode(e)
-		}
-	}
+	e.FieldStart("storage")
+	m.Storage.Encode(e)
 
-	if m.Network.IsSet() {
-		e.FieldStart("network")
-		if m.Network.IsNull() {
-			e.Null()
-		} else {
-			m.Network.Value.Encode(e)
-		}
-	}
+	e.FieldStart("network")
+	m.Network.Encode(e)
 
 	if m.ServiceAccount.IsSet() {
 		e.FieldStart("serviceAccount")
@@ -102,7 +86,7 @@ func (m *VirtualMachineSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Zone.SetTo(v)
+			m.Zone = v
 			return nil
 		case "vmType":
 			var v compute.VmTypeRef
@@ -110,7 +94,7 @@ func (m *VirtualMachineSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.VmType.SetTo(v)
+			m.VmType = v
 			return nil
 		case "hardware":
 			if d.Next() == jx.Null {
@@ -139,30 +123,20 @@ func (m *VirtualMachineSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			m.Os.SetTo(v)
 			return nil
 		case "storage":
-			if d.Next() == jx.Null {
-				m.Storage.SetToNull()
-				return d.Null()
-			}
-
 			var v StorageSpecOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Storage.SetTo(v)
+			m.Storage = v
 			return nil
 		case "network":
-			if d.Next() == jx.Null {
-				m.Network.SetToNull()
-				return d.Null()
-			}
-
 			var v NetworkSpecOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Network.SetTo(v)
+			m.Network = v
 			return nil
 		case "serviceAccount":
 			if d.Next() == jx.Null {

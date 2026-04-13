@@ -52,6 +52,11 @@ func (n *AnyResourceID) ID() string {
 	return n.resource
 }
 
+// String implements fmt.Stringer. Returns the same value as ID.
+func (n *AnyResourceID) String() string {
+	return n.ID()
+}
+
 // ResourceName returns the trailing segment of the resource path.
 // Parses the stored path and extracts everything after the last "/".
 // For empty paths or nil receiver, returns empty string.

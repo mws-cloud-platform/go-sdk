@@ -109,6 +109,10 @@ func (m *FolderCountID) ID() string {
 	return m.ServiceSlug() + "/organizations/" + m.organization + "/services/iam/quotas/folderCount"
 }
 
+func (m *FolderCountID) String() string {
+	return m.ID()
+}
+
 func (m *FolderCountID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -232,6 +236,10 @@ func (m *FolderCountRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *FolderCountRef) String() string {
+	return m.IDPath()
 }
 
 func (m *FolderCountRef) Parse(ctx context.Context) error {

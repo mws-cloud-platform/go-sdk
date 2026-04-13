@@ -48,7 +48,7 @@ type ListCertificatesRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -82,11 +82,11 @@ func (m ListCertificatesRequest) WithPageToken(token *string) ListCertificatesRe
 
 type ListCertificatesResponse struct {
 	Code        int
-	Response200 *model.CertificateListResponse
+	Response200 *model.CertificateListOptionalResponse
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -149,7 +149,7 @@ type GetCertificateContentResponse struct {
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -208,13 +208,21 @@ func (m *DeleteCertificateRequest) SetProject(project string) {
 	m.Project = project
 }
 
+func (m *DeleteCertificateRequest) getCertificateRequest() GetCertificateRequest {
+	return GetCertificateRequest{
+		Project:       m.Project,
+		Name:          m.Name,
+		Authorization: m.Authorization,
+	}
+}
+
 type DeleteCertificateResponse struct {
 	Code        int
 	Response204 bool // empty response
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -273,11 +281,11 @@ func (m *GetCertificateRequest) SetProject(project string) {
 
 type GetCertificateResponse struct {
 	Code        int
-	Response200 *model.CertificateResponse
+	Response200 *model.CertificateOptionalResponse
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -337,6 +345,14 @@ func (m *UpsertCertificateRequest) SetProject(project string) {
 	m.Project = project
 }
 
+func (m *UpsertCertificateRequest) getCertificateRequest() GetCertificateRequest {
+	return GetCertificateRequest{
+		Project:       m.Project,
+		Name:          m.Name,
+		Authorization: m.Authorization,
+	}
+}
+
 type UpdateCertificateRequest struct {
 	// Путь к проекту
 	Project string // path: "project"
@@ -361,15 +377,23 @@ func (m *UpdateCertificateRequest) SetProject(project string) {
 	m.Project = project
 }
 
+func (m *UpdateCertificateRequest) getCertificateRequest() GetCertificateRequest {
+	return GetCertificateRequest{
+		Project:       m.Project,
+		Name:          m.Name,
+		Authorization: m.Authorization,
+	}
+}
+
 type UpsertCertificateResponse struct {
 	Code        int
-	Response200 *model.CertificateResponse
-	Response201 *model.CertificateResponse
+	Response200 *model.CertificateOptionalResponse
+	Response201 *model.CertificateOptionalResponse
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response409 *common.ApiError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }

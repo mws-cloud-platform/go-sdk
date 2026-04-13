@@ -31,11 +31,6 @@ func (m *HmacKeySpecResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("expirationTime")
 		conv.EncodeDateTimeUTC(e, *m.ExpirationTime)
 	}
-
-	if m.LastAuthTime != nil {
-		e.FieldStart("lastAuthTime")
-		conv.EncodeDateTimeUTC(e, *m.LastAuthTime)
-	}
 }
 
 func (m *HmacKeySpecResponse) UnmarshalJSON(b []byte) error {
@@ -56,14 +51,6 @@ func (m *HmacKeySpecResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.ExpirationTime = &v
-			return nil
-		case "lastAuthTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.LastAuthTime = &v
 			return nil
 		default:
 			return d.Skip()

@@ -12,6 +12,7 @@ import (
 )
 
 func TestDiskStatusIopsResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initDiskStatusIopsResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

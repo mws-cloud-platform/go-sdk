@@ -12,6 +12,7 @@ import (
 )
 
 func TestStorageStatusResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initStorageStatusResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

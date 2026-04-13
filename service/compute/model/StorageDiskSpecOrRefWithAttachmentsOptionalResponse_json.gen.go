@@ -40,14 +40,8 @@ func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) encodeFields(e *jx
 		e.Str(m.DeviceName.Value)
 	}
 
-	if m.Disk.IsSet() {
-		e.FieldStart("disk")
-		if m.Disk.IsNull() {
-			e.Null()
-		} else {
-			m.Disk.Value.Encode(e)
-		}
-	}
+	e.FieldStart("disk")
+	m.Disk.Encode(e)
 }
 
 func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -86,17 +80,12 @@ func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) Decode(d *jx.Decod
 			m.DeviceName.SetTo(v)
 			return nil
 		case "disk":
-			if d.Next() == jx.Null {
-				m.Disk.SetToNull()
-				return d.Null()
-			}
-
 			var v StorageDiskSpecOrRefOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Disk.SetTo(v)
+			m.Disk = v
 			return nil
 		default:
 			return d.Skip()

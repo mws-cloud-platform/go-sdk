@@ -22,7 +22,7 @@ type VmTypeOptionalResponse struct {
 	// Спецификация типа ВМ.
 	Spec VmTypeSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Статус типа ВМ.
-	Status *common.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
+	Status *VmTypeStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *VmTypeOptionalResponse) GetKind() *string {
@@ -68,18 +68,18 @@ func (m *VmTypeOptionalResponse) SetSpec(val VmTypeSpecOptionalResponse) {
 	m.Spec = val
 }
 
-func (m *VmTypeOptionalResponse) GetStatus() *common.ResourceStatusResponse {
+func (m *VmTypeOptionalResponse) GetStatus() *VmTypeStatusResponse {
 	if m != nil {
 		return m.Status
 	}
 	return nil
 }
 
-func (m *VmTypeOptionalResponse) SetStatus(val *common.ResourceStatusResponse) {
+func (m *VmTypeOptionalResponse) SetStatus(val *VmTypeStatusResponse) {
 	m.Status = val
 }
 
-func (m *VmTypeOptionalResponse) GetStatusOr(val common.ResourceStatusResponse) common.ResourceStatusResponse {
+func (m *VmTypeOptionalResponse) GetStatusOr(val VmTypeStatusResponse) VmTypeStatusResponse {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}

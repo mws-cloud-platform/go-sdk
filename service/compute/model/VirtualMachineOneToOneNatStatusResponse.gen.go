@@ -6,6 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -14,7 +15,7 @@ type VirtualMachineOneToOneNatStatusResponse struct {
 	// Ссылка на ресурс OneToOneNat
 	Ref vpc.OneToOneNatRef `json:"ref" yaml:"ref"`
 	// Ссылка на ресурс состояние ресурса OneToOneNat
-	Ready *ObservationResponse `json:"ready,omitempty" yaml:"ready,omitempty"`
+	Ready *common.ResourceStatusReadyResponse `json:"ready,omitempty" yaml:"ready,omitempty"`
 	// Статус внешнего (публичного) Адреса
 	External *OneToOneNatExternalAddressStatusResponse `json:"external,omitempty" yaml:"external,omitempty"`
 }
@@ -30,18 +31,18 @@ func (m *VirtualMachineOneToOneNatStatusResponse) SetRef(val vpc.OneToOneNatRef)
 	m.Ref = val
 }
 
-func (m *VirtualMachineOneToOneNatStatusResponse) GetReady() *ObservationResponse {
+func (m *VirtualMachineOneToOneNatStatusResponse) GetReady() *common.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.Ready
 	}
 	return nil
 }
 
-func (m *VirtualMachineOneToOneNatStatusResponse) SetReady(val *ObservationResponse) {
+func (m *VirtualMachineOneToOneNatStatusResponse) SetReady(val *common.ResourceStatusReadyResponse) {
 	m.Ready = val
 }
 
-func (m *VirtualMachineOneToOneNatStatusResponse) GetReadyOr(val ObservationResponse) ObservationResponse {
+func (m *VirtualMachineOneToOneNatStatusResponse) GetReadyOr(val common.ResourceStatusReadyResponse) common.ResourceStatusReadyResponse {
 	if m != nil && m.Ready != nil {
 		return *m.Ready
 	}

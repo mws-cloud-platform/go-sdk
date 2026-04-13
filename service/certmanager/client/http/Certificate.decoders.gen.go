@@ -28,7 +28,7 @@ func decodeListCertificatesResponse(resp *http.Response) (*client.ListCertificat
 		case "application/json":
 			result := &client.ListCertificatesResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.CertificateListResponse{},
+				Response200: &model.CertificateListOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -100,7 +100,7 @@ func decodeListCertificatesResponse(resp *http.Response) (*client.ListCertificat
 		case "application/json":
 			result := &client.ListCertificatesResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -198,7 +198,7 @@ func decodeGetCertificateContentResponse(resp *http.Response) (*client.GetCertif
 		case "application/json":
 			result := &client.GetCertificateContentResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -286,7 +286,7 @@ func decodeDeleteCertificateResponse(resp *http.Response) (*client.DeleteCertifi
 		case "application/json":
 			result := &client.DeleteCertificateResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -316,7 +316,7 @@ func decodeGetCertificateResponse(resp *http.Response) (*client.GetCertificateRe
 		case "application/json":
 			result := &client.GetCertificateResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.CertificateResponse{},
+				Response200: &model.CertificateOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -388,7 +388,7 @@ func decodeGetCertificateResponse(resp *http.Response) (*client.GetCertificateRe
 		case "application/json":
 			result := &client.GetCertificateResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -418,7 +418,7 @@ func decodeUpsertCertificateResponse(resp *http.Response) (*client.UpsertCertifi
 		case "application/json":
 			result := &client.UpsertCertificateResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.CertificateResponse{},
+				Response200: &model.CertificateOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -439,7 +439,7 @@ func decodeUpsertCertificateResponse(resp *http.Response) (*client.UpsertCertifi
 		case "application/json":
 			result := &client.UpsertCertificateResponse{
 				Code:        resp.StatusCode,
-				Response201: &model.CertificateResponse{},
+				Response201: &model.CertificateOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {
@@ -528,7 +528,7 @@ func decodeUpsertCertificateResponse(resp *http.Response) (*client.UpsertCertifi
 		case "application/json":
 			result := &client.UpsertCertificateResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

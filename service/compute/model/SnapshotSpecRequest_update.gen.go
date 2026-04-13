@@ -2,21 +2,11 @@
 
 package model
 
-import (
-	"context"
-
-	commonclient "go.mws.cloud/go-sdk/internal/client"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-)
-
 type UpdateSnapshotSpecRequest struct {
-	// Источник для создания снимка (На текущий момент поддерживается только диск, но в будущем будут и другие источники)
-	Source commonclient.Optional[UpdateSnapshotSourceRequest] `json:"source" yaml:"source"`
 }
 
 func (m *SnapshotSpecRequest) AsUpdateModel() UpdateSnapshotSpecRequest {
 	var u UpdateSnapshotSpecRequest
-	u.Source = commonclient.NewOptional(m.Source.AsUpdateModel())
 	return u
 }
 
@@ -25,7 +15,6 @@ func (m *SnapshotSpecRequest) Diff(src *SnapshotSpecRequest) UpdateSnapshotSpecR
 	nilDiffers := src != nil && m == nil
 	upd := UpdateSnapshotSpecRequest{}
 	if !nilDiffers {
-		upd.Source = m.diffSource(src)
 	}
 	return upd
 }
@@ -36,34 +25,10 @@ func (m *SnapshotSpecRequest) WithChanges(u UpdateSnapshotSpecRequest) SnapshotS
 		out = *m
 	}
 
-	if u.Source.IsSet() {
-		out.Source = out.Source.WithChanges(u.Source.Value)
-	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateSnapshotSpecRequest) HasChanges() bool {
-	return m.Source.Set
-}
-
-func (m *UpdateSnapshotSpecRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Source.IsSet() {
-		if err := m.Source.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Source", err)
-		}
-	}
-
-	return nil
-}
-
-func (m *SnapshotSpecRequest) diffSource(src *SnapshotSpecRequest) commonclient.Optional[UpdateSnapshotSourceRequest] {
-	from := src.GetSource()
-	to := m.GetSource()
-	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateSnapshotSourceRequest](value, value.HasChanges())
+	return false
 }

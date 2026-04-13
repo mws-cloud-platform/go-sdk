@@ -59,7 +59,7 @@ func (m *CertificateStatusDetailsResponse) GetNotAfter() time.Time {
 	if m != nil {
 		return m.NotAfter
 	}
-	return time.Unix(0, 0).UTC()
+	return time.Time{}
 }
 
 func (m *CertificateStatusDetailsResponse) SetNotAfter(val time.Time) {
@@ -70,7 +70,7 @@ func (m *CertificateStatusDetailsResponse) GetNotBefore() time.Time {
 	if m != nil {
 		return m.NotBefore
 	}
-	return time.Unix(0, 0).UTC()
+	return time.Time{}
 }
 
 func (m *CertificateStatusDetailsResponse) SetNotBefore(val time.Time) {

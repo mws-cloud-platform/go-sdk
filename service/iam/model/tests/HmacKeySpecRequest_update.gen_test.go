@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateHmacKeySpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initHmacKeySpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

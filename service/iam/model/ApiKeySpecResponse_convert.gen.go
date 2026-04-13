@@ -8,6 +8,5 @@ func ApiKeySpecRequestToResponse(request *ApiKeySpecRequest) (*ApiKeySpecRespons
 	}
 	var response ApiKeySpecResponse
 	response.ExpireTime = request.ExpireTime
-	response.LastAuthTime = request.LastAuthTime
 	return &response, nil
 }

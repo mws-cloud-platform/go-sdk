@@ -3,8 +3,6 @@
 package model
 
 import (
-	"time"
-
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
@@ -15,8 +13,8 @@ type UpdateAuthorizedKeySpecRequest struct {
 	PublicKey commonclient.Optional[string] `json:"publicKey" yaml:"publicKey"`
 	// Алгоритм шифрования.
 	KeyAlgorithm commonclient.Optional[string] `json:"keyAlgorithm" yaml:"keyAlgorithm"`
-	// Время истечения срока действия ключа.
-	ExpirationTime commonclient.Optional[time.Time] `json:"expirationTime" yaml:"expirationTime"`
+	// Флаг активности ключа.
+	Active commonclient.Optional[bool] `json:"active" yaml:"active"`
 }
 
 func (m *AuthorizedKeySpecRequest) AsUpdateModel() UpdateAuthorizedKeySpecRequest {
@@ -25,8 +23,8 @@ func (m *AuthorizedKeySpecRequest) AsUpdateModel() UpdateAuthorizedKeySpecReques
 		u.PublicKey = commonclient.NewOptional(m.GetPublicKeyOr(""))
 	}
 	u.KeyAlgorithm = commonclient.NewOptional(m.GetKeyAlgorithm())
-	if m.ExpirationTime != nil {
-		u.ExpirationTime = commonclient.NewOptional(m.GetExpirationTimeOr(time.Unix(0, 0).UTC()))
+	if m.Active != nil {
+		u.Active = commonclient.NewOptional(m.GetActiveOr(false))
 	}
 	return u
 }
@@ -38,7 +36,7 @@ func (m *AuthorizedKeySpecRequest) Diff(src *AuthorizedKeySpecRequest) UpdateAut
 	if !nilDiffers {
 		upd.PublicKey = m.diffPublicKey(src)
 		upd.KeyAlgorithm = m.diffKeyAlgorithm(src)
-		upd.ExpirationTime = m.diffExpirationTime(src)
+		upd.Active = m.diffActive(src)
 	}
 	return upd
 }
@@ -55,8 +53,8 @@ func (m *AuthorizedKeySpecRequest) WithChanges(u UpdateAuthorizedKeySpecRequest)
 	if u.KeyAlgorithm.IsSet() {
 		out.KeyAlgorithm = u.KeyAlgorithm.Value
 	}
-	if u.ExpirationTime.IsSet() {
-		out.ExpirationTime = ptr.Get(u.ExpirationTime.Value)
+	if u.Active.IsSet() {
+		out.Active = ptr.Get(u.Active.Value)
 	}
 	return out
 }
@@ -65,7 +63,7 @@ func (m *AuthorizedKeySpecRequest) WithChanges(u UpdateAuthorizedKeySpecRequest)
 func (m UpdateAuthorizedKeySpecRequest) HasChanges() bool {
 	return m.PublicKey.Set ||
 		m.KeyAlgorithm.Set ||
-		m.ExpirationTime.Set
+		m.Active.Set
 }
 
 func (m *AuthorizedKeySpecRequest) diffPublicKey(src *AuthorizedKeySpecRequest) commonclient.Optional[string] {
@@ -78,7 +76,7 @@ func (m *AuthorizedKeySpecRequest) diffKeyAlgorithm(src *AuthorizedKeySpecReques
 	return commonclient.DiffPrimitiveRequired(src.GetKeyAlgorithm(), m.GetKeyAlgorithm(), nilDiffers)
 }
 
-func (m *AuthorizedKeySpecRequest) diffExpirationTime(src *AuthorizedKeySpecRequest) commonclient.Optional[time.Time] {
+func (m *AuthorizedKeySpecRequest) diffActive(src *AuthorizedKeySpecRequest) commonclient.Optional[bool] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetExpirationTime(), m.GetExpirationTime(), nilDiffers)
+	return commonclient.DiffPrimitiveNonRequired(src.GetActive(), m.GetActive(), nilDiffers)
 }

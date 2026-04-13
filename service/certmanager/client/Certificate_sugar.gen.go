@@ -5,7 +5,10 @@ package client
 import (
 	"context"
 
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
 	mwserrors "go.mws.cloud/go-sdk/mws/errors"
+	"go.mws.cloud/go-sdk/mws/wait"
 	"go.mws.cloud/go-sdk/service/certmanager/model"
 )
 
@@ -26,7 +29,7 @@ func (x *CertificateSugared) Impl() Certificate {
 // ListCertificates позволяет получить все сертификаты.
 //
 // Путь: GET /certmanager/v1/projects/{project}/certificates
-func (x *CertificateSugared) ListCertificates(ctx context.Context, request ListCertificatesRequest) (*model.CertificateListResponse, error) {
+func (x *CertificateSugared) ListCertificates(ctx context.Context, request ListCertificatesRequest) (*model.CertificateListOptionalResponse, error) {
 	resp, err := x.impl.ListCertificates(ctx, request)
 	if err != nil {
 		return nil, err
@@ -35,7 +38,7 @@ func (x *CertificateSugared) ListCertificates(ctx context.Context, request ListC
 	return x.respHandlerListCertificates(resp)
 }
 
-func (x *CertificateSugared) respHandlerListCertificates(resp *ListCertificatesResponse) (*model.CertificateListResponse, error) {
+func (x *CertificateSugared) respHandlerListCertificates(resp *ListCertificatesResponse) (*model.CertificateListOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -74,13 +77,24 @@ func (x *CertificateSugared) respHandlerGetCertificateContent(resp *GetCertifica
 // DeleteCertificate позволяет удалить сертификаты.
 //
 // Путь: DELETE /certmanager/v1/projects/{project}/certificates/{name}
-func (x *CertificateSugared) DeleteCertificate(ctx context.Context, request DeleteCertificateRequest) error {
+func (x *CertificateSugared) DeleteCertificate(ctx context.Context, request DeleteCertificateRequest, opts ...Option) error {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.DeleteCertificate(ctx, request)
 	if err != nil {
 		return err
 	}
 
-	return x.respHandlerDeleteCertificate(resp)
+	err = x.respHandlerDeleteCertificate(resp)
+	if err != nil {
+		return err
+	}
+
+	if !config.wait {
+		return nil
+	}
+
+	return x.waitDeleteCertificate(ctx, request.getCertificateRequest(), config.waitOptions...)
 }
 
 func (x *CertificateSugared) respHandlerDeleteCertificate(resp *DeleteCertificateResponse) error {
@@ -95,19 +109,43 @@ func (x *CertificateSugared) respHandlerDeleteCertificate(resp *DeleteCertificat
 	return mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+func (x *CertificateSugared) waitDeleteCertificate(ctx context.Context, request GetCertificateRequest, opts ...wait.WaiterOption) error {
+	callback := func(ctx context.Context) (*model.CertificateOptionalResponse, bool, error) {
+		_, err := x.GetCertificate(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	_, err := waiter.Wait(ctx)
+	return err
+}
+
 // GetCertificate позволяет получить конкретный сертификат.
 //
 // Путь: GET /certmanager/v1/projects/{project}/certificates/{name}
-func (x *CertificateSugared) GetCertificate(ctx context.Context, request GetCertificateRequest) (*model.CertificateResponse, error) {
+func (x *CertificateSugared) GetCertificate(ctx context.Context, request GetCertificateRequest, opts ...Option) (*model.CertificateOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.GetCertificate(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerGetCertificate(resp)
+	sugaredResponse, err := x.respHandlerGetCertificate(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitGetCertificate(ctx, request, config.waitOptions...)
 }
 
-func (x *CertificateSugared) respHandlerGetCertificate(resp *GetCertificateResponse) (*model.CertificateResponse, error) {
+func (x *CertificateSugared) respHandlerGetCertificate(resp *GetCertificateResponse) (*model.CertificateOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -119,19 +157,40 @@ func (x *CertificateSugared) respHandlerGetCertificate(resp *GetCertificateRespo
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+func (x *CertificateSugared) waitGetCertificate(ctx context.Context, request GetCertificateRequest, opts ...wait.WaiterOption) (*model.CertificateOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.CertificateOptionalResponse, bool, error) {
+		response, err := x.GetCertificate(ctx, request)
+		stop := string(ptr.Get(ptr.Get(response.GetStatus()).GetReady()).GetState()) != "PROCESSING"
+		return response, stop, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	return waiter.Wait(ctx)
+}
+
 // UpsertCertificate позволяет обновить (или создать) сертификат.
 //
 // Путь: POST /certmanager/v1/projects/{project}/certificates/{name}
-func (x *CertificateSugared) UpsertCertificate(ctx context.Context, request UpsertCertificateRequest) (*model.CertificateResponse, error) {
+func (x *CertificateSugared) UpsertCertificate(ctx context.Context, request UpsertCertificateRequest, opts ...Option) (*model.CertificateOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.UpsertCertificate(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertCertificate(resp)
+	sugaredResponse, err := x.respHandlerUpsertCertificate(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertCertificate(ctx, request.getCertificateRequest(), config.waitOptions...)
 }
 
-func (x *CertificateSugared) respHandlerUpsertCertificate(resp *UpsertCertificateResponse) (*model.CertificateResponse, error) {
+func (x *CertificateSugared) respHandlerUpsertCertificate(resp *UpsertCertificateResponse) (*model.CertificateOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -147,28 +206,60 @@ func (x *CertificateSugared) respHandlerUpsertCertificate(resp *UpsertCertificat
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+func (x *CertificateSugared) waitUpsertCertificate(ctx context.Context, request GetCertificateRequest, opts ...wait.WaiterOption) (*model.CertificateOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.CertificateOptionalResponse, bool, error) {
+		response, err := x.GetCertificate(ctx, request)
+		stop := string(ptr.Get(ptr.Get(response.GetStatus()).GetReady()).GetState()) != "PROCESSING"
+		return response, stop, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	return waiter.Wait(ctx)
+}
+
 // CreateCertificate позволяет обновить (или создать) сертификат.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /certmanager/v1/projects/{project}/certificates/{name}?createOnly=true
-func (x *CertificateSugared) CreateCertificate(ctx context.Context, request UpsertCertificateRequest) (*model.CertificateResponse, error) {
+func (x *CertificateSugared) CreateCertificate(ctx context.Context, request UpsertCertificateRequest, opts ...Option) (*model.CertificateOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.CreateCertificate(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertCertificate(resp)
+	sugaredResponse, err := x.respHandlerUpsertCertificate(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertCertificate(ctx, request.getCertificateRequest(), config.waitOptions...)
 }
 
 // UpdateCertificate позволяет обновить (или создать) сертификат.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /certmanager/v1/projects/{project}/certificates/{name}?updateOnly=true
-func (x *CertificateSugared) UpdateCertificate(ctx context.Context, request UpdateCertificateRequest) (*model.CertificateResponse, error) {
+func (x *CertificateSugared) UpdateCertificate(ctx context.Context, request UpdateCertificateRequest, opts ...Option) (*model.CertificateOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.UpdateCertificate(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertCertificate(resp)
+	sugaredResponse, err := x.respHandlerUpsertCertificate(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertCertificate(ctx, request.getCertificateRequest(), config.waitOptions...)
 }

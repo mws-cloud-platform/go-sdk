@@ -28,11 +28,7 @@ func (m *UpdateComputeOneToOneNatSpecRequest) Encode(e *jx.Encoder) {
 func (m *UpdateComputeOneToOneNatSpecRequest) encodeFields(e *jx.Encoder) {
 	if m.External.IsSet() {
 		e.FieldStart("external")
-		if m.External.IsNull() {
-			e.Null()
-		} else {
-			m.External.Value.Encode(e)
-		}
+		m.External.Value.Encode(e)
 	}
 }
 
@@ -48,11 +44,6 @@ func (m *UpdateComputeOneToOneNatSpecRequest) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "external":
-			if d.Next() == jx.Null {
-				m.External.SetToNull()
-				return d.Null()
-			}
-
 			var v UpdateComputeOneToOneNatSpecExternalRequest
 			if err := v.Decode(d); err != nil {
 				return err
@@ -85,11 +76,7 @@ func (m *UpdateComputeOneToOneNatSpecExternalRequest) Encode(e *jx.Encoder) {
 func (m *UpdateComputeOneToOneNatSpecExternalRequest) encodeFields(e *jx.Encoder) {
 	if m.Address.IsSet() {
 		e.FieldStart("address")
-		if m.Address.IsNull() {
-			e.Null()
-		} else {
-			m.Address.Value.Encode(e)
-		}
+		m.Address.Value.Encode(e)
 	}
 }
 
@@ -105,11 +92,6 @@ func (m *UpdateComputeOneToOneNatSpecExternalRequest) Decode(d *jx.Decoder) erro
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "address":
-			if d.Next() == jx.Null {
-				m.Address.SetToNull()
-				return d.Null()
-			}
-
 			var v UpdateOneToOneNatAddressSpecOrRefRequest
 			if err := v.Decode(d); err != nil {
 				return err

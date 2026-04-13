@@ -37,9 +37,9 @@ func (m *UpdateAuthorizedKeySpecRequest) encodeFields(e *jx.Encoder) {
 		e.Str(m.KeyAlgorithm.Value)
 	}
 
-	if m.ExpirationTime.IsSet() {
-		e.FieldStart("expirationTime")
-		conv.EncodeDateTimeUTC(e, m.ExpirationTime.Value)
+	if m.Active.IsSet() {
+		e.FieldStart("active")
+		e.Bool(m.Active.Value)
 	}
 }
 
@@ -70,13 +70,13 @@ func (m *UpdateAuthorizedKeySpecRequest) Decode(d *jx.Decoder) error {
 
 			m.KeyAlgorithm.SetTo(v)
 			return nil
-		case "expirationTime":
-			v, err := decode.DateTime(d)
+		case "active":
+			v, err := decode.Bool(d)
 			if err != nil {
 				return err
 			}
 
-			m.ExpirationTime.SetTo(v)
+			m.Active.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

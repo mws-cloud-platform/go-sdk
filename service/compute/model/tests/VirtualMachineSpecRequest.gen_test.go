@@ -12,6 +12,7 @@ import (
 )
 
 func TestVirtualMachineSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initVirtualMachineSpecRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
@@ -23,5 +24,7 @@ func TestVirtualMachineSpecRequestMarshalling(t *testing.T) {
 
 func initVirtualMachineSpecRequest() model.VirtualMachineSpecRequest {
 	var v model.VirtualMachineSpecRequest
+	v.Storage.Disks = make([]model.StorageDiskSpecOrRefWithAttachmentsRequest, 0)
+	v.Network.NetworkInterfaces = make([]model.NetworkInterfaceSpecRequest, 0)
 	return v
 }

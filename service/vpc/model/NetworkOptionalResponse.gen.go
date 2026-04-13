@@ -14,7 +14,7 @@ import (
 // Real OAPI model name: Network
 type NetworkOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
-	// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata commonclient.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Spec     VpcNetworkSpecOptionalResponse                                               `json:"spec" yaml:"spec"`
 	Status   *NetworkStatusResponse                                                       `json:"status,omitempty" yaml:"status,omitempty"`

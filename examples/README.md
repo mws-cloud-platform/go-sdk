@@ -11,6 +11,8 @@ Available examples:
 * [CRUD Virtual Machine](./vm_test.go): Demonstrates how to perform Create, Read, Update, and Delete operations on virtual machine resources.
 * [List Virtual Machines](./vm_list_test.go): Demonstrates how to list virtual machines.
 * [Snapshot](./snapshot_test.go): Demonstrates how to create a disk, a snapshot of it, and how to create a copy of the disk from that snapshot.
+* [CRUD MWS-Managed Certificate](./cert_mws_managed_test.go): Demonstrates how to perform Create, Read, Update, and Delete operations on MWS-managed certificate resources.
+* [CRUD Self-Hosted Certificate](./cert_self_hosted_test.go): Demonstrates how to perform Create, Read, Update, and Delete operations on self-managed certificate resources.
 
 ## Environment Setup
 

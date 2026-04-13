@@ -12,6 +12,7 @@ import (
 )
 
 func TestHardwareStatusResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initHardwareStatusResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

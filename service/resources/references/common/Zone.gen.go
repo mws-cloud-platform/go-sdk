@@ -84,6 +84,10 @@ func (m *ZoneID) ID() string {
 	return "zones/" + m.zone
 }
 
+func (m *ZoneID) String() string {
+	return m.ID()
+}
+
 func (m *ZoneID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -207,6 +211,10 @@ func (m *ZoneRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZoneRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZoneRef) Parse(ctx context.Context) error {

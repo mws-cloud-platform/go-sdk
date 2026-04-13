@@ -11,14 +11,15 @@ import (
 
 // Real OAPI model name: NetworkInterfaceSpec
 type NetworkInterfaceSpecRequest struct {
-	Name    string `json:"name" yaml:"name"`
-	Primary *bool  `json:"primary,omitempty" yaml:"primary,omitempty"`
+	Name                string `json:"name" yaml:"name"`
+	Primary             *bool  `json:"primary,omitempty" yaml:"primary,omitempty"`
+	IpForwardingEnabled *bool  `json:"ipForwardingEnabled,omitempty" yaml:"ipForwardingEnabled,omitempty"`
 	// К одному сетевому интерфейсу можно подключить одновременно 4 разных сетевых адреса
 	// - IPv4 internal
 	// - IPv4 external
 	// - IPv6 internal
 	// - IPv6 external
-	Addresses []AddressSpecOrRefWithAttachmentsRequest `json:"addresses,omitempty" yaml:"addresses,omitempty"`
+	Addresses []AddressSpecOrRefWithAttachmentsRequest `json:"addresses" yaml:"addresses"`
 }
 
 func (m *NetworkInterfaceSpecRequest) GetName() string {
@@ -50,6 +51,24 @@ func (m *NetworkInterfaceSpecRequest) GetPrimaryOr(val bool) bool {
 	return val
 }
 
+func (m *NetworkInterfaceSpecRequest) GetIpForwardingEnabled() *bool {
+	if m != nil {
+		return m.IpForwardingEnabled
+	}
+	return nil
+}
+
+func (m *NetworkInterfaceSpecRequest) SetIpForwardingEnabled(val *bool) {
+	m.IpForwardingEnabled = val
+}
+
+func (m *NetworkInterfaceSpecRequest) GetIpForwardingEnabledOr(val bool) bool {
+	if m != nil && m.IpForwardingEnabled != nil {
+		return *m.IpForwardingEnabled
+	}
+	return val
+}
+
 func (m *NetworkInterfaceSpecRequest) GetAddresses() []AddressSpecOrRefWithAttachmentsRequest {
 	if m != nil {
 		return m.Addresses
@@ -61,13 +80,6 @@ func (m *NetworkInterfaceSpecRequest) SetAddresses(val []AddressSpecOrRefWithAtt
 	m.Addresses = val
 }
 
-func (m *NetworkInterfaceSpecRequest) GetAddressesOr(val []AddressSpecOrRefWithAttachmentsRequest) []AddressSpecOrRefWithAttachmentsRequest {
-	if m != nil && m.Addresses != nil {
-		return m.Addresses
-	}
-	return val
-}
-
 func (m *NetworkInterfaceSpecRequest) Clone() *NetworkInterfaceSpecRequest {
 	if m == nil {
 		return nil
@@ -77,6 +89,10 @@ func (m *NetworkInterfaceSpecRequest) Clone() *NetworkInterfaceSpecRequest {
 	if m.Primary != nil {
 		clonePrimary := *m.Primary
 		clone.Primary = &clonePrimary
+	}
+	if m.IpForwardingEnabled != nil {
+		cloneIpForwardingEnabled := *m.IpForwardingEnabled
+		clone.IpForwardingEnabled = &cloneIpForwardingEnabled
 	}
 	if m.Addresses != nil {
 		clone.Addresses = make([]AddressSpecOrRefWithAttachmentsRequest, len(m.Addresses))

@@ -10,27 +10,20 @@ import (
 
 // Real OAPI model name: AddressSpecOrRefWithAttachments
 type AddressSpecOrRefWithAttachmentsRequest struct {
-	Address *AddressSpecOrRefRequest `json:"address,omitempty" yaml:"address,omitempty"`
+	Address AddressSpecOrRefRequest `json:"address" yaml:"address"`
 	// NAT правило для связи внутреннего адреса с внешним адресом
 	OneToOneNat *ComputeOneToOneNatSpecRequest `json:"oneToOneNat,omitempty" yaml:"oneToOneNat,omitempty"`
 }
 
-func (m *AddressSpecOrRefWithAttachmentsRequest) GetAddress() *AddressSpecOrRefRequest {
+func (m *AddressSpecOrRefWithAttachmentsRequest) GetAddress() AddressSpecOrRefRequest {
 	if m != nil {
 		return m.Address
 	}
-	return nil
+	return AddressSpecOrRefRequest{}
 }
 
-func (m *AddressSpecOrRefWithAttachmentsRequest) SetAddress(val *AddressSpecOrRefRequest) {
+func (m *AddressSpecOrRefWithAttachmentsRequest) SetAddress(val AddressSpecOrRefRequest) {
 	m.Address = val
-}
-
-func (m *AddressSpecOrRefWithAttachmentsRequest) GetAddressOr(val AddressSpecOrRefRequest) AddressSpecOrRefRequest {
-	if m != nil && m.Address != nil {
-		return *m.Address
-	}
-	return val
 }
 
 func (m *AddressSpecOrRefWithAttachmentsRequest) GetOneToOneNat() *ComputeOneToOneNatSpecRequest {
@@ -57,7 +50,7 @@ func (m *AddressSpecOrRefWithAttachmentsRequest) Clone() *AddressSpecOrRefWithAt
 	}
 
 	clone := *m
-	clone.Address = m.Address.Clone()
+	clone.Address = *m.Address.Clone()
 	clone.OneToOneNat = m.OneToOneNat.Clone()
 	return &clone
 }

@@ -50,7 +50,7 @@ type ListDisksRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -119,7 +119,7 @@ func (m *ListDisksResponse) SetErrorWrapper(f func(err error) error) {
 // ListDisksResponse200 is a nested type
 type ListDisksResponse200 struct {
 	Items []model.DiskOptionalResponse `json:"items" yaml:"items"`
-	// Строка, которую нужно передать в следующий запрос, чтобы получить следующую страницу. Для последней страницы не задан
+	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
 	NextPageToken commonclient.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
@@ -329,7 +329,7 @@ type GetDiskRequest struct {
 	Project string // path: "project"
 	// Путь к диску
 	Disk string // path: "disk"
-	// Текущий etag объекта, при передаче сервис будет дожидаться изменений в ресурсе (смены etag)
+	// Текущее значение ETag. При передаче параметра сервис будет ждать изменений в ресурсе до тех пор, пока значение ETag не будет изменено
 	WaitNew *string // query: "waitNew"
 }
 

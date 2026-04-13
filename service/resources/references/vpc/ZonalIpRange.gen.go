@@ -108,6 +108,10 @@ func (m *ZonalIpRangeID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/zonalIpRanges/" + m.zonalIpRange
 }
 
+func (m *ZonalIpRangeID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalIpRangeID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ZonalIpRangeRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalIpRangeRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalIpRangeRef) Parse(ctx context.Context) error {

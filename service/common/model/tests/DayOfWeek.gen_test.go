@@ -12,6 +12,7 @@ import (
 )
 
 func TestDayOfWeekMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initDayOfWeek()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

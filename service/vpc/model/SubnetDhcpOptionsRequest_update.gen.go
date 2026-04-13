@@ -16,6 +16,8 @@ type UpdateSubnetDhcpOptionsRequest struct {
 	DomainName commonclient.Optional[string] `json:"domainName" yaml:"domainName"`
 	// Список адресов DNS серверов.
 	DomainNameServers commonclient.Optional[[]ipaddress.IP4Address] `json:"domainNameServers" yaml:"domainNameServers"`
+	// Список адресов NTP серверов.
+	NtpServers commonclient.Optional[[]ipaddress.IP4Address] `json:"ntpServers" yaml:"ntpServers"`
 }
 
 func (m *SubnetDhcpOptionsRequest) AsUpdateModel() UpdateSubnetDhcpOptionsRequest {
@@ -25,6 +27,9 @@ func (m *SubnetDhcpOptionsRequest) AsUpdateModel() UpdateSubnetDhcpOptionsReques
 	}
 	if m.DomainNameServers != nil {
 		u.DomainNameServers = commonclient.NewOptional(m.GetDomainNameServers())
+	}
+	if m.NtpServers != nil {
+		u.NtpServers = commonclient.NewOptional(m.GetNtpServers())
 	}
 	return u
 }
@@ -36,6 +41,7 @@ func (m *SubnetDhcpOptionsRequest) Diff(src *SubnetDhcpOptionsRequest) UpdateSub
 	if !nilDiffers {
 		upd.DomainName = m.diffDomainName(src)
 		upd.DomainNameServers = m.diffDomainNameServers(src)
+		upd.NtpServers = m.diffNtpServers(src)
 	}
 	return upd
 }
@@ -52,13 +58,17 @@ func (m *SubnetDhcpOptionsRequest) WithChanges(u UpdateSubnetDhcpOptionsRequest)
 	if u.DomainNameServers.IsSet() {
 		out.DomainNameServers = slices.Clone(u.DomainNameServers.Value)
 	}
+	if u.NtpServers.IsSet() {
+		out.NtpServers = slices.Clone(u.NtpServers.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateSubnetDhcpOptionsRequest) HasChanges() bool {
 	return m.DomainName.Set ||
-		m.DomainNameServers.Set
+		m.DomainNameServers.Set ||
+		m.NtpServers.Set
 }
 
 func (m *SubnetDhcpOptionsRequest) diffDomainName(src *SubnetDhcpOptionsRequest) commonclient.Optional[string] {
@@ -68,5 +78,10 @@ func (m *SubnetDhcpOptionsRequest) diffDomainName(src *SubnetDhcpOptionsRequest)
 
 func (m *SubnetDhcpOptionsRequest) diffDomainNameServers(src *SubnetDhcpOptionsRequest) commonclient.Optional[[]ipaddress.IP4Address] {
 	value, hasChanges := commonclient.GetChangesArrayEquatableIface(src.GetDomainNameServers(), m.GetDomainNameServers())
+	return commonclient.NewDirectOptional[[]ipaddress.IP4Address](value, hasChanges)
+}
+
+func (m *SubnetDhcpOptionsRequest) diffNtpServers(src *SubnetDhcpOptionsRequest) commonclient.Optional[[]ipaddress.IP4Address] {
+	value, hasChanges := commonclient.GetChangesArrayEquatableIface(src.GetNtpServers(), m.GetNtpServers())
 	return commonclient.NewDirectOptional[[]ipaddress.IP4Address](value, hasChanges)
 }

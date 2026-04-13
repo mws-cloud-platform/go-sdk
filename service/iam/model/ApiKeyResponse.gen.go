@@ -15,7 +15,7 @@ import (
 type ApiKeyResponse struct {
 	Kind     *string                 `json:"kind,omitempty" yaml:"kind,omitempty"`
 	Metadata *ApiKeyMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	// Спецификация api-key.
+	// Спецификация API-ключа
 	Spec   ApiKeySpecResponse    `json:"spec" yaml:"spec"`
 	Status *ApiKeyStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }

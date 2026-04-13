@@ -11,9 +11,7 @@ func AddressSpecRequestToOptionalResponse(request *AddressSpecRequest) (*Address
 		return nil, nil
 	}
 	var response AddressSpecOptionalResponse
-	if request.Subnet != nil {
-		response.Subnet = commonclient.NewOptional(*request.Subnet)
-	}
+	response.Subnet = request.Subnet
 	if request.IpAddress != nil {
 		response.IpAddress = commonclient.NewOptional(*request.IpAddress)
 	}

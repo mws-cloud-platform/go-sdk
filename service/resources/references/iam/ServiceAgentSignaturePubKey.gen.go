@@ -127,6 +127,10 @@ func (m *ServiceAgentSignaturePubKeyID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/serviceAgents/" + m.serviceAgentId + "/signaturePublicKeys/" + m.keyName
 }
 
+func (m *ServiceAgentSignaturePubKeyID) String() string {
+	return m.ID()
+}
+
 func (m *ServiceAgentSignaturePubKeyID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *ServiceAgentSignaturePubKeyRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ServiceAgentSignaturePubKeyRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ServiceAgentSignaturePubKeyRef) Parse(ctx context.Context) error {

@@ -109,6 +109,10 @@ func (m *ProjectRoleBindingCountID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/services/iam/quotas/projectRoleBindingCount"
 }
 
+func (m *ProjectRoleBindingCountID) String() string {
+	return m.ID()
+}
+
 func (m *ProjectRoleBindingCountID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -232,6 +236,10 @@ func (m *ProjectRoleBindingCountRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ProjectRoleBindingCountRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ProjectRoleBindingCountRef) Parse(ctx context.Context) error {

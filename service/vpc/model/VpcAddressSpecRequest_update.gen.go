@@ -3,32 +3,16 @@
 package model
 
 import (
-	"context"
-	"fmt"
-
-	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateVpcAddressSpecRequest struct {
-	// Подсеть облачной сети к которой принадлежит адрес.
-	Subnet commonclient.Optional[vpc.SubnetRef] `json:"subnet" yaml:"subnet"`
-	// Желаемый IP адрес. Если не указан, то будет выделен из пула адресов подсети.
-	IpAddress commonclient.Optional[ipaddress.IPAddress]              `json:"ipAddress" yaml:"ipAddress"`
-	Dns       commonclient.Optional[[]UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
+	Dns commonclient.Optional[[]UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
 }
 
 func (m *VpcAddressSpecRequest) AsUpdateModel() UpdateVpcAddressSpecRequest {
 	var u UpdateVpcAddressSpecRequest
-	u.Subnet = commonclient.NewOptional(m.GetSubnet())
-	if m.IpAddress != nil {
-		u.IpAddress = commonclient.NewOptional(m.GetIpAddressOr(ipaddress.IPAddress{}))
-	}
 	if m.Dns != nil {
 		u.Dns = commonclient.NewOptional(func() []UpdateVpcAddressDnsSpecRequest {
 			var tmp []UpdateVpcAddressDnsSpecRequest
@@ -45,19 +29,13 @@ func (m *VpcAddressSpecRequest) AsUpdateModel() UpdateVpcAddressSpecRequest {
 }
 
 // Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *VpcAddressSpecRequest) Diff(src *VpcAddressSpecRequest) (UpdateVpcAddressSpecRequest, error) {
-	var err error
+func (m *VpcAddressSpecRequest) Diff(src *VpcAddressSpecRequest) UpdateVpcAddressSpecRequest {
 	nilDiffers := src != nil && m == nil
 	upd := UpdateVpcAddressSpecRequest{}
 	if !nilDiffers {
-		upd.Subnet = m.diffSubnet(src)
-		upd.IpAddress = m.diffIpAddress(src)
-		upd.Dns, err = m.diffDns(src)
-		if err != nil {
-			return UpdateVpcAddressSpecRequest{}, fmt.Errorf("Dns: %w", err)
-		}
+		upd.Dns = m.diffDns(src)
 	}
-	return upd, nil
+	return upd
 }
 
 func (m *VpcAddressSpecRequest) WithChanges(u UpdateVpcAddressSpecRequest) VpcAddressSpecRequest {
@@ -66,12 +44,6 @@ func (m *VpcAddressSpecRequest) WithChanges(u UpdateVpcAddressSpecRequest) VpcAd
 		out = *m
 	}
 
-	if u.Subnet.IsSet() {
-		out.Subnet = u.Subnet.Value
-	}
-	if u.IpAddress.IsSet() {
-		out.IpAddress = ptr.Get(u.IpAddress.Value)
-	}
 	if u.Dns.IsSet() {
 		out.Dns = merge.Slice(out.Dns, u.Dns.Value, (*VpcAddressDnsSpecRequest).WithChanges, (*VpcAddressDnsSpecRequest).GetName, (*UpdateVpcAddressDnsSpecRequest).GetName)
 	}
@@ -80,48 +52,16 @@ func (m *VpcAddressSpecRequest) WithChanges(u UpdateVpcAddressSpecRequest) VpcAd
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateVpcAddressSpecRequest) HasChanges() bool {
-	return m.Subnet.Set ||
-		m.IpAddress.Set ||
-		m.Dns.Set
+	return m.Dns.Set
 }
 
-func (m *UpdateVpcAddressSpecRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Subnet.IsSet() {
-		if err := m.Subnet.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Subnet", err)
-		}
-	}
-
-	return nil
-}
-
-func (m *VpcAddressSpecRequest) diffSubnet(src *VpcAddressSpecRequest) commonclient.Optional[vpc.SubnetRef] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetSubnet(), m.GetSubnet(), nilDiffers)
-}
-
-func (m *VpcAddressSpecRequest) diffIpAddress(src *VpcAddressSpecRequest) commonclient.Optional[ipaddress.IPAddress] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffEquatableIfaceNonRequired(src.GetIpAddress(), m.GetIpAddress(), nilDiffers)
-}
-
-func (m *VpcAddressSpecRequest) diffDns(src *VpcAddressSpecRequest) (commonclient.Optional[[]UpdateVpcAddressDnsSpecRequest], error) {
-	diffFunc := func(fromItem, toItem *VpcAddressDnsSpecRequest, fromNil bool) UpdateVpcAddressDnsSpecRequest {
+func (m *VpcAddressSpecRequest) diffDns(src *VpcAddressSpecRequest) commonclient.Optional[[]UpdateVpcAddressDnsSpecRequest] {
+	diffFunc := func(fromItem, toItem VpcAddressDnsSpecRequest, fromNil bool) UpdateVpcAddressDnsSpecRequest {
 		if fromNil {
 			return toItem.Diff(nil)
 		}
-		return toItem.Diff(fromItem)
+		return toItem.Diff(&fromItem)
 	}
-	value, hasChanges, err := commonclient.GetChangesArrayObjectNamed(
-		commonclient.ToPointerArray(src.GetDns()),
-		commonclient.ToPointerArray(m.GetDns()),
-		diffFunc)
-	if err != nil {
-		return commonclient.Optional[[]UpdateVpcAddressDnsSpecRequest]{}, err
-	}
-	return commonclient.NewDirectOptional[[]UpdateVpcAddressDnsSpecRequest](value, hasChanges), nil
+	value, hasChanges := commonclient.GetChangesArrayObject(src.GetDns(), m.GetDns(), diffFunc)
+	return commonclient.NewDirectOptional[[]UpdateVpcAddressDnsSpecRequest](value, hasChanges)
 }

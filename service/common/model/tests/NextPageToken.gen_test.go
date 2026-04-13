@@ -12,6 +12,7 @@ import (
 )
 
 func TestNextPageTokenMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initNextPageToken()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

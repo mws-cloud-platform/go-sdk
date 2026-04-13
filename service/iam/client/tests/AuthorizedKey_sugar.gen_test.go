@@ -14,7 +14,50 @@ import (
 	clientmocks "go.mws.cloud/go-sdk/service/iam/client/mocks"
 )
 
+func TestAuthorizedKeySugared_ListAuthorizedKey(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockAuthorizedKey(ctrl)
+	mockClient.EXPECT().ListAuthorizedKey(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewAuthorizedKeySugared(mockClient)
+
+	_, err := sugared.ListAuthorizedKey(context.Background(), client.ListAuthorizedKeyRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
+func TestAuthorizedKeySugared_DeleteAuthorizedKey(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockAuthorizedKey(ctrl)
+	mockClient.EXPECT().DeleteAuthorizedKey(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewAuthorizedKeySugared(mockClient)
+
+	err := sugared.DeleteAuthorizedKey(context.Background(), client.DeleteAuthorizedKeyRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
+func TestAuthorizedKeySugared_GetAuthorizedKey(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockAuthorizedKey(ctrl)
+	mockClient.EXPECT().GetAuthorizedKey(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewAuthorizedKeySugared(mockClient)
+
+	_, err := sugared.GetAuthorizedKey(context.Background(), client.GetAuthorizedKeyRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
 func TestAuthorizedKeySugared_UpsertAuthorizedKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +71,7 @@ func TestAuthorizedKeySugared_UpsertAuthorizedKey(t *testing.T) {
 }
 
 func TestAuthorizedKeySugared_CreateAuthorizedKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +85,7 @@ func TestAuthorizedKeySugared_CreateAuthorizedKey(t *testing.T) {
 }
 
 func TestAuthorizedKeySugared_UpdateAuthorizedKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

@@ -24,7 +24,7 @@ type VmType interface {
 type ListVmTypesRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -52,6 +52,7 @@ type ListVmTypesResponse struct {
 	Code        int
 	Response200 *model.VmTypesListOptionalResponse
 	Response400 *common.ApiError
+	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response408 *common.ApiError
@@ -74,6 +75,9 @@ func (m *ListVmTypesResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -116,6 +120,7 @@ type GetVmTypeResponse struct {
 	Code        int
 	Response200 *model.VmTypeOptionalResponse
 	Response400 *common.ApiError
+	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response408 *common.ApiError
@@ -138,6 +143,9 @@ func (m *GetVmTypeResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)

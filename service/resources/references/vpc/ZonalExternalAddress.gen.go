@@ -127,6 +127,10 @@ func (m *ZonalExternalAddressID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalExternalAddresses/" + m.zonalExternalAddress
 }
 
+func (m *ZonalExternalAddressID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalExternalAddressID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *ZonalExternalAddressRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalExternalAddressRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalExternalAddressRef) Parse(ctx context.Context) error {

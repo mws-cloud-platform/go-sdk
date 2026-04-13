@@ -32,9 +32,9 @@ func (m *UpdateNetworkInterfaceSpecRequest) encodeFields(e *jx.Encoder) {
 		e.Str(m.Name.Value)
 	}
 
-	if m.Primary.IsSet() {
-		e.FieldStart("primary")
-		e.Bool(m.Primary.Value)
+	if m.IpForwardingEnabled.IsSet() {
+		e.FieldStart("ipForwardingEnabled")
+		e.Bool(m.IpForwardingEnabled.Value)
 	}
 
 	if m.Addresses.IsSet() {
@@ -66,13 +66,13 @@ func (m *UpdateNetworkInterfaceSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.Name.SetTo(v)
 			return nil
-		case "primary":
+		case "ipForwardingEnabled":
 			v, err := decode.Bool(d)
 			if err != nil {
 				return err
 			}
 
-			m.Primary.SetTo(v)
+			m.IpForwardingEnabled.SetTo(v)
 			return nil
 		case "addresses":
 			c := make([]UpdateAddressSpecOrRefWithAttachmentsRequest, 0)

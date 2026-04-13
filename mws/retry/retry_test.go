@@ -59,6 +59,18 @@ func TestStandardRetry(t *testing.T) {
 			outErr: nil,
 		},
 		{
+			err:    mwserrors.NewUnexpectedStatusCodeError(500),
+			outErr: nil,
+		},
+		{
+			err:    mwserrors.NewUnexpectedStatusCodeErrorWithData(500, []byte("details")),
+			outErr: nil,
+		},
+		{
+			err:    mwserrors.NewUnexpectedStatusCodeError(501),
+			outErr: clienterrors.ErrNoRetry,
+		},
+		{
 			err:    &mwserrors.TransportError{},
 			outErr: nil,
 		},

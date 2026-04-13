@@ -15,6 +15,7 @@ import (
 )
 
 func TestImageSugared_LatestImage(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestImageSugared_LatestImage(t *testing.T) {
 }
 
 func TestImageSugared_ListImages(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestImageSugared_ListImages(t *testing.T) {
 }
 
 func TestImageSugared_DeleteImage(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestImageSugared_DeleteImage(t *testing.T) {
 }
 
 func TestImageSugared_GetImage(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestImageSugared_GetImage(t *testing.T) {
 }
 
 func TestImageSugared_UpsertImage(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestImageSugared_UpsertImage(t *testing.T) {
 }
 
 func TestImageSugared_CreateImage(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -93,6 +99,7 @@ func TestImageSugared_CreateImage(t *testing.T) {
 }
 
 func TestImageSugared_UpdateImage(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

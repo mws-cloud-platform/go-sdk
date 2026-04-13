@@ -15,6 +15,7 @@ import (
 )
 
 func TestCertificateSugared_ListCertificates(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestCertificateSugared_ListCertificates(t *testing.T) {
 }
 
 func TestCertificateSugared_GetCertificateContent(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestCertificateSugared_GetCertificateContent(t *testing.T) {
 }
 
 func TestCertificateSugared_DeleteCertificate(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestCertificateSugared_DeleteCertificate(t *testing.T) {
 }
 
 func TestCertificateSugared_GetCertificate(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestCertificateSugared_GetCertificate(t *testing.T) {
 }
 
 func TestCertificateSugared_UpsertCertificate(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestCertificateSugared_UpsertCertificate(t *testing.T) {
 }
 
 func TestCertificateSugared_CreateCertificate(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -93,6 +99,7 @@ func TestCertificateSugared_CreateCertificate(t *testing.T) {
 }
 
 func TestCertificateSugared_UpdateCertificate(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

@@ -16,7 +16,7 @@ type ServiceAccountResponse struct {
 	Kind     *string                         `json:"kind,omitempty" yaml:"kind,omitempty"`
 	Metadata *ServiceAccountMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Spec     ServiceAccountSpecResponse      `json:"spec" yaml:"spec"`
-	Status   *common.ResourceStatusResponse  `json:"status,omitempty" yaml:"status,omitempty"`
+	Status   *ServiceAccountStatusResponse   `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *ServiceAccountResponse) GetKind() *string {
@@ -66,18 +66,18 @@ func (m *ServiceAccountResponse) SetSpec(val ServiceAccountSpecResponse) {
 	m.Spec = val
 }
 
-func (m *ServiceAccountResponse) GetStatus() *common.ResourceStatusResponse {
+func (m *ServiceAccountResponse) GetStatus() *ServiceAccountStatusResponse {
 	if m != nil {
 		return m.Status
 	}
 	return nil
 }
 
-func (m *ServiceAccountResponse) SetStatus(val *common.ResourceStatusResponse) {
+func (m *ServiceAccountResponse) SetStatus(val *ServiceAccountStatusResponse) {
 	m.Status = val
 }
 
-func (m *ServiceAccountResponse) GetStatusOr(val common.ResourceStatusResponse) common.ResourceStatusResponse {
+func (m *ServiceAccountResponse) GetStatusOr(val ServiceAccountStatusResponse) ServiceAccountStatusResponse {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
@@ -117,8 +117,7 @@ func (m *ServiceAccountResponse) Parse(ctx context.Context) error {
 type ServiceAccountMetadataResponse struct {
 	common.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// ID свойства
-	Id               *resmodels.AnyResourceID `json:"id,omitempty" yaml:"id,omitempty"`
-	LastAuthDateTime *time.Time               `json:"lastAuthDateTime,omitempty" yaml:"lastAuthDateTime,omitempty"`
+	Id *resmodels.AnyResourceID `json:"id,omitempty" yaml:"id,omitempty"`
 }
 
 func (m *ServiceAccountMetadataResponse) GetDisplayName() *string {
@@ -243,20 +242,6 @@ func (m *ServiceAccountMetadataResponse) GetId() *resmodels.AnyResourceID {
 func (m *ServiceAccountMetadataResponse) GetIdOr(val resmodels.AnyResourceID) resmodels.AnyResourceID {
 	if m != nil && m.Id != nil {
 		return *m.Id
-	}
-	return val
-}
-
-func (m *ServiceAccountMetadataResponse) GetLastAuthDateTime() *time.Time {
-	if m != nil {
-		return m.LastAuthDateTime
-	}
-	return nil
-}
-
-func (m *ServiceAccountMetadataResponse) GetLastAuthDateTimeOr(val time.Time) time.Time {
-	if m != nil && m.LastAuthDateTime != nil {
-		return *m.LastAuthDateTime
 	}
 	return val
 }

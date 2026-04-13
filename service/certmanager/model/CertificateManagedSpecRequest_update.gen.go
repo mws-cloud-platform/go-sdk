@@ -9,19 +9,12 @@ import (
 )
 
 type UpdateCertificateManagedSpecRequest struct {
-	// Предпочтительный тип проверки домена (challenge).
-	// Возможные значения: DNS01 или HTTP01. По умолчанию используется DNS01.
-	PreferredChallengeType commonclient.Optional[CertificateChallengeType] `json:"preferredChallengeType" yaml:"preferredChallengeType"`
-	// Провайдер сертификатов, например Let's Encrypt или другой центр сертификации.
-	Provider commonclient.Optional[CertificateProvider] `json:"provider" yaml:"provider"`
 	// Список доменов, для которых будет выдан сертификат.
 	Domains commonclient.Optional[[]string] `json:"domains" yaml:"domains"`
 }
 
 func (m *CertificateManagedSpecRequest) AsUpdateModel() UpdateCertificateManagedSpecRequest {
 	var u UpdateCertificateManagedSpecRequest
-	u.PreferredChallengeType = commonclient.NewOptional(m.GetPreferredChallengeType())
-	u.Provider = commonclient.NewOptional(m.GetProvider())
 	u.Domains = commonclient.NewOptional(m.GetDomains())
 	return u
 }
@@ -31,8 +24,6 @@ func (m *CertificateManagedSpecRequest) Diff(src *CertificateManagedSpecRequest)
 	nilDiffers := src != nil && m == nil
 	upd := UpdateCertificateManagedSpecRequest{}
 	if !nilDiffers {
-		upd.PreferredChallengeType = m.diffPreferredChallengeType(src)
-		upd.Provider = m.diffProvider(src)
 		upd.Domains = m.diffDomains(src)
 	}
 	return upd
@@ -44,12 +35,6 @@ func (m *CertificateManagedSpecRequest) WithChanges(u UpdateCertificateManagedSp
 		out = *m
 	}
 
-	if u.PreferredChallengeType.IsSet() {
-		out.PreferredChallengeType = u.PreferredChallengeType.Value
-	}
-	if u.Provider.IsSet() {
-		out.Provider = u.Provider.Value
-	}
 	if u.Domains.IsSet() {
 		out.Domains = slices.Clone(u.Domains.Value)
 	}
@@ -58,19 +43,7 @@ func (m *CertificateManagedSpecRequest) WithChanges(u UpdateCertificateManagedSp
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateCertificateManagedSpecRequest) HasChanges() bool {
-	return m.PreferredChallengeType.Set ||
-		m.Provider.Set ||
-		m.Domains.Set
-}
-
-func (m *CertificateManagedSpecRequest) diffPreferredChallengeType(src *CertificateManagedSpecRequest) commonclient.Optional[CertificateChallengeType] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetPreferredChallengeType(), m.GetPreferredChallengeType(), nilDiffers)
-}
-
-func (m *CertificateManagedSpecRequest) diffProvider(src *CertificateManagedSpecRequest) commonclient.Optional[CertificateProvider] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetProvider(), m.GetProvider(), nilDiffers)
+	return m.Domains.Set
 }
 
 func (m *CertificateManagedSpecRequest) diffDomains(src *CertificateManagedSpecRequest) commonclient.Optional[[]string] {

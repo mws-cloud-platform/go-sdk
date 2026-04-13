@@ -15,6 +15,7 @@ import (
 )
 
 func TestServiceAccountSugared_ListServiceAccount(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -27,7 +28,22 @@ func TestServiceAccountSugared_ListServiceAccount(t *testing.T) {
 	require.True(t, mwserrors.IsDecodeBodyError(err))
 }
 
+func TestServiceAccountSugared_DeleteServiceAccount(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockServiceAccount(ctrl)
+	mockClient.EXPECT().DeleteServiceAccount(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewServiceAccountSugared(mockClient)
+
+	err := sugared.DeleteServiceAccount(context.Background(), client.DeleteServiceAccountRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
 func TestServiceAccountSugared_GetServiceAccount(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +57,7 @@ func TestServiceAccountSugared_GetServiceAccount(t *testing.T) {
 }
 
 func TestServiceAccountSugared_UpsertServiceAccount(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +71,7 @@ func TestServiceAccountSugared_UpsertServiceAccount(t *testing.T) {
 }
 
 func TestServiceAccountSugared_CreateServiceAccount(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +85,7 @@ func TestServiceAccountSugared_CreateServiceAccount(t *testing.T) {
 }
 
 func TestServiceAccountSugared_UpdateServiceAccount(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

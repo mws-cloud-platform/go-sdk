@@ -9,7 +9,7 @@ import (
 // Подсеть - это сегмент сети, ассоциированный с диапазоном внутренних адресов
 // Real OAPI model name: Subnet
 type SubnetRequest struct {
-	// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Spec     SubnetSpecRequest                          `json:"spec" yaml:"spec"`
 }

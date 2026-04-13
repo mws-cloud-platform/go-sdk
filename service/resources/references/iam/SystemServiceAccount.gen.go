@@ -89,6 +89,10 @@ func (m *SystemServiceAccountID) ID() string {
 	return m.ServiceSlug() + "/systemServiceAccounts/" + m.systemServiceAccounts
 }
 
+func (m *SystemServiceAccountID) String() string {
+	return m.ID()
+}
+
 func (m *SystemServiceAccountID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *SystemServiceAccountRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *SystemServiceAccountRef) String() string {
+	return m.IDPath()
 }
 
 func (m *SystemServiceAccountRef) Parse(ctx context.Context) error {

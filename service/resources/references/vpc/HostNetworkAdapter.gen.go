@@ -146,6 +146,10 @@ func (m *HostNetworkAdapterID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalVirtualMachines/" + m.virtualMachine + "/hostNetworkAdapters/" + m.hostNetworkAdapter
 }
 
+func (m *HostNetworkAdapterID) String() string {
+	return m.ID()
+}
+
 func (m *HostNetworkAdapterID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -296,6 +300,10 @@ func (m *HostNetworkAdapterRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *HostNetworkAdapterRef) String() string {
+	return m.IDPath()
 }
 
 func (m *HostNetworkAdapterRef) Parse(ctx context.Context) error {

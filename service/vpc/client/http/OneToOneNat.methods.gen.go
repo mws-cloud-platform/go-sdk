@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/vpc/client"
 )
 
-// ListOneToOneNats позволяет получить список One-to-One NAT-шлюзов.
+// ListOneToOneNats позволяет получить список One-to-One NAT.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /vpc/v1/projects/{project}/networks/{network}/oneToOneNats
@@ -111,7 +111,7 @@ func (c *OneToOneNat) headerListOneToOneNats(req *http.Request, request *client.
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// DeleteOneToOneNat позволяет удалить One-to-One NAT-шлюз.
+// DeleteOneToOneNat позволяет удалить One-to-One NAT.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: DELETE /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}
@@ -188,7 +188,7 @@ func (c *OneToOneNat) headerDeleteOneToOneNat(req *http.Request, request *client
 	}
 }
 
-// GetOneToOneNat позволяет получить информацию о One-to-One NAT-шлюзе.
+// GetOneToOneNat позволяет получить информацию о One-to-One NAT.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}
@@ -266,7 +266,7 @@ func (c *OneToOneNat) headerGetOneToOneNat(req *http.Request, request *client.Ge
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpsertOneToOneNat позволяет создать или изменить One-to-One NAT-шлюз.
+// UpsertOneToOneNat позволяет создать или изменить One-to-One NAT.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}
@@ -359,7 +359,7 @@ func (c *OneToOneNat) headerUpsertOneToOneNat(req *http.Request, request *client
 	}
 }
 
-// CreateOneToOneNat позволяет создать или изменить One-to-One NAT-шлюз.
+// CreateOneToOneNat позволяет создать или изменить One-to-One NAT.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -454,7 +454,7 @@ func (c *OneToOneNat) headerCreateOneToOneNat(req *http.Request, request *client
 	}
 }
 
-// UpdateOneToOneNat позволяет создать или изменить One-to-One NAT-шлюз.
+// UpdateOneToOneNat позволяет создать или изменить One-to-One NAT.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

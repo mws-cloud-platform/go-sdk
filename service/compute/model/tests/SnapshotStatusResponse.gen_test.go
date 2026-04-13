@@ -12,6 +12,7 @@ import (
 )
 
 func TestSnapshotStatusResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initSnapshotStatusResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

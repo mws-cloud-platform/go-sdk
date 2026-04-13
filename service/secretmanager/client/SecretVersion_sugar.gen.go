@@ -5,7 +5,10 @@ package client
 import (
 	"context"
 
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
 	mwserrors "go.mws.cloud/go-sdk/mws/errors"
+	"go.mws.cloud/go-sdk/mws/wait"
 	"go.mws.cloud/go-sdk/service/secretmanager/model"
 )
 
@@ -50,7 +53,7 @@ func (x *SecretVersionSugared) respHandlerAddSecretVersion(resp *AddSecretVersio
 // ListSecretVersions извлечь все версии секрета.
 //
 // Путь: GET /secretmanager/v1/projects/{project}/secrets/{name}/secretVersions
-func (x *SecretVersionSugared) ListSecretVersions(ctx context.Context, request ListSecretVersionsRequest) (*model.SecretVersionListResponse, error) {
+func (x *SecretVersionSugared) ListSecretVersions(ctx context.Context, request ListSecretVersionsRequest) (*model.SecretVersionListOptionalResponse, error) {
 	resp, err := x.impl.ListSecretVersions(ctx, request)
 	if err != nil {
 		return nil, err
@@ -59,7 +62,7 @@ func (x *SecretVersionSugared) ListSecretVersions(ctx context.Context, request L
 	return x.respHandlerListSecretVersions(resp)
 }
 
-func (x *SecretVersionSugared) respHandlerListSecretVersions(resp *ListSecretVersionsResponse) (*model.SecretVersionListResponse, error) {
+func (x *SecretVersionSugared) respHandlerListSecretVersions(resp *ListSecretVersionsResponse) (*model.SecretVersionListOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -98,13 +101,24 @@ func (x *SecretVersionSugared) respHandlerGetData(resp *GetDataResponse) (model.
 // DeleteSecretVersion позволяет удалить указанную версию секрета.
 //
 // Путь: DELETE /secretmanager/v1/projects/{project}/secrets/{name}/secretVersions/{version}
-func (x *SecretVersionSugared) DeleteSecretVersion(ctx context.Context, request DeleteSecretVersionRequest) error {
+func (x *SecretVersionSugared) DeleteSecretVersion(ctx context.Context, request DeleteSecretVersionRequest, opts ...Option) error {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.DeleteSecretVersion(ctx, request)
 	if err != nil {
 		return err
 	}
 
-	return x.respHandlerDeleteSecretVersion(resp)
+	err = x.respHandlerDeleteSecretVersion(resp)
+	if err != nil {
+		return err
+	}
+
+	if !config.wait {
+		return nil
+	}
+
+	return x.waitDeleteSecretVersion(ctx, request.getSecretVersionRequest(), config.waitOptions...)
 }
 
 func (x *SecretVersionSugared) respHandlerDeleteSecretVersion(resp *DeleteSecretVersionResponse) error {
@@ -119,19 +133,43 @@ func (x *SecretVersionSugared) respHandlerDeleteSecretVersion(resp *DeleteSecret
 	return mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+func (x *SecretVersionSugared) waitDeleteSecretVersion(ctx context.Context, request GetSecretVersionRequest, opts ...wait.WaiterOption) error {
+	callback := func(ctx context.Context) (*model.SecretVersionOptionalResponse, bool, error) {
+		_, err := x.GetSecretVersion(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	_, err := waiter.Wait(ctx)
+	return err
+}
+
 // GetSecretVersion позволяет получить указанную версию секрета.
 //
 // Путь: GET /secretmanager/v1/projects/{project}/secrets/{name}/secretVersions/{version}
-func (x *SecretVersionSugared) GetSecretVersion(ctx context.Context, request GetSecretVersionRequest) (*model.SecretVersionResponse, error) {
+func (x *SecretVersionSugared) GetSecretVersion(ctx context.Context, request GetSecretVersionRequest, opts ...Option) (*model.SecretVersionOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.GetSecretVersion(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerGetSecretVersion(resp)
+	sugaredResponse, err := x.respHandlerGetSecretVersion(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitGetSecretVersion(ctx, request, config.waitOptions...)
 }
 
-func (x *SecretVersionSugared) respHandlerGetSecretVersion(resp *GetSecretVersionResponse) (*model.SecretVersionResponse, error) {
+func (x *SecretVersionSugared) respHandlerGetSecretVersion(resp *GetSecretVersionResponse) (*model.SecretVersionOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -141,21 +179,42 @@ func (x *SecretVersionSugared) respHandlerGetSecretVersion(resp *GetSecretVersio
 	}
 
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *SecretVersionSugared) waitGetSecretVersion(ctx context.Context, request GetSecretVersionRequest, opts ...wait.WaiterOption) (*model.SecretVersionOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.SecretVersionOptionalResponse, bool, error) {
+		response, err := x.GetSecretVersion(ctx, request)
+		stop := string(ptr.Get(ptr.Get(response.GetStatus()).GetReady()).GetState()) != "PROCESSING"
+		return response, stop, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	return waiter.Wait(ctx)
 }
 
 // UpsertSecretVersion позволяет изменить версию секрета.
 //
 // Путь: POST /secretmanager/v1/projects/{project}/secrets/{name}/secretVersions/{version}
-func (x *SecretVersionSugared) UpsertSecretVersion(ctx context.Context, request UpsertSecretVersionRequest) (*model.SecretVersionResponse, error) {
+func (x *SecretVersionSugared) UpsertSecretVersion(ctx context.Context, request UpsertSecretVersionRequest, opts ...Option) (*model.SecretVersionOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.UpsertSecretVersion(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertSecretVersion(resp)
+	sugaredResponse, err := x.respHandlerUpsertSecretVersion(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertSecretVersion(ctx, request.getSecretVersionRequest(), config.waitOptions...)
 }
 
-func (x *SecretVersionSugared) respHandlerUpsertSecretVersion(resp *UpsertSecretVersionResponse) (*model.SecretVersionResponse, error) {
+func (x *SecretVersionSugared) respHandlerUpsertSecretVersion(resp *UpsertSecretVersionResponse) (*model.SecretVersionOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -165,30 +224,62 @@ func (x *SecretVersionSugared) respHandlerUpsertSecretVersion(resp *UpsertSecret
 	}
 
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *SecretVersionSugared) waitUpsertSecretVersion(ctx context.Context, request GetSecretVersionRequest, opts ...wait.WaiterOption) (*model.SecretVersionOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.SecretVersionOptionalResponse, bool, error) {
+		response, err := x.GetSecretVersion(ctx, request)
+		stop := string(ptr.Get(ptr.Get(response.GetStatus()).GetReady()).GetState()) != "PROCESSING"
+		return response, stop, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	return waiter.Wait(ctx)
 }
 
 // CreateSecretVersion позволяет изменить версию секрета.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /secretmanager/v1/projects/{project}/secrets/{name}/secretVersions/{version}?createOnly=true
-func (x *SecretVersionSugared) CreateSecretVersion(ctx context.Context, request UpsertSecretVersionRequest) (*model.SecretVersionResponse, error) {
+func (x *SecretVersionSugared) CreateSecretVersion(ctx context.Context, request UpsertSecretVersionRequest, opts ...Option) (*model.SecretVersionOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.CreateSecretVersion(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertSecretVersion(resp)
+	sugaredResponse, err := x.respHandlerUpsertSecretVersion(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertSecretVersion(ctx, request.getSecretVersionRequest(), config.waitOptions...)
 }
 
 // UpdateSecretVersion позволяет изменить версию секрета.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /secretmanager/v1/projects/{project}/secrets/{name}/secretVersions/{version}?updateOnly=true
-func (x *SecretVersionSugared) UpdateSecretVersion(ctx context.Context, request UpdateSecretVersionRequest) (*model.SecretVersionResponse, error) {
+func (x *SecretVersionSugared) UpdateSecretVersion(ctx context.Context, request UpdateSecretVersionRequest, opts ...Option) (*model.SecretVersionOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.UpdateSecretVersion(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerUpsertSecretVersion(resp)
+	sugaredResponse, err := x.respHandlerUpsertSecretVersion(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitUpsertSecretVersion(ctx, request.getSecretVersionRequest(), config.waitOptions...)
 }

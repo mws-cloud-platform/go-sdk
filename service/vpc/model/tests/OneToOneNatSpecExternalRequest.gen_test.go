@@ -12,6 +12,7 @@ import (
 )
 
 func TestOneToOneNatSpecExternalRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initOneToOneNatSpecExternalRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

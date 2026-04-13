@@ -108,6 +108,10 @@ func (m *ImageID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/images/" + m.image
 }
 
+func (m *ImageID) String() string {
+	return m.ID()
+}
+
 func (m *ImageID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ImageRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ImageRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ImageRef) Parse(ctx context.Context) error {

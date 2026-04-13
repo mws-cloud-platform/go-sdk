@@ -15,6 +15,7 @@ import (
 )
 
 func TestNatGatewaySugared_ListNatGateways(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

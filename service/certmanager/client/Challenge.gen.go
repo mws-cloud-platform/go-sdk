@@ -10,13 +10,13 @@ import (
 )
 
 type Challenge interface {
-	// GetChallengeContent retrieves the challenge content associated with the given certificate reference and token.
+	// GetChallengeToken retrieves the challenge content associated with the given certificate reference and token.
 	//
-	// Путь: GET /certmanager/v1/projects/{project}/certificates/{name}/{token}
-	GetChallengeContent(context.Context, GetChallengeContentRequest) (*GetChallengeContentResponse, error)
+	// Путь: GET /certmanager/v1/projects/{project}/certificates/{name}/tokens/{token}
+	GetChallengeToken(context.Context, GetChallengeTokenRequest) (*GetChallengeTokenResponse, error)
 }
 
-type GetChallengeContentRequest struct {
+type GetChallengeTokenRequest struct {
 	// Путь к проекту
 	Project string // path: "project"
 	// Certificate name.
@@ -25,28 +25,28 @@ type GetChallengeContentRequest struct {
 	Token string // path: "token"
 }
 
-func (m GetChallengeContentRequest) GetProject() string {
+func (m GetChallengeTokenRequest) GetProject() string {
 	return m.Project
 }
 
-func (m *GetChallengeContentRequest) SetProject(project string) {
+func (m *GetChallengeTokenRequest) SetProject(project string) {
 	m.Project = project
 }
 
-type GetChallengeContentResponse struct {
+type GetChallengeTokenResponse struct {
 	Code        int
 	Response200 *string
 	Response404 *common.ApiError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
 
-func (m *GetChallengeContentResponse) GetCode() int {
+func (m *GetChallengeTokenResponse) GetCode() int {
 	return m.Code
 }
 
-func (m *GetChallengeContentResponse) GetErr() (err error) {
+func (m *GetChallengeTokenResponse) GetErr() (err error) {
 	defer func() {
 		if err != nil && m.errorWrapper != nil {
 			err = m.errorWrapper(err)
@@ -61,7 +61,7 @@ func (m *GetChallengeContentResponse) GetErr() (err error) {
 	return nil
 }
 
-func (m *GetChallengeContentResponse) SetErrorWrapper(f func(err error) error) {
+func (m *GetChallengeTokenResponse) SetErrorWrapper(f func(err error) error) {
 	if m != nil {
 		m.errorWrapper = f
 	}

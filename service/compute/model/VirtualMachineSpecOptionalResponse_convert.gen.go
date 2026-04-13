@@ -11,40 +11,32 @@ func VirtualMachineSpecRequestToOptionalResponse(request *VirtualMachineSpecRequ
 		return nil, nil
 	}
 	var response VirtualMachineSpecOptionalResponse
-	if request.Zone != nil {
-		response.Zone = commonclient.NewOptional(*request.Zone)
-	}
-	if request.VmType != nil {
-		response.VmType = commonclient.NewOptional(*request.VmType)
-	}
-	tmpHardware, err := HardwareSpecRequestToOptionalResponse(request.Hardware)
-	if err != nil {
-		return nil, err
-	}
+	response.Zone = request.Zone
+	response.VmType = request.VmType
 	if request.Hardware != nil {
+		tmpHardware, err := HardwareSpecRequestToOptionalResponse(request.Hardware)
+		if err != nil {
+			return nil, err
+		}
 		response.Hardware = commonclient.NewOptionalNil(*tmpHardware)
 	}
-	tmpOs, err := OsSpecRequestToOptionalResponse(request.Os)
-	if err != nil {
-		return nil, err
-	}
 	if request.Os != nil {
+		tmpOs, err := OsSpecRequestToOptionalResponse(request.Os)
+		if err != nil {
+			return nil, err
+		}
 		response.Os = commonclient.NewOptionalNil(*tmpOs)
 	}
-	tmpStorage, err := StorageSpecRequestToOptionalResponse(request.Storage)
+	tmpStorage, err := StorageSpecRequestToOptionalResponse(&request.Storage)
 	if err != nil {
 		return nil, err
 	}
-	if request.Storage != nil {
-		response.Storage = commonclient.NewOptionalNil(*tmpStorage)
-	}
-	tmpNetwork, err := NetworkSpecRequestToOptionalResponse(request.Network)
+	response.Storage = *tmpStorage
+	tmpNetwork, err := NetworkSpecRequestToOptionalResponse(&request.Network)
 	if err != nil {
 		return nil, err
 	}
-	if request.Network != nil {
-		response.Network = commonclient.NewOptionalNil(*tmpNetwork)
-	}
+	response.Network = *tmpNetwork
 	if request.ServiceAccount != nil {
 		response.ServiceAccount = commonclient.NewOptionalNil(*request.ServiceAccount)
 	}

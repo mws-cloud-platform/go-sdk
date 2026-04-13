@@ -23,7 +23,7 @@ func (x *IssueServiceAccountTokenSugared) Impl() IssueServiceAccountToken {
 	return x.impl
 }
 
-// IssueServiceAccountTokenV2 issue token for service account.
+// IssueServiceAccountTokenV2 позволяет выпустить токен для сервисного аккаунта.
 //
 // Путь: GET /iam/v2/tokens/:issueServiceAccountToken
 func (x *IssueServiceAccountTokenSugared) IssueServiceAccountTokenV2(ctx context.Context, request IssueServiceAccountTokenV2Request) (*model.SuccessTokenV2Response, error) {
@@ -47,7 +47,8 @@ func (x *IssueServiceAccountTokenSugared) respHandlerIssueServiceAccountTokenV2(
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// IssueServiceAccountToken issue token for service account.
+// Deprecated: Переходим на v2-версию метода.
+// IssueServiceAccountToken позволяет выпустить токен для сервисного аккаунта.
 //
 // Путь: GET /iam/v1/tokens/:issueServiceAccountToken
 func (x *IssueServiceAccountTokenSugared) IssueServiceAccountToken(ctx context.Context, request IssueServiceAccountTokenRequest) (*model.SuccessTokenResponse, error) {

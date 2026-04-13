@@ -12,6 +12,7 @@ import (
 )
 
 func TestSelfManagedSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initSelfManagedSpecRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

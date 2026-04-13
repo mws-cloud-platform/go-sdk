@@ -8,12 +8,12 @@ import (
 
 // Real OAPI model name: AddressDnsSpec
 type AddressDnsSpecRequest struct {
-	// DNS-имя, по которому будет доступна ВМ в MWS cloud
+	// DNS-имя виртуальной машины в MWS Cloud Platform
 	Name string `json:"name" yaml:"name"`
 	// Продолжительность хранения DNS записи в кеше
-	Ttl *duration.Duration `json:"ttl,omitempty" yaml:"ttl,omitempty"`
+	Ttl duration.Duration `json:"ttl" yaml:"ttl"`
 	// Создать обратную DNS-запись
-	Ptr *bool `json:"ptr,omitempty" yaml:"ptr,omitempty"`
+	Ptr bool `json:"ptr" yaml:"ptr"`
 }
 
 func (m *AddressDnsSpecRequest) GetName() string {
@@ -27,40 +27,26 @@ func (m *AddressDnsSpecRequest) SetName(val string) {
 	m.Name = val
 }
 
-func (m *AddressDnsSpecRequest) GetTtl() *duration.Duration {
+func (m *AddressDnsSpecRequest) GetTtl() duration.Duration {
 	if m != nil {
 		return m.Ttl
 	}
-	return nil
+	return duration.Duration{}
 }
 
-func (m *AddressDnsSpecRequest) SetTtl(val *duration.Duration) {
+func (m *AddressDnsSpecRequest) SetTtl(val duration.Duration) {
 	m.Ttl = val
 }
 
-func (m *AddressDnsSpecRequest) GetTtlOr(val duration.Duration) duration.Duration {
-	if m != nil && m.Ttl != nil {
-		return *m.Ttl
-	}
-	return val
-}
-
-func (m *AddressDnsSpecRequest) GetPtr() *bool {
+func (m *AddressDnsSpecRequest) GetPtr() bool {
 	if m != nil {
 		return m.Ptr
 	}
-	return nil
+	return false
 }
 
-func (m *AddressDnsSpecRequest) SetPtr(val *bool) {
+func (m *AddressDnsSpecRequest) SetPtr(val bool) {
 	m.Ptr = val
-}
-
-func (m *AddressDnsSpecRequest) GetPtrOr(val bool) bool {
-	if m != nil && m.Ptr != nil {
-		return *m.Ptr
-	}
-	return val
 }
 
 func (m *AddressDnsSpecRequest) Clone() *AddressDnsSpecRequest {
@@ -69,10 +55,6 @@ func (m *AddressDnsSpecRequest) Clone() *AddressDnsSpecRequest {
 	}
 
 	clone := *m
-	clone.Ttl = m.Ttl.Clone()
-	if m.Ptr != nil {
-		clonePtr := *m.Ptr
-		clone.Ptr = &clonePtr
-	}
+	clone.Ttl = *m.Ttl.Clone()
 	return &clone
 }

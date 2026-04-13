@@ -34,6 +34,11 @@ func (m *ApiKeyStatusResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("apiKey")
 		e.Str(*m.ApiKey)
 	}
+
+	if m.LastAuthTime != nil {
+		e.FieldStart("lastAuthTime")
+		conv.EncodeDateTimeUTC(e, *m.LastAuthTime)
+	}
 }
 
 func (m *ApiKeyStatusResponse) UnmarshalJSON(b []byte) error {
@@ -62,6 +67,14 @@ func (m *ApiKeyStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.ApiKey = &v
+			return nil
+		case "lastAuthTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.LastAuthTime = &v
 			return nil
 		default:
 			return d.Skip()

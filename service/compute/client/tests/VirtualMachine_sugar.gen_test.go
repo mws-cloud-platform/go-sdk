@@ -15,6 +15,7 @@ import (
 )
 
 func TestVirtualMachineSugared_ListVirtualMachines(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestVirtualMachineSugared_ListVirtualMachines(t *testing.T) {
 }
 
 func TestVirtualMachineSugared_DeleteVirtualMachine(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestVirtualMachineSugared_DeleteVirtualMachine(t *testing.T) {
 }
 
 func TestVirtualMachineSugared_GetVirtualMachine(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestVirtualMachineSugared_GetVirtualMachine(t *testing.T) {
 }
 
 func TestVirtualMachineSugared_UpsertVirtualMachine(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestVirtualMachineSugared_UpsertVirtualMachine(t *testing.T) {
 }
 
 func TestVirtualMachineSugared_CreateVirtualMachine(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestVirtualMachineSugared_CreateVirtualMachine(t *testing.T) {
 }
 
 func TestVirtualMachineSugared_UpdateVirtualMachine(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

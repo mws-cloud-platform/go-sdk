@@ -12,6 +12,7 @@ import (
 )
 
 func TestServiceAccountSpecResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initServiceAccountSpecResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

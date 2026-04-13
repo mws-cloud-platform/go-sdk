@@ -12,6 +12,7 @@ import (
 )
 
 func TestNatGatewayOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initNatGatewayOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

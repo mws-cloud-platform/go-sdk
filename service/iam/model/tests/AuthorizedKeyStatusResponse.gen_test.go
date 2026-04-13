@@ -12,6 +12,7 @@ import (
 )
 
 func TestAuthorizedKeyStatusResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initAuthorizedKeyStatusResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

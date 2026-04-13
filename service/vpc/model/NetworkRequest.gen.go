@@ -9,7 +9,7 @@ import (
 // Сеть — это виртуальный аналог физической сети на базе инфраструктуры MWS
 // Real OAPI model name: Network
 type NetworkRequest struct {
-	// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Spec     VpcNetworkSpecRequest                      `json:"spec" yaml:"spec"`
 }

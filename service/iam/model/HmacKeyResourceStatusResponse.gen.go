@@ -3,6 +3,8 @@
 package model
 
 import (
+	"time"
+
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -11,8 +13,10 @@ type HmacKeyResourceStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
 	// Идентификатор ключа (readOnly).
 	AccessKeyId *string `json:"accessKeyId,omitempty" yaml:"accessKeyId,omitempty"`
-	// Hmac ключ (readOnly).
+	// HMAC-ключ (readOnly).
 	SecretAccessKey *string `json:"secretAccessKey,omitempty" yaml:"secretAccessKey,omitempty"`
+	// Время последней аутентификации.
+	LastAuthTime *time.Time `json:"lastAuthTime,omitempty" yaml:"lastAuthTime,omitempty"`
 }
 
 func (m *HmacKeyResourceStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -46,6 +50,20 @@ func (m *HmacKeyResourceStatusResponse) GetSecretAccessKey() *string {
 func (m *HmacKeyResourceStatusResponse) GetSecretAccessKeyOr(val string) string {
 	if m != nil && m.SecretAccessKey != nil {
 		return *m.SecretAccessKey
+	}
+	return val
+}
+
+func (m *HmacKeyResourceStatusResponse) GetLastAuthTime() *time.Time {
+	if m != nil {
+		return m.LastAuthTime
+	}
+	return nil
+}
+
+func (m *HmacKeyResourceStatusResponse) GetLastAuthTimeOr(val time.Time) time.Time {
+	if m != nil && m.LastAuthTime != nil {
+		return *m.LastAuthTime
 	}
 	return val
 }

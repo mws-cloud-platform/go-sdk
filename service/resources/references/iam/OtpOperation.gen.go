@@ -89,6 +89,10 @@ func (m *OtpOperationID) ID() string {
 	return m.ServiceSlug() + "/otpOperations/" + m.operation
 }
 
+func (m *OtpOperationID) String() string {
+	return m.ID()
+}
+
 func (m *OtpOperationID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *OtpOperationRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *OtpOperationRef) String() string {
+	return m.IDPath()
 }
 
 func (m *OtpOperationRef) Parse(ctx context.Context) error {

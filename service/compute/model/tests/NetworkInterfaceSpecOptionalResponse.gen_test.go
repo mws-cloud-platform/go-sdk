@@ -12,6 +12,7 @@ import (
 )
 
 func TestNetworkInterfaceSpecOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initNetworkInterfaceSpecOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
@@ -23,5 +24,6 @@ func TestNetworkInterfaceSpecOptionalResponseMarshalling(t *testing.T) {
 
 func initNetworkInterfaceSpecOptionalResponse() model.NetworkInterfaceSpecOptionalResponse {
 	var v model.NetworkInterfaceSpecOptionalResponse
+	v.Addresses = make([]model.AddressSpecOrRefWithAttachmentsOptionalResponse, 0)
 	return v
 }

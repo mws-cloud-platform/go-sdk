@@ -15,6 +15,7 @@ import (
 )
 
 func TestApiKeySugared_ListApiKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestApiKeySugared_ListApiKey(t *testing.T) {
 }
 
 func TestApiKeySugared_DeleteApiKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestApiKeySugared_DeleteApiKey(t *testing.T) {
 }
 
 func TestApiKeySugared_GetApiKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestApiKeySugared_GetApiKey(t *testing.T) {
 }
 
 func TestApiKeySugared_UpsertApiKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestApiKeySugared_UpsertApiKey(t *testing.T) {
 }
 
 func TestApiKeySugared_CreateApiKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestApiKeySugared_CreateApiKey(t *testing.T) {
 }
 
 func TestApiKeySugared_UpdateApiKey(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

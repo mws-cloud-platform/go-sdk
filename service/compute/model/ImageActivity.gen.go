@@ -10,3 +10,7 @@ const (
 	ImageActivity_DEPRECATED ImageActivity = "DEPRECATED"
 	ImageActivity_DISABLED   ImageActivity = "DISABLED"
 )
+
+func (m ImageActivity) String() string {
+	return string(m)
+}

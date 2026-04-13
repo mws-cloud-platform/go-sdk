@@ -108,6 +108,10 @@ func (m *ZonalSrv6RouteID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/zonalSrv6Routes/" + m.zonalSrv6Route
 }
 
+func (m *ZonalSrv6RouteID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalSrv6RouteID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ZonalSrv6RouteRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalSrv6RouteRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalSrv6RouteRef) Parse(ctx context.Context) error {

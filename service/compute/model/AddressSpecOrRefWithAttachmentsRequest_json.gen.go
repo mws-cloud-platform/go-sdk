@@ -26,10 +26,8 @@ func (m *AddressSpecOrRefWithAttachmentsRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *AddressSpecOrRefWithAttachmentsRequest) encodeFields(e *jx.Encoder) {
-	if m.Address != nil {
-		e.FieldStart("address")
-		m.Address.Encode(e)
-	}
+	e.FieldStart("address")
+	m.Address.Encode(e)
 
 	if m.OneToOneNat != nil {
 		e.FieldStart("oneToOneNat")
@@ -46,19 +44,19 @@ func (m *AddressSpecOrRefWithAttachmentsRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("AddressSpecOrRefWithAttachmentsRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	requiredFilled := map[string]bool{
+		"address": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "address":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			var v AddressSpecOrRefRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Address = &v
+			m.Address = v
+			requiredFilled["address"] = true
 			return nil
 		case "oneToOneNat":
 			if d.Next() == jx.Null {
@@ -76,4 +74,9 @@ func (m *AddressSpecOrRefWithAttachmentsRequest) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

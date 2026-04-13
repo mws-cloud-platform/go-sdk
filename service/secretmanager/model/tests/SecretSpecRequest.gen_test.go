@@ -12,6 +12,7 @@ import (
 )
 
 func TestSecretSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initSecretSpecRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

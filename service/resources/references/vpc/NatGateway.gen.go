@@ -108,6 +108,10 @@ func (m *NatGatewayID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/natGateways/" + m.natGateway
 }
 
+func (m *NatGatewayID) String() string {
+	return m.ID()
+}
+
 func (m *NatGatewayID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *NatGatewayRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *NatGatewayRef) String() string {
+	return m.IDPath()
 }
 
 func (m *NatGatewayRef) Parse(ctx context.Context) error {

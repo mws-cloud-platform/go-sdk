@@ -35,14 +35,17 @@ func (m *NetworkInterfaceSpecRequest) encodeFields(e *jx.Encoder) {
 		e.Bool(*m.Primary)
 	}
 
-	if m.Addresses != nil {
-		e.FieldStart("addresses")
-		e.ArrStart()
-		for _, elem := range m.Addresses {
-			elem.Encode(e)
-		}
-		e.ArrEnd()
+	if m.IpForwardingEnabled != nil {
+		e.FieldStart("ipForwardingEnabled")
+		e.Bool(*m.IpForwardingEnabled)
 	}
+
+	e.FieldStart("addresses")
+	e.ArrStart()
+	for _, elem := range m.Addresses {
+		elem.Encode(e)
+	}
+	e.ArrEnd()
 }
 
 func (m *NetworkInterfaceSpecRequest) UnmarshalJSON(b []byte) error {
@@ -55,7 +58,8 @@ func (m *NetworkInterfaceSpecRequest) Decode(d *jx.Decoder) error {
 	}
 
 	requiredFilled := map[string]bool{
-		"name": false,
+		"name":      false,
+		"addresses": false,
 	}
 	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -76,6 +80,14 @@ func (m *NetworkInterfaceSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.Primary = &v
 			return nil
+		case "ipForwardingEnabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.IpForwardingEnabled = &v
+			return nil
 		case "addresses":
 			c := make([]AddressSpecOrRefWithAttachmentsRequest, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
@@ -90,6 +102,7 @@ func (m *NetworkInterfaceSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Addresses = c
+			requiredFilled["addresses"] = true
 			return nil
 		default:
 			return d.Skip()

@@ -13,7 +13,7 @@ import (
 )
 
 type UpdateEgressNatRequest struct {
-	// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Описывает спецификацию Egress (Many-to-Many) NAT-шлюза.
 	Spec commonclient.Optional[UpdateEgressNatSpecRequest] `json:"spec" yaml:"spec"`

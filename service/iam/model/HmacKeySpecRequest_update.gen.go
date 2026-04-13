@@ -2,29 +2,11 @@
 
 package model
 
-import (
-	"time"
-
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
-	commonclient "go.mws.cloud/go-sdk/internal/client"
-)
-
 type UpdateHmacKeySpecRequest struct {
-	// Время истечения срока действия ключа.
-	ExpirationTime commonclient.Optional[time.Time] `json:"expirationTime" yaml:"expirationTime"`
-	// Время последней аутентификации.
-	LastAuthTime commonclient.Optional[time.Time] `json:"lastAuthTime" yaml:"lastAuthTime"`
 }
 
 func (m *HmacKeySpecRequest) AsUpdateModel() UpdateHmacKeySpecRequest {
 	var u UpdateHmacKeySpecRequest
-	if m.ExpirationTime != nil {
-		u.ExpirationTime = commonclient.NewOptional(m.GetExpirationTimeOr(time.Unix(0, 0).UTC()))
-	}
-	if m.LastAuthTime != nil {
-		u.LastAuthTime = commonclient.NewOptional(m.GetLastAuthTimeOr(time.Unix(0, 0).UTC()))
-	}
 	return u
 }
 
@@ -33,8 +15,6 @@ func (m *HmacKeySpecRequest) Diff(src *HmacKeySpecRequest) UpdateHmacKeySpecRequ
 	nilDiffers := src != nil && m == nil
 	upd := UpdateHmacKeySpecRequest{}
 	if !nilDiffers {
-		upd.ExpirationTime = m.diffExpirationTime(src)
-		upd.LastAuthTime = m.diffLastAuthTime(src)
 	}
 	return upd
 }
@@ -45,27 +25,10 @@ func (m *HmacKeySpecRequest) WithChanges(u UpdateHmacKeySpecRequest) HmacKeySpec
 		out = *m
 	}
 
-	if u.ExpirationTime.IsSet() {
-		out.ExpirationTime = ptr.Get(u.ExpirationTime.Value)
-	}
-	if u.LastAuthTime.IsSet() {
-		out.LastAuthTime = ptr.Get(u.LastAuthTime.Value)
-	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateHmacKeySpecRequest) HasChanges() bool {
-	return m.ExpirationTime.Set ||
-		m.LastAuthTime.Set
-}
-
-func (m *HmacKeySpecRequest) diffExpirationTime(src *HmacKeySpecRequest) commonclient.Optional[time.Time] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetExpirationTime(), m.GetExpirationTime(), nilDiffers)
-}
-
-func (m *HmacKeySpecRequest) diffLastAuthTime(src *HmacKeySpecRequest) commonclient.Optional[time.Time] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetLastAuthTime(), m.GetLastAuthTime(), nilDiffers)
+	return false
 }

@@ -5,22 +5,18 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 type UpdateComputeOneToOneNatSpecRequest struct {
 	// Информация о внешнем адресе
-	External commonclient.OptionalNil[UpdateComputeOneToOneNatSpecExternalRequest] `json:"external" yaml:"external"`
+	External commonclient.Optional[UpdateComputeOneToOneNatSpecExternalRequest] `json:"external" yaml:"external"`
 }
 
 func (m *ComputeOneToOneNatSpecRequest) AsUpdateModel() UpdateComputeOneToOneNatSpecRequest {
 	var u UpdateComputeOneToOneNatSpecRequest
-	if m.External != nil {
-		u.External = commonclient.NewOptionalNil(m.External.AsUpdateModel())
-	}
+	u.External = commonclient.NewOptional(m.External.AsUpdateModel())
 	return u
 }
 
@@ -41,9 +37,7 @@ func (m *ComputeOneToOneNatSpecRequest) WithChanges(u UpdateComputeOneToOneNatSp
 	}
 
 	if u.External.IsSet() {
-		out.External = ptr.Get(out.External.WithChanges(u.External.Value))
-	} else if u.External.IsNull() {
-		out.External = nil
+		out.External = out.External.WithChanges(u.External.Value)
 	}
 	return out
 }
@@ -67,21 +61,20 @@ func (m *UpdateComputeOneToOneNatSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *ComputeOneToOneNatSpecRequest) diffExternal(src *ComputeOneToOneNatSpecRequest) commonclient.OptionalNil[UpdateComputeOneToOneNatSpecExternalRequest] {
-	nilDiffers := src != nil && m == nil
-	value := m.GetExternal().Diff(src.GetExternal())
-	return commonclient.NewDirectOptionalNil[UpdateComputeOneToOneNatSpecExternalRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+func (m *ComputeOneToOneNatSpecRequest) diffExternal(src *ComputeOneToOneNatSpecRequest) commonclient.Optional[UpdateComputeOneToOneNatSpecExternalRequest] {
+	from := src.GetExternal()
+	to := m.GetExternal()
+	value := to.Diff(&from)
+	return commonclient.NewDirectOptional[UpdateComputeOneToOneNatSpecExternalRequest](value, value.HasChanges())
 }
 
 type UpdateComputeOneToOneNatSpecExternalRequest struct {
-	Address commonclient.OptionalNil[UpdateOneToOneNatAddressSpecOrRefRequest] `json:"address" yaml:"address"`
+	Address commonclient.Optional[UpdateOneToOneNatAddressSpecOrRefRequest] `json:"address" yaml:"address"`
 }
 
 func (m *ComputeOneToOneNatSpecExternalRequest) AsUpdateModel() UpdateComputeOneToOneNatSpecExternalRequest {
 	var u UpdateComputeOneToOneNatSpecExternalRequest
-	if m.Address != nil {
-		u.Address = commonclient.NewOptionalNil(m.Address.AsUpdateModel())
-	}
+	u.Address = commonclient.NewOptional(m.Address.AsUpdateModel())
 	return u
 }
 
@@ -102,9 +95,7 @@ func (m *ComputeOneToOneNatSpecExternalRequest) WithChanges(u UpdateComputeOneTo
 	}
 
 	if u.Address.IsSet() {
-		out.Address = ptr.Get(out.Address.WithChanges(u.Address.Value))
-	} else if u.Address.IsNull() {
-		out.Address = nil
+		out.Address = out.Address.WithChanges(u.Address.Value)
 	}
 	return out
 }
@@ -128,8 +119,9 @@ func (m *UpdateComputeOneToOneNatSpecExternalRequest) Parse(ctx context.Context)
 	return nil
 }
 
-func (m *ComputeOneToOneNatSpecExternalRequest) diffAddress(src *ComputeOneToOneNatSpecExternalRequest) commonclient.OptionalNil[UpdateOneToOneNatAddressSpecOrRefRequest] {
-	nilDiffers := src != nil && m == nil
-	value := m.GetAddress().Diff(src.GetAddress())
-	return commonclient.NewDirectOptionalNil[UpdateOneToOneNatAddressSpecOrRefRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+func (m *ComputeOneToOneNatSpecExternalRequest) diffAddress(src *ComputeOneToOneNatSpecExternalRequest) commonclient.Optional[UpdateOneToOneNatAddressSpecOrRefRequest] {
+	from := src.GetAddress()
+	to := m.GetAddress()
+	value := to.Diff(&from)
+	return commonclient.NewDirectOptional[UpdateOneToOneNatAddressSpecOrRefRequest](value, value.HasChanges())
 }

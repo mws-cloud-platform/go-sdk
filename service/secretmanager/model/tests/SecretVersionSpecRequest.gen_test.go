@@ -12,6 +12,7 @@ import (
 )
 
 func TestSecretVersionSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initSecretVersionSpecRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

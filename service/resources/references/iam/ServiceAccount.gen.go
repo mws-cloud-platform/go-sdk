@@ -108,6 +108,10 @@ func (m *ServiceAccountID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/serviceAccounts/" + m.serviceAccount
 }
 
+func (m *ServiceAccountID) String() string {
+	return m.ID()
+}
+
 func (m *ServiceAccountID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ServiceAccountRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ServiceAccountRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ServiceAccountRef) Parse(ctx context.Context) error {

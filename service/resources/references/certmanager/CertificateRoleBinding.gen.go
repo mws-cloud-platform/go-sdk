@@ -127,6 +127,10 @@ func (m *CertificateRoleBindingID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/certificates/" + m.name + "/certificateRoleBindings/" + m.roleBinding
 }
 
+func (m *CertificateRoleBindingID) String() string {
+	return m.ID()
+}
+
 func (m *CertificateRoleBindingID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *CertificateRoleBindingRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *CertificateRoleBindingRef) String() string {
+	return m.IDPath()
 }
 
 func (m *CertificateRoleBindingRef) Parse(ctx context.Context) error {

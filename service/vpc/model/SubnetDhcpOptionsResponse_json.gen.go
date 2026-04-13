@@ -41,6 +41,15 @@ func (m *SubnetDhcpOptionsResponse) encodeFields(e *jx.Encoder) {
 		}
 		e.ArrEnd()
 	}
+
+	if m.NtpServers != nil {
+		e.FieldStart("ntpServers")
+		e.ArrStart()
+		for _, elem := range m.NtpServers {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
 }
 
 func (m *SubnetDhcpOptionsResponse) UnmarshalJSON(b []byte) error {
@@ -76,6 +85,21 @@ func (m *SubnetDhcpOptionsResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.DomainNameServers = c
+			return nil
+		case "ntpServers":
+			c := make([]ipaddress.IP4Address, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v ipaddress.IP4Address
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.NtpServers = c
 			return nil
 		default:
 			return d.Skip()

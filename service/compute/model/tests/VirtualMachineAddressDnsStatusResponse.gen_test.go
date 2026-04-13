@@ -13,6 +13,7 @@ import (
 )
 
 func TestVirtualMachineAddressDnsStatusResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initVirtualMachineAddressDnsStatusResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

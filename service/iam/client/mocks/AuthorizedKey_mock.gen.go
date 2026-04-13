@@ -49,6 +49,51 @@ func (mr *MockAuthorizedKeyMockRecorder) CreateAuthorizedKey(arg0, arg1 any) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).CreateAuthorizedKey), arg0, arg1)
 }
 
+// DeleteAuthorizedKey mocks base method.
+func (m *MockAuthorizedKey) DeleteAuthorizedKey(arg0 context.Context, arg1 client.DeleteAuthorizedKeyRequest) (*client.DeleteAuthorizedKeyResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAuthorizedKey", arg0, arg1)
+	ret0, _ := ret[0].(*client.DeleteAuthorizedKeyResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteAuthorizedKey indicates an expected call of DeleteAuthorizedKey.
+func (mr *MockAuthorizedKeyMockRecorder) DeleteAuthorizedKey(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).DeleteAuthorizedKey), arg0, arg1)
+}
+
+// GetAuthorizedKey mocks base method.
+func (m *MockAuthorizedKey) GetAuthorizedKey(arg0 context.Context, arg1 client.GetAuthorizedKeyRequest) (*client.GetAuthorizedKeyResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAuthorizedKey", arg0, arg1)
+	ret0, _ := ret[0].(*client.GetAuthorizedKeyResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAuthorizedKey indicates an expected call of GetAuthorizedKey.
+func (mr *MockAuthorizedKeyMockRecorder) GetAuthorizedKey(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).GetAuthorizedKey), arg0, arg1)
+}
+
+// ListAuthorizedKey mocks base method.
+func (m *MockAuthorizedKey) ListAuthorizedKey(arg0 context.Context, arg1 client.ListAuthorizedKeyRequest) (*client.ListAuthorizedKeyResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAuthorizedKey", arg0, arg1)
+	ret0, _ := ret[0].(*client.ListAuthorizedKeyResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAuthorizedKey indicates an expected call of ListAuthorizedKey.
+func (mr *MockAuthorizedKeyMockRecorder) ListAuthorizedKey(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).ListAuthorizedKey), arg0, arg1)
+}
+
 // UpdateAuthorizedKey mocks base method.
 func (m *MockAuthorizedKey) UpdateAuthorizedKey(arg0 context.Context, arg1 client.UpdateAuthorizedKeyRequest) (*client.UpsertAuthorizedKeyResponse, error) {
 	m.ctrl.T.Helper()

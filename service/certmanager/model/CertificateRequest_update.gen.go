@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateCertificateRequest struct {
-	// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
 	Spec     commonclient.Optional[UpdateCertificateSpecRequest]                       `json:"spec" yaml:"spec"`
 }

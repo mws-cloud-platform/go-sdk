@@ -11,11 +11,11 @@ func HardwareSpecRequestToOptionalResponse(request *HardwareSpecRequest) (*Hardw
 		return nil, nil
 	}
 	var response HardwareSpecOptionalResponse
-	tmpPower, err := HardwareSpecPowerRequestToOptionalResponse(request.Power)
-	if err != nil {
-		return nil, err
-	}
 	if request.Power != nil {
+		tmpPower, err := HardwareSpecPowerRequestToOptionalResponse(request.Power)
+		if err != nil {
+			return nil, err
+		}
 		response.Power = commonclient.NewOptional(*tmpPower)
 	}
 	if request.GracefulShutdownTimeout != nil {

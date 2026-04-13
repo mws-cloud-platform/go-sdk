@@ -12,6 +12,7 @@ import (
 )
 
 func TestOneToOneNatAddressSpecOrRefOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initOneToOneNatAddressSpecOrRefOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -11,7 +11,7 @@ import (
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 )
 
-// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 // Real OAPI model name: CommonTypedResourceMetadata
 type CommonTypedResourceMetadataOptionalResponse struct {
 	// ID свойства

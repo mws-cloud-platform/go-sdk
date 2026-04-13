@@ -108,6 +108,10 @@ func (m *VpcHostID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/vpcHosts/" + m.vpcHost
 }
 
+func (m *VpcHostID) String() string {
+	return m.ID()
+}
+
 func (m *VpcHostID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *VpcHostRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *VpcHostRef) String() string {
+	return m.IDPath()
 }
 
 func (m *VpcHostRef) Parse(ctx context.Context) error {

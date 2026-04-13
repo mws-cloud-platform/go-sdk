@@ -26,7 +26,7 @@ func (x *ServiceAccountSugared) Impl() ServiceAccount {
 	return x.impl
 }
 
-// ListServiceAccount список сервисных аккаунтов в проекте.
+// ListServiceAccount позволяет получить список сервисных аккаунтов в проекте.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts
 func (x *ServiceAccountSugared) ListServiceAccount(ctx context.Context, request ListServiceAccountRequest) (*model.ServiceAccountListResponse, error) {
@@ -50,7 +50,55 @@ func (x *ServiceAccountSugared) respHandlerListServiceAccount(resp *ListServiceA
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// GetServiceAccount get service account.
+// DeleteServiceAccount удаление сервисного аккаунта.
+//
+// Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}
+func (x *ServiceAccountSugared) DeleteServiceAccount(ctx context.Context, request DeleteServiceAccountRequest, opts ...Option) error {
+	config := newConfig(opts...)
+
+	resp, err := x.impl.DeleteServiceAccount(ctx, request)
+	if err != nil {
+		return err
+	}
+
+	err = x.respHandlerDeleteServiceAccount(resp)
+	if err != nil {
+		return err
+	}
+
+	if !config.wait {
+		return nil
+	}
+
+	return x.waitDeleteServiceAccount(ctx, request.getServiceAccountRequest(), config.waitOptions...)
+}
+
+func (x *ServiceAccountSugared) respHandlerDeleteServiceAccount(resp *DeleteServiceAccountResponse) error {
+	if err := resp.GetErr(); err != nil {
+		return err
+	}
+
+	if resp.Response204 {
+		return nil
+	}
+
+	return mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *ServiceAccountSugared) waitDeleteServiceAccount(ctx context.Context, request GetServiceAccountRequest, opts ...wait.WaiterOption) error {
+	callback := func(ctx context.Context) (*model.ServiceAccountResponse, bool, error) {
+		_, err := x.GetServiceAccount(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	_, err := waiter.Wait(ctx)
+	return err
+}
+
+// GetServiceAccount позволяет получить информацию о сервисном аккаунте.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}
 func (x *ServiceAccountSugared) GetServiceAccount(ctx context.Context, request GetServiceAccountRequest, opts ...Option) (*model.ServiceAccountResponse, error) {
@@ -95,7 +143,7 @@ func (x *ServiceAccountSugared) waitGetServiceAccount(ctx context.Context, reque
 	return waiter.Wait(ctx)
 }
 
-// UpsertServiceAccount update(or create) service account.
+// UpsertServiceAccount позволяет создать или обновить сервисный аккаунт.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}
 func (x *ServiceAccountSugared) UpsertServiceAccount(ctx context.Context, request UpsertServiceAccountRequest, opts ...Option) (*model.ServiceAccountResponse, error) {
@@ -144,7 +192,7 @@ func (x *ServiceAccountSugared) waitUpsertServiceAccount(ctx context.Context, re
 	return waiter.Wait(ctx)
 }
 
-// CreateServiceAccount update(or create) service account.
+// CreateServiceAccount позволяет создать или обновить сервисный аккаунт.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}?createOnly=true
@@ -168,7 +216,7 @@ func (x *ServiceAccountSugared) CreateServiceAccount(ctx context.Context, reques
 	return x.waitUpsertServiceAccount(ctx, request.getServiceAccountRequest(), config.waitOptions...)
 }
 
-// UpdateServiceAccount update(or create) service account.
+// UpdateServiceAccount позволяет создать или обновить сервисный аккаунт.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}?updateOnly=true

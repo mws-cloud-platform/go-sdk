@@ -44,7 +44,7 @@ type ListNetworksRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -137,7 +137,7 @@ type DeleteNetworkRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
 }
 
@@ -220,7 +220,7 @@ type GetNetworkRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
 }
 
@@ -297,9 +297,9 @@ type UpsertNetworkRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Update network
+	// Данные для создания или изменения сети
 	Body model.NetworkRequest // body
 }
 
@@ -330,9 +330,9 @@ type UpdateNetworkRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Update network
+	// Данные для создания или изменения сети
 	Body model.UpdateNetworkRequest // body
 }
 

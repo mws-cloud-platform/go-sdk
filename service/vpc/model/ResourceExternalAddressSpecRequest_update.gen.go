@@ -2,26 +2,11 @@
 
 package model
 
-import (
-	"context"
-
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
-	commonclient "go.mws.cloud/go-sdk/internal/client"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	"go.mws.cloud/go-sdk/service/resources/references/vpc"
-)
-
 type UpdateResourceExternalAddressSpecRequest struct {
-	// Шлюз, к которому относится этот адрес. Если шлюз не указан, то ExternalAddress получит IP из well-known  NatGateway(ref=natGateways/internet-gateway, vrfId=555).
-	NatGateway commonclient.Optional[vpc.NatGatewayRef] `json:"natGateway" yaml:"natGateway"`
 }
 
 func (m *ResourceExternalAddressSpecRequest) AsUpdateModel() UpdateResourceExternalAddressSpecRequest {
 	var u UpdateResourceExternalAddressSpecRequest
-	if m.NatGateway != nil {
-		u.NatGateway = commonclient.NewOptional(m.GetNatGatewayOr(vpc.NatGatewayRef{}))
-	}
 	return u
 }
 
@@ -30,7 +15,6 @@ func (m *ResourceExternalAddressSpecRequest) Diff(src *ResourceExternalAddressSp
 	nilDiffers := src != nil && m == nil
 	upd := UpdateResourceExternalAddressSpecRequest{}
 	if !nilDiffers {
-		upd.NatGateway = m.diffNatGateway(src)
 	}
 	return upd
 }
@@ -41,32 +25,10 @@ func (m *ResourceExternalAddressSpecRequest) WithChanges(u UpdateResourceExterna
 		out = *m
 	}
 
-	if u.NatGateway.IsSet() {
-		out.NatGateway = ptr.Get(u.NatGateway.Value)
-	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateResourceExternalAddressSpecRequest) HasChanges() bool {
-	return m.NatGateway.Set
-}
-
-func (m *UpdateResourceExternalAddressSpecRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.NatGateway.IsSet() {
-		if err := m.NatGateway.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("NatGateway", err)
-		}
-	}
-
-	return nil
-}
-
-func (m *ResourceExternalAddressSpecRequest) diffNatGateway(src *ResourceExternalAddressSpecRequest) commonclient.Optional[vpc.NatGatewayRef] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetNatGateway(), m.GetNatGateway(), nilDiffers)
+	return false
 }

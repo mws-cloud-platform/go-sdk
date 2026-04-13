@@ -5,7 +5,10 @@ package client
 import (
 	"context"
 
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
 	mwserrors "go.mws.cloud/go-sdk/mws/errors"
+	"go.mws.cloud/go-sdk/mws/wait"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
 
@@ -23,10 +26,127 @@ func (x *AuthorizedKeySugared) Impl() AuthorizedKey {
 	return x.impl
 }
 
+// ListAuthorizedKey позволяет получить список авторизованных ключей.
+//
+// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys
+func (x *AuthorizedKeySugared) ListAuthorizedKey(ctx context.Context, request ListAuthorizedKeyRequest) (*model.AuthorizedKeyListOptionalResponse, error) {
+	resp, err := x.impl.ListAuthorizedKey(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return x.respHandlerListAuthorizedKey(resp)
+}
+
+func (x *AuthorizedKeySugared) respHandlerListAuthorizedKey(resp *ListAuthorizedKeyResponse) (*model.AuthorizedKeyListOptionalResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+// DeleteAuthorizedKey позволяет удалить авторизованный ключ.
+//
+// Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+func (x *AuthorizedKeySugared) DeleteAuthorizedKey(ctx context.Context, request DeleteAuthorizedKeyRequest, opts ...Option) error {
+	config := newConfig(opts...)
+
+	resp, err := x.impl.DeleteAuthorizedKey(ctx, request)
+	if err != nil {
+		return err
+	}
+
+	err = x.respHandlerDeleteAuthorizedKey(resp)
+	if err != nil {
+		return err
+	}
+
+	if !config.wait {
+		return nil
+	}
+
+	return x.waitDeleteAuthorizedKey(ctx, request.getAuthorizedKeyRequest(), config.waitOptions...)
+}
+
+func (x *AuthorizedKeySugared) respHandlerDeleteAuthorizedKey(resp *DeleteAuthorizedKeyResponse) error {
+	if err := resp.GetErr(); err != nil {
+		return err
+	}
+
+	if resp.Response204 {
+		return nil
+	}
+
+	return mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *AuthorizedKeySugared) waitDeleteAuthorizedKey(ctx context.Context, request GetAuthorizedKeyRequest, opts ...wait.WaiterOption) error {
+	callback := func(ctx context.Context) (*model.AuthorizedKeyOptionalResponse, bool, error) {
+		_, err := x.GetAuthorizedKey(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	_, err := waiter.Wait(ctx)
+	return err
+}
+
+// GetAuthorizedKey позволяет получить авторизованный ключ.
+//
+// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+func (x *AuthorizedKeySugared) GetAuthorizedKey(ctx context.Context, request GetAuthorizedKeyRequest, opts ...Option) (*model.AuthorizedKeyOptionalResponse, error) {
+	config := newConfig(opts...)
+
+	resp, err := x.impl.GetAuthorizedKey(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	sugaredResponse, err := x.respHandlerGetAuthorizedKey(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitGetAuthorizedKey(ctx, request, config.waitOptions...)
+}
+
+func (x *AuthorizedKeySugared) respHandlerGetAuthorizedKey(resp *GetAuthorizedKeyResponse) (*model.AuthorizedKeyOptionalResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *AuthorizedKeySugared) waitGetAuthorizedKey(ctx context.Context, request GetAuthorizedKeyRequest, opts ...wait.WaiterOption) (*model.AuthorizedKeyOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.AuthorizedKeyOptionalResponse, bool, error) {
+		response, err := x.GetAuthorizedKey(ctx, request)
+		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
+		return response, stop, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	return waiter.Wait(ctx)
+}
+
 // UpsertAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
-func (x *AuthorizedKeySugared) UpsertAuthorizedKey(ctx context.Context, request UpsertAuthorizedKeyRequest) (*model.AuthorizedKeyResponse, error) {
+func (x *AuthorizedKeySugared) UpsertAuthorizedKey(ctx context.Context, request UpsertAuthorizedKeyRequest) (*model.AuthorizedKeyOptionalResponse, error) {
 	resp, err := x.impl.UpsertAuthorizedKey(ctx, request)
 	if err != nil {
 		return nil, err
@@ -35,7 +155,7 @@ func (x *AuthorizedKeySugared) UpsertAuthorizedKey(ctx context.Context, request 
 	return x.respHandlerUpsertAuthorizedKey(resp)
 }
 
-func (x *AuthorizedKeySugared) respHandlerUpsertAuthorizedKey(resp *UpsertAuthorizedKeyResponse) (*model.AuthorizedKeyResponse, error) {
+func (x *AuthorizedKeySugared) respHandlerUpsertAuthorizedKey(resp *UpsertAuthorizedKeyResponse) (*model.AuthorizedKeyOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -55,7 +175,7 @@ func (x *AuthorizedKeySugared) respHandlerUpsertAuthorizedKey(resp *UpsertAuthor
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?createOnly=true
-func (x *AuthorizedKeySugared) CreateAuthorizedKey(ctx context.Context, request UpsertAuthorizedKeyRequest) (*model.AuthorizedKeyResponse, error) {
+func (x *AuthorizedKeySugared) CreateAuthorizedKey(ctx context.Context, request UpsertAuthorizedKeyRequest) (*model.AuthorizedKeyOptionalResponse, error) {
 	resp, err := x.impl.CreateAuthorizedKey(ctx, request)
 	if err != nil {
 		return nil, err
@@ -68,7 +188,7 @@ func (x *AuthorizedKeySugared) CreateAuthorizedKey(ctx context.Context, request 
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?updateOnly=true
-func (x *AuthorizedKeySugared) UpdateAuthorizedKey(ctx context.Context, request UpdateAuthorizedKeyRequest) (*model.AuthorizedKeyResponse, error) {
+func (x *AuthorizedKeySugared) UpdateAuthorizedKey(ctx context.Context, request UpdateAuthorizedKeyRequest) (*model.AuthorizedKeyOptionalResponse, error) {
 	resp, err := x.impl.UpdateAuthorizedKey(ctx, request)
 	if err != nil {
 		return nil, err

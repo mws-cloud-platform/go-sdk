@@ -12,11 +12,11 @@ func FirewallRuleRequestToOptionalResponse(request *FirewallRuleRequest) (*Firew
 		return nil, nil
 	}
 	var response FirewallRuleOptionalResponse
-	tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
-	if err != nil {
-		return nil, err
-	}
 	if request.Metadata != nil {
+		tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
+		if err != nil {
+			return nil, err
+		}
 		response.Metadata = commonclient.NewOptionalNil(*tmpMetadata)
 	}
 	tmpSpec, err := FirewallRuleSpecRequestToOptionalResponse(&request.Spec)

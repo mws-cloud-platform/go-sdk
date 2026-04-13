@@ -30,6 +30,11 @@ func (m *NetworkInterfaceStatusResponse) encodeFields(e *jx.Encoder) {
 	e.FieldStart("name")
 	e.Str(m.Name)
 
+	if m.IpForwardingEnabled != nil {
+		e.FieldStart("ipForwardingEnabled")
+		e.Bool(*m.IpForwardingEnabled)
+	}
+
 	e.FieldStart("addresses")
 	e.ArrStart()
 	for _, elem := range m.Addresses {
@@ -56,6 +61,14 @@ func (m *NetworkInterfaceStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Name = v
+			return nil
+		case "ipForwardingEnabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.IpForwardingEnabled = &v
 			return nil
 		case "addresses":
 			c := make([]VirtualMachineAddressStatusResponse, 0)

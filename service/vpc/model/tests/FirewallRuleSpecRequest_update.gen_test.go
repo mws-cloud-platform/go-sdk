@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateFirewallRuleSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initFirewallRuleSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

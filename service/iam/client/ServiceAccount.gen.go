@@ -11,24 +11,28 @@ import (
 )
 
 type ServiceAccount interface {
-	// ListServiceAccount список сервисных аккаунтов в проекте.
+	// ListServiceAccount позволяет получить список сервисных аккаунтов в проекте.
 	//
 	// Путь: GET /iam/v1/projects/{project}/serviceAccounts
 	ListServiceAccount(context.Context, ListServiceAccountRequest) (*ListServiceAccountResponse, error)
-	// GetServiceAccount get service account.
+	// DeleteServiceAccount удаление сервисного аккаунта.
+	//
+	// Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}
+	DeleteServiceAccount(context.Context, DeleteServiceAccountRequest) (*DeleteServiceAccountResponse, error)
+	// GetServiceAccount позволяет получить информацию о сервисном аккаунте.
 	//
 	// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}
 	GetServiceAccount(context.Context, GetServiceAccountRequest) (*GetServiceAccountResponse, error)
-	// UpsertServiceAccount update(or create) service account.
+	// UpsertServiceAccount позволяет создать или обновить сервисный аккаунт.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}
 	UpsertServiceAccount(context.Context, UpsertServiceAccountRequest) (*UpsertServiceAccountResponse, error)
-	// CreateServiceAccount update(or create) service account.
+	// CreateServiceAccount позволяет создать или обновить сервисный аккаунт.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}?createOnly=true
 	CreateServiceAccount(context.Context, UpsertServiceAccountRequest) (*UpsertServiceAccountResponse, error)
-	// UpdateServiceAccount update(or create) service account.
+	// UpdateServiceAccount позволяет создать или обновить сервисный аккаунт.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}?updateOnly=true
@@ -40,7 +44,7 @@ type ListServiceAccountRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -79,7 +83,7 @@ type ListServiceAccountResponse struct {
 	Response200 *model.ServiceAccountListResponse
 	Response400 *common.InvalidRequestError
 	Response403 *common.BaseError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -112,6 +116,72 @@ func (m *ListServiceAccountResponse) SetErrorWrapper(f func(err error) error) {
 	}
 }
 
+type DeleteServiceAccountRequest struct {
+	// Токен авторизации IAM
+	Authorization string // header: "Authorization"
+	// Путь к проекту
+	Project        string // path: "project"
+	ServiceAccount string // path: "serviceAccount"
+}
+
+func (m *DeleteServiceAccountRequest) SetAuthorization(authorization string) {
+	m.Authorization = authorization
+}
+
+func (m DeleteServiceAccountRequest) GetProject() string {
+	return m.Project
+}
+
+func (m *DeleteServiceAccountRequest) SetProject(project string) {
+	m.Project = project
+}
+
+func (m *DeleteServiceAccountRequest) getServiceAccountRequest() GetServiceAccountRequest {
+	return GetServiceAccountRequest{
+		Authorization:  m.Authorization,
+		Project:        m.Project,
+		ServiceAccount: m.ServiceAccount,
+	}
+}
+
+type DeleteServiceAccountResponse struct {
+	Code        int
+	Response204 bool // empty response
+	Response400 *common.ApiError
+	Response404 *common.ApiError
+	Response500 *common.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *DeleteServiceAccountResponse) GetCode() int {
+	return m.Code
+}
+
+func (m *DeleteServiceAccountResponse) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *DeleteServiceAccountResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
+}
+
 type GetServiceAccountRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -137,7 +207,7 @@ type GetServiceAccountResponse struct {
 	Response200 *model.ServiceAccountResponse
 	Response400 *common.InvalidRequestError
 	Response404 *common.BaseError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -235,7 +305,7 @@ type UpsertServiceAccountResponse struct {
 	Response400 *common.InvalidRequestError
 	Response404 *common.BaseError
 	Response409 *common.BaseError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }

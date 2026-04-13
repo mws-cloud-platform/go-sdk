@@ -127,6 +127,10 @@ func (m *ZonalDnsResolverID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/zonalDnsResourceGroups/" + m.zonalDnsResourceGroup + "/zonalDnsResolvers/" + m.zonalDnsResolver
 }
 
+func (m *ZonalDnsResolverID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalDnsResolverID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *ZonalDnsResolverRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalDnsResolverRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalDnsResolverRef) Parse(ctx context.Context) error {

@@ -34,6 +34,11 @@ func (m *OsStatusResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("standardDnsRecords")
 		e.Bool(*m.StandardDnsRecords)
 	}
+
+	if m.OsType != nil {
+		e.FieldStart("osType")
+		m.OsType.Encode(e)
+	}
 }
 
 func (m *OsStatusResponse) UnmarshalJSON(b []byte) error {
@@ -63,8 +68,48 @@ func (m *OsStatusResponse) Decode(d *jx.Decoder) error {
 
 			m.StandardDnsRecords = &v
 			return nil
+		case "osType":
+			var v OsStatusOsTypeResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType = &v
+			return nil
 		default:
 			return d.Skip()
 		}
 	}))
+}
+
+func (m OsStatusOsTypeResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	m.Encode(&e)
+	return e.Bytes(), nil
+}
+
+func (m *OsStatusOsTypeResponse) Encode(e *jx.Encoder) {
+	if m == nil {
+		e.Null()
+		return
+	}
+	e.Str(string(*m))
+}
+
+func (m *OsStatusOsTypeResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *OsStatusOsTypeResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("OsStatusOsTypeResponse")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = OsStatusOsTypeResponse(v)
+	return nil
 }

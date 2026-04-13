@@ -1,0 +1,2 @@
+minValue: "1 bit/s"
+maxValue: "1 bit/s"

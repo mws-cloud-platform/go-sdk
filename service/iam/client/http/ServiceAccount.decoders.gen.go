@@ -83,7 +83,78 @@ func decodeListServiceAccountResponse(resp *http.Response) (*client.ListServiceA
 		case "application/json":
 			result := &client.ListServiceAccountResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	default:
+		data, err := io.ReadAll(resp.Body)
+		return nil, errors.Join(err, clienterrors.UnexpectedStatusCodeWithData(resp.StatusCode, data))
+	}
+}
+
+func decodeDeleteServiceAccountResponse(resp *http.Response) (*client.DeleteServiceAccountResponse, error) {
+	ct, err := commonclient.GetContentType(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	switch resp.StatusCode {
+	case 204:
+		result := &client.DeleteServiceAccountResponse{
+			Code:        resp.StatusCode,
+			Response204: true,
+		}
+
+		return result, nil
+	case 400:
+		switch ct {
+		case "application/json":
+			result := &client.DeleteServiceAccountResponse{
+				Code:        resp.StatusCode,
+				Response400: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 404:
+		switch ct {
+		case "application/json":
+			result := &client.DeleteServiceAccountResponse{
+				Code:        resp.StatusCode,
+				Response404: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 500:
+		switch ct {
+		case "application/json":
+			result := &client.DeleteServiceAccountResponse{
+				Code:        resp.StatusCode,
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -168,7 +239,7 @@ func decodeGetServiceAccountResponse(resp *http.Response) (*client.GetServiceAcc
 		case "application/json":
 			result := &client.GetServiceAccountResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -291,7 +362,7 @@ func decodeUpsertServiceAccountResponse(resp *http.Response) (*client.UpsertServ
 		case "application/json":
 			result := &client.UpsertServiceAccountResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

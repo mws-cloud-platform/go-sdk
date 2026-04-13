@@ -12,6 +12,7 @@ import (
 )
 
 func TestHmacKeyResourceStatusResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initHmacKeyResourceStatusResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

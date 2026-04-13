@@ -11,28 +11,28 @@ import (
 )
 
 type OneToOneNat interface {
-	// ListOneToOneNats позволяет получить список One-to-One NAT-шлюзов.
+	// ListOneToOneNats позволяет получить список One-to-One NAT.
 	//
 	// Путь: GET /vpc/v1/projects/{project}/networks/{network}/oneToOneNats
 	ListOneToOneNats(context.Context, ListOneToOneNatsRequest) (*ListOneToOneNatsResponse, error)
-	// DeleteOneToOneNat позволяет удалить One-to-One NAT-шлюз.
+	// DeleteOneToOneNat позволяет удалить One-to-One NAT.
 	//
 	// Путь: DELETE /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}
 	DeleteOneToOneNat(context.Context, DeleteOneToOneNatRequest) (*DeleteOneToOneNatResponse, error)
-	// GetOneToOneNat позволяет получить информацию о One-to-One NAT-шлюзе.
+	// GetOneToOneNat позволяет получить информацию о One-to-One NAT.
 	//
 	// Путь: GET /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}
 	GetOneToOneNat(context.Context, GetOneToOneNatRequest) (*GetOneToOneNatResponse, error)
-	// UpsertOneToOneNat позволяет создать или изменить One-to-One NAT-шлюз.
+	// UpsertOneToOneNat позволяет создать или изменить One-to-One NAT.
 	//
 	// Путь: POST /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}
 	UpsertOneToOneNat(context.Context, UpsertOneToOneNatRequest) (*UpsertOneToOneNatResponse, error)
-	// CreateOneToOneNat позволяет создать или изменить One-to-One NAT-шлюз.
+	// CreateOneToOneNat позволяет создать или изменить One-to-One NAT.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}?createOnly=true
 	CreateOneToOneNat(context.Context, UpsertOneToOneNatRequest) (*UpsertOneToOneNatResponse, error)
-	// UpdateOneToOneNat позволяет создать или изменить One-to-One NAT-шлюз.
+	// UpdateOneToOneNat позволяет создать или изменить One-to-One NAT.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /vpc/v1/projects/{project}/networks/{network}/oneToOneNats/{oneToOneNat}?updateOnly=true
@@ -44,9 +44,9 @@ type ListOneToOneNatsRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -139,9 +139,9 @@ type DeleteOneToOneNatRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// One-to-One NAT name
+	// Имя One-to-One NAT
 	OneToOneNat string // path: "oneToOneNat"
 }
 
@@ -225,9 +225,9 @@ type GetOneToOneNatRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// One-to-One NAT name
+	// Имя One-to-One NAT
 	OneToOneNat string // path: "oneToOneNat"
 }
 
@@ -304,11 +304,11 @@ type UpsertOneToOneNatRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// One-to-One NAT name
+	// Имя One-to-One NAT
 	OneToOneNat string // path: "oneToOneNat"
-	// Update One-to-One NAT
+	// Данные для создания или изменения One-to-One NAT
 	Body model.OneToOneNatRequest // body
 }
 
@@ -340,11 +340,11 @@ type UpdateOneToOneNatRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// One-to-One NAT name
+	// Имя One-to-One NAT
 	OneToOneNat string // path: "oneToOneNat"
-	// Update One-to-One NAT
+	// Данные для создания или изменения One-to-One NAT
 	Body model.UpdateOneToOneNatRequest // body
 }
 

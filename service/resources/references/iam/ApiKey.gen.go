@@ -127,6 +127,10 @@ func (m *ApiKeyID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/serviceAccounts/" + m.serviceAccount + "/apiKeys/" + m.apiKey
 }
 
+func (m *ApiKeyID) String() string {
+	return m.ID()
+}
+
 func (m *ApiKeyID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *ApiKeyRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ApiKeyRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ApiKeyRef) Parse(ctx context.Context) error {

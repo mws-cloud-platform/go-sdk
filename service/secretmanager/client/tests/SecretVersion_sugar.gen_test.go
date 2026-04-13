@@ -15,6 +15,7 @@ import (
 )
 
 func TestSecretVersionSugared_AddSecretVersion(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestSecretVersionSugared_AddSecretVersion(t *testing.T) {
 }
 
 func TestSecretVersionSugared_ListSecretVersions(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestSecretVersionSugared_ListSecretVersions(t *testing.T) {
 }
 
 func TestSecretVersionSugared_GetData(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestSecretVersionSugared_GetData(t *testing.T) {
 }
 
 func TestSecretVersionSugared_DeleteSecretVersion(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestSecretVersionSugared_DeleteSecretVersion(t *testing.T) {
 }
 
 func TestSecretVersionSugared_GetSecretVersion(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestSecretVersionSugared_GetSecretVersion(t *testing.T) {
 }
 
 func TestSecretVersionSugared_UpsertSecretVersion(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -93,6 +99,7 @@ func TestSecretVersionSugared_UpsertSecretVersion(t *testing.T) {
 }
 
 func TestSecretVersionSugared_CreateSecretVersion(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -106,6 +113,7 @@ func TestSecretVersionSugared_CreateSecretVersion(t *testing.T) {
 }
 
 func TestSecretVersionSugared_UpdateSecretVersion(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

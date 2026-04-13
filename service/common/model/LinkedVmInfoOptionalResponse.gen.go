@@ -11,7 +11,7 @@ import (
 
 // Real OAPI model name: LinkedVmInfo
 type LinkedVmInfoOptionalResponse struct {
-	// Идентификатор вирутальноый машины
+	// Идентификатор виртуальной машины
 	Id compute.VirtualMachineRef `json:"id" yaml:"id"`
 	// Имя виртуальной машины
 	Name string `json:"name" yaml:"name"`

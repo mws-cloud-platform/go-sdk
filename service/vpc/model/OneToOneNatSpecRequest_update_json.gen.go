@@ -26,10 +26,6 @@ func (m *UpdateOneToOneNatSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *UpdateOneToOneNatSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.Internal.IsSet() {
-		e.FieldStart("internal")
-		m.Internal.Value.Encode(e)
-	}
 
 	if m.External.IsSet() {
 		e.FieldStart("external")
@@ -48,14 +44,6 @@ func (m *UpdateOneToOneNatSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "internal":
-			var v UpdateOneToOneNatSpecInternalRequest
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Internal.SetTo(v)
-			return nil
 		case "external":
 			var v UpdateOneToOneNatSpecExternalRequest
 			if err := v.Decode(d); err != nil {

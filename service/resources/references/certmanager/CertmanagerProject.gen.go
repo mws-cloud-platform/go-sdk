@@ -89,6 +89,10 @@ func (m *CertmanagerProjectID) ID() string {
 	return m.ServiceSlug() + "/certmanagerProjects/" + m.project
 }
 
+func (m *CertmanagerProjectID) String() string {
+	return m.ID()
+}
+
 func (m *CertmanagerProjectID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *CertmanagerProjectRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *CertmanagerProjectRef) String() string {
+	return m.IDPath()
 }
 
 func (m *CertmanagerProjectRef) Parse(ctx context.Context) error {

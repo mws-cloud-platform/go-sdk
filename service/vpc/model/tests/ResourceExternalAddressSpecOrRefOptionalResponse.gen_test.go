@@ -12,6 +12,7 @@ import (
 )
 
 func TestResourceExternalAddressSpecOrRefOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initResourceExternalAddressSpecOrRefOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

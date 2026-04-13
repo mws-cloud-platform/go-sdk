@@ -19,29 +19,22 @@ import (
 // Real OAPI model name: AddressSpec
 type AddressSpecRequest struct {
 	// Подсеть облачной сети, к которой принадлежит внутренний адрес
-	Subnet *vpc.SubnetRef `json:"subnet,omitempty" yaml:"subnet,omitempty"`
+	Subnet vpc.SubnetRef `json:"subnet" yaml:"subnet"`
 	// Желаемый адрес. Если не указан, то будет выделен из пула адресов подсети.
 	IpAddress *ipaddress.IPAddress `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
 	// Настройки DNS
 	Dns []AddressDnsSpecRequest `json:"dns,omitempty" yaml:"dns,omitempty"`
 }
 
-func (m *AddressSpecRequest) GetSubnet() *vpc.SubnetRef {
+func (m *AddressSpecRequest) GetSubnet() vpc.SubnetRef {
 	if m != nil {
 		return m.Subnet
 	}
-	return nil
+	return vpc.SubnetRef{}
 }
 
-func (m *AddressSpecRequest) SetSubnet(val *vpc.SubnetRef) {
+func (m *AddressSpecRequest) SetSubnet(val vpc.SubnetRef) {
 	m.Subnet = val
-}
-
-func (m *AddressSpecRequest) GetSubnetOr(val vpc.SubnetRef) vpc.SubnetRef {
-	if m != nil && m.Subnet != nil {
-		return *m.Subnet
-	}
-	return val
 }
 
 func (m *AddressSpecRequest) GetIpAddress() *ipaddress.IPAddress {
@@ -86,7 +79,7 @@ func (m *AddressSpecRequest) Clone() *AddressSpecRequest {
 	}
 
 	clone := *m
-	clone.Subnet = m.Subnet.Clone()
+	clone.Subnet = *m.Subnet.Clone()
 	clone.IpAddress = m.IpAddress.Clone()
 	if m.Dns != nil {
 		clone.Dns = make([]AddressDnsSpecRequest, len(m.Dns))

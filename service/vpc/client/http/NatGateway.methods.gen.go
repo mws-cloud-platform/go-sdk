@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/vpc/client"
 )
 
-// ListNatGateways list private Nat gateways.
+// ListNatGateways позволяет получить список NAT-шлюзов.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /vpc/v1/projects/{project}/natGateways

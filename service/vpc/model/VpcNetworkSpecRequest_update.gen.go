@@ -9,15 +9,11 @@ import (
 )
 
 type UpdateVpcNetworkSpecRequest struct {
-	Mtu            commonclient.Optional[int32] `json:"mtu" yaml:"mtu"`
-	InternetAccess commonclient.Optional[bool]  `json:"internetAccess" yaml:"internetAccess"`
+	InternetAccess commonclient.Optional[bool] `json:"internetAccess" yaml:"internetAccess"`
 }
 
 func (m *VpcNetworkSpecRequest) AsUpdateModel() UpdateVpcNetworkSpecRequest {
 	var u UpdateVpcNetworkSpecRequest
-	if m.Mtu != nil {
-		u.Mtu = commonclient.NewOptional(m.GetMtuOr(0))
-	}
 	if m.InternetAccess != nil {
 		u.InternetAccess = commonclient.NewOptional(m.GetInternetAccessOr(false))
 	}
@@ -29,7 +25,6 @@ func (m *VpcNetworkSpecRequest) Diff(src *VpcNetworkSpecRequest) UpdateVpcNetwor
 	nilDiffers := src != nil && m == nil
 	upd := UpdateVpcNetworkSpecRequest{}
 	if !nilDiffers {
-		upd.Mtu = m.diffMtu(src)
 		upd.InternetAccess = m.diffInternetAccess(src)
 	}
 	return upd
@@ -41,9 +36,6 @@ func (m *VpcNetworkSpecRequest) WithChanges(u UpdateVpcNetworkSpecRequest) VpcNe
 		out = *m
 	}
 
-	if u.Mtu.IsSet() {
-		out.Mtu = ptr.Get(u.Mtu.Value)
-	}
 	if u.InternetAccess.IsSet() {
 		out.InternetAccess = ptr.Get(u.InternetAccess.Value)
 	}
@@ -52,13 +44,7 @@ func (m *VpcNetworkSpecRequest) WithChanges(u UpdateVpcNetworkSpecRequest) VpcNe
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateVpcNetworkSpecRequest) HasChanges() bool {
-	return m.Mtu.Set ||
-		m.InternetAccess.Set
-}
-
-func (m *VpcNetworkSpecRequest) diffMtu(src *VpcNetworkSpecRequest) commonclient.Optional[int32] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetMtu(), m.GetMtu(), nilDiffers)
+	return m.InternetAccess.Set
 }
 
 func (m *VpcNetworkSpecRequest) diffInternetAccess(src *VpcNetworkSpecRequest) commonclient.Optional[bool] {

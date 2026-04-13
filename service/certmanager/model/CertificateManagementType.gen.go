@@ -10,3 +10,7 @@ const (
 	CertificateManagementType_SELF_MANAGED CertificateManagementType = "SELF_MANAGED"
 	CertificateManagementType_MANAGED      CertificateManagementType = "MANAGED"
 )
+
+func (m CertificateManagementType) String() string {
+	return string(m)
+}

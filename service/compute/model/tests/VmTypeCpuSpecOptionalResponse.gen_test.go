@@ -12,6 +12,7 @@ import (
 )
 
 func TestVmTypeCpuSpecOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initVmTypeCpuSpecOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

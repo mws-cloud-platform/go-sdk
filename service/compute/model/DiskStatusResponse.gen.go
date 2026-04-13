@@ -21,7 +21,7 @@ type DiskStatusResponse struct {
 	SourceExists *bool `json:"sourceExists,omitempty" yaml:"sourceExists,omitempty"`
 	// Размер диска
 	Size *bytesize.ByteSize `json:"size,omitempty" yaml:"size,omitempty"`
-	// Запрашиваемые базовые и дополнительные IOPS
+	// Запрашиваемое базовое и дополнительное количество операций ввода-вывода в секунду (IOPS)
 	Iops *DiskStatusIopsResponse `json:"iops,omitempty" yaml:"iops,omitempty"`
 	// Пропускная способность диска
 	Throughput *Throughput `json:"throughput,omitempty" yaml:"throughput,omitempty"`

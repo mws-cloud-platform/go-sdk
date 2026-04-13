@@ -97,6 +97,14 @@ func WithServiceEndpointResolver(resolver endpoints.ServiceEndpointResolver) Loa
 	}
 }
 
+// WithServiceAccountAuthorizedKey sets the service account authorized key. It
+// would be used by the default credentials provider.
+func WithServiceAccountAuthorizedKey(v iam.ServiceAccountAuthorizedKey) LoadSDKOption {
+	return func(o *loadSDKOptions) {
+		o.serviceAccountAuthorizedKey = &v
+	}
+}
+
 // WithCredentials sets the credentials provider.
 func WithCredentials(provider credentials.Provider) LoadSDKOption {
 	return func(c *loadSDKOptions) {
@@ -105,17 +113,18 @@ func WithCredentials(provider credentials.Provider) LoadSDKOption {
 }
 
 type loadSDKOptions struct {
-	env                     env.Env
-	config                  *Config
-	defaultProject          string
-	defaultZone             string
-	timeout                 time.Duration
-	logger                  *zap.Logger
-	client                  HTTPClient
-	transport               http.RoundTripper
-	retryer                 retry.Retryer
-	serviceEndpointResolver endpoints.ServiceEndpointResolver
-	credentials             credentials.Provider
+	env                         env.Env
+	config                      *Config
+	defaultProject              string
+	defaultZone                 string
+	timeout                     time.Duration
+	logger                      *zap.Logger
+	client                      HTTPClient
+	transport                   http.RoundTripper
+	retryer                     retry.Retryer
+	serviceEndpointResolver     endpoints.ServiceEndpointResolver
+	serviceAccountAuthorizedKey *iam.ServiceAccountAuthorizedKey
+	credentials                 credentials.Provider
 }
 
 func newLoadSDKOptions() *loadSDKOptions {
@@ -239,31 +248,36 @@ func (o *loadSDKOptions) userAgent() string {
 }
 
 func (o *loadSDKOptions) buildCredentials(ctx context.Context, sdk *SDK) (credentials.Provider, error) {
-	if o.config.Token != "" {
+	switch {
+	case o.serviceAccountAuthorizedKey != nil:
+		return o.buildServiceAccountAuthorizedKeyCredentials(ctx, sdk, *o.serviceAccountAuthorizedKey)
+	case o.config.Token != "":
 		return credentials.StaticProvider(credentials.Credentials{
 			AccessToken: o.config.Token,
 		}), nil
-	}
+	case o.config.ServiceAccountAuthorizedKeyPath != "":
+		var key iam.ServiceAccountAuthorizedKey
 
-	if o.config.ServiceAccountAuthorizedKeyPath != "" {
-		return o.buildServiceAccountAuthorizedKeyCredentials(ctx, sdk)
-	}
+		data, err := os.ReadFile(o.config.ServiceAccountAuthorizedKeyPath)
+		if err != nil {
+			return nil, fmt.Errorf("read service account authorized key file: %w", err)
+		}
 
-	return credentials.AnonymousProvider(), nil
+		if err = json.Unmarshal(data, &key); err != nil {
+			return nil, fmt.Errorf("unmarshal service account authorized key: %w", err)
+		}
+
+		return o.buildServiceAccountAuthorizedKeyCredentials(ctx, sdk, key)
+	default:
+		return credentials.AnonymousProvider(), nil
+	}
 }
 
-func (o *loadSDKOptions) buildServiceAccountAuthorizedKeyCredentials(ctx context.Context, sdk *SDK) (credentials.Provider, error) {
-	var key iam.ServiceAccountKey
-
-	data, err := os.ReadFile(o.config.ServiceAccountAuthorizedKeyPath)
-	if err != nil {
-		return nil, fmt.Errorf("read service account key authorized file: %w", err)
-	}
-
-	if err = json.Unmarshal(data, &key); err != nil {
-		return nil, fmt.Errorf("unmarshal service account authorized key: %w", err)
-	}
-
+func (o *loadSDKOptions) buildServiceAccountAuthorizedKeyCredentials(
+	ctx context.Context,
+	sdk *SDK,
+	key iam.ServiceAccountAuthorizedKey,
+) (credentials.Provider, error) {
 	endpoint, err := sdk.serviceEndpointResolver.Resolve(ctx, "iam")
 	if err != nil {
 		return nil, fmt.Errorf("resolve iam service endpoint: %w", err)

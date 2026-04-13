@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateAuthorizedKeyRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initAuthorizedKeyRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

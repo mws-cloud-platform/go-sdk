@@ -127,6 +127,10 @@ func (m *ServiceAccountAwsKeyID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/serviceAccounts/" + m.serviceAccountId + "/awsKeys/" + m.keyName
 }
 
+func (m *ServiceAccountAwsKeyID) String() string {
+	return m.ID()
+}
+
 func (m *ServiceAccountAwsKeyID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *ServiceAccountAwsKeyRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ServiceAccountAwsKeyRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ServiceAccountAwsKeyRef) Parse(ctx context.Context) error {

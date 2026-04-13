@@ -29,7 +29,7 @@ func (x *SecretSugared) Impl() Secret {
 // ListSecrets позволяет получить все секреты.
 //
 // Путь: GET /secretmanager/v1/projects/{project}/secrets
-func (x *SecretSugared) ListSecrets(ctx context.Context, request ListSecretsRequest) (*model.SecretListResponse, error) {
+func (x *SecretSugared) ListSecrets(ctx context.Context, request ListSecretsRequest) (*model.SecretListOptionalResponse, error) {
 	resp, err := x.impl.ListSecrets(ctx, request)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (x *SecretSugared) ListSecrets(ctx context.Context, request ListSecretsRequ
 	return x.respHandlerListSecrets(resp)
 }
 
-func (x *SecretSugared) respHandlerListSecrets(resp *ListSecretsResponse) (*model.SecretListResponse, error) {
+func (x *SecretSugared) respHandlerListSecrets(resp *ListSecretsResponse) (*model.SecretListOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (x *SecretSugared) respHandlerListSecrets(resp *ListSecretsResponse) (*mode
 // CreateSecretWithSecretVersion позволяет создать секрет с версией секрета.
 //
 // Путь: POST /secretmanager/v1/projects/{project}/secrets/{name}:createSecretWithSecretVersion
-func (x *SecretSugared) CreateSecretWithSecretVersion(ctx context.Context, request CreateSecretWithSecretVersionRequest) (*model.SecretResponse, error) {
+func (x *SecretSugared) CreateSecretWithSecretVersion(ctx context.Context, request CreateSecretWithSecretVersionRequest) (*model.SecretOptionalResponse, error) {
 	resp, err := x.impl.CreateSecretWithSecretVersion(ctx, request)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (x *SecretSugared) CreateSecretWithSecretVersion(ctx context.Context, reque
 	return x.respHandlerCreateSecretWithSecretVersion(resp)
 }
 
-func (x *SecretSugared) respHandlerCreateSecretWithSecretVersion(resp *CreateSecretWithSecretVersionResponse) (*model.SecretResponse, error) {
+func (x *SecretSugared) respHandlerCreateSecretWithSecretVersion(resp *CreateSecretWithSecretVersionResponse) (*model.SecretOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func (x *SecretSugared) respHandlerDeleteSecret(resp *DeleteSecretResponse) erro
 }
 
 func (x *SecretSugared) waitDeleteSecret(ctx context.Context, request GetSecretRequest, opts ...wait.WaiterOption) error {
-	callback := func(ctx context.Context) (*model.SecretResponse, bool, error) {
+	callback := func(ctx context.Context) (*model.SecretOptionalResponse, bool, error) {
 		_, err := x.GetSecret(ctx, request)
 		if mwserrors.IsAPIErrorNotFoundStatus(err) {
 			return nil, true, nil
@@ -125,7 +125,7 @@ func (x *SecretSugared) waitDeleteSecret(ctx context.Context, request GetSecretR
 // GetSecret позволяет получить указанный секрет.
 //
 // Путь: GET /secretmanager/v1/projects/{project}/secrets/{name}
-func (x *SecretSugared) GetSecret(ctx context.Context, request GetSecretRequest, opts ...Option) (*model.SecretResponse, error) {
+func (x *SecretSugared) GetSecret(ctx context.Context, request GetSecretRequest, opts ...Option) (*model.SecretOptionalResponse, error) {
 	config := newConfig(opts...)
 
 	resp, err := x.impl.GetSecret(ctx, request)
@@ -145,7 +145,7 @@ func (x *SecretSugared) GetSecret(ctx context.Context, request GetSecretRequest,
 	return x.waitGetSecret(ctx, request, config.waitOptions...)
 }
 
-func (x *SecretSugared) respHandlerGetSecret(resp *GetSecretResponse) (*model.SecretResponse, error) {
+func (x *SecretSugared) respHandlerGetSecret(resp *GetSecretResponse) (*model.SecretOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -157,8 +157,8 @@ func (x *SecretSugared) respHandlerGetSecret(resp *GetSecretResponse) (*model.Se
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-func (x *SecretSugared) waitGetSecret(ctx context.Context, request GetSecretRequest, opts ...wait.WaiterOption) (*model.SecretResponse, error) {
-	callback := func(ctx context.Context) (*model.SecretResponse, bool, error) {
+func (x *SecretSugared) waitGetSecret(ctx context.Context, request GetSecretRequest, opts ...wait.WaiterOption) (*model.SecretOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.SecretOptionalResponse, bool, error) {
 		response, err := x.GetSecret(ctx, request)
 		stop := string(ptr.Get(ptr.Get(response.GetStatus()).GetReady()).GetState()) != "PROCESSING"
 		return response, stop, err
@@ -170,7 +170,7 @@ func (x *SecretSugared) waitGetSecret(ctx context.Context, request GetSecretRequ
 // UpsertSecret позволяет создать или изменить секрет.
 //
 // Путь: POST /secretmanager/v1/projects/{project}/secrets/{name}
-func (x *SecretSugared) UpsertSecret(ctx context.Context, request UpsertSecretRequest, opts ...Option) (*model.SecretResponse, error) {
+func (x *SecretSugared) UpsertSecret(ctx context.Context, request UpsertSecretRequest, opts ...Option) (*model.SecretOptionalResponse, error) {
 	config := newConfig(opts...)
 
 	resp, err := x.impl.UpsertSecret(ctx, request)
@@ -190,7 +190,7 @@ func (x *SecretSugared) UpsertSecret(ctx context.Context, request UpsertSecretRe
 	return x.waitUpsertSecret(ctx, request.getSecretRequest(), config.waitOptions...)
 }
 
-func (x *SecretSugared) respHandlerUpsertSecret(resp *UpsertSecretResponse) (*model.SecretResponse, error) {
+func (x *SecretSugared) respHandlerUpsertSecret(resp *UpsertSecretResponse) (*model.SecretOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -206,8 +206,8 @@ func (x *SecretSugared) respHandlerUpsertSecret(resp *UpsertSecretResponse) (*mo
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-func (x *SecretSugared) waitUpsertSecret(ctx context.Context, request GetSecretRequest, opts ...wait.WaiterOption) (*model.SecretResponse, error) {
-	callback := func(ctx context.Context) (*model.SecretResponse, bool, error) {
+func (x *SecretSugared) waitUpsertSecret(ctx context.Context, request GetSecretRequest, opts ...wait.WaiterOption) (*model.SecretOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.SecretOptionalResponse, bool, error) {
 		response, err := x.GetSecret(ctx, request)
 		stop := string(ptr.Get(ptr.Get(response.GetStatus()).GetReady()).GetState()) != "PROCESSING"
 		return response, stop, err
@@ -220,7 +220,7 @@ func (x *SecretSugared) waitUpsertSecret(ctx context.Context, request GetSecretR
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /secretmanager/v1/projects/{project}/secrets/{name}?createOnly=true
-func (x *SecretSugared) CreateSecret(ctx context.Context, request UpsertSecretRequest, opts ...Option) (*model.SecretResponse, error) {
+func (x *SecretSugared) CreateSecret(ctx context.Context, request UpsertSecretRequest, opts ...Option) (*model.SecretOptionalResponse, error) {
 	config := newConfig(opts...)
 
 	resp, err := x.impl.CreateSecret(ctx, request)
@@ -244,7 +244,7 @@ func (x *SecretSugared) CreateSecret(ctx context.Context, request UpsertSecretRe
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /secretmanager/v1/projects/{project}/secrets/{name}?updateOnly=true
-func (x *SecretSugared) UpdateSecret(ctx context.Context, request UpdateSecretRequest, opts ...Option) (*model.SecretResponse, error) {
+func (x *SecretSugared) UpdateSecret(ctx context.Context, request UpdateSecretRequest, opts ...Option) (*model.SecretOptionalResponse, error) {
 	config := newConfig(opts...)
 
 	resp, err := x.impl.UpdateSecret(ctx, request)

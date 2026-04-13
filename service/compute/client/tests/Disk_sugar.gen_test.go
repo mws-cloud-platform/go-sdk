@@ -15,6 +15,7 @@ import (
 )
 
 func TestDiskSugared_ListDisks(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestDiskSugared_ListDisks(t *testing.T) {
 }
 
 func TestDiskSugared_DeleteDisk(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestDiskSugared_DeleteDisk(t *testing.T) {
 }
 
 func TestDiskSugared_GetDisk(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestDiskSugared_GetDisk(t *testing.T) {
 }
 
 func TestDiskSugared_UpsertDisk(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestDiskSugared_UpsertDisk(t *testing.T) {
 }
 
 func TestDiskSugared_CreateDisk(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestDiskSugared_CreateDisk(t *testing.T) {
 }
 
 func TestDiskSugared_UpdateDisk(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

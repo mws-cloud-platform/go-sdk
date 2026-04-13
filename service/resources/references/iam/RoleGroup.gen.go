@@ -89,6 +89,10 @@ func (m *RoleGroupID) ID() string {
 	return m.ServiceSlug() + "/roleGroups/" + m.roleGroup
 }
 
+func (m *RoleGroupID) String() string {
+	return m.ID()
+}
+
 func (m *RoleGroupID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *RoleGroupRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *RoleGroupRef) String() string {
+	return m.IDPath()
 }
 
 func (m *RoleGroupRef) Parse(ctx context.Context) error {

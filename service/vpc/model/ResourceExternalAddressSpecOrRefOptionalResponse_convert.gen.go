@@ -14,11 +14,11 @@ func ResourceExternalAddressSpecOrRefRequestToOptionalResponse(request *Resource
 	if request.Ref != nil {
 		response.Ref = commonclient.NewOptional(*request.Ref)
 	}
-	tmpSpec, err := ResourceExternalAddressSpecRequestToOptionalResponse(request.Spec)
-	if err != nil {
-		return nil, err
-	}
 	if request.Spec != nil {
+		tmpSpec, err := ResourceExternalAddressSpecRequestToOptionalResponse(request.Spec)
+		if err != nil {
+			return nil, err
+		}
 		response.Spec = commonclient.NewOptionalNil(*tmpSpec)
 	}
 	return &response, nil

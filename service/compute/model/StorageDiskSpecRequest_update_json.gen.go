@@ -8,7 +8,6 @@ import (
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func (m UpdateStorageDiskSpecRequest) MarshalJSON() ([]byte, error) {
@@ -31,20 +30,6 @@ func (m *UpdateStorageDiskSpecRequest) encodeFields(e *jx.Encoder) {
 	if m.Size.IsSet() {
 		e.FieldStart("size")
 		m.Size.Value.Encode(e)
-	}
-
-	if m.Source.IsSet() {
-		e.FieldStart("source")
-		if m.Source.IsNull() {
-			e.Null()
-		} else {
-			m.Source.Value.Encode(e)
-		}
-	}
-
-	if m.DiskType.IsSet() {
-		e.FieldStart("diskType")
-		m.DiskType.Value.Encode(e)
 	}
 
 	if m.Iops.IsSet() {
@@ -72,27 +57,6 @@ func (m *UpdateStorageDiskSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.Size.SetTo(v)
 			return nil
-		case "source":
-			if d.Next() == jx.Null {
-				m.Source.SetToNull()
-				return d.Null()
-			}
-
-			var v UpdateStorageDiskSpecSourceRequest
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Source.SetTo(v)
-			return nil
-		case "diskType":
-			var v compute.DiskTypeRef
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.DiskType.SetTo(v)
-			return nil
 		case "iops":
 			var v Iops
 			if err := v.Decode(d); err != nil {
@@ -100,54 +64,6 @@ func (m *UpdateStorageDiskSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Iops.SetTo(v)
-			return nil
-		default:
-			return d.Skip()
-		}
-	}))
-}
-
-func (m UpdateStorageDiskSpecSourceRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	m.Encode(&e)
-	return e.Bytes(), nil
-}
-
-func (m *UpdateStorageDiskSpecSourceRequest) Encode(e *jx.Encoder) {
-	if m == nil {
-		e.Null()
-		return
-	}
-	e.ObjStart()
-	m.encodeFields(e)
-	e.ObjEnd()
-}
-
-func (m *UpdateStorageDiskSpecSourceRequest) encodeFields(e *jx.Encoder) {
-	if m.Image.IsSet() {
-		e.FieldStart("image")
-		m.Image.Value.Encode(e)
-	}
-}
-
-func (m *UpdateStorageDiskSpecSourceRequest) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *UpdateStorageDiskSpecSourceRequest) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("UpdateStorageDiskSpecSourceRequest")
-	}
-
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "image":
-			var v compute.ImageRef
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Image.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

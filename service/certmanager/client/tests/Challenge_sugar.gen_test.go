@@ -14,15 +14,16 @@ import (
 	clientmocks "go.mws.cloud/go-sdk/service/certmanager/client/mocks"
 )
 
-func TestChallengeSugared_GetChallengeContent(t *testing.T) {
+func TestChallengeSugared_GetChallengeToken(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	mockClient := clientmocks.NewMockChallenge(ctrl)
-	mockClient.EXPECT().GetChallengeContent(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+	mockClient.EXPECT().GetChallengeToken(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
 
 	sugared := client.NewChallengeSugared(mockClient)
 
-	_, err := sugared.GetChallengeContent(context.Background(), client.GetChallengeContentRequest{})
+	_, err := sugared.GetChallengeToken(context.Background(), client.GetChallengeTokenRequest{})
 	require.True(t, mwserrors.IsDecodeBodyError(err))
 }

@@ -103,5 +103,5 @@ func xtoi2(s string, e byte) (byte, bool) {
 		return 0, false
 	}
 	n, ei, ok := xtoi(s[:2])
-	return byte(n), ok && ei == 2
+	return byte(n), ok && ei == 2 //nolint:gosec // xtoi always returns bytes
 }

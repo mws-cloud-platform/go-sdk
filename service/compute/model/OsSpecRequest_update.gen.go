@@ -11,23 +11,11 @@ import (
 )
 
 type UpdateOsSpecRequest struct {
-	Hostname           commonclient.Optional[string]                         `json:"hostname" yaml:"hostname"`
-	LocalDomain        commonclient.Optional[string]                         `json:"localDomain" yaml:"localDomain"`
-	StandardDnsRecords commonclient.Optional[bool]                           `json:"standardDnsRecords" yaml:"standardDnsRecords"`
-	Metadata           commonclient.OptionalNil[UpdateOsSpecMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata commonclient.OptionalNil[UpdateOsSpecMetadataRequest] `json:"metadata" yaml:"metadata"`
 }
 
 func (m *OsSpecRequest) AsUpdateModel() UpdateOsSpecRequest {
 	var u UpdateOsSpecRequest
-	if m.Hostname != nil {
-		u.Hostname = commonclient.NewOptional(m.GetHostnameOr(""))
-	}
-	if m.LocalDomain != nil {
-		u.LocalDomain = commonclient.NewOptional(m.GetLocalDomainOr(""))
-	}
-	if m.StandardDnsRecords != nil {
-		u.StandardDnsRecords = commonclient.NewOptional(m.GetStandardDnsRecordsOr(false))
-	}
 	if m.Metadata != nil {
 		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
@@ -39,9 +27,6 @@ func (m *OsSpecRequest) Diff(src *OsSpecRequest) UpdateOsSpecRequest {
 	nilDiffers := src != nil && m == nil
 	upd := UpdateOsSpecRequest{}
 	if !nilDiffers {
-		upd.Hostname = m.diffHostname(src)
-		upd.LocalDomain = m.diffLocalDomain(src)
-		upd.StandardDnsRecords = m.diffStandardDnsRecords(src)
 		upd.Metadata = m.diffMetadata(src)
 	}
 	return upd
@@ -53,15 +38,6 @@ func (m *OsSpecRequest) WithChanges(u UpdateOsSpecRequest) OsSpecRequest {
 		out = *m
 	}
 
-	if u.Hostname.IsSet() {
-		out.Hostname = ptr.Get(u.Hostname.Value)
-	}
-	if u.LocalDomain.IsSet() {
-		out.LocalDomain = ptr.Get(u.LocalDomain.Value)
-	}
-	if u.StandardDnsRecords.IsSet() {
-		out.StandardDnsRecords = ptr.Get(u.StandardDnsRecords.Value)
-	}
 	if u.Metadata.IsSet() {
 		out.Metadata = ptr.Get(out.Metadata.WithChanges(u.Metadata.Value))
 	} else if u.Metadata.IsNull() {
@@ -72,25 +48,7 @@ func (m *OsSpecRequest) WithChanges(u UpdateOsSpecRequest) OsSpecRequest {
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateOsSpecRequest) HasChanges() bool {
-	return m.Hostname.Set ||
-		m.LocalDomain.Set ||
-		m.StandardDnsRecords.Set ||
-		m.Metadata.Set
-}
-
-func (m *OsSpecRequest) diffHostname(src *OsSpecRequest) commonclient.Optional[string] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetHostname(), m.GetHostname(), nilDiffers)
-}
-
-func (m *OsSpecRequest) diffLocalDomain(src *OsSpecRequest) commonclient.Optional[string] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetLocalDomain(), m.GetLocalDomain(), nilDiffers)
-}
-
-func (m *OsSpecRequest) diffStandardDnsRecords(src *OsSpecRequest) commonclient.Optional[bool] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetStandardDnsRecords(), m.GetStandardDnsRecords(), nilDiffers)
+	return m.Metadata.Set
 }
 
 func (m *OsSpecRequest) diffMetadata(src *OsSpecRequest) commonclient.OptionalNil[UpdateOsSpecMetadataRequest] {

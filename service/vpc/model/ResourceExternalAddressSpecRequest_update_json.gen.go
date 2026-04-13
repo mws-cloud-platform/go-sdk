@@ -6,8 +6,6 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func (m UpdateResourceExternalAddressSpecRequest) MarshalJSON() ([]byte, error) {
@@ -27,10 +25,6 @@ func (m *UpdateResourceExternalAddressSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *UpdateResourceExternalAddressSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.NatGateway.IsSet() {
-		e.FieldStart("natGateway")
-		m.NatGateway.Value.Encode(e)
-	}
 }
 
 func (m *UpdateResourceExternalAddressSpecRequest) UnmarshalJSON(b []byte) error {
@@ -42,18 +36,5 @@ func (m *UpdateResourceExternalAddressSpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("UpdateResourceExternalAddressSpecRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "natGateway":
-			var v vpc.NatGatewayRef
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.NatGateway.SetTo(v)
-			return nil
-		default:
-			return d.Skip()
-		}
-	}))
+	return d.Skip()
 }

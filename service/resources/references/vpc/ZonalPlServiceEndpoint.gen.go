@@ -146,6 +146,10 @@ func (m *ZonalPlServiceEndpointID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalNetworks/" + m.zonalNetwork + "/zonalPlServiceEndpoints/" + m.serviceEndpoint
 }
 
+func (m *ZonalPlServiceEndpointID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalPlServiceEndpointID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -296,6 +300,10 @@ func (m *ZonalPlServiceEndpointRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalPlServiceEndpointRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalPlServiceEndpointRef) Parse(ctx context.Context) error {

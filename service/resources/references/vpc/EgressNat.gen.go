@@ -127,6 +127,10 @@ func (m *EgressNatID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/networks/" + m.network + "/egressNats/" + m.egressNat
 }
 
+func (m *EgressNatID) String() string {
+	return m.ID()
+}
+
 func (m *EgressNatID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *EgressNatRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *EgressNatRef) String() string {
+	return m.IDPath()
 }
 
 func (m *EgressNatRef) Parse(ctx context.Context) error {

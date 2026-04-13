@@ -127,6 +127,10 @@ func (m *RouteID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/networks/" + m.network + "/routes/" + m.route
 }
 
+func (m *RouteID) String() string {
+	return m.ID()
+}
+
 func (m *RouteID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *RouteRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *RouteRef) String() string {
+	return m.IDPath()
 }
 
 func (m *RouteRef) Parse(ctx context.Context) error {

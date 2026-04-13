@@ -26,7 +26,7 @@ func (x *EgressNatSugared) Impl() EgressNat {
 	return x.impl
 }
 
-// ListEgressNats позволяет получить список Egress NAT-шлюзов.
+// ListEgressNats позволяет получить список Egress NAT.
 //
 // Путь: GET /vpc/v1/projects/{project}/networks/{network}/egressNats
 func (x *EgressNatSugared) ListEgressNats(ctx context.Context, request ListEgressNatsRequest) (*model.ListEgressNatResponseOptionalResponse, error) {
@@ -50,7 +50,7 @@ func (x *EgressNatSugared) respHandlerListEgressNats(resp *ListEgressNatsRespons
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// DeleteEgressNat позволяет удалить Egress NAT-шлюз.
+// DeleteEgressNat позволяет удалить Egress NAT.
 //
 // Путь: DELETE /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}
 func (x *EgressNatSugared) DeleteEgressNat(ctx context.Context, request DeleteEgressNatRequest, opts ...Option) error {
@@ -98,7 +98,7 @@ func (x *EgressNatSugared) waitDeleteEgressNat(ctx context.Context, request GetE
 	return err
 }
 
-// GetEgressNat позволяет получить информацию об Egress NAT-шлюзе.
+// GetEgressNat позволяет получить информацию об Egress NAT.
 //
 // Путь: GET /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}
 func (x *EgressNatSugared) GetEgressNat(ctx context.Context, request GetEgressNatRequest, opts ...Option) (*model.EgressNatOptionalResponse, error) {
@@ -143,7 +143,7 @@ func (x *EgressNatSugared) waitGetEgressNat(ctx context.Context, request GetEgre
 	return waiter.Wait(ctx)
 }
 
-// UpsertEgressNat позволяет создать или изменить Egress NAT-шлюз.
+// UpsertEgressNat позволяет создать или изменить Egress NAT.
 //
 // Путь: POST /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}
 func (x *EgressNatSugared) UpsertEgressNat(ctx context.Context, request UpsertEgressNatRequest, opts ...Option) (*model.EgressNatOptionalResponse, error) {
@@ -188,7 +188,7 @@ func (x *EgressNatSugared) waitUpsertEgressNat(ctx context.Context, request GetE
 	return waiter.Wait(ctx)
 }
 
-// CreateEgressNat позволяет создать или изменить Egress NAT-шлюз.
+// CreateEgressNat позволяет создать или изменить Egress NAT.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}?createOnly=true
@@ -212,7 +212,7 @@ func (x *EgressNatSugared) CreateEgressNat(ctx context.Context, request UpsertEg
 	return x.waitUpsertEgressNat(ctx, request.getEgressNatRequest(), config.waitOptions...)
 }
 
-// UpdateEgressNat позволяет создать или изменить Egress NAT-шлюз.
+// UpdateEgressNat позволяет создать или изменить Egress NAT.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}?updateOnly=true

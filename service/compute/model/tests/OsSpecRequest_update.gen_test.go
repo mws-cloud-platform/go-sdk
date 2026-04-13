@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateOsSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initOsSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

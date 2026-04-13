@@ -11,7 +11,7 @@ import (
 
 // Real OAPI model name: NetworkSpec
 type NetworkSpecRequest struct {
-	NetworkInterfaces []NetworkInterfaceSpecRequest `json:"networkInterfaces,omitempty" yaml:"networkInterfaces,omitempty"`
+	NetworkInterfaces []NetworkInterfaceSpecRequest `json:"networkInterfaces" yaml:"networkInterfaces"`
 }
 
 func (m *NetworkSpecRequest) GetNetworkInterfaces() []NetworkInterfaceSpecRequest {
@@ -23,13 +23,6 @@ func (m *NetworkSpecRequest) GetNetworkInterfaces() []NetworkInterfaceSpecReques
 
 func (m *NetworkSpecRequest) SetNetworkInterfaces(val []NetworkInterfaceSpecRequest) {
 	m.NetworkInterfaces = val
-}
-
-func (m *NetworkSpecRequest) GetNetworkInterfacesOr(val []NetworkInterfaceSpecRequest) []NetworkInterfaceSpecRequest {
-	if m != nil && m.NetworkInterfaces != nil {
-		return m.NetworkInterfaces
-	}
-	return val
 }
 
 func (m *NetworkSpecRequest) Clone() *NetworkSpecRequest {

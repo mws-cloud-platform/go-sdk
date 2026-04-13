@@ -89,6 +89,10 @@ func (m *ComputeProjectID) ID() string {
 	return m.ServiceSlug() + "/computeProjects/" + m.project
 }
 
+func (m *ComputeProjectID) String() string {
+	return m.ID()
+}
+
 func (m *ComputeProjectID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *ComputeProjectRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ComputeProjectRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ComputeProjectRef) Parse(ctx context.Context) error {

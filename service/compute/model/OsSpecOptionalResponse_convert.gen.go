@@ -20,11 +20,11 @@ func OsSpecRequestToOptionalResponse(request *OsSpecRequest) (*OsSpecOptionalRes
 	if request.StandardDnsRecords != nil {
 		response.StandardDnsRecords = commonclient.NewOptional(*request.StandardDnsRecords)
 	}
-	tmpMetadata, err := OsSpecMetadataRequestToOptionalResponse(request.Metadata)
-	if err != nil {
-		return nil, err
-	}
 	if request.Metadata != nil {
+		tmpMetadata, err := OsSpecMetadataRequestToOptionalResponse(request.Metadata)
+		if err != nil {
+			return nil, err
+		}
 		response.Metadata = commonclient.NewOptionalNil(*tmpMetadata)
 	}
 	return &response, nil

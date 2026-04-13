@@ -15,6 +15,7 @@ import (
 )
 
 func TestSnapshotSugared_ListSnapshots(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestSnapshotSugared_ListSnapshots(t *testing.T) {
 }
 
 func TestSnapshotSugared_DeleteSnapshot(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestSnapshotSugared_DeleteSnapshot(t *testing.T) {
 }
 
 func TestSnapshotSugared_GetSnapshot(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestSnapshotSugared_GetSnapshot(t *testing.T) {
 }
 
 func TestSnapshotSugared_UpsertSnapshot(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestSnapshotSugared_UpsertSnapshot(t *testing.T) {
 }
 
 func TestSnapshotSugared_CreateSnapshot(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestSnapshotSugared_CreateSnapshot(t *testing.T) {
 }
 
 func TestSnapshotSugared_UpdateSnapshot(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

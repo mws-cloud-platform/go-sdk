@@ -18,12 +18,10 @@ func StorageDiskSpecOrRefWithAttachmentsRequestToOptionalResponse(request *Stora
 	if request.DeviceName != nil {
 		response.DeviceName = commonclient.NewOptional(*request.DeviceName)
 	}
-	tmpDisk, err := StorageDiskSpecOrRefRequestToOptionalResponse(request.Disk)
+	tmpDisk, err := StorageDiskSpecOrRefRequestToOptionalResponse(&request.Disk)
 	if err != nil {
 		return nil, err
 	}
-	if request.Disk != nil {
-		response.Disk = commonclient.NewOptionalNil(*tmpDisk)
-	}
+	response.Disk = *tmpDisk
 	return &response, nil
 }

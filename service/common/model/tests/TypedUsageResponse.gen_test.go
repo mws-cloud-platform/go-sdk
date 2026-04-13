@@ -12,6 +12,7 @@ import (
 )
 
 func TestTypedUsageResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initTypedUsageResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -3,8 +3,6 @@
 package model
 
 import (
-	"maps"
-
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
@@ -13,8 +11,6 @@ import (
 type UpdateSecretVersionSpecRequest struct {
 	// Версия секрета активна/неактивна
 	Active commonclient.Optional[bool] `json:"active" yaml:"active"`
-	// Содержимое секрета
-	Data commonclient.Optional[UpdateSecretVersionDataSpec] `json:"data" yaml:"data"`
 }
 
 func (m *SecretVersionSpecRequest) AsUpdateModel() UpdateSecretVersionSpecRequest {
@@ -22,7 +18,6 @@ func (m *SecretVersionSpecRequest) AsUpdateModel() UpdateSecretVersionSpecReques
 	if m.Active != nil {
 		u.Active = commonclient.NewOptional(m.GetActiveOr(false))
 	}
-	u.Data = commonclient.NewOptional(m.Data.AsUpdateModel())
 	return u
 }
 
@@ -32,7 +27,6 @@ func (m *SecretVersionSpecRequest) Diff(src *SecretVersionSpecRequest) UpdateSec
 	upd := UpdateSecretVersionSpecRequest{}
 	if !nilDiffers {
 		upd.Active = m.diffActive(src)
-		upd.Data = m.diffData(src)
 	}
 	return upd
 }
@@ -46,24 +40,15 @@ func (m *SecretVersionSpecRequest) WithChanges(u UpdateSecretVersionSpecRequest)
 	if u.Active.IsSet() {
 		out.Active = ptr.Get(u.Active.Value)
 	}
-	if u.Data.IsSet() {
-		out.Data = SecretVersionDataSpec(maps.Clone(u.Data.Value))
-	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateSecretVersionSpecRequest) HasChanges() bool {
-	return m.Active.Set ||
-		m.Data.Set
+	return m.Active.Set
 }
 
 func (m *SecretVersionSpecRequest) diffActive(src *SecretVersionSpecRequest) commonclient.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetActive(), m.GetActive(), nilDiffers)
-}
-
-func (m *SecretVersionSpecRequest) diffData(src *SecretVersionSpecRequest) commonclient.Optional[UpdateSecretVersionDataSpec] {
-	value, hasChanges := commonclient.GetChangesMapPrimitive(src.GetData(), m.GetData())
-	return commonclient.NewDirectOptional[UpdateSecretVersionDataSpec](value, hasChanges)
 }

@@ -10,3 +10,7 @@ const (
 	CertificateChallengeType_DNS01  CertificateChallengeType = "DNS01"
 	CertificateChallengeType_HTTP01 CertificateChallengeType = "HTTP01"
 )
+
+func (m CertificateChallengeType) String() string {
+	return string(m)
+}

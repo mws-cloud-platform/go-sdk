@@ -26,14 +26,12 @@ func (m *NetworkSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *NetworkSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.NetworkInterfaces != nil {
-		e.FieldStart("networkInterfaces")
-		e.ArrStart()
-		for _, elem := range m.NetworkInterfaces {
-			elem.Encode(e)
-		}
-		e.ArrEnd()
+	e.FieldStart("networkInterfaces")
+	e.ArrStart()
+	for _, elem := range m.NetworkInterfaces {
+		elem.Encode(e)
 	}
+	e.ArrEnd()
 }
 
 func (m *NetworkSpecRequest) UnmarshalJSON(b []byte) error {
@@ -45,7 +43,10 @@ func (m *NetworkSpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("NetworkSpecRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	requiredFilled := map[string]bool{
+		"networkInterfaces": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "networkInterfaces":
 			c := make([]NetworkInterfaceSpecRequest, 0)
@@ -61,9 +62,15 @@ func (m *NetworkSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.NetworkInterfaces = c
+			requiredFilled["networkInterfaces"] = true
 			return nil
 		default:
 			return d.Skip()
 		}
 	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

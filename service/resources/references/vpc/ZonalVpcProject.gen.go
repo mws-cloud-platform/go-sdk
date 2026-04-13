@@ -108,6 +108,10 @@ func (m *ZonalVpcProjectID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/vpcProjects/" + m.project
 }
 
+func (m *ZonalVpcProjectID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalVpcProjectID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ZonalVpcProjectRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalVpcProjectRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalVpcProjectRef) Parse(ctx context.Context) error {

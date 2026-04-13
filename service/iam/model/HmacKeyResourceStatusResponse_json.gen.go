@@ -39,6 +39,11 @@ func (m *HmacKeyResourceStatusResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("secretAccessKey")
 		e.Str(*m.SecretAccessKey)
 	}
+
+	if m.LastAuthTime != nil {
+		e.FieldStart("lastAuthTime")
+		conv.EncodeDateTimeUTC(e, *m.LastAuthTime)
+	}
 }
 
 func (m *HmacKeyResourceStatusResponse) UnmarshalJSON(b []byte) error {
@@ -75,6 +80,14 @@ func (m *HmacKeyResourceStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.SecretAccessKey = &v
+			return nil
+		case "lastAuthTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.LastAuthTime = &v
 			return nil
 		default:
 			return d.Skip()

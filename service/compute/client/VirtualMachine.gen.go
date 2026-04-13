@@ -42,9 +42,9 @@ type VirtualMachine interface {
 type ListVirtualMachinesRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Имя проекта с валидацией для compute
+	// Путь к проекту
 	Project string // path: "project"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -80,6 +80,7 @@ type ListVirtualMachinesResponse struct {
 	Code        int
 	Response200 *model.VirtualMachinesListOptionalResponse
 	Response400 *common.ApiError
+	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response408 *common.ApiError
@@ -102,6 +103,9 @@ func (m *ListVirtualMachinesResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -135,7 +139,7 @@ type DeleteVirtualMachineRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Имя проекта с валидацией для compute
+	// Путь к проекту
 	Project        string // path: "project"
 	VirtualMachine string // path: "virtualMachine"
 }
@@ -165,6 +169,7 @@ type DeleteVirtualMachineResponse struct {
 	Response202 bool // empty response
 	Response204 bool // empty response
 	Response400 *common.ApiError
+	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response408 *common.ApiError
@@ -188,6 +193,9 @@ func (m *DeleteVirtualMachineResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -222,7 +230,7 @@ func (m *DeleteVirtualMachineResponse) SetErrorWrapper(f func(err error) error) 
 type GetVirtualMachineRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Имя проекта с валидацией для compute
+	// Путь к проекту
 	Project        string // path: "project"
 	VirtualMachine string // path: "virtualMachine"
 }
@@ -243,6 +251,7 @@ type GetVirtualMachineResponse struct {
 	Code        int
 	Response200 *model.VirtualMachineOptionalResponse
 	Response400 *common.ApiError
+	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response408 *common.ApiError
@@ -265,6 +274,9 @@ func (m *GetVirtualMachineResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -298,10 +310,10 @@ type UpsertVirtualMachineRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Имя проекта с валидацией для compute
+	// Путь к проекту
 	Project        string // path: "project"
 	VirtualMachine string // path: "virtualMachine"
-	// Create a new virtualMachine
+	// Данные для создания или изменения виртуальной машины
 	Body model.VirtualMachineRequest // body
 }
 
@@ -330,10 +342,10 @@ type UpdateVirtualMachineRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Имя проекта с валидацией для compute
+	// Путь к проекту
 	Project        string // path: "project"
 	VirtualMachine string // path: "virtualMachine"
-	// Create a new virtualMachine
+	// Данные для создания или изменения виртуальной машины
 	Body model.UpdateVirtualMachineRequest // body
 }
 
@@ -361,6 +373,7 @@ type UpsertVirtualMachineResponse struct {
 	Code        int
 	Response200 *model.VirtualMachineOptionalResponse
 	Response400 *common.ApiError
+	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response408 *common.ApiError
@@ -385,6 +398,9 @@ func (m *UpsertVirtualMachineResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)

@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateRouteSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initRouteSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

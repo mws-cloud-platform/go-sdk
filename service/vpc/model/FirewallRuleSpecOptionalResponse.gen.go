@@ -18,9 +18,9 @@ type FirewallRuleSpecOptionalResponse struct {
 	// Состояние правила. True - правило активно и контролирует поведение трафика. False - правило не активно.
 	Active commonclient.Optional[bool] `json:"active,omitempty" yaml:"active,omitempty"`
 	// Критерий применимости правила, описывает источник отправления пакета.
-	Source AddressGroupSpecOrRefOptionalResponse `json:"source" yaml:"source"`
+	Source FirewallRuleSourceOptionalResponse `json:"source" yaml:"source"`
 	// Критерий применимости правила, описывает пункт назначения пакета.
-	Destination AddressGroupSpecOrRefOptionalResponse `json:"destination" yaml:"destination"`
+	Destination FirewallRuleDestinationOptionalResponse `json:"destination" yaml:"destination"`
 	// Критерий применимости правила. Определяет список протоколов и соответствующих портов (если применимо) назначения пакета. Значение по умолчанию - пустое значение. Означает любой протокол и порт.
 	ProtoPorts commonclient.Optional[[]string] `json:"protoPorts,omitempty" yaml:"protoPorts,omitempty"`
 }
@@ -75,25 +75,25 @@ func (m *FirewallRuleSpecOptionalResponse) GetActiveOr(val bool) bool {
 	return val
 }
 
-func (m *FirewallRuleSpecOptionalResponse) GetSource() AddressGroupSpecOrRefOptionalResponse {
+func (m *FirewallRuleSpecOptionalResponse) GetSource() FirewallRuleSourceOptionalResponse {
 	if m != nil {
 		return m.Source
 	}
-	return AddressGroupSpecOrRefOptionalResponse{}
+	return FirewallRuleSourceOptionalResponse{}
 }
 
-func (m *FirewallRuleSpecOptionalResponse) SetSource(val AddressGroupSpecOrRefOptionalResponse) {
+func (m *FirewallRuleSpecOptionalResponse) SetSource(val FirewallRuleSourceOptionalResponse) {
 	m.Source = val
 }
 
-func (m *FirewallRuleSpecOptionalResponse) GetDestination() AddressGroupSpecOrRefOptionalResponse {
+func (m *FirewallRuleSpecOptionalResponse) GetDestination() FirewallRuleDestinationOptionalResponse {
 	if m != nil {
 		return m.Destination
 	}
-	return AddressGroupSpecOrRefOptionalResponse{}
+	return FirewallRuleDestinationOptionalResponse{}
 }
 
-func (m *FirewallRuleSpecOptionalResponse) SetDestination(val AddressGroupSpecOrRefOptionalResponse) {
+func (m *FirewallRuleSpecOptionalResponse) SetDestination(val FirewallRuleDestinationOptionalResponse) {
 	m.Destination = val
 }
 
@@ -137,6 +137,10 @@ const (
 	FirewallRuleSpecActionOptionalResponse_DENY  FirewallRuleSpecActionOptionalResponse = "DENY"
 )
 
+func (m FirewallRuleSpecActionOptionalResponse) String() string {
+	return string(m)
+}
+
 // Представление поля Direction enum типа структуры FirewallRuleSpec
 // Real OAPI model name: FirewallRuleSpecDirection
 type FirewallRuleSpecDirectionOptionalResponse string
@@ -145,3 +149,7 @@ const (
 	FirewallRuleSpecDirectionOptionalResponse_INGRESS FirewallRuleSpecDirectionOptionalResponse = "INGRESS"
 	FirewallRuleSpecDirectionOptionalResponse_EGRESS  FirewallRuleSpecDirectionOptionalResponse = "EGRESS"
 )
+
+func (m FirewallRuleSpecDirectionOptionalResponse) String() string {
+	return string(m)
+}

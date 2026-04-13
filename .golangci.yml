@@ -1,0 +1,182 @@
+version: "2"
+
+linters:
+  default: none
+  enable:
+  - asasalint
+  - asciicheck
+  - bidichk
+  - bodyclose
+  - canonicalheader
+  - containedctx
+  - contextcheck
+  - cyclop
+  - dogsled
+  - dupl
+  - dupword
+  - durationcheck
+  - err113
+  - errcheck
+  - errname
+  - errorlint
+  - fatcontext
+  - forcetypeassert
+  - gocheckcompilerdirectives
+  - gocognit
+  - goconst
+  - gocritic
+  - gocyclo
+  - godoclint
+  - godot
+  - gomoddirectives
+  - goprintffuncname
+  - gosec
+  - gosmopolitan
+  - govet
+  - ineffassign
+  - intrange
+  - iotamixing
+  - lll
+  - loggercheck
+  - mirror
+  - misspell
+  - mnd
+  - nakedret
+  - nestif
+  - nilerr
+  - nilnesserr
+  - nilnil
+  - noctx
+  - nolintlint
+  - nosprintfhostport
+  - perfsprint
+  - prealloc
+  - predeclared
+  - reassign
+  - recvcheck
+  - revive
+  - spancheck
+  - staticcheck
+  - testifylint
+  - tparallel
+  - unconvert
+  - unparam
+  - unused
+  - usestdlibvars
+  - usetesting
+  - wastedassign
+  - whitespace
+  settings:
+    cyclop:
+      max-complexity: 15
+    dogsled:
+      max-blank-identifiers: 2
+    dupl:
+      threshold: 150
+    errcheck:
+      check-type-assertions: true
+    gocognit:
+      min-complexity: 30
+    goconst:
+      min-len: 3
+      min-occurrences: 3
+    gocyclo:
+      min-complexity: 20
+    godoclint:
+      enable:
+      - no-unused-link
+      options:
+        max-len:
+          length: 160
+    godot:
+      scope: declarations
+    gomoddirectives:
+      exclude-forbidden: true
+    govet:
+      disable:
+      - fieldalignment
+      enable-all: true
+    gosec:
+      excludes:
+      - G301
+      - G304
+      - G306
+    lll:
+      line-length: 160
+    misspell:
+      locale: US
+    mnd:
+      ignored-numbers:
+      - "0o600"
+      - "0o666"
+      - "0o644"
+      - "0o755"
+      - "0o777"
+    nakedret:
+      max-func-lines: 30
+    nestif:
+      min-complexity: 5
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+      allow-unused: false
+    revive:
+      enable-all-rules: true
+      rules:
+      - name: enforce-slice-style
+        arguments: ["nil"]
+      - name: line-length-limit
+        arguments: [160]
+      - name: cognitive-complexity
+        disabled: true
+      - name: add-constant
+        disabled: true
+      - name: enforce-switch-style
+        disabled: true
+      - name: import-shadowing
+        disabled: true
+      - name: max-public-structs
+        disabled: true
+      - name: var-naming
+        arguments:
+          - [] # AllowList
+          - [] # DenyList
+          - - skip-package-name-collision-with-go-std: true
+    usestdlibvars:
+      default-rpc-path: true
+      time-date-month: true
+      time-weekday: true
+      time-month: true
+      time-layout: true
+      crypto-hash: true
+      tls-signature-scheme: true
+      constant-kind: true
+    usetesting:
+      os-temp-dir: true
+    unused:
+      local-variables-are-used: false
+  exclusions:
+    generated: lax
+    warn-unused: true
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+output:
+  formats:
+    text:
+      path: stdout
+      print-linter-name: true
+      print-issued-lines: true
+
+run:
+  timeout: 5m
+  relative-path-mode: gomod
+  issues-exit-code: 1
+  tests: true
+  modules-download-mode: readonly
+  allow-serial-runners: true
+
+severity:
+  default: error

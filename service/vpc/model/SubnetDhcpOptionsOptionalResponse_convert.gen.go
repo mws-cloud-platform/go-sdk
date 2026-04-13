@@ -17,5 +17,8 @@ func SubnetDhcpOptionsRequestToOptionalResponse(request *SubnetDhcpOptionsReques
 	if request.DomainNameServers != nil {
 		response.DomainNameServers = commonclient.NewOptional(request.DomainNameServers)
 	}
+	if request.NtpServers != nil {
+		response.NtpServers = commonclient.NewOptional(request.NtpServers)
+	}
 	return &response, nil
 }

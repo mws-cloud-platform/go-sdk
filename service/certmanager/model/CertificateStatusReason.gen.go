@@ -13,3 +13,7 @@ const (
 	CertificateStatusReason_ISSUING     CertificateStatusReason = "ISSUING"
 	CertificateStatusReason_FAILED      CertificateStatusReason = "FAILED"
 )
+
+func (m CertificateStatusReason) String() string {
+	return string(m)
+}

@@ -8,22 +8,23 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 // Real OAPI model name: StorageDiskStatus
 type StorageDiskStatusResponse struct {
-	// Уникальный в рамках VM alias на диск
+	// Уникальный в рамках ВМ псевдоним (alias) диска
 	Name string `json:"name" yaml:"name"`
 	// Является ли диск загрузочным
 	Boot bool `json:"boot" yaml:"boot"`
 	// Суффикс deviceName в dev/disk/by-id/
 	DeviceName string `json:"deviceName" yaml:"deviceName"`
-	// ref на ресурс Диск
+	// Ссылка на ресурс "Диск"
 	Ref compute.DiskRef `json:"ref" yaml:"ref"`
 	// Состояние ресурса Диска
-	Ready *ObservationResponse `json:"ready,omitempty" yaml:"ready,omitempty"`
-	// IOPS диска
+	Ready *common.ResourceStatusReadyResponse `json:"ready,omitempty" yaml:"ready,omitempty"`
+	// Количество операций ввода-вывода в секунду (IOPS) для диска
 	Iops *Iops              `json:"iops,omitempty" yaml:"iops,omitempty"`
 	Size *bytesize.ByteSize `json:"size,omitempty" yaml:"size,omitempty"`
 }
@@ -72,18 +73,18 @@ func (m *StorageDiskStatusResponse) SetRef(val compute.DiskRef) {
 	m.Ref = val
 }
 
-func (m *StorageDiskStatusResponse) GetReady() *ObservationResponse {
+func (m *StorageDiskStatusResponse) GetReady() *common.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.Ready
 	}
 	return nil
 }
 
-func (m *StorageDiskStatusResponse) SetReady(val *ObservationResponse) {
+func (m *StorageDiskStatusResponse) SetReady(val *common.ResourceStatusReadyResponse) {
 	m.Ready = val
 }
 
-func (m *StorageDiskStatusResponse) GetReadyOr(val ObservationResponse) ObservationResponse {
+func (m *StorageDiskStatusResponse) GetReadyOr(val common.ResourceStatusReadyResponse) common.ResourceStatusReadyResponse {
 	if m != nil && m.Ready != nil {
 		return *m.Ready
 	}

@@ -8,7 +8,6 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 )
 
 func (m UpdateCommonTypedResourceMetadata) MarshalJSON() ([]byte, error) {
@@ -28,10 +27,6 @@ func (m *UpdateCommonTypedResourceMetadata) Encode(e *jx.Encoder) {
 }
 
 func (m *UpdateCommonTypedResourceMetadata) encodeFields(e *jx.Encoder) {
-	if m.Id.IsSet() {
-		e.FieldStart("id")
-		m.Id.Value.Encode(e)
-	}
 
 	if m.Name.IsSet() {
 		e.FieldStart("name")
@@ -41,26 +36,6 @@ func (m *UpdateCommonTypedResourceMetadata) encodeFields(e *jx.Encoder) {
 	if m.DisplayName.IsSet() {
 		e.FieldStart("displayName")
 		e.Str(m.DisplayName.Value)
-	}
-
-	if m.CreateTime.IsSet() {
-		e.FieldStart("createTime")
-		conv.EncodeDateTime(e, m.CreateTime.Value)
-	}
-
-	if m.UpdateTime.IsSet() {
-		e.FieldStart("updateTime")
-		conv.EncodeDateTime(e, m.UpdateTime.Value)
-	}
-
-	if m.DeleteTime.IsSet() {
-		e.FieldStart("deleteTime")
-		conv.EncodeDateTime(e, m.DeleteTime.Value)
-	}
-
-	if m.PurgeTime.IsSet() {
-		e.FieldStart("purgeTime")
-		conv.EncodeDateTime(e, m.PurgeTime.Value)
 	}
 
 	if m.Usages.IsSet() {
@@ -94,14 +69,6 @@ func (m *UpdateCommonTypedResourceMetadata) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "id":
-			var v resmodels.AnyResourceID
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Id.SetTo(v)
-			return nil
 		case "name":
 			v, err := decode.Str(d)
 			if err != nil {
@@ -117,38 +84,6 @@ func (m *UpdateCommonTypedResourceMetadata) Decode(d *jx.Decoder) error {
 			}
 
 			m.DisplayName.SetTo(v)
-			return nil
-		case "createTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.CreateTime.SetTo(v)
-			return nil
-		case "updateTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.UpdateTime.SetTo(v)
-			return nil
-		case "deleteTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.DeleteTime.SetTo(v)
-			return nil
-		case "purgeTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.PurgeTime.SetTo(v)
 			return nil
 		case "usages":
 			c := make([]UpdateUsage, 0)

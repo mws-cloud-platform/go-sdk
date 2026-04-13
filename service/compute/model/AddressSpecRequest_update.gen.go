@@ -26,9 +26,7 @@ type UpdateAddressSpecRequest struct {
 
 func (m *AddressSpecRequest) AsUpdateModel() UpdateAddressSpecRequest {
 	var u UpdateAddressSpecRequest
-	if m.Subnet != nil {
-		u.Subnet = commonclient.NewOptional(m.GetSubnetOr(vpc.SubnetRef{}))
-	}
+	u.Subnet = commonclient.NewOptional(m.GetSubnet())
 	if m.IpAddress != nil {
 		u.IpAddress = commonclient.NewOptional(m.GetIpAddressOr(ipaddress.IPAddress{}))
 	}
@@ -70,7 +68,7 @@ func (m *AddressSpecRequest) WithChanges(u UpdateAddressSpecRequest) AddressSpec
 	}
 
 	if u.Subnet.IsSet() {
-		out.Subnet = ptr.Get(u.Subnet.Value)
+		out.Subnet = u.Subnet.Value
 	}
 	if u.IpAddress.IsSet() {
 		out.IpAddress = ptr.Get(u.IpAddress.Value)
@@ -104,7 +102,7 @@ func (m *UpdateAddressSpecRequest) Parse(ctx context.Context) error {
 
 func (m *AddressSpecRequest) diffSubnet(src *AddressSpecRequest) commonclient.Optional[vpc.SubnetRef] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetSubnet(), m.GetSubnet(), nilDiffers)
+	return commonclient.DiffPrimitiveRequired(src.GetSubnet(), m.GetSubnet(), nilDiffers)
 }
 
 func (m *AddressSpecRequest) diffIpAddress(src *AddressSpecRequest) commonclient.Optional[ipaddress.IPAddress] {

@@ -14,11 +14,11 @@ func ResourceAddressSpecOrRefRequestToOptionalResponse(request *ResourceAddressS
 	if request.Ref != nil {
 		response.Ref = commonclient.NewOptional(*request.Ref)
 	}
-	tmpSpec, err := ResourceAddressSpecRequestToOptionalResponse(request.Spec)
-	if err != nil {
-		return nil, err
-	}
 	if request.Spec != nil {
+		tmpSpec, err := ResourceAddressSpecRequestToOptionalResponse(request.Spec)
+		if err != nil {
+			return nil, err
+		}
 		response.Spec = commonclient.NewOptionalNil(*tmpSpec)
 	}
 	return &response, nil

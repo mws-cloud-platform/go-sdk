@@ -12,6 +12,8 @@ type SubnetDhcpOptionsResponse struct {
 	DomainName *string `json:"domainName,omitempty" yaml:"domainName,omitempty"`
 	// Список адресов DNS серверов.
 	DomainNameServers []ipaddress.IP4Address `json:"domainNameServers,omitempty" yaml:"domainNameServers,omitempty"`
+	// Список адресов NTP серверов.
+	NtpServers []ipaddress.IP4Address `json:"ntpServers,omitempty" yaml:"ntpServers,omitempty"`
 }
 
 func (m *SubnetDhcpOptionsResponse) GetDomainName() *string {
@@ -50,6 +52,24 @@ func (m *SubnetDhcpOptionsResponse) GetDomainNameServersOr(val []ipaddress.IP4Ad
 	return val
 }
 
+func (m *SubnetDhcpOptionsResponse) GetNtpServers() []ipaddress.IP4Address {
+	if m != nil {
+		return m.NtpServers
+	}
+	return nil
+}
+
+func (m *SubnetDhcpOptionsResponse) SetNtpServers(val []ipaddress.IP4Address) {
+	m.NtpServers = val
+}
+
+func (m *SubnetDhcpOptionsResponse) GetNtpServersOr(val []ipaddress.IP4Address) []ipaddress.IP4Address {
+	if m != nil && m.NtpServers != nil {
+		return m.NtpServers
+	}
+	return val
+}
+
 func (m *SubnetDhcpOptionsResponse) Clone() *SubnetDhcpOptionsResponse {
 	if m == nil {
 		return nil
@@ -64,6 +84,12 @@ func (m *SubnetDhcpOptionsResponse) Clone() *SubnetDhcpOptionsResponse {
 		clone.DomainNameServers = make([]ipaddress.IP4Address, len(m.DomainNameServers))
 		for i, v := range m.DomainNameServers {
 			clone.DomainNameServers[i] = *v.Clone()
+		}
+	}
+	if m.NtpServers != nil {
+		clone.NtpServers = make([]ipaddress.IP4Address, len(m.NtpServers))
+		for i, v := range m.NtpServers {
+			clone.NtpServers[i] = *v.Clone()
 		}
 	}
 	return &clone

@@ -12,6 +12,7 @@ import (
 )
 
 func TestStorageDiskSpecOrRefOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initStorageDiskSpecOrRefOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

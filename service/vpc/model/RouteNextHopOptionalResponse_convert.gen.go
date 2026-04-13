@@ -14,11 +14,11 @@ func RouteNextHopRequestToOptionalResponse(request *RouteNextHopRequest) (*Route
 	if request.NatGateway != nil {
 		response.NatGateway = commonclient.NewOptional(*request.NatGateway)
 	}
-	tmpAddress, err := RouteNextHopAddressRequestToOptionalResponse(request.Address)
-	if err != nil {
-		return nil, err
-	}
 	if request.Address != nil {
+		tmpAddress, err := RouteNextHopAddressRequestToOptionalResponse(request.Address)
+		if err != nil {
+			return nil, err
+		}
 		response.Address = commonclient.NewOptionalNil(*tmpAddress)
 	}
 	return &response, nil

@@ -8,7 +8,7 @@ import (
 
 // Real OAPI model name: SecretVersion
 type SecretVersionRequest struct {
-	// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Spec     SecretVersionSpecRequest                   `json:"spec" yaml:"spec"`
 }

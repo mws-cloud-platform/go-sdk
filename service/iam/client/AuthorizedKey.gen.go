@@ -11,6 +11,18 @@ import (
 )
 
 type AuthorizedKey interface {
+	// ListAuthorizedKey позволяет получить список авторизованных ключей.
+	//
+	// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys
+	ListAuthorizedKey(context.Context, ListAuthorizedKeyRequest) (*ListAuthorizedKeyResponse, error)
+	// DeleteAuthorizedKey позволяет удалить авторизованный ключ.
+	//
+	// Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+	DeleteAuthorizedKey(context.Context, DeleteAuthorizedKeyRequest) (*DeleteAuthorizedKeyResponse, error)
+	// GetAuthorizedKey позволяет получить авторизованный ключ.
+	//
+	// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+	GetAuthorizedKey(context.Context, GetAuthorizedKeyRequest) (*GetAuthorizedKeyResponse, error)
 	// UpsertAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
@@ -25,6 +37,203 @@ type AuthorizedKey interface {
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?updateOnly=true
 	UpdateAuthorizedKey(context.Context, UpdateAuthorizedKeyRequest) (*UpsertAuthorizedKeyResponse, error)
+}
+
+type ListAuthorizedKeyRequest struct {
+	ServiceAccount string // path: "serviceAccount"
+	// Путь к проекту
+	Project string // path: "project"
+	// Токен авторизации IAM
+	Authorization string // header: "Authorization"
+}
+
+func (m *ListAuthorizedKeyRequest) SetAuthorization(authorization string) {
+	m.Authorization = authorization
+}
+
+func (m ListAuthorizedKeyRequest) GetProject() string {
+	return m.Project
+}
+
+func (m *ListAuthorizedKeyRequest) SetProject(project string) {
+	m.Project = project
+}
+
+type ListAuthorizedKeyResponse struct {
+	Code        int
+	Response200 *model.AuthorizedKeyListOptionalResponse
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
+	Response500 *common.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *ListAuthorizedKeyResponse) GetCode() int {
+	return m.Code
+}
+
+func (m *ListAuthorizedKeyResponse) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *ListAuthorizedKeyResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
+}
+
+type DeleteAuthorizedKeyRequest struct {
+	ServiceAccount string // path: "serviceAccount"
+	AuthorizedKey  string // path: "authorizedKey"
+	// Путь к проекту
+	Project string // path: "project"
+	// Токен авторизации IAM
+	Authorization string // header: "Authorization"
+}
+
+func (m *DeleteAuthorizedKeyRequest) SetAuthorization(authorization string) {
+	m.Authorization = authorization
+}
+
+func (m DeleteAuthorizedKeyRequest) GetProject() string {
+	return m.Project
+}
+
+func (m *DeleteAuthorizedKeyRequest) SetProject(project string) {
+	m.Project = project
+}
+
+func (m *DeleteAuthorizedKeyRequest) getAuthorizedKeyRequest() GetAuthorizedKeyRequest {
+	return GetAuthorizedKeyRequest{
+		ServiceAccount: m.ServiceAccount,
+		AuthorizedKey:  m.AuthorizedKey,
+		Project:        m.Project,
+		Authorization:  m.Authorization,
+	}
+}
+
+type DeleteAuthorizedKeyResponse struct {
+	Code        int
+	Response204 bool // empty response
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
+	Response500 *common.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *DeleteAuthorizedKeyResponse) GetCode() int {
+	return m.Code
+}
+
+func (m *DeleteAuthorizedKeyResponse) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *DeleteAuthorizedKeyResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
+}
+
+type GetAuthorizedKeyRequest struct {
+	ServiceAccount string // path: "serviceAccount"
+	AuthorizedKey  string // path: "authorizedKey"
+	// Путь к проекту
+	Project string // path: "project"
+	// Токен авторизации IAM
+	Authorization string // header: "Authorization"
+}
+
+func (m *GetAuthorizedKeyRequest) SetAuthorization(authorization string) {
+	m.Authorization = authorization
+}
+
+func (m GetAuthorizedKeyRequest) GetProject() string {
+	return m.Project
+}
+
+func (m *GetAuthorizedKeyRequest) SetProject(project string) {
+	m.Project = project
+}
+
+type GetAuthorizedKeyResponse struct {
+	Code        int
+	Response200 *model.AuthorizedKeyOptionalResponse
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
+	Response500 *common.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *GetAuthorizedKeyResponse) GetCode() int {
+	return m.Code
+}
+
+func (m *GetAuthorizedKeyResponse) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *GetAuthorizedKeyResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
 }
 
 type UpsertAuthorizedKeyRequest struct {
@@ -77,13 +286,13 @@ func (m *UpdateAuthorizedKeyRequest) SetProject(project string) {
 
 type UpsertAuthorizedKeyResponse struct {
 	Code        int
-	Response200 *model.AuthorizedKeyResponse
-	Response201 *model.AuthorizedKeyResponse
-	Response400 *common.InvalidRequestError
-	Response403 *common.BaseError
-	Response404 *common.BaseError
-	Response409 *common.BaseError
-	Response500 *common.BaseError
+	Response200 *model.AuthorizedKeyOptionalResponse
+	Response201 *model.AuthorizedKeyOptionalResponse
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
+	Response409 *common.ApiError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }

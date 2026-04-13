@@ -10,12 +10,13 @@ import (
 type HardwareSpecRequest struct {
 	// Целевое состояние питания виртуальной машины
 	Power *HardwareSpecPowerRequest `json:"power,omitempty" yaml:"power,omitempty"`
-	// Таймаут для ACPI shutdown виртуальной машины.
+	// Время ожидания (таймаут) при отключении по ACPI
+	//
 	// Выключение виртуальной машины происходит в 2 этапа:
 	// 1. Гостевой ОС передается сигнал ACPI shutdown.
 	// 2. В случае если гостевая ОС не завершила работу за заданное время, агент принудительно останавливает ВМ.
 	//
-	// При timeout=0 первый этап пропускается.
+	// При timeout=0 первый этап пропускается
 	GracefulShutdownTimeout *duration.Duration `json:"gracefulShutdownTimeout,omitempty" yaml:"gracefulShutdownTimeout,omitempty"`
 }
 
@@ -77,3 +78,7 @@ const (
 	HardwareSpecPowerRequest_ON  HardwareSpecPowerRequest = "ON"
 	HardwareSpecPowerRequest_OFF HardwareSpecPowerRequest = "OFF"
 )
+
+func (m HardwareSpecPowerRequest) String() string {
+	return string(m)
+}

@@ -13,42 +13,36 @@ import (
 
 // Real OAPI model name: VirtualMachineSpec
 type VirtualMachineSpecOptionalResponse struct {
-	Zone     commonclient.Optional[string]                          `json:"zone,omitempty" yaml:"zone,omitempty"`
-	VmType   commonclient.Optional[compute.VmTypeRef]               `json:"vmType,omitempty" yaml:"vmType,omitempty"`
+	Zone     string                                                 `json:"zone" yaml:"zone"`
+	VmType   compute.VmTypeRef                                      `json:"vmType" yaml:"vmType"`
 	Hardware commonclient.OptionalNil[HardwareSpecOptionalResponse] `json:"hardware,omitempty" yaml:"hardware,omitempty"`
 	Os       commonclient.OptionalNil[OsSpecOptionalResponse]       `json:"os,omitempty" yaml:"os,omitempty"`
-	Storage  commonclient.OptionalNil[StorageSpecOptionalResponse]  `json:"storage,omitempty" yaml:"storage,omitempty"`
-	Network  commonclient.OptionalNil[NetworkSpecOptionalResponse]  `json:"network,omitempty" yaml:"network,omitempty"`
+	Storage  StorageSpecOptionalResponse                            `json:"storage" yaml:"storage"`
+	Network  NetworkSpecOptionalResponse                            `json:"network" yaml:"network"`
 	// Ссылка на сервис аккаунт привязанный к виртуальной машине.
-	ServiceAccount commonclient.OptionalNil[iam.ServiceAccountRef] `json:"serviceAccount" yaml:"serviceAccount"`
+	ServiceAccount commonclient.OptionalNil[iam.ServiceAccountRef] `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
 }
 
-func (m *VirtualMachineSpecOptionalResponse) GetZone() *string {
-	if m != nil && m.Zone.IsSet() {
-		return &m.Zone.Value
+func (m *VirtualMachineSpecOptionalResponse) GetZone() string {
+	if m != nil {
+		return m.Zone
 	}
-	return nil
+	return ""
 }
 
-func (m *VirtualMachineSpecOptionalResponse) GetZoneOr(val string) string {
-	if m != nil && m.Zone.IsSet() {
-		return m.Zone.Value
-	}
-	return val
+func (m *VirtualMachineSpecOptionalResponse) SetZone(val string) {
+	m.Zone = val
 }
 
-func (m *VirtualMachineSpecOptionalResponse) GetVmType() *compute.VmTypeRef {
-	if m != nil && m.VmType.IsSet() {
-		return &m.VmType.Value
+func (m *VirtualMachineSpecOptionalResponse) GetVmType() compute.VmTypeRef {
+	if m != nil {
+		return m.VmType
 	}
-	return nil
+	return compute.VmTypeRef{}
 }
 
-func (m *VirtualMachineSpecOptionalResponse) GetVmTypeOr(val compute.VmTypeRef) compute.VmTypeRef {
-	if m != nil && m.VmType.IsSet() {
-		return m.VmType.Value
-	}
-	return val
+func (m *VirtualMachineSpecOptionalResponse) SetVmType(val compute.VmTypeRef) {
+	m.VmType = val
 }
 
 func (m *VirtualMachineSpecOptionalResponse) GetHardware() *HardwareSpecOptionalResponse {
@@ -79,32 +73,26 @@ func (m *VirtualMachineSpecOptionalResponse) GetOsOr(val OsSpecOptionalResponse)
 	return val
 }
 
-func (m *VirtualMachineSpecOptionalResponse) GetStorage() *StorageSpecOptionalResponse {
-	if m != nil && m.Storage.IsSet() {
-		return &m.Storage.Value
+func (m *VirtualMachineSpecOptionalResponse) GetStorage() StorageSpecOptionalResponse {
+	if m != nil {
+		return m.Storage
 	}
-	return nil
+	return StorageSpecOptionalResponse{}
 }
 
-func (m *VirtualMachineSpecOptionalResponse) GetStorageOr(val StorageSpecOptionalResponse) StorageSpecOptionalResponse {
-	if m != nil && m.Storage.IsSet() {
-		return m.Storage.Value
-	}
-	return val
+func (m *VirtualMachineSpecOptionalResponse) SetStorage(val StorageSpecOptionalResponse) {
+	m.Storage = val
 }
 
-func (m *VirtualMachineSpecOptionalResponse) GetNetwork() *NetworkSpecOptionalResponse {
-	if m != nil && m.Network.IsSet() {
-		return &m.Network.Value
+func (m *VirtualMachineSpecOptionalResponse) GetNetwork() NetworkSpecOptionalResponse {
+	if m != nil {
+		return m.Network
 	}
-	return nil
+	return NetworkSpecOptionalResponse{}
 }
 
-func (m *VirtualMachineSpecOptionalResponse) GetNetworkOr(val NetworkSpecOptionalResponse) NetworkSpecOptionalResponse {
-	if m != nil && m.Network.IsSet() {
-		return m.Network.Value
-	}
-	return val
+func (m *VirtualMachineSpecOptionalResponse) SetNetwork(val NetworkSpecOptionalResponse) {
+	m.Network = val
 }
 
 func (m *VirtualMachineSpecOptionalResponse) GetServiceAccount() *iam.ServiceAccountRef {
@@ -127,21 +115,15 @@ func (m *VirtualMachineSpecOptionalResponse) Clone() *VirtualMachineSpecOptional
 	}
 
 	clone := *m
-	if clone.VmType.IsSet() {
-		clone.VmType.Value = *m.VmType.Value.Clone()
-	}
+	clone.VmType = *m.VmType.Clone()
 	if clone.Hardware.IsSet() {
 		clone.Hardware.Value = *m.Hardware.Value.Clone()
 	}
 	if clone.Os.IsSet() {
 		clone.Os.Value = *m.Os.Value.Clone()
 	}
-	if clone.Storage.IsSet() {
-		clone.Storage.Value = *m.Storage.Value.Clone()
-	}
-	if clone.Network.IsSet() {
-		clone.Network.Value = *m.Network.Value.Clone()
-	}
+	clone.Storage = *m.Storage.Clone()
+	clone.Network = *m.Network.Clone()
 	if clone.ServiceAccount.IsSet() {
 		clone.ServiceAccount.Value = *m.ServiceAccount.Value.Clone()
 	}
@@ -153,22 +135,16 @@ func (m *VirtualMachineSpecOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.VmType.IsSet() {
-		if err := m.VmType.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("VmType", err)
-		}
+	if err := m.VmType.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("VmType", err)
 	}
 
-	if m.Storage.IsSet() {
-		if err := m.Storage.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Storage", err)
-		}
+	if err := m.Storage.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Storage", err)
 	}
 
-	if m.Network.IsSet() {
-		if err := m.Network.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Network", err)
-		}
+	if err := m.Network.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Network", err)
 	}
 
 	if m.ServiceAccount.IsSet() {

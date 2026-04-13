@@ -3,6 +3,8 @@
 package model
 
 import (
+	"time"
+
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -22,6 +24,8 @@ type CertificateStatusResponse struct {
 	// Список challenge-задач, которые необходимо выполнить для проверки сертификата.
 	// Присутствует только в случае, если сертификат управляемый.
 	Challenges []CertificateChallengeResponse `json:"challenges,omitempty" yaml:"challenges,omitempty"`
+	// Время следующего обновления сертификата.
+	RenewalAt *time.Time `json:"renewalAt,omitempty" yaml:"renewalAt,omitempty"`
 }
 
 func (m *CertificateStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -90,6 +94,20 @@ func (m *CertificateStatusResponse) GetChallenges() []CertificateChallengeRespon
 func (m *CertificateStatusResponse) GetChallengesOr(val []CertificateChallengeResponse) []CertificateChallengeResponse {
 	if m != nil && m.Challenges != nil {
 		return m.Challenges
+	}
+	return val
+}
+
+func (m *CertificateStatusResponse) GetRenewalAt() *time.Time {
+	if m != nil {
+		return m.RenewalAt
+	}
+	return nil
+}
+
+func (m *CertificateStatusResponse) GetRenewalAtOr(val time.Time) time.Time {
+	if m != nil && m.RenewalAt != nil {
+		return *m.RenewalAt
 	}
 	return val
 }

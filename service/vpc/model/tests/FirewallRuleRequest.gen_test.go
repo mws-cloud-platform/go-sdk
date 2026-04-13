@@ -12,6 +12,7 @@ import (
 )
 
 func TestFirewallRuleRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initFirewallRuleRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -10,3 +10,7 @@ const (
 	ResourceStatusState_FAILED     ResourceStatusState = "FAILED"
 	ResourceStatusState_PROCESSING ResourceStatusState = "PROCESSING"
 )
+
+func (m ResourceStatusState) String() string {
+	return string(m)
+}

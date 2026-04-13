@@ -3,12 +3,9 @@
 package model
 
 import (
-	"context"
-
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -60,20 +57,6 @@ func (m *SnapshotRequest) WithChanges(u UpdateSnapshotRequest) SnapshotRequest {
 func (m UpdateSnapshotRequest) HasChanges() bool {
 	return m.Metadata.Set ||
 		m.Spec.Set
-}
-
-func (m *UpdateSnapshotRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Spec.IsSet() {
-		if err := m.Spec.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Spec", err)
-		}
-	}
-
-	return nil
 }
 
 func (m *SnapshotRequest) diffMetadata(src *SnapshotRequest) commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {

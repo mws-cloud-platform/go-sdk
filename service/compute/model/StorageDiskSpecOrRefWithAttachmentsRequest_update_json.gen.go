@@ -32,23 +32,9 @@ func (m *UpdateStorageDiskSpecOrRefWithAttachmentsRequest) encodeFields(e *jx.En
 		e.Str(m.Name.Value)
 	}
 
-	if m.Boot.IsSet() {
-		e.FieldStart("boot")
-		e.Bool(m.Boot.Value)
-	}
-
-	if m.DeviceName.IsSet() {
-		e.FieldStart("deviceName")
-		e.Str(m.DeviceName.Value)
-	}
-
 	if m.Disk.IsSet() {
 		e.FieldStart("disk")
-		if m.Disk.IsNull() {
-			e.Null()
-		} else {
-			m.Disk.Value.Encode(e)
-		}
+		m.Disk.Value.Encode(e)
 	}
 }
 
@@ -71,28 +57,7 @@ func (m *UpdateStorageDiskSpecOrRefWithAttachmentsRequest) Decode(d *jx.Decoder)
 
 			m.Name.SetTo(v)
 			return nil
-		case "boot":
-			v, err := decode.Bool(d)
-			if err != nil {
-				return err
-			}
-
-			m.Boot.SetTo(v)
-			return nil
-		case "deviceName":
-			v, err := decode.Str(d)
-			if err != nil {
-				return err
-			}
-
-			m.DeviceName.SetTo(v)
-			return nil
 		case "disk":
-			if d.Next() == jx.Null {
-				m.Disk.SetToNull()
-				return d.Null()
-			}
-
 			var v UpdateStorageDiskSpecOrRefRequest
 			if err := v.Decode(d); err != nil {
 				return err

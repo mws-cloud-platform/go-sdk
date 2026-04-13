@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateStorageDiskSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initStorageDiskSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

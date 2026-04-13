@@ -100,7 +100,7 @@ func decodeListApiKeyResponse(resp *http.Response) (*client.ListApiKeyResponse, 
 		case "application/json":
 			result := &client.ListApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -188,7 +188,7 @@ func decodeDeleteApiKeyResponse(resp *http.Response) (*client.DeleteApiKeyRespon
 		case "application/json":
 			result := &client.DeleteApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -290,7 +290,7 @@ func decodeGetApiKeyResponse(resp *http.Response) (*client.GetApiKeyResponse, er
 		case "application/json":
 			result := &client.GetApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -430,7 +430,7 @@ func decodeUpsertApiKeyResponse(resp *http.Response) (*client.UpsertApiKeyRespon
 		case "application/json":
 			result := &client.UpsertApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

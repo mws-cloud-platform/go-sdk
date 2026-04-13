@@ -12,6 +12,7 @@ import (
 )
 
 func TestDiskRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initDiskRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -12,6 +12,7 @@ import (
 )
 
 func TestNetworkInterfaceStatusResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initNetworkInterfaceStatusResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

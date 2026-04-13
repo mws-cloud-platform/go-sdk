@@ -89,6 +89,10 @@ func (m *DiskTypeID) ID() string {
 	return m.ServiceSlug() + "/diskTypes/" + m.diskType
 }
 
+func (m *DiskTypeID) String() string {
+	return m.ID()
+}
+
 func (m *DiskTypeID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *DiskTypeRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *DiskTypeRef) String() string {
+	return m.IDPath()
 }
 
 func (m *DiskTypeRef) Parse(ctx context.Context) error {

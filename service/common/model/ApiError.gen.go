@@ -12,7 +12,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/backoff"
 )
 
-// Описание при ошибке при http статусе не 2xx.
+// Описание ошибки (если HTTP-статус отличен от 2xx)
 type ApiError struct {
 	// Короткий код ошибки
 	Code ApiErrorCode `json:"code" yaml:"code"`
@@ -20,9 +20,13 @@ type ApiError struct {
 	Type *string `json:"type,omitempty" yaml:"type,omitempty"`
 	// Развёрнутое пояснение ошибки.
 	Description *string `json:"description,omitempty" yaml:"description,omitempty"`
-	// Политика ретраев при ошибке.
+	// Правила выполнения повторных попыток в случае ошибки
 	RetryPolicy *RetryPolicy `json:"retryPolicy,omitempty" yaml:"retryPolicy,omitempty"`
-	// Детальная информация по ошибке.
+	// Детальная информация по ошибке в произвольном JSON формате. Содержимое не предназначено для машинной обработки
+	//
+	// Примеры:
+	//   - '{"jsonPaths": [{"path": "foo.bar", "reason": "some reason", "offset": "line: 1, column: 2"}]}'
+	//   - '{"errorInfo": "some error info"}'
 	Details map[string]json.RawMessage `json:"details,omitempty" yaml:"details,omitempty"`
 }
 
@@ -210,3 +214,7 @@ const (
 	ApiErrorCode_METHOD_NOT_ALLOWED           ApiErrorCode = "METHOD_NOT_ALLOWED"
 	ApiErrorCode_TOO_MANY_REQUESTS            ApiErrorCode = "TOO_MANY_REQUESTS"
 )
+
+func (m ApiErrorCode) String() string {
+	return string(m)
+}

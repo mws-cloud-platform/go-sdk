@@ -127,6 +127,10 @@ func (m *HmacKeyID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/serviceAccounts/" + m.serviceAccount + "/hmacKeys/" + m.hmacKey
 }
 
+func (m *HmacKeyID) String() string {
+	return m.ID()
+}
+
 func (m *HmacKeyID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *HmacKeyRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *HmacKeyRef) String() string {
+	return m.IDPath()
 }
 
 func (m *HmacKeyRef) Parse(ctx context.Context) error {

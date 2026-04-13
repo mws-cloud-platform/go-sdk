@@ -12,6 +12,7 @@ import (
 )
 
 func TestAddressSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initAddressSpecRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

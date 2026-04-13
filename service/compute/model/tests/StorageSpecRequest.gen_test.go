@@ -12,6 +12,7 @@ import (
 )
 
 func TestStorageSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initStorageSpecRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
@@ -23,5 +24,6 @@ func TestStorageSpecRequestMarshalling(t *testing.T) {
 
 func initStorageSpecRequest() model.StorageSpecRequest {
 	var v model.StorageSpecRequest
+	v.Disks = make([]model.StorageDiskSpecOrRefWithAttachmentsRequest, 0)
 	return v
 }

@@ -26,14 +26,12 @@ func (m *NetworkSpecOptionalResponse) Encode(e *jx.Encoder) {
 }
 
 func (m *NetworkSpecOptionalResponse) encodeFields(e *jx.Encoder) {
-	if m.NetworkInterfaces.IsSet() {
-		e.FieldStart("networkInterfaces")
-		e.ArrStart()
-		for _, elem := range m.NetworkInterfaces.Value {
-			elem.Encode(e)
-		}
-		e.ArrEnd()
+	e.FieldStart("networkInterfaces")
+	e.ArrStart()
+	for _, elem := range m.NetworkInterfaces {
+		elem.Encode(e)
 	}
+	e.ArrEnd()
 }
 
 func (m *NetworkSpecOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -60,7 +58,7 @@ func (m *NetworkSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.NetworkInterfaces.SetTo(c)
+			m.NetworkInterfaces = c
 			return nil
 		default:
 			return d.Skip()

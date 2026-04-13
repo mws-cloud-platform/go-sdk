@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/iam/client"
 )
 
-// ListHmacKey список hmacKeys для сервисного аккаунта.
+// ListHmacKey позволяет получить список HMAC-ключей для сервисного аккаунта.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys
@@ -111,7 +111,7 @@ func (c *ServiceAccountHmacKey) headerListHmacKey(req *http.Request, request *cl
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// DeleteHmacKey удаление hmac ключей.
+// DeleteHmacKey позволяет удалить HMAC-ключ.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}
@@ -185,7 +185,7 @@ func (c *ServiceAccountHmacKey) headerDeleteHmacKey(req *http.Request, request *
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// GetHmacKey получение hmac ключей.
+// GetHmacKey позволяет получить HMAC-ключ.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}
@@ -263,7 +263,7 @@ func (c *ServiceAccountHmacKey) headerGetHmacKey(req *http.Request, request *cli
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpsertHmacKey создание (обновление) hmac ключей.
+// UpsertHmacKey позволяет создать или обновить HMAC-ключ.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}
@@ -356,7 +356,7 @@ func (c *ServiceAccountHmacKey) headerUpsertHmacKey(req *http.Request, request *
 	}
 }
 
-// CreateHmacKey создание (обновление) hmac ключей.
+// CreateHmacKey позволяет создать или обновить HMAC-ключ.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -451,7 +451,7 @@ func (c *ServiceAccountHmacKey) headerCreateHmacKey(req *http.Request, request *
 	}
 }
 
-// UpdateHmacKey создание (обновление) hmac ключей.
+// UpdateHmacKey позволяет создать или обновить HMAC-ключ.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

@@ -28,7 +28,7 @@ func decodeListSecretsResponse(resp *http.Response) (*client.ListSecretsResponse
 		case "application/json":
 			result := &client.ListSecretsResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.SecretListResponse{},
+				Response200: &model.SecretListOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -53,6 +53,23 @@ func decodeListSecretsResponse(resp *http.Response) (*client.ListSecretsResponse
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.ListSecretsResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
@@ -181,7 +198,7 @@ func decodeCreateSecretWithSecretVersionResponse(resp *http.Response) (*client.C
 		case "application/json":
 			result := &client.CreateSecretWithSecretVersionResponse{
 				Code:        resp.StatusCode,
-				Response201: &model.SecretResponse{},
+				Response201: &model.SecretOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {
@@ -206,6 +223,23 @@ func decodeCreateSecretWithSecretVersionResponse(resp *http.Response) (*client.C
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.CreateSecretWithSecretVersionResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
@@ -387,6 +421,23 @@ func decodeDeleteSecretResponse(resp *http.Response) (*client.DeleteSecretRespon
 			_, _ = io.Copy(io.Discard, resp.Body)
 			return nil, clienterrors.InvalidContentType(ct)
 		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.DeleteSecretResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
 	case 403:
 		switch ct {
 		case "application/json":
@@ -507,7 +558,7 @@ func decodeGetSecretResponse(resp *http.Response) (*client.GetSecretResponse, er
 		case "application/json":
 			result := &client.GetSecretResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.SecretResponse{},
+				Response200: &model.SecretOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -532,6 +583,23 @@ func decodeGetSecretResponse(resp *http.Response) (*client.GetSecretResponse, er
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.GetSecretResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
@@ -660,7 +728,7 @@ func decodeUpsertSecretResponse(resp *http.Response) (*client.UpsertSecretRespon
 		case "application/json":
 			result := &client.UpsertSecretResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.SecretResponse{},
+				Response200: &model.SecretOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -681,7 +749,7 @@ func decodeUpsertSecretResponse(resp *http.Response) (*client.UpsertSecretRespon
 		case "application/json":
 			result := &client.UpsertSecretResponse{
 				Code:        resp.StatusCode,
-				Response201: &model.SecretResponse{},
+				Response201: &model.SecretOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {
@@ -706,6 +774,23 @@ func decodeUpsertSecretResponse(resp *http.Response) (*client.UpsertSecretRespon
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.UpsertSecretResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

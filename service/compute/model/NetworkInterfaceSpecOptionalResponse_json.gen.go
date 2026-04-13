@@ -35,14 +35,17 @@ func (m *NetworkInterfaceSpecOptionalResponse) encodeFields(e *jx.Encoder) {
 		e.Bool(m.Primary.Value)
 	}
 
-	if m.Addresses.IsSet() {
-		e.FieldStart("addresses")
-		e.ArrStart()
-		for _, elem := range m.Addresses.Value {
-			elem.Encode(e)
-		}
-		e.ArrEnd()
+	if m.IpForwardingEnabled.IsSet() {
+		e.FieldStart("ipForwardingEnabled")
+		e.Bool(m.IpForwardingEnabled.Value)
 	}
+
+	e.FieldStart("addresses")
+	e.ArrStart()
+	for _, elem := range m.Addresses {
+		elem.Encode(e)
+	}
+	e.ArrEnd()
 }
 
 func (m *NetworkInterfaceSpecOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -72,6 +75,14 @@ func (m *NetworkInterfaceSpecOptionalResponse) Decode(d *jx.Decoder) error {
 
 			m.Primary.SetTo(v)
 			return nil
+		case "ipForwardingEnabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.IpForwardingEnabled.SetTo(v)
+			return nil
 		case "addresses":
 			c := make([]AddressSpecOrRefWithAttachmentsOptionalResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
@@ -85,7 +96,7 @@ func (m *NetworkInterfaceSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Addresses.SetTo(c)
+			m.Addresses = c
 			return nil
 		default:
 			return d.Skip()

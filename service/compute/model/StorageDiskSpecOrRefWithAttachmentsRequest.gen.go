@@ -14,8 +14,8 @@ type StorageDiskSpecOrRefWithAttachmentsRequest struct {
 	Name string `json:"name" yaml:"name"`
 	Boot *bool  `json:"boot,omitempty" yaml:"boot,omitempty"`
 	// Уникальное имя устройства, которое отображается в дереве /dev/disk/by-id/mws-* Linux. Если не указано - "mws-{name}", если указано - "mws-{deviceName}"
-	DeviceName *string                      `json:"deviceName,omitempty" yaml:"deviceName,omitempty"`
-	Disk       *StorageDiskSpecOrRefRequest `json:"disk,omitempty" yaml:"disk,omitempty"`
+	DeviceName *string                     `json:"deviceName,omitempty" yaml:"deviceName,omitempty"`
+	Disk       StorageDiskSpecOrRefRequest `json:"disk" yaml:"disk"`
 }
 
 func (m *StorageDiskSpecOrRefWithAttachmentsRequest) GetName() string {
@@ -65,22 +65,15 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) GetDeviceNameOr(val string)
 	return val
 }
 
-func (m *StorageDiskSpecOrRefWithAttachmentsRequest) GetDisk() *StorageDiskSpecOrRefRequest {
+func (m *StorageDiskSpecOrRefWithAttachmentsRequest) GetDisk() StorageDiskSpecOrRefRequest {
 	if m != nil {
 		return m.Disk
 	}
-	return nil
+	return StorageDiskSpecOrRefRequest{}
 }
 
-func (m *StorageDiskSpecOrRefWithAttachmentsRequest) SetDisk(val *StorageDiskSpecOrRefRequest) {
+func (m *StorageDiskSpecOrRefWithAttachmentsRequest) SetDisk(val StorageDiskSpecOrRefRequest) {
 	m.Disk = val
-}
-
-func (m *StorageDiskSpecOrRefWithAttachmentsRequest) GetDiskOr(val StorageDiskSpecOrRefRequest) StorageDiskSpecOrRefRequest {
-	if m != nil && m.Disk != nil {
-		return *m.Disk
-	}
-	return val
 }
 
 func (m *StorageDiskSpecOrRefWithAttachmentsRequest) Clone() *StorageDiskSpecOrRefWithAttachmentsRequest {
@@ -97,7 +90,7 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) Clone() *StorageDiskSpecOrR
 		cloneDeviceName := *m.DeviceName
 		clone.DeviceName = &cloneDeviceName
 	}
-	clone.Disk = m.Disk.Clone()
+	clone.Disk = *m.Disk.Clone()
 	return &clone
 }
 

@@ -6,27 +6,23 @@ import (
 	"context"
 	"fmt"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Real OAPI model name: NetworkSpec
 type NetworkSpecOptionalResponse struct {
-	NetworkInterfaces commonclient.Optional[[]NetworkInterfaceSpecOptionalResponse] `json:"networkInterfaces,omitempty" yaml:"networkInterfaces,omitempty"`
+	NetworkInterfaces []NetworkInterfaceSpecOptionalResponse `json:"networkInterfaces" yaml:"networkInterfaces"`
 }
 
 func (m *NetworkSpecOptionalResponse) GetNetworkInterfaces() []NetworkInterfaceSpecOptionalResponse {
-	if m != nil && m.NetworkInterfaces.IsSet() {
-		return m.NetworkInterfaces.Value
+	if m != nil {
+		return m.NetworkInterfaces
 	}
 	return nil
 }
 
-func (m *NetworkSpecOptionalResponse) GetNetworkInterfacesOr(val []NetworkInterfaceSpecOptionalResponse) []NetworkInterfaceSpecOptionalResponse {
-	if m != nil && m.NetworkInterfaces.IsSet() {
-		return m.NetworkInterfaces.Value
-	}
-	return val
+func (m *NetworkSpecOptionalResponse) SetNetworkInterfaces(val []NetworkInterfaceSpecOptionalResponse) {
+	m.NetworkInterfaces = val
 }
 
 func (m *NetworkSpecOptionalResponse) Clone() *NetworkSpecOptionalResponse {
@@ -35,10 +31,10 @@ func (m *NetworkSpecOptionalResponse) Clone() *NetworkSpecOptionalResponse {
 	}
 
 	clone := *m
-	if m.NetworkInterfaces.Value != nil {
-		clone.NetworkInterfaces.Value = make([]NetworkInterfaceSpecOptionalResponse, len(m.NetworkInterfaces.Value))
-		for i, v := range m.NetworkInterfaces.Value {
-			clone.NetworkInterfaces.Value[i] = *v.Clone()
+	if m.NetworkInterfaces != nil {
+		clone.NetworkInterfaces = make([]NetworkInterfaceSpecOptionalResponse, len(m.NetworkInterfaces))
+		for i, v := range m.NetworkInterfaces {
+			clone.NetworkInterfaces[i] = *v.Clone()
 		}
 	}
 	return &clone
@@ -49,11 +45,9 @@ func (m *NetworkSpecOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.NetworkInterfaces.IsSet() {
-		for index := range m.NetworkInterfaces.Value {
-			if err := m.NetworkInterfaces.Value[index].Parse(ctx); err != nil {
-				return reserrors.NewPathAccumulatorError("NetworkInterfaces"+fmt.Sprint("[", index, "]"), err)
-			}
+	for index := range m.NetworkInterfaces {
+		if err := m.NetworkInterfaces[index].Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("NetworkInterfaces"+fmt.Sprint("[", index, "]"), err)
 		}
 	}
 

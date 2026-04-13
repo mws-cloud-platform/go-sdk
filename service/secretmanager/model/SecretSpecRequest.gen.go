@@ -15,6 +15,7 @@ type SecretSpecRequest struct {
 	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 	// Номер текущей версии секрета.
 	CurrentSecretVersion *secretmanager.SecretVersionRef `json:"currentSecretVersion,omitempty" yaml:"currentSecretVersion,omitempty"`
+	Encryption           *EncryptionSpecRequest          `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
 func (m *SecretSpecRequest) GetActive() *bool {
@@ -53,6 +54,24 @@ func (m *SecretSpecRequest) GetCurrentSecretVersionOr(val secretmanager.SecretVe
 	return val
 }
 
+func (m *SecretSpecRequest) GetEncryption() *EncryptionSpecRequest {
+	if m != nil {
+		return m.Encryption
+	}
+	return nil
+}
+
+func (m *SecretSpecRequest) SetEncryption(val *EncryptionSpecRequest) {
+	m.Encryption = val
+}
+
+func (m *SecretSpecRequest) GetEncryptionOr(val EncryptionSpecRequest) EncryptionSpecRequest {
+	if m != nil && m.Encryption != nil {
+		return *m.Encryption
+	}
+	return val
+}
+
 func (m *SecretSpecRequest) Clone() *SecretSpecRequest {
 	if m == nil {
 		return nil
@@ -64,6 +83,7 @@ func (m *SecretSpecRequest) Clone() *SecretSpecRequest {
 		clone.Active = &cloneActive
 	}
 	clone.CurrentSecretVersion = m.CurrentSecretVersion.Clone()
+	clone.Encryption = m.Encryption.Clone()
 	return &clone
 }
 
@@ -74,6 +94,10 @@ func (m *SecretSpecRequest) Parse(ctx context.Context) error {
 
 	if err := m.CurrentSecretVersion.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("CurrentSecretVersion", err)
+	}
+
+	if err := m.Encryption.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Encryption", err)
 	}
 
 	return nil

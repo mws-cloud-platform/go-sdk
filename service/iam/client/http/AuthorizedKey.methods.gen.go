@@ -16,6 +16,234 @@ import (
 	"go.mws.cloud/go-sdk/service/iam/client"
 )
 
+// ListAuthorizedKey позволяет получить список авторизованных ключей.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys
+func (c *AuthorizedKey) ListAuthorizedKey(ctx context.Context, request client.ListAuthorizedKeyRequest) (r *client.ListAuthorizedKeyResponse, err error) {
+	ctx = c.setListAuthorizedKeyAttributes(ctx)
+	r = &client.ListAuthorizedKeyResponse{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.listAuthorizedKeyInvoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *AuthorizedKey) setListAuthorizedKeyAttributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "ListAuthorizedKey"),
+		commonattribute.String(commonattribute.PathTemplate, "/iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys"),
+		commonattribute.String(commonattribute.ProjectName, "iam"),
+		commonattribute.String(commonattribute.ServiceName, "authorizedKey"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *AuthorizedKey) listAuthorizedKeyInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.ListAuthorizedKeyRequest)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"iam",
+		"v1",
+		"projects",
+		request.Project,
+		"serviceAccounts",
+		request.ServiceAccount,
+		"authorizedKeys")
+
+	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
+	ctx = valuesctx.With(ctx, "project", request.Project)
+
+	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerListAuthorizedKey(httpReq, request)
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeListAuthorizedKeyResponse(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.ListAuthorizedKeyResponse)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *AuthorizedKey) headerListAuthorizedKey(req *http.Request, request *client.ListAuthorizedKeyRequest) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+}
+
+// DeleteAuthorizedKey позволяет удалить авторизованный ключ.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+func (c *AuthorizedKey) DeleteAuthorizedKey(ctx context.Context, request client.DeleteAuthorizedKeyRequest) (r *client.DeleteAuthorizedKeyResponse, err error) {
+	ctx = c.setDeleteAuthorizedKeyAttributes(ctx)
+	r = &client.DeleteAuthorizedKeyResponse{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.deleteAuthorizedKeyInvoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *AuthorizedKey) setDeleteAuthorizedKeyAttributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "DeleteAuthorizedKey"),
+		commonattribute.String(commonattribute.PathTemplate, "/iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}"),
+		commonattribute.String(commonattribute.ProjectName, "iam"),
+		commonattribute.String(commonattribute.ServiceName, "authorizedKey"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *AuthorizedKey) deleteAuthorizedKeyInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.DeleteAuthorizedKeyRequest)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"iam",
+		"v1",
+		"projects",
+		request.Project,
+		"serviceAccounts",
+		request.ServiceAccount,
+		"authorizedKeys",
+		request.AuthorizedKey)
+
+	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerDeleteAuthorizedKey(httpReq, request)
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeDeleteAuthorizedKeyResponse(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.DeleteAuthorizedKeyResponse)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *AuthorizedKey) headerDeleteAuthorizedKey(req *http.Request, request *client.DeleteAuthorizedKeyRequest) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+}
+
+// GetAuthorizedKey позволяет получить авторизованный ключ.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+func (c *AuthorizedKey) GetAuthorizedKey(ctx context.Context, request client.GetAuthorizedKeyRequest) (r *client.GetAuthorizedKeyResponse, err error) {
+	ctx = c.setGetAuthorizedKeyAttributes(ctx)
+	r = &client.GetAuthorizedKeyResponse{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.getAuthorizedKeyInvoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *AuthorizedKey) setGetAuthorizedKeyAttributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "GetAuthorizedKey"),
+		commonattribute.String(commonattribute.PathTemplate, "/iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}"),
+		commonattribute.String(commonattribute.ProjectName, "iam"),
+		commonattribute.String(commonattribute.ServiceName, "authorizedKey"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *AuthorizedKey) getAuthorizedKeyInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.GetAuthorizedKeyRequest)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"iam",
+		"v1",
+		"projects",
+		request.Project,
+		"serviceAccounts",
+		request.ServiceAccount,
+		"authorizedKeys",
+		request.AuthorizedKey)
+
+	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
+	ctx = valuesctx.With(ctx, "authorizedKey", request.AuthorizedKey)
+	ctx = valuesctx.With(ctx, "project", request.Project)
+
+	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerGetAuthorizedKey(httpReq, request)
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeGetAuthorizedKeyResponse(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.GetAuthorizedKeyResponse)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *AuthorizedKey) headerGetAuthorizedKey(req *http.Request, request *client.GetAuthorizedKeyRequest) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+}
+
 // UpsertAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

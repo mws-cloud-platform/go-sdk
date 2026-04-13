@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/iam/client"
 )
 
-// ListApiKey список api-keys для сервисного аккаунта.
+// ListApiKey позволяет получить список API-ключей для сервисного аккаунта.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys
@@ -111,7 +111,7 @@ func (c *ApiKey) headerListApiKey(req *http.Request, request *client.ListApiKeyR
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// DeleteApiKey удаление api-key.
+// DeleteApiKey позволяет удалить API-ключ.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}
@@ -185,7 +185,7 @@ func (c *ApiKey) headerDeleteApiKey(req *http.Request, request *client.DeleteApi
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// GetApiKey получение информации об api-key.
+// GetApiKey позволяет получить информацию об API-ключе.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}
@@ -263,7 +263,7 @@ func (c *ApiKey) headerGetApiKey(req *http.Request, request *client.GetApiKeyReq
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpsertApiKey создание/обновление api-key.
+// UpsertApiKey позволяет создать или обновить API-ключ.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}
@@ -356,7 +356,7 @@ func (c *ApiKey) headerUpsertApiKey(req *http.Request, request *client.UpsertApi
 	}
 }
 
-// CreateApiKey создание/обновление api-key.
+// CreateApiKey позволяет создать или обновить API-ключ.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -451,7 +451,7 @@ func (c *ApiKey) headerCreateApiKey(req *http.Request, request *client.UpsertApi
 	}
 }
 
-// UpdateApiKey создание/обновление api-key.
+// UpdateApiKey позволяет создать или обновить API-ключ.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

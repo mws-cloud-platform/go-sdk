@@ -57,6 +57,11 @@ func (m *CertificateStatusResponse) encodeFields(e *jx.Encoder) {
 		}
 		e.ArrEnd()
 	}
+
+	if m.RenewalAt != nil {
+		e.FieldStart("renewalAt")
+		conv.EncodeDateTimeUTC(e, *m.RenewalAt)
+	}
 }
 
 func (m *CertificateStatusResponse) UnmarshalJSON(b []byte) error {
@@ -136,6 +141,14 @@ func (m *CertificateStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Challenges = c
+			return nil
+		case "renewalAt":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.RenewalAt = &v
 			return nil
 		default:
 			return d.Skip()

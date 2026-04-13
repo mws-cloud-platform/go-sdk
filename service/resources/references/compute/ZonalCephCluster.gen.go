@@ -108,6 +108,10 @@ func (m *ZonalCephClusterID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/cephClusters/" + m.cluster
 }
 
+func (m *ZonalCephClusterID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalCephClusterID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ZonalCephClusterRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalCephClusterRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalCephClusterRef) Parse(ctx context.Context) error {

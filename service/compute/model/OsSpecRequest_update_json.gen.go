@@ -27,20 +27,6 @@ func (m *UpdateOsSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *UpdateOsSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.Hostname.IsSet() {
-		e.FieldStart("hostname")
-		e.Str(m.Hostname.Value)
-	}
-
-	if m.LocalDomain.IsSet() {
-		e.FieldStart("localDomain")
-		e.Str(m.LocalDomain.Value)
-	}
-
-	if m.StandardDnsRecords.IsSet() {
-		e.FieldStart("standardDnsRecords")
-		e.Bool(m.StandardDnsRecords.Value)
-	}
 
 	if m.Metadata.IsSet() {
 		e.FieldStart("metadata")
@@ -63,30 +49,6 @@ func (m *UpdateOsSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "hostname":
-			v, err := decode.Str(d)
-			if err != nil {
-				return err
-			}
-
-			m.Hostname.SetTo(v)
-			return nil
-		case "localDomain":
-			v, err := decode.Str(d)
-			if err != nil {
-				return err
-			}
-
-			m.LocalDomain.SetTo(v)
-			return nil
-		case "standardDnsRecords":
-			v, err := decode.Bool(d)
-			if err != nil {
-				return err
-			}
-
-			m.StandardDnsRecords.SetTo(v)
-			return nil
 		case "metadata":
 			if d.Next() == jx.Null {
 				m.Metadata.SetToNull()

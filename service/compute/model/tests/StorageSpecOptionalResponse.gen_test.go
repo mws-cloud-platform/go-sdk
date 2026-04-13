@@ -12,6 +12,7 @@ import (
 )
 
 func TestStorageSpecOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initStorageSpecOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
@@ -23,5 +24,6 @@ func TestStorageSpecOptionalResponseMarshalling(t *testing.T) {
 
 func initStorageSpecOptionalResponse() model.StorageSpecOptionalResponse {
 	var v model.StorageSpecOptionalResponse
+	v.Disks = make([]model.StorageDiskSpecOrRefWithAttachmentsOptionalResponse, 0)
 	return v
 }

@@ -12,11 +12,11 @@ func EgressNatRequestToOptionalResponse(request *EgressNatRequest) (*EgressNatOp
 		return nil, nil
 	}
 	var response EgressNatOptionalResponse
-	tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
-	if err != nil {
-		return nil, err
-	}
 	if request.Metadata != nil {
+		tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
+		if err != nil {
+			return nil, err
+		}
 		response.Metadata = commonclient.NewOptionalNil(*tmpMetadata)
 	}
 	tmpSpec, err := EgressNatSpecRequestToOptionalResponse(&request.Spec)

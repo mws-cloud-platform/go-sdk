@@ -87,6 +87,11 @@ func (s *StandardRetry) IsRetryable(err error) bool {
 		errors.As(err, &apiError)
 
 		return s.codeIsRetryable(apiError.Code)
+	case mwserrors.IsUnexpectedStatusCodeError(err):
+		var unexpectedStatusCodeErr *mwserrors.UnexpectedStatusCodeError
+		errors.As(err, &unexpectedStatusCodeErr)
+
+		return s.codeIsRetryable(unexpectedStatusCodeErr.StatusCode)
 	case mwserrors.IsTransportError(err):
 		return true
 	default:

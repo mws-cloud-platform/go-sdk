@@ -75,12 +75,6 @@ func (m *UpdateResourceExternalAddressSpecOrRefRequest) Parse(ctx context.Contex
 		}
 	}
 
-	if m.Spec.IsSet() {
-		if err := m.Spec.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Spec", err)
-		}
-	}
-
 	return nil
 }
 

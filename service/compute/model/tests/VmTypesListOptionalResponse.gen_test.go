@@ -12,6 +12,7 @@ import (
 )
 
 func TestVmTypesListOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initVmTypesListOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -12,6 +12,7 @@ import (
 )
 
 func TestCertificateChallengeTypeMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initCertificateChallengeType()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

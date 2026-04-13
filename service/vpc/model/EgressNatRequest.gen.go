@@ -12,7 +12,7 @@ import (
 // Описывает Egress (Many-to-Many) NAT-шлюз.
 // Real OAPI model name: EgressNat
 type EgressNatRequest struct {
-	// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Описывает спецификацию Egress (Many-to-Many) NAT-шлюза.
 	Spec EgressNatSpecRequest `json:"spec" yaml:"spec"`

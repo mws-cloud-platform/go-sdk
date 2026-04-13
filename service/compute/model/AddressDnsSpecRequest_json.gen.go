@@ -31,15 +31,11 @@ func (m *AddressDnsSpecRequest) encodeFields(e *jx.Encoder) {
 	e.FieldStart("name")
 	e.Str(m.Name)
 
-	if m.Ttl != nil {
-		e.FieldStart("ttl")
-		m.Ttl.Encode(e)
-	}
+	e.FieldStart("ttl")
+	m.Ttl.Encode(e)
 
-	if m.Ptr != nil {
-		e.FieldStart("ptr")
-		e.Bool(*m.Ptr)
-	}
+	e.FieldStart("ptr")
+	e.Bool(m.Ptr)
 }
 
 func (m *AddressDnsSpecRequest) UnmarshalJSON(b []byte) error {
@@ -53,6 +49,8 @@ func (m *AddressDnsSpecRequest) Decode(d *jx.Decoder) error {
 
 	requiredFilled := map[string]bool{
 		"name": false,
+		"ttl":  false,
+		"ptr":  false,
 	}
 	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -71,7 +69,8 @@ func (m *AddressDnsSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ttl = &v
+			m.Ttl = v
+			requiredFilled["ttl"] = true
 			return nil
 		case "ptr":
 			v, err := decode.Bool(d)
@@ -79,7 +78,8 @@ func (m *AddressDnsSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ptr = &v
+			m.Ptr = v
+			requiredFilled["ptr"] = true
 			return nil
 		default:
 			return d.Skip()

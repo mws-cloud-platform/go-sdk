@@ -8,7 +8,7 @@ import (
 
 // Real OAPI model name: VirtualMachineAddressDnsStatus
 type VirtualMachineAddressDnsStatusResponse struct {
-	// DNS-имя, по которому будет доступна ВМ в MWS cloud
+	// DNS-имя виртуальной машины в MWS Cloud Platform
 	Name string `json:"name" yaml:"name"`
 	// Продолжительность хранения DNS записи в кеше
 	Ttl duration.Duration `json:"ttl" yaml:"ttl"`

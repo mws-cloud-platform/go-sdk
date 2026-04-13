@@ -15,6 +15,7 @@ import (
 )
 
 func TestVmTypeSugared_ListVmTypes(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestVmTypeSugared_ListVmTypes(t *testing.T) {
 }
 
 func TestVmTypeSugared_GetVmType(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

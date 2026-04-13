@@ -12,6 +12,7 @@ import (
 )
 
 func TestNetworkInterfaceSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initNetworkInterfaceSpecRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
@@ -23,5 +24,6 @@ func TestNetworkInterfaceSpecRequestMarshalling(t *testing.T) {
 
 func initNetworkInterfaceSpecRequest() model.NetworkInterfaceSpecRequest {
 	var v model.NetworkInterfaceSpecRequest
+	v.Addresses = make([]model.AddressSpecOrRefWithAttachmentsRequest, 0)
 	return v
 }

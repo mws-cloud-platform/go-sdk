@@ -109,6 +109,10 @@ func (m *FederationCountID) ID() string {
 	return m.ServiceSlug() + "/organizations/" + m.organization + "/services/iam/quotas/federationCount"
 }
 
+func (m *FederationCountID) String() string {
+	return m.ID()
+}
+
 func (m *FederationCountID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -232,6 +236,10 @@ func (m *FederationCountRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *FederationCountRef) String() string {
+	return m.IDPath()
 }
 
 func (m *FederationCountRef) Parse(ctx context.Context) error {

@@ -12,6 +12,7 @@ import (
 )
 
 func TestVirtualMachineSpecOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initVirtualMachineSpecOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
@@ -23,5 +24,7 @@ func TestVirtualMachineSpecOptionalResponseMarshalling(t *testing.T) {
 
 func initVirtualMachineSpecOptionalResponse() model.VirtualMachineSpecOptionalResponse {
 	var v model.VirtualMachineSpecOptionalResponse
+	v.Storage.Disks = make([]model.StorageDiskSpecOrRefWithAttachmentsOptionalResponse, 0)
+	v.Network.NetworkInterfaces = make([]model.NetworkInterfaceSpecOptionalResponse, 0)
 	return v
 }

@@ -4,13 +4,12 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 )
 
 type UpdateAddressDnsSpecRequest struct {
-	// DNS-имя, по которому будет доступна ВМ в MWS cloud
+	// DNS-имя виртуальной машины в MWS Cloud Platform
 	Name commonclient.Optional[string] `json:"name" yaml:"name"`
 	// Продолжительность хранения DNS записи в кеше
 	Ttl commonclient.Optional[duration.Duration] `json:"ttl" yaml:"ttl"`
@@ -21,12 +20,8 @@ type UpdateAddressDnsSpecRequest struct {
 func (m *AddressDnsSpecRequest) AsUpdateModel() UpdateAddressDnsSpecRequest {
 	var u UpdateAddressDnsSpecRequest
 	u.Name = commonclient.NewOptional(m.GetName())
-	if m.Ttl != nil {
-		u.Ttl = commonclient.NewOptional(m.GetTtlOr(duration.Duration{}))
-	}
-	if m.Ptr != nil {
-		u.Ptr = commonclient.NewOptional(m.GetPtrOr(false))
-	}
+	u.Ttl = commonclient.NewOptional(m.GetTtl())
+	u.Ptr = commonclient.NewOptional(m.GetPtr())
 	return u
 }
 
@@ -52,10 +47,10 @@ func (m *AddressDnsSpecRequest) WithChanges(u UpdateAddressDnsSpecRequest) Addre
 		out.Name = u.Name.Value
 	}
 	if u.Ttl.IsSet() {
-		out.Ttl = ptr.Get(u.Ttl.Value)
+		out.Ttl = u.Ttl.Value
 	}
 	if u.Ptr.IsSet() {
-		out.Ptr = ptr.Get(u.Ptr.Value)
+		out.Ptr = u.Ptr.Value
 	}
 	return out
 }
@@ -87,10 +82,10 @@ func (m *AddressDnsSpecRequest) diffName(src *AddressDnsSpecRequest) commonclien
 
 func (m *AddressDnsSpecRequest) diffTtl(src *AddressDnsSpecRequest) commonclient.Optional[duration.Duration] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffEquatableIfaceNonRequired(src.GetTtl(), m.GetTtl(), nilDiffers)
+	return commonclient.DiffEquatableIfaceRequired(src.GetTtl(), m.GetTtl(), nilDiffers)
 }
 
 func (m *AddressDnsSpecRequest) diffPtr(src *AddressDnsSpecRequest) commonclient.Optional[bool] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetPtr(), m.GetPtr(), nilDiffers)
+	return commonclient.DiffPrimitiveRequired(src.GetPtr(), m.GetPtr(), nilDiffers)
 }

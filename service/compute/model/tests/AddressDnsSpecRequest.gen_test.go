@@ -7,11 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
 
 func TestAddressDnsSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initAddressDnsSpecRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
@@ -23,5 +25,6 @@ func TestAddressDnsSpecRequestMarshalling(t *testing.T) {
 
 func initAddressDnsSpecRequest() model.AddressDnsSpecRequest {
 	var v model.AddressDnsSpecRequest
+	v.Ttl = duration.MustParseString("PT0S")
 	return v
 }

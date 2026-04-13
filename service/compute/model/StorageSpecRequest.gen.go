@@ -11,7 +11,7 @@ import (
 
 // Real OAPI model name: StorageSpec
 type StorageSpecRequest struct {
-	Disks []StorageDiskSpecOrRefWithAttachmentsRequest `json:"disks,omitempty" yaml:"disks,omitempty"`
+	Disks []StorageDiskSpecOrRefWithAttachmentsRequest `json:"disks" yaml:"disks"`
 }
 
 func (m *StorageSpecRequest) GetDisks() []StorageDiskSpecOrRefWithAttachmentsRequest {
@@ -23,13 +23,6 @@ func (m *StorageSpecRequest) GetDisks() []StorageDiskSpecOrRefWithAttachmentsReq
 
 func (m *StorageSpecRequest) SetDisks(val []StorageDiskSpecOrRefWithAttachmentsRequest) {
 	m.Disks = val
-}
-
-func (m *StorageSpecRequest) GetDisksOr(val []StorageDiskSpecOrRefWithAttachmentsRequest) []StorageDiskSpecOrRefWithAttachmentsRequest {
-	if m != nil && m.Disks != nil {
-		return m.Disks
-	}
-	return val
 }
 
 func (m *StorageSpecRequest) Clone() *StorageSpecRequest {

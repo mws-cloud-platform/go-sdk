@@ -92,7 +92,7 @@ func (m *ServiceAccountResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v common.ResourceStatusResponse
+			var v ServiceAccountStatusResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -168,11 +168,6 @@ func (m *ServiceAccountMetadataResponse) encodeFields(e *jx.Encoder) {
 	if m.Id != nil {
 		e.FieldStart("id")
 		m.Id.Encode(e)
-	}
-
-	if m.LastAuthDateTime != nil {
-		e.FieldStart("lastAuthDateTime")
-		conv.EncodeDateTimeUTC(e, *m.LastAuthDateTime)
 	}
 }
 
@@ -265,14 +260,6 @@ func (m *ServiceAccountMetadataResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Id = &v
-			return nil
-		case "lastAuthDateTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.LastAuthDateTime = &v
 			return nil
 		default:
 			return d.Skip()

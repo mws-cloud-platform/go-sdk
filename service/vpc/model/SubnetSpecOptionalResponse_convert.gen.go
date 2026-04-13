@@ -12,11 +12,11 @@ func SubnetSpecRequestToOptionalResponse(request *SubnetSpecRequest) (*SubnetSpe
 	}
 	var response SubnetSpecOptionalResponse
 	response.Cidr = request.Cidr
-	tmpDhcpOptions, err := SubnetDhcpOptionsRequestToOptionalResponse(request.DhcpOptions)
-	if err != nil {
-		return nil, err
-	}
 	if request.DhcpOptions != nil {
+		tmpDhcpOptions, err := SubnetDhcpOptionsRequestToOptionalResponse(request.DhcpOptions)
+		if err != nil {
+			return nil, err
+		}
 		response.DhcpOptions = commonclient.NewOptionalNil(*tmpDhcpOptions)
 	}
 	return &response, nil

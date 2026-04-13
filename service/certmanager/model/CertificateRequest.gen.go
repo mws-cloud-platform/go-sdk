@@ -9,7 +9,7 @@ import (
 // TLS/SSL-сертификат — это цифровой объект, с помощью которого веб-системы идентифицируют пользователя и устанавливают зашифрованное сетевое соединение с ним, используя протокол SSL/TLS (Secure Sockets Layer/Transport Layer Security)
 // Real OAPI model name: Certificate
 type CertificateRequest struct {
-	// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Spec     CertificateSpecRequest                     `json:"spec" yaml:"spec"`
 }

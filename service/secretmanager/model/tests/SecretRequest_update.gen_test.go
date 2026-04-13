@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateSecretRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initSecretRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

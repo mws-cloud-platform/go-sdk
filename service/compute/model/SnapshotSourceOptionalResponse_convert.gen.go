@@ -11,11 +11,11 @@ func SnapshotSourceRequestToOptionalResponse(request *SnapshotSourceRequest) (*S
 		return nil, nil
 	}
 	var response SnapshotSourceOptionalResponse
-	tmpDisk, err := SnapshotSourceDiskRequestToOptionalResponse(request.Disk)
-	if err != nil {
-		return nil, err
-	}
 	if request.Disk != nil {
+		tmpDisk, err := SnapshotSourceDiskRequestToOptionalResponse(request.Disk)
+		if err != nil {
+			return nil, err
+		}
 		response.Disk = commonclient.NewOptionalNil(*tmpDisk)
 	}
 	return &response, nil

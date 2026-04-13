@@ -15,12 +15,15 @@ func NetworkInterfaceSpecRequestToOptionalResponse(request *NetworkInterfaceSpec
 	if request.Primary != nil {
 		response.Primary = commonclient.NewOptional(*request.Primary)
 	}
+	if request.IpForwardingEnabled != nil {
+		response.IpForwardingEnabled = commonclient.NewOptional(*request.IpForwardingEnabled)
+	}
 	for _, e := range request.Addresses {
 		tmp, err := AddressSpecOrRefWithAttachmentsRequestToOptionalResponse(&e)
 		if err != nil {
 			return nil, err
 		}
-		response.Addresses.SetTo(append(response.Addresses.Value, *tmp))
+		response.Addresses = append(response.Addresses, *tmp)
 	}
 	return &response, nil
 }

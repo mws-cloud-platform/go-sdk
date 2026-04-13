@@ -49,6 +49,21 @@ func (mr *MockServiceAccountMockRecorder) CreateServiceAccount(arg0, arg1 any) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateServiceAccount", reflect.TypeOf((*MockServiceAccount)(nil).CreateServiceAccount), arg0, arg1)
 }
 
+// DeleteServiceAccount mocks base method.
+func (m *MockServiceAccount) DeleteServiceAccount(arg0 context.Context, arg1 client.DeleteServiceAccountRequest) (*client.DeleteServiceAccountResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteServiceAccount", arg0, arg1)
+	ret0, _ := ret[0].(*client.DeleteServiceAccountResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteServiceAccount indicates an expected call of DeleteServiceAccount.
+func (mr *MockServiceAccountMockRecorder) DeleteServiceAccount(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteServiceAccount", reflect.TypeOf((*MockServiceAccount)(nil).DeleteServiceAccount), arg0, arg1)
+}
+
 // GetServiceAccount mocks base method.
 func (m *MockServiceAccount) GetServiceAccount(arg0 context.Context, arg1 client.GetServiceAccountRequest) (*client.GetServiceAccountResponse, error) {
 	m.ctrl.T.Helper()

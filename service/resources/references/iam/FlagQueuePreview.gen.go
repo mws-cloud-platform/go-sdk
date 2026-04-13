@@ -109,6 +109,10 @@ func (m *FlagQueuePreviewID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/services/iam/quotas/flag_queuePreview"
 }
 
+func (m *FlagQueuePreviewID) String() string {
+	return m.ID()
+}
+
 func (m *FlagQueuePreviewID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -232,6 +236,10 @@ func (m *FlagQueuePreviewRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *FlagQueuePreviewRef) String() string {
+	return m.IDPath()
 }
 
 func (m *FlagQueuePreviewRef) Parse(ctx context.Context) error {

@@ -12,6 +12,7 @@ import (
 )
 
 func TestLinkedVmInfoRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initLinkedVmInfoRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

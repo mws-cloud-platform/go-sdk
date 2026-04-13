@@ -121,10 +121,6 @@ func (m *UpdateAuthorizedKeyMetadataRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("description")
 		e.Str(m.Description.Value)
 	}
-	if m.Name.IsSet() {
-		e.FieldStart("name")
-		e.Str(m.Name.Value)
-	}
 }
 
 func (m *UpdateAuthorizedKeyMetadataRequest) UnmarshalJSON(b []byte) error {
@@ -176,14 +172,6 @@ func (m *UpdateAuthorizedKeyMetadataRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Description.SetTo(v)
-			return nil
-		case "name":
-			v, err := decode.Str(d)
-			if err != nil {
-				return err
-			}
-
-			m.Name.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

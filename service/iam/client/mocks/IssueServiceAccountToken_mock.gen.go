@@ -35,6 +35,8 @@ func (m *MockIssueServiceAccountToken) EXPECT() *MockIssueServiceAccountTokenMoc
 }
 
 // IssueServiceAccountToken mocks base method.
+//
+// Deprecated: Переходим на v2-версию метода
 func (m *MockIssueServiceAccountToken) IssueServiceAccountToken(arg0 context.Context, arg1 client.IssueServiceAccountTokenRequest) (*client.IssueServiceAccountTokenResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IssueServiceAccountToken", arg0, arg1)
@@ -44,6 +46,8 @@ func (m *MockIssueServiceAccountToken) IssueServiceAccountToken(arg0 context.Con
 }
 
 // IssueServiceAccountToken indicates an expected call of IssueServiceAccountToken.
+//
+// Deprecated: Переходим на v2-версию метода
 func (mr *MockIssueServiceAccountTokenMockRecorder) IssueServiceAccountToken(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IssueServiceAccountToken", reflect.TypeOf((*MockIssueServiceAccountToken)(nil).IssueServiceAccountToken), arg0, arg1)

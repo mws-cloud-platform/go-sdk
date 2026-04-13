@@ -11,28 +11,28 @@ import (
 )
 
 type EgressNat interface {
-	// ListEgressNats позволяет получить список Egress NAT-шлюзов.
+	// ListEgressNats позволяет получить список Egress NAT.
 	//
 	// Путь: GET /vpc/v1/projects/{project}/networks/{network}/egressNats
 	ListEgressNats(context.Context, ListEgressNatsRequest) (*ListEgressNatsResponse, error)
-	// DeleteEgressNat позволяет удалить Egress NAT-шлюз.
+	// DeleteEgressNat позволяет удалить Egress NAT.
 	//
 	// Путь: DELETE /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}
 	DeleteEgressNat(context.Context, DeleteEgressNatRequest) (*DeleteEgressNatResponse, error)
-	// GetEgressNat позволяет получить информацию об Egress NAT-шлюзе.
+	// GetEgressNat позволяет получить информацию об Egress NAT.
 	//
 	// Путь: GET /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}
 	GetEgressNat(context.Context, GetEgressNatRequest) (*GetEgressNatResponse, error)
-	// UpsertEgressNat позволяет создать или изменить Egress NAT-шлюз.
+	// UpsertEgressNat позволяет создать или изменить Egress NAT.
 	//
 	// Путь: POST /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}
 	UpsertEgressNat(context.Context, UpsertEgressNatRequest) (*UpsertEgressNatResponse, error)
-	// CreateEgressNat позволяет создать или изменить Egress NAT-шлюз.
+	// CreateEgressNat позволяет создать или изменить Egress NAT.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}?createOnly=true
 	CreateEgressNat(context.Context, UpsertEgressNatRequest) (*UpsertEgressNatResponse, error)
-	// UpdateEgressNat позволяет создать или изменить Egress NAT-шлюз.
+	// UpdateEgressNat позволяет создать или изменить Egress NAT.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /vpc/v1/projects/{project}/networks/{network}/egressNats/{egressNat}?updateOnly=true
@@ -44,9 +44,9 @@ type ListEgressNatsRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -139,9 +139,9 @@ type DeleteEgressNatRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Egress NAT name
+	// Имя Egress NAT
 	EgressNat string // path: "egressNat"
 }
 
@@ -225,9 +225,9 @@ type GetEgressNatRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Egress NAT name
+	// Имя Egress NAT
 	EgressNat string // path: "egressNat"
 }
 
@@ -304,11 +304,11 @@ type UpsertEgressNatRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Egress NAT name
+	// Имя Egress NAT
 	EgressNat string // path: "egressNat"
-	// Update Egress NAT
+	// Данные для создания или изменения Egress NAT
 	Body model.EgressNatRequest // body
 }
 
@@ -340,11 +340,11 @@ type UpdateEgressNatRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Egress NAT name
+	// Имя Egress NAT
 	EgressNat string // path: "egressNat"
-	// Update Egress NAT
+	// Данные для создания или изменения Egress NAT
 	Body model.UpdateEgressNatRequest // body
 }
 

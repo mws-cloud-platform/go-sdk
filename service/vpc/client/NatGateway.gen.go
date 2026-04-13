@@ -11,7 +11,7 @@ import (
 )
 
 type NatGateway interface {
-	// ListNatGateways list private Nat gateways.
+	// ListNatGateways позволяет получить список NAT-шлюзов.
 	//
 	// Путь: GET /vpc/v1/projects/{project}/natGateways
 	ListNatGateways(context.Context, ListNatGatewaysRequest) (*ListNatGatewaysResponse, error)
@@ -22,7 +22,7 @@ type ListNatGatewaysRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"

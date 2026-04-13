@@ -44,9 +44,9 @@ type ListSubnetsRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -139,9 +139,9 @@ type DeleteSubnetRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Subnet name
+	// Имя подсети
 	Subnet string // path: "subnet"
 }
 
@@ -225,9 +225,9 @@ type GetSubnetRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Subnet name
+	// Имя подсети
 	Subnet string // path: "subnet"
 }
 
@@ -304,11 +304,11 @@ type UpsertSubnetRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Subnet name
+	// Имя подсети
 	Subnet string // path: "subnet"
-	// Update subnetwork
+	// Данные для создания или изменения подсети
 	Body model.SubnetRequest // body
 }
 
@@ -340,11 +340,11 @@ type UpdateSubnetRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Subnet name
+	// Имя подсети
 	Subnet string // path: "subnet"
-	// Update subnetwork
+	// Данные для создания или изменения подсети
 	Body model.UpdateSubnetRequest // body
 }
 

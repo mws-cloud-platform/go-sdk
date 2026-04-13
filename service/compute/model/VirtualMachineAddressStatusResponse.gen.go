@@ -8,23 +8,24 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 // Real OAPI model name: VirtualMachineAddressStatus
 type VirtualMachineAddressStatusResponse struct {
-	// В какой subnet был создан Адрес
+	// Подсеть, в которой был создан адрес
 	Subnet *vpc.SubnetRef `json:"subnet,omitempty" yaml:"subnet,omitempty"`
-	// В какой network был создан Адрес
+	// Сеть, в которой был создан адрес
 	Network *vpc.NetworkRef `json:"network,omitempty" yaml:"network,omitempty"`
 	// ref на ресурс Адрес
 	Ref vpc.AddressRef `json:"ref" yaml:"ref"`
-	// выделенный ipAddress
+	// Выделенный IP-адрес
 	IpAddress   *ipaddress.IPAddress                     `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
 	StandardDns *VirtualMachineAddressDnsStatusResponse  `json:"standardDns,omitempty" yaml:"standardDns,omitempty"`
 	Dns         []VirtualMachineAddressDnsStatusResponse `json:"dns,omitempty" yaml:"dns,omitempty"`
 	// Статус ресурса Адрес
-	Ready       *ObservationResponse                     `json:"ready,omitempty" yaml:"ready,omitempty"`
+	Ready       *common.ResourceStatusReadyResponse      `json:"ready,omitempty" yaml:"ready,omitempty"`
 	OneToOneNat *VirtualMachineOneToOneNatStatusResponse `json:"oneToOneNat,omitempty" yaml:"oneToOneNat,omitempty"`
 }
 
@@ -129,18 +130,18 @@ func (m *VirtualMachineAddressStatusResponse) GetDnsOr(val []VirtualMachineAddre
 	return val
 }
 
-func (m *VirtualMachineAddressStatusResponse) GetReady() *ObservationResponse {
+func (m *VirtualMachineAddressStatusResponse) GetReady() *common.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.Ready
 	}
 	return nil
 }
 
-func (m *VirtualMachineAddressStatusResponse) SetReady(val *ObservationResponse) {
+func (m *VirtualMachineAddressStatusResponse) SetReady(val *common.ResourceStatusReadyResponse) {
 	m.Ready = val
 }
 
-func (m *VirtualMachineAddressStatusResponse) GetReadyOr(val ObservationResponse) ObservationResponse {
+func (m *VirtualMachineAddressStatusResponse) GetReadyOr(val common.ResourceStatusReadyResponse) common.ResourceStatusReadyResponse {
 	if m != nil && m.Ready != nil {
 		return *m.Ready
 	}

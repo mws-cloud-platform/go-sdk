@@ -146,6 +146,10 @@ func (m *ZonalLocalDiskHostAttachmentID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalVirtualMachines/" + m.virtualMachine + "/localDiskHostAttachments/" + m.attachment
 }
 
+func (m *ZonalLocalDiskHostAttachmentID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalLocalDiskHostAttachmentID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -296,6 +300,10 @@ func (m *ZonalLocalDiskHostAttachmentRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalLocalDiskHostAttachmentRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalLocalDiskHostAttachmentRef) Parse(ctx context.Context) error {

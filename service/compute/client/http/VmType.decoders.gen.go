@@ -61,6 +61,23 @@ func decodeListVmTypesResponse(resp *http.Response) (*client.ListVmTypesResponse
 			_, _ = io.Copy(io.Discard, resp.Body)
 			return nil, clienterrors.InvalidContentType(ct)
 		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.ListVmTypesResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
 	case 403:
 		switch ct {
 		case "application/json":
@@ -206,6 +223,23 @@ func decodeGetVmTypeResponse(resp *http.Response) (*client.GetVmTypeResponse, er
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 401:
+		switch ct {
+		case "application/json":
+			result := &client.GetVmTypeResponse{
+				Code:        resp.StatusCode,
+				Response401: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

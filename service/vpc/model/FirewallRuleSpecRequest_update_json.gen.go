@@ -111,7 +111,7 @@ func (m *UpdateFirewallRuleSpecRequest) Decode(d *jx.Decoder) error {
 			m.Active.SetTo(v)
 			return nil
 		case "source":
-			var v UpdateAddressGroupSpecOrRefRequest
+			var v UpdateFirewallRuleSourceRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -119,7 +119,7 @@ func (m *UpdateFirewallRuleSpecRequest) Decode(d *jx.Decoder) error {
 			m.Source.SetTo(v)
 			return nil
 		case "destination":
-			var v UpdateAddressGroupSpecOrRefRequest
+			var v UpdateFirewallRuleDestinationRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}

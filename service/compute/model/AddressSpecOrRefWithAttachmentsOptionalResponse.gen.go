@@ -11,23 +11,20 @@ import (
 
 // Real OAPI model name: AddressSpecOrRefWithAttachments
 type AddressSpecOrRefWithAttachmentsOptionalResponse struct {
-	Address commonclient.OptionalNil[AddressSpecOrRefOptionalResponse] `json:"address,omitempty" yaml:"address,omitempty"`
+	Address AddressSpecOrRefOptionalResponse `json:"address" yaml:"address"`
 	// NAT правило для связи внутреннего адреса с внешним адресом
 	OneToOneNat commonclient.OptionalNil[ComputeOneToOneNatSpecOptionalResponse] `json:"oneToOneNat,omitempty" yaml:"oneToOneNat,omitempty"`
 }
 
-func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) GetAddress() *AddressSpecOrRefOptionalResponse {
-	if m != nil && m.Address.IsSet() {
-		return &m.Address.Value
+func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) GetAddress() AddressSpecOrRefOptionalResponse {
+	if m != nil {
+		return m.Address
 	}
-	return nil
+	return AddressSpecOrRefOptionalResponse{}
 }
 
-func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) GetAddressOr(val AddressSpecOrRefOptionalResponse) AddressSpecOrRefOptionalResponse {
-	if m != nil && m.Address.IsSet() {
-		return m.Address.Value
-	}
-	return val
+func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) SetAddress(val AddressSpecOrRefOptionalResponse) {
+	m.Address = val
 }
 
 func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) GetOneToOneNat() *ComputeOneToOneNatSpecOptionalResponse {
@@ -50,9 +47,7 @@ func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) Clone() *AddressSpecOr
 	}
 
 	clone := *m
-	if clone.Address.IsSet() {
-		clone.Address.Value = *m.Address.Value.Clone()
-	}
+	clone.Address = *m.Address.Clone()
 	if clone.OneToOneNat.IsSet() {
 		clone.OneToOneNat.Value = *m.OneToOneNat.Value.Clone()
 	}
@@ -64,10 +59,8 @@ func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) Parse(ctx context.Cont
 		return nil
 	}
 
-	if m.Address.IsSet() {
-		if err := m.Address.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Address", err)
-		}
+	if err := m.Address.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Address", err)
 	}
 
 	if m.OneToOneNat.IsSet() {

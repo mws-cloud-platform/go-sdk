@@ -17,18 +17,16 @@ type UpdateStorageSpecRequest struct {
 
 func (m *StorageSpecRequest) AsUpdateModel() UpdateStorageSpecRequest {
 	var u UpdateStorageSpecRequest
-	if m.Disks != nil {
-		u.Disks = commonclient.NewOptional(func() []UpdateStorageDiskSpecOrRefWithAttachmentsRequest {
-			var tmp []UpdateStorageDiskSpecOrRefWithAttachmentsRequest
-			if m.GetDisks() != nil {
-				tmp = make([]UpdateStorageDiskSpecOrRefWithAttachmentsRequest, 0, len(m.GetDisks()))
-			}
-			for _, val := range m.GetDisks() {
-				tmp = append(tmp, val.AsUpdateModel())
-			}
-			return tmp
-		}())
-	}
+	u.Disks = commonclient.NewOptional(func() []UpdateStorageDiskSpecOrRefWithAttachmentsRequest {
+		var tmp []UpdateStorageDiskSpecOrRefWithAttachmentsRequest
+		if m.GetDisks() != nil {
+			tmp = make([]UpdateStorageDiskSpecOrRefWithAttachmentsRequest, 0, len(m.GetDisks()))
+		}
+		for _, val := range m.GetDisks() {
+			tmp = append(tmp, val.AsUpdateModel())
+		}
+		return tmp
+	}())
 	return u
 }
 

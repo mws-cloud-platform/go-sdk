@@ -15,6 +15,7 @@ import (
 )
 
 func TestRouteSugared_ListRoutes(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestRouteSugared_ListRoutes(t *testing.T) {
 }
 
 func TestRouteSugared_DeleteRoute(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestRouteSugared_DeleteRoute(t *testing.T) {
 }
 
 func TestRouteSugared_GetRoute(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestRouteSugared_GetRoute(t *testing.T) {
 }
 
 func TestRouteSugared_UpsertRoute(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestRouteSugared_UpsertRoute(t *testing.T) {
 }
 
 func TestRouteSugared_CreateRoute(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestRouteSugared_CreateRoute(t *testing.T) {
 }
 
 func TestRouteSugared_UpdateRoute(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

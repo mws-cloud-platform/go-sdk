@@ -108,6 +108,10 @@ func (m *ZonalDnsServerGroupID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/zonalDnsServerGroups/" + m.zonalDnsServerGroup
 }
 
+func (m *ZonalDnsServerGroupID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalDnsServerGroupID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ZonalDnsServerGroupRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalDnsServerGroupRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalDnsServerGroupRef) Parse(ctx context.Context) error {

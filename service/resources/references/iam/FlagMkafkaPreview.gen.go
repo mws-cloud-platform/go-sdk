@@ -109,6 +109,10 @@ func (m *FlagMkafkaPreviewID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/services/iam/quotas/flag_mkafkaPreview"
 }
 
+func (m *FlagMkafkaPreviewID) String() string {
+	return m.ID()
+}
+
 func (m *FlagMkafkaPreviewID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -232,6 +236,10 @@ func (m *FlagMkafkaPreviewRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *FlagMkafkaPreviewRef) String() string {
+	return m.IDPath()
 }
 
 func (m *FlagMkafkaPreviewRef) Parse(ctx context.Context) error {

@@ -12,7 +12,7 @@ import (
 // One-to-One NAT-шлюз — механизм, с помощью которого ресурсы во внутренней сети могут выходить в интернет через внешний IP-адрес
 // Real OAPI model name: OneToOneNat
 type OneToOneNatRequest struct {
-	// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Описывает спецификацию One-to-One NAT-шлюза.
 	Spec OneToOneNatSpecRequest `json:"spec" yaml:"spec"`

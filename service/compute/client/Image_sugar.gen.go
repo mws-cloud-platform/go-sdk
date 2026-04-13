@@ -29,13 +29,24 @@ func (x *ImageSugared) Impl() Image {
 // LatestImage позволяет получить latest образ.
 //
 // Путь: GET /compute/v1/projects/{project}/images:latest
-func (x *ImageSugared) LatestImage(ctx context.Context, request LatestImageRequest) (*model.ImageOptionalResponse, error) {
+func (x *ImageSugared) LatestImage(ctx context.Context, request LatestImageRequest, opts ...Option) (*model.ImageOptionalResponse, error) {
+	config := newConfig(opts...)
+
 	resp, err := x.impl.LatestImage(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerLatestImage(resp)
+	sugaredResponse, err := x.respHandlerLatestImage(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitLatestImage(ctx, request, config.waitOptions...)
 }
 
 func (x *ImageSugared) respHandlerLatestImage(resp *LatestImageResponse) (*model.ImageOptionalResponse, error) {
@@ -48,6 +59,16 @@ func (x *ImageSugared) respHandlerLatestImage(resp *LatestImageResponse) (*model
 	}
 
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *ImageSugared) waitLatestImage(ctx context.Context, request LatestImageRequest, opts ...wait.WaiterOption) (*model.ImageOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.ImageOptionalResponse, bool, error) {
+		response, err := x.LatestImage(ctx, request)
+		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
+		return response, stop, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	return waiter.Wait(ctx)
 }
 
 // ListImages позволяет получить список образов.

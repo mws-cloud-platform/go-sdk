@@ -34,17 +34,17 @@ func (m *MockChallenge) EXPECT() *MockChallengeMockRecorder {
 	return m.recorder
 }
 
-// GetChallengeContent mocks base method.
-func (m *MockChallenge) GetChallengeContent(arg0 context.Context, arg1 client.GetChallengeContentRequest) (*client.GetChallengeContentResponse, error) {
+// GetChallengeToken mocks base method.
+func (m *MockChallenge) GetChallengeToken(arg0 context.Context, arg1 client.GetChallengeTokenRequest) (*client.GetChallengeTokenResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetChallengeContent", arg0, arg1)
-	ret0, _ := ret[0].(*client.GetChallengeContentResponse)
+	ret := m.ctrl.Call(m, "GetChallengeToken", arg0, arg1)
+	ret0, _ := ret[0].(*client.GetChallengeTokenResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetChallengeContent indicates an expected call of GetChallengeContent.
-func (mr *MockChallengeMockRecorder) GetChallengeContent(arg0, arg1 any) *gomock.Call {
+// GetChallengeToken indicates an expected call of GetChallengeToken.
+func (mr *MockChallengeMockRecorder) GetChallengeToken(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChallengeContent", reflect.TypeOf((*MockChallenge)(nil).GetChallengeContent), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChallengeToken", reflect.TypeOf((*MockChallenge)(nil).GetChallengeToken), arg0, arg1)
 }

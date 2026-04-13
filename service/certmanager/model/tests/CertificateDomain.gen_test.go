@@ -12,6 +12,7 @@ import (
 )
 
 func TestCertificateDomainMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initCertificateDomain()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -12,3 +12,7 @@ const (
 	CertificateChallengeStatus_CANCELED  CertificateChallengeStatus = "CANCELED"
 	CertificateChallengeStatus_INVALID   CertificateChallengeStatus = "INVALID"
 )
+
+func (m CertificateChallengeStatus) String() string {
+	return string(m)
+}

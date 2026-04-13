@@ -12,6 +12,7 @@ import (
 )
 
 func TestVpcExternalAddressSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initVpcExternalAddressSpecRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

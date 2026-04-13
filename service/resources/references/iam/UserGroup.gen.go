@@ -89,6 +89,10 @@ func (m *UserGroupID) ID() string {
 	return m.ServiceSlug() + "/userGroups/" + m.userGroup
 }
 
+func (m *UserGroupID) String() string {
+	return m.ID()
+}
+
 func (m *UserGroupID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *UserGroupRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *UserGroupRef) String() string {
+	return m.IDPath()
 }
 
 func (m *UserGroupRef) Parse(ctx context.Context) error {

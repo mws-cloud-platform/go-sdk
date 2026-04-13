@@ -48,7 +48,7 @@ type ListSecretsRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -82,8 +82,9 @@ func (m ListSecretsRequest) WithPageToken(token *string) ListSecretsRequest {
 
 type ListSecretsResponse struct {
 	Code        int
-	Response200 *model.SecretListResponse
+	Response200 *model.SecretListOptionalResponse
 	Response400 *common.ApiError
+	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response408 *common.ApiError
@@ -106,6 +107,9 @@ func (m *ListSecretsResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -139,7 +143,7 @@ type CreateSecretWithSecretVersionRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Имя секрета.
+	// Имя секрета
 	Name string                                     // path: "name"
 	Body model.CreateSecretWithSecretVersionRequest // body
 }
@@ -158,8 +162,9 @@ func (m *CreateSecretWithSecretVersionRequest) SetProject(project string) {
 
 type CreateSecretWithSecretVersionResponse struct {
 	Code        int
-	Response201 *model.SecretResponse
+	Response201 *model.SecretOptionalResponse
 	Response400 *common.ApiError
+	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response408 *common.ApiError
@@ -184,6 +189,9 @@ func (m *CreateSecretWithSecretVersionResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -253,6 +261,7 @@ type DeleteSecretResponse struct {
 	Code        int
 	Response204 bool // empty response
 	Response400 *common.ApiError
+	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response408 *common.ApiError
@@ -275,6 +284,9 @@ func (m *DeleteSecretResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -326,8 +338,9 @@ func (m *GetSecretRequest) SetProject(project string) {
 
 type GetSecretResponse struct {
 	Code        int
-	Response200 *model.SecretResponse
+	Response200 *model.SecretOptionalResponse
 	Response400 *common.ApiError
+	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response408 *common.ApiError
@@ -350,6 +363,9 @@ func (m *GetSecretResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -444,9 +460,10 @@ func (m *UpdateSecretRequest) getSecretRequest() GetSecretRequest {
 
 type UpsertSecretResponse struct {
 	Code        int
-	Response200 *model.SecretResponse
-	Response201 *model.SecretResponse
+	Response200 *model.SecretOptionalResponse
+	Response201 *model.SecretOptionalResponse
 	Response400 *common.ApiError
+	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response408 *common.ApiError
@@ -471,6 +488,9 @@ func (m *UpsertSecretResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response401 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)

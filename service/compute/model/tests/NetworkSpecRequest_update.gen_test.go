@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateNetworkSpecRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initNetworkSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

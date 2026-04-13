@@ -10,8 +10,6 @@ import (
 type HmacKeySpecResponse struct {
 	// Время истечения срока действия ключа.
 	ExpirationTime *time.Time `json:"expirationTime,omitempty" yaml:"expirationTime,omitempty"`
-	// Время последней аутентификации.
-	LastAuthTime *time.Time `json:"lastAuthTime,omitempty" yaml:"lastAuthTime,omitempty"`
 }
 
 func (m *HmacKeySpecResponse) GetExpirationTime() *time.Time {
@@ -28,24 +26,6 @@ func (m *HmacKeySpecResponse) SetExpirationTime(val *time.Time) {
 func (m *HmacKeySpecResponse) GetExpirationTimeOr(val time.Time) time.Time {
 	if m != nil && m.ExpirationTime != nil {
 		return *m.ExpirationTime
-	}
-	return val
-}
-
-func (m *HmacKeySpecResponse) GetLastAuthTime() *time.Time {
-	if m != nil {
-		return m.LastAuthTime
-	}
-	return nil
-}
-
-func (m *HmacKeySpecResponse) SetLastAuthTime(val *time.Time) {
-	m.LastAuthTime = val
-}
-
-func (m *HmacKeySpecResponse) GetLastAuthTimeOr(val time.Time) time.Time {
-	if m != nil && m.LastAuthTime != nil {
-		return *m.LastAuthTime
 	}
 	return val
 }

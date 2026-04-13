@@ -28,6 +28,8 @@ func (m *VirtualMachineStatusResponse) Encode(e *jx.Encoder) {
 }
 
 func (m *VirtualMachineStatusResponse) encodeFields(e *jx.Encoder) {
+	e.FieldStart("ready")
+	m.Ready.Encode(e)
 	e.FieldStart("id")
 	e.Str(m.Id)
 
@@ -42,9 +44,6 @@ func (m *VirtualMachineStatusResponse) encodeFields(e *jx.Encoder) {
 
 	e.FieldStart("network")
 	m.Network.Encode(e)
-
-	e.FieldStart("ready")
-	m.Ready.Encode(e)
 
 	if m.ServiceAccount != nil {
 		e.FieldStart("serviceAccount")
@@ -63,6 +62,14 @@ func (m *VirtualMachineStatusResponse) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "ready":
+			var v common.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
 		case "id":
 			v, err := decode.Str(d)
 			if err != nil {
@@ -103,20 +110,12 @@ func (m *VirtualMachineStatusResponse) Decode(d *jx.Decoder) error {
 
 			m.Network = v
 			return nil
-		case "ready":
-			var v ObservationResponse
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Ready = v
-			return nil
 		case "serviceAccount":
 			if d.Next() == jx.Null {
 				return d.Null()
 			}
 
-			var v common.ResourceStatusResponse
+			var v ServiceAccountStatusResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

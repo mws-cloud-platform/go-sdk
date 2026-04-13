@@ -15,6 +15,7 @@ import (
 )
 
 func TestNetworkSugared_ListNetworks(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestNetworkSugared_ListNetworks(t *testing.T) {
 }
 
 func TestNetworkSugared_DeleteNetwork(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestNetworkSugared_DeleteNetwork(t *testing.T) {
 }
 
 func TestNetworkSugared_GetNetwork(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestNetworkSugared_GetNetwork(t *testing.T) {
 }
 
 func TestNetworkSugared_UpsertNetwork(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestNetworkSugared_UpsertNetwork(t *testing.T) {
 }
 
 func TestNetworkSugared_CreateNetwork(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestNetworkSugared_CreateNetwork(t *testing.T) {
 }
 
 func TestNetworkSugared_UpdateNetwork(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

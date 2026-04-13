@@ -32,26 +32,6 @@ func (m *UpdateTypedResourceMetadata) encodeFields(e *jx.Encoder) {
 		e.Str(m.DisplayName.Value)
 	}
 
-	if m.CreateTime.IsSet() {
-		e.FieldStart("createTime")
-		conv.EncodeDateTime(e, m.CreateTime.Value)
-	}
-
-	if m.UpdateTime.IsSet() {
-		e.FieldStart("updateTime")
-		conv.EncodeDateTime(e, m.UpdateTime.Value)
-	}
-
-	if m.DeleteTime.IsSet() {
-		e.FieldStart("deleteTime")
-		conv.EncodeDateTime(e, m.DeleteTime.Value)
-	}
-
-	if m.PurgeTime.IsSet() {
-		e.FieldStart("purgeTime")
-		conv.EncodeDateTime(e, m.PurgeTime.Value)
-	}
-
 	if m.Usages.IsSet() {
 		e.FieldStart("usages")
 		e.ArrStart()
@@ -90,38 +70,6 @@ func (m *UpdateTypedResourceMetadata) Decode(d *jx.Decoder) error {
 			}
 
 			m.DisplayName.SetTo(v)
-			return nil
-		case "createTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.CreateTime.SetTo(v)
-			return nil
-		case "updateTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.UpdateTime.SetTo(v)
-			return nil
-		case "deleteTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.DeleteTime.SetTo(v)
-			return nil
-		case "purgeTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.PurgeTime.SetTo(v)
 			return nil
 		case "usages":
 			c := make([]UpdateTypedUsage, 0)

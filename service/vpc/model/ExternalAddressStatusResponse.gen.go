@@ -14,6 +14,8 @@ type ExternalAddressStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
 	// Присвоенный адрес.
 	IpAddress *ipaddress.IPAddress `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
+	// Состояние внешнего адреса активен или не активен.
+	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
 func (m *ExternalAddressStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -37,6 +39,20 @@ func (m *ExternalAddressStatusResponse) GetIpAddressOr(val ipaddress.IPAddress) 
 	return val
 }
 
+func (m *ExternalAddressStatusResponse) GetActive() *bool {
+	if m != nil {
+		return m.Active
+	}
+	return nil
+}
+
+func (m *ExternalAddressStatusResponse) GetActiveOr(val bool) bool {
+	if m != nil && m.Active != nil {
+		return *m.Active
+	}
+	return val
+}
+
 func (m *ExternalAddressStatusResponse) Clone() *ExternalAddressStatusResponse {
 	if m == nil {
 		return nil
@@ -45,6 +61,10 @@ func (m *ExternalAddressStatusResponse) Clone() *ExternalAddressStatusResponse {
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
 	clone.IpAddress = m.IpAddress.Clone()
+	if m.Active != nil {
+		cloneActive := *m.Active
+		clone.Active = &cloneActive
+	}
 
 	return &clone
 }

@@ -26,7 +26,7 @@ func (x *ServiceAccountHmacKeySugared) Impl() ServiceAccountHmacKey {
 	return x.impl
 }
 
-// ListHmacKey список hmacKeys для сервисного аккаунта.
+// ListHmacKey позволяет получить список HMAC-ключей для сервисного аккаунта.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys
 func (x *ServiceAccountHmacKeySugared) ListHmacKey(ctx context.Context, request ListHmacKeyRequest) (*model.HmacKeyListResponse, error) {
@@ -50,7 +50,7 @@ func (x *ServiceAccountHmacKeySugared) respHandlerListHmacKey(resp *ListHmacKeyR
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// DeleteHmacKey удаление hmac ключей.
+// DeleteHmacKey позволяет удалить HMAC-ключ.
 //
 // Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}
 func (x *ServiceAccountHmacKeySugared) DeleteHmacKey(ctx context.Context, request DeleteHmacKeyRequest, opts ...Option) error {
@@ -98,7 +98,7 @@ func (x *ServiceAccountHmacKeySugared) waitDeleteHmacKey(ctx context.Context, re
 	return err
 }
 
-// GetHmacKey получение hmac ключей.
+// GetHmacKey позволяет получить HMAC-ключ.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}
 func (x *ServiceAccountHmacKeySugared) GetHmacKey(ctx context.Context, request GetHmacKeyRequest, opts ...Option) (*model.HmacKeyResponse, error) {
@@ -143,27 +143,16 @@ func (x *ServiceAccountHmacKeySugared) waitGetHmacKey(ctx context.Context, reque
 	return waiter.Wait(ctx)
 }
 
-// UpsertHmacKey создание (обновление) hmac ключей.
+// UpsertHmacKey позволяет создать или обновить HMAC-ключ.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}
-func (x *ServiceAccountHmacKeySugared) UpsertHmacKey(ctx context.Context, request UpsertHmacKeyRequest, opts ...Option) (*model.HmacKeyResponse, error) {
-	config := newConfig(opts...)
-
+func (x *ServiceAccountHmacKeySugared) UpsertHmacKey(ctx context.Context, request UpsertHmacKeyRequest) (*model.HmacKeyResponse, error) {
 	resp, err := x.impl.UpsertHmacKey(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	sugaredResponse, err := x.respHandlerUpsertHmacKey(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	if !config.wait {
-		return sugaredResponse, nil
-	}
-
-	return x.waitUpsertHmacKey(ctx, request.getHmacKeyRequest(), config.waitOptions...)
+	return x.respHandlerUpsertHmacKey(resp)
 }
 
 func (x *ServiceAccountHmacKeySugared) respHandlerUpsertHmacKey(resp *UpsertHmacKeyResponse) (*model.HmacKeyResponse, error) {
@@ -182,60 +171,28 @@ func (x *ServiceAccountHmacKeySugared) respHandlerUpsertHmacKey(resp *UpsertHmac
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-func (x *ServiceAccountHmacKeySugared) waitUpsertHmacKey(ctx context.Context, request GetHmacKeyRequest, opts ...wait.WaiterOption) (*model.HmacKeyResponse, error) {
-	callback := func(ctx context.Context) (*model.HmacKeyResponse, bool, error) {
-		response, err := x.GetHmacKey(ctx, request)
-		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
-		return response, stop, err
-	}
-	waiter := wait.NewWaiter(callback, opts...)
-	return waiter.Wait(ctx)
-}
-
-// CreateHmacKey создание (обновление) hmac ключей.
+// CreateHmacKey позволяет создать или обновить HMAC-ключ.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}?createOnly=true
-func (x *ServiceAccountHmacKeySugared) CreateHmacKey(ctx context.Context, request UpsertHmacKeyRequest, opts ...Option) (*model.HmacKeyResponse, error) {
-	config := newConfig(opts...)
-
+func (x *ServiceAccountHmacKeySugared) CreateHmacKey(ctx context.Context, request UpsertHmacKeyRequest) (*model.HmacKeyResponse, error) {
 	resp, err := x.impl.CreateHmacKey(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	sugaredResponse, err := x.respHandlerUpsertHmacKey(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	if !config.wait {
-		return sugaredResponse, nil
-	}
-
-	return x.waitUpsertHmacKey(ctx, request.getHmacKeyRequest(), config.waitOptions...)
+	return x.respHandlerUpsertHmacKey(resp)
 }
 
-// UpdateHmacKey создание (обновление) hmac ключей.
+// UpdateHmacKey позволяет создать или обновить HMAC-ключ.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}?updateOnly=true
-func (x *ServiceAccountHmacKeySugared) UpdateHmacKey(ctx context.Context, request UpdateHmacKeyRequest, opts ...Option) (*model.HmacKeyResponse, error) {
-	config := newConfig(opts...)
-
+func (x *ServiceAccountHmacKeySugared) UpdateHmacKey(ctx context.Context, request UpdateHmacKeyRequest) (*model.HmacKeyResponse, error) {
 	resp, err := x.impl.UpdateHmacKey(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	sugaredResponse, err := x.respHandlerUpsertHmacKey(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	if !config.wait {
-		return sugaredResponse, nil
-	}
-
-	return x.waitUpsertHmacKey(ctx, request.getHmacKeyRequest(), config.waitOptions...)
+	return x.respHandlerUpsertHmacKey(resp)
 }

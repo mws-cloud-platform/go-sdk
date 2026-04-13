@@ -146,6 +146,10 @@ func (m *ZonalAddressGroupID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalNetworks/" + m.zonalNetwork + "/zonalAddressGroups/" + m.zonalAddressGroup
 }
 
+func (m *ZonalAddressGroupID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalAddressGroupID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -296,6 +300,10 @@ func (m *ZonalAddressGroupRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalAddressGroupRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalAddressGroupRef) Parse(ctx context.Context) error {

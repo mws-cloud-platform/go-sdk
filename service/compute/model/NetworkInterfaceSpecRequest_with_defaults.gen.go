@@ -15,5 +15,8 @@ func (m *NetworkInterfaceSpecRequest) WithDefaults() NetworkInterfaceSpecRequest
 	if out.Primary == nil {
 		out.Primary = ptr.Get(true)
 	}
+	if out.IpForwardingEnabled == nil {
+		out.IpForwardingEnabled = ptr.Get(false)
+	}
 	return out
 }

@@ -12,11 +12,11 @@ func DiskRequestToOptionalResponse(request *DiskRequest) (*DiskOptionalResponse,
 		return nil, nil
 	}
 	var response DiskOptionalResponse
-	tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
-	if err != nil {
-		return nil, err
-	}
 	if request.Metadata != nil {
+		tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
+		if err != nil {
+			return nil, err
+		}
 		response.Metadata = commonclient.NewOptionalNil(*tmpMetadata)
 	}
 	tmpSpec, err := DiskSpecRequestToOptionalResponse(&request.Spec)

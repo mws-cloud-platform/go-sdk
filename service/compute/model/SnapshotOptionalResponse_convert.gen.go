@@ -12,11 +12,11 @@ func SnapshotRequestToOptionalResponse(request *SnapshotRequest) (*SnapshotOptio
 		return nil, nil
 	}
 	var response SnapshotOptionalResponse
-	tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
-	if err != nil {
-		return nil, err
-	}
 	if request.Metadata != nil {
+		tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
+		if err != nil {
+			return nil, err
+		}
 		response.Metadata = commonclient.NewOptionalNil(*tmpMetadata)
 	}
 	tmpSpec, err := SnapshotSpecRequestToOptionalResponse(&request.Spec)

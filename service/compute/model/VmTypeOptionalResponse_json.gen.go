@@ -97,7 +97,7 @@ func (m *VmTypeOptionalResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v common.ResourceStatusResponse
+			var v VmTypeStatusResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

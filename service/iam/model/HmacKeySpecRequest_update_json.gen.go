@@ -6,8 +6,6 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
-	"go.mws.cloud/go-sdk/internal/decode"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 func (m UpdateHmacKeySpecRequest) MarshalJSON() ([]byte, error) {
@@ -27,15 +25,6 @@ func (m *UpdateHmacKeySpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *UpdateHmacKeySpecRequest) encodeFields(e *jx.Encoder) {
-	if m.ExpirationTime.IsSet() {
-		e.FieldStart("expirationTime")
-		conv.EncodeDateTimeUTC(e, m.ExpirationTime.Value)
-	}
-
-	if m.LastAuthTime.IsSet() {
-		e.FieldStart("lastAuthTime")
-		conv.EncodeDateTimeUTC(e, m.LastAuthTime.Value)
-	}
 }
 
 func (m *UpdateHmacKeySpecRequest) UnmarshalJSON(b []byte) error {
@@ -47,26 +36,5 @@ func (m *UpdateHmacKeySpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("UpdateHmacKeySpecRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "expirationTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.ExpirationTime.SetTo(v)
-			return nil
-		case "lastAuthTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.LastAuthTime.SetTo(v)
-			return nil
-		default:
-			return d.Skip()
-		}
-	}))
+	return d.Skip()
 }

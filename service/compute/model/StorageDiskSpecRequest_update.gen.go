@@ -3,22 +3,14 @@
 package model
 
 import (
-	"context"
-
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 type UpdateStorageDiskSpecRequest struct {
 	Size commonclient.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
-	// Источник для создания диска
-	Source commonclient.OptionalNil[UpdateStorageDiskSpecSourceRequest] `json:"source" yaml:"source"`
-	// Ссылка на тип диска
-	DiskType commonclient.Optional[compute.DiskTypeRef] `json:"diskType" yaml:"diskType"`
 	// Запрашиваемая пользователем IOPS
 	Iops commonclient.Optional[Iops] `json:"iops" yaml:"iops"`
 }
@@ -27,12 +19,6 @@ func (m *StorageDiskSpecRequest) AsUpdateModel() UpdateStorageDiskSpecRequest {
 	var u UpdateStorageDiskSpecRequest
 	if m.Size != nil {
 		u.Size = commonclient.NewOptional(m.GetSizeOr(bytesize.ByteSize{}))
-	}
-	if m.Source != nil {
-		u.Source = commonclient.NewOptionalNil(m.Source.AsUpdateModel())
-	}
-	if m.DiskType != nil {
-		u.DiskType = commonclient.NewOptional(m.GetDiskTypeOr(compute.DiskTypeRef{}))
 	}
 	if m.Iops != nil {
 		u.Iops = commonclient.NewOptional(m.GetIopsOr(0))
@@ -46,8 +32,6 @@ func (m *StorageDiskSpecRequest) Diff(src *StorageDiskSpecRequest) UpdateStorage
 	upd := UpdateStorageDiskSpecRequest{}
 	if !nilDiffers {
 		upd.Size = m.diffSize(src)
-		upd.Source = m.diffSource(src)
-		upd.DiskType = m.diffDiskType(src)
 		upd.Iops = m.diffIops(src)
 	}
 	return upd
@@ -62,14 +46,6 @@ func (m *StorageDiskSpecRequest) WithChanges(u UpdateStorageDiskSpecRequest) Sto
 	if u.Size.IsSet() {
 		out.Size = ptr.Get(u.Size.Value)
 	}
-	if u.Source.IsSet() {
-		out.Source = ptr.Get(out.Source.WithChanges(u.Source.Value))
-	} else if u.Source.IsNull() {
-		out.Source = nil
-	}
-	if u.DiskType.IsSet() {
-		out.DiskType = ptr.Get(u.DiskType.Value)
-	}
 	if u.Iops.IsSet() {
 		out.Iops = ptr.Get(u.Iops.Value)
 	}
@@ -79,29 +55,7 @@ func (m *StorageDiskSpecRequest) WithChanges(u UpdateStorageDiskSpecRequest) Sto
 // HasChanges returns true if any field has Set == true
 func (m UpdateStorageDiskSpecRequest) HasChanges() bool {
 	return m.Size.Set ||
-		m.Source.Set ||
-		m.DiskType.Set ||
 		m.Iops.Set
-}
-
-func (m *UpdateStorageDiskSpecRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Source.IsSet() {
-		if err := m.Source.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Source", err)
-		}
-	}
-
-	if m.DiskType.IsSet() {
-		if err := m.DiskType.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("DiskType", err)
-		}
-	}
-
-	return nil
 }
 
 func (m *StorageDiskSpecRequest) diffSize(src *StorageDiskSpecRequest) commonclient.Optional[bytesize.ByteSize] {
@@ -109,77 +63,7 @@ func (m *StorageDiskSpecRequest) diffSize(src *StorageDiskSpecRequest) commoncli
 	return commonclient.DiffEquatableIfaceNonRequired(src.GetSize(), m.GetSize(), nilDiffers)
 }
 
-func (m *StorageDiskSpecRequest) diffSource(src *StorageDiskSpecRequest) commonclient.OptionalNil[UpdateStorageDiskSpecSourceRequest] {
-	nilDiffers := src != nil && m == nil
-	value := m.GetSource().Diff(src.GetSource())
-	return commonclient.NewDirectOptionalNil[UpdateStorageDiskSpecSourceRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
-}
-
-func (m *StorageDiskSpecRequest) diffDiskType(src *StorageDiskSpecRequest) commonclient.Optional[compute.DiskTypeRef] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetDiskType(), m.GetDiskType(), nilDiffers)
-}
-
 func (m *StorageDiskSpecRequest) diffIops(src *StorageDiskSpecRequest) commonclient.Optional[Iops] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetIops(), m.GetIops(), nilDiffers)
-}
-
-type UpdateStorageDiskSpecSourceRequest struct {
-	// Ссылка на образ
-	Image commonclient.Optional[compute.ImageRef] `json:"image" yaml:"image"`
-}
-
-func (m *StorageDiskSpecSourceRequest) AsUpdateModel() UpdateStorageDiskSpecSourceRequest {
-	var u UpdateStorageDiskSpecSourceRequest
-	if m.Image != nil {
-		u.Image = commonclient.NewOptional(m.GetImageOr(compute.ImageRef{}))
-	}
-	return u
-}
-
-// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *StorageDiskSpecSourceRequest) Diff(src *StorageDiskSpecSourceRequest) UpdateStorageDiskSpecSourceRequest {
-	nilDiffers := src != nil && m == nil
-	upd := UpdateStorageDiskSpecSourceRequest{}
-	if !nilDiffers {
-		upd.Image = m.diffImage(src)
-	}
-	return upd
-}
-
-func (m *StorageDiskSpecSourceRequest) WithChanges(u UpdateStorageDiskSpecSourceRequest) StorageDiskSpecSourceRequest {
-	var out StorageDiskSpecSourceRequest
-	if m != nil {
-		out = *m
-	}
-
-	if u.Image.IsSet() {
-		out.Image = ptr.Get(u.Image.Value)
-	}
-	return out
-}
-
-// HasChanges returns true if any field has Set == true
-func (m UpdateStorageDiskSpecSourceRequest) HasChanges() bool {
-	return m.Image.Set
-}
-
-func (m *UpdateStorageDiskSpecSourceRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Image.IsSet() {
-		if err := m.Image.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Image", err)
-		}
-	}
-
-	return nil
-}
-
-func (m *StorageDiskSpecSourceRequest) diffImage(src *StorageDiskSpecSourceRequest) commonclient.Optional[compute.ImageRef] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetImage(), m.GetImage(), nilDiffers)
 }

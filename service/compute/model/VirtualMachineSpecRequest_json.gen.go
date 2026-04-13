@@ -29,15 +29,11 @@ func (m *VirtualMachineSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *VirtualMachineSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.Zone != nil {
-		e.FieldStart("zone")
-		e.Str(*m.Zone)
-	}
+	e.FieldStart("zone")
+	e.Str(m.Zone)
 
-	if m.VmType != nil {
-		e.FieldStart("vmType")
-		m.VmType.Encode(e)
-	}
+	e.FieldStart("vmType")
+	m.VmType.Encode(e)
 
 	if m.Hardware != nil {
 		e.FieldStart("hardware")
@@ -49,21 +45,15 @@ func (m *VirtualMachineSpecRequest) encodeFields(e *jx.Encoder) {
 		m.Os.Encode(e)
 	}
 
-	if m.Storage != nil {
-		e.FieldStart("storage")
-		m.Storage.Encode(e)
-	}
+	e.FieldStart("storage")
+	m.Storage.Encode(e)
 
-	if m.Network != nil {
-		e.FieldStart("network")
-		m.Network.Encode(e)
-	}
+	e.FieldStart("network")
+	m.Network.Encode(e)
 
-	e.FieldStart("serviceAccount")
 	if m.ServiceAccount != nil {
+		e.FieldStart("serviceAccount")
 		m.ServiceAccount.Encode(e)
-	} else {
-		e.Null()
 	}
 }
 
@@ -76,7 +66,13 @@ func (m *VirtualMachineSpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("VirtualMachineSpecRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	requiredFilled := map[string]bool{
+		"zone":    false,
+		"vmType":  false,
+		"storage": false,
+		"network": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "zone":
 			v, err := decode.Str(d)
@@ -84,7 +80,8 @@ func (m *VirtualMachineSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Zone = &v
+			m.Zone = v
+			requiredFilled["zone"] = true
 			return nil
 		case "vmType":
 			var v compute.VmTypeRef
@@ -92,7 +89,8 @@ func (m *VirtualMachineSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.VmType = &v
+			m.VmType = v
+			requiredFilled["vmType"] = true
 			return nil
 		case "hardware":
 			if d.Next() == jx.Null {
@@ -119,28 +117,22 @@ func (m *VirtualMachineSpecRequest) Decode(d *jx.Decoder) error {
 			m.Os = &v
 			return nil
 		case "storage":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			var v StorageSpecRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Storage = &v
+			m.Storage = v
+			requiredFilled["storage"] = true
 			return nil
 		case "network":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			var v NetworkSpecRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Network = &v
+			m.Network = v
+			requiredFilled["network"] = true
 			return nil
 		case "serviceAccount":
 			if d.Next() == jx.Null {
@@ -158,4 +150,9 @@ func (m *VirtualMachineSpecRequest) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

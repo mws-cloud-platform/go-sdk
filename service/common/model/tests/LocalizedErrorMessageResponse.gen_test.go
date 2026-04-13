@@ -12,6 +12,7 @@ import (
 )
 
 func TestLocalizedErrorMessageResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initLocalizedErrorMessageResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -26,7 +26,7 @@ func (x *ApiKeySugared) Impl() ApiKey {
 	return x.impl
 }
 
-// ListApiKey список api-keys для сервисного аккаунта.
+// ListApiKey позволяет получить список API-ключей для сервисного аккаунта.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys
 func (x *ApiKeySugared) ListApiKey(ctx context.Context, request ListApiKeyRequest) (*model.ApiKeyListResponse, error) {
@@ -50,7 +50,7 @@ func (x *ApiKeySugared) respHandlerListApiKey(resp *ListApiKeyResponse) (*model.
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// DeleteApiKey удаление api-key.
+// DeleteApiKey позволяет удалить API-ключ.
 //
 // Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}
 func (x *ApiKeySugared) DeleteApiKey(ctx context.Context, request DeleteApiKeyRequest, opts ...Option) error {
@@ -98,7 +98,7 @@ func (x *ApiKeySugared) waitDeleteApiKey(ctx context.Context, request GetApiKeyR
 	return err
 }
 
-// GetApiKey получение информации об api-key.
+// GetApiKey позволяет получить информацию об API-ключе.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}
 func (x *ApiKeySugared) GetApiKey(ctx context.Context, request GetApiKeyRequest, opts ...Option) (*model.ApiKeyResponse, error) {
@@ -143,27 +143,16 @@ func (x *ApiKeySugared) waitGetApiKey(ctx context.Context, request GetApiKeyRequ
 	return waiter.Wait(ctx)
 }
 
-// UpsertApiKey создание/обновление api-key.
+// UpsertApiKey позволяет создать или обновить API-ключ.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}
-func (x *ApiKeySugared) UpsertApiKey(ctx context.Context, request UpsertApiKeyRequest, opts ...Option) (*model.ApiKeyResponse, error) {
-	config := newConfig(opts...)
-
+func (x *ApiKeySugared) UpsertApiKey(ctx context.Context, request UpsertApiKeyRequest) (*model.ApiKeyResponse, error) {
 	resp, err := x.impl.UpsertApiKey(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	sugaredResponse, err := x.respHandlerUpsertApiKey(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	if !config.wait {
-		return sugaredResponse, nil
-	}
-
-	return x.waitUpsertApiKey(ctx, request.getApiKeyRequest(), config.waitOptions...)
+	return x.respHandlerUpsertApiKey(resp)
 }
 
 func (x *ApiKeySugared) respHandlerUpsertApiKey(resp *UpsertApiKeyResponse) (*model.ApiKeyResponse, error) {
@@ -182,60 +171,28 @@ func (x *ApiKeySugared) respHandlerUpsertApiKey(resp *UpsertApiKeyResponse) (*mo
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-func (x *ApiKeySugared) waitUpsertApiKey(ctx context.Context, request GetApiKeyRequest, opts ...wait.WaiterOption) (*model.ApiKeyResponse, error) {
-	callback := func(ctx context.Context) (*model.ApiKeyResponse, bool, error) {
-		response, err := x.GetApiKey(ctx, request)
-		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
-		return response, stop, err
-	}
-	waiter := wait.NewWaiter(callback, opts...)
-	return waiter.Wait(ctx)
-}
-
-// CreateApiKey создание/обновление api-key.
+// CreateApiKey позволяет создать или обновить API-ключ.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}?createOnly=true
-func (x *ApiKeySugared) CreateApiKey(ctx context.Context, request UpsertApiKeyRequest, opts ...Option) (*model.ApiKeyResponse, error) {
-	config := newConfig(opts...)
-
+func (x *ApiKeySugared) CreateApiKey(ctx context.Context, request UpsertApiKeyRequest) (*model.ApiKeyResponse, error) {
 	resp, err := x.impl.CreateApiKey(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	sugaredResponse, err := x.respHandlerUpsertApiKey(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	if !config.wait {
-		return sugaredResponse, nil
-	}
-
-	return x.waitUpsertApiKey(ctx, request.getApiKeyRequest(), config.waitOptions...)
+	return x.respHandlerUpsertApiKey(resp)
 }
 
-// UpdateApiKey создание/обновление api-key.
+// UpdateApiKey позволяет создать или обновить API-ключ.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}?updateOnly=true
-func (x *ApiKeySugared) UpdateApiKey(ctx context.Context, request UpdateApiKeyRequest, opts ...Option) (*model.ApiKeyResponse, error) {
-	config := newConfig(opts...)
-
+func (x *ApiKeySugared) UpdateApiKey(ctx context.Context, request UpdateApiKeyRequest) (*model.ApiKeyResponse, error) {
 	resp, err := x.impl.UpdateApiKey(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	sugaredResponse, err := x.respHandlerUpsertApiKey(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	if !config.wait {
-		return sugaredResponse, nil
-	}
-
-	return x.waitUpsertApiKey(ctx, request.getApiKeyRequest(), config.waitOptions...)
+	return x.respHandlerUpsertApiKey(resp)
 }

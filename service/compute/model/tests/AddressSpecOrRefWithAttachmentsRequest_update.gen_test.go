@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateAddressSpecOrRefWithAttachmentsRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initAddressSpecOrRefWithAttachmentsRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

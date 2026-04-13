@@ -12,6 +12,7 @@ import (
 )
 
 func TestApiErrorMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initApiError()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

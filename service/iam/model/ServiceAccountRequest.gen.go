@@ -4,7 +4,6 @@ package model
 
 import (
 	"context"
-	"time"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
@@ -72,7 +71,6 @@ func (m *ServiceAccountRequest) Parse(ctx context.Context) error {
 // Real OAPI model name: ServiceAccountMetadata
 type ServiceAccountMetadataRequest struct {
 	common.TypedResourceMetadataRequest `yaml:"-,inline"`
-	LastAuthDateTime                    *time.Time `json:"lastAuthDateTime,omitempty" yaml:"lastAuthDateTime,omitempty"`
 }
 
 func (m *ServiceAccountMetadataRequest) GetDisplayName() *string {
@@ -127,20 +125,6 @@ func (m *ServiceAccountMetadataRequest) GetDescription() *string {
 func (m *ServiceAccountMetadataRequest) GetDescriptionOr(val string) string {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetDescriptionOr(val)
-	}
-	return val
-}
-
-func (m *ServiceAccountMetadataRequest) GetLastAuthDateTime() *time.Time {
-	if m != nil {
-		return m.LastAuthDateTime
-	}
-	return nil
-}
-
-func (m *ServiceAccountMetadataRequest) GetLastAuthDateTimeOr(val time.Time) time.Time {
-	if m != nil && m.LastAuthDateTime != nil {
-		return *m.LastAuthDateTime
 	}
 	return val
 }

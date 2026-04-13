@@ -26,14 +26,12 @@ func (m *StorageSpecOptionalResponse) Encode(e *jx.Encoder) {
 }
 
 func (m *StorageSpecOptionalResponse) encodeFields(e *jx.Encoder) {
-	if m.Disks.IsSet() {
-		e.FieldStart("disks")
-		e.ArrStart()
-		for _, elem := range m.Disks.Value {
-			elem.Encode(e)
-		}
-		e.ArrEnd()
+	e.FieldStart("disks")
+	e.ArrStart()
+	for _, elem := range m.Disks {
+		elem.Encode(e)
 	}
+	e.ArrEnd()
 }
 
 func (m *StorageSpecOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -60,7 +58,7 @@ func (m *StorageSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Disks.SetTo(c)
+			m.Disks = c
 			return nil
 		default:
 			return d.Skip()

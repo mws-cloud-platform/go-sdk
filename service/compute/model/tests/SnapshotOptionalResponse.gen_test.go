@@ -12,6 +12,7 @@ import (
 )
 
 func TestSnapshotOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initSnapshotOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

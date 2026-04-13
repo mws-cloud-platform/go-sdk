@@ -22,19 +22,19 @@ func (x *ChallengeSugared) Impl() Challenge {
 	return x.impl
 }
 
-// GetChallengeContent retrieves the challenge content associated with the given certificate reference and token.
+// GetChallengeToken retrieves the challenge content associated with the given certificate reference and token.
 //
-// Путь: GET /certmanager/v1/projects/{project}/certificates/{name}/{token}
-func (x *ChallengeSugared) GetChallengeContent(ctx context.Context, request GetChallengeContentRequest) (*string, error) {
-	resp, err := x.impl.GetChallengeContent(ctx, request)
+// Путь: GET /certmanager/v1/projects/{project}/certificates/{name}/tokens/{token}
+func (x *ChallengeSugared) GetChallengeToken(ctx context.Context, request GetChallengeTokenRequest) (*string, error) {
+	resp, err := x.impl.GetChallengeToken(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return x.respHandlerGetChallengeContent(resp)
+	return x.respHandlerGetChallengeToken(resp)
 }
 
-func (x *ChallengeSugared) respHandlerGetChallengeContent(resp *GetChallengeContentResponse) (*string, error) {
+func (x *ChallengeSugared) respHandlerGetChallengeToken(resp *GetChallengeTokenResponse) (*string, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}

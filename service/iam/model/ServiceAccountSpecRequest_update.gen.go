@@ -17,7 +17,7 @@ type UpdateServiceAccountSpecRequest struct {
 func (m *ServiceAccountSpecRequest) AsUpdateModel() UpdateServiceAccountSpecRequest {
 	var u UpdateServiceAccountSpecRequest
 	if m.LastAuthDateTime != nil {
-		u.LastAuthDateTime = commonclient.NewOptional(m.GetLastAuthDateTimeOr(time.Unix(0, 0).UTC()))
+		u.LastAuthDateTime = commonclient.NewOptional(m.GetLastAuthDateTimeOr(time.Time{}))
 	}
 	return u
 }

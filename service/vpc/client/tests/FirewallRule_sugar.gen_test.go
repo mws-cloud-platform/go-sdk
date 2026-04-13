@@ -15,6 +15,7 @@ import (
 )
 
 func TestFirewallRuleSugared_ListFirewallRules(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestFirewallRuleSugared_ListFirewallRules(t *testing.T) {
 }
 
 func TestFirewallRuleSugared_DeleteFirewallRule(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestFirewallRuleSugared_DeleteFirewallRule(t *testing.T) {
 }
 
 func TestFirewallRuleSugared_GetFirewallRule(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestFirewallRuleSugared_GetFirewallRule(t *testing.T) {
 }
 
 func TestFirewallRuleSugared_UpsertFirewallRule(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestFirewallRuleSugared_UpsertFirewallRule(t *testing.T) {
 }
 
 func TestFirewallRuleSugared_CreateFirewallRule(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestFirewallRuleSugared_CreateFirewallRule(t *testing.T) {
 }
 
 func TestFirewallRuleSugared_UpdateFirewallRule(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

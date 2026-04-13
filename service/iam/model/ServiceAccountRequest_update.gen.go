@@ -4,7 +4,6 @@ package model
 
 import (
 	"context"
-	"time"
 
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
@@ -91,7 +90,6 @@ func (m *ServiceAccountRequest) diffSpec(src *ServiceAccountRequest) commonclien
 
 type UpdateServiceAccountMetadataRequest struct {
 	common.UpdateTypedResourceMetadataRequest
-	LastAuthDateTime commonclient.Optional[time.Time] `json:"lastAuthDateTime" yaml:"lastAuthDateTime"`
 }
 
 func (m *ServiceAccountMetadataRequest) AsUpdateModel() UpdateServiceAccountMetadataRequest {
@@ -117,9 +115,6 @@ func (m *ServiceAccountMetadataRequest) AsUpdateModel() UpdateServiceAccountMeta
 	if m.Description != nil {
 		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
 	}
-	if m.LastAuthDateTime != nil {
-		u.LastAuthDateTime = commonclient.NewOptional(m.GetLastAuthDateTimeOr(time.Unix(0, 0).UTC()))
-	}
 	return u
 }
 
@@ -132,7 +127,6 @@ func (m *ServiceAccountMetadataRequest) Diff(src *ServiceAccountMetadataRequest)
 		upd.Usages = m.diffUsages(src)
 		upd.Etag = m.diffEtag(src)
 		upd.Description = m.diffDescription(src)
-		upd.LastAuthDateTime = m.diffLastAuthDateTime(src)
 	}
 	return upd
 }
@@ -155,9 +149,6 @@ func (m *ServiceAccountMetadataRequest) WithChanges(u UpdateServiceAccountMetada
 	if u.Description.IsSet() {
 		out.Description = ptr.Get(u.Description.Value)
 	}
-	if u.LastAuthDateTime.IsSet() {
-		out.LastAuthDateTime = ptr.Get(u.LastAuthDateTime.Value)
-	}
 	return out
 }
 
@@ -166,8 +157,7 @@ func (m UpdateServiceAccountMetadataRequest) HasChanges() bool {
 	return m.DisplayName.Set ||
 		m.Usages.Set ||
 		m.Etag.Set ||
-		m.Description.Set ||
-		m.LastAuthDateTime.Set
+		m.Description.Set
 }
 
 func (m *UpdateServiceAccountMetadataRequest) Parse(ctx context.Context) error {
@@ -205,9 +195,4 @@ func (m *ServiceAccountMetadataRequest) diffEtag(src *ServiceAccountMetadataRequ
 func (m *ServiceAccountMetadataRequest) diffDescription(src *ServiceAccountMetadataRequest) commonclient.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
-}
-
-func (m *ServiceAccountMetadataRequest) diffLastAuthDateTime(src *ServiceAccountMetadataRequest) commonclient.Optional[time.Time] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetLastAuthDateTime(), m.GetLastAuthDateTime(), nilDiffers)
 }

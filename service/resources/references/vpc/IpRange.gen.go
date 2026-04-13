@@ -89,6 +89,10 @@ func (m *IpRangeID) ID() string {
 	return m.ServiceSlug() + "/ipRanges/" + m.ipRange
 }
 
+func (m *IpRangeID) String() string {
+	return m.ID()
+}
+
 func (m *IpRangeID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *IpRangeRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *IpRangeRef) String() string {
+	return m.IDPath()
 }
 
 func (m *IpRangeRef) Parse(ctx context.Context) error {

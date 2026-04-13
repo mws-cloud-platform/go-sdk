@@ -39,6 +39,11 @@ func (m *AuthorizedKeyStatusResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("privateKeyFile")
 		e.Str(*m.PrivateKeyFile)
 	}
+
+	if m.LastAuthTime != nil {
+		e.FieldStart("lastAuthTime")
+		conv.EncodeDateTimeUTC(e, *m.LastAuthTime)
+	}
 }
 
 func (m *AuthorizedKeyStatusResponse) UnmarshalJSON(b []byte) error {
@@ -75,6 +80,14 @@ func (m *AuthorizedKeyStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.PrivateKeyFile = &v
+			return nil
+		case "lastAuthTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.LastAuthTime = &v
 			return nil
 		default:
 			return d.Skip()

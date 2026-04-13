@@ -108,6 +108,10 @@ func (m *ZonalBulkReconciliationID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/bulkReconciliations/" + m.resourceType
 }
 
+func (m *ZonalBulkReconciliationID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalBulkReconciliationID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ZonalBulkReconciliationRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalBulkReconciliationRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalBulkReconciliationRef) Parse(ctx context.Context) error {

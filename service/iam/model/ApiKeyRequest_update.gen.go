@@ -15,7 +15,7 @@ import (
 
 type UpdateApiKeyRequest struct {
 	Metadata commonclient.OptionalNil[UpdateApiKeyMetadataRequest] `json:"metadata" yaml:"metadata"`
-	// Спецификация api-key.
+	// Спецификация API-ключа
 	Spec commonclient.Optional[UpdateApiKeySpecRequest] `json:"spec" yaml:"spec"`
 }
 

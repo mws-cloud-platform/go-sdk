@@ -91,6 +91,11 @@ func (n *AnyResourceRef) Path() string {
 	return n.IDPath()
 }
 
+// String implements fmt.Stringer. Returns the same value as IDPath.
+func (n *AnyResourceRef) String() string {
+	return n.IDPath()
+}
+
 // Clone creates a deep copy of the AnyResourceRef.
 // Returns nil if the receiver is nil.
 func (n *AnyResourceRef) Clone() *AnyResourceRef {

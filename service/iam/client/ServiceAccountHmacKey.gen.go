@@ -11,28 +11,28 @@ import (
 )
 
 type ServiceAccountHmacKey interface {
-	// ListHmacKey список hmacKeys для сервисного аккаунта.
+	// ListHmacKey позволяет получить список HMAC-ключей для сервисного аккаунта.
 	//
 	// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys
 	ListHmacKey(context.Context, ListHmacKeyRequest) (*ListHmacKeyResponse, error)
-	// DeleteHmacKey удаление hmac ключей.
+	// DeleteHmacKey позволяет удалить HMAC-ключ.
 	//
 	// Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}
 	DeleteHmacKey(context.Context, DeleteHmacKeyRequest) (*DeleteHmacKeyResponse, error)
-	// GetHmacKey получение hmac ключей.
+	// GetHmacKey позволяет получить HMAC-ключ.
 	//
 	// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}
 	GetHmacKey(context.Context, GetHmacKeyRequest) (*GetHmacKeyResponse, error)
-	// UpsertHmacKey создание (обновление) hmac ключей.
+	// UpsertHmacKey позволяет создать или обновить HMAC-ключ.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}
 	UpsertHmacKey(context.Context, UpsertHmacKeyRequest) (*UpsertHmacKeyResponse, error)
-	// CreateHmacKey создание (обновление) hmac ключей.
+	// CreateHmacKey позволяет создать или обновить HMAC-ключ.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}?createOnly=true
 	CreateHmacKey(context.Context, UpsertHmacKeyRequest) (*UpsertHmacKeyResponse, error)
-	// UpdateHmacKey создание (обновление) hmac ключей.
+	// UpdateHmacKey позволяет создать или обновить HMAC-ключ.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/hmacKeys/{keyName}?updateOnly=true
@@ -46,7 +46,7 @@ type ListHmacKeyRequest struct {
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -84,7 +84,7 @@ type ListHmacKeyResponse struct {
 	Response400 *common.InvalidRequestError
 	Response403 *common.BaseError
 	Response404 *common.BaseError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -156,7 +156,7 @@ type DeleteHmacKeyResponse struct {
 	Response400 *common.InvalidRequestError
 	Response403 *common.BaseError
 	Response404 *common.BaseError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -219,7 +219,7 @@ type GetHmacKeyResponse struct {
 	Response400 *common.InvalidRequestError
 	Response403 *common.BaseError
 	Response404 *common.BaseError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -279,15 +279,6 @@ func (m *UpsertHmacKeyRequest) SetProject(project string) {
 	m.Project = project
 }
 
-func (m *UpsertHmacKeyRequest) getHmacKeyRequest() GetHmacKeyRequest {
-	return GetHmacKeyRequest{
-		ServiceAccount: m.ServiceAccount,
-		KeyName:        m.KeyName,
-		Project:        m.Project,
-		Authorization:  m.Authorization,
-	}
-}
-
 type UpdateHmacKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	KeyName        string // path: "keyName"
@@ -312,15 +303,6 @@ func (m *UpdateHmacKeyRequest) SetProject(project string) {
 	m.Project = project
 }
 
-func (m *UpdateHmacKeyRequest) getHmacKeyRequest() GetHmacKeyRequest {
-	return GetHmacKeyRequest{
-		ServiceAccount: m.ServiceAccount,
-		KeyName:        m.KeyName,
-		Project:        m.Project,
-		Authorization:  m.Authorization,
-	}
-}
-
 type UpsertHmacKeyResponse struct {
 	Code        int
 	Response200 *model.HmacKeyResponse
@@ -329,7 +311,7 @@ type UpsertHmacKeyResponse struct {
 	Response403 *common.BaseError
 	Response404 *common.BaseError
 	Response409 *common.BaseError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }

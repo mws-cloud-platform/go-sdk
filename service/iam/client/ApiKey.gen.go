@@ -11,28 +11,28 @@ import (
 )
 
 type ApiKey interface {
-	// ListApiKey список api-keys для сервисного аккаунта.
+	// ListApiKey позволяет получить список API-ключей для сервисного аккаунта.
 	//
 	// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys
 	ListApiKey(context.Context, ListApiKeyRequest) (*ListApiKeyResponse, error)
-	// DeleteApiKey удаление api-key.
+	// DeleteApiKey позволяет удалить API-ключ.
 	//
 	// Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}
 	DeleteApiKey(context.Context, DeleteApiKeyRequest) (*DeleteApiKeyResponse, error)
-	// GetApiKey получение информации об api-key.
+	// GetApiKey позволяет получить информацию об API-ключе.
 	//
 	// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}
 	GetApiKey(context.Context, GetApiKeyRequest) (*GetApiKeyResponse, error)
-	// UpsertApiKey создание/обновление api-key.
+	// UpsertApiKey позволяет создать или обновить API-ключ.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}
 	UpsertApiKey(context.Context, UpsertApiKeyRequest) (*UpsertApiKeyResponse, error)
-	// CreateApiKey создание/обновление api-key.
+	// CreateApiKey позволяет создать или обновить API-ключ.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}?createOnly=true
 	CreateApiKey(context.Context, UpsertApiKeyRequest) (*UpsertApiKeyResponse, error)
-	// UpdateApiKey создание/обновление api-key.
+	// UpdateApiKey позволяет создать или обновить API-ключ.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}?updateOnly=true
@@ -46,7 +46,7 @@ type ListApiKeyRequest struct {
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -84,7 +84,7 @@ type ListApiKeyResponse struct {
 	Response400 *common.InvalidRequestError
 	Response403 *common.BaseError
 	Response404 *common.BaseError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -121,9 +121,9 @@ func (m *ListApiKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type DeleteApiKeyRequest struct {
-	// Идентификатор сервисного акканута.
+	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
-	// Идентификатор api-key.
+	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
 	// Путь к проекту
 	Project string // path: "project"
@@ -158,7 +158,7 @@ type DeleteApiKeyResponse struct {
 	Response400 *common.InvalidRequestError
 	Response403 *common.BaseError
 	Response404 *common.BaseError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -195,9 +195,9 @@ func (m *DeleteApiKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type GetApiKeyRequest struct {
-	// Идентификатор сервисного акканута.
+	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
-	// Идентификатор api-key.
+	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
 	// Путь к проекту
 	Project string // path: "project"
@@ -223,7 +223,7 @@ type GetApiKeyResponse struct {
 	Response400 *common.InvalidRequestError
 	Response403 *common.BaseError
 	Response404 *common.BaseError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -260,9 +260,9 @@ func (m *GetApiKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type UpsertApiKeyRequest struct {
-	// Идентификатор сервисного акканута.
+	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
-	// Идентификатор api-key.
+	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
 	// Путь к проекту
 	Project string // path: "project"
@@ -285,19 +285,10 @@ func (m *UpsertApiKeyRequest) SetProject(project string) {
 	m.Project = project
 }
 
-func (m *UpsertApiKeyRequest) getApiKeyRequest() GetApiKeyRequest {
-	return GetApiKeyRequest{
-		ServiceAccount: m.ServiceAccount,
-		ApiKey:         m.ApiKey,
-		Project:        m.Project,
-		Authorization:  m.Authorization,
-	}
-}
-
 type UpdateApiKeyRequest struct {
-	// Идентификатор сервисного акканута.
+	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
-	// Идентификатор api-key.
+	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
 	// Путь к проекту
 	Project string // path: "project"
@@ -320,15 +311,6 @@ func (m *UpdateApiKeyRequest) SetProject(project string) {
 	m.Project = project
 }
 
-func (m *UpdateApiKeyRequest) getApiKeyRequest() GetApiKeyRequest {
-	return GetApiKeyRequest{
-		ServiceAccount: m.ServiceAccount,
-		ApiKey:         m.ApiKey,
-		Project:        m.Project,
-		Authorization:  m.Authorization,
-	}
-}
-
 type UpsertApiKeyResponse struct {
 	Code        int
 	Response200 *model.ApiKeyResponse
@@ -337,7 +319,7 @@ type UpsertApiKeyResponse struct {
 	Response403 *common.BaseError
 	Response404 *common.BaseError
 	Response409 *common.BaseError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }

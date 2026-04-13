@@ -28,10 +28,8 @@ func (m *AddressSpecOptionalResponse) Encode(e *jx.Encoder) {
 }
 
 func (m *AddressSpecOptionalResponse) encodeFields(e *jx.Encoder) {
-	if m.Subnet.IsSet() {
-		e.FieldStart("subnet")
-		m.Subnet.Value.Encode(e)
-	}
+	e.FieldStart("subnet")
+	m.Subnet.Encode(e)
 
 	if m.IpAddress.IsSet() {
 		e.FieldStart("ipAddress")
@@ -65,7 +63,7 @@ func (m *AddressSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Subnet.SetTo(v)
+			m.Subnet = v
 			return nil
 		case "ipAddress":
 			var v ipaddress.IPAddress

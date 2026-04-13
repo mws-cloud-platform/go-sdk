@@ -12,6 +12,7 @@ import (
 )
 
 func TestMaintenanceWindowMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initMaintenanceWindow()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

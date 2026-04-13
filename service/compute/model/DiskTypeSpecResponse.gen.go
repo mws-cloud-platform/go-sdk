@@ -17,7 +17,7 @@ import (
 type DiskTypeSpecResponse struct {
 	// Зоны доступности для диска
 	Zones []commonref.ZoneRef `json:"zones" yaml:"zones"`
-	// Ограничения I/O
+	// Ограничения на операции ввода-вывода
 	Limits DiskTypeSpecLimitsResponse `json:"limits" yaml:"limits"`
 }
 
@@ -76,7 +76,7 @@ func (m *DiskTypeSpecResponse) Parse(ctx context.Context) error {
 // Представление поля Limits анонимного типа структуры DiskTypeSpec
 // Real OAPI model name: DiskTypeSpecLimits
 type DiskTypeSpecLimitsResponse struct {
-	// Предоставляемые базовые и максимальные IOPS
+	// Базовое и максимальное количество операций ввода-вывода в секунду (IOPS)
 	Iops DiskTypeSpecLimitsIopsResponse `json:"iops" yaml:"iops"`
 	// Минимальный размер диска заданного типа
 	MinDiskSize bytesize.ByteSize `json:"minDiskSize" yaml:"minDiskSize"`
@@ -132,9 +132,9 @@ func (m *DiskTypeSpecLimitsResponse) Clone() *DiskTypeSpecLimitsResponse {
 // Представление поля Iops анонимного типа структуры DiskTypeSpecLimits
 // Real OAPI model name: DiskTypeSpecLimitsIops
 type DiskTypeSpecLimitsIopsResponse struct {
-	// IOPS
+	// Количество операций ввода-вывода в секунду (IOPS)
 	Base Iops `json:"base" yaml:"base"`
-	// IOPS
+	// Количество операций ввода-вывода в секунду (IOPS)
 	Max Iops `json:"max" yaml:"max"`
 }
 

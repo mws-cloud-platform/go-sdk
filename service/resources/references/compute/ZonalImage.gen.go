@@ -127,6 +127,10 @@ func (m *ZonalImageID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalImages/" + m.image
 }
 
+func (m *ZonalImageID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalImageID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *ZonalImageRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalImageRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalImageRef) Parse(ctx context.Context) error {

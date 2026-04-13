@@ -12,6 +12,7 @@ import (
 )
 
 func TestTypedResourceMetadataOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initTypedResourceMetadataOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -12,6 +12,7 @@ import (
 )
 
 func TestHttp01ChallengeResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initHttp01ChallengeResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

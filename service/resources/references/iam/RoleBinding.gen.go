@@ -89,6 +89,10 @@ func (m *RoleBindingID) ID() string {
 	return m.ServiceSlug() + "/roleBindings/" + m.roleBinding
 }
 
+func (m *RoleBindingID) String() string {
+	return m.ID()
+}
+
 func (m *RoleBindingID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -212,6 +216,10 @@ func (m *RoleBindingRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *RoleBindingRef) String() string {
+	return m.IDPath()
 }
 
 func (m *RoleBindingRef) Parse(ctx context.Context) error {

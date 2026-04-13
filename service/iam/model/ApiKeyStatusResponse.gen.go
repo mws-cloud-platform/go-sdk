@@ -3,14 +3,18 @@
 package model
 
 import (
+	"time"
+
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ApiKeyStatus
 type ApiKeyStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
-	// Сгенерированный api-key.
+	// Сгенерированный API-ключ
 	ApiKey *string `json:"apiKey,omitempty" yaml:"apiKey,omitempty"`
+	// Время последней аутентификации.
+	LastAuthTime *time.Time `json:"lastAuthTime,omitempty" yaml:"lastAuthTime,omitempty"`
 }
 
 func (m *ApiKeyStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -30,6 +34,20 @@ func (m *ApiKeyStatusResponse) GetApiKey() *string {
 func (m *ApiKeyStatusResponse) GetApiKeyOr(val string) string {
 	if m != nil && m.ApiKey != nil {
 		return *m.ApiKey
+	}
+	return val
+}
+
+func (m *ApiKeyStatusResponse) GetLastAuthTime() *time.Time {
+	if m != nil {
+		return m.LastAuthTime
+	}
+	return nil
+}
+
+func (m *ApiKeyStatusResponse) GetLastAuthTimeOr(val time.Time) time.Time {
+	if m != nil && m.LastAuthTime != nil {
+		return *m.LastAuthTime
 	}
 	return val
 }

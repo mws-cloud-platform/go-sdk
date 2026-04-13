@@ -15,6 +15,7 @@ import (
 )
 
 func TestExternalAddressSugared_ListExternalAddresses(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,6 +29,7 @@ func TestExternalAddressSugared_ListExternalAddresses(t *testing.T) {
 }
 
 func TestExternalAddressSugared_DeleteExternalAddress(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -41,6 +43,7 @@ func TestExternalAddressSugared_DeleteExternalAddress(t *testing.T) {
 }
 
 func TestExternalAddressSugared_GetExternalAddress(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,6 +57,7 @@ func TestExternalAddressSugared_GetExternalAddress(t *testing.T) {
 }
 
 func TestExternalAddressSugared_UpsertExternalAddress(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -67,6 +71,7 @@ func TestExternalAddressSugared_UpsertExternalAddress(t *testing.T) {
 }
 
 func TestExternalAddressSugared_CreateExternalAddress(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -80,6 +85,7 @@ func TestExternalAddressSugared_CreateExternalAddress(t *testing.T) {
 }
 
 func TestExternalAddressSugared_UpdateExternalAddress(t *testing.T) {
+	t.Parallel()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

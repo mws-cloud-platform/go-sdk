@@ -7,6 +7,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
 	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -33,6 +34,11 @@ func (m *ExternalAddressStatusResponse) encodeFields(e *jx.Encoder) {
 	if m.IpAddress != nil {
 		e.FieldStart("ipAddress")
 		m.IpAddress.Encode(e)
+	}
+
+	if m.Active != nil {
+		e.FieldStart("active")
+		e.Bool(*m.Active)
 	}
 }
 
@@ -62,6 +68,14 @@ func (m *ExternalAddressStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.IpAddress = &v
+			return nil
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = &v
 			return nil
 		default:
 			return d.Skip()

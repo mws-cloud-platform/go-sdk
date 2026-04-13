@@ -33,10 +33,8 @@ func (m *CertificateChallengeResponse) encodeFields(e *jx.Encoder) {
 	e.FieldStart("createdAt")
 	conv.EncodeDateTimeUTC(e, m.CreatedAt)
 
-	if m.UpdatedAt != nil {
-		e.FieldStart("updatedAt")
-		conv.EncodeDateTimeUTC(e, *m.UpdatedAt)
-	}
+	e.FieldStart("updatedAt")
+	conv.EncodeDateTimeUTC(e, m.UpdatedAt)
 
 	if m.LastValidatedAt != nil {
 		e.FieldStart("lastValidatedAt")
@@ -95,7 +93,7 @@ func (m *CertificateChallengeResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.UpdatedAt = &v
+			m.UpdatedAt = v
 			return nil
 		case "lastValidatedAt":
 			v, err := decode.DateTime(d)

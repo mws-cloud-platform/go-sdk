@@ -8,16 +8,16 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 )
 
-// Политика ретраев при ошибке.
+// Правила выполнения повторных попыток в случае ошибки
 // Real OAPI model name: RetryPolicy
 type RetryPolicyOptionalResponse struct {
-	// Максимальное количество ретраев. 0 - значение по-умолчанию.
+	// Максимальное количество повторных попыток. 0 - значение по-умолчанию
 	RetryCount int `json:"retryCount" yaml:"retryCount"`
-	// Пауза между ретраями.
+	// Пауза между повторными попытками
 	RetryTimeout duration.Duration `json:"retryTimeout" yaml:"retryTimeout"`
 	// Шаг увеличения таймаута
 	RetryTimeoutScale commonclient.Optional[RetryTimeoutScale] `json:"retryTimeoutScale,omitempty" yaml:"retryTimeoutScale,omitempty"`
-	// Максимальная длительность таймаута.
+	// Максимальная длительность таймаута
 	MaxRetryTimeout commonclient.Optional[duration.Duration] `json:"maxRetryTimeout,omitempty" yaml:"maxRetryTimeout,omitempty"`
 }
 

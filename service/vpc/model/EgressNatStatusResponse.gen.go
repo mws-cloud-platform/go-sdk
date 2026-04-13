@@ -17,6 +17,8 @@ type EgressNatStatusResponse struct {
 	Internal *EgressNatStatusInternalResponse `json:"internal,omitempty" yaml:"internal,omitempty"`
 	// Группирующий элемент для всего что, касается внешней части (ресурсов, доступных извне).
 	External *EgressNatStatusExternalResponse `json:"external,omitempty" yaml:"external,omitempty"`
+	// Описывает примененные настройки управления портами.
+	PortAllocation *EgressNatStatusPortAllocationResponse `json:"portAllocation,omitempty" yaml:"portAllocation,omitempty"`
 	// Описывает настройки управления портами (Port Block Allocation).
 	Pba *EgressNatStatusPbaResponse `json:"pba,omitempty" yaml:"pba,omitempty"`
 }
@@ -56,6 +58,20 @@ func (m *EgressNatStatusResponse) GetExternalOr(val EgressNatStatusExternalRespo
 	return val
 }
 
+func (m *EgressNatStatusResponse) GetPortAllocation() *EgressNatStatusPortAllocationResponse {
+	if m != nil {
+		return m.PortAllocation
+	}
+	return nil
+}
+
+func (m *EgressNatStatusResponse) GetPortAllocationOr(val EgressNatStatusPortAllocationResponse) EgressNatStatusPortAllocationResponse {
+	if m != nil && m.PortAllocation != nil {
+		return *m.PortAllocation
+	}
+	return val
+}
+
 func (m *EgressNatStatusResponse) GetPba() *EgressNatStatusPbaResponse {
 	if m != nil {
 		return m.Pba
@@ -79,6 +95,7 @@ func (m *EgressNatStatusResponse) Clone() *EgressNatStatusResponse {
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
 	clone.Internal = m.Internal.Clone()
 	clone.External = m.External.Clone()
+	clone.PortAllocation = m.PortAllocation.Clone()
 	clone.Pba = m.Pba.Clone()
 
 	return &clone

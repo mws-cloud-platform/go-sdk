@@ -3,6 +3,8 @@
 package model
 
 import (
+	"time"
+
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -13,6 +15,8 @@ type AuthorizedKeyStatusResponse struct {
 	PrivateKey *string `json:"privateKey,omitempty" yaml:"privateKey,omitempty"`
 	// Файл с закрытым ключом, сгенерированным на стороне сервиса, в формате base64
 	PrivateKeyFile *string `json:"privateKeyFile,omitempty" yaml:"privateKeyFile,omitempty"`
+	// Время последней аутентификации.
+	LastAuthTime *time.Time `json:"lastAuthTime,omitempty" yaml:"lastAuthTime,omitempty"`
 }
 
 func (m *AuthorizedKeyStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -46,6 +50,20 @@ func (m *AuthorizedKeyStatusResponse) GetPrivateKeyFile() *string {
 func (m *AuthorizedKeyStatusResponse) GetPrivateKeyFileOr(val string) string {
 	if m != nil && m.PrivateKeyFile != nil {
 		return *m.PrivateKeyFile
+	}
+	return val
+}
+
+func (m *AuthorizedKeyStatusResponse) GetLastAuthTime() *time.Time {
+	if m != nil {
+		return m.LastAuthTime
+	}
+	return nil
+}
+
+func (m *AuthorizedKeyStatusResponse) GetLastAuthTimeOr(val time.Time) time.Time {
+	if m != nil && m.LastAuthTime != nil {
+		return *m.LastAuthTime
 	}
 	return val
 }

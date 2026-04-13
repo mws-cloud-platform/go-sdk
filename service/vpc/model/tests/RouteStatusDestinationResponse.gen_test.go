@@ -12,6 +12,7 @@ import (
 )
 
 func TestRouteStatusDestinationResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initRouteStatusDestinationResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

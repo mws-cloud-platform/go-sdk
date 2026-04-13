@@ -128,6 +128,10 @@ func (m *FederationProviderCountID) ID() string {
 	return m.ServiceSlug() + "/organizations/" + m.organization + "/userFederations/" + m.userFederation + "/services/iam/quotas/providerCount"
 }
 
+func (m *FederationProviderCountID) String() string {
+	return m.ID()
+}
+
 func (m *FederationProviderCountID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -260,6 +264,10 @@ func (m *FederationProviderCountRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *FederationProviderCountRef) String() string {
+	return m.IDPath()
 }
 
 func (m *FederationProviderCountRef) Parse(ctx context.Context) error {

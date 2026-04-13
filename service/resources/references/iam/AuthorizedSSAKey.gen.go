@@ -108,6 +108,10 @@ func (m *AuthorizedSSAKeyID) ID() string {
 	return m.ServiceSlug() + "/systemServiceAccounts/" + m.systemServiceAccounts + "/authorizedKeys/" + m.authorizedKey
 }
 
+func (m *AuthorizedSSAKeyID) String() string {
+	return m.ID()
+}
+
 func (m *AuthorizedSSAKeyID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *AuthorizedSSAKeyRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *AuthorizedSSAKeyRef) String() string {
+	return m.IDPath()
 }
 
 func (m *AuthorizedSSAKeyRef) Parse(ctx context.Context) error {

@@ -6,7 +6,6 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
-	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -29,11 +28,6 @@ func (m *OneToOneNatStatusExternalResponse) Encode(e *jx.Encoder) {
 func (m *OneToOneNatStatusExternalResponse) encodeFields(e *jx.Encoder) {
 	e.FieldStart("address")
 	m.Address.Encode(e)
-
-	if m.Managed != nil {
-		e.FieldStart("managed")
-		e.Bool(*m.Managed)
-	}
 }
 
 func (m *OneToOneNatStatusExternalResponse) UnmarshalJSON(b []byte) error {
@@ -54,14 +48,6 @@ func (m *OneToOneNatStatusExternalResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Address = v
-			return nil
-		case "managed":
-			v, err := decode.Bool(d)
-			if err != nil {
-				return err
-			}
-
-			m.Managed = &v
 			return nil
 		default:
 			return d.Skip()

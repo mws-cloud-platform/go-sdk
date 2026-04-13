@@ -4,11 +4,9 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func (m UpdateVpcAddressSpecRequest) MarshalJSON() ([]byte, error) {
@@ -28,15 +26,6 @@ func (m *UpdateVpcAddressSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *UpdateVpcAddressSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.Subnet.IsSet() {
-		e.FieldStart("subnet")
-		m.Subnet.Value.Encode(e)
-	}
-
-	if m.IpAddress.IsSet() {
-		e.FieldStart("ipAddress")
-		m.IpAddress.Value.Encode(e)
-	}
 
 	if m.Dns.IsSet() {
 		e.FieldStart("dns")
@@ -59,22 +48,6 @@ func (m *UpdateVpcAddressSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "subnet":
-			var v vpc.SubnetRef
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Subnet.SetTo(v)
-			return nil
-		case "ipAddress":
-			var v ipaddress.IPAddress
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.IpAddress.SetTo(v)
-			return nil
 		case "dns":
 			c := make([]UpdateVpcAddressDnsSpecRequest, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {

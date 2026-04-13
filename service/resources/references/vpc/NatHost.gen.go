@@ -108,6 +108,10 @@ func (m *NatHostID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/natHosts/" + m.natHost
 }
 
+func (m *NatHostID) String() string {
+	return m.ID()
+}
+
 func (m *NatHostID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *NatHostRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *NatHostRef) String() string {
+	return m.IDPath()
 }
 
 func (m *NatHostRef) Parse(ctx context.Context) error {

@@ -103,7 +103,7 @@ func (m *FirewallRuleSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			m.Active.SetTo(v)
 			return nil
 		case "source":
-			var v AddressGroupSpecOrRefOptionalResponse
+			var v FirewallRuleSourceOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -111,7 +111,7 @@ func (m *FirewallRuleSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			m.Source = v
 			return nil
 		case "destination":
-			var v AddressGroupSpecOrRefOptionalResponse
+			var v FirewallRuleDestinationOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

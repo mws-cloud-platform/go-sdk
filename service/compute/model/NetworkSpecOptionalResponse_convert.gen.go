@@ -12,7 +12,7 @@ func NetworkSpecRequestToOptionalResponse(request *NetworkSpecRequest) (*Network
 		if err != nil {
 			return nil, err
 		}
-		response.NetworkInterfaces.SetTo(append(response.NetworkInterfaces.Value, *tmp))
+		response.NetworkInterfaces = append(response.NetworkInterfaces, *tmp)
 	}
 	return &response, nil
 }

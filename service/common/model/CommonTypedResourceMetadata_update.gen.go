@@ -3,34 +3,19 @@
 package model
 
 import (
-	"context"
-	"time"
-
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 )
 
 type UpdateCommonTypedResourceMetadata struct {
-	// ID свойства
-	Id commonclient.Optional[resmodels.AnyResourceID] `json:"id" yaml:"id"`
 	// Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта.
 	//
 	// Deprecated: Отказываемся в пользу metadata.id
 	Name commonclient.Optional[string] `json:"name" yaml:"name"`
 	// Отображаемое имя свойства
 	DisplayName commonclient.Optional[string] `json:"displayName" yaml:"displayName"`
-	// Дата создания объекта
-	CreateTime commonclient.Optional[time.Time] `json:"createTime" yaml:"createTime"`
-	// Дата последнего изменения объекта
-	UpdateTime commonclient.Optional[time.Time] `json:"updateTime" yaml:"updateTime"`
-	// Время запроса на удаление ресурса
-	DeleteTime commonclient.Optional[time.Time] `json:"deleteTime" yaml:"deleteTime"`
-	// Время удаления ресурса
-	PurgeTime commonclient.Optional[time.Time] `json:"purgeTime" yaml:"purgeTime"`
 	// Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены
 	Usages commonclient.Optional[[]UpdateUsage] `json:"usages" yaml:"usages"`
 	// Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса
@@ -41,26 +26,11 @@ type UpdateCommonTypedResourceMetadata struct {
 
 func (m *CommonTypedResourceMetadata) AsUpdateModel() UpdateCommonTypedResourceMetadata {
 	var u UpdateCommonTypedResourceMetadata
-	if m.Id != nil {
-		u.Id = commonclient.NewOptional(m.GetIdOr(resmodels.AnyResourceID{}))
-	}
 	if m.Name != nil {
 		u.Name = commonclient.NewOptional(m.GetNameOr(""))
 	}
 	if m.DisplayName != nil {
 		u.DisplayName = commonclient.NewOptional(m.GetDisplayNameOr(""))
-	}
-	if m.CreateTime != nil {
-		u.CreateTime = commonclient.NewOptional(m.GetCreateTimeOr(time.Unix(0, 0).UTC()))
-	}
-	if m.UpdateTime != nil {
-		u.UpdateTime = commonclient.NewOptional(m.GetUpdateTimeOr(time.Unix(0, 0).UTC()))
-	}
-	if m.DeleteTime != nil {
-		u.DeleteTime = commonclient.NewOptional(m.GetDeleteTimeOr(time.Unix(0, 0).UTC()))
-	}
-	if m.PurgeTime != nil {
-		u.PurgeTime = commonclient.NewOptional(m.GetPurgeTimeOr(time.Unix(0, 0).UTC()))
 	}
 	if m.Usages != nil {
 		u.Usages = commonclient.NewOptional(func() []UpdateUsage {
@@ -88,13 +58,8 @@ func (m *CommonTypedResourceMetadata) Diff(src *CommonTypedResourceMetadata) Upd
 	nilDiffers := src != nil && m == nil
 	upd := UpdateCommonTypedResourceMetadata{}
 	if !nilDiffers {
-		upd.Id = m.diffId(src)
 		upd.Name = m.diffName(src)
 		upd.DisplayName = m.diffDisplayName(src)
-		upd.CreateTime = m.diffCreateTime(src)
-		upd.UpdateTime = m.diffUpdateTime(src)
-		upd.DeleteTime = m.diffDeleteTime(src)
-		upd.PurgeTime = m.diffPurgeTime(src)
 		upd.Usages = m.diffUsages(src)
 		upd.Etag = m.diffEtag(src)
 		upd.Description = m.diffDescription(src)
@@ -108,26 +73,11 @@ func (m *CommonTypedResourceMetadata) WithChanges(u UpdateCommonTypedResourceMet
 		out = *m
 	}
 
-	if u.Id.IsSet() {
-		out.Id = ptr.Get(u.Id.Value)
-	}
 	if u.Name.IsSet() {
 		out.Name = ptr.Get(u.Name.Value)
 	}
 	if u.DisplayName.IsSet() {
 		out.DisplayName = ptr.Get(u.DisplayName.Value)
-	}
-	if u.CreateTime.IsSet() {
-		out.CreateTime = ptr.Get(u.CreateTime.Value)
-	}
-	if u.UpdateTime.IsSet() {
-		out.UpdateTime = ptr.Get(u.UpdateTime.Value)
-	}
-	if u.DeleteTime.IsSet() {
-		out.DeleteTime = ptr.Get(u.DeleteTime.Value)
-	}
-	if u.PurgeTime.IsSet() {
-		out.PurgeTime = ptr.Get(u.PurgeTime.Value)
 	}
 	if u.Usages.IsSet() {
 		out.Usages = merge.Slice(out.Usages, u.Usages.Value, (*Usage).WithChanges, (*Usage).GetName, (*UpdateUsage).GetName)
@@ -143,13 +93,8 @@ func (m *CommonTypedResourceMetadata) WithChanges(u UpdateCommonTypedResourceMet
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateCommonTypedResourceMetadata) HasChanges() bool {
-	return m.Id.Set ||
-		m.Name.Set ||
+	return m.Name.Set ||
 		m.DisplayName.Set ||
-		m.CreateTime.Set ||
-		m.UpdateTime.Set ||
-		m.DeleteTime.Set ||
-		m.PurgeTime.Set ||
 		m.Usages.Set ||
 		m.Etag.Set ||
 		m.Description.Set
@@ -160,25 +105,6 @@ func (m *UpdateCommonTypedResourceMetadata) SetName(name string) {
 	m.Name = commonclient.NewOptional(name)
 }
 
-func (m *UpdateCommonTypedResourceMetadata) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Id.IsSet() {
-		if err := m.Id.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Id", err)
-		}
-	}
-
-	return nil
-}
-
-func (m *CommonTypedResourceMetadata) diffId(src *CommonTypedResourceMetadata) commonclient.Optional[resmodels.AnyResourceID] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffEquatableIfaceNonRequired(src.GetId(), m.GetId(), nilDiffers)
-}
-
 func (m *CommonTypedResourceMetadata) diffName(src *CommonTypedResourceMetadata) commonclient.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetName(), m.GetName(), nilDiffers)
@@ -187,26 +113,6 @@ func (m *CommonTypedResourceMetadata) diffName(src *CommonTypedResourceMetadata)
 func (m *CommonTypedResourceMetadata) diffDisplayName(src *CommonTypedResourceMetadata) commonclient.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
-}
-
-func (m *CommonTypedResourceMetadata) diffCreateTime(src *CommonTypedResourceMetadata) commonclient.Optional[time.Time] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetCreateTime(), m.GetCreateTime(), nilDiffers)
-}
-
-func (m *CommonTypedResourceMetadata) diffUpdateTime(src *CommonTypedResourceMetadata) commonclient.Optional[time.Time] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetUpdateTime(), m.GetUpdateTime(), nilDiffers)
-}
-
-func (m *CommonTypedResourceMetadata) diffDeleteTime(src *CommonTypedResourceMetadata) commonclient.Optional[time.Time] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetDeleteTime(), m.GetDeleteTime(), nilDiffers)
-}
-
-func (m *CommonTypedResourceMetadata) diffPurgeTime(src *CommonTypedResourceMetadata) commonclient.Optional[time.Time] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetPurgeTime(), m.GetPurgeTime(), nilDiffers)
 }
 
 func (m *CommonTypedResourceMetadata) diffUsages(src *CommonTypedResourceMetadata) commonclient.Optional[[]UpdateUsage] {

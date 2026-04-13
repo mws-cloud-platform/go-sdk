@@ -9,6 +9,8 @@ type OsStatusResponse struct {
 	// и spec/os/localDomain, а также дефолтов на основе metadata/name в случае, если эти поля не заданы.
 	Fqdn               string `json:"fqdn" yaml:"fqdn"`
 	StandardDnsRecords *bool  `json:"standardDnsRecords,omitempty" yaml:"standardDnsRecords,omitempty"`
+	// Тип гостевой операционной системы
+	OsType *OsStatusOsTypeResponse `json:"osType,omitempty" yaml:"osType,omitempty"`
 }
 
 func (m *OsStatusResponse) GetFqdn() string {
@@ -40,6 +42,24 @@ func (m *OsStatusResponse) GetStandardDnsRecordsOr(val bool) bool {
 	return val
 }
 
+func (m *OsStatusResponse) GetOsType() *OsStatusOsTypeResponse {
+	if m != nil {
+		return m.OsType
+	}
+	return nil
+}
+
+func (m *OsStatusResponse) SetOsType(val *OsStatusOsTypeResponse) {
+	m.OsType = val
+}
+
+func (m *OsStatusResponse) GetOsTypeOr(val OsStatusOsTypeResponse) OsStatusOsTypeResponse {
+	if m != nil && m.OsType != nil {
+		return *m.OsType
+	}
+	return val
+}
+
 func (m *OsStatusResponse) Clone() *OsStatusResponse {
 	if m == nil {
 		return nil
@@ -50,5 +70,22 @@ func (m *OsStatusResponse) Clone() *OsStatusResponse {
 		cloneStandardDnsRecords := *m.StandardDnsRecords
 		clone.StandardDnsRecords = &cloneStandardDnsRecords
 	}
+	if m.OsType != nil {
+		cloneOsType := *m.OsType
+		clone.OsType = &cloneOsType
+	}
 	return &clone
+}
+
+// Представление поля OsType enum типа структуры OsStatus
+// Real OAPI model name: OsStatusOsType
+type OsStatusOsTypeResponse string
+
+const (
+	OsStatusOsTypeResponse_LINUX   OsStatusOsTypeResponse = "LINUX"
+	OsStatusOsTypeResponse_WINDOWS OsStatusOsTypeResponse = "WINDOWS"
+)
+
+func (m OsStatusOsTypeResponse) String() string {
+	return string(m)
 }

@@ -108,6 +108,10 @@ func (m *CertificateID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/certificates/" + m.name
 }
 
+func (m *CertificateID) String() string {
+	return m.ID()
+}
+
 func (m *CertificateID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *CertificateRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *CertificateRef) String() string {
+	return m.IDPath()
 }
 
 func (m *CertificateRef) Parse(ctx context.Context) error {

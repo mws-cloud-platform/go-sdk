@@ -17,18 +17,16 @@ type UpdateNetworkSpecRequest struct {
 
 func (m *NetworkSpecRequest) AsUpdateModel() UpdateNetworkSpecRequest {
 	var u UpdateNetworkSpecRequest
-	if m.NetworkInterfaces != nil {
-		u.NetworkInterfaces = commonclient.NewOptional(func() []UpdateNetworkInterfaceSpecRequest {
-			var tmp []UpdateNetworkInterfaceSpecRequest
-			if m.GetNetworkInterfaces() != nil {
-				tmp = make([]UpdateNetworkInterfaceSpecRequest, 0, len(m.GetNetworkInterfaces()))
-			}
-			for _, val := range m.GetNetworkInterfaces() {
-				tmp = append(tmp, val.AsUpdateModel())
-			}
-			return tmp
-		}())
-	}
+	u.NetworkInterfaces = commonclient.NewOptional(func() []UpdateNetworkInterfaceSpecRequest {
+		var tmp []UpdateNetworkInterfaceSpecRequest
+		if m.GetNetworkInterfaces() != nil {
+			tmp = make([]UpdateNetworkInterfaceSpecRequest, 0, len(m.GetNetworkInterfaces()))
+		}
+		for _, val := range m.GetNetworkInterfaces() {
+			tmp = append(tmp, val.AsUpdateModel())
+		}
+		return tmp
+	}())
 	return u
 }
 

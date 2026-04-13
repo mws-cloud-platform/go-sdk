@@ -12,6 +12,7 @@ import (
 )
 
 func TestNetworkRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initNetworkRequest()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

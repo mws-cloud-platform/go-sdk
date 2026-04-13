@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateExternalAddressRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initExternalAddressRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

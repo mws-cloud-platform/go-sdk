@@ -72,10 +72,6 @@ func (m *AuthorizedKeyRequest) Parse(ctx context.Context) error {
 // Real OAPI model name: AuthorizedKeyMetadata
 type AuthorizedKeyMetadataRequest struct {
 	common.TypedResourceMetadataRequest `yaml:"-,inline"`
-	// Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта.
-	//
-	// Deprecated: Отказываемся в пользу metadata.id
-	Name *string `json:"name,omitempty" yaml:"name,omitempty"`
 }
 
 func (m *AuthorizedKeyMetadataRequest) GetDisplayName() *string {
@@ -134,22 +130,6 @@ func (m *AuthorizedKeyMetadataRequest) GetDescriptionOr(val string) string {
 	return val
 }
 
-// Deprecated: Отказываемся в пользу metadata.id
-func (m *AuthorizedKeyMetadataRequest) GetName() *string {
-	if m != nil {
-		return m.Name
-	}
-	return nil
-}
-
-// Deprecated: Отказываемся в пользу metadata.id
-func (m *AuthorizedKeyMetadataRequest) GetNameOr(val string) string {
-	if m != nil && m.Name != nil {
-		return *m.Name
-	}
-	return val
-}
-
 func (m *AuthorizedKeyMetadataRequest) Clone() *AuthorizedKeyMetadataRequest {
 	if m == nil {
 		return nil
@@ -157,10 +137,6 @@ func (m *AuthorizedKeyMetadataRequest) Clone() *AuthorizedKeyMetadataRequest {
 
 	clone := *m
 	clone.TypedResourceMetadataRequest = *m.TypedResourceMetadataRequest.Clone()
-	if m.Name != nil {
-		cloneName := *m.Name
-		clone.Name = &cloneName
-	}
 
 	return &clone
 }

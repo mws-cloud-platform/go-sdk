@@ -13,6 +13,7 @@ import (
 )
 
 func TestUpdateTypedUsageRequestMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := ptr.Get(initTypedUsageRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

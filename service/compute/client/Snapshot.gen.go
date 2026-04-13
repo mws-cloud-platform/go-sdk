@@ -50,7 +50,7 @@ type ListSnapshotsRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -119,7 +119,7 @@ func (m *ListSnapshotsResponse) SetErrorWrapper(f func(err error) error) {
 // ListSnapshotsResponse200 is a nested type
 type ListSnapshotsResponse200 struct {
 	Items []model.SnapshotOptionalResponse `json:"items" yaml:"items"`
-	// Строка, которую нужно передать в следующий запрос, чтобы получить следующую страницу. Для последней страницы не задан
+	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
 	NextPageToken commonclient.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
@@ -329,7 +329,7 @@ type GetSnapshotRequest struct {
 	Project string // path: "project"
 	// Путь к снимку
 	Snapshot string // path: "snapshot"
-	// Текущий etag объекта, при передаче сервис будет дожидаться изменений в ресурсе (смены etag)
+	// Текущее значение ETag. При передаче параметра сервис будет ждать изменений в ресурсе до тех пор, пока значение ETag не будет изменено
 	WaitNew *string // query: "waitNew"
 }
 
@@ -459,6 +459,7 @@ type UpsertSnapshotResponse struct {
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response409 *common.ApiError
+	Response412 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -482,6 +483,9 @@ func (m *UpsertSnapshotResponse) GetErr() (err error) {
 	}
 	if m.Response409 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response409)
+	}
+	if m.Response412 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)

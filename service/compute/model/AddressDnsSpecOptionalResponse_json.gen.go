@@ -31,15 +31,11 @@ func (m *AddressDnsSpecOptionalResponse) encodeFields(e *jx.Encoder) {
 	e.FieldStart("name")
 	e.Str(m.Name)
 
-	if m.Ttl.IsSet() {
-		e.FieldStart("ttl")
-		m.Ttl.Value.Encode(e)
-	}
+	e.FieldStart("ttl")
+	m.Ttl.Encode(e)
 
-	if m.Ptr.IsSet() {
-		e.FieldStart("ptr")
-		e.Bool(m.Ptr.Value)
-	}
+	e.FieldStart("ptr")
+	e.Bool(m.Ptr)
 }
 
 func (m *AddressDnsSpecOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -67,7 +63,7 @@ func (m *AddressDnsSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ttl.SetTo(v)
+			m.Ttl = v
 			return nil
 		case "ptr":
 			v, err := decode.Bool(d)
@@ -75,7 +71,7 @@ func (m *AddressDnsSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ptr.SetTo(v)
+			m.Ptr = v
 			return nil
 		default:
 			return d.Skip()

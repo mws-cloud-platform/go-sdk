@@ -4,18 +4,16 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
-
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 )
 
 // Real OAPI model name: AddressDnsSpec
 type AddressDnsSpecOptionalResponse struct {
-	// DNS-имя, по которому будет доступна ВМ в MWS cloud
+	// DNS-имя виртуальной машины в MWS Cloud Platform
 	Name string `json:"name" yaml:"name"`
 	// Продолжительность хранения DNS записи в кеше
-	Ttl commonclient.Optional[duration.Duration] `json:"ttl,omitempty" yaml:"ttl,omitempty"`
+	Ttl duration.Duration `json:"ttl" yaml:"ttl"`
 	// Создать обратную DNS-запись
-	Ptr commonclient.Optional[bool] `json:"ptr,omitempty" yaml:"ptr,omitempty"`
+	Ptr bool `json:"ptr" yaml:"ptr"`
 }
 
 func (m *AddressDnsSpecOptionalResponse) GetName() string {
@@ -29,32 +27,26 @@ func (m *AddressDnsSpecOptionalResponse) SetName(val string) {
 	m.Name = val
 }
 
-func (m *AddressDnsSpecOptionalResponse) GetTtl() *duration.Duration {
-	if m != nil && m.Ttl.IsSet() {
-		return &m.Ttl.Value
+func (m *AddressDnsSpecOptionalResponse) GetTtl() duration.Duration {
+	if m != nil {
+		return m.Ttl
 	}
-	return nil
+	return duration.Duration{}
 }
 
-func (m *AddressDnsSpecOptionalResponse) GetTtlOr(val duration.Duration) duration.Duration {
-	if m != nil && m.Ttl.IsSet() {
-		return m.Ttl.Value
-	}
-	return val
+func (m *AddressDnsSpecOptionalResponse) SetTtl(val duration.Duration) {
+	m.Ttl = val
 }
 
-func (m *AddressDnsSpecOptionalResponse) GetPtr() *bool {
-	if m != nil && m.Ptr.IsSet() {
-		return &m.Ptr.Value
+func (m *AddressDnsSpecOptionalResponse) GetPtr() bool {
+	if m != nil {
+		return m.Ptr
 	}
-	return nil
+	return false
 }
 
-func (m *AddressDnsSpecOptionalResponse) GetPtrOr(val bool) bool {
-	if m != nil && m.Ptr.IsSet() {
-		return m.Ptr.Value
-	}
-	return val
+func (m *AddressDnsSpecOptionalResponse) SetPtr(val bool) {
+	m.Ptr = val
 }
 
 func (m *AddressDnsSpecOptionalResponse) Clone() *AddressDnsSpecOptionalResponse {
@@ -63,8 +55,6 @@ func (m *AddressDnsSpecOptionalResponse) Clone() *AddressDnsSpecOptionalResponse
 	}
 
 	clone := *m
-	if clone.Ttl.IsSet() {
-		clone.Ttl.Value = *m.Ttl.Value.Clone()
-	}
+	clone.Ttl = *m.Ttl.Clone()
 	return &clone
 }

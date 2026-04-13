@@ -56,7 +56,7 @@ func (m *DiskStatusIopsResponse) Decode(d *jx.Decoder) error {
 			m.Base = v
 			return nil
 		case "extra":
-			var v Iops
+			var v PossiblyZeroIops
 			if err := v.Decode(d); err != nil {
 				return err
 			}

@@ -12,6 +12,7 @@ import (
 )
 
 func TestServiceAccountResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initServiceAccountResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

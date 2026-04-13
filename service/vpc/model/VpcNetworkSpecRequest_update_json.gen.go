@@ -27,10 +27,6 @@ func (m *UpdateVpcNetworkSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *UpdateVpcNetworkSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.Mtu.IsSet() {
-		e.FieldStart("mtu")
-		e.Int32(m.Mtu.Value)
-	}
 
 	if m.InternetAccess.IsSet() {
 		e.FieldStart("internetAccess")
@@ -49,14 +45,6 @@ func (m *UpdateVpcNetworkSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "mtu":
-			v, err := decode.Int32(d)
-			if err != nil {
-				return err
-			}
-
-			m.Mtu.SetTo(v)
-			return nil
 		case "internetAccess":
 			v, err := decode.Bool(d)
 			if err != nil {

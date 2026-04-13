@@ -12,6 +12,7 @@ import (
 )
 
 func TestListExternalAddressesResponseOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initListExternalAddressesResponseOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

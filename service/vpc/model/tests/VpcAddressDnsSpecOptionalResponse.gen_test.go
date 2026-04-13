@@ -13,6 +13,7 @@ import (
 )
 
 func TestVpcAddressDnsSpecOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initVpcAddressDnsSpecOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

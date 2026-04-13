@@ -12,6 +12,7 @@ import (
 )
 
 func TestResourceStatusStateMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initResourceStatusState()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

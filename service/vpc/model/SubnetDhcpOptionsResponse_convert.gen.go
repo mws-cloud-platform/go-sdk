@@ -9,5 +9,6 @@ func SubnetDhcpOptionsRequestToResponse(request *SubnetDhcpOptionsRequest) (*Sub
 	var response SubnetDhcpOptionsResponse
 	response.DomainName = request.DomainName
 	response.DomainNameServers = request.DomainNameServers
+	response.NtpServers = request.NtpServers
 	return &response, nil
 }

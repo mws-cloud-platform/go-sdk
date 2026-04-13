@@ -108,6 +108,10 @@ func (m *UserMembershipID) ID() string {
 	return m.ServiceSlug() + "/users/" + m.user + "/organizations/" + m.organization
 }
 
+func (m *UserMembershipID) String() string {
+	return m.ID()
+}
+
 func (m *UserMembershipID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *UserMembershipRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *UserMembershipRef) String() string {
+	return m.IDPath()
 }
 
 func (m *UserMembershipRef) Parse(ctx context.Context) error {

@@ -5,7 +5,6 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -13,21 +12,18 @@ import (
 // Real OAPI model name: ComputeOneToOneNatSpec
 type ComputeOneToOneNatSpecOptionalResponse struct {
 	// Информация о внешнем адресе
-	External commonclient.OptionalNil[ComputeOneToOneNatSpecExternalOptionalResponse] `json:"external,omitempty" yaml:"external,omitempty"`
+	External ComputeOneToOneNatSpecExternalOptionalResponse `json:"external" yaml:"external"`
 }
 
-func (m *ComputeOneToOneNatSpecOptionalResponse) GetExternal() *ComputeOneToOneNatSpecExternalOptionalResponse {
-	if m != nil && m.External.IsSet() {
-		return &m.External.Value
+func (m *ComputeOneToOneNatSpecOptionalResponse) GetExternal() ComputeOneToOneNatSpecExternalOptionalResponse {
+	if m != nil {
+		return m.External
 	}
-	return nil
+	return ComputeOneToOneNatSpecExternalOptionalResponse{}
 }
 
-func (m *ComputeOneToOneNatSpecOptionalResponse) GetExternalOr(val ComputeOneToOneNatSpecExternalOptionalResponse) ComputeOneToOneNatSpecExternalOptionalResponse {
-	if m != nil && m.External.IsSet() {
-		return m.External.Value
-	}
-	return val
+func (m *ComputeOneToOneNatSpecOptionalResponse) SetExternal(val ComputeOneToOneNatSpecExternalOptionalResponse) {
+	m.External = val
 }
 
 func (m *ComputeOneToOneNatSpecOptionalResponse) Clone() *ComputeOneToOneNatSpecOptionalResponse {
@@ -36,9 +32,7 @@ func (m *ComputeOneToOneNatSpecOptionalResponse) Clone() *ComputeOneToOneNatSpec
 	}
 
 	clone := *m
-	if clone.External.IsSet() {
-		clone.External.Value = *m.External.Value.Clone()
-	}
+	clone.External = *m.External.Clone()
 	return &clone
 }
 
@@ -47,10 +41,8 @@ func (m *ComputeOneToOneNatSpecOptionalResponse) Parse(ctx context.Context) erro
 		return nil
 	}
 
-	if m.External.IsSet() {
-		if err := m.External.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("External", err)
-		}
+	if err := m.External.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("External", err)
 	}
 
 	return nil
@@ -59,21 +51,18 @@ func (m *ComputeOneToOneNatSpecOptionalResponse) Parse(ctx context.Context) erro
 // Представление поля External анонимного типа структуры ComputeOneToOneNatSpec
 // Real OAPI model name: ComputeOneToOneNatSpecExternal
 type ComputeOneToOneNatSpecExternalOptionalResponse struct {
-	Address commonclient.OptionalNil[OneToOneNatAddressSpecOrRefOptionalResponse] `json:"address,omitempty" yaml:"address,omitempty"`
+	Address OneToOneNatAddressSpecOrRefOptionalResponse `json:"address" yaml:"address"`
 }
 
-func (m *ComputeOneToOneNatSpecExternalOptionalResponse) GetAddress() *OneToOneNatAddressSpecOrRefOptionalResponse {
-	if m != nil && m.Address.IsSet() {
-		return &m.Address.Value
+func (m *ComputeOneToOneNatSpecExternalOptionalResponse) GetAddress() OneToOneNatAddressSpecOrRefOptionalResponse {
+	if m != nil {
+		return m.Address
 	}
-	return nil
+	return OneToOneNatAddressSpecOrRefOptionalResponse{}
 }
 
-func (m *ComputeOneToOneNatSpecExternalOptionalResponse) GetAddressOr(val OneToOneNatAddressSpecOrRefOptionalResponse) OneToOneNatAddressSpecOrRefOptionalResponse {
-	if m != nil && m.Address.IsSet() {
-		return m.Address.Value
-	}
-	return val
+func (m *ComputeOneToOneNatSpecExternalOptionalResponse) SetAddress(val OneToOneNatAddressSpecOrRefOptionalResponse) {
+	m.Address = val
 }
 
 func (m *ComputeOneToOneNatSpecExternalOptionalResponse) Clone() *ComputeOneToOneNatSpecExternalOptionalResponse {
@@ -82,9 +71,7 @@ func (m *ComputeOneToOneNatSpecExternalOptionalResponse) Clone() *ComputeOneToOn
 	}
 
 	clone := *m
-	if clone.Address.IsSet() {
-		clone.Address.Value = *m.Address.Value.Clone()
-	}
+	clone.Address = *m.Address.Clone()
 	return &clone
 }
 
@@ -93,10 +80,8 @@ func (m *ComputeOneToOneNatSpecExternalOptionalResponse) Parse(ctx context.Conte
 		return nil
 	}
 
-	if m.Address.IsSet() {
-		if err := m.Address.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Address", err)
-		}
+	if err := m.Address.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Address", err)
 	}
 
 	return nil

@@ -15,6 +15,8 @@ type EgressNatSpecRequest struct {
 	Internal EgressNatSpecInternalRequest `json:"internal" yaml:"internal"`
 	// Группирующий элемент для всего, что касается внешней части (ресурсов, доступных извне).
 	External EgressNatSpecExternalRequest `json:"external" yaml:"external"`
+	// Описывает настройки управления портами.
+	PortAllocation *EgressNatSpecPortAllocationRequest `json:"portAllocation,omitempty" yaml:"portAllocation,omitempty"`
 	// Описывает настройки управления портами (Port Block Allocation).
 	Pba *EgressNatSpecPbaRequest `json:"pba,omitempty" yaml:"pba,omitempty"`
 }
@@ -39,6 +41,24 @@ func (m *EgressNatSpecRequest) GetExternal() EgressNatSpecExternalRequest {
 
 func (m *EgressNatSpecRequest) SetExternal(val EgressNatSpecExternalRequest) {
 	m.External = val
+}
+
+func (m *EgressNatSpecRequest) GetPortAllocation() *EgressNatSpecPortAllocationRequest {
+	if m != nil {
+		return m.PortAllocation
+	}
+	return nil
+}
+
+func (m *EgressNatSpecRequest) SetPortAllocation(val *EgressNatSpecPortAllocationRequest) {
+	m.PortAllocation = val
+}
+
+func (m *EgressNatSpecRequest) GetPortAllocationOr(val EgressNatSpecPortAllocationRequest) EgressNatSpecPortAllocationRequest {
+	if m != nil && m.PortAllocation != nil {
+		return *m.PortAllocation
+	}
+	return val
 }
 
 func (m *EgressNatSpecRequest) GetPba() *EgressNatSpecPbaRequest {
@@ -67,6 +87,7 @@ func (m *EgressNatSpecRequest) Clone() *EgressNatSpecRequest {
 	clone := *m
 	clone.Internal = *m.Internal.Clone()
 	clone.External = *m.External.Clone()
+	clone.PortAllocation = m.PortAllocation.Clone()
 	clone.Pba = m.Pba.Clone()
 	return &clone
 }

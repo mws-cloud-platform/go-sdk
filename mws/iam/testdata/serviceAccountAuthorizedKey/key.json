@@ -1,0 +1,7 @@
+{
+  "keyId": "projects/foo/serviceAccounts/bar/authorizedKeys/default",
+  "privateKey": "MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCDo30JRUNcxg2XM+00LuIZdyA7vHT20CqJ9ukgsw//b3w==",
+  "publicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEUOUJre7T96hWE97JVL6hlXkVcb7l0OtLhYKbsO3ay6UY3VSBHqaFfhr5n7cDWccEkVmUvWL0H9+rzqg5q75NKQ==",
+  "expirationTime": "2026-01-01T00:00:00.000Z",
+  "algorithm": "ES256"
+}

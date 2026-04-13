@@ -39,6 +39,11 @@ func (m *AuthorizedKeySpecRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("expirationTime")
 		conv.EncodeDateTimeUTC(e, *m.ExpirationTime)
 	}
+
+	if m.Active != nil {
+		e.FieldStart("active")
+		e.Bool(*m.Active)
+	}
 }
 
 func (m *AuthorizedKeySpecRequest) UnmarshalJSON(b []byte) error {
@@ -79,6 +84,14 @@ func (m *AuthorizedKeySpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.ExpirationTime = &v
+			return nil
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = &v
 			return nil
 		default:
 			return d.Skip()

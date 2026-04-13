@@ -6,7 +6,6 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
-	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
@@ -29,10 +28,6 @@ func (m *UpdateVirtualMachineSpecRequest) Encode(e *jx.Encoder) {
 }
 
 func (m *UpdateVirtualMachineSpecRequest) encodeFields(e *jx.Encoder) {
-	if m.Zone.IsSet() {
-		e.FieldStart("zone")
-		e.Str(m.Zone.Value)
-	}
 
 	if m.VmType.IsSet() {
 		e.FieldStart("vmType")
@@ -59,20 +54,12 @@ func (m *UpdateVirtualMachineSpecRequest) encodeFields(e *jx.Encoder) {
 
 	if m.Storage.IsSet() {
 		e.FieldStart("storage")
-		if m.Storage.IsNull() {
-			e.Null()
-		} else {
-			m.Storage.Value.Encode(e)
-		}
+		m.Storage.Value.Encode(e)
 	}
 
 	if m.Network.IsSet() {
 		e.FieldStart("network")
-		if m.Network.IsNull() {
-			e.Null()
-		} else {
-			m.Network.Value.Encode(e)
-		}
+		m.Network.Value.Encode(e)
 	}
 
 	if m.ServiceAccount.IsSet() {
@@ -96,14 +83,6 @@ func (m *UpdateVirtualMachineSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "zone":
-			v, err := decode.Str(d)
-			if err != nil {
-				return err
-			}
-
-			m.Zone.SetTo(v)
-			return nil
 		case "vmType":
 			var v compute.VmTypeRef
 			if err := v.Decode(d); err != nil {
@@ -139,11 +118,6 @@ func (m *UpdateVirtualMachineSpecRequest) Decode(d *jx.Decoder) error {
 			m.Os.SetTo(v)
 			return nil
 		case "storage":
-			if d.Next() == jx.Null {
-				m.Storage.SetToNull()
-				return d.Null()
-			}
-
 			var v UpdateStorageSpecRequest
 			if err := v.Decode(d); err != nil {
 				return err
@@ -152,11 +126,6 @@ func (m *UpdateVirtualMachineSpecRequest) Decode(d *jx.Decoder) error {
 			m.Storage.SetTo(v)
 			return nil
 		case "network":
-			if d.Next() == jx.Null {
-				m.Network.SetToNull()
-				return d.Null()
-			}
-
 			var v UpdateNetworkSpecRequest
 			if err := v.Decode(d); err != nil {
 				return err

@@ -2,9 +2,16 @@
 
 package model
 
+import (
+	"context"
+
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: CreateSecretWithSecretVersion
 type CreateSecretWithSecretVersionRequest struct {
 	SecretVersionSpecRequest `yaml:"-,inline"`
+	Encryption               *EncryptionSpecRequest `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
 func (m *CreateSecretWithSecretVersionRequest) GetActive() *bool {
@@ -28,6 +35,20 @@ func (m *CreateSecretWithSecretVersionRequest) GetData() SecretVersionDataSpec {
 	return nil
 }
 
+func (m *CreateSecretWithSecretVersionRequest) GetEncryption() *EncryptionSpecRequest {
+	if m != nil {
+		return m.Encryption
+	}
+	return nil
+}
+
+func (m *CreateSecretWithSecretVersionRequest) GetEncryptionOr(val EncryptionSpecRequest) EncryptionSpecRequest {
+	if m != nil && m.Encryption != nil {
+		return *m.Encryption
+	}
+	return val
+}
+
 func (m *CreateSecretWithSecretVersionRequest) Clone() *CreateSecretWithSecretVersionRequest {
 	if m == nil {
 		return nil
@@ -35,6 +56,19 @@ func (m *CreateSecretWithSecretVersionRequest) Clone() *CreateSecretWithSecretVe
 
 	clone := *m
 	clone.SecretVersionSpecRequest = *m.SecretVersionSpecRequest.Clone()
+	clone.Encryption = m.Encryption.Clone()
 
 	return &clone
+}
+
+func (m *CreateSecretWithSecretVersionRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if err := m.Encryption.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Encryption", err)
+	}
+
+	return nil
 }

@@ -14,7 +14,7 @@ import (
 // Real OAPI model name: OneToOneNat
 type OneToOneNatOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
-	// Набор общих для всех пользовательских объектов аттрибутов. Может быть расширен аттрибутами, специфичными для контейнеров.
+	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata commonclient.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Описывает спецификацию One-to-One NAT-шлюза.
 	Spec OneToOneNatSpecOptionalResponse `json:"spec" yaml:"spec"`

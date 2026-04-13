@@ -9,7 +9,7 @@ import (
 )
 
 type UpdateVpcAddressDnsSpecRequest struct {
-	// DNS-имя по которому будет доступна ВМ в MWS cloud
+	// DNS-имя виртуальной машины в MWS Cloud Platform
 	Name commonclient.Optional[string] `json:"name" yaml:"name"`
 	// продолжительность хранения DNS записи в кеше
 	Ttl commonclient.Optional[duration.Duration] `json:"ttl" yaml:"ttl"`

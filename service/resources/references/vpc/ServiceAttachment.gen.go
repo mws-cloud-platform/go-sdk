@@ -127,6 +127,10 @@ func (m *ServiceAttachmentID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/networks/" + m.network + "/serviceAttachments/" + m.serviceAttachment
 }
 
+func (m *ServiceAttachmentID) String() string {
+	return m.ID()
+}
+
 func (m *ServiceAttachmentID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -268,6 +272,10 @@ func (m *ServiceAttachmentRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ServiceAttachmentRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ServiceAttachmentRef) Parse(ctx context.Context) error {

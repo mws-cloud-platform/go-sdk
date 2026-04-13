@@ -44,9 +44,9 @@ type ListFirewallRulesRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчание и верхнюю границу
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
@@ -139,9 +139,9 @@ type DeleteFirewallRuleRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Firewall rule name
+	// Имя правила файрвола
 	FirewallRule string // path: "firewallRule"
 }
 
@@ -225,9 +225,9 @@ type GetFirewallRuleRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Firewall rule name
+	// Имя правила файрвола
 	FirewallRule string // path: "firewallRule"
 }
 
@@ -304,11 +304,11 @@ type UpsertFirewallRuleRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Firewall rule name
+	// Имя правила файрвола
 	FirewallRule string // path: "firewallRule"
-	// Update firewall rule
+	// Данные для создания или изменения правила файрвола
 	Body model.FirewallRuleRequest // body
 }
 
@@ -340,11 +340,11 @@ type UpdateFirewallRuleRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту
 	Project string // path: "project"
-	// Network name
+	// Имя сети
 	Network string // path: "network"
-	// Firewall rule name
+	// Имя правила файрвола
 	FirewallRule string // path: "firewallRule"
-	// Update firewall rule
+	// Данные для создания или изменения правила файрвола
 	Body model.UpdateFirewallRuleRequest // body
 }
 

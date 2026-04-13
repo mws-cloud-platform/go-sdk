@@ -14,8 +14,8 @@ import (
 )
 
 type UpdateNetworkInterfaceSpecRequest struct {
-	Name    commonclient.Optional[string] `json:"name" yaml:"name"`
-	Primary commonclient.Optional[bool]   `json:"primary" yaml:"primary"`
+	Name                commonclient.Optional[string] `json:"name" yaml:"name"`
+	IpForwardingEnabled commonclient.Optional[bool]   `json:"ipForwardingEnabled" yaml:"ipForwardingEnabled"`
 	// К одному сетевому интерфейсу можно подключить одновременно 4 разных сетевых адреса
 	// - IPv4 internal
 	// - IPv4 external
@@ -27,21 +27,19 @@ type UpdateNetworkInterfaceSpecRequest struct {
 func (m *NetworkInterfaceSpecRequest) AsUpdateModel() UpdateNetworkInterfaceSpecRequest {
 	var u UpdateNetworkInterfaceSpecRequest
 	u.Name = commonclient.NewOptional(m.GetName())
-	if m.Primary != nil {
-		u.Primary = commonclient.NewOptional(m.GetPrimaryOr(false))
+	if m.IpForwardingEnabled != nil {
+		u.IpForwardingEnabled = commonclient.NewOptional(m.GetIpForwardingEnabledOr(false))
 	}
-	if m.Addresses != nil {
-		u.Addresses = commonclient.NewOptional(func() []UpdateAddressSpecOrRefWithAttachmentsRequest {
-			var tmp []UpdateAddressSpecOrRefWithAttachmentsRequest
-			if m.GetAddresses() != nil {
-				tmp = make([]UpdateAddressSpecOrRefWithAttachmentsRequest, 0, len(m.GetAddresses()))
-			}
-			for _, val := range m.GetAddresses() {
-				tmp = append(tmp, val.AsUpdateModel())
-			}
-			return tmp
-		}())
-	}
+	u.Addresses = commonclient.NewOptional(func() []UpdateAddressSpecOrRefWithAttachmentsRequest {
+		var tmp []UpdateAddressSpecOrRefWithAttachmentsRequest
+		if m.GetAddresses() != nil {
+			tmp = make([]UpdateAddressSpecOrRefWithAttachmentsRequest, 0, len(m.GetAddresses()))
+		}
+		for _, val := range m.GetAddresses() {
+			tmp = append(tmp, val.AsUpdateModel())
+		}
+		return tmp
+	}())
 	return u
 }
 
@@ -52,7 +50,7 @@ func (m *NetworkInterfaceSpecRequest) Diff(src *NetworkInterfaceSpecRequest) (Up
 	upd := UpdateNetworkInterfaceSpecRequest{}
 	if !nilDiffers {
 		upd.Name = m.diffName(src)
-		upd.Primary = m.diffPrimary(src)
+		upd.IpForwardingEnabled = m.diffIpForwardingEnabled(src)
 		upd.Addresses, err = m.diffAddresses(src)
 		if err != nil {
 			return UpdateNetworkInterfaceSpecRequest{}, fmt.Errorf("Addresses: %w", err)
@@ -70,8 +68,8 @@ func (m *NetworkInterfaceSpecRequest) WithChanges(u UpdateNetworkInterfaceSpecRe
 	if u.Name.IsSet() {
 		out.Name = u.Name.Value
 	}
-	if u.Primary.IsSet() {
-		out.Primary = ptr.Get(u.Primary.Value)
+	if u.IpForwardingEnabled.IsSet() {
+		out.IpForwardingEnabled = ptr.Get(u.IpForwardingEnabled.Value)
 	}
 	if u.Addresses.IsSet() {
 		out.Addresses = merge.InapplicableSlice(u.Addresses.Value, (*AddressSpecOrRefWithAttachmentsRequest).WithChanges)
@@ -82,7 +80,7 @@ func (m *NetworkInterfaceSpecRequest) WithChanges(u UpdateNetworkInterfaceSpecRe
 // HasChanges returns true if any field has Set == true
 func (m UpdateNetworkInterfaceSpecRequest) HasChanges() bool {
 	return m.Name.Set ||
-		m.Primary.Set ||
+		m.IpForwardingEnabled.Set ||
 		m.Addresses.Set
 }
 
@@ -120,9 +118,9 @@ func (m *NetworkInterfaceSpecRequest) diffName(src *NetworkInterfaceSpecRequest)
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
 }
 
-func (m *NetworkInterfaceSpecRequest) diffPrimary(src *NetworkInterfaceSpecRequest) commonclient.Optional[bool] {
+func (m *NetworkInterfaceSpecRequest) diffIpForwardingEnabled(src *NetworkInterfaceSpecRequest) commonclient.Optional[bool] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetPrimary(), m.GetPrimary(), nilDiffers)
+	return commonclient.DiffPrimitiveNonRequired(src.GetIpForwardingEnabled(), m.GetIpForwardingEnabled(), nilDiffers)
 }
 
 func (m *NetworkInterfaceSpecRequest) diffAddresses(src *NetworkInterfaceSpecRequest) (commonclient.Optional[[]UpdateAddressSpecOrRefWithAttachmentsRequest], error) {

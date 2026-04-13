@@ -121,10 +121,6 @@ func (m *UpdateServiceAccountMetadataRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("description")
 		e.Str(m.Description.Value)
 	}
-	if m.LastAuthDateTime.IsSet() {
-		e.FieldStart("lastAuthDateTime")
-		conv.EncodeDateTimeUTC(e, m.LastAuthDateTime.Value)
-	}
 }
 
 func (m *UpdateServiceAccountMetadataRequest) UnmarshalJSON(b []byte) error {
@@ -176,14 +172,6 @@ func (m *UpdateServiceAccountMetadataRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Description.SetTo(v)
-			return nil
-		case "lastAuthDateTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.LastAuthDateTime.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

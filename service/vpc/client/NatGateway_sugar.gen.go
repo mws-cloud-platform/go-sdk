@@ -23,7 +23,7 @@ func (x *NatGatewaySugared) Impl() NatGateway {
 	return x.impl
 }
 
-// ListNatGateways list private Nat gateways.
+// ListNatGateways позволяет получить список NAT-шлюзов.
 //
 // Путь: GET /vpc/v1/projects/{project}/natGateways
 func (x *NatGatewaySugared) ListNatGateways(ctx context.Context, request ListNatGatewaysRequest) (*model.ListNatGatewayResponseOptionalResponse, error) {

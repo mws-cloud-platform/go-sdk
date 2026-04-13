@@ -26,14 +26,8 @@ func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) Encode(e *jx.Encoder) 
 }
 
 func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) encodeFields(e *jx.Encoder) {
-	if m.Address.IsSet() {
-		e.FieldStart("address")
-		if m.Address.IsNull() {
-			e.Null()
-		} else {
-			m.Address.Value.Encode(e)
-		}
-	}
+	e.FieldStart("address")
+	m.Address.Encode(e)
 
 	if m.OneToOneNat.IsSet() {
 		e.FieldStart("oneToOneNat")
@@ -57,17 +51,12 @@ func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) Decode(d *jx.Decoder) 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "address":
-			if d.Next() == jx.Null {
-				m.Address.SetToNull()
-				return d.Null()
-			}
-
 			var v AddressSpecOrRefOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Address.SetTo(v)
+			m.Address = v
 			return nil
 		case "oneToOneNat":
 			if d.Next() == jx.Null {

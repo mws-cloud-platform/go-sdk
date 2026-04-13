@@ -14,3 +14,7 @@ const (
 	DayOfWeek_SATURDAY  DayOfWeek = "SATURDAY"
 	DayOfWeek_SUNDAY    DayOfWeek = "SUNDAY"
 )
+
+func (m DayOfWeek) String() string {
+	return string(m)
+}

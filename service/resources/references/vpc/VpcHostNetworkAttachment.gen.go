@@ -146,6 +146,10 @@ func (m *VpcHostNetworkAttachmentID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/vpcHosts/" + m.vpcHost + "/projects/" + m.project + "/networkAttachments/" + m.networkAttachment
 }
 
+func (m *VpcHostNetworkAttachmentID) String() string {
+	return m.ID()
+}
+
 func (m *VpcHostNetworkAttachmentID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -296,6 +300,10 @@ func (m *VpcHostNetworkAttachmentRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *VpcHostNetworkAttachmentRef) String() string {
+	return m.IDPath()
 }
 
 func (m *VpcHostNetworkAttachmentRef) Parse(ctx context.Context) error {

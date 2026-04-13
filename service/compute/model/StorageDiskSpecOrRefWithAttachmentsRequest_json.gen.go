@@ -40,10 +40,8 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) encodeFields(e *jx.Encoder)
 		e.Str(*m.DeviceName)
 	}
 
-	if m.Disk != nil {
-		e.FieldStart("disk")
-		m.Disk.Encode(e)
-	}
+	e.FieldStart("disk")
+	m.Disk.Encode(e)
 }
 
 func (m *StorageDiskSpecOrRefWithAttachmentsRequest) UnmarshalJSON(b []byte) error {
@@ -57,6 +55,7 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) Decode(d *jx.Decoder) error
 
 	requiredFilled := map[string]bool{
 		"name": false,
+		"disk": false,
 	}
 	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -86,16 +85,13 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) Decode(d *jx.Decoder) error
 			m.DeviceName = &v
 			return nil
 		case "disk":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			var v StorageDiskSpecOrRefRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Disk = &v
+			m.Disk = v
+			requiredFilled["disk"] = true
 			return nil
 		default:
 			return d.Skip()

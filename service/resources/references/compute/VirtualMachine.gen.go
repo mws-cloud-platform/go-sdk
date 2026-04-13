@@ -108,6 +108,10 @@ func (m *VirtualMachineID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/virtualMachines/" + m.virtualMachine
 }
 
+func (m *VirtualMachineID) String() string {
+	return m.ID()
+}
+
 func (m *VirtualMachineID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *VirtualMachineRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *VirtualMachineRef) String() string {
+	return m.IDPath()
 }
 
 func (m *VirtualMachineRef) Parse(ctx context.Context) error {

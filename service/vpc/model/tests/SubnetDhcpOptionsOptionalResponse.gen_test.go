@@ -12,6 +12,7 @@ import (
 )
 
 func TestSubnetDhcpOptionsOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initSubnetDhcpOptionsOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

@@ -12,6 +12,7 @@ import (
 )
 
 func TestLinkedVmInfoResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initLinkedVmInfoResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

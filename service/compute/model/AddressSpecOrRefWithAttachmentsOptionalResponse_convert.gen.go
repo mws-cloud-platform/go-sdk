@@ -11,18 +11,16 @@ func AddressSpecOrRefWithAttachmentsRequestToOptionalResponse(request *AddressSp
 		return nil, nil
 	}
 	var response AddressSpecOrRefWithAttachmentsOptionalResponse
-	tmpAddress, err := AddressSpecOrRefRequestToOptionalResponse(request.Address)
+	tmpAddress, err := AddressSpecOrRefRequestToOptionalResponse(&request.Address)
 	if err != nil {
 		return nil, err
 	}
-	if request.Address != nil {
-		response.Address = commonclient.NewOptionalNil(*tmpAddress)
-	}
-	tmpOneToOneNat, err := ComputeOneToOneNatSpecRequestToOptionalResponse(request.OneToOneNat)
-	if err != nil {
-		return nil, err
-	}
+	response.Address = *tmpAddress
 	if request.OneToOneNat != nil {
+		tmpOneToOneNat, err := ComputeOneToOneNatSpecRequestToOptionalResponse(request.OneToOneNat)
+		if err != nil {
+			return nil, err
+		}
 		response.OneToOneNat = commonclient.NewOptionalNil(*tmpOneToOneNat)
 	}
 	return &response, nil

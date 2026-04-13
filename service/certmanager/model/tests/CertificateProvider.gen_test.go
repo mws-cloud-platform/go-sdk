@@ -12,6 +12,7 @@ import (
 )
 
 func TestCertificateProviderMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initCertificateProvider()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

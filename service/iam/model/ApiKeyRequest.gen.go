@@ -12,7 +12,7 @@ import (
 // Real OAPI model name: ApiKey
 type ApiKeyRequest struct {
 	Metadata *ApiKeyMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	// Спецификация api-key.
+	// Спецификация API-ключа
 	Spec ApiKeySpecRequest `json:"spec" yaml:"spec"`
 }
 

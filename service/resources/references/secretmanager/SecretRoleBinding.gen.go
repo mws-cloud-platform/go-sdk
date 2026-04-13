@@ -108,6 +108,10 @@ func (m *SecretRoleBindingID) ID() string {
 	return m.ServiceSlug() + "/projects/" + m.project + "/secretRoleBindings/" + m.roleBinding
 }
 
+func (m *SecretRoleBindingID) String() string {
+	return m.ID()
+}
+
 func (m *SecretRoleBindingID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *SecretRoleBindingRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *SecretRoleBindingRef) String() string {
+	return m.IDPath()
 }
 
 func (m *SecretRoleBindingRef) Parse(ctx context.Context) error {

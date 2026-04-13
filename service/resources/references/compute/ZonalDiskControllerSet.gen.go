@@ -146,6 +146,10 @@ func (m *ZonalDiskControllerSetID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/projects/" + m.project + "/zonalVirtualMachines/" + m.virtualMachine + "/diskControllerSets/" + m.set
 }
 
+func (m *ZonalDiskControllerSetID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalDiskControllerSetID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -296,6 +300,10 @@ func (m *ZonalDiskControllerSetRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalDiskControllerSetRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalDiskControllerSetRef) Parse(ctx context.Context) error {

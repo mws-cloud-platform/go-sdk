@@ -15,8 +15,8 @@ type StorageDiskSpecOrRefWithAttachmentsOptionalResponse struct {
 	Name string                      `json:"name" yaml:"name"`
 	Boot commonclient.Optional[bool] `json:"boot,omitempty" yaml:"boot,omitempty"`
 	// Уникальное имя устройства, которое отображается в дереве /dev/disk/by-id/mws-* Linux. Если не указано - "mws-{name}", если указано - "mws-{deviceName}"
-	DeviceName commonclient.Optional[string]                                  `json:"deviceName,omitempty" yaml:"deviceName,omitempty"`
-	Disk       commonclient.OptionalNil[StorageDiskSpecOrRefOptionalResponse] `json:"disk,omitempty" yaml:"disk,omitempty"`
+	DeviceName commonclient.Optional[string]        `json:"deviceName,omitempty" yaml:"deviceName,omitempty"`
+	Disk       StorageDiskSpecOrRefOptionalResponse `json:"disk" yaml:"disk"`
 }
 
 func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) GetName() string {
@@ -58,18 +58,15 @@ func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) GetDeviceNameOr(va
 	return val
 }
 
-func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) GetDisk() *StorageDiskSpecOrRefOptionalResponse {
-	if m != nil && m.Disk.IsSet() {
-		return &m.Disk.Value
+func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) GetDisk() StorageDiskSpecOrRefOptionalResponse {
+	if m != nil {
+		return m.Disk
 	}
-	return nil
+	return StorageDiskSpecOrRefOptionalResponse{}
 }
 
-func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) GetDiskOr(val StorageDiskSpecOrRefOptionalResponse) StorageDiskSpecOrRefOptionalResponse {
-	if m != nil && m.Disk.IsSet() {
-		return m.Disk.Value
-	}
-	return val
+func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) SetDisk(val StorageDiskSpecOrRefOptionalResponse) {
+	m.Disk = val
 }
 
 func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) Clone() *StorageDiskSpecOrRefWithAttachmentsOptionalResponse {
@@ -78,9 +75,7 @@ func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) Clone() *StorageDi
 	}
 
 	clone := *m
-	if clone.Disk.IsSet() {
-		clone.Disk.Value = *m.Disk.Value.Clone()
-	}
+	clone.Disk = *m.Disk.Clone()
 	return &clone
 }
 
@@ -89,10 +84,8 @@ func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) Parse(ctx context.
 		return nil
 	}
 
-	if m.Disk.IsSet() {
-		if err := m.Disk.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Disk", err)
-		}
+	if err := m.Disk.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Disk", err)
 	}
 
 	return nil

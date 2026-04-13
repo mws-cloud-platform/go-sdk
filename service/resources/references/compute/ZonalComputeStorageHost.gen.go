@@ -108,6 +108,10 @@ func (m *ZonalComputeStorageHostID) ID() string {
 	return m.ServiceSlug() + "/zones/" + m.zone + "/computeStorageHosts/" + m.host
 }
 
+func (m *ZonalComputeStorageHostID) String() string {
+	return m.ID()
+}
+
 func (m *ZonalComputeStorageHostID) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
@@ -240,6 +244,10 @@ func (m *ZonalComputeStorageHostRef) Path() string {
 		return m.absolutePath()
 	}
 	return m.id.path
+}
+
+func (m *ZonalComputeStorageHostRef) String() string {
+	return m.IDPath()
 }
 
 func (m *ZonalComputeStorageHostRef) Parse(ctx context.Context) error {

@@ -7,7 +7,7 @@ import (
 )
 
 type UpdateUsageRequest struct {
-	// Тип связи, стандартные own и use могут быть расширены сервисоспецифичными
+	// Тип связи. Помимо стандартных own и use могут быть добавлены специализированные типы для конкретных сервисов
 	UsageType commonclient.Optional[string] `json:"usageType" yaml:"usageType"`
 	// Имя связи, требуется для модификации коллекции
 	Name commonclient.Optional[string] `json:"name" yaml:"name"`

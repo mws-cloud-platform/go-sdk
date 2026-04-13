@@ -14,7 +14,7 @@ import (
 // Real OAPI model name: VirtualMachinesList
 type VirtualMachinesListOptionalResponse struct {
 	Items []VirtualMachineOptionalResponse `json:"items" yaml:"items"`
-	// Строка, которую нужно передать в следующий запрос, чтобы получить следующую страницу. Для последней страницы не задан
+	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
 	NextPageToken commonclient.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 

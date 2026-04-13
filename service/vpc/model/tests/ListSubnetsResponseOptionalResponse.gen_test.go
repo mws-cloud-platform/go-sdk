@@ -12,6 +12,7 @@ import (
 )
 
 func TestListSubnetsResponseOptionalResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initListSubnetsResponseOptionalResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

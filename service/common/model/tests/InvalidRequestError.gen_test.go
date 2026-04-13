@@ -12,6 +12,7 @@ import (
 )
 
 func TestInvalidRequestErrorMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initInvalidRequestError()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)

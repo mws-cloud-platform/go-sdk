@@ -13,6 +13,7 @@ import (
 )
 
 func TestDiskStatusResponseMarshalling(t *testing.T) {
+	t.Parallel()
 	expected := initDiskStatusResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
