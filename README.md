@@ -1,6 +1,7 @@
 # MWS Cloud Platform Go SDK
 
 [![PkgGoDev](https://pkg.go.dev/badge/go.mws.cloud/go-sdk)](https://pkg.go.dev/go.mws.cloud/go-sdk)
+[![Build](https://go.mws.cloud/badges/mws-cloud-platform/go-sdk)](https://go.mws.cloud/ci/mws-cloud-platform/go-sdk)
 [![Go Report Card](https://goreportcard.com/badge/go.mws.cloud/go-sdk)](https://goreportcard.com/report/go.mws.cloud/go-sdk)
 ![Last Commit](https://img.shields.io/github/last-commit/mws-cloud-platform/go-sdk)
 ![Go Version](https://img.shields.io/badge/Go-1.25.6%2B-blue)
