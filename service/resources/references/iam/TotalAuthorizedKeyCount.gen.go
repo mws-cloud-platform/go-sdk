@@ -138,20 +138,23 @@ func (m *TotalAuthorizedKeyCountID) Clone() *TotalAuthorizedKeyCountID {
 
 func (m TotalAuthorizedKeyCountID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *TotalAuthorizedKeyCountID) Encode(e *jx.Encoder) {
+func (m *TotalAuthorizedKeyCountID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *TotalAuthorizedKeyCountID) UnmarshalJSON(b []byte) error {
@@ -267,16 +270,19 @@ func (m *TotalAuthorizedKeyCountRef) Clone() *TotalAuthorizedKeyCountRef {
 
 func (m TotalAuthorizedKeyCountRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *TotalAuthorizedKeyCountRef) Encode(e *jx.Encoder) {
+func (m *TotalAuthorizedKeyCountRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *TotalAuthorizedKeyCountRef) UnmarshalJSON(b []byte) error {

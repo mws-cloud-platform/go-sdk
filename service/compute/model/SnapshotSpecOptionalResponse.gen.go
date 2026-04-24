@@ -5,6 +5,7 @@ package model
 import (
 	"context"
 
+	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -13,6 +14,8 @@ import (
 type SnapshotSpecOptionalResponse struct {
 	// Источник для создания снимка (На текущий момент поддерживается только диск, но в будущем будут и другие источники)
 	Source SnapshotSourceOptionalResponse `json:"source" yaml:"source"`
+	// Тип операционной системы
+	OsType commonclient.Optional[OsType] `json:"osType,omitempty" yaml:"osType,omitempty"`
 }
 
 func (m *SnapshotSpecOptionalResponse) GetSource() SnapshotSourceOptionalResponse {
@@ -24,6 +27,20 @@ func (m *SnapshotSpecOptionalResponse) GetSource() SnapshotSourceOptionalRespons
 
 func (m *SnapshotSpecOptionalResponse) SetSource(val SnapshotSourceOptionalResponse) {
 	m.Source = val
+}
+
+func (m *SnapshotSpecOptionalResponse) GetOsType() *OsType {
+	if m != nil && m.OsType.IsSet() {
+		return &m.OsType.Value
+	}
+	return nil
+}
+
+func (m *SnapshotSpecOptionalResponse) GetOsTypeOr(val OsType) OsType {
+	if m != nil && m.OsType.IsSet() {
+		return m.OsType.Value
+	}
+	return val
 }
 
 func (m *SnapshotSpecOptionalResponse) Clone() *SnapshotSpecOptionalResponse {

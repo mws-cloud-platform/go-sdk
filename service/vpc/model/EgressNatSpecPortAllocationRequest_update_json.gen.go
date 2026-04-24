@@ -13,25 +13,31 @@ import (
 
 func (m UpdateEgressNatSpecPortAllocationRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateEgressNatSpecPortAllocationRequest) Encode(e *jx.Encoder) {
+func (m *UpdateEgressNatSpecPortAllocationRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateEgressNatSpecPortAllocationRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateEgressNatSpecPortAllocationRequest) encodeFields(e *jx.Encoder) error {
 	if m.PortsPerClient.IsSet() {
 		e.FieldStart("portsPerClient")
 		m.PortsPerClient.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *UpdateEgressNatSpecPortAllocationRequest) UnmarshalJSON(b []byte) error {

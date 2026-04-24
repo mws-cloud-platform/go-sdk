@@ -10,7 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	"go.mws.cloud/go-sdk/service/compute/model"
-	commonref "go.mws.cloud/go-sdk/service/resources/references/common"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func TestDiskTypeSpecResponseMarshalling(t *testing.T) {
@@ -26,7 +26,7 @@ func TestDiskTypeSpecResponseMarshalling(t *testing.T) {
 
 func initDiskTypeSpecResponse() model.DiskTypeSpecResponse {
 	var v model.DiskTypeSpecResponse
-	v.Zones = make([]commonref.ZoneRef, 0)
+	v.Zones = make([]rm.ZoneRef, 0)
 	v.Limits.MinDiskSize = bytesize.MustParseString("0 B")
 	v.Limits.MaxDiskSize = bytesize.MustParseString("0 B")
 	return v

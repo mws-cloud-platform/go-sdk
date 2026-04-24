@@ -158,20 +158,23 @@ func (m *ZonalVirtualMachineID) Clone() *ZonalVirtualMachineID {
 
 func (m ZonalVirtualMachineID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalVirtualMachineID) Encode(e *jx.Encoder) {
+func (m *ZonalVirtualMachineID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ZonalVirtualMachineID) UnmarshalJSON(b []byte) error {
@@ -305,16 +308,19 @@ func (m *ZonalVirtualMachineRef) Clone() *ZonalVirtualMachineRef {
 
 func (m ZonalVirtualMachineRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalVirtualMachineRef) Encode(e *jx.Encoder) {
+func (m *ZonalVirtualMachineRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ZonalVirtualMachineRef) UnmarshalJSON(b []byte) error {

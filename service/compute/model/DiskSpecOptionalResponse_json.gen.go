@@ -14,21 +14,26 @@ import (
 
 func (m DiskSpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *DiskSpecOptionalResponse) Encode(e *jx.Encoder) {
+func (m *DiskSpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *DiskSpecOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *DiskSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("zone")
 	e.Str(m.Zone)
 
@@ -60,6 +65,12 @@ func (m *DiskSpecOptionalResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("blockSize")
 		m.BlockSize.Value.Encode(e)
 	}
+
+	if m.OsType.IsSet() {
+		e.FieldStart("osType")
+		m.OsType.Value.Encode(e)
+	}
+	return nil
 }
 
 func (m *DiskSpecOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -126,6 +137,14 @@ func (m *DiskSpecOptionalResponse) Decode(d *jx.Decoder) error {
 
 			m.BlockSize.SetTo(v)
 			return nil
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType.SetTo(v)
+			return nil
 		default:
 			return d.Skip()
 		}
@@ -134,21 +153,26 @@ func (m *DiskSpecOptionalResponse) Decode(d *jx.Decoder) error {
 
 func (m DiskSpecSourceOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *DiskSpecSourceOptionalResponse) Encode(e *jx.Encoder) {
+func (m *DiskSpecSourceOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *DiskSpecSourceOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *DiskSpecSourceOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Image.IsSet() {
 		e.FieldStart("image")
 		m.Image.Value.Encode(e)
@@ -158,6 +182,7 @@ func (m *DiskSpecSourceOptionalResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("snapshot")
 		m.Snapshot.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *DiskSpecSourceOptionalResponse) UnmarshalJSON(b []byte) error {

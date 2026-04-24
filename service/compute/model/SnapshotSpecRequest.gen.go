@@ -13,6 +13,8 @@ import (
 type SnapshotSpecRequest struct {
 	// Источник для создания снимка (На текущий момент поддерживается только диск, но в будущем будут и другие источники)
 	Source SnapshotSourceRequest `json:"source" yaml:"source"`
+	// Тип операционной системы
+	OsType *OsType `json:"osType,omitempty" yaml:"osType,omitempty"`
 }
 
 func (m *SnapshotSpecRequest) GetSource() SnapshotSourceRequest {
@@ -26,6 +28,24 @@ func (m *SnapshotSpecRequest) SetSource(val SnapshotSourceRequest) {
 	m.Source = val
 }
 
+func (m *SnapshotSpecRequest) GetOsType() *OsType {
+	if m != nil {
+		return m.OsType
+	}
+	return nil
+}
+
+func (m *SnapshotSpecRequest) SetOsType(val *OsType) {
+	m.OsType = val
+}
+
+func (m *SnapshotSpecRequest) GetOsTypeOr(val OsType) OsType {
+	if m != nil && m.OsType != nil {
+		return *m.OsType
+	}
+	return val
+}
+
 func (m *SnapshotSpecRequest) Clone() *SnapshotSpecRequest {
 	if m == nil {
 		return nil
@@ -33,6 +53,10 @@ func (m *SnapshotSpecRequest) Clone() *SnapshotSpecRequest {
 
 	clone := *m
 	clone.Source = *m.Source.Clone()
+	if m.OsType != nil {
+		cloneOsType := *m.OsType
+		clone.OsType = &cloneOsType
+	}
 	return &clone
 }
 

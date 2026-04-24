@@ -12,21 +12,26 @@ import (
 
 func (m ResourceStatusReadyResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ResourceStatusReadyResponse) Encode(e *jx.Encoder) {
+func (m *ResourceStatusReadyResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ResourceStatusReadyResponse) encodeFields(e *jx.Encoder) {
+func (m *ResourceStatusReadyResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("state")
 	m.State.Encode(e)
 
@@ -34,6 +39,7 @@ func (m *ResourceStatusReadyResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("message")
 		e.Str(*m.Message)
 	}
+	return nil
 }
 
 func (m *ResourceStatusReadyResponse) UnmarshalJSON(b []byte) error {

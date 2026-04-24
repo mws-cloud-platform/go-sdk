@@ -15,5 +15,6 @@ func CommonRoleBindingSpecSubjectRequestToResponse(request *CommonRoleBindingSpe
 		return nil, err
 	}
 	response.UserFederation = tmpUserFederation
+	response.UserGroup = request.UserGroup
 	return &response, nil
 }

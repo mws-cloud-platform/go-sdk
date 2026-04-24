@@ -14,21 +14,26 @@ import (
 
 func (m HmacKeyResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *HmacKeyResponse) Encode(e *jx.Encoder) {
+func (m *HmacKeyResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *HmacKeyResponse) encodeFields(e *jx.Encoder) {
+func (m *HmacKeyResponse) encodeFields(e *jx.Encoder) error {
 	if m.Kind != nil {
 		e.FieldStart("kind")
 		e.Str(*m.Kind)
@@ -46,6 +51,7 @@ func (m *HmacKeyResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("status")
 		m.Status.Encode(e)
 	}
+	return nil
 }
 
 func (m *HmacKeyResponse) UnmarshalJSON(b []byte) error {
@@ -107,21 +113,26 @@ func (m *HmacKeyResponse) Decode(d *jx.Decoder) error {
 
 func (m HmacKeyMetadataResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *HmacKeyMetadataResponse) Encode(e *jx.Encoder) {
+func (m *HmacKeyMetadataResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *HmacKeyMetadataResponse) encodeFields(e *jx.Encoder) {
+func (m *HmacKeyMetadataResponse) encodeFields(e *jx.Encoder) error {
 	if m.DisplayName != nil {
 		e.FieldStart("displayName")
 		e.Str(*m.DisplayName)
@@ -169,6 +180,7 @@ func (m *HmacKeyMetadataResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("id")
 		m.Id.Encode(e)
 	}
+	return nil
 }
 
 func (m *HmacKeyMetadataResponse) UnmarshalJSON(b []byte) error {

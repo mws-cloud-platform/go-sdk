@@ -158,20 +158,23 @@ func (m *ServiceAgentEncryptionKeyID) Clone() *ServiceAgentEncryptionKeyID {
 
 func (m ServiceAgentEncryptionKeyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ServiceAgentEncryptionKeyID) Encode(e *jx.Encoder) {
+func (m *ServiceAgentEncryptionKeyID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ServiceAgentEncryptionKeyID) UnmarshalJSON(b []byte) error {
@@ -305,16 +308,19 @@ func (m *ServiceAgentEncryptionKeyRef) Clone() *ServiceAgentEncryptionKeyRef {
 
 func (m ServiceAgentEncryptionKeyRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ServiceAgentEncryptionKeyRef) Encode(e *jx.Encoder) {
+func (m *ServiceAgentEncryptionKeyRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ServiceAgentEncryptionKeyRef) UnmarshalJSON(b []byte) error {

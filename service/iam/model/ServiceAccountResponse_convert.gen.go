@@ -39,5 +39,14 @@ func ServiceAccountMetadataRequestToResponse(request *ServiceAccountMetadataRequ
 	}
 	response.Etag = request.Etag
 	response.Description = request.Description
+	response.Name = request.Name
+	return &response, nil
+}
+
+func ServiceAccountSpecRequestToResponse(request *ServiceAccountSpecRequest) (*ServiceAccountSpecResponse, error) {
+	if request == nil {
+		return nil, nil
+	}
+	var response ServiceAccountSpecResponse
 	return &response, nil
 }

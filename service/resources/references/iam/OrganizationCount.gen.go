@@ -138,20 +138,23 @@ func (m *OrganizationCountID) Clone() *OrganizationCountID {
 
 func (m OrganizationCountID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *OrganizationCountID) Encode(e *jx.Encoder) {
+func (m *OrganizationCountID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *OrganizationCountID) UnmarshalJSON(b []byte) error {
@@ -267,16 +270,19 @@ func (m *OrganizationCountRef) Clone() *OrganizationCountRef {
 
 func (m OrganizationCountRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *OrganizationCountRef) Encode(e *jx.Encoder) {
+func (m *OrganizationCountRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *OrganizationCountRef) UnmarshalJSON(b []byte) error {

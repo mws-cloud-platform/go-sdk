@@ -138,20 +138,23 @@ func (m *ZonalCephStorageHostID) Clone() *ZonalCephStorageHostID {
 
 func (m ZonalCephStorageHostID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalCephStorageHostID) Encode(e *jx.Encoder) {
+func (m *ZonalCephStorageHostID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ZonalCephStorageHostID) UnmarshalJSON(b []byte) error {
@@ -276,16 +279,19 @@ func (m *ZonalCephStorageHostRef) Clone() *ZonalCephStorageHostRef {
 
 func (m ZonalCephStorageHostRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalCephStorageHostRef) Encode(e *jx.Encoder) {
+func (m *ZonalCephStorageHostRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ZonalCephStorageHostRef) UnmarshalJSON(b []byte) error {

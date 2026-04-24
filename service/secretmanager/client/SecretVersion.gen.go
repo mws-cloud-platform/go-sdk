@@ -53,8 +53,8 @@ type AddSecretVersionRequest struct {
 	// Путь к проекту
 	Project string // path: "project"
 	// Имя секрета.
-	Name string                         // path: "name"
-	Body model.SecretVersionSpecRequest // body
+	Name string                        // path: "name"
+	Body model.AddSecretVersionRequest // body
 }
 
 func (m *AddSecretVersionRequest) SetAuthorization(authorization string) {

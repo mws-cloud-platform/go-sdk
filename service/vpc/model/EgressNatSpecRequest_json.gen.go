@@ -11,21 +11,26 @@ import (
 
 func (m EgressNatSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *EgressNatSpecRequest) Encode(e *jx.Encoder) {
+func (m *EgressNatSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *EgressNatSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *EgressNatSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("internal")
 	m.Internal.Encode(e)
 
@@ -36,11 +41,7 @@ func (m *EgressNatSpecRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("portAllocation")
 		m.PortAllocation.Encode(e)
 	}
-
-	if m.Pba != nil {
-		e.FieldStart("pba")
-		m.Pba.Encode(e)
-	}
+	return nil
 }
 
 func (m *EgressNatSpecRequest) UnmarshalJSON(b []byte) error {
@@ -87,18 +88,6 @@ func (m *EgressNatSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.PortAllocation = &v
-			return nil
-		case "pba":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
-			var v EgressNatSpecPbaRequest
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Pba = &v
 			return nil
 		default:
 			return d.Skip()

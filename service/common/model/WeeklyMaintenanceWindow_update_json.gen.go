@@ -13,21 +13,26 @@ import (
 
 func (m UpdateWeeklyMaintenanceWindow) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateWeeklyMaintenanceWindow) Encode(e *jx.Encoder) {
+func (m *UpdateWeeklyMaintenanceWindow) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateWeeklyMaintenanceWindow) encodeFields(e *jx.Encoder) {
+func (m *UpdateWeeklyMaintenanceWindow) encodeFields(e *jx.Encoder) error {
 	if m.Days.IsSet() {
 		e.FieldStart("days")
 		e.ArrStart()
@@ -44,8 +49,13 @@ func (m *UpdateWeeklyMaintenanceWindow) encodeFields(e *jx.Encoder) {
 
 	if m.Duration.IsSet() {
 		e.FieldStart("duration")
-		m.Duration.Value.Encode(e)
+		if m.Duration.IsNull() {
+			e.Null()
+		} else {
+			m.Duration.Value.Encode(e)
+		}
 	}
+	return nil
 }
 
 func (m *UpdateWeeklyMaintenanceWindow) UnmarshalJSON(b []byte) error {
@@ -83,6 +93,11 @@ func (m *UpdateWeeklyMaintenanceWindow) Decode(d *jx.Decoder) error {
 			m.Hour.SetTo(v)
 			return nil
 		case "duration":
+			if d.Next() == jx.Null {
+				m.Duration.SetToNull()
+				return d.Null()
+			}
+
 			var v duration.Duration
 			if err := v.Decode(d); err != nil {
 				return err

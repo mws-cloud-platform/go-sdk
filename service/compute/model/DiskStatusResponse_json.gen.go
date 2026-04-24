@@ -15,21 +15,26 @@ import (
 
 func (m DiskStatusResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *DiskStatusResponse) Encode(e *jx.Encoder) {
+func (m *DiskStatusResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *DiskStatusResponse) encodeFields(e *jx.Encoder) {
+func (m *DiskStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
 	m.Ready.Encode(e)
 	if m.SourceExists != nil {
@@ -68,6 +73,17 @@ func (m *DiskStatusResponse) encodeFields(e *jx.Encoder) {
 		elem.Encode(e)
 	}
 	e.ArrEnd()
+
+	if m.InitialSourceImage != nil {
+		e.FieldStart("initialSourceImage")
+		m.InitialSourceImage.Encode(e)
+	}
+
+	if m.OsType != nil {
+		e.FieldStart("osType")
+		m.OsType.Encode(e)
+	}
+	return nil
 }
 
 func (m *DiskStatusResponse) UnmarshalJSON(b []byte) error {
@@ -155,6 +171,22 @@ func (m *DiskStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.LinkedVms = c
+			return nil
+		case "initialSourceImage":
+			var v compute.ImageID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.InitialSourceImage = &v
+			return nil
+		case "osType":
+			var v OsType2
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType = &v
 			return nil
 		default:
 			return d.Skip()

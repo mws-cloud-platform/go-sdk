@@ -13,21 +13,26 @@ import (
 
 func (m ApiKeyStatusResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ApiKeyStatusResponse) Encode(e *jx.Encoder) {
+func (m *ApiKeyStatusResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ApiKeyStatusResponse) encodeFields(e *jx.Encoder) {
+func (m *ApiKeyStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
 	m.Ready.Encode(e)
 	if m.ApiKey != nil {
@@ -39,6 +44,7 @@ func (m *ApiKeyStatusResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("lastAuthTime")
 		conv.EncodeDateTimeUTC(e, *m.LastAuthTime)
 	}
+	return nil
 }
 
 func (m *ApiKeyStatusResponse) UnmarshalJSON(b []byte) error {

@@ -12,21 +12,26 @@ import (
 
 func (m Dns01ChallengeResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *Dns01ChallengeResponse) Encode(e *jx.Encoder) {
+func (m *Dns01ChallengeResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *Dns01ChallengeResponse) encodeFields(e *jx.Encoder) {
+func (m *Dns01ChallengeResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("delegated")
 	e.Bool(m.Delegated)
 
@@ -34,6 +39,7 @@ func (m *Dns01ChallengeResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("cnameTarget")
 		e.Str(*m.CnameTarget)
 	}
+	return nil
 }
 
 func (m *Dns01ChallengeResponse) UnmarshalJSON(b []byte) error {

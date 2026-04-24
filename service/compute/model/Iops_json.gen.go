@@ -11,16 +11,19 @@ import (
 
 func (m Iops) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *Iops) Encode(e *jx.Encoder) {
+func (m *Iops) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Int64(int64(*m))
+	return nil
 }
 
 func (m *Iops) UnmarshalJSON(b []byte) error {

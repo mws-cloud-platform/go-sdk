@@ -13,21 +13,26 @@ import (
 
 func (m UpdateServiceAccountRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateServiceAccountRequest) Encode(e *jx.Encoder) {
+func (m *UpdateServiceAccountRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateServiceAccountRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateServiceAccountRequest) encodeFields(e *jx.Encoder) error {
 	if m.Metadata.IsSet() {
 		e.FieldStart("metadata")
 		if m.Metadata.IsNull() {
@@ -41,6 +46,7 @@ func (m *UpdateServiceAccountRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("spec")
 		m.Spec.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *UpdateServiceAccountRequest) UnmarshalJSON(b []byte) error {
@@ -83,21 +89,26 @@ func (m *UpdateServiceAccountRequest) Decode(d *jx.Decoder) error {
 
 func (m UpdateServiceAccountMetadataRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateServiceAccountMetadataRequest) Encode(e *jx.Encoder) {
+func (m *UpdateServiceAccountMetadataRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateServiceAccountMetadataRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateServiceAccountMetadataRequest) encodeFields(e *jx.Encoder) error {
 	if m.DisplayName.IsSet() {
 		e.FieldStart("displayName")
 		e.Str(m.DisplayName.Value)
@@ -121,6 +132,11 @@ func (m *UpdateServiceAccountMetadataRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("description")
 		e.Str(m.Description.Value)
 	}
+	if m.Name.IsSet() {
+		e.FieldStart("name")
+		e.Str(m.Name.Value)
+	}
+	return nil
 }
 
 func (m *UpdateServiceAccountMetadataRequest) UnmarshalJSON(b []byte) error {
@@ -173,8 +189,53 @@ func (m *UpdateServiceAccountMetadataRequest) Decode(d *jx.Decoder) error {
 
 			m.Description.SetTo(v)
 			return nil
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name.SetTo(v)
+			return nil
 		default:
 			return d.Skip()
 		}
 	}))
+}
+
+func (m UpdateServiceAccountSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *UpdateServiceAccountSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *UpdateServiceAccountSpecRequest) encodeFields(e *jx.Encoder) error {
+	return nil
+}
+
+func (m *UpdateServiceAccountSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *UpdateServiceAccountSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("UpdateServiceAccountSpecRequest")
+	}
+
+	return d.Skip()
 }

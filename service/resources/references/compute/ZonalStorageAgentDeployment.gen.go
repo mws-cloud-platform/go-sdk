@@ -138,20 +138,23 @@ func (m *ZonalStorageAgentDeploymentID) Clone() *ZonalStorageAgentDeploymentID {
 
 func (m ZonalStorageAgentDeploymentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalStorageAgentDeploymentID) Encode(e *jx.Encoder) {
+func (m *ZonalStorageAgentDeploymentID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ZonalStorageAgentDeploymentID) UnmarshalJSON(b []byte) error {
@@ -276,16 +279,19 @@ func (m *ZonalStorageAgentDeploymentRef) Clone() *ZonalStorageAgentDeploymentRef
 
 func (m ZonalStorageAgentDeploymentRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalStorageAgentDeploymentRef) Encode(e *jx.Encoder) {
+func (m *ZonalStorageAgentDeploymentRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ZonalStorageAgentDeploymentRef) UnmarshalJSON(b []byte) error {

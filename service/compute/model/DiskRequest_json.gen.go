@@ -12,21 +12,26 @@ import (
 
 func (m DiskRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *DiskRequest) Encode(e *jx.Encoder) {
+func (m *DiskRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *DiskRequest) encodeFields(e *jx.Encoder) {
+func (m *DiskRequest) encodeFields(e *jx.Encoder) error {
 	if m.Metadata != nil {
 		e.FieldStart("metadata")
 		m.Metadata.Encode(e)
@@ -34,6 +39,7 @@ func (m *DiskRequest) encodeFields(e *jx.Encoder) {
 
 	e.FieldStart("spec")
 	m.Spec.Encode(e)
+	return nil
 }
 
 func (m *DiskRequest) UnmarshalJSON(b []byte) error {

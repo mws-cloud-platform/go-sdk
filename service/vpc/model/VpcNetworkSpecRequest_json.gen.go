@@ -12,21 +12,26 @@ import (
 
 func (m VpcNetworkSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *VpcNetworkSpecRequest) Encode(e *jx.Encoder) {
+func (m *VpcNetworkSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *VpcNetworkSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *VpcNetworkSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Mtu != nil {
 		e.FieldStart("mtu")
 		e.Int32(*m.Mtu)
@@ -36,6 +41,7 @@ func (m *VpcNetworkSpecRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("internetAccess")
 		e.Bool(*m.InternetAccess)
 	}
+	return nil
 }
 
 func (m *VpcNetworkSpecRequest) UnmarshalJSON(b []byte) error {

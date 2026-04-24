@@ -138,20 +138,23 @@ func (m *UserSignatureKeyID) Clone() *UserSignatureKeyID {
 
 func (m UserSignatureKeyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UserSignatureKeyID) Encode(e *jx.Encoder) {
+func (m *UserSignatureKeyID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *UserSignatureKeyID) UnmarshalJSON(b []byte) error {
@@ -276,16 +279,19 @@ func (m *UserSignatureKeyRef) Clone() *UserSignatureKeyRef {
 
 func (m UserSignatureKeyRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UserSignatureKeyRef) Encode(e *jx.Encoder) {
+func (m *UserSignatureKeyRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *UserSignatureKeyRef) UnmarshalJSON(b []byte) error {

@@ -178,20 +178,23 @@ func (m *VpcHostNetworkAttachmentID) Clone() *VpcHostNetworkAttachmentID {
 
 func (m VpcHostNetworkAttachmentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *VpcHostNetworkAttachmentID) Encode(e *jx.Encoder) {
+func (m *VpcHostNetworkAttachmentID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *VpcHostNetworkAttachmentID) UnmarshalJSON(b []byte) error {
@@ -334,16 +337,19 @@ func (m *VpcHostNetworkAttachmentRef) Clone() *VpcHostNetworkAttachmentRef {
 
 func (m VpcHostNetworkAttachmentRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *VpcHostNetworkAttachmentRef) Encode(e *jx.Encoder) {
+func (m *VpcHostNetworkAttachmentRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *VpcHostNetworkAttachmentRef) UnmarshalJSON(b []byte) error {

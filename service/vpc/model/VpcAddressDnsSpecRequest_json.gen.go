@@ -13,21 +13,26 @@ import (
 
 func (m VpcAddressDnsSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *VpcAddressDnsSpecRequest) Encode(e *jx.Encoder) {
+func (m *VpcAddressDnsSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *VpcAddressDnsSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *VpcAddressDnsSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("name")
 	e.Str(m.Name)
 
@@ -36,6 +41,7 @@ func (m *VpcAddressDnsSpecRequest) encodeFields(e *jx.Encoder) {
 
 	e.FieldStart("ptr")
 	e.Bool(m.Ptr)
+	return nil
 }
 
 func (m *VpcAddressDnsSpecRequest) UnmarshalJSON(b []byte) error {

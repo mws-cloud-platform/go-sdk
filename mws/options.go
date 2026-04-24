@@ -10,9 +10,14 @@ import (
 	"time"
 
 	"go.mws.cloud/util-toolset/pkg/os/env"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/internal/imds"
 	"go.mws.cloud/go-sdk/mws/credentials"
 	"go.mws.cloud/go-sdk/mws/endpoints"
 	"go.mws.cloud/go-sdk/mws/iam"
@@ -45,10 +50,31 @@ func WithDefaultZone(zone string) LoadSDKOption {
 	}
 }
 
+// WithDefaultBaseEndpoint sets default base endpoint.
+func WithDefaultBaseEndpoint(endpoint string) LoadSDKOption {
+	return func(c *loadSDKOptions) {
+		c.defaultBaseEndpoint = endpoint
+	}
+}
+
+// WithUserAgent sets user agent.
+func WithUserAgent(userAgent string) LoadSDKOption {
+	return func(c *loadSDKOptions) {
+		c.userAgent = userAgent
+	}
+}
+
 // WithLogger sets the logger.
 func WithLogger(logger *zap.Logger) LoadSDKOption {
 	return func(o *loadSDKOptions) {
 		o.logger = logger
+	}
+}
+
+// WithTracerProvider sets the tracer provider.
+func WithTracerProvider(tracerProvider trace.TracerProvider) LoadSDKOption {
+	return func(c *loadSDKOptions) {
+		c.tracerProvider = tracerProvider
 	}
 }
 
@@ -115,8 +141,11 @@ type loadSDKOptions struct {
 	config                      *Config
 	defaultProject              string
 	defaultZone                 string
+	defaultBaseEndpoint         string
+	userAgent                   string
 	timeout                     time.Duration
 	logger                      *zap.Logger
+	tracerProvider              trace.TracerProvider
 	client                      HTTPClient
 	transport                   http.RoundTripper
 	retryer                     retry.Retryer
@@ -146,6 +175,9 @@ func (o *loadSDKOptions) setOpts(sdk *SDK) {
 	sdk.defaultZone = o.defaultZone
 	if o.logger != nil {
 		sdk.logger = o.logger
+	}
+	if o.tracerProvider != nil {
+		sdk.tracerProvider = o.tracerProvider
 	}
 	if o.client != nil {
 		sdk.client = o.client
@@ -179,8 +211,11 @@ func (o *loadSDKOptions) setDefaults(ctx context.Context, sdk *SDK) (err error) 
 			return fmt.Errorf("build logger: %w", err)
 		}
 	}
+	if sdk.tracerProvider == nil {
+		sdk.tracerProvider = otel.GetTracerProvider()
+	}
 	if sdk.client == nil {
-		sdk.client = o.buildClient()
+		sdk.client = o.buildClient(sdk)
 	}
 
 	sdk.client, sdk.clientCancel = newCancelableClient(sdk.client)
@@ -219,14 +254,21 @@ func (o *loadSDKOptions) buildLogger(level string) (*zap.Logger, error) {
 	return logger.Named("sdk"), nil
 }
 
-func (o *loadSDKOptions) buildClient() *http.Client {
+func (o *loadSDKOptions) buildClient(sdk *SDK) *http.Client {
 	return &http.Client{
 		Timeout: o.getTimeout(),
 		Transport: mwshttp.Chain(
+			mwshttp.Otel(
+				otelhttp.WithTracerProvider(sdk.tracerProvider),
+				otelhttp.WithPropagators(propagation.NewCompositeTextMapPropagator(
+					propagation.TraceContext{},
+					propagation.Baggage{},
+				)),
+			),
 			mwshttp.RequestIDInjector,
 			mwshttp.IdempotencyTokenInjector,
 			mwshttp.RetryAttemptInjector,
-			mwshttp.UserAgentInjector(o.userAgent()),
+			mwshttp.UserAgentInjector(o.getUserAgent()),
 		)(o.transport),
 	}
 }
@@ -235,9 +277,12 @@ func (o *loadSDKOptions) getTimeout() time.Duration {
 	return cmp.Or(o.timeout, o.config.Timeout, DefaultTimeout)
 }
 
-func (o *loadSDKOptions) userAgent() string {
-	version := "unknown"
+func (o *loadSDKOptions) getUserAgent() string {
+	if o.userAgent != "" {
+		return o.userAgent
+	}
 
+	version := "unknown"
 	if info, ok := debug.ReadBuildInfo(); ok && info.Main.Version != "" {
 		version = info.Main.Version
 	}
@@ -259,6 +304,8 @@ func (o *loadSDKOptions) buildCredentials(ctx context.Context, sdk *SDK) (creden
 			return nil, fmt.Errorf("read service account authorized key from file: %w", err)
 		}
 		return o.buildServiceAccountAuthorizedKeyCredentials(ctx, sdk, key)
+	case onComputeVMWithSA(ctx, sdk.client, o.env):
+		return o.buildVMServiceAccountCredentials(sdk), nil
 	default:
 		return credentials.AnonymousProvider(), nil
 	}
@@ -285,8 +332,13 @@ func (o *loadSDKOptions) buildServiceAccountAuthorizedKeyCredentials(
 	), nil
 }
 
+func (o *loadSDKOptions) buildVMServiceAccountCredentials(sdk *SDK) credentials.Provider {
+	metadataProvider := imds.NewClient(sdk.client, o.env)
+	return credentials.NewVMServiceAccountProvider(metadataProvider, credentials.WithVMServiceAccountProviderLogger(sdk.logger))
+}
+
 func (o *loadSDKOptions) buildServiceEndpointResolver(logger *zap.Logger, client HTTPClient) endpoints.ServiceEndpointResolver {
-	endpoint := endpoints.Endpoint(o.config.BaseEndpoint)
+	endpoint := endpoints.Endpoint(cmp.Or(o.defaultBaseEndpoint, o.config.BaseEndpoint))
 	discoveryClient := endpoints.NewHTTPDiscoveryClient(logger, client, endpoint)
 	return endpoints.NewDiscoveryServiceEndpointResolver(discoveryClient)
 }
@@ -338,3 +390,8 @@ type closeIdler interface{ CloseIdleConnections() }
 type noopCloser struct{}
 
 func (noopCloser) CloseIdleConnections() {}
+
+func onComputeVMWithSA(ctx context.Context, client HTTPClient, env env.Env) bool {
+	serviceAccountRef, err := imds.GetVMServiceAccount(ctx, client, env)
+	return err == nil && serviceAccountRef != ""
+}

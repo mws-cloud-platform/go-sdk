@@ -13,21 +13,26 @@ import (
 
 func (m StorageDiskSpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *StorageDiskSpecOptionalResponse) Encode(e *jx.Encoder) {
+func (m *StorageDiskSpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *StorageDiskSpecOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *StorageDiskSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Size.IsSet() {
 		e.FieldStart("size")
 		m.Size.Value.Encode(e)
@@ -51,6 +56,7 @@ func (m *StorageDiskSpecOptionalResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("iops")
 		m.Iops.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *StorageDiskSpecOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -109,25 +115,31 @@ func (m *StorageDiskSpecOptionalResponse) Decode(d *jx.Decoder) error {
 
 func (m StorageDiskSpecSourceOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *StorageDiskSpecSourceOptionalResponse) Encode(e *jx.Encoder) {
+func (m *StorageDiskSpecSourceOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *StorageDiskSpecSourceOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *StorageDiskSpecSourceOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Image.IsSet() {
 		e.FieldStart("image")
 		m.Image.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *StorageDiskSpecSourceOptionalResponse) UnmarshalJSON(b []byte) error {

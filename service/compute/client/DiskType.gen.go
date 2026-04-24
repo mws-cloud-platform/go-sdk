@@ -158,21 +158,26 @@ func (m *ListDiskTypesResponse200) Parse(ctx context.Context) error {
 
 func (m ListDiskTypesResponse200) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ListDiskTypesResponse200) Encode(e *jx.Encoder) {
+func (m *ListDiskTypesResponse200) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ListDiskTypesResponse200) encodeFields(e *jx.Encoder) {
+func (m *ListDiskTypesResponse200) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("items")
 	e.ArrStart()
 	for _, elem := range m.Items {
@@ -184,6 +189,7 @@ func (m *ListDiskTypesResponse200) encodeFields(e *jx.Encoder) {
 		e.FieldStart("nextPageToken")
 		m.NextPageToken.Encode(e)
 	}
+	return nil
 }
 
 func (m *ListDiskTypesResponse200) UnmarshalJSON(b []byte) error {

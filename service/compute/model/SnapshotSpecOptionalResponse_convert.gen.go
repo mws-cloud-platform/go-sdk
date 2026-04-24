@@ -2,6 +2,10 @@
 
 package model
 
+import (
+	commonclient "go.mws.cloud/go-sdk/internal/client"
+)
+
 func SnapshotSpecRequestToOptionalResponse(request *SnapshotSpecRequest) (*SnapshotSpecOptionalResponse, error) {
 	if request == nil {
 		return nil, nil
@@ -12,5 +16,8 @@ func SnapshotSpecRequestToOptionalResponse(request *SnapshotSpecRequest) (*Snaps
 		return nil, err
 	}
 	response.Source = *tmpSource
+	if request.OsType != nil {
+		response.OsType = commonclient.NewOptional(*request.OsType)
+	}
 	return &response, nil
 }

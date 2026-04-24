@@ -29,6 +29,16 @@ var (
 			SearchAfter: false,
 		},
 		{
+			Value:       "secretName",
+			IsConstant:  false,
+			SearchAfter: true,
+		},
+		{
+			Value:       "secrets",
+			IsConstant:  true,
+			SearchAfter: false,
+		},
+		{
 			Value:       "project",
 			IsConstant:  false,
 			SearchAfter: true,
@@ -46,9 +56,10 @@ var (
 	}
 )
 
-func NewSecretRoleBindingID(project, roleBinding string) SecretRoleBindingID {
+func NewSecretRoleBindingID(project, secretName, roleBinding string) SecretRoleBindingID {
 	m := SecretRoleBindingID{
 		roleBinding: roleBinding,
+		secretName:  secretName,
 		project:     project,
 	}
 	m.path = m.ID()
@@ -71,6 +82,7 @@ func NewSecretRoleBindingIDFromAnyID(resource resmodels.AnyResourceID) (SecretRo
 
 type SecretRoleBindingID struct {
 	roleBinding string
+	secretName  string
 	project     string
 	path        string
 }
@@ -89,6 +101,13 @@ func (m *SecretRoleBindingID) GetRoleBinding() string {
 	return m.roleBinding
 }
 
+func (m *SecretRoleBindingID) GetSecretName() string {
+	if m == nil {
+		return ""
+	}
+	return m.secretName
+}
+
 func (m *SecretRoleBindingID) GetProject() string {
 	if m == nil {
 		return ""
@@ -101,11 +120,11 @@ func (m *SecretRoleBindingID) ServiceSlug() string {
 }
 
 func (m *SecretRoleBindingID) ID() string {
-	if m == nil || m.roleBinding == "" || m.project == "" {
+	if m == nil || m.roleBinding == "" || m.secretName == "" || m.project == "" {
 		return ""
 	}
 
-	return m.ServiceSlug() + "/projects/" + m.project + "/secretRoleBindings/" + m.roleBinding
+	return m.ServiceSlug() + "/projects/" + m.project + "/secrets/" + m.secretName + "/secretRoleBindings/" + m.roleBinding
 }
 
 func (m *SecretRoleBindingID) String() string {
@@ -123,6 +142,7 @@ func (m *SecretRoleBindingID) Parse(ctx context.Context) error {
 	}
 
 	m.roleBinding = result["roleBinding"]
+	m.secretName = result["secretName"]
 	m.project = result["project"]
 
 	return nil
@@ -138,20 +158,23 @@ func (m *SecretRoleBindingID) Clone() *SecretRoleBindingID {
 
 func (m SecretRoleBindingID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *SecretRoleBindingID) Encode(e *jx.Encoder) {
+func (m *SecretRoleBindingID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *SecretRoleBindingID) UnmarshalJSON(b []byte) error {
@@ -172,10 +195,11 @@ func (m *SecretRoleBindingID) Decode(d *jx.Decoder) error {
 	return nil
 }
 
-func NewSecretRoleBindingRef(project, roleBinding string) SecretRoleBindingRef {
+func NewSecretRoleBindingRef(project, secretName, roleBinding string) SecretRoleBindingRef {
 	m := SecretRoleBindingRef{
 		id: SecretRoleBindingID{
 			roleBinding: roleBinding,
+			secretName:  secretName,
 			project:     project,
 		},
 	}
@@ -216,6 +240,13 @@ func (m *SecretRoleBindingRef) GetRoleBinding() string {
 		return ""
 	}
 	return m.id.GetRoleBinding()
+}
+
+func (m *SecretRoleBindingRef) GetSecretName() string {
+	if m == nil {
+		return ""
+	}
+	return m.id.GetSecretName()
 }
 
 func (m *SecretRoleBindingRef) GetProject() string {
@@ -261,6 +292,7 @@ func (m *SecretRoleBindingRef) Parse(ctx context.Context) error {
 	}
 
 	m.id.roleBinding = result["roleBinding"]
+	m.id.secretName = result["secretName"]
 	m.id.project = result["project"]
 
 	return nil
@@ -276,16 +308,19 @@ func (m *SecretRoleBindingRef) Clone() *SecretRoleBindingRef {
 
 func (m SecretRoleBindingRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *SecretRoleBindingRef) Encode(e *jx.Encoder) {
+func (m *SecretRoleBindingRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *SecretRoleBindingRef) UnmarshalJSON(b []byte) error {
@@ -307,9 +342,9 @@ func (m *SecretRoleBindingRef) Decode(d *jx.Decoder) error {
 }
 
 func (m *SecretRoleBindingRef) absolutePath() string {
-	if m == nil || m.id.roleBinding == "" || m.id.project == "" {
+	if m == nil || m.id.roleBinding == "" || m.id.secretName == "" || m.id.project == "" {
 		return ""
 	}
 
-	return "projects/" + m.id.project + "/secretRoleBindings/" + m.id.roleBinding
+	return "projects/" + m.id.project + "/secrets/" + m.id.secretName + "/secretRoleBindings/" + m.id.roleBinding
 }

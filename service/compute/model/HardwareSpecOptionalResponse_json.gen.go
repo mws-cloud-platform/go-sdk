@@ -13,21 +13,26 @@ import (
 
 func (m HardwareSpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *HardwareSpecOptionalResponse) Encode(e *jx.Encoder) {
+func (m *HardwareSpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *HardwareSpecOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *HardwareSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Power.IsSet() {
 		e.FieldStart("power")
 		m.Power.Value.Encode(e)
@@ -37,6 +42,7 @@ func (m *HardwareSpecOptionalResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("gracefulShutdownTimeout")
 		m.GracefulShutdownTimeout.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *HardwareSpecOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -74,16 +80,19 @@ func (m *HardwareSpecOptionalResponse) Decode(d *jx.Decoder) error {
 
 func (m HardwareSpecPowerOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *HardwareSpecPowerOptionalResponse) Encode(e *jx.Encoder) {
+func (m *HardwareSpecPowerOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(string(*m))
+	return nil
 }
 
 func (m *HardwareSpecPowerOptionalResponse) UnmarshalJSON(b []byte) error {

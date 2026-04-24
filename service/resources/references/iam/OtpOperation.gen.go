@@ -118,20 +118,23 @@ func (m *OtpOperationID) Clone() *OtpOperationID {
 
 func (m OtpOperationID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *OtpOperationID) Encode(e *jx.Encoder) {
+func (m *OtpOperationID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *OtpOperationID) UnmarshalJSON(b []byte) error {
@@ -247,16 +250,19 @@ func (m *OtpOperationRef) Clone() *OtpOperationRef {
 
 func (m OtpOperationRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *OtpOperationRef) Encode(e *jx.Encoder) {
+func (m *OtpOperationRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *OtpOperationRef) UnmarshalJSON(b []byte) error {

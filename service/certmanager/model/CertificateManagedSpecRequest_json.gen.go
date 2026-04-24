@@ -12,21 +12,26 @@ import (
 
 func (m CertificateManagedSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CertificateManagedSpecRequest) Encode(e *jx.Encoder) {
+func (m *CertificateManagedSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *CertificateManagedSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *CertificateManagedSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("preferredChallengeType")
 	m.PreferredChallengeType.Encode(e)
 
@@ -39,6 +44,7 @@ func (m *CertificateManagedSpecRequest) encodeFields(e *jx.Encoder) {
 		e.Str(elem)
 	}
 	e.ArrEnd()
+	return nil
 }
 
 func (m *CertificateManagedSpecRequest) UnmarshalJSON(b []byte) error {

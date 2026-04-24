@@ -22,6 +22,8 @@ type ImageSpecRequest struct {
 	Activity *ImageActivity `json:"activity,omitempty" yaml:"activity,omitempty"`
 	// Минимальный допустимый размер диска, создаваемого из образа
 	MinDiskSize *bytesize.ByteSize `json:"minDiskSize,omitempty" yaml:"minDiskSize,omitempty"`
+	// Тип операционной системы
+	OsType *OsType `json:"osType,omitempty" yaml:"osType,omitempty"`
 }
 
 func (m *ImageSpecRequest) GetFamily() *string {
@@ -89,6 +91,24 @@ func (m *ImageSpecRequest) GetMinDiskSizeOr(val bytesize.ByteSize) bytesize.Byte
 	return val
 }
 
+func (m *ImageSpecRequest) GetOsType() *OsType {
+	if m != nil {
+		return m.OsType
+	}
+	return nil
+}
+
+func (m *ImageSpecRequest) SetOsType(val *OsType) {
+	m.OsType = val
+}
+
+func (m *ImageSpecRequest) GetOsTypeOr(val OsType) OsType {
+	if m != nil && m.OsType != nil {
+		return *m.OsType
+	}
+	return val
+}
+
 func (m *ImageSpecRequest) Clone() *ImageSpecRequest {
 	if m == nil {
 		return nil
@@ -105,6 +125,10 @@ func (m *ImageSpecRequest) Clone() *ImageSpecRequest {
 		clone.Activity = &cloneActivity
 	}
 	clone.MinDiskSize = m.MinDiskSize.Clone()
+	if m.OsType != nil {
+		cloneOsType := *m.OsType
+		clone.OsType = &cloneOsType
+	}
 	return &clone
 }
 

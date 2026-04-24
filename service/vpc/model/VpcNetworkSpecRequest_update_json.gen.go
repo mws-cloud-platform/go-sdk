@@ -12,26 +12,32 @@ import (
 
 func (m UpdateVpcNetworkSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateVpcNetworkSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateVpcNetworkSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateVpcNetworkSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateVpcNetworkSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.InternetAccess.IsSet() {
 		e.FieldStart("internetAccess")
 		e.Bool(m.InternetAccess.Value)
 	}
+	return nil
 }
 
 func (m *UpdateVpcNetworkSpecRequest) UnmarshalJSON(b []byte) error {

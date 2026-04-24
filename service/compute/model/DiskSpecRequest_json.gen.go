@@ -14,21 +14,26 @@ import (
 
 func (m DiskSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *DiskSpecRequest) Encode(e *jx.Encoder) {
+func (m *DiskSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *DiskSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *DiskSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("zone")
 	e.Str(m.Zone)
 
@@ -56,6 +61,12 @@ func (m *DiskSpecRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("blockSize")
 		m.BlockSize.Encode(e)
 	}
+
+	if m.OsType != nil {
+		e.FieldStart("osType")
+		m.OsType.Encode(e)
+	}
+	return nil
 }
 
 func (m *DiskSpecRequest) UnmarshalJSON(b []byte) error {
@@ -125,6 +136,14 @@ func (m *DiskSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.BlockSize = &v
 			return nil
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType = &v
+			return nil
 		default:
 			return d.Skip()
 		}
@@ -138,21 +157,26 @@ func (m *DiskSpecRequest) Decode(d *jx.Decoder) error {
 
 func (m DiskSpecSourceRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *DiskSpecSourceRequest) Encode(e *jx.Encoder) {
+func (m *DiskSpecSourceRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *DiskSpecSourceRequest) encodeFields(e *jx.Encoder) {
+func (m *DiskSpecSourceRequest) encodeFields(e *jx.Encoder) error {
 	if m.Image != nil {
 		e.FieldStart("image")
 		m.Image.Encode(e)
@@ -162,6 +186,7 @@ func (m *DiskSpecSourceRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("snapshot")
 		m.Snapshot.Encode(e)
 	}
+	return nil
 }
 
 func (m *DiskSpecSourceRequest) UnmarshalJSON(b []byte) error {

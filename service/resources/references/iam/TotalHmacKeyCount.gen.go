@@ -138,20 +138,23 @@ func (m *TotalHmacKeyCountID) Clone() *TotalHmacKeyCountID {
 
 func (m TotalHmacKeyCountID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *TotalHmacKeyCountID) Encode(e *jx.Encoder) {
+func (m *TotalHmacKeyCountID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *TotalHmacKeyCountID) UnmarshalJSON(b []byte) error {
@@ -267,16 +270,19 @@ func (m *TotalHmacKeyCountRef) Clone() *TotalHmacKeyCountRef {
 
 func (m TotalHmacKeyCountRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *TotalHmacKeyCountRef) Encode(e *jx.Encoder) {
+func (m *TotalHmacKeyCountRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *TotalHmacKeyCountRef) UnmarshalJSON(b []byte) error {

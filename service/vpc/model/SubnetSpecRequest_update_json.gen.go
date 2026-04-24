@@ -11,21 +11,26 @@ import (
 
 func (m UpdateSubnetSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateSubnetSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateSubnetSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateSubnetSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateSubnetSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.DhcpOptions.IsSet() {
 		e.FieldStart("dhcpOptions")
@@ -35,6 +40,7 @@ func (m *UpdateSubnetSpecRequest) encodeFields(e *jx.Encoder) {
 			m.DhcpOptions.Value.Encode(e)
 		}
 	}
+	return nil
 }
 
 func (m *UpdateSubnetSpecRequest) UnmarshalJSON(b []byte) error {

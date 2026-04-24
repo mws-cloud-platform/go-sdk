@@ -71,6 +71,8 @@ func (m *ServiceAccountRequest) Parse(ctx context.Context) error {
 // Real OAPI model name: ServiceAccountMetadata
 type ServiceAccountMetadataRequest struct {
 	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	// Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта.
+	Name *string `json:"name,omitempty" yaml:"name,omitempty"`
 }
 
 func (m *ServiceAccountMetadataRequest) GetDisplayName() *string {
@@ -129,6 +131,20 @@ func (m *ServiceAccountMetadataRequest) GetDescriptionOr(val string) string {
 	return val
 }
 
+func (m *ServiceAccountMetadataRequest) GetName() *string {
+	if m != nil {
+		return m.Name
+	}
+	return nil
+}
+
+func (m *ServiceAccountMetadataRequest) GetNameOr(val string) string {
+	if m != nil && m.Name != nil {
+		return *m.Name
+	}
+	return val
+}
+
 func (m *ServiceAccountMetadataRequest) Clone() *ServiceAccountMetadataRequest {
 	if m == nil {
 		return nil
@@ -136,6 +152,10 @@ func (m *ServiceAccountMetadataRequest) Clone() *ServiceAccountMetadataRequest {
 
 	clone := *m
 	clone.TypedResourceMetadataRequest = *m.TypedResourceMetadataRequest.Clone()
+	if m.Name != nil {
+		cloneName := *m.Name
+		clone.Name = &cloneName
+	}
 
 	return &clone
 }
@@ -149,4 +169,18 @@ func (m *ServiceAccountMetadataRequest) Parse(ctx context.Context) error {
 		return reserrors.NewPathAccumulatorError("TypedResourceMetadataRequest", err)
 	}
 	return nil
+}
+
+// Представление поля Spec анонимного типа структуры ServiceAccount
+// Real OAPI model name: ServiceAccountSpec
+type ServiceAccountSpecRequest struct {
+}
+
+func (m *ServiceAccountSpecRequest) Clone() *ServiceAccountSpecRequest {
+	if m == nil {
+		return nil
+	}
+
+	clone := *m
+	return &clone
 }

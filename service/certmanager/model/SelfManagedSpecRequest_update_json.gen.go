@@ -12,21 +12,26 @@ import (
 
 func (m UpdateSelfManagedSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateSelfManagedSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateSelfManagedSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateSelfManagedSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateSelfManagedSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Certificate.IsSet() {
 		e.FieldStart("certificate")
 		e.Str(m.Certificate.Value)
@@ -41,6 +46,7 @@ func (m *UpdateSelfManagedSpecRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("chainedCert")
 		e.Str(m.ChainedCert.Value)
 	}
+	return nil
 }
 
 func (m *UpdateSelfManagedSpecRequest) UnmarshalJSON(b []byte) error {

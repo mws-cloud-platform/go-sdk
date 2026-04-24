@@ -12,21 +12,26 @@ import (
 
 func (m UsageResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UsageResponse) Encode(e *jx.Encoder) {
+func (m *UsageResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UsageResponse) encodeFields(e *jx.Encoder) {
+func (m *UsageResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("usageType")
 	e.Str(m.UsageType)
 
@@ -35,6 +40,7 @@ func (m *UsageResponse) encodeFields(e *jx.Encoder) {
 
 	e.FieldStart("resource")
 	e.Str(m.Resource)
+	return nil
 }
 
 func (m *UsageResponse) UnmarshalJSON(b []byte) error {

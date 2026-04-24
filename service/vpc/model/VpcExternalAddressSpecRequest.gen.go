@@ -12,7 +12,7 @@ import (
 // Спецификация внешнего адреса.
 // Real OAPI model name: VpcExternalAddressSpec
 type VpcExternalAddressSpecRequest struct {
-	// Шлюз, к которому относится адрес. Если шлюз не указан, для трансляции IP-адресов используется шлюз по умолчанию для выхода в интернет (ref=natGateways/internet-gateway, vrfId=555)
+	// Шлюз, к которому относится адрес. Если шлюз не указан, для трансляции IP-адресов используется шлюз по умолчанию для выхода в интернет (ref=natGateways/internet-gateway)
 	NatGateway *vpc.NatGatewayRef `json:"natGateway,omitempty" yaml:"natGateway,omitempty"`
 }
 

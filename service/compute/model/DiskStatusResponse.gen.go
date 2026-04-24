@@ -31,6 +31,10 @@ type DiskStatusResponse struct {
 	BlockSize *bytesize.ByteSize `json:"blockSize,omitempty" yaml:"blockSize,omitempty"`
 	// Информация о ВМ, использующих этот диск
 	LinkedVms []common.LinkedVmInfoResponse `json:"linkedVms" yaml:"linkedVms"`
+	// Ссылка на исходный образ
+	InitialSourceImage *compute.ImageID `json:"initialSourceImage,omitempty" yaml:"initialSourceImage,omitempty"`
+	// Тип операционной системы
+	OsType *OsType2 `json:"osType,omitempty" yaml:"osType,omitempty"`
 }
 
 func (m *DiskStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -131,6 +135,34 @@ func (m *DiskStatusResponse) GetLinkedVms() []common.LinkedVmInfoResponse {
 	return nil
 }
 
+func (m *DiskStatusResponse) GetInitialSourceImage() *compute.ImageID {
+	if m != nil {
+		return m.InitialSourceImage
+	}
+	return nil
+}
+
+func (m *DiskStatusResponse) GetInitialSourceImageOr(val compute.ImageID) compute.ImageID {
+	if m != nil && m.InitialSourceImage != nil {
+		return *m.InitialSourceImage
+	}
+	return val
+}
+
+func (m *DiskStatusResponse) GetOsType() *OsType2 {
+	if m != nil {
+		return m.OsType
+	}
+	return nil
+}
+
+func (m *DiskStatusResponse) GetOsTypeOr(val OsType2) OsType2 {
+	if m != nil && m.OsType != nil {
+		return *m.OsType
+	}
+	return val
+}
+
 func (m *DiskStatusResponse) Clone() *DiskStatusResponse {
 	if m == nil {
 		return nil
@@ -153,6 +185,11 @@ func (m *DiskStatusResponse) Clone() *DiskStatusResponse {
 			clone.LinkedVms[i] = *v.Clone()
 		}
 	}
+	clone.InitialSourceImage = m.InitialSourceImage.Clone()
+	if m.OsType != nil {
+		cloneOsType := *m.OsType
+		clone.OsType = &cloneOsType
+	}
 
 	return &clone
 }
@@ -170,6 +207,10 @@ func (m *DiskStatusResponse) Parse(ctx context.Context) error {
 		if err := m.LinkedVms[index].Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("LinkedVms"+fmt.Sprint("[", index, "]"), err)
 		}
+	}
+
+	if err := m.InitialSourceImage.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("InitialSourceImage", err)
 	}
 
 	return nil

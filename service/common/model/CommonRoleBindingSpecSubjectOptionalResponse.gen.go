@@ -17,8 +17,11 @@ type CommonRoleBindingSpecSubjectOptionalResponse struct {
 	// Идентификатор сервисного аккаунта, принадлежащего проекту.
 	ServiceAccount commonclient.Optional[iam.ServiceAccountRef] `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
 	// Идентификатор сервисного агента, связанного с проектом.
-	ServiceAgent   commonclient.Optional[iam.ServiceAgentRef]                            `json:"serviceAgent,omitempty" yaml:"serviceAgent,omitempty"`
+	ServiceAgent commonclient.Optional[iam.ServiceAgentRef] `json:"serviceAgent,omitempty" yaml:"serviceAgent,omitempty"`
+	// Субъект федерации пользователей.
 	UserFederation commonclient.OptionalNil[CommonRoleBindingFederationOptionalResponse] `json:"userFederation,omitempty" yaml:"userFederation,omitempty"`
+	// Идентификатор группы пользователей.
+	UserGroup commonclient.Optional[iam.UserGroupRef] `json:"userGroup,omitempty" yaml:"userGroup,omitempty"`
 }
 
 func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetUser() *iam.UserRef {
@@ -77,6 +80,20 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetUserFederationOr(val C
 	return val
 }
 
+func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetUserGroup() *iam.UserGroupRef {
+	if m != nil && m.UserGroup.IsSet() {
+		return &m.UserGroup.Value
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetUserGroupOr(val iam.UserGroupRef) iam.UserGroupRef {
+	if m != nil && m.UserGroup.IsSet() {
+		return m.UserGroup.Value
+	}
+	return val
+}
+
 func (m *CommonRoleBindingSpecSubjectOptionalResponse) Clone() *CommonRoleBindingSpecSubjectOptionalResponse {
 	if m == nil {
 		return nil
@@ -94,6 +111,9 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) Clone() *CommonRoleBindin
 	}
 	if clone.UserFederation.IsSet() {
 		clone.UserFederation.Value = *m.UserFederation.Value.Clone()
+	}
+	if clone.UserGroup.IsSet() {
+		clone.UserGroup.Value = *m.UserGroup.Value.Clone()
 	}
 	return &clone
 }
@@ -124,6 +144,12 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) Parse(ctx context.Context
 	if m.UserFederation.IsSet() {
 		if err := m.UserFederation.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("UserFederation", err)
+		}
+	}
+
+	if m.UserGroup.IsSet() {
+		if err := m.UserGroup.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("UserGroup", err)
 		}
 	}
 

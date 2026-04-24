@@ -138,20 +138,23 @@ func (m *ProjectRoleBindingCountID) Clone() *ProjectRoleBindingCountID {
 
 func (m ProjectRoleBindingCountID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ProjectRoleBindingCountID) Encode(e *jx.Encoder) {
+func (m *ProjectRoleBindingCountID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ProjectRoleBindingCountID) UnmarshalJSON(b []byte) error {
@@ -267,16 +270,19 @@ func (m *ProjectRoleBindingCountRef) Clone() *ProjectRoleBindingCountRef {
 
 func (m ProjectRoleBindingCountRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ProjectRoleBindingCountRef) Encode(e *jx.Encoder) {
+func (m *ProjectRoleBindingCountRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ProjectRoleBindingCountRef) UnmarshalJSON(b []byte) error {

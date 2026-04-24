@@ -158,20 +158,23 @@ func (m *FirewallRuleID) Clone() *FirewallRuleID {
 
 func (m FirewallRuleID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FirewallRuleID) Encode(e *jx.Encoder) {
+func (m *FirewallRuleID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *FirewallRuleID) UnmarshalJSON(b []byte) error {
@@ -305,16 +308,19 @@ func (m *FirewallRuleRef) Clone() *FirewallRuleRef {
 
 func (m FirewallRuleRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FirewallRuleRef) Encode(e *jx.Encoder) {
+func (m *FirewallRuleRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *FirewallRuleRef) UnmarshalJSON(b []byte) error {

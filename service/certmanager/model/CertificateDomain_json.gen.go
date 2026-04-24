@@ -11,16 +11,19 @@ import (
 
 func (m CertificateDomain) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CertificateDomain) Encode(e *jx.Encoder) {
+func (m *CertificateDomain) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(string(*m))
+	return nil
 }
 
 func (m *CertificateDomain) UnmarshalJSON(b []byte) error {

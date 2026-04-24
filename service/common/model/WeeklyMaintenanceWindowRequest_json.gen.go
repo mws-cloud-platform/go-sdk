@@ -13,21 +13,26 @@ import (
 
 func (m WeeklyMaintenanceWindowRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *WeeklyMaintenanceWindowRequest) Encode(e *jx.Encoder) {
+func (m *WeeklyMaintenanceWindowRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *WeeklyMaintenanceWindowRequest) encodeFields(e *jx.Encoder) {
+func (m *WeeklyMaintenanceWindowRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("days")
 	e.ArrStart()
 	for _, elem := range m.Days {
@@ -42,6 +47,7 @@ func (m *WeeklyMaintenanceWindowRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("duration")
 		m.Duration.Encode(e)
 	}
+	return nil
 }
 
 func (m *WeeklyMaintenanceWindowRequest) UnmarshalJSON(b []byte) error {
@@ -85,6 +91,10 @@ func (m *WeeklyMaintenanceWindowRequest) Decode(d *jx.Decoder) error {
 			requiredFilled["hour"] = true
 			return nil
 		case "duration":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			var v duration.Duration
 			if err := v.Decode(d); err != nil {
 				return err

@@ -12,21 +12,26 @@ import (
 
 func (m UpdateRouteNextHopRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateRouteNextHopRequest) Encode(e *jx.Encoder) {
+func (m *UpdateRouteNextHopRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateRouteNextHopRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateRouteNextHopRequest) encodeFields(e *jx.Encoder) error {
 	if m.NatGateway.IsSet() {
 		e.FieldStart("natGateway")
 		m.NatGateway.Value.Encode(e)
@@ -40,6 +45,7 @@ func (m *UpdateRouteNextHopRequest) encodeFields(e *jx.Encoder) {
 			m.Address.Value.Encode(e)
 		}
 	}
+	return nil
 }
 
 func (m *UpdateRouteNextHopRequest) UnmarshalJSON(b []byte) error {
@@ -82,25 +88,31 @@ func (m *UpdateRouteNextHopRequest) Decode(d *jx.Decoder) error {
 
 func (m UpdateRouteNextHopAddressRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateRouteNextHopAddressRequest) Encode(e *jx.Encoder) {
+func (m *UpdateRouteNextHopAddressRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateRouteNextHopAddressRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateRouteNextHopAddressRequest) encodeFields(e *jx.Encoder) error {
 	if m.Ref.IsSet() {
 		e.FieldStart("ref")
 		m.Ref.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *UpdateRouteNextHopAddressRequest) UnmarshalJSON(b []byte) error {

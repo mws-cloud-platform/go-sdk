@@ -13,21 +13,26 @@ import (
 
 func (m VirtualMachineAddressDnsStatusResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *VirtualMachineAddressDnsStatusResponse) Encode(e *jx.Encoder) {
+func (m *VirtualMachineAddressDnsStatusResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *VirtualMachineAddressDnsStatusResponse) encodeFields(e *jx.Encoder) {
+func (m *VirtualMachineAddressDnsStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("name")
 	e.Str(m.Name)
 
@@ -36,6 +41,7 @@ func (m *VirtualMachineAddressDnsStatusResponse) encodeFields(e *jx.Encoder) {
 
 	e.FieldStart("ptr")
 	e.Bool(m.Ptr)
+	return nil
 }
 
 func (m *VirtualMachineAddressDnsStatusResponse) UnmarshalJSON(b []byte) error {

@@ -138,20 +138,23 @@ func (m *ServiceAgentID) Clone() *ServiceAgentID {
 
 func (m ServiceAgentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ServiceAgentID) Encode(e *jx.Encoder) {
+func (m *ServiceAgentID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ServiceAgentID) UnmarshalJSON(b []byte) error {
@@ -276,16 +279,19 @@ func (m *ServiceAgentRef) Clone() *ServiceAgentRef {
 
 func (m ServiceAgentRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ServiceAgentRef) Encode(e *jx.Encoder) {
+func (m *ServiceAgentRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ServiceAgentRef) UnmarshalJSON(b []byte) error {

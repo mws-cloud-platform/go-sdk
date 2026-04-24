@@ -50,7 +50,7 @@ func (m *ServiceAccountRequest) WithChanges(u UpdateServiceAccountRequest) Servi
 		out.Metadata = nil
 	}
 	if u.Spec.IsSet() {
-		out.Spec = out.Spec.WithChanges(u.Spec.Value)
+		out.Spec = ServiceAccountSpecRequest(u.Spec.Value)
 	}
 	return out
 }
@@ -90,6 +90,8 @@ func (m *ServiceAccountRequest) diffSpec(src *ServiceAccountRequest) commonclien
 
 type UpdateServiceAccountMetadataRequest struct {
 	common.UpdateTypedResourceMetadataRequest
+	// Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта.
+	Name commonclient.Optional[string] `json:"name" yaml:"name"`
 }
 
 func (m *ServiceAccountMetadataRequest) AsUpdateModel() UpdateServiceAccountMetadataRequest {
@@ -115,6 +117,9 @@ func (m *ServiceAccountMetadataRequest) AsUpdateModel() UpdateServiceAccountMeta
 	if m.Description != nil {
 		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
 	}
+	if m.Name != nil {
+		u.Name = commonclient.NewOptional(m.GetNameOr(""))
+	}
 	return u
 }
 
@@ -127,6 +132,7 @@ func (m *ServiceAccountMetadataRequest) Diff(src *ServiceAccountMetadataRequest)
 		upd.Usages = m.diffUsages(src)
 		upd.Etag = m.diffEtag(src)
 		upd.Description = m.diffDescription(src)
+		upd.Name = m.diffName(src)
 	}
 	return upd
 }
@@ -149,6 +155,9 @@ func (m *ServiceAccountMetadataRequest) WithChanges(u UpdateServiceAccountMetada
 	if u.Description.IsSet() {
 		out.Description = ptr.Get(u.Description.Value)
 	}
+	if u.Name.IsSet() {
+		out.Name = ptr.Get(u.Name.Value)
+	}
 	return out
 }
 
@@ -157,7 +166,13 @@ func (m UpdateServiceAccountMetadataRequest) HasChanges() bool {
 	return m.DisplayName.Set ||
 		m.Usages.Set ||
 		m.Etag.Set ||
-		m.Description.Set
+		m.Description.Set ||
+		m.Name.Set
+}
+
+// SetName is used in the Diff function for NamedArray
+func (m *UpdateServiceAccountMetadataRequest) SetName(name string) {
+	m.Name = commonclient.NewOptional(name)
 }
 
 func (m *UpdateServiceAccountMetadataRequest) Parse(ctx context.Context) error {
@@ -195,4 +210,40 @@ func (m *ServiceAccountMetadataRequest) diffEtag(src *ServiceAccountMetadataRequ
 func (m *ServiceAccountMetadataRequest) diffDescription(src *ServiceAccountMetadataRequest) commonclient.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
+}
+
+func (m *ServiceAccountMetadataRequest) diffName(src *ServiceAccountMetadataRequest) commonclient.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetName(), m.GetName(), nilDiffers)
+}
+
+type UpdateServiceAccountSpecRequest struct {
+}
+
+func (m *ServiceAccountSpecRequest) AsUpdateModel() UpdateServiceAccountSpecRequest {
+	var u UpdateServiceAccountSpecRequest
+	return u
+}
+
+// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
+func (m *ServiceAccountSpecRequest) Diff(src *ServiceAccountSpecRequest) UpdateServiceAccountSpecRequest {
+	nilDiffers := src != nil && m == nil
+	upd := UpdateServiceAccountSpecRequest{}
+	if !nilDiffers {
+	}
+	return upd
+}
+
+func (m *ServiceAccountSpecRequest) WithChanges(u UpdateServiceAccountSpecRequest) ServiceAccountSpecRequest {
+	var out ServiceAccountSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	return out
+}
+
+// HasChanges returns true if any field has Set == true
+func (m UpdateServiceAccountSpecRequest) HasChanges() bool {
+	return false
 }

@@ -28,12 +28,5 @@ func EgressNatSpecRequestToOptionalResponse(request *EgressNatSpecRequest) (*Egr
 		}
 		response.PortAllocation = commonclient.NewOptionalNil(*tmpPortAllocation)
 	}
-	if request.Pba != nil {
-		tmpPba, err := EgressNatSpecPbaRequestToOptionalResponse(request.Pba)
-		if err != nil {
-			return nil, err
-		}
-		response.Pba = commonclient.NewOptionalNil(*tmpPba)
-	}
 	return &response, nil
 }

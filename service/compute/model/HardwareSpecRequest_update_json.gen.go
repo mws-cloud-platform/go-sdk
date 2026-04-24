@@ -12,21 +12,26 @@ import (
 
 func (m UpdateHardwareSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateHardwareSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateHardwareSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateHardwareSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateHardwareSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Power.IsSet() {
 		e.FieldStart("power")
 		m.Power.Value.Encode(e)
@@ -36,6 +41,7 @@ func (m *UpdateHardwareSpecRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("gracefulShutdownTimeout")
 		m.GracefulShutdownTimeout.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *UpdateHardwareSpecRequest) UnmarshalJSON(b []byte) error {

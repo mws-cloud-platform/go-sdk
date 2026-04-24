@@ -27,5 +27,8 @@ func CommonRoleBindingSpecSubjectRequestToOptionalResponse(request *CommonRoleBi
 		}
 		response.UserFederation = commonclient.NewOptionalNil(*tmpUserFederation)
 	}
+	if request.UserGroup != nil {
+		response.UserGroup = commonclient.NewOptional(*request.UserGroup)
+	}
 	return &response, nil
 }

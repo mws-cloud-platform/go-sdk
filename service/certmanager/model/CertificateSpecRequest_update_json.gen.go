@@ -11,21 +11,26 @@ import (
 
 func (m UpdateCertificateSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateCertificateSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateCertificateSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateCertificateSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateCertificateSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.SelfManaged.IsSet() {
 		e.FieldStart("selfManaged")
 		if m.SelfManaged.IsNull() {
@@ -34,15 +39,7 @@ func (m *UpdateCertificateSpecRequest) encodeFields(e *jx.Encoder) {
 			m.SelfManaged.Value.Encode(e)
 		}
 	}
-
-	if m.Managed.IsSet() {
-		e.FieldStart("managed")
-		if m.Managed.IsNull() {
-			e.Null()
-		} else {
-			m.Managed.Value.Encode(e)
-		}
-	}
+	return nil
 }
 
 func (m *UpdateCertificateSpecRequest) UnmarshalJSON(b []byte) error {
@@ -68,19 +65,6 @@ func (m *UpdateCertificateSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.SelfManaged.SetTo(v)
-			return nil
-		case "managed":
-			if d.Next() == jx.Null {
-				m.Managed.SetToNull()
-				return d.Null()
-			}
-
-			var v UpdateCertificateManagedSpecRequest
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Managed.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

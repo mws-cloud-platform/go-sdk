@@ -12,25 +12,31 @@ import (
 
 func (m ApiKeySpecResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ApiKeySpecResponse) Encode(e *jx.Encoder) {
+func (m *ApiKeySpecResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ApiKeySpecResponse) encodeFields(e *jx.Encoder) {
+func (m *ApiKeySpecResponse) encodeFields(e *jx.Encoder) error {
 	if m.ExpireTime != nil {
 		e.FieldStart("expireTime")
 		conv.EncodeDateTimeUTC(e, *m.ExpireTime)
 	}
+	return nil
 }
 
 func (m *ApiKeySpecResponse) UnmarshalJSON(b []byte) error {

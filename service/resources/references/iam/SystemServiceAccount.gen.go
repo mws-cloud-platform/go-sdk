@@ -118,20 +118,23 @@ func (m *SystemServiceAccountID) Clone() *SystemServiceAccountID {
 
 func (m SystemServiceAccountID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *SystemServiceAccountID) Encode(e *jx.Encoder) {
+func (m *SystemServiceAccountID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *SystemServiceAccountID) UnmarshalJSON(b []byte) error {
@@ -247,16 +250,19 @@ func (m *SystemServiceAccountRef) Clone() *SystemServiceAccountRef {
 
 func (m SystemServiceAccountRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *SystemServiceAccountRef) Encode(e *jx.Encoder) {
+func (m *SystemServiceAccountRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *SystemServiceAccountRef) UnmarshalJSON(b []byte) error {

@@ -100,7 +100,7 @@ func createVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachi
 									Source: &computemodel.StorageDiskSpecSourceRequest{
 										Image: ptr.Get(computeref.NewImageRef(
 											"mws-ubuntu",
-											"mws-ubuntu-2004-lts-v20250529",
+											"mws-ubuntu-2404-lts-v20260324",
 										)),
 									},
 								},
@@ -190,7 +190,7 @@ func createNetwork(ctx context.Context, sdk *mws.SDK, networkName string) func()
 				Mtu:            ptr.Get(int32(1500)),
 			},
 		},
-	})
+	}, vpcclient.WithWait())
 	if err != nil {
 		log.Panicln("create network:", err)
 	}
@@ -221,7 +221,7 @@ func createSubnet(ctx context.Context, sdk *mws.SDK, subnetName, networkName str
 				Cidr: cidraddress.MustParseCIDR4AddressString("192.168.0.0/16"),
 			},
 		},
-	})
+	}, vpcclient.WithWait())
 	if err != nil {
 		log.Panicln("create subnet:", err)
 	}
@@ -257,7 +257,7 @@ func createExternalAddress(ctx context.Context, sdk *mws.SDK, externalAddressNam
 		Body: &vpcmodel.ExternalAddressRequest{
 			Spec: vpcmodel.VpcExternalAddressSpecRequest{},
 		},
-	})
+	}, vpcclient.WithWait())
 	if err != nil {
 		log.Panicln("create external address:", err)
 	}

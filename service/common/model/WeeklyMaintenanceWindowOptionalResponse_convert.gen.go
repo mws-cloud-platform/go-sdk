@@ -14,7 +14,7 @@ func WeeklyMaintenanceWindowRequestToOptionalResponse(request *WeeklyMaintenance
 	response.Days = request.Days
 	response.Hour = request.Hour
 	if request.Duration != nil {
-		response.Duration = commonclient.NewOptional(*request.Duration)
+		response.Duration = commonclient.NewOptionalNil(*request.Duration)
 	}
 	return &response, nil
 }

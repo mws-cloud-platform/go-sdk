@@ -13,21 +13,26 @@ import (
 
 func (m CertificateStatusResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CertificateStatusResponse) Encode(e *jx.Encoder) {
+func (m *CertificateStatusResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *CertificateStatusResponse) encodeFields(e *jx.Encoder) {
+func (m *CertificateStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
 	m.Ready.Encode(e)
 	if m.Details != nil {
@@ -62,6 +67,7 @@ func (m *CertificateStatusResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("renewalAt")
 		conv.EncodeDateTimeUTC(e, *m.RenewalAt)
 	}
+	return nil
 }
 
 func (m *CertificateStatusResponse) UnmarshalJSON(b []byte) error {

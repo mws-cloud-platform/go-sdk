@@ -15,7 +15,7 @@ type WeeklyMaintenanceWindowOptionalResponse struct {
 	// Час, в который будет запущено задание на тех.обслуживание
 	Hour int `json:"hour" yaml:"hour"`
 	// Допустимая продолжительность процесса обновления. Если не указано, то не ограничено по времени. Принимается только формат в часах (h)
-	Duration commonclient.Optional[duration.Duration] `json:"duration,omitempty" yaml:"duration,omitempty"`
+	Duration commonclient.OptionalNil[duration.Duration] `json:"duration,omitempty" yaml:"duration,omitempty"`
 }
 
 func (m *WeeklyMaintenanceWindowOptionalResponse) GetDays() []DayOfWeek {

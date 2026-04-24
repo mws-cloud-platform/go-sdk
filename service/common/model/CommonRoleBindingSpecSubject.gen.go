@@ -15,8 +15,11 @@ type CommonRoleBindingSpecSubject struct {
 	// Идентификатор сервисного аккаунта, принадлежащего проекту.
 	ServiceAccount *iam.ServiceAccountRef `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
 	// Идентификатор сервисного агента, связанного с проектом.
-	ServiceAgent   *iam.ServiceAgentRef         `json:"serviceAgent,omitempty" yaml:"serviceAgent,omitempty"`
+	ServiceAgent *iam.ServiceAgentRef `json:"serviceAgent,omitempty" yaml:"serviceAgent,omitempty"`
+	// Субъект федерации пользователей.
 	UserFederation *CommonRoleBindingFederation `json:"userFederation,omitempty" yaml:"userFederation,omitempty"`
+	// Идентификатор группы пользователей.
+	UserGroup *iam.UserGroupRef `json:"userGroup,omitempty" yaml:"userGroup,omitempty"`
 }
 
 func (m *CommonRoleBindingSpecSubject) GetUser() *iam.UserRef {
@@ -91,6 +94,24 @@ func (m *CommonRoleBindingSpecSubject) GetUserFederationOr(val CommonRoleBinding
 	return val
 }
 
+func (m *CommonRoleBindingSpecSubject) GetUserGroup() *iam.UserGroupRef {
+	if m != nil {
+		return m.UserGroup
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpecSubject) SetUserGroup(val *iam.UserGroupRef) {
+	m.UserGroup = val
+}
+
+func (m *CommonRoleBindingSpecSubject) GetUserGroupOr(val iam.UserGroupRef) iam.UserGroupRef {
+	if m != nil && m.UserGroup != nil {
+		return *m.UserGroup
+	}
+	return val
+}
+
 func (m *CommonRoleBindingSpecSubject) Clone() *CommonRoleBindingSpecSubject {
 	if m == nil {
 		return nil
@@ -101,6 +122,7 @@ func (m *CommonRoleBindingSpecSubject) Clone() *CommonRoleBindingSpecSubject {
 	clone.ServiceAccount = m.ServiceAccount.Clone()
 	clone.ServiceAgent = m.ServiceAgent.Clone()
 	clone.UserFederation = m.UserFederation.Clone()
+	clone.UserGroup = m.UserGroup.Clone()
 	return &clone
 }
 
@@ -123,6 +145,10 @@ func (m *CommonRoleBindingSpecSubject) Parse(ctx context.Context) error {
 
 	if err := m.UserFederation.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("UserFederation", err)
+	}
+
+	if err := m.UserGroup.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("UserGroup", err)
 	}
 
 	return nil

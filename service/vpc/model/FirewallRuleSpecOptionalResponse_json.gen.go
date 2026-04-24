@@ -12,21 +12,26 @@ import (
 
 func (m FirewallRuleSpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FirewallRuleSpecOptionalResponse) Encode(e *jx.Encoder) {
+func (m *FirewallRuleSpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *FirewallRuleSpecOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *FirewallRuleSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("direction")
 	m.Direction.Encode(e)
 
@@ -57,6 +62,7 @@ func (m *FirewallRuleSpecOptionalResponse) encodeFields(e *jx.Encoder) {
 		}
 		e.ArrEnd()
 	}
+	return nil
 }
 
 func (m *FirewallRuleSpecOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -142,16 +148,19 @@ func (m *FirewallRuleSpecOptionalResponse) Decode(d *jx.Decoder) error {
 
 func (m FirewallRuleSpecActionOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FirewallRuleSpecActionOptionalResponse) Encode(e *jx.Encoder) {
+func (m *FirewallRuleSpecActionOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(string(*m))
+	return nil
 }
 
 func (m *FirewallRuleSpecActionOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -174,16 +183,19 @@ func (m *FirewallRuleSpecActionOptionalResponse) Decode(d *jx.Decoder) error {
 
 func (m FirewallRuleSpecDirectionOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FirewallRuleSpecDirectionOptionalResponse) Encode(e *jx.Encoder) {
+func (m *FirewallRuleSpecDirectionOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(string(*m))
+	return nil
 }
 
 func (m *FirewallRuleSpecDirectionOptionalResponse) UnmarshalJSON(b []byte) error {

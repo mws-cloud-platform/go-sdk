@@ -118,20 +118,23 @@ func (m *NbsProjectID) Clone() *NbsProjectID {
 
 func (m NbsProjectID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *NbsProjectID) Encode(e *jx.Encoder) {
+func (m *NbsProjectID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *NbsProjectID) UnmarshalJSON(b []byte) error {
@@ -247,16 +250,19 @@ func (m *NbsProjectRef) Clone() *NbsProjectRef {
 
 func (m NbsProjectRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *NbsProjectRef) Encode(e *jx.Encoder) {
+func (m *NbsProjectRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *NbsProjectRef) UnmarshalJSON(b []byte) error {

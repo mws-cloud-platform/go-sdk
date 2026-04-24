@@ -158,20 +158,23 @@ func (m *RouteID) Clone() *RouteID {
 
 func (m RouteID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *RouteID) Encode(e *jx.Encoder) {
+func (m *RouteID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *RouteID) UnmarshalJSON(b []byte) error {
@@ -305,16 +308,19 @@ func (m *RouteRef) Clone() *RouteRef {
 
 func (m RouteRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *RouteRef) Encode(e *jx.Encoder) {
+func (m *RouteRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *RouteRef) UnmarshalJSON(b []byte) error {

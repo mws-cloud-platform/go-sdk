@@ -175,7 +175,7 @@ func (m *ApiError) GetCommonRetryPolicy() *mwserrors.RetryPolicy {
 }
 
 type Details interface {
-	Encode(e *jx.Encoder)
+	Encode(e *jx.Encoder) error
 	isErrorDetail()
 }
 

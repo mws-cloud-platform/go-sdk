@@ -12,21 +12,26 @@ import (
 
 func (m StorageDiskSpecOrRefRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *StorageDiskSpecOrRefRequest) Encode(e *jx.Encoder) {
+func (m *StorageDiskSpecOrRefRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *StorageDiskSpecOrRefRequest) encodeFields(e *jx.Encoder) {
+func (m *StorageDiskSpecOrRefRequest) encodeFields(e *jx.Encoder) error {
 	if m.Ref != nil {
 		e.FieldStart("ref")
 		m.Ref.Encode(e)
@@ -36,6 +41,7 @@ func (m *StorageDiskSpecOrRefRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("spec")
 		m.Spec.Encode(e)
 	}
+	return nil
 }
 
 func (m *StorageDiskSpecOrRefRequest) UnmarshalJSON(b []byte) error {

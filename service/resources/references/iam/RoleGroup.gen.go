@@ -118,20 +118,23 @@ func (m *RoleGroupID) Clone() *RoleGroupID {
 
 func (m RoleGroupID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *RoleGroupID) Encode(e *jx.Encoder) {
+func (m *RoleGroupID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *RoleGroupID) UnmarshalJSON(b []byte) error {
@@ -247,16 +250,19 @@ func (m *RoleGroupRef) Clone() *RoleGroupRef {
 
 func (m RoleGroupRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *RoleGroupRef) Encode(e *jx.Encoder) {
+func (m *RoleGroupRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *RoleGroupRef) UnmarshalJSON(b []byte) error {

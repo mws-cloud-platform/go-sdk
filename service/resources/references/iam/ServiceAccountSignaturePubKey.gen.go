@@ -158,20 +158,23 @@ func (m *ServiceAccountSignaturePubKeyID) Clone() *ServiceAccountSignaturePubKey
 
 func (m ServiceAccountSignaturePubKeyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ServiceAccountSignaturePubKeyID) Encode(e *jx.Encoder) {
+func (m *ServiceAccountSignaturePubKeyID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ServiceAccountSignaturePubKeyID) UnmarshalJSON(b []byte) error {
@@ -305,16 +308,19 @@ func (m *ServiceAccountSignaturePubKeyRef) Clone() *ServiceAccountSignaturePubKe
 
 func (m ServiceAccountSignaturePubKeyRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ServiceAccountSignaturePubKeyRef) Encode(e *jx.Encoder) {
+func (m *ServiceAccountSignaturePubKeyRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ServiceAccountSignaturePubKeyRef) UnmarshalJSON(b []byte) error {

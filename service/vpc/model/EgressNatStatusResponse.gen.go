@@ -19,8 +19,6 @@ type EgressNatStatusResponse struct {
 	External *EgressNatStatusExternalResponse `json:"external,omitempty" yaml:"external,omitempty"`
 	// Описывает примененные настройки управления портами.
 	PortAllocation *EgressNatStatusPortAllocationResponse `json:"portAllocation,omitempty" yaml:"portAllocation,omitempty"`
-	// Описывает настройки управления портами (Port Block Allocation).
-	Pba *EgressNatStatusPbaResponse `json:"pba,omitempty" yaml:"pba,omitempty"`
 }
 
 func (m *EgressNatStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -72,20 +70,6 @@ func (m *EgressNatStatusResponse) GetPortAllocationOr(val EgressNatStatusPortAll
 	return val
 }
 
-func (m *EgressNatStatusResponse) GetPba() *EgressNatStatusPbaResponse {
-	if m != nil {
-		return m.Pba
-	}
-	return nil
-}
-
-func (m *EgressNatStatusResponse) GetPbaOr(val EgressNatStatusPbaResponse) EgressNatStatusPbaResponse {
-	if m != nil && m.Pba != nil {
-		return *m.Pba
-	}
-	return val
-}
-
 func (m *EgressNatStatusResponse) Clone() *EgressNatStatusResponse {
 	if m == nil {
 		return nil
@@ -96,7 +80,6 @@ func (m *EgressNatStatusResponse) Clone() *EgressNatStatusResponse {
 	clone.Internal = m.Internal.Clone()
 	clone.External = m.External.Clone()
 	clone.PortAllocation = m.PortAllocation.Clone()
-	clone.Pba = m.Pba.Clone()
 
 	return &clone
 }
@@ -106,23 +89,13 @@ func (m *EgressNatStatusResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
+	if err := m.Internal.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Internal", err)
+	}
+
 	if err := m.External.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("External", err)
 	}
 
 	return nil
-}
-
-// Представление поля Internal анонимного типа структуры EgressNatStatus
-// Real OAPI model name: EgressNatStatusInternal
-type EgressNatStatusInternalResponse struct {
-}
-
-func (m *EgressNatStatusInternalResponse) Clone() *EgressNatStatusInternalResponse {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
-	return &clone
 }

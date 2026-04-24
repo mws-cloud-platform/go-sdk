@@ -129,19 +129,22 @@ func (n AnyResourceRef) Equal(n2 AnyResourceRef) bool {
 // Serializes AnyResourceRef as a JSON string.
 func (n AnyResourceRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	n.Encode(&e)
+	if err := n.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
 // Encode implements [jx.Encoder].
 // Writes AnyResourceRef as a JSON string.
-func (n *AnyResourceRef) Encode(e *jx.Encoder) {
+func (n *AnyResourceRef) Encode(e *jx.Encoder) error {
 	if n == nil {
 		e.Null()
-		return
+		return nil
 	}
 
 	e.Str(n.Path())
+	return nil
 }
 
 // UnmarshalJSON implements [json.Unmarshaler].

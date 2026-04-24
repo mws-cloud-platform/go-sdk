@@ -138,20 +138,23 @@ func (m *UserMembershipID) Clone() *UserMembershipID {
 
 func (m UserMembershipID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UserMembershipID) Encode(e *jx.Encoder) {
+func (m *UserMembershipID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *UserMembershipID) UnmarshalJSON(b []byte) error {
@@ -276,16 +279,19 @@ func (m *UserMembershipRef) Clone() *UserMembershipRef {
 
 func (m UserMembershipRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UserMembershipRef) Encode(e *jx.Encoder) {
+func (m *UserMembershipRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *UserMembershipRef) UnmarshalJSON(b []byte) error {

@@ -12,21 +12,26 @@ import (
 
 func (m SuccessTokenResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *SuccessTokenResponse) Encode(e *jx.Encoder) {
+func (m *SuccessTokenResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *SuccessTokenResponse) encodeFields(e *jx.Encoder) {
+func (m *SuccessTokenResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("accessToken")
 	e.Str(m.AccessToken)
 
@@ -34,6 +39,7 @@ func (m *SuccessTokenResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("expirationTs")
 		conv.EncodeDateTimeUTC(e, *m.ExpirationTs)
 	}
+	return nil
 }
 
 func (m *SuccessTokenResponse) UnmarshalJSON(b []byte) error {

@@ -11,27 +11,33 @@ import (
 
 func (m NetworkSpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *NetworkSpecOptionalResponse) Encode(e *jx.Encoder) {
+func (m *NetworkSpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *NetworkSpecOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *NetworkSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("networkInterfaces")
 	e.ArrStart()
 	for _, elem := range m.NetworkInterfaces {
 		elem.Encode(e)
 	}
 	e.ArrEnd()
+	return nil
 }
 
 func (m *NetworkSpecOptionalResponse) UnmarshalJSON(b []byte) error {

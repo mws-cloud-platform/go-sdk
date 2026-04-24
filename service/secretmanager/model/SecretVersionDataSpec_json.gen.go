@@ -12,25 +12,31 @@ import (
 
 func (m SecretVersionDataSpec) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *SecretVersionDataSpec) Encode(e *jx.Encoder) {
+func (m *SecretVersionDataSpec) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *SecretVersionDataSpec) encodeFields(e *jx.Encoder) {
+func (m *SecretVersionDataSpec) encodeFields(e *jx.Encoder) error {
 	for key, elem := range *m {
 		e.FieldStart(key)
 		e.Str(elem)
 	}
+	return nil
 }
 
 func (m *SecretVersionDataSpec) UnmarshalJSON(b []byte) error {

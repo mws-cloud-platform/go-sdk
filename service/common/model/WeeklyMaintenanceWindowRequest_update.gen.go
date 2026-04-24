@@ -17,7 +17,7 @@ type UpdateWeeklyMaintenanceWindowRequest struct {
 	// Час, в который будет запущено задание на тех.обслуживание
 	Hour commonclient.Optional[int] `json:"hour" yaml:"hour"`
 	// Допустимая продолжительность процесса обновления. Если не указано, то не ограничено по времени. Принимается только формат в часах (h)
-	Duration commonclient.Optional[duration.Duration] `json:"duration" yaml:"duration"`
+	Duration commonclient.OptionalNil[duration.Duration] `json:"duration" yaml:"duration"`
 }
 
 func (m *WeeklyMaintenanceWindowRequest) AsUpdateModel() UpdateWeeklyMaintenanceWindowRequest {
@@ -34,7 +34,7 @@ func (m *WeeklyMaintenanceWindowRequest) AsUpdateModel() UpdateWeeklyMaintenance
 	}())
 	u.Hour = commonclient.NewOptional(m.GetHour())
 	if m.Duration != nil {
-		u.Duration = commonclient.NewOptional(m.GetDurationOr(duration.Duration{}))
+		u.Duration = commonclient.NewOptionalNil(m.GetDurationOr(duration.Duration{}))
 	}
 	return u
 }
@@ -65,6 +65,8 @@ func (m *WeeklyMaintenanceWindowRequest) WithChanges(u UpdateWeeklyMaintenanceWi
 	}
 	if u.Duration.IsSet() {
 		out.Duration = ptr.Get(u.Duration.Value)
+	} else if u.Duration.IsNull() {
+		out.Duration = nil
 	}
 	return out
 }
@@ -86,7 +88,7 @@ func (m *WeeklyMaintenanceWindowRequest) diffHour(src *WeeklyMaintenanceWindowRe
 	return commonclient.DiffPrimitiveRequired(src.GetHour(), m.GetHour(), nilDiffers)
 }
 
-func (m *WeeklyMaintenanceWindowRequest) diffDuration(src *WeeklyMaintenanceWindowRequest) commonclient.Optional[duration.Duration] {
+func (m *WeeklyMaintenanceWindowRequest) diffDuration(src *WeeklyMaintenanceWindowRequest) commonclient.OptionalNil[duration.Duration] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffEquatableIfaceNonRequired(src.GetDuration(), m.GetDuration(), nilDiffers)
+	return commonclient.DiffEquatableIfaceNullable(src.GetDuration(), m.GetDuration(), nilDiffers)
 }

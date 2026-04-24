@@ -95,19 +95,22 @@ func (n AnyResourceID) Equal(n2 AnyResourceID) bool {
 // Serializes AnyResourceID as a JSON string.
 func (n AnyResourceID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	n.Encode(&e)
+	if err := n.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
 // Encode implements [jx.Encoder].
 // Writes AnyResourceID as a JSON string.
-func (n *AnyResourceID) Encode(e *jx.Encoder) {
+func (n *AnyResourceID) Encode(e *jx.Encoder) error {
 	if n == nil {
 		e.Null()
-		return
+		return nil
 	}
 
 	e.Str(n.ID())
+	return nil
 }
 
 // UnmarshalJSON implements [json.Unmarshaler].

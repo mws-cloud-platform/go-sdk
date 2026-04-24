@@ -138,20 +138,23 @@ func (m *ZonalStorageAgentID) Clone() *ZonalStorageAgentID {
 
 func (m ZonalStorageAgentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalStorageAgentID) Encode(e *jx.Encoder) {
+func (m *ZonalStorageAgentID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ZonalStorageAgentID) UnmarshalJSON(b []byte) error {
@@ -276,16 +279,19 @@ func (m *ZonalStorageAgentRef) Clone() *ZonalStorageAgentRef {
 
 func (m ZonalStorageAgentRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalStorageAgentRef) Encode(e *jx.Encoder) {
+func (m *ZonalStorageAgentRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ZonalStorageAgentRef) UnmarshalJSON(b []byte) error {

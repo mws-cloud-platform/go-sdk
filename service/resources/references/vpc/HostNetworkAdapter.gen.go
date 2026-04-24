@@ -178,20 +178,23 @@ func (m *HostNetworkAdapterID) Clone() *HostNetworkAdapterID {
 
 func (m HostNetworkAdapterID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *HostNetworkAdapterID) Encode(e *jx.Encoder) {
+func (m *HostNetworkAdapterID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *HostNetworkAdapterID) UnmarshalJSON(b []byte) error {
@@ -334,16 +337,19 @@ func (m *HostNetworkAdapterRef) Clone() *HostNetworkAdapterRef {
 
 func (m HostNetworkAdapterRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *HostNetworkAdapterRef) Encode(e *jx.Encoder) {
+func (m *HostNetworkAdapterRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *HostNetworkAdapterRef) UnmarshalJSON(b []byte) error {

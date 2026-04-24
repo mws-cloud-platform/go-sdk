@@ -13,21 +13,26 @@ import (
 
 func (m OneToOneNatExternalAddressStatusResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *OneToOneNatExternalAddressStatusResponse) Encode(e *jx.Encoder) {
+func (m *OneToOneNatExternalAddressStatusResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *OneToOneNatExternalAddressStatusResponse) encodeFields(e *jx.Encoder) {
+func (m *OneToOneNatExternalAddressStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.Ref != nil {
 		e.FieldStart("ref")
 		m.Ref.Encode(e)
@@ -37,6 +42,7 @@ func (m *OneToOneNatExternalAddressStatusResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("ipAddress")
 		m.IpAddress.Encode(e)
 	}
+	return nil
 }
 
 func (m *OneToOneNatExternalAddressStatusResponse) UnmarshalJSON(b []byte) error {

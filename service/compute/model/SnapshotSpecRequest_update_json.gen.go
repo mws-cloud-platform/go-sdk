@@ -6,25 +6,37 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 func (m UpdateSnapshotSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateSnapshotSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateSnapshotSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateSnapshotSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateSnapshotSpecRequest) encodeFields(e *jx.Encoder) error {
+
+	if m.OsType.IsSet() {
+		e.FieldStart("osType")
+		m.OsType.Value.Encode(e)
+	}
+	return nil
 }
 
 func (m *UpdateSnapshotSpecRequest) UnmarshalJSON(b []byte) error {
@@ -36,5 +48,18 @@ func (m *UpdateSnapshotSpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("UpdateSnapshotSpecRequest")
 	}
 
-	return d.Skip()
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

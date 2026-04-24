@@ -118,6 +118,8 @@ type ServiceAccountMetadataResponse struct {
 	common.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// ID свойства
 	Id *resmodels.AnyResourceID `json:"id,omitempty" yaml:"id,omitempty"`
+	// Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта.
+	Name *string `json:"name,omitempty" yaml:"name,omitempty"`
 }
 
 func (m *ServiceAccountMetadataResponse) GetDisplayName() *string {
@@ -246,6 +248,20 @@ func (m *ServiceAccountMetadataResponse) GetIdOr(val resmodels.AnyResourceID) re
 	return val
 }
 
+func (m *ServiceAccountMetadataResponse) GetName() *string {
+	if m != nil {
+		return m.Name
+	}
+	return nil
+}
+
+func (m *ServiceAccountMetadataResponse) GetNameOr(val string) string {
+	if m != nil && m.Name != nil {
+		return *m.Name
+	}
+	return val
+}
+
 func (m *ServiceAccountMetadataResponse) Clone() *ServiceAccountMetadataResponse {
 	if m == nil {
 		return nil
@@ -254,6 +270,10 @@ func (m *ServiceAccountMetadataResponse) Clone() *ServiceAccountMetadataResponse
 	clone := *m
 	clone.TypedResourceMetadataResponse = *m.TypedResourceMetadataResponse.Clone()
 	clone.Id = m.Id.Clone()
+	if m.Name != nil {
+		cloneName := *m.Name
+		clone.Name = &cloneName
+	}
 
 	return &clone
 }
@@ -271,4 +291,18 @@ func (m *ServiceAccountMetadataResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// Представление поля Spec анонимного типа структуры ServiceAccount
+// Real OAPI model name: ServiceAccountSpec
+type ServiceAccountSpecResponse struct {
+}
+
+func (m *ServiceAccountSpecResponse) Clone() *ServiceAccountSpecResponse {
+	if m == nil {
+		return nil
+	}
+
+	clone := *m
+	return &clone
 }

@@ -56,7 +56,7 @@ func Example_certSelfHosted() {
 				},
 			},
 		},
-	})
+	}, certclient.WithWait())
 	if err != nil {
 		log.Panicln("create certificate:", err)
 	}
@@ -81,7 +81,7 @@ func Example_certSelfHosted() {
 				},
 			},
 		}).AsUpdateModel(),
-	})
+	}, certclient.WithWait())
 	if err != nil {
 		log.Panicln("update certificate:", err)
 	}
@@ -97,7 +97,7 @@ func Example_certSelfHosted() {
 
 	err = certClient.DeleteCertificate(ctx, certclient.DeleteCertificateRequest{
 		Name: certName,
-	})
+	}, certclient.WithWait())
 	if err != nil {
 		log.Panicln("delete certificate:", err)
 	}

@@ -12,21 +12,26 @@ import (
 
 func (m OsSpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *OsSpecOptionalResponse) Encode(e *jx.Encoder) {
+func (m *OsSpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *OsSpecOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *OsSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Hostname.IsSet() {
 		e.FieldStart("hostname")
 		e.Str(m.Hostname.Value)
@@ -50,6 +55,7 @@ func (m *OsSpecOptionalResponse) encodeFields(e *jx.Encoder) {
 			m.Metadata.Value.Encode(e)
 		}
 	}
+	return nil
 }
 
 func (m *OsSpecOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -108,21 +114,26 @@ func (m *OsSpecOptionalResponse) Decode(d *jx.Decoder) error {
 
 func (m OsSpecMetadataOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *OsSpecMetadataOptionalResponse) Encode(e *jx.Encoder) {
+func (m *OsSpecMetadataOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *OsSpecMetadataOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *OsSpecMetadataOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Attributes.IsSet() {
 		e.FieldStart("attributes")
 		e.ObjStart()
@@ -132,6 +143,7 @@ func (m *OsSpecMetadataOptionalResponse) encodeFields(e *jx.Encoder) {
 		}
 		e.ObjEnd()
 	}
+	return nil
 }
 
 func (m *OsSpecMetadataOptionalResponse) UnmarshalJSON(b []byte) error {

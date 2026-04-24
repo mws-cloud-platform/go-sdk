@@ -13,21 +13,26 @@ import (
 
 func (m UpdateVirtualMachineRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateVirtualMachineRequest) Encode(e *jx.Encoder) {
+func (m *UpdateVirtualMachineRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateVirtualMachineRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateVirtualMachineRequest) encodeFields(e *jx.Encoder) error {
 	if m.Metadata.IsSet() {
 		e.FieldStart("metadata")
 		if m.Metadata.IsNull() {
@@ -41,6 +46,7 @@ func (m *UpdateVirtualMachineRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("spec")
 		m.Spec.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *UpdateVirtualMachineRequest) UnmarshalJSON(b []byte) error {
@@ -83,21 +89,26 @@ func (m *UpdateVirtualMachineRequest) Decode(d *jx.Decoder) error {
 
 func (m UpdateVirtualMachineMetadataRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateVirtualMachineMetadataRequest) Encode(e *jx.Encoder) {
+func (m *UpdateVirtualMachineMetadataRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateVirtualMachineMetadataRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateVirtualMachineMetadataRequest) encodeFields(e *jx.Encoder) error {
 	if m.DisplayName.IsSet() {
 		e.FieldStart("displayName")
 		e.Str(m.DisplayName.Value)
@@ -121,6 +132,7 @@ func (m *UpdateVirtualMachineMetadataRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("description")
 		e.Str(m.Description.Value)
 	}
+	return nil
 }
 
 func (m *UpdateVirtualMachineMetadataRequest) UnmarshalJSON(b []byte) error {

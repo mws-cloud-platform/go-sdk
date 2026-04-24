@@ -25,6 +25,9 @@ func ImageSpecRequestToOptionalResponse(request *ImageSpecRequest) (*ImageSpecOp
 	if request.MinDiskSize != nil {
 		response.MinDiskSize = commonclient.NewOptional(*request.MinDiskSize)
 	}
+	if request.OsType != nil {
+		response.OsType = commonclient.NewOptional(*request.OsType)
+	}
 	return &response, nil
 }
 

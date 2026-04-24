@@ -23,6 +23,8 @@ type ImageSpecOptionalResponse struct {
 	Activity commonclient.Optional[ImageActivity] `json:"activity,omitempty" yaml:"activity,omitempty"`
 	// Минимальный допустимый размер диска, создаваемого из образа
 	MinDiskSize commonclient.Optional[bytesize.ByteSize] `json:"minDiskSize,omitempty" yaml:"minDiskSize,omitempty"`
+	// Тип операционной системы
+	OsType commonclient.Optional[OsType] `json:"osType,omitempty" yaml:"osType,omitempty"`
 }
 
 func (m *ImageSpecOptionalResponse) GetFamily() *string {
@@ -74,6 +76,20 @@ func (m *ImageSpecOptionalResponse) GetMinDiskSize() *bytesize.ByteSize {
 func (m *ImageSpecOptionalResponse) GetMinDiskSizeOr(val bytesize.ByteSize) bytesize.ByteSize {
 	if m != nil && m.MinDiskSize.IsSet() {
 		return m.MinDiskSize.Value
+	}
+	return val
+}
+
+func (m *ImageSpecOptionalResponse) GetOsType() *OsType {
+	if m != nil && m.OsType.IsSet() {
+		return &m.OsType.Value
+	}
+	return nil
+}
+
+func (m *ImageSpecOptionalResponse) GetOsTypeOr(val OsType) OsType {
+	if m != nil && m.OsType.IsSet() {
+		return m.OsType.Value
 	}
 	return val
 }

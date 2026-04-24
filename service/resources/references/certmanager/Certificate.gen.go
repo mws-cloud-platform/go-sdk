@@ -138,20 +138,23 @@ func (m *CertificateID) Clone() *CertificateID {
 
 func (m CertificateID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CertificateID) Encode(e *jx.Encoder) {
+func (m *CertificateID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *CertificateID) UnmarshalJSON(b []byte) error {
@@ -276,16 +279,19 @@ func (m *CertificateRef) Clone() *CertificateRef {
 
 func (m CertificateRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CertificateRef) Encode(e *jx.Encoder) {
+func (m *CertificateRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *CertificateRef) UnmarshalJSON(b []byte) error {

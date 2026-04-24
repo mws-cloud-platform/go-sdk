@@ -12,21 +12,26 @@ import (
 
 func (m UpdateImageSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateImageSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateImageSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateImageSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateImageSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Family.IsSet() {
 		e.FieldStart("family")
 		e.Str(m.Family.Value)
@@ -36,6 +41,12 @@ func (m *UpdateImageSpecRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("activity")
 		m.Activity.Value.Encode(e)
 	}
+
+	if m.OsType.IsSet() {
+		e.FieldStart("osType")
+		m.OsType.Value.Encode(e)
+	}
+	return nil
 }
 
 func (m *UpdateImageSpecRequest) UnmarshalJSON(b []byte) error {
@@ -64,6 +75,14 @@ func (m *UpdateImageSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Activity.SetTo(v)
+			return nil
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

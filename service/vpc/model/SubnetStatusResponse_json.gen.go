@@ -12,27 +12,33 @@ import (
 
 func (m SubnetStatusResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *SubnetStatusResponse) Encode(e *jx.Encoder) {
+func (m *SubnetStatusResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *SubnetStatusResponse) encodeFields(e *jx.Encoder) {
+func (m *SubnetStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
 	m.Ready.Encode(e)
 	if m.DhcpOptions != nil {
 		e.FieldStart("dhcpOptions")
 		m.DhcpOptions.Encode(e)
 	}
+	return nil
 }
 
 func (m *SubnetStatusResponse) UnmarshalJSON(b []byte) error {

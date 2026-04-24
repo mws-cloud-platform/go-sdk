@@ -12,21 +12,26 @@ import (
 
 func (m CommonRoleBindingFederationContextOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CommonRoleBindingFederationContextOptionalResponse) Encode(e *jx.Encoder) {
+func (m *CommonRoleBindingFederationContextOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *CommonRoleBindingFederationContextOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *CommonRoleBindingFederationContextOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Subject.IsSet() {
 		e.FieldStart("subject")
 		e.Str(m.Subject.Value)
@@ -40,6 +45,7 @@ func (m *CommonRoleBindingFederationContextOptionalResponse) encodeFields(e *jx.
 			m.Attribute.Value.Encode(e)
 		}
 	}
+	return nil
 }
 
 func (m *CommonRoleBindingFederationContextOptionalResponse) UnmarshalJSON(b []byte) error {

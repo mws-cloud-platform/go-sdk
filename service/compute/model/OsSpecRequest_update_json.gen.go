@@ -12,21 +12,26 @@ import (
 
 func (m UpdateOsSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateOsSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateOsSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateOsSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateOsSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Metadata.IsSet() {
 		e.FieldStart("metadata")
@@ -36,6 +41,7 @@ func (m *UpdateOsSpecRequest) encodeFields(e *jx.Encoder) {
 			m.Metadata.Value.Encode(e)
 		}
 	}
+	return nil
 }
 
 func (m *UpdateOsSpecRequest) UnmarshalJSON(b []byte) error {
@@ -70,21 +76,26 @@ func (m *UpdateOsSpecRequest) Decode(d *jx.Decoder) error {
 
 func (m UpdateOsSpecMetadataRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateOsSpecMetadataRequest) Encode(e *jx.Encoder) {
+func (m *UpdateOsSpecMetadataRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateOsSpecMetadataRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateOsSpecMetadataRequest) encodeFields(e *jx.Encoder) error {
 	if m.Attributes.IsSet() {
 		e.FieldStart("attributes")
 		e.ObjStart()
@@ -94,6 +105,7 @@ func (m *UpdateOsSpecMetadataRequest) encodeFields(e *jx.Encoder) {
 		}
 		e.ObjEnd()
 	}
+	return nil
 }
 
 func (m *UpdateOsSpecMetadataRequest) UnmarshalJSON(b []byte) error {

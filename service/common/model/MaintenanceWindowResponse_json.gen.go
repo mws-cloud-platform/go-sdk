@@ -11,23 +11,29 @@ import (
 
 func (m MaintenanceWindowResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *MaintenanceWindowResponse) Encode(e *jx.Encoder) {
+func (m *MaintenanceWindowResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *MaintenanceWindowResponse) encodeFields(e *jx.Encoder) {
+func (m *MaintenanceWindowResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("weekly")
 	m.Weekly.Encode(e)
+	return nil
 }
 
 func (m *MaintenanceWindowResponse) UnmarshalJSON(b []byte) error {

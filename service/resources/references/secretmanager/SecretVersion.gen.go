@@ -158,20 +158,23 @@ func (m *SecretVersionID) Clone() *SecretVersionID {
 
 func (m SecretVersionID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *SecretVersionID) Encode(e *jx.Encoder) {
+func (m *SecretVersionID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *SecretVersionID) UnmarshalJSON(b []byte) error {
@@ -305,16 +308,19 @@ func (m *SecretVersionRef) Clone() *SecretVersionRef {
 
 func (m SecretVersionRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *SecretVersionRef) Encode(e *jx.Encoder) {
+func (m *SecretVersionRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *SecretVersionRef) UnmarshalJSON(b []byte) error {

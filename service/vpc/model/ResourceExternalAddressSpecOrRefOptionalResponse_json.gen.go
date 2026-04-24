@@ -12,21 +12,26 @@ import (
 
 func (m ResourceExternalAddressSpecOrRefOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ResourceExternalAddressSpecOrRefOptionalResponse) Encode(e *jx.Encoder) {
+func (m *ResourceExternalAddressSpecOrRefOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ResourceExternalAddressSpecOrRefOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *ResourceExternalAddressSpecOrRefOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Ref.IsSet() {
 		e.FieldStart("ref")
 		m.Ref.Value.Encode(e)
@@ -40,6 +45,7 @@ func (m *ResourceExternalAddressSpecOrRefOptionalResponse) encodeFields(e *jx.En
 			m.Spec.Value.Encode(e)
 		}
 	}
+	return nil
 }
 
 func (m *ResourceExternalAddressSpecOrRefOptionalResponse) UnmarshalJSON(b []byte) error {

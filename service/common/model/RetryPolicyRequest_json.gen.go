@@ -13,21 +13,26 @@ import (
 
 func (m RetryPolicyRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *RetryPolicyRequest) Encode(e *jx.Encoder) {
+func (m *RetryPolicyRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *RetryPolicyRequest) encodeFields(e *jx.Encoder) {
+func (m *RetryPolicyRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("retryCount")
 	e.Int(m.RetryCount)
 
@@ -43,6 +48,7 @@ func (m *RetryPolicyRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("maxRetryTimeout")
 		m.MaxRetryTimeout.Encode(e)
 	}
+	return nil
 }
 
 func (m *RetryPolicyRequest) UnmarshalJSON(b []byte) error {

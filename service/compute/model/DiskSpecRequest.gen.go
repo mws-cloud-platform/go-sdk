@@ -26,6 +26,8 @@ type DiskSpecRequest struct {
 	Iops *Iops `json:"iops,omitempty" yaml:"iops,omitempty"`
 	// Размер блока диска
 	BlockSize *bytesize.ByteSize `json:"blockSize,omitempty" yaml:"blockSize,omitempty"`
+	// Тип операционной системы
+	OsType *OsType `json:"osType,omitempty" yaml:"osType,omitempty"`
 }
 
 func (m *DiskSpecRequest) GetZone() string {
@@ -129,6 +131,24 @@ func (m *DiskSpecRequest) GetBlockSizeOr(val bytesize.ByteSize) bytesize.ByteSiz
 	return val
 }
 
+func (m *DiskSpecRequest) GetOsType() *OsType {
+	if m != nil {
+		return m.OsType
+	}
+	return nil
+}
+
+func (m *DiskSpecRequest) SetOsType(val *OsType) {
+	m.OsType = val
+}
+
+func (m *DiskSpecRequest) GetOsTypeOr(val OsType) OsType {
+	if m != nil && m.OsType != nil {
+		return *m.OsType
+	}
+	return val
+}
+
 func (m *DiskSpecRequest) Clone() *DiskSpecRequest {
 	if m == nil {
 		return nil
@@ -143,6 +163,10 @@ func (m *DiskSpecRequest) Clone() *DiskSpecRequest {
 		clone.Iops = &cloneIops
 	}
 	clone.BlockSize = m.BlockSize.Clone()
+	if m.OsType != nil {
+		cloneOsType := *m.OsType
+		clone.OsType = &cloneOsType
+	}
 	return &clone
 }
 

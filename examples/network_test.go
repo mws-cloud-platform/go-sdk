@@ -46,7 +46,7 @@ func Example_network() {
 				Mtu:            ptr.Get(int32(1500)),
 			},
 		},
-	})
+	}, vpcclient.WithWait())
 	if err != nil {
 		log.Panicln("create network:", err)
 	}
@@ -60,7 +60,7 @@ func Example_network() {
 				InternetAccess: ptr.Get(false),
 			},
 		}).AsUpdateModel(),
-	})
+	}, vpcclient.WithWait())
 	if err != nil {
 		log.Panicln("update network:", err)
 	}
@@ -78,7 +78,7 @@ func Example_network() {
 	// And finally, delete the network to clean up after the example run.
 	err = networkClient.DeleteNetwork(ctx, vpcclient.DeleteNetworkRequest{
 		Network: networkName,
-	})
+	}, vpcclient.WithWait())
 	if err != nil {
 		log.Panicln("delete network:", err)
 	}

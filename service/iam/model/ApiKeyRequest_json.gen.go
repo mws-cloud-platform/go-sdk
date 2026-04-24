@@ -13,21 +13,26 @@ import (
 
 func (m ApiKeyRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ApiKeyRequest) Encode(e *jx.Encoder) {
+func (m *ApiKeyRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ApiKeyRequest) encodeFields(e *jx.Encoder) {
+func (m *ApiKeyRequest) encodeFields(e *jx.Encoder) error {
 	if m.Metadata != nil {
 		e.FieldStart("metadata")
 		m.Metadata.Encode(e)
@@ -35,6 +40,7 @@ func (m *ApiKeyRequest) encodeFields(e *jx.Encoder) {
 
 	e.FieldStart("spec")
 	m.Spec.Encode(e)
+	return nil
 }
 
 func (m *ApiKeyRequest) UnmarshalJSON(b []byte) error {
@@ -85,21 +91,26 @@ func (m *ApiKeyRequest) Decode(d *jx.Decoder) error {
 
 func (m ApiKeyMetadataRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ApiKeyMetadataRequest) Encode(e *jx.Encoder) {
+func (m *ApiKeyMetadataRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ApiKeyMetadataRequest) encodeFields(e *jx.Encoder) {
+func (m *ApiKeyMetadataRequest) encodeFields(e *jx.Encoder) error {
 	if m.DisplayName != nil {
 		e.FieldStart("displayName")
 		e.Str(*m.DisplayName)
@@ -123,6 +134,7 @@ func (m *ApiKeyMetadataRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("description")
 		e.Str(*m.Description)
 	}
+	return nil
 }
 
 func (m *ApiKeyMetadataRequest) UnmarshalJSON(b []byte) error {

@@ -11,26 +11,32 @@ import (
 
 func (m RouteSpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *RouteSpecOptionalResponse) Encode(e *jx.Encoder) {
+func (m *RouteSpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *RouteSpecOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *RouteSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("destination")
 	m.Destination.Encode(e)
 
 	e.FieldStart("nextHop")
 	m.NextHop.Encode(e)
+	return nil
 }
 
 func (m *RouteSpecOptionalResponse) UnmarshalJSON(b []byte) error {

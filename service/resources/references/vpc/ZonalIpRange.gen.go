@@ -138,20 +138,23 @@ func (m *ZonalIpRangeID) Clone() *ZonalIpRangeID {
 
 func (m ZonalIpRangeID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalIpRangeID) Encode(e *jx.Encoder) {
+func (m *ZonalIpRangeID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ZonalIpRangeID) UnmarshalJSON(b []byte) error {
@@ -276,16 +279,19 @@ func (m *ZonalIpRangeRef) Clone() *ZonalIpRangeRef {
 
 func (m ZonalIpRangeRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalIpRangeRef) Encode(e *jx.Encoder) {
+func (m *ZonalIpRangeRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ZonalIpRangeRef) UnmarshalJSON(b []byte) error {

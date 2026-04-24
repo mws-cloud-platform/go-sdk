@@ -158,20 +158,23 @@ func (m *FederationRoleBindingID) Clone() *FederationRoleBindingID {
 
 func (m FederationRoleBindingID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FederationRoleBindingID) Encode(e *jx.Encoder) {
+func (m *FederationRoleBindingID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *FederationRoleBindingID) UnmarshalJSON(b []byte) error {
@@ -305,16 +308,19 @@ func (m *FederationRoleBindingRef) Clone() *FederationRoleBindingRef {
 
 func (m FederationRoleBindingRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FederationRoleBindingRef) Encode(e *jx.Encoder) {
+func (m *FederationRoleBindingRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *FederationRoleBindingRef) UnmarshalJSON(b []byte) error {

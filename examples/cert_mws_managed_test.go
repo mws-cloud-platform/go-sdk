@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
+	"go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/mws"
 	certclient "go.mws.cloud/go-sdk/service/certmanager/client"
 	certmodel "go.mws.cloud/go-sdk/service/certmanager/model"
@@ -54,7 +53,7 @@ func Example_certMWSManaged() {
 				},
 			},
 		},
-	})
+	}, certclient.WithWait())
 	if err != nil {
 		log.Panicln("create certificate:", err)
 	}
@@ -62,17 +61,18 @@ func Example_certMWSManaged() {
 
 	cert, err = certClient.UpdateCertificate(ctx, certclient.UpdateCertificateRequest{
 		Name: certName,
-		Body: (&certmodel.CertificateRequest{
-			Metadata: &common.CommonTypedResourceMetadataRequest{
-				Description: ptr.Get("managed certificate"),
-			},
-		}).AsUpdateModel(),
-	})
+		Body: certmodel.UpdateCertificateRequest{
+			Metadata: client.NewOptionalNil(common.UpdateCommonTypedResourceMetadataRequest{
+				Description: client.NewOptional("managed certificate"),
+			}),
+		},
+	}, certclient.WithWait())
 	if err != nil {
 		log.Panicln("update certificate:", err)
 	}
 	fmt.Println("certificate updated:", cert.GetMetadata().Id)
 
+	// To make the certificate content available, you need to confirm your rights to the domains.
 	content, err := certClient.GetCertificateContent(ctx, certclient.GetCertificateContentRequest{
 		Name: certName,
 	})
@@ -83,7 +83,7 @@ func Example_certMWSManaged() {
 
 	err = certClient.DeleteCertificate(ctx, certclient.DeleteCertificateRequest{
 		Name: certName,
-	})
+	}, certclient.WithWait())
 	if err != nil {
 		log.Panicln("delete certificate:", err)
 	}

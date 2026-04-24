@@ -11,23 +11,34 @@ import (
 
 func (m SnapshotSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *SnapshotSpecRequest) Encode(e *jx.Encoder) {
+func (m *SnapshotSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *SnapshotSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *SnapshotSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("source")
 	m.Source.Encode(e)
+
+	if m.OsType != nil {
+		e.FieldStart("osType")
+		m.OsType.Encode(e)
+	}
+	return nil
 }
 
 func (m *SnapshotSpecRequest) UnmarshalJSON(b []byte) error {
@@ -52,6 +63,14 @@ func (m *SnapshotSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.Source = v
 			requiredFilled["source"] = true
+			return nil
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType = &v
 			return nil
 		default:
 			return d.Skip()

@@ -158,20 +158,23 @@ func (m *Nat46ID) Clone() *Nat46ID {
 
 func (m Nat46ID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *Nat46ID) Encode(e *jx.Encoder) {
+func (m *Nat46ID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *Nat46ID) UnmarshalJSON(b []byte) error {
@@ -305,16 +308,19 @@ func (m *Nat46Ref) Clone() *Nat46Ref {
 
 func (m Nat46Ref) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *Nat46Ref) Encode(e *jx.Encoder) {
+func (m *Nat46Ref) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *Nat46Ref) UnmarshalJSON(b []byte) error {

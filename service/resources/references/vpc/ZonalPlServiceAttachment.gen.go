@@ -178,20 +178,23 @@ func (m *ZonalPlServiceAttachmentID) Clone() *ZonalPlServiceAttachmentID {
 
 func (m ZonalPlServiceAttachmentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalPlServiceAttachmentID) Encode(e *jx.Encoder) {
+func (m *ZonalPlServiceAttachmentID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ZonalPlServiceAttachmentID) UnmarshalJSON(b []byte) error {
@@ -334,16 +337,19 @@ func (m *ZonalPlServiceAttachmentRef) Clone() *ZonalPlServiceAttachmentRef {
 
 func (m ZonalPlServiceAttachmentRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalPlServiceAttachmentRef) Encode(e *jx.Encoder) {
+func (m *ZonalPlServiceAttachmentRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ZonalPlServiceAttachmentRef) UnmarshalJSON(b []byte) error {

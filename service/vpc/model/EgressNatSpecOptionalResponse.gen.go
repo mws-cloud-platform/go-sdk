@@ -18,8 +18,6 @@ type EgressNatSpecOptionalResponse struct {
 	External EgressNatSpecExternalOptionalResponse `json:"external" yaml:"external"`
 	// Описывает настройки управления портами.
 	PortAllocation commonclient.OptionalNil[EgressNatSpecPortAllocationOptionalResponse] `json:"portAllocation,omitempty" yaml:"portAllocation,omitempty"`
-	// Описывает настройки управления портами (Port Block Allocation).
-	Pba commonclient.OptionalNil[EgressNatSpecPbaOptionalResponse] `json:"pba,omitempty" yaml:"pba,omitempty"`
 }
 
 func (m *EgressNatSpecOptionalResponse) GetInternal() EgressNatSpecInternalOptionalResponse {
@@ -58,20 +56,6 @@ func (m *EgressNatSpecOptionalResponse) GetPortAllocationOr(val EgressNatSpecPor
 	return val
 }
 
-func (m *EgressNatSpecOptionalResponse) GetPba() *EgressNatSpecPbaOptionalResponse {
-	if m != nil && m.Pba.IsSet() {
-		return &m.Pba.Value
-	}
-	return nil
-}
-
-func (m *EgressNatSpecOptionalResponse) GetPbaOr(val EgressNatSpecPbaOptionalResponse) EgressNatSpecPbaOptionalResponse {
-	if m != nil && m.Pba.IsSet() {
-		return m.Pba.Value
-	}
-	return val
-}
-
 func (m *EgressNatSpecOptionalResponse) Clone() *EgressNatSpecOptionalResponse {
 	if m == nil {
 		return nil
@@ -82,9 +66,6 @@ func (m *EgressNatSpecOptionalResponse) Clone() *EgressNatSpecOptionalResponse {
 	clone.External = *m.External.Clone()
 	if clone.PortAllocation.IsSet() {
 		clone.PortAllocation.Value = *m.PortAllocation.Value.Clone()
-	}
-	if clone.Pba.IsSet() {
-		clone.Pba.Value = *m.Pba.Value.Clone()
 	}
 	return &clone
 }

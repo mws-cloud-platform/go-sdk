@@ -138,20 +138,23 @@ func (m *VirtualMachineID) Clone() *VirtualMachineID {
 
 func (m VirtualMachineID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *VirtualMachineID) Encode(e *jx.Encoder) {
+func (m *VirtualMachineID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *VirtualMachineID) UnmarshalJSON(b []byte) error {
@@ -276,16 +279,19 @@ func (m *VirtualMachineRef) Clone() *VirtualMachineRef {
 
 func (m VirtualMachineRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *VirtualMachineRef) Encode(e *jx.Encoder) {
+func (m *VirtualMachineRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *VirtualMachineRef) UnmarshalJSON(b []byte) error {

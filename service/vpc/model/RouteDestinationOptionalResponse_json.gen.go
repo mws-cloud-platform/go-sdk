@@ -12,23 +12,29 @@ import (
 
 func (m RouteDestinationOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *RouteDestinationOptionalResponse) Encode(e *jx.Encoder) {
+func (m *RouteDestinationOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *RouteDestinationOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *RouteDestinationOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("spec")
 	m.Spec.Encode(e)
+	return nil
 }
 
 func (m *RouteDestinationOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -58,27 +64,33 @@ func (m *RouteDestinationOptionalResponse) Decode(d *jx.Decoder) error {
 
 func (m RouteDestinationSpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *RouteDestinationSpecOptionalResponse) Encode(e *jx.Encoder) {
+func (m *RouteDestinationSpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *RouteDestinationSpecOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *RouteDestinationSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("cidrs")
 	e.ArrStart()
 	for _, elem := range m.Cidrs {
 		elem.Encode(e)
 	}
 	e.ArrEnd()
+	return nil
 }
 
 func (m *RouteDestinationSpecOptionalResponse) UnmarshalJSON(b []byte) error {

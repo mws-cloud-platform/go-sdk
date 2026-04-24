@@ -11,25 +11,31 @@ import (
 
 func (m UpdateComputeOneToOneNatSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateComputeOneToOneNatSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateComputeOneToOneNatSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateComputeOneToOneNatSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateComputeOneToOneNatSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.External.IsSet() {
 		e.FieldStart("external")
 		m.External.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *UpdateComputeOneToOneNatSpecRequest) UnmarshalJSON(b []byte) error {
@@ -59,25 +65,31 @@ func (m *UpdateComputeOneToOneNatSpecRequest) Decode(d *jx.Decoder) error {
 
 func (m UpdateComputeOneToOneNatSpecExternalRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateComputeOneToOneNatSpecExternalRequest) Encode(e *jx.Encoder) {
+func (m *UpdateComputeOneToOneNatSpecExternalRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateComputeOneToOneNatSpecExternalRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateComputeOneToOneNatSpecExternalRequest) encodeFields(e *jx.Encoder) error {
 	if m.Address.IsSet() {
 		e.FieldStart("address")
 		m.Address.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *UpdateComputeOneToOneNatSpecExternalRequest) UnmarshalJSON(b []byte) error {

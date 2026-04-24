@@ -11,21 +11,26 @@ import (
 
 func (m UpdateNetworkSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateNetworkSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateNetworkSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateNetworkSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateNetworkSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.NetworkInterfaces.IsSet() {
 		e.FieldStart("networkInterfaces")
 		e.ArrStart()
@@ -34,6 +39,7 @@ func (m *UpdateNetworkSpecRequest) encodeFields(e *jx.Encoder) {
 		}
 		e.ArrEnd()
 	}
+	return nil
 }
 
 func (m *UpdateNetworkSpecRequest) UnmarshalJSON(b []byte) error {

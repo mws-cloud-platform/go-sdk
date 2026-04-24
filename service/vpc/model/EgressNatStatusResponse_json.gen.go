@@ -12,21 +12,26 @@ import (
 
 func (m EgressNatStatusResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *EgressNatStatusResponse) Encode(e *jx.Encoder) {
+func (m *EgressNatStatusResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *EgressNatStatusResponse) encodeFields(e *jx.Encoder) {
+func (m *EgressNatStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
 	m.Ready.Encode(e)
 	if m.Internal != nil {
@@ -43,11 +48,7 @@ func (m *EgressNatStatusResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("portAllocation")
 		m.PortAllocation.Encode(e)
 	}
-
-	if m.Pba != nil {
-		e.FieldStart("pba")
-		m.Pba.Encode(e)
-	}
+	return nil
 }
 
 func (m *EgressNatStatusResponse) UnmarshalJSON(b []byte) error {
@@ -105,51 +106,8 @@ func (m *EgressNatStatusResponse) Decode(d *jx.Decoder) error {
 
 			m.PortAllocation = &v
 			return nil
-		case "pba":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
-			var v EgressNatStatusPbaResponse
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Pba = &v
-			return nil
 		default:
 			return d.Skip()
 		}
 	}))
-}
-
-func (m EgressNatStatusInternalResponse) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	m.Encode(&e)
-	return e.Bytes(), nil
-}
-
-func (m *EgressNatStatusInternalResponse) Encode(e *jx.Encoder) {
-	if m == nil {
-		e.Null()
-		return
-	}
-	e.ObjStart()
-	m.encodeFields(e)
-	e.ObjEnd()
-}
-
-func (m *EgressNatStatusInternalResponse) encodeFields(e *jx.Encoder) {
-}
-
-func (m *EgressNatStatusInternalResponse) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *EgressNatStatusInternalResponse) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("EgressNatStatusInternalResponse")
-	}
-
-	return d.Skip()
 }

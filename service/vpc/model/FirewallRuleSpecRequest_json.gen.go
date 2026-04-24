@@ -12,21 +12,26 @@ import (
 
 func (m FirewallRuleSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FirewallRuleSpecRequest) Encode(e *jx.Encoder) {
+func (m *FirewallRuleSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *FirewallRuleSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *FirewallRuleSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("direction")
 	m.Direction.Encode(e)
 
@@ -57,6 +62,7 @@ func (m *FirewallRuleSpecRequest) encodeFields(e *jx.Encoder) {
 		}
 		e.ArrEnd()
 	}
+	return nil
 }
 
 func (m *FirewallRuleSpecRequest) UnmarshalJSON(b []byte) error {
@@ -157,16 +163,19 @@ func (m *FirewallRuleSpecRequest) Decode(d *jx.Decoder) error {
 
 func (m FirewallRuleSpecActionRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FirewallRuleSpecActionRequest) Encode(e *jx.Encoder) {
+func (m *FirewallRuleSpecActionRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(string(*m))
+	return nil
 }
 
 func (m *FirewallRuleSpecActionRequest) UnmarshalJSON(b []byte) error {
@@ -189,16 +198,19 @@ func (m *FirewallRuleSpecActionRequest) Decode(d *jx.Decoder) error {
 
 func (m FirewallRuleSpecDirectionRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FirewallRuleSpecDirectionRequest) Encode(e *jx.Encoder) {
+func (m *FirewallRuleSpecDirectionRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(string(*m))
+	return nil
 }
 
 func (m *FirewallRuleSpecDirectionRequest) UnmarshalJSON(b []byte) error {

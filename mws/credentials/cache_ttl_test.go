@@ -3,12 +3,12 @@ package credentials_test
 import (
 	"context"
 	"testing"
+	"testing/synctest"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/goleak"
-	"testing/synctest"
 
 	"go.mws.cloud/go-sdk/mws/credentials"
 )

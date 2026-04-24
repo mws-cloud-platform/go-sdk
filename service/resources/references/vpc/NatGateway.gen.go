@@ -138,20 +138,23 @@ func (m *NatGatewayID) Clone() *NatGatewayID {
 
 func (m NatGatewayID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *NatGatewayID) Encode(e *jx.Encoder) {
+func (m *NatGatewayID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *NatGatewayID) UnmarshalJSON(b []byte) error {
@@ -276,16 +279,19 @@ func (m *NatGatewayRef) Clone() *NatGatewayRef {
 
 func (m NatGatewayRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *NatGatewayRef) Encode(e *jx.Encoder) {
+func (m *NatGatewayRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *NatGatewayRef) UnmarshalJSON(b []byte) error {

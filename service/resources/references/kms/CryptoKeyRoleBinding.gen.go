@@ -158,20 +158,23 @@ func (m *CryptoKeyRoleBindingID) Clone() *CryptoKeyRoleBindingID {
 
 func (m CryptoKeyRoleBindingID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CryptoKeyRoleBindingID) Encode(e *jx.Encoder) {
+func (m *CryptoKeyRoleBindingID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *CryptoKeyRoleBindingID) UnmarshalJSON(b []byte) error {
@@ -305,16 +308,19 @@ func (m *CryptoKeyRoleBindingRef) Clone() *CryptoKeyRoleBindingRef {
 
 func (m CryptoKeyRoleBindingRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CryptoKeyRoleBindingRef) Encode(e *jx.Encoder) {
+func (m *CryptoKeyRoleBindingRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *CryptoKeyRoleBindingRef) UnmarshalJSON(b []byte) error {

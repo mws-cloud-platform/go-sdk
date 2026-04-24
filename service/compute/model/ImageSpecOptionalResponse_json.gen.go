@@ -14,21 +14,26 @@ import (
 
 func (m ImageSpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ImageSpecOptionalResponse) Encode(e *jx.Encoder) {
+func (m *ImageSpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ImageSpecOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *ImageSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Family.IsSet() {
 		e.FieldStart("family")
 		e.Str(m.Family.Value)
@@ -46,6 +51,12 @@ func (m *ImageSpecOptionalResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("minDiskSize")
 		m.MinDiskSize.Value.Encode(e)
 	}
+
+	if m.OsType.IsSet() {
+		e.FieldStart("osType")
+		m.OsType.Value.Encode(e)
+	}
+	return nil
 }
 
 func (m *ImageSpecOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -91,6 +102,14 @@ func (m *ImageSpecOptionalResponse) Decode(d *jx.Decoder) error {
 
 			m.MinDiskSize.SetTo(v)
 			return nil
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType.SetTo(v)
+			return nil
 		default:
 			return d.Skip()
 		}
@@ -99,21 +118,26 @@ func (m *ImageSpecOptionalResponse) Decode(d *jx.Decoder) error {
 
 func (m ImageSpecSourceOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ImageSpecSourceOptionalResponse) Encode(e *jx.Encoder) {
+func (m *ImageSpecSourceOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ImageSpecSourceOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *ImageSpecSourceOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.ExternalUrl.IsSet() {
 		e.FieldStart("externalUrl")
 		e.Str(m.ExternalUrl.Value)
@@ -128,6 +152,7 @@ func (m *ImageSpecSourceOptionalResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("imageId")
 		m.ImageId.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *ImageSpecSourceOptionalResponse) UnmarshalJSON(b []byte) error {

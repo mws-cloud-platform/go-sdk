@@ -14,6 +14,8 @@ type UpdateDiskSpecRequest struct {
 	Size commonclient.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
 	// Запрашиваемое пользователем количество операций ввода-вывода в секунду (IOPS)
 	Iops commonclient.Optional[Iops] `json:"iops" yaml:"iops"`
+	// Тип операционной системы
+	OsType commonclient.Optional[OsType] `json:"osType" yaml:"osType"`
 }
 
 func (m *DiskSpecRequest) AsUpdateModel() UpdateDiskSpecRequest {
@@ -23,6 +25,9 @@ func (m *DiskSpecRequest) AsUpdateModel() UpdateDiskSpecRequest {
 	}
 	if m.Iops != nil {
 		u.Iops = commonclient.NewOptional(m.GetIopsOr(0))
+	}
+	if m.OsType != nil {
+		u.OsType = commonclient.NewOptional(m.GetOsTypeOr(""))
 	}
 	return u
 }
@@ -34,6 +39,7 @@ func (m *DiskSpecRequest) Diff(src *DiskSpecRequest) UpdateDiskSpecRequest {
 	if !nilDiffers {
 		upd.Size = m.diffSize(src)
 		upd.Iops = m.diffIops(src)
+		upd.OsType = m.diffOsType(src)
 	}
 	return upd
 }
@@ -50,13 +56,17 @@ func (m *DiskSpecRequest) WithChanges(u UpdateDiskSpecRequest) DiskSpecRequest {
 	if u.Iops.IsSet() {
 		out.Iops = ptr.Get(u.Iops.Value)
 	}
+	if u.OsType.IsSet() {
+		out.OsType = ptr.Get(u.OsType.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateDiskSpecRequest) HasChanges() bool {
 	return m.Size.Set ||
-		m.Iops.Set
+		m.Iops.Set ||
+		m.OsType.Set
 }
 
 func (m *DiskSpecRequest) diffSize(src *DiskSpecRequest) commonclient.Optional[bytesize.ByteSize] {
@@ -67,4 +77,9 @@ func (m *DiskSpecRequest) diffSize(src *DiskSpecRequest) commonclient.Optional[b
 func (m *DiskSpecRequest) diffIops(src *DiskSpecRequest) commonclient.Optional[Iops] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetIops(), m.GetIops(), nilDiffers)
+}
+
+func (m *DiskSpecRequest) diffOsType(src *DiskSpecRequest) commonclient.Optional[OsType] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetOsType(), m.GetOsType(), nilDiffers)
 }

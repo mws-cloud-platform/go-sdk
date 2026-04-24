@@ -118,20 +118,23 @@ func (m *DiskTypeID) Clone() *DiskTypeID {
 
 func (m DiskTypeID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *DiskTypeID) Encode(e *jx.Encoder) {
+func (m *DiskTypeID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *DiskTypeID) UnmarshalJSON(b []byte) error {
@@ -247,16 +250,19 @@ func (m *DiskTypeRef) Clone() *DiskTypeRef {
 
 func (m DiskTypeRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *DiskTypeRef) Encode(e *jx.Encoder) {
+func (m *DiskTypeRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *DiskTypeRef) UnmarshalJSON(b []byte) error {

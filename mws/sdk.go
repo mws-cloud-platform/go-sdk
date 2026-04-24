@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
@@ -13,6 +14,7 @@ import (
 	loginterceptor "go.mws.cloud/go-sdk/internal/client/interceptors/log"
 	recoveryinterceptor "go.mws.cloud/go-sdk/internal/client/interceptors/recovery"
 	retryinterceptor "go.mws.cloud/go-sdk/internal/client/interceptors/retry"
+	traceinterceptor "go.mws.cloud/go-sdk/internal/client/interceptors/trace"
 	"go.mws.cloud/go-sdk/mws/credentials"
 	"go.mws.cloud/go-sdk/mws/endpoints"
 	"go.mws.cloud/go-sdk/mws/retry"
@@ -31,6 +33,7 @@ type HTTPClient interface {
 // Use [Load] to create SDK instance.
 type SDK struct {
 	logger                  *zap.Logger
+	tracerProvider          trace.TracerProvider
 	defaultZone             string
 	defaultProject          string
 	client                  HTTPClient
@@ -89,8 +92,9 @@ func (s *SDK) ClientOptions() []commonclient.Option {
 			commonclient.IdempotencyKeyInjector,
 			commonclient.DefaultsInjector(s.defaultProject, s.defaultZone),
 			authinterceptor.New(s.credentials),
-			loginterceptor.New(s.logger.Named("client")),
 			retryinterceptor.New(retryinterceptor.WithRetryer(s.retryer)),
+			loginterceptor.New(s.logger.Named("client")),
+			traceinterceptor.New(traceinterceptor.WithTracer(s.tracerProvider.Tracer(traceinterceptor.DefaultName))),
 			commonclient.ErrorWrapper,
 		),
 	}

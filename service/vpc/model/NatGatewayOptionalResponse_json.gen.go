@@ -13,21 +13,26 @@ import (
 
 func (m NatGatewayOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *NatGatewayOptionalResponse) Encode(e *jx.Encoder) {
+func (m *NatGatewayOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *NatGatewayOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *NatGatewayOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Kind != nil {
 		e.FieldStart("kind")
 		e.Str(*m.Kind)
@@ -49,6 +54,7 @@ func (m *NatGatewayOptionalResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("status")
 		m.Status.Encode(e)
 	}
+	return nil
 }
 
 func (m *NatGatewayOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -111,21 +117,27 @@ func (m *NatGatewayOptionalResponse) Decode(d *jx.Decoder) error {
 
 func (m NatGatewaySpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *NatGatewaySpecOptionalResponse) Encode(e *jx.Encoder) {
+func (m *NatGatewaySpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *NatGatewaySpecOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *NatGatewaySpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	return nil
 }
 
 func (m *NatGatewaySpecOptionalResponse) UnmarshalJSON(b []byte) error {

@@ -178,20 +178,23 @@ func (m *ZonalNat46ID) Clone() *ZonalNat46ID {
 
 func (m ZonalNat46ID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalNat46ID) Encode(e *jx.Encoder) {
+func (m *ZonalNat46ID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ZonalNat46ID) UnmarshalJSON(b []byte) error {
@@ -334,16 +337,19 @@ func (m *ZonalNat46Ref) Clone() *ZonalNat46Ref {
 
 func (m ZonalNat46Ref) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalNat46Ref) Encode(e *jx.Encoder) {
+func (m *ZonalNat46Ref) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ZonalNat46Ref) UnmarshalJSON(b []byte) error {

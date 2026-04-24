@@ -13,21 +13,26 @@ import (
 
 func (m UpdateSecretSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateSecretSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateSecretSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateSecretSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateSecretSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Active.IsSet() {
 		e.FieldStart("active")
 		e.Bool(m.Active.Value)
@@ -37,6 +42,7 @@ func (m *UpdateSecretSpecRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("currentSecretVersion")
 		m.CurrentSecretVersion.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *UpdateSecretSpecRequest) UnmarshalJSON(b []byte) error {

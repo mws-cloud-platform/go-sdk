@@ -14,21 +14,26 @@ import (
 
 func (m VmTypeOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *VmTypeOptionalResponse) Encode(e *jx.Encoder) {
+func (m *VmTypeOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *VmTypeOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *VmTypeOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Kind != nil {
 		e.FieldStart("kind")
 		e.Str(*m.Kind)
@@ -50,6 +55,7 @@ func (m *VmTypeOptionalResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("status")
 		m.Status.Encode(e)
 	}
+	return nil
 }
 
 func (m *VmTypeOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -112,21 +118,26 @@ func (m *VmTypeOptionalResponse) Decode(d *jx.Decoder) error {
 
 func (m VmTypeMetadataOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *VmTypeMetadataOptionalResponse) Encode(e *jx.Encoder) {
+func (m *VmTypeMetadataOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *VmTypeMetadataOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *VmTypeMetadataOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.DisplayName.IsSet() {
 		e.FieldStart("displayName")
 		e.Str(m.DisplayName.Value)
@@ -172,6 +183,7 @@ func (m *VmTypeMetadataOptionalResponse) encodeFields(e *jx.Encoder) {
 	}
 	e.FieldStart("id")
 	m.Id.Encode(e)
+	return nil
 }
 
 func (m *VmTypeMetadataOptionalResponse) UnmarshalJSON(b []byte) error {

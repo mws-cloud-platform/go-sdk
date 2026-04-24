@@ -53,7 +53,7 @@ func Example_disk() {
 				Zone:      "ru-central1-a",
 			},
 		},
-	})
+	}, computeclient.WithWait())
 	if err != nil {
 		log.Panicln("create disk:", err)
 	}
@@ -68,7 +68,7 @@ func Example_disk() {
 				Size: commonclient.NewOptional(bytesize.MustParseString("2 GB")),
 			}),
 		},
-	})
+	}, computeclient.WithWait())
 	if err != nil {
 		log.Panicln("update disk:", err)
 	}
@@ -86,7 +86,7 @@ func Example_disk() {
 	// And finally, delete the disk to clean up after the example run.
 	err = diskClient.DeleteDisk(ctx, computeclient.DeleteDiskRequest{
 		Disk: diskName,
-	})
+	}, computeclient.WithWait())
 	if err != nil {
 		log.Panicln("delete disk:", err)
 	}

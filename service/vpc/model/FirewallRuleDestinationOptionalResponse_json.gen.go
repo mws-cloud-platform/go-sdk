@@ -11,21 +11,26 @@ import (
 
 func (m FirewallRuleDestinationOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FirewallRuleDestinationOptionalResponse) Encode(e *jx.Encoder) {
+func (m *FirewallRuleDestinationOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *FirewallRuleDestinationOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *FirewallRuleDestinationOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Spec.IsSet() {
 		e.FieldStart("spec")
 		if m.Spec.IsNull() {
@@ -34,6 +39,7 @@ func (m *FirewallRuleDestinationOptionalResponse) encodeFields(e *jx.Encoder) {
 			m.Spec.Value.Encode(e)
 		}
 	}
+	return nil
 }
 
 func (m *FirewallRuleDestinationOptionalResponse) UnmarshalJSON(b []byte) error {

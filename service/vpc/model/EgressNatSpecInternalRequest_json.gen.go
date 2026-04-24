@@ -12,27 +12,33 @@ import (
 
 func (m EgressNatSpecInternalRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *EgressNatSpecInternalRequest) Encode(e *jx.Encoder) {
+func (m *EgressNatSpecInternalRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *EgressNatSpecInternalRequest) encodeFields(e *jx.Encoder) {
+func (m *EgressNatSpecInternalRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("subnets")
 	e.ArrStart()
 	for _, elem := range m.Subnets {
 		elem.Encode(e)
 	}
 	e.ArrEnd()
+	return nil
 }
 
 func (m *EgressNatSpecInternalRequest) UnmarshalJSON(b []byte) error {

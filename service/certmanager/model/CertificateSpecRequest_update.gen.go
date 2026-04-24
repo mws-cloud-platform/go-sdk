@@ -9,17 +9,13 @@ import (
 )
 
 type UpdateCertificateSpecRequest struct {
-	SelfManaged commonclient.OptionalNil[UpdateSelfManagedSpecRequest]        `json:"selfManaged" yaml:"selfManaged"`
-	Managed     commonclient.OptionalNil[UpdateCertificateManagedSpecRequest] `json:"managed" yaml:"managed"`
+	SelfManaged commonclient.OptionalNil[UpdateSelfManagedSpecRequest] `json:"selfManaged" yaml:"selfManaged"`
 }
 
 func (m *CertificateSpecRequest) AsUpdateModel() UpdateCertificateSpecRequest {
 	var u UpdateCertificateSpecRequest
 	if m.SelfManaged != nil {
 		u.SelfManaged = commonclient.NewOptionalNil(m.SelfManaged.AsUpdateModel())
-	}
-	if m.Managed != nil {
-		u.Managed = commonclient.NewOptionalNil(m.Managed.AsUpdateModel())
 	}
 	return u
 }
@@ -30,7 +26,6 @@ func (m *CertificateSpecRequest) Diff(src *CertificateSpecRequest) UpdateCertifi
 	upd := UpdateCertificateSpecRequest{}
 	if !nilDiffers {
 		upd.SelfManaged = m.diffSelfManaged(src)
-		upd.Managed = m.diffManaged(src)
 	}
 	return upd
 }
@@ -46,28 +41,16 @@ func (m *CertificateSpecRequest) WithChanges(u UpdateCertificateSpecRequest) Cer
 	} else if u.SelfManaged.IsNull() {
 		out.SelfManaged = nil
 	}
-	if u.Managed.IsSet() {
-		out.Managed = ptr.Get(out.Managed.WithChanges(u.Managed.Value))
-	} else if u.Managed.IsNull() {
-		out.Managed = nil
-	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateCertificateSpecRequest) HasChanges() bool {
-	return m.SelfManaged.Set ||
-		m.Managed.Set
+	return m.SelfManaged.Set
 }
 
 func (m *CertificateSpecRequest) diffSelfManaged(src *CertificateSpecRequest) commonclient.OptionalNil[UpdateSelfManagedSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSelfManaged().Diff(src.GetSelfManaged())
 	return commonclient.NewDirectOptionalNil[UpdateSelfManagedSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
-}
-
-func (m *CertificateSpecRequest) diffManaged(src *CertificateSpecRequest) commonclient.OptionalNil[UpdateCertificateManagedSpecRequest] {
-	nilDiffers := src != nil && m == nil
-	value := m.GetManaged().Diff(src.GetManaged())
-	return commonclient.NewDirectOptionalNil[UpdateCertificateManagedSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
 }

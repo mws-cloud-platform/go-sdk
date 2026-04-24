@@ -14,21 +14,26 @@ import (
 
 func (m ApiError) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ApiError) Encode(e *jx.Encoder) {
+func (m *ApiError) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ApiError) encodeFields(e *jx.Encoder) {
+func (m *ApiError) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("code")
 	m.Code.Encode(e)
 
@@ -54,12 +59,13 @@ func (m *ApiError) encodeFields(e *jx.Encoder) {
 			e.FieldStart(key)
 			if elem == nil {
 				e.Null()
-				return
+				continue
 			}
 			e.Raw(elem)
 		}
 		e.ObjEnd()
 	}
+	return nil
 }
 
 func (m *ApiError) UnmarshalJSON(b []byte) error {
@@ -142,16 +148,19 @@ func (m *ApiError) Decode(d *jx.Decoder) error {
 
 func (m ApiErrorCode) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ApiErrorCode) Encode(e *jx.Encoder) {
+func (m *ApiErrorCode) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(string(*m))
+	return nil
 }
 
 func (m *ApiErrorCode) UnmarshalJSON(b []byte) error {

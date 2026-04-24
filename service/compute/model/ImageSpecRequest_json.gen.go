@@ -14,21 +14,26 @@ import (
 
 func (m ImageSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ImageSpecRequest) Encode(e *jx.Encoder) {
+func (m *ImageSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ImageSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *ImageSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Family != nil {
 		e.FieldStart("family")
 		e.Str(*m.Family)
@@ -46,6 +51,12 @@ func (m *ImageSpecRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("minDiskSize")
 		m.MinDiskSize.Encode(e)
 	}
+
+	if m.OsType != nil {
+		e.FieldStart("osType")
+		m.OsType.Encode(e)
+	}
+	return nil
 }
 
 func (m *ImageSpecRequest) UnmarshalJSON(b []byte) error {
@@ -95,6 +106,14 @@ func (m *ImageSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.MinDiskSize = &v
 			return nil
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType = &v
+			return nil
 		default:
 			return d.Skip()
 		}
@@ -108,21 +127,26 @@ func (m *ImageSpecRequest) Decode(d *jx.Decoder) error {
 
 func (m ImageSpecSourceRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ImageSpecSourceRequest) Encode(e *jx.Encoder) {
+func (m *ImageSpecSourceRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ImageSpecSourceRequest) encodeFields(e *jx.Encoder) {
+func (m *ImageSpecSourceRequest) encodeFields(e *jx.Encoder) error {
 	if m.ExternalUrl != nil {
 		e.FieldStart("externalUrl")
 		e.Str(*m.ExternalUrl)
@@ -137,6 +161,7 @@ func (m *ImageSpecSourceRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("imageId")
 		m.ImageId.Encode(e)
 	}
+	return nil
 }
 
 func (m *ImageSpecSourceRequest) UnmarshalJSON(b []byte) error {

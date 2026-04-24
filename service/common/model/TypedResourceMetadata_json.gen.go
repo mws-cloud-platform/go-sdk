@@ -12,21 +12,26 @@ import (
 
 func (m TypedResourceMetadata) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *TypedResourceMetadata) Encode(e *jx.Encoder) {
+func (m *TypedResourceMetadata) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *TypedResourceMetadata) encodeFields(e *jx.Encoder) {
+func (m *TypedResourceMetadata) encodeFields(e *jx.Encoder) error {
 	if m.DisplayName != nil {
 		e.FieldStart("displayName")
 		e.Str(*m.DisplayName)
@@ -70,6 +75,7 @@ func (m *TypedResourceMetadata) encodeFields(e *jx.Encoder) {
 		e.FieldStart("description")
 		e.Str(*m.Description)
 	}
+	return nil
 }
 
 func (m *TypedResourceMetadata) UnmarshalJSON(b []byte) error {

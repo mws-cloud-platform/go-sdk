@@ -12,23 +12,29 @@ import (
 
 func (m LocalizedErrorMessage) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *LocalizedErrorMessage) Encode(e *jx.Encoder) {
+func (m *LocalizedErrorMessage) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *LocalizedErrorMessage) encodeFields(e *jx.Encoder) {
+func (m *LocalizedErrorMessage) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("message")
 	e.Str(m.Message)
+	return nil
 }
 
 func (m *LocalizedErrorMessage) UnmarshalJSON(b []byte) error {

@@ -12,21 +12,26 @@ import (
 
 func (m UpdateOneToOneNatAddressSpecOrRefRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateOneToOneNatAddressSpecOrRefRequest) Encode(e *jx.Encoder) {
+func (m *UpdateOneToOneNatAddressSpecOrRefRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateOneToOneNatAddressSpecOrRefRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateOneToOneNatAddressSpecOrRefRequest) encodeFields(e *jx.Encoder) error {
 	if m.Ref.IsSet() {
 		e.FieldStart("ref")
 		m.Ref.Value.Encode(e)
@@ -40,6 +45,7 @@ func (m *UpdateOneToOneNatAddressSpecOrRefRequest) encodeFields(e *jx.Encoder) {
 			m.Spec.Value.Encode(e)
 		}
 	}
+	return nil
 }
 
 func (m *UpdateOneToOneNatAddressSpecOrRefRequest) UnmarshalJSON(b []byte) error {
@@ -82,21 +88,27 @@ func (m *UpdateOneToOneNatAddressSpecOrRefRequest) Decode(d *jx.Decoder) error {
 
 func (m UpdateOneToOneNatAddressSpecOrRefSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateOneToOneNatAddressSpecOrRefSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateOneToOneNatAddressSpecOrRefSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateOneToOneNatAddressSpecOrRefSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateOneToOneNatAddressSpecOrRefSpecRequest) encodeFields(e *jx.Encoder) error {
+	return nil
 }
 
 func (m *UpdateOneToOneNatAddressSpecOrRefSpecRequest) UnmarshalJSON(b []byte) error {

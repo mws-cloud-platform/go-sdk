@@ -13,21 +13,26 @@ import (
 
 func (m ImageOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ImageOptionalResponse) Encode(e *jx.Encoder) {
+func (m *ImageOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ImageOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *ImageOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Kind != nil {
 		e.FieldStart("kind")
 		e.Str(*m.Kind)
@@ -49,6 +54,7 @@ func (m *ImageOptionalResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("status")
 		m.Status.Encode(e)
 	}
+	return nil
 }
 
 func (m *ImageOptionalResponse) UnmarshalJSON(b []byte) error {

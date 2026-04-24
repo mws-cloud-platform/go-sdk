@@ -12,21 +12,26 @@ import (
 
 func (m CommonRoleBindingSpecSubjectRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CommonRoleBindingSpecSubjectRequest) Encode(e *jx.Encoder) {
+func (m *CommonRoleBindingSpecSubjectRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *CommonRoleBindingSpecSubjectRequest) encodeFields(e *jx.Encoder) {
+func (m *CommonRoleBindingSpecSubjectRequest) encodeFields(e *jx.Encoder) error {
 	if m.User != nil {
 		e.FieldStart("user")
 		m.User.Encode(e)
@@ -46,6 +51,12 @@ func (m *CommonRoleBindingSpecSubjectRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("userFederation")
 		m.UserFederation.Encode(e)
 	}
+
+	if m.UserGroup != nil {
+		e.FieldStart("userGroup")
+		m.UserGroup.Encode(e)
+	}
+	return nil
 }
 
 func (m *CommonRoleBindingSpecSubjectRequest) UnmarshalJSON(b []byte) error {
@@ -94,6 +105,14 @@ func (m *CommonRoleBindingSpecSubjectRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.UserFederation = &v
+			return nil
+		case "userGroup":
+			var v iam.UserGroupRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.UserGroup = &v
 			return nil
 		default:
 			return d.Skip()

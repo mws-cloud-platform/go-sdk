@@ -10,25 +10,31 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func (m SnapshotStatusResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *SnapshotStatusResponse) Encode(e *jx.Encoder) {
+func (m *SnapshotStatusResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *SnapshotStatusResponse) encodeFields(e *jx.Encoder) {
+func (m *SnapshotStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
 	m.Ready.Encode(e)
 	if m.StorageSize != nil {
@@ -50,6 +56,17 @@ func (m *SnapshotStatusResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("minDiskSize")
 		m.MinDiskSize.Encode(e)
 	}
+
+	if m.InitialSourceImage != nil {
+		e.FieldStart("initialSourceImage")
+		m.InitialSourceImage.Encode(e)
+	}
+
+	if m.OsType != nil {
+		e.FieldStart("osType")
+		m.OsType.Encode(e)
+	}
+	return nil
 }
 
 func (m *SnapshotStatusResponse) UnmarshalJSON(b []byte) error {
@@ -102,6 +119,22 @@ func (m *SnapshotStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.MinDiskSize = &v
+			return nil
+		case "initialSourceImage":
+			var v compute.ImageID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.InitialSourceImage = &v
+			return nil
+		case "osType":
+			var v OsType2
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType = &v
 			return nil
 		default:
 			return d.Skip()

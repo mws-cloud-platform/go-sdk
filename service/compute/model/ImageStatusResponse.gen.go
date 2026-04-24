@@ -3,9 +3,13 @@
 package model
 
 import (
+	"context"
+
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 // Статус образа
@@ -20,6 +24,10 @@ type ImageStatusResponse struct {
 	Activity *ImageActivity `json:"activity,omitempty" yaml:"activity,omitempty"`
 	// Минимальный допустимый размер диска, создаваемого из образа
 	MinDiskSize *bytesize.ByteSize `json:"minDiskSize,omitempty" yaml:"minDiskSize,omitempty"`
+	// Ссылка на исходный образ
+	InitialSourceImage *compute.ImageID `json:"initialSourceImage,omitempty" yaml:"initialSourceImage,omitempty"`
+	// Тип операционной системы
+	OsType *OsType2 `json:"osType,omitempty" yaml:"osType,omitempty"`
 }
 
 func (m *ImageStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -85,6 +93,34 @@ func (m *ImageStatusResponse) GetMinDiskSizeOr(val bytesize.ByteSize) bytesize.B
 	return val
 }
 
+func (m *ImageStatusResponse) GetInitialSourceImage() *compute.ImageID {
+	if m != nil {
+		return m.InitialSourceImage
+	}
+	return nil
+}
+
+func (m *ImageStatusResponse) GetInitialSourceImageOr(val compute.ImageID) compute.ImageID {
+	if m != nil && m.InitialSourceImage != nil {
+		return *m.InitialSourceImage
+	}
+	return val
+}
+
+func (m *ImageStatusResponse) GetOsType() *OsType2 {
+	if m != nil {
+		return m.OsType
+	}
+	return nil
+}
+
+func (m *ImageStatusResponse) GetOsTypeOr(val OsType2) OsType2 {
+	if m != nil && m.OsType != nil {
+		return *m.OsType
+	}
+	return val
+}
+
 func (m *ImageStatusResponse) Clone() *ImageStatusResponse {
 	if m == nil {
 		return nil
@@ -102,6 +138,23 @@ func (m *ImageStatusResponse) Clone() *ImageStatusResponse {
 		clone.Activity = &cloneActivity
 	}
 	clone.MinDiskSize = m.MinDiskSize.Clone()
+	clone.InitialSourceImage = m.InitialSourceImage.Clone()
+	if m.OsType != nil {
+		cloneOsType := *m.OsType
+		clone.OsType = &cloneOsType
+	}
 
 	return &clone
+}
+
+func (m *ImageStatusResponse) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if err := m.InitialSourceImage.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("InitialSourceImage", err)
+	}
+
+	return nil
 }

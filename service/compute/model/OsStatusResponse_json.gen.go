@@ -12,21 +12,26 @@ import (
 
 func (m OsStatusResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *OsStatusResponse) Encode(e *jx.Encoder) {
+func (m *OsStatusResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *OsStatusResponse) encodeFields(e *jx.Encoder) {
+func (m *OsStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("fqdn")
 	e.Str(m.Fqdn)
 
@@ -39,6 +44,7 @@ func (m *OsStatusResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("osType")
 		m.OsType.Encode(e)
 	}
+	return nil
 }
 
 func (m *OsStatusResponse) UnmarshalJSON(b []byte) error {
@@ -84,16 +90,19 @@ func (m *OsStatusResponse) Decode(d *jx.Decoder) error {
 
 func (m OsStatusOsTypeResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *OsStatusOsTypeResponse) Encode(e *jx.Encoder) {
+func (m *OsStatusOsTypeResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(string(*m))
+	return nil
 }
 
 func (m *OsStatusOsTypeResponse) UnmarshalJSON(b []byte) error {

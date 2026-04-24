@@ -28,7 +28,7 @@ MWS Cloud Platform SDK for Go.
 ## Installation
 
 ```shell
-go get go.mws.cloud/go-sdk/mws
+go get go.mws.cloud/go-sdk
 ```
 
 ## Getting Started
@@ -48,7 +48,7 @@ go mod init my-mws-project
 **Install SDK**
 
 ```shell
-go get go.mws.cloud/go-sdk/mws
+go get go.mws.cloud/go-sdk
 ```
 
 **Write Code**
@@ -180,7 +180,7 @@ Please note that the token lifetime is limited.
 
 ### Service Account Authorized Key
 
-To autheticate as a service account, you can set the path to its [authorized key](https://mws.ru/docs/cloud-platform/iam/keys.html#authkey) using the `MWS_SERVICE_ACCOUNT_AUTHORIZED_KEY_PATH` environmet variable.
+To authenticate as a service account, you can set the path to its [authorized key](https://mws.ru/docs/cloud-platform/iam/keys.html#authkey) using the `MWS_SERVICE_ACCOUNT_AUTHORIZED_KEY_PATH` environment variable.
 
 Alternatively, this can be done directly in code:
 
@@ -195,11 +195,18 @@ sdk, err := mws.Load(ctx, mws.WithServiceAccountAuthorizedKey(key))
 
 ### Custom Credentials Provider
 
-You can completly customize authentication by providing your own [credentials.Provider](https://pkg.go.dev/go.mws.cloud/go-sdk/mws/credentials#Provider) implementation:
+You can completely customize authentication by providing your own [credentials.Provider](https://pkg.go.dev/go.mws.cloud/go-sdk/mws/credentials#Provider) implementation:
 
 ```go
 sdk, err := mws.Load(ctx, mws.WithCredentials(CustomProvider{}))
 ```
+
+### Instance Metadata Service
+
+If none of the listed authentication methods is used, SDK will try to detect if the current environment is a Compute VM 
+with an [attached service account](https://mws.ru/docs/cloud-platform/compute/general/vm-add-change-delete-sa.html)
+by performing a request to the [instance metadata service](https://mws.ru/docs/cloud-platform/compute/general/vm-metadata-overview.html). 
+If the request succeeds, SDK will use credentials from the metadata service for authentication.
 
 ## Examples
 

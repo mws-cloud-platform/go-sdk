@@ -11,23 +11,29 @@ import (
 
 func (m ComputeOneToOneNatSpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ComputeOneToOneNatSpecOptionalResponse) Encode(e *jx.Encoder) {
+func (m *ComputeOneToOneNatSpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ComputeOneToOneNatSpecOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *ComputeOneToOneNatSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("external")
 	m.External.Encode(e)
+	return nil
 }
 
 func (m *ComputeOneToOneNatSpecOptionalResponse) UnmarshalJSON(b []byte) error {
@@ -57,23 +63,29 @@ func (m *ComputeOneToOneNatSpecOptionalResponse) Decode(d *jx.Decoder) error {
 
 func (m ComputeOneToOneNatSpecExternalOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ComputeOneToOneNatSpecExternalOptionalResponse) Encode(e *jx.Encoder) {
+func (m *ComputeOneToOneNatSpecExternalOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ComputeOneToOneNatSpecExternalOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *ComputeOneToOneNatSpecExternalOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("address")
 	m.Address.Encode(e)
+	return nil
 }
 
 func (m *ComputeOneToOneNatSpecExternalOptionalResponse) UnmarshalJSON(b []byte) error {

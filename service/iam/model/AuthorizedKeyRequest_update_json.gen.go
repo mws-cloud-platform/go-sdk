@@ -13,21 +13,26 @@ import (
 
 func (m UpdateAuthorizedKeyRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateAuthorizedKeyRequest) Encode(e *jx.Encoder) {
+func (m *UpdateAuthorizedKeyRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateAuthorizedKeyRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateAuthorizedKeyRequest) encodeFields(e *jx.Encoder) error {
 	if m.Metadata.IsSet() {
 		e.FieldStart("metadata")
 		if m.Metadata.IsNull() {
@@ -41,6 +46,7 @@ func (m *UpdateAuthorizedKeyRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("spec")
 		m.Spec.Value.Encode(e)
 	}
+	return nil
 }
 
 func (m *UpdateAuthorizedKeyRequest) UnmarshalJSON(b []byte) error {
@@ -83,21 +89,26 @@ func (m *UpdateAuthorizedKeyRequest) Decode(d *jx.Decoder) error {
 
 func (m UpdateAuthorizedKeyMetadataRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateAuthorizedKeyMetadataRequest) Encode(e *jx.Encoder) {
+func (m *UpdateAuthorizedKeyMetadataRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateAuthorizedKeyMetadataRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateAuthorizedKeyMetadataRequest) encodeFields(e *jx.Encoder) error {
 	if m.DisplayName.IsSet() {
 		e.FieldStart("displayName")
 		e.Str(m.DisplayName.Value)
@@ -121,6 +132,7 @@ func (m *UpdateAuthorizedKeyMetadataRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("description")
 		e.Str(m.Description.Value)
 	}
+	return nil
 }
 
 func (m *UpdateAuthorizedKeyMetadataRequest) UnmarshalJSON(b []byte) error {

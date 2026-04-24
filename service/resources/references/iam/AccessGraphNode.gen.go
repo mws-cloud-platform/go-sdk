@@ -118,20 +118,23 @@ func (m *AccessGraphNodeID) Clone() *AccessGraphNodeID {
 
 func (m AccessGraphNodeID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *AccessGraphNodeID) Encode(e *jx.Encoder) {
+func (m *AccessGraphNodeID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *AccessGraphNodeID) UnmarshalJSON(b []byte) error {
@@ -247,16 +250,19 @@ func (m *AccessGraphNodeRef) Clone() *AccessGraphNodeRef {
 
 func (m AccessGraphNodeRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *AccessGraphNodeRef) Encode(e *jx.Encoder) {
+func (m *AccessGraphNodeRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *AccessGraphNodeRef) UnmarshalJSON(b []byte) error {

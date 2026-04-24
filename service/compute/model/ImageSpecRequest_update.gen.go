@@ -13,6 +13,8 @@ type UpdateImageSpecRequest struct {
 	Family commonclient.Optional[string] `json:"family" yaml:"family"`
 	// Актуальность образа
 	Activity commonclient.Optional[ImageActivity] `json:"activity" yaml:"activity"`
+	// Тип операционной системы
+	OsType commonclient.Optional[OsType] `json:"osType" yaml:"osType"`
 }
 
 func (m *ImageSpecRequest) AsUpdateModel() UpdateImageSpecRequest {
@@ -22,6 +24,9 @@ func (m *ImageSpecRequest) AsUpdateModel() UpdateImageSpecRequest {
 	}
 	if m.Activity != nil {
 		u.Activity = commonclient.NewOptional(m.GetActivityOr(""))
+	}
+	if m.OsType != nil {
+		u.OsType = commonclient.NewOptional(m.GetOsTypeOr(""))
 	}
 	return u
 }
@@ -33,6 +38,7 @@ func (m *ImageSpecRequest) Diff(src *ImageSpecRequest) UpdateImageSpecRequest {
 	if !nilDiffers {
 		upd.Family = m.diffFamily(src)
 		upd.Activity = m.diffActivity(src)
+		upd.OsType = m.diffOsType(src)
 	}
 	return upd
 }
@@ -49,13 +55,17 @@ func (m *ImageSpecRequest) WithChanges(u UpdateImageSpecRequest) ImageSpecReques
 	if u.Activity.IsSet() {
 		out.Activity = ptr.Get(u.Activity.Value)
 	}
+	if u.OsType.IsSet() {
+		out.OsType = ptr.Get(u.OsType.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateImageSpecRequest) HasChanges() bool {
 	return m.Family.Set ||
-		m.Activity.Set
+		m.Activity.Set ||
+		m.OsType.Set
 }
 
 func (m *ImageSpecRequest) diffFamily(src *ImageSpecRequest) commonclient.Optional[string] {
@@ -66,4 +76,9 @@ func (m *ImageSpecRequest) diffFamily(src *ImageSpecRequest) commonclient.Option
 func (m *ImageSpecRequest) diffActivity(src *ImageSpecRequest) commonclient.Optional[ImageActivity] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetActivity(), m.GetActivity(), nilDiffers)
+}
+
+func (m *ImageSpecRequest) diffOsType(src *ImageSpecRequest) commonclient.Optional[OsType] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetOsType(), m.GetOsType(), nilDiffers)
 }

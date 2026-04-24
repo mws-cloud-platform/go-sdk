@@ -138,20 +138,23 @@ func (m *PlacementGroupID) Clone() *PlacementGroupID {
 
 func (m PlacementGroupID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *PlacementGroupID) Encode(e *jx.Encoder) {
+func (m *PlacementGroupID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *PlacementGroupID) UnmarshalJSON(b []byte) error {
@@ -276,16 +279,19 @@ func (m *PlacementGroupRef) Clone() *PlacementGroupRef {
 
 func (m PlacementGroupRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *PlacementGroupRef) Encode(e *jx.Encoder) {
+func (m *PlacementGroupRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *PlacementGroupRef) UnmarshalJSON(b []byte) error {

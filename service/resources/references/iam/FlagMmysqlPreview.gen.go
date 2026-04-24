@@ -138,20 +138,23 @@ func (m *FlagMmysqlPreviewID) Clone() *FlagMmysqlPreviewID {
 
 func (m FlagMmysqlPreviewID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FlagMmysqlPreviewID) Encode(e *jx.Encoder) {
+func (m *FlagMmysqlPreviewID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *FlagMmysqlPreviewID) UnmarshalJSON(b []byte) error {
@@ -267,16 +270,19 @@ func (m *FlagMmysqlPreviewRef) Clone() *FlagMmysqlPreviewRef {
 
 func (m FlagMmysqlPreviewRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *FlagMmysqlPreviewRef) Encode(e *jx.Encoder) {
+func (m *FlagMmysqlPreviewRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *FlagMmysqlPreviewRef) UnmarshalJSON(b []byte) error {

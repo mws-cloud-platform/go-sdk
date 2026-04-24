@@ -158,20 +158,23 @@ func (m *CryptoKeyVersionID) Clone() *CryptoKeyVersionID {
 
 func (m CryptoKeyVersionID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CryptoKeyVersionID) Encode(e *jx.Encoder) {
+func (m *CryptoKeyVersionID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *CryptoKeyVersionID) UnmarshalJSON(b []byte) error {
@@ -305,16 +308,19 @@ func (m *CryptoKeyVersionRef) Clone() *CryptoKeyVersionRef {
 
 func (m CryptoKeyVersionRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CryptoKeyVersionRef) Encode(e *jx.Encoder) {
+func (m *CryptoKeyVersionRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *CryptoKeyVersionRef) UnmarshalJSON(b []byte) error {

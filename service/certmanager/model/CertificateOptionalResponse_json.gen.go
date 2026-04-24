@@ -13,21 +13,26 @@ import (
 
 func (m CertificateOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CertificateOptionalResponse) Encode(e *jx.Encoder) {
+func (m *CertificateOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *CertificateOptionalResponse) encodeFields(e *jx.Encoder) {
+func (m *CertificateOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("kind")
 	e.Str(m.Kind)
 
@@ -39,6 +44,7 @@ func (m *CertificateOptionalResponse) encodeFields(e *jx.Encoder) {
 
 	e.FieldStart("status")
 	m.Status.Encode(e)
+	return nil
 }
 
 func (m *CertificateOptionalResponse) UnmarshalJSON(b []byte) error {

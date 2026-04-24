@@ -18,8 +18,11 @@ type UpdateCommonRoleBindingSpecSubject struct {
 	// Идентификатор сервисного аккаунта, принадлежащего проекту.
 	ServiceAccount commonclient.Optional[iam.ServiceAccountRef] `json:"serviceAccount" yaml:"serviceAccount"`
 	// Идентификатор сервисного агента, связанного с проектом.
-	ServiceAgent   commonclient.Optional[iam.ServiceAgentRef]                  `json:"serviceAgent" yaml:"serviceAgent"`
+	ServiceAgent commonclient.Optional[iam.ServiceAgentRef] `json:"serviceAgent" yaml:"serviceAgent"`
+	// Субъект федерации пользователей.
 	UserFederation commonclient.OptionalNil[UpdateCommonRoleBindingFederation] `json:"userFederation" yaml:"userFederation"`
+	// Идентификатор группы пользователей.
+	UserGroup commonclient.Optional[iam.UserGroupRef] `json:"userGroup" yaml:"userGroup"`
 }
 
 func (m *CommonRoleBindingSpecSubject) AsUpdateModel() UpdateCommonRoleBindingSpecSubject {
@@ -36,6 +39,9 @@ func (m *CommonRoleBindingSpecSubject) AsUpdateModel() UpdateCommonRoleBindingSp
 	if m.UserFederation != nil {
 		u.UserFederation = commonclient.NewOptionalNil(m.UserFederation.AsUpdateModel())
 	}
+	if m.UserGroup != nil {
+		u.UserGroup = commonclient.NewOptional(m.GetUserGroupOr(iam.UserGroupRef{}))
+	}
 	return u
 }
 
@@ -48,6 +54,7 @@ func (m *CommonRoleBindingSpecSubject) Diff(src *CommonRoleBindingSpecSubject) U
 		upd.ServiceAccount = m.diffServiceAccount(src)
 		upd.ServiceAgent = m.diffServiceAgent(src)
 		upd.UserFederation = m.diffUserFederation(src)
+		upd.UserGroup = m.diffUserGroup(src)
 	}
 	return upd
 }
@@ -72,6 +79,9 @@ func (m *CommonRoleBindingSpecSubject) WithChanges(u UpdateCommonRoleBindingSpec
 	} else if u.UserFederation.IsNull() {
 		out.UserFederation = nil
 	}
+	if u.UserGroup.IsSet() {
+		out.UserGroup = ptr.Get(u.UserGroup.Value)
+	}
 	return out
 }
 
@@ -80,7 +90,8 @@ func (m UpdateCommonRoleBindingSpecSubject) HasChanges() bool {
 	return m.User.Set ||
 		m.ServiceAccount.Set ||
 		m.ServiceAgent.Set ||
-		m.UserFederation.Set
+		m.UserFederation.Set ||
+		m.UserGroup.Set
 }
 
 func (m *UpdateCommonRoleBindingSpecSubject) Parse(ctx context.Context) error {
@@ -112,6 +123,12 @@ func (m *UpdateCommonRoleBindingSpecSubject) Parse(ctx context.Context) error {
 		}
 	}
 
+	if m.UserGroup.IsSet() {
+		if err := m.UserGroup.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("UserGroup", err)
+		}
+	}
+
 	return nil
 }
 
@@ -134,4 +151,9 @@ func (m *CommonRoleBindingSpecSubject) diffUserFederation(src *CommonRoleBinding
 	nilDiffers := src != nil && m == nil
 	value := m.GetUserFederation().Diff(src.GetUserFederation())
 	return commonclient.NewDirectOptionalNil[UpdateCommonRoleBindingFederation](value, nilDiffers || value.HasChanges(), nilDiffers)
+}
+
+func (m *CommonRoleBindingSpecSubject) diffUserGroup(src *CommonRoleBindingSpecSubject) commonclient.Optional[iam.UserGroupRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetUserGroup(), m.GetUserGroup(), nilDiffers)
 }

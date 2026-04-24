@@ -14,21 +14,26 @@ import (
 
 func (m ServiceAccountResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ServiceAccountResponse) Encode(e *jx.Encoder) {
+func (m *ServiceAccountResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ServiceAccountResponse) encodeFields(e *jx.Encoder) {
+func (m *ServiceAccountResponse) encodeFields(e *jx.Encoder) error {
 	if m.Kind != nil {
 		e.FieldStart("kind")
 		e.Str(*m.Kind)
@@ -46,6 +51,7 @@ func (m *ServiceAccountResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("status")
 		m.Status.Encode(e)
 	}
+	return nil
 }
 
 func (m *ServiceAccountResponse) UnmarshalJSON(b []byte) error {
@@ -107,21 +113,26 @@ func (m *ServiceAccountResponse) Decode(d *jx.Decoder) error {
 
 func (m ServiceAccountMetadataResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ServiceAccountMetadataResponse) Encode(e *jx.Encoder) {
+func (m *ServiceAccountMetadataResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *ServiceAccountMetadataResponse) encodeFields(e *jx.Encoder) {
+func (m *ServiceAccountMetadataResponse) encodeFields(e *jx.Encoder) error {
 	if m.DisplayName != nil {
 		e.FieldStart("displayName")
 		e.Str(*m.DisplayName)
@@ -169,6 +180,12 @@ func (m *ServiceAccountMetadataResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("id")
 		m.Id.Encode(e)
 	}
+
+	if m.Name != nil {
+		e.FieldStart("name")
+		e.Str(*m.Name)
+	}
+	return nil
 }
 
 func (m *ServiceAccountMetadataResponse) UnmarshalJSON(b []byte) error {
@@ -261,8 +278,53 @@ func (m *ServiceAccountMetadataResponse) Decode(d *jx.Decoder) error {
 
 			m.Id = &v
 			return nil
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = &v
+			return nil
 		default:
 			return d.Skip()
 		}
 	}))
+}
+
+func (m ServiceAccountSpecResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ServiceAccountSpecResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ServiceAccountSpecResponse) encodeFields(e *jx.Encoder) error {
+	return nil
+}
+
+func (m *ServiceAccountSpecResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ServiceAccountSpecResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ServiceAccountSpecResponse")
+	}
+
+	return d.Skip()
 }

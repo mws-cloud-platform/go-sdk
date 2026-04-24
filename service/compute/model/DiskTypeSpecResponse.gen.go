@@ -9,26 +9,26 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	commonref "go.mws.cloud/go-sdk/service/resources/references/common"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Спецификация типа глобального диска
 // Real OAPI model name: DiskTypeSpec
 type DiskTypeSpecResponse struct {
 	// Зоны доступности для диска
-	Zones []commonref.ZoneRef `json:"zones" yaml:"zones"`
+	Zones []rm.ZoneRef `json:"zones" yaml:"zones"`
 	// Ограничения на операции ввода-вывода
 	Limits DiskTypeSpecLimitsResponse `json:"limits" yaml:"limits"`
 }
 
-func (m *DiskTypeSpecResponse) GetZones() []commonref.ZoneRef {
+func (m *DiskTypeSpecResponse) GetZones() []rm.ZoneRef {
 	if m != nil {
 		return m.Zones
 	}
 	return nil
 }
 
-func (m *DiskTypeSpecResponse) SetZones(val []commonref.ZoneRef) {
+func (m *DiskTypeSpecResponse) SetZones(val []rm.ZoneRef) {
 	m.Zones = val
 }
 
@@ -50,7 +50,7 @@ func (m *DiskTypeSpecResponse) Clone() *DiskTypeSpecResponse {
 
 	clone := *m
 	if m.Zones != nil {
-		clone.Zones = make([]commonref.ZoneRef, len(m.Zones))
+		clone.Zones = make([]rm.ZoneRef, len(m.Zones))
 		for i, v := range m.Zones {
 			clone.Zones[i] = *v.Clone()
 		}

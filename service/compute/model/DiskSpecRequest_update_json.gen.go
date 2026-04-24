@@ -12,21 +12,26 @@ import (
 
 func (m UpdateDiskSpecRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *UpdateDiskSpecRequest) Encode(e *jx.Encoder) {
+func (m *UpdateDiskSpecRequest) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *UpdateDiskSpecRequest) encodeFields(e *jx.Encoder) {
+func (m *UpdateDiskSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Size.IsSet() {
 		e.FieldStart("size")
@@ -37,6 +42,12 @@ func (m *UpdateDiskSpecRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("iops")
 		m.Iops.Value.Encode(e)
 	}
+
+	if m.OsType.IsSet() {
+		e.FieldStart("osType")
+		m.OsType.Value.Encode(e)
+	}
+	return nil
 }
 
 func (m *UpdateDiskSpecRequest) UnmarshalJSON(b []byte) error {
@@ -65,6 +76,14 @@ func (m *UpdateDiskSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Iops.SetTo(v)
+			return nil
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

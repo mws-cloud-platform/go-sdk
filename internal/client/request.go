@@ -13,7 +13,7 @@ import (
 
 // Marshaler implements json writing.
 type Marshaler interface {
-	Encode(e *jx.Encoder)
+	Encode(e *jx.Encoder) error
 }
 
 func SetJSONBody(req *http.Request, body Marshaler) error {
@@ -26,7 +26,9 @@ func SetJSONBody(req *http.Request, body Marshaler) error {
 		return nil
 	}
 
-	body.Encode(&e)
+	if err := body.Encode(&e); err != nil {
+		return errors.NewEncodeBodyError(err)
+	}
 
 	if _, err := buf.Write(e.Bytes()); err != nil {
 		return errors.NewEncodeBodyError(err)
@@ -68,8 +70,9 @@ func setContentTypeRequest(req *http.Request, contentType string) {
 
 type ByteArray []byte
 
-func (b ByteArray) Encode(e *jx.Encoder) {
+func (b ByteArray) Encode(e *jx.Encoder) error {
 	e.Base64(b)
+	return nil
 }
 
 // URLFormMarshaler implements url form writing.

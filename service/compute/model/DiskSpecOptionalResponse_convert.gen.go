@@ -31,6 +31,9 @@ func DiskSpecRequestToOptionalResponse(request *DiskSpecRequest) (*DiskSpecOptio
 	if request.BlockSize != nil {
 		response.BlockSize = commonclient.NewOptional(*request.BlockSize)
 	}
+	if request.OsType != nil {
+		response.OsType = commonclient.NewOptional(*request.OsType)
+	}
 	return &response, nil
 }
 

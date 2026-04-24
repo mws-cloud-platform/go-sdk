@@ -11,23 +11,29 @@ import (
 
 func (m CommonRoleBindingStatusResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *CommonRoleBindingStatusResponse) Encode(e *jx.Encoder) {
+func (m *CommonRoleBindingStatusResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *CommonRoleBindingStatusResponse) encodeFields(e *jx.Encoder) {
+func (m *CommonRoleBindingStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
 	m.Ready.Encode(e)
+	return nil
 }
 
 func (m *CommonRoleBindingStatusResponse) UnmarshalJSON(b []byte) error {

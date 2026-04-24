@@ -14,21 +14,26 @@ import (
 
 func (m RouteStatusNextHopResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *RouteStatusNextHopResponse) Encode(e *jx.Encoder) {
+func (m *RouteStatusNextHopResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.ObjStart()
-	m.encodeFields(e)
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
 	e.ObjEnd()
+	return nil
 }
 
-func (m *RouteStatusNextHopResponse) encodeFields(e *jx.Encoder) {
+func (m *RouteStatusNextHopResponse) encodeFields(e *jx.Encoder) error {
 	if m.NetworkLocal != nil {
 		e.FieldStart("networkLocal")
 		e.Raw(m.NetworkLocal)
@@ -43,6 +48,7 @@ func (m *RouteStatusNextHopResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("address")
 		m.Address.Encode(e)
 	}
+	return nil
 }
 
 func (m *RouteStatusNextHopResponse) UnmarshalJSON(b []byte) error {

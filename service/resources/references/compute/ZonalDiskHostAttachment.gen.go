@@ -178,20 +178,23 @@ func (m *ZonalDiskHostAttachmentID) Clone() *ZonalDiskHostAttachmentID {
 
 func (m ZonalDiskHostAttachmentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalDiskHostAttachmentID) Encode(e *jx.Encoder) {
+func (m *ZonalDiskHostAttachmentID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *ZonalDiskHostAttachmentID) UnmarshalJSON(b []byte) error {
@@ -334,16 +337,19 @@ func (m *ZonalDiskHostAttachmentRef) Clone() *ZonalDiskHostAttachmentRef {
 
 func (m ZonalDiskHostAttachmentRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *ZonalDiskHostAttachmentRef) Encode(e *jx.Encoder) {
+func (m *ZonalDiskHostAttachmentRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *ZonalDiskHostAttachmentRef) UnmarshalJSON(b []byte) error {

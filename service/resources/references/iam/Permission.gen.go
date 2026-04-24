@@ -118,20 +118,23 @@ func (m *PermissionID) Clone() *PermissionID {
 
 func (m PermissionID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *PermissionID) Encode(e *jx.Encoder) {
+func (m *PermissionID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	result := m.ID()
 	if result == "" {
 		result = m.path
 	}
 	e.Str(result)
+	return nil
 }
 
 func (m *PermissionID) UnmarshalJSON(b []byte) error {
@@ -247,16 +250,19 @@ func (m *PermissionRef) Clone() *PermissionRef {
 
 func (m PermissionRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
-	m.Encode(&e)
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
 	return e.Bytes(), nil
 }
 
-func (m *PermissionRef) Encode(e *jx.Encoder) {
+func (m *PermissionRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
-		return
+		return nil
 	}
 	e.Str(m.Path())
+	return nil
 }
 
 func (m *PermissionRef) UnmarshalJSON(b []byte) error {
