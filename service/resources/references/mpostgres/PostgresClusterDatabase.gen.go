@@ -4,6 +4,8 @@ package mpostgres
 
 import (
 	"context"
+	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -17,9 +19,12 @@ import (
 )
 
 var (
-	PostgresClusterDatabaseRefTemplate = resparsers.Template{
+	PostgresClusterDatabaseDatabaseValidatePattern = regexp.MustCompile(`^[a-zA-Z_]([a-zA-Z0-9_$-]{0,61}[a-zA-Z0-9_$-])?$`)
+	PostgresClusterDatabaseClusterValidatePattern  = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,45}[a-z0-9])?$`)
+	PostgresClusterDatabaseRefTemplate             = resparsers.Template{
 		{
 			Value:       "database",
+			Pattern:     PostgresClusterDatabaseDatabaseValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -30,6 +35,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     PostgresClusterDatabaseClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -56,12 +62,28 @@ var (
 	}
 )
 
-func NewPostgresClusterDatabaseID(project, cluster, database string) PostgresClusterDatabaseID {
+func NewPostgresClusterDatabaseID(project, cluster, database string) (PostgresClusterDatabaseID, error) {
+	if match := PostgresClusterDatabaseDatabaseValidatePattern.Match([]byte(database)); !match {
+		return PostgresClusterDatabaseID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "database", database)
+	}
+	if match := PostgresClusterDatabaseClusterValidatePattern.Match([]byte(cluster)); !match {
+		return PostgresClusterDatabaseID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
+	}
 	m := PostgresClusterDatabaseID{
 		database: database,
 		cluster:  cluster,
 		project:  project,
 	}
+	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustPostgresClusterDatabaseID(project, cluster, database string) PostgresClusterDatabaseID {
+	m, err := NewPostgresClusterDatabaseID(project, cluster, database)
+	if err != nil {
+		panic(err)
+	}
+
 	m.path = m.ID()
 	return m
 }
@@ -183,7 +205,7 @@ func (m *PostgresClusterDatabaseID) UnmarshalJSON(b []byte) error {
 
 func (m *PostgresClusterDatabaseID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("PostgresClusterDatabaseRef")
+		return conv.NewDecodeToNilError("PostgresClusterDatabaseID")
 	}
 
 	v, err := decode.Str(d)
@@ -195,13 +217,22 @@ func (m *PostgresClusterDatabaseID) Decode(d *jx.Decoder) error {
 	return nil
 }
 
-func NewPostgresClusterDatabaseRef(project, cluster, database string) PostgresClusterDatabaseRef {
+func NewPostgresClusterDatabaseRef(project, cluster, database string) (PostgresClusterDatabaseRef, error) {
+	id, err := NewPostgresClusterDatabaseID(project, cluster, database)
+	if err != nil {
+		return PostgresClusterDatabaseRef{}, err
+	}
+
 	m := PostgresClusterDatabaseRef{
-		id: PostgresClusterDatabaseID{
-			database: database,
-			cluster:  cluster,
-			project:  project,
-		},
+		id: id,
+	}
+	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustPostgresClusterDatabaseRef(project, cluster, database string) PostgresClusterDatabaseRef {
+	m := PostgresClusterDatabaseRef{
+		id: NewMustPostgresClusterDatabaseID(project, cluster, database),
 	}
 	m.id.path = m.absolutePath()
 	return m

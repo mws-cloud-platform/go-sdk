@@ -186,6 +186,11 @@ func (m *DiskSpecSourceRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("snapshot")
 		m.Snapshot.Encode(e)
 	}
+
+	if m.DiskBackup != nil {
+		e.FieldStart("diskBackup")
+		m.DiskBackup.Encode(e)
+	}
 	return nil
 }
 
@@ -215,6 +220,14 @@ func (m *DiskSpecSourceRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Snapshot = &v
+			return nil
+		case "diskBackup":
+			var v compute.DiskBackupRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.DiskBackup = &v
 			return nil
 		default:
 			return d.Skip()

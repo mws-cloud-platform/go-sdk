@@ -5,21 +5,21 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateKafkaInstanceRequest struct {
 	// Параметры виртуальной машины, где будет работать брокер Кафки.
-	Broker commonclient.Optional[UpdateKafkaInstanceSpecRequest] `json:"broker" yaml:"broker"`
+	Broker optional.Optional[UpdateKafkaInstanceSpecRequest] `json:"broker" yaml:"broker"`
 	// Параметры виртуальной машины, где будет работать KRaft контроллер Кафки.
-	Controller commonclient.Optional[UpdateKafkaControllerInstanceSpecRequest] `json:"controller" yaml:"controller"`
+	Controller optional.Optional[UpdateKafkaControllerInstanceSpecRequest] `json:"controller" yaml:"controller"`
 }
 
 func (m *KafkaInstanceRequest) AsUpdateModel() UpdateKafkaInstanceRequest {
 	var u UpdateKafkaInstanceRequest
-	u.Broker = commonclient.NewOptional(m.Broker.AsUpdateModel())
-	u.Controller = commonclient.NewOptional(m.Controller.AsUpdateModel())
+	u.Broker = optional.NewOptional(m.Broker.AsUpdateModel())
+	u.Controller = optional.NewOptional(m.Controller.AsUpdateModel())
 	return u
 }
 
@@ -75,16 +75,22 @@ func (m *UpdateKafkaInstanceRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *KafkaInstanceRequest) diffBroker(src *KafkaInstanceRequest) commonclient.Optional[UpdateKafkaInstanceSpecRequest] {
+func (m *KafkaInstanceRequest) diffBroker(src *KafkaInstanceRequest) optional.Optional[UpdateKafkaInstanceSpecRequest] {
 	from := src.GetBroker()
 	to := m.GetBroker()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateKafkaInstanceSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateKafkaInstanceSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *KafkaInstanceRequest) diffController(src *KafkaInstanceRequest) commonclient.Optional[UpdateKafkaControllerInstanceSpecRequest] {
+func (m *KafkaInstanceRequest) diffController(src *KafkaInstanceRequest) optional.Optional[UpdateKafkaControllerInstanceSpecRequest] {
 	from := src.GetController()
 	to := m.GetController()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateKafkaControllerInstanceSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateKafkaControllerInstanceSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

@@ -5,17 +5,21 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Кластер Managed Kubernetes — кластер Kubernetes на базе облачной
+// инфраструктуры MWS Cloud Platform. Представляет собой совокупность Control
+// Plane (управляющего слоя) и групп рабочих узлов
+//
 // Real OAPI model name: Cluster
 type ClusterOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata commonclient.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     ClusterSpecOptionalResponse                                                  `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     ClusterSpecOptionalResponse                                              `json:"spec" yaml:"spec"`
 	// Описывает статусную модель k8s cluster.
 	Status *ClusterStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }

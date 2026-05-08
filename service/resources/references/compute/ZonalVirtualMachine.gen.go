@@ -183,7 +183,7 @@ func (m *ZonalVirtualMachineID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalVirtualMachineID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalVirtualMachineRef")
+		return conv.NewDecodeToNilError("ZonalVirtualMachineID")
 	}
 
 	v, err := decode.Str(d)

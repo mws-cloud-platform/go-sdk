@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func VpcNetworkSpecRequestToOptionalResponse(request *VpcNetworkSpecRequest) (*VpcNetworkSpecOptionalResponse, error) {
@@ -12,10 +12,10 @@ func VpcNetworkSpecRequestToOptionalResponse(request *VpcNetworkSpecRequest) (*V
 	}
 	var response VpcNetworkSpecOptionalResponse
 	if request.Mtu != nil {
-		response.Mtu = commonclient.NewOptional(*request.Mtu)
+		response.Mtu = optional.NewOptional(*request.Mtu)
 	}
 	if request.InternetAccess != nil {
-		response.InternetAccess = commonclient.NewOptional(*request.InternetAccess)
+		response.InternetAccess = optional.NewOptional(*request.InternetAccess)
 	}
 	return &response, nil
 }

@@ -5,18 +5,18 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/secretmanager"
 )
 
 // Real OAPI model name: SecretSpec
 type SecretSpecOptionalResponse struct {
 	// Секрет активен/неактивен
-	Active commonclient.Optional[bool] `json:"active,omitempty" yaml:"active,omitempty"`
+	Active optional.Optional[bool] `json:"active,omitempty" yaml:"active,omitempty"`
 	// Номер текущей версии секрета.
-	CurrentSecretVersion commonclient.Optional[secretmanager.SecretVersionRef]    `json:"currentSecretVersion,omitempty" yaml:"currentSecretVersion,omitempty"`
-	Encryption           commonclient.OptionalNil[EncryptionSpecOptionalResponse] `json:"encryption,omitempty" yaml:"encryption,omitempty"`
+	CurrentSecretVersion optional.Optional[secretmanager.SecretVersionRef]    `json:"currentSecretVersion,omitempty" yaml:"currentSecretVersion,omitempty"`
+	Encryption           optional.OptionalNil[EncryptionSpecOptionalResponse] `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
 func (m *SecretSpecOptionalResponse) GetActive() *bool {

@@ -70,6 +70,15 @@ func (m *UpdateKafkaClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 			m.MaintenanceWindow.Value.Encode(e)
 		}
 	}
+
+	if m.SchemaRegistry.IsSet() {
+		e.FieldStart("schemaRegistry")
+		if m.SchemaRegistry.IsNull() {
+			e.Null()
+		} else {
+			m.SchemaRegistry.Value.Encode(e)
+		}
+	}
 	return nil
 }
 
@@ -143,6 +152,19 @@ func (m *UpdateKafkaClusterSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.MaintenanceWindow.SetTo(v)
+			return nil
+		case "schemaRegistry":
+			if d.Next() == jx.Null {
+				m.SchemaRegistry.SetToNull()
+				return d.Null()
+			}
+
+			var v UpdateKafkaSchemaRegistrySpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SchemaRegistry.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

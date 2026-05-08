@@ -183,7 +183,7 @@ func (m *Nat46ID) UnmarshalJSON(b []byte) error {
 
 func (m *Nat46ID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("Nat46Ref")
+		return conv.NewDecodeToNilError("Nat46ID")
 	}
 
 	v, err := decode.Str(d)

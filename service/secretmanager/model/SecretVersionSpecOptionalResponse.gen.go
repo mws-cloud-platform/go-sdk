@@ -3,13 +3,13 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: SecretVersionSpec
 type SecretVersionSpecOptionalResponse struct {
 	// Версия секрета активна/неактивна
-	Active commonclient.Optional[bool] `json:"active,omitempty" yaml:"active,omitempty"`
+	Active optional.Optional[bool] `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
 func (m *SecretVersionSpecOptionalResponse) GetActive() *bool {

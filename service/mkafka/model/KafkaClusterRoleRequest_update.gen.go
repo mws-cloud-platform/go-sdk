@@ -4,16 +4,17 @@ package model
 
 import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateKafkaClusterRoleRequest struct {
 	// Название роли.
-	Name commonclient.Optional[KafkaClusterRoleName] `json:"name" yaml:"name"`
+	Name optional.Optional[KafkaClusterRoleName] `json:"name" yaml:"name"`
 }
 
 func (m *KafkaClusterRoleRequest) AsUpdateModel() UpdateKafkaClusterRoleRequest {
 	var u UpdateKafkaClusterRoleRequest
-	u.Name = commonclient.NewOptional(m.GetName())
+	u.Name = optional.NewOptional(m.GetName())
 	return u
 }
 
@@ -44,7 +45,7 @@ func (m UpdateKafkaClusterRoleRequest) HasChanges() bool {
 	return m.Name.Set
 }
 
-func (m *KafkaClusterRoleRequest) diffName(src *KafkaClusterRoleRequest) commonclient.Optional[KafkaClusterRoleName] {
+func (m *KafkaClusterRoleRequest) diffName(src *KafkaClusterRoleRequest) optional.Optional[KafkaClusterRoleName] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
 }

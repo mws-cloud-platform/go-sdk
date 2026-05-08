@@ -6,23 +6,24 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdatePostgresClusterUserSpecRequest struct {
-	Password commonclient.Optional[string] `json:"password" yaml:"password"`
+	Password optional.Optional[string] `json:"password" yaml:"password"`
 	// Пользовательские роли (они же роли приложений):
 	//   - `DB_OWNER_USER`: Пользователь с правами владельца базы данных. Это не суперпользователь,
 	//     не имеет права создавать бд или роли, наследует разрешения db_owner.
 	//   - `DB_WRITER_USER`: Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
 	//   - `DB_READER_USER`: Пользовательская роль, наследует разрешения групповой роли db_reader.
-	Role commonclient.Optional[PostgresUserRole] `json:"role" yaml:"role"`
+	Role optional.Optional[PostgresUserRole] `json:"role" yaml:"role"`
 }
 
 func (m *PostgresClusterUserSpecRequest) AsUpdateModel() UpdatePostgresClusterUserSpecRequest {
 	var u UpdatePostgresClusterUserSpecRequest
-	u.Password = commonclient.NewOptional(m.GetPassword())
+	u.Password = optional.NewOptional(m.GetPassword())
 	if m.Role != nil {
-		u.Role = commonclient.NewOptional(m.GetRoleOr(""))
+		u.Role = optional.NewOptional(m.GetRoleOr(""))
 	}
 	return u
 }
@@ -59,12 +60,12 @@ func (m UpdatePostgresClusterUserSpecRequest) HasChanges() bool {
 		m.Role.Set
 }
 
-func (m *PostgresClusterUserSpecRequest) diffPassword(src *PostgresClusterUserSpecRequest) commonclient.Optional[string] {
+func (m *PostgresClusterUserSpecRequest) diffPassword(src *PostgresClusterUserSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetPassword(), m.GetPassword(), nilDiffers)
 }
 
-func (m *PostgresClusterUserSpecRequest) diffRole(src *PostgresClusterUserSpecRequest) commonclient.Optional[PostgresUserRole] {
+func (m *PostgresClusterUserSpecRequest) diffRole(src *PostgresClusterUserSpecRequest) optional.Optional[PostgresUserRole] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRole(), m.GetRole(), nilDiffers)
 }

@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func ClusterPublicEndpointSpecRequestToOptionalResponse(request *ClusterPublicEndpointSpecRequest) (*ClusterPublicEndpointSpecOptionalResponse, error) {
@@ -16,7 +16,7 @@ func ClusterPublicEndpointSpecRequestToOptionalResponse(request *ClusterPublicEn
 		if err != nil {
 			return nil, err
 		}
-		response.Version = commonclient.NewOptional(*tmpVersion)
+		response.Version = optional.NewOptional(*tmpVersion)
 	}
 	return &response, nil
 }

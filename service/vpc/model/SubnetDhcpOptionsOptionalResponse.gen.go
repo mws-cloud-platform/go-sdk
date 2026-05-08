@@ -5,17 +5,17 @@ package model
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: SubnetDhcpOptions
 type SubnetDhcpOptionsOptionalResponse struct {
 	// Базовое доменное имя для разрешения имен.
-	DomainName commonclient.Optional[string] `json:"domainName,omitempty" yaml:"domainName,omitempty"`
+	DomainName optional.Optional[string] `json:"domainName,omitempty" yaml:"domainName,omitempty"`
 	// Список адресов DNS серверов.
-	DomainNameServers commonclient.Optional[[]ipaddress.IP4Address] `json:"domainNameServers,omitempty" yaml:"domainNameServers,omitempty"`
+	DomainNameServers optional.Optional[[]ipaddress.IP4Address] `json:"domainNameServers,omitempty" yaml:"domainNameServers,omitempty"`
 	// Список адресов NTP серверов.
-	NtpServers commonclient.Optional[[]ipaddress.IP4Address] `json:"ntpServers,omitempty" yaml:"ntpServers,omitempty"`
+	NtpServers optional.Optional[[]ipaddress.IP4Address] `json:"ntpServers,omitempty" yaml:"ntpServers,omitempty"`
 }
 
 func (m *SubnetDhcpOptionsOptionalResponse) GetDomainName() *string {

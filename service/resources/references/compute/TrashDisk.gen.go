@@ -143,7 +143,7 @@ func (m *TrashDiskID) UnmarshalJSON(b []byte) error {
 
 func (m *TrashDiskID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("TrashDiskRef")
+		return conv.NewDecodeToNilError("TrashDiskID")
 	}
 
 	v, err := decode.Str(d)

@@ -49,7 +49,7 @@ func (c *Disk) listDisksInvoker(ctx context.Context, anyReq any, response common
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"disks")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -141,9 +141,9 @@ func (c *Disk) deleteDiskInvoker(ctx context.Context, anyReq any, response commo
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"disks",
-		request.Disk)
+		url.PathEscape(request.Disk))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -226,9 +226,9 @@ func (c *Disk) getDiskInvoker(ctx context.Context, anyReq any, response commoncl
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"disks",
-		request.Disk)
+		url.PathEscape(request.Disk))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "disk", request.Disk)
@@ -311,9 +311,9 @@ func (c *Disk) upsertDiskInvoker(ctx context.Context, anyReq any, response commo
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"disks",
-		request.Disk)
+		url.PathEscape(request.Disk))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "disk", request.Disk)
@@ -402,9 +402,9 @@ func (c *Disk) createDiskInvoker(ctx context.Context, anyReq any, response commo
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"disks",
-		request.Disk)
+		url.PathEscape(request.Disk))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "disk", request.Disk)
@@ -494,9 +494,9 @@ func (c *Disk) updateDiskInvoker(ctx context.Context, anyReq any, response commo
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"disks",
-		request.Disk)
+		url.PathEscape(request.Disk))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "disk", request.Disk)

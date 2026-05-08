@@ -4,6 +4,8 @@ package mpostgres
 
 import (
 	"context"
+	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -17,9 +19,12 @@ import (
 )
 
 var (
-	PostgresClusterUserRefTemplate = resparsers.Template{
+	PostgresClusterUserUserValidatePattern    = regexp.MustCompile(`^[a-zA-Z0-9_]([a-zA-Z0-9_$-]{0,61}[a-zA-Z0-9_$-])?$`)
+	PostgresClusterUserClusterValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,45}[a-z0-9])?$`)
+	PostgresClusterUserRefTemplate            = resparsers.Template{
 		{
 			Value:       "user",
+			Pattern:     PostgresClusterUserUserValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -30,6 +35,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     PostgresClusterUserClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -56,12 +62,28 @@ var (
 	}
 )
 
-func NewPostgresClusterUserID(project, cluster, user string) PostgresClusterUserID {
+func NewPostgresClusterUserID(project, cluster, user string) (PostgresClusterUserID, error) {
+	if match := PostgresClusterUserUserValidatePattern.Match([]byte(user)); !match {
+		return PostgresClusterUserID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "user", user)
+	}
+	if match := PostgresClusterUserClusterValidatePattern.Match([]byte(cluster)); !match {
+		return PostgresClusterUserID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
+	}
 	m := PostgresClusterUserID{
 		user:    user,
 		cluster: cluster,
 		project: project,
 	}
+	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustPostgresClusterUserID(project, cluster, user string) PostgresClusterUserID {
+	m, err := NewPostgresClusterUserID(project, cluster, user)
+	if err != nil {
+		panic(err)
+	}
+
 	m.path = m.ID()
 	return m
 }
@@ -183,7 +205,7 @@ func (m *PostgresClusterUserID) UnmarshalJSON(b []byte) error {
 
 func (m *PostgresClusterUserID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("PostgresClusterUserRef")
+		return conv.NewDecodeToNilError("PostgresClusterUserID")
 	}
 
 	v, err := decode.Str(d)
@@ -195,13 +217,22 @@ func (m *PostgresClusterUserID) Decode(d *jx.Decoder) error {
 	return nil
 }
 
-func NewPostgresClusterUserRef(project, cluster, user string) PostgresClusterUserRef {
+func NewPostgresClusterUserRef(project, cluster, user string) (PostgresClusterUserRef, error) {
+	id, err := NewPostgresClusterUserID(project, cluster, user)
+	if err != nil {
+		return PostgresClusterUserRef{}, err
+	}
+
 	m := PostgresClusterUserRef{
-		id: PostgresClusterUserID{
-			user:    user,
-			cluster: cluster,
-			project: project,
-		},
+		id: id,
+	}
+	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustPostgresClusterUserRef(project, cluster, user string) PostgresClusterUserRef {
+	m := PostgresClusterUserRef{
+		id: NewMustPostgresClusterUserID(project, cluster, user),
 	}
 	m.id.path = m.absolutePath()
 	return m

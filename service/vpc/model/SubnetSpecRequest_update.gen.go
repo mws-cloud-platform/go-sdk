@@ -5,17 +5,17 @@ package model
 import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateSubnetSpecRequest struct {
-	DhcpOptions commonclient.OptionalNil[UpdateSubnetDhcpOptionsRequest] `json:"dhcpOptions" yaml:"dhcpOptions"`
+	DhcpOptions optional.OptionalNil[UpdateSubnetDhcpOptionsRequest] `json:"dhcpOptions" yaml:"dhcpOptions"`
 }
 
 func (m *SubnetSpecRequest) AsUpdateModel() UpdateSubnetSpecRequest {
 	var u UpdateSubnetSpecRequest
 	if m.DhcpOptions != nil {
-		u.DhcpOptions = commonclient.NewOptionalNil(m.DhcpOptions.AsUpdateModel())
+		u.DhcpOptions = optional.NewOptionalNil(m.DhcpOptions.AsUpdateModel())
 	}
 	return u
 }
@@ -49,8 +49,12 @@ func (m UpdateSubnetSpecRequest) HasChanges() bool {
 	return m.DhcpOptions.Set
 }
 
-func (m *SubnetSpecRequest) diffDhcpOptions(src *SubnetSpecRequest) commonclient.OptionalNil[UpdateSubnetDhcpOptionsRequest] {
+func (m *SubnetSpecRequest) diffDhcpOptions(src *SubnetSpecRequest) optional.OptionalNil[UpdateSubnetDhcpOptionsRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetDhcpOptions().Diff(src.GetDhcpOptions())
-	return commonclient.NewDirectOptionalNil[UpdateSubnetDhcpOptionsRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateSubnetDhcpOptionsRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

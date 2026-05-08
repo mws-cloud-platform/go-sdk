@@ -7,19 +7,20 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 type UpdateCommonRoleBindingFederation struct {
 	// Идентификатор федерации.
-	Id      commonclient.Optional[iam.UserFederationRef]                    `json:"id" yaml:"id"`
-	Context commonclient.Optional[UpdateCommonRoleBindingFederationContext] `json:"context" yaml:"context"`
+	Id      optional.Optional[iam.UserFederationRef]                    `json:"id" yaml:"id"`
+	Context optional.Optional[UpdateCommonRoleBindingFederationContext] `json:"context" yaml:"context"`
 }
 
 func (m *CommonRoleBindingFederation) AsUpdateModel() UpdateCommonRoleBindingFederation {
 	var u UpdateCommonRoleBindingFederation
-	u.Id = commonclient.NewOptional(m.GetId())
-	u.Context = commonclient.NewOptional(m.Context.AsUpdateModel())
+	u.Id = optional.NewOptional(m.GetId())
+	u.Context = optional.NewOptional(m.Context.AsUpdateModel())
 	return u
 }
 
@@ -69,14 +70,17 @@ func (m *UpdateCommonRoleBindingFederation) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *CommonRoleBindingFederation) diffId(src *CommonRoleBindingFederation) commonclient.Optional[iam.UserFederationRef] {
+func (m *CommonRoleBindingFederation) diffId(src *CommonRoleBindingFederation) optional.Optional[iam.UserFederationRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetId(), m.GetId(), nilDiffers)
 }
 
-func (m *CommonRoleBindingFederation) diffContext(src *CommonRoleBindingFederation) commonclient.Optional[UpdateCommonRoleBindingFederationContext] {
+func (m *CommonRoleBindingFederation) diffContext(src *CommonRoleBindingFederation) optional.Optional[UpdateCommonRoleBindingFederationContext] {
 	from := src.GetContext()
 	to := m.GetContext()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateCommonRoleBindingFederationContext](value, value.HasChanges())
+	return optional.Optional[UpdateCommonRoleBindingFederationContext]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

@@ -47,11 +47,11 @@ func (c *Challenge) getChallengeTokenInvoker(ctx context.Context, anyReq any, re
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name,
+		url.PathEscape(request.Name),
 		"tokens",
-		request.Token)
+		url.PathEscape(request.Token))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)
 	if err != nil {

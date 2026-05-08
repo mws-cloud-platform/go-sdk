@@ -4,19 +4,20 @@ package model
 
 import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateCommonRoleBindingFederationContextAttributeRequest struct {
 	// Имя атрибута
-	Name commonclient.Optional[string] `json:"name" yaml:"name"`
+	Name optional.Optional[string] `json:"name" yaml:"name"`
 	// Значение атрибута
-	Value commonclient.Optional[string] `json:"value" yaml:"value"`
+	Value optional.Optional[string] `json:"value" yaml:"value"`
 }
 
 func (m *CommonRoleBindingFederationContextAttributeRequest) AsUpdateModel() UpdateCommonRoleBindingFederationContextAttributeRequest {
 	var u UpdateCommonRoleBindingFederationContextAttributeRequest
-	u.Name = commonclient.NewOptional(m.GetName())
-	u.Value = commonclient.NewOptional(m.GetValue())
+	u.Name = optional.NewOptional(m.GetName())
+	u.Value = optional.NewOptional(m.GetValue())
 	return u
 }
 
@@ -62,15 +63,15 @@ func (m *UpdateCommonRoleBindingFederationContextAttributeRequest) GetName() str
 
 // SetName is used in the Diff function for NamedArray
 func (m *UpdateCommonRoleBindingFederationContextAttributeRequest) SetName(name string) {
-	m.Name = commonclient.NewOptional(name)
+	m.Name = optional.NewOptional(name)
 }
 
-func (m *CommonRoleBindingFederationContextAttributeRequest) diffName(src *CommonRoleBindingFederationContextAttributeRequest) commonclient.Optional[string] {
+func (m *CommonRoleBindingFederationContextAttributeRequest) diffName(src *CommonRoleBindingFederationContextAttributeRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
 }
 
-func (m *CommonRoleBindingFederationContextAttributeRequest) diffValue(src *CommonRoleBindingFederationContextAttributeRequest) commonclient.Optional[string] {
+func (m *CommonRoleBindingFederationContextAttributeRequest) diffValue(src *CommonRoleBindingFederationContextAttributeRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetValue(), m.GetValue(), nilDiffers)
 }

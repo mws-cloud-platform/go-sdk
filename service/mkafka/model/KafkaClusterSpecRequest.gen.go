@@ -24,6 +24,8 @@ type KafkaClusterSpecRequest struct {
 	// Настройки Kafka. Если не указаны, будут использованы настройки по-умолчанию.
 	ProductConfig     *string                          `json:"productConfig,omitempty" yaml:"productConfig,omitempty"`
 	MaintenanceWindow *common.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	// Настройка Schema Registry для кластера.
+	SchemaRegistry *KafkaSchemaRegistrySpecRequest `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`
 }
 
 func (m *KafkaClusterSpecRequest) GetActive() *bool {
@@ -113,6 +115,24 @@ func (m *KafkaClusterSpecRequest) GetMaintenanceWindowOr(val common.MaintenanceW
 	return val
 }
 
+func (m *KafkaClusterSpecRequest) GetSchemaRegistry() *KafkaSchemaRegistrySpecRequest {
+	if m != nil {
+		return m.SchemaRegistry
+	}
+	return nil
+}
+
+func (m *KafkaClusterSpecRequest) SetSchemaRegistry(val *KafkaSchemaRegistrySpecRequest) {
+	m.SchemaRegistry = val
+}
+
+func (m *KafkaClusterSpecRequest) GetSchemaRegistryOr(val KafkaSchemaRegistrySpecRequest) KafkaSchemaRegistrySpecRequest {
+	if m != nil && m.SchemaRegistry != nil {
+		return *m.SchemaRegistry
+	}
+	return val
+}
+
 func (m *KafkaClusterSpecRequest) Clone() *KafkaClusterSpecRequest {
 	if m == nil {
 		return nil
@@ -135,6 +155,7 @@ func (m *KafkaClusterSpecRequest) Clone() *KafkaClusterSpecRequest {
 		clone.ProductConfig = &cloneProductConfig
 	}
 	clone.MaintenanceWindow = m.MaintenanceWindow.Clone()
+	clone.SchemaRegistry = m.SchemaRegistry.Clone()
 	return &clone
 }
 

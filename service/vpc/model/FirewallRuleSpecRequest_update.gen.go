@@ -8,39 +8,40 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateFirewallRuleSpecRequest struct {
 	// Направление трафика, к которому применяется правило.
-	Direction commonclient.Optional[FirewallRuleSpecDirectionRequest] `json:"direction" yaml:"direction"`
+	Direction optional.Optional[FirewallRuleSpecDirectionRequest] `json:"direction" yaml:"direction"`
 	// Приоритет правила. Чем меньше число, тем больший приоритет имеет правило.
-	Priority commonclient.Optional[int32] `json:"priority" yaml:"priority"`
+	Priority optional.Optional[int32] `json:"priority" yaml:"priority"`
 	// Действие, которое должно быть применено к трафику при срабатывании правила.
-	Action commonclient.Optional[FirewallRuleSpecActionRequest] `json:"action" yaml:"action"`
+	Action optional.Optional[FirewallRuleSpecActionRequest] `json:"action" yaml:"action"`
 	// Состояние правила. True - правило активно и контролирует поведение трафика. False - правило не активно.
-	Active commonclient.Optional[bool] `json:"active" yaml:"active"`
+	Active optional.Optional[bool] `json:"active" yaml:"active"`
 	// Критерий применимости правила, описывает источник отправления пакета.
-	Source commonclient.Optional[UpdateFirewallRuleSourceRequest] `json:"source" yaml:"source"`
+	Source optional.Optional[UpdateFirewallRuleSourceRequest] `json:"source" yaml:"source"`
 	// Критерий применимости правила, описывает пункт назначения пакета.
-	Destination commonclient.Optional[UpdateFirewallRuleDestinationRequest] `json:"destination" yaml:"destination"`
+	Destination optional.Optional[UpdateFirewallRuleDestinationRequest] `json:"destination" yaml:"destination"`
 	// Критерий применимости правила. Определяет список протоколов и соответствующих портов (если применимо) назначения пакета. Значение по умолчанию - пустое значение. Означает любой протокол и порт.
-	ProtoPorts commonclient.Optional[[]string] `json:"protoPorts" yaml:"protoPorts"`
+	ProtoPorts optional.Optional[[]string] `json:"protoPorts" yaml:"protoPorts"`
 }
 
 func (m *FirewallRuleSpecRequest) AsUpdateModel() UpdateFirewallRuleSpecRequest {
 	var u UpdateFirewallRuleSpecRequest
-	u.Direction = commonclient.NewOptional(m.GetDirection())
+	u.Direction = optional.NewOptional(m.GetDirection())
 	if m.Priority != nil {
-		u.Priority = commonclient.NewOptional(m.GetPriorityOr(0))
+		u.Priority = optional.NewOptional(m.GetPriorityOr(0))
 	}
-	u.Action = commonclient.NewOptional(m.GetAction())
+	u.Action = optional.NewOptional(m.GetAction())
 	if m.Active != nil {
-		u.Active = commonclient.NewOptional(m.GetActiveOr(false))
+		u.Active = optional.NewOptional(m.GetActiveOr(false))
 	}
-	u.Source = commonclient.NewOptional(m.Source.AsUpdateModel())
-	u.Destination = commonclient.NewOptional(m.Destination.AsUpdateModel())
+	u.Source = optional.NewOptional(m.Source.AsUpdateModel())
+	u.Destination = optional.NewOptional(m.Destination.AsUpdateModel())
 	if m.ProtoPorts != nil {
-		u.ProtoPorts = commonclient.NewOptional(m.GetProtoPorts())
+		u.ProtoPorts = optional.NewOptional(m.GetProtoPorts())
 	}
 	return u
 }
@@ -102,41 +103,50 @@ func (m UpdateFirewallRuleSpecRequest) HasChanges() bool {
 		m.ProtoPorts.Set
 }
 
-func (m *FirewallRuleSpecRequest) diffDirection(src *FirewallRuleSpecRequest) commonclient.Optional[FirewallRuleSpecDirectionRequest] {
+func (m *FirewallRuleSpecRequest) diffDirection(src *FirewallRuleSpecRequest) optional.Optional[FirewallRuleSpecDirectionRequest] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetDirection(), m.GetDirection(), nilDiffers)
 }
 
-func (m *FirewallRuleSpecRequest) diffPriority(src *FirewallRuleSpecRequest) commonclient.Optional[int32] {
+func (m *FirewallRuleSpecRequest) diffPriority(src *FirewallRuleSpecRequest) optional.Optional[int32] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetPriority(), m.GetPriority(), nilDiffers)
 }
 
-func (m *FirewallRuleSpecRequest) diffAction(src *FirewallRuleSpecRequest) commonclient.Optional[FirewallRuleSpecActionRequest] {
+func (m *FirewallRuleSpecRequest) diffAction(src *FirewallRuleSpecRequest) optional.Optional[FirewallRuleSpecActionRequest] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetAction(), m.GetAction(), nilDiffers)
 }
 
-func (m *FirewallRuleSpecRequest) diffActive(src *FirewallRuleSpecRequest) commonclient.Optional[bool] {
+func (m *FirewallRuleSpecRequest) diffActive(src *FirewallRuleSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetActive(), m.GetActive(), nilDiffers)
 }
 
-func (m *FirewallRuleSpecRequest) diffSource(src *FirewallRuleSpecRequest) commonclient.Optional[UpdateFirewallRuleSourceRequest] {
+func (m *FirewallRuleSpecRequest) diffSource(src *FirewallRuleSpecRequest) optional.Optional[UpdateFirewallRuleSourceRequest] {
 	from := src.GetSource()
 	to := m.GetSource()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateFirewallRuleSourceRequest](value, value.HasChanges())
+	return optional.Optional[UpdateFirewallRuleSourceRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *FirewallRuleSpecRequest) diffDestination(src *FirewallRuleSpecRequest) commonclient.Optional[UpdateFirewallRuleDestinationRequest] {
+func (m *FirewallRuleSpecRequest) diffDestination(src *FirewallRuleSpecRequest) optional.Optional[UpdateFirewallRuleDestinationRequest] {
 	from := src.GetDestination()
 	to := m.GetDestination()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateFirewallRuleDestinationRequest](value, value.HasChanges())
+	return optional.Optional[UpdateFirewallRuleDestinationRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *FirewallRuleSpecRequest) diffProtoPorts(src *FirewallRuleSpecRequest) commonclient.Optional[[]string] {
+func (m *FirewallRuleSpecRequest) diffProtoPorts(src *FirewallRuleSpecRequest) optional.Optional[[]string] {
 	value, hasChanges := commonclient.GetChangesArrayPrimitive(src.GetProtoPorts(), m.GetProtoPorts())
-	return commonclient.NewDirectOptional[[]string](value, hasChanges)
+	return optional.Optional[[]string]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

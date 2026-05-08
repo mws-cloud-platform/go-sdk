@@ -48,9 +48,9 @@ func (c *Mk8sVersion) listMk8sVersionsInvoker(ctx context.Context, anyReq any, r
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"releaseChannels",
-		request.ReleaseChannelName,
+		url.PathEscape(request.ReleaseChannelName),
 		"versions")
 
 	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)

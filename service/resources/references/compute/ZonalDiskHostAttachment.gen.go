@@ -203,7 +203,7 @@ func (m *ZonalDiskHostAttachmentID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalDiskHostAttachmentID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalDiskHostAttachmentRef")
+		return conv.NewDecodeToNilError("ZonalDiskHostAttachmentID")
 	}
 
 	v, err := decode.Str(d)

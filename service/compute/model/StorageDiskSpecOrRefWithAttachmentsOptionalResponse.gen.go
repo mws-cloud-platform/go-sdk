@@ -5,17 +5,17 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: StorageDiskSpecOrRefWithAttachments
 type StorageDiskSpecOrRefWithAttachmentsOptionalResponse struct {
 	// Уникальное имя диска в рамках виртуальной машины
-	Name string                      `json:"name" yaml:"name"`
-	Boot commonclient.Optional[bool] `json:"boot,omitempty" yaml:"boot,omitempty"`
+	Name string                  `json:"name" yaml:"name"`
+	Boot optional.Optional[bool] `json:"boot,omitempty" yaml:"boot,omitempty"`
 	// Уникальное имя устройства, которое отображается в дереве /dev/disk/by-id/mws-* Linux. Если не указано - "mws-{name}", если указано - "mws-{deviceName}"
-	DeviceName commonclient.Optional[string]        `json:"deviceName,omitempty" yaml:"deviceName,omitempty"`
+	DeviceName optional.Optional[string]            `json:"deviceName,omitempty" yaml:"deviceName,omitempty"`
 	Disk       StorageDiskSpecOrRefOptionalResponse `json:"disk" yaml:"disk"`
 }
 

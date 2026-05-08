@@ -3,20 +3,20 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Спецификация типа ВМ.
 // Real OAPI model name: VmTypeSpec
 type VmTypeSpecOptionalResponse struct {
 	// Спецификация процессора, который доступен для ВМ указанного типа.
-	Cpu commonclient.OptionalNil[VmTypeCpuSpecOptionalResponse] `json:"cpu,omitempty" yaml:"cpu,omitempty"`
+	Cpu optional.OptionalNil[VmTypeCpuSpecOptionalResponse] `json:"cpu,omitempty" yaml:"cpu,omitempty"`
 	// Спецификация RAM, которая доступна для ВМ указанного типа.
-	Memory commonclient.OptionalNil[VmTypeMemorySpecOptionalResponse] `json:"memory,omitempty" yaml:"memory,omitempty"`
+	Memory optional.OptionalNil[VmTypeMemorySpecOptionalResponse] `json:"memory,omitempty" yaml:"memory,omitempty"`
 	// Спецификация сетевых дисков, которые доступны для ВМ указанного типа.
-	Disks commonclient.OptionalNil[VmTypeDisksSpecOptionalResponse] `json:"disks,omitempty" yaml:"disks,omitempty"`
+	Disks optional.OptionalNil[VmTypeDisksSpecOptionalResponse] `json:"disks,omitempty" yaml:"disks,omitempty"`
 	// Спецификация сети, которая доступна для ВМ указанного типа.
-	Network commonclient.OptionalNil[VmTypeSpecNetworkOptionalResponse] `json:"network,omitempty" yaml:"network,omitempty"`
+	Network optional.OptionalNil[VmTypeSpecNetworkOptionalResponse] `json:"network,omitempty" yaml:"network,omitempty"`
 }
 
 func (m *VmTypeSpecOptionalResponse) GetCpu() *VmTypeCpuSpecOptionalResponse {

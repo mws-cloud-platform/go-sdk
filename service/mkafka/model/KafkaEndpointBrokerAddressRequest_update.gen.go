@@ -9,23 +9,24 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateKafkaEndpointBrokerAddressRequest struct {
 	// Идентификатор существующего адреса.
-	Ref commonclient.Optional[vpc.AddressRef] `json:"ref" yaml:"ref"`
+	Ref optional.Optional[vpc.AddressRef] `json:"ref" yaml:"ref"`
 	// Спецификация нового адреса. Адрес будет выделен в ходе реконсиляции кластера.
-	Spec commonclient.OptionalNil[UpdateKafkaEndpointBrokerAddressSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateKafkaEndpointBrokerAddressSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *KafkaEndpointBrokerAddressRequest) AsUpdateModel() UpdateKafkaEndpointBrokerAddressRequest {
 	var u UpdateKafkaEndpointBrokerAddressRequest
 	if m.Ref != nil {
-		u.Ref = commonclient.NewOptional(m.GetRefOr(vpc.AddressRef{}))
+		u.Ref = optional.NewOptional(m.GetRefOr(vpc.AddressRef{}))
 	}
 	if m.Spec != nil {
-		u.Spec = commonclient.NewOptionalNil(m.Spec.AsUpdateModel())
+		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
 	}
 	return u
 }
@@ -84,13 +85,17 @@ func (m *UpdateKafkaEndpointBrokerAddressRequest) Parse(ctx context.Context) err
 	return nil
 }
 
-func (m *KafkaEndpointBrokerAddressRequest) diffRef(src *KafkaEndpointBrokerAddressRequest) commonclient.Optional[vpc.AddressRef] {
+func (m *KafkaEndpointBrokerAddressRequest) diffRef(src *KafkaEndpointBrokerAddressRequest) optional.Optional[vpc.AddressRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *KafkaEndpointBrokerAddressRequest) diffSpec(src *KafkaEndpointBrokerAddressRequest) commonclient.OptionalNil[UpdateKafkaEndpointBrokerAddressSpecRequest] {
+func (m *KafkaEndpointBrokerAddressRequest) diffSpec(src *KafkaEndpointBrokerAddressRequest) optional.OptionalNil[UpdateKafkaEndpointBrokerAddressSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return commonclient.NewDirectOptionalNil[UpdateKafkaEndpointBrokerAddressSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateKafkaEndpointBrokerAddressSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

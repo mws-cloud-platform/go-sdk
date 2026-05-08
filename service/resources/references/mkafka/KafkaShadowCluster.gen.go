@@ -163,7 +163,7 @@ func (m *KafkaShadowClusterID) UnmarshalJSON(b []byte) error {
 
 func (m *KafkaShadowClusterID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("KafkaShadowClusterRef")
+		return conv.NewDecodeToNilError("KafkaShadowClusterID")
 	}
 
 	v, err := decode.Str(d)

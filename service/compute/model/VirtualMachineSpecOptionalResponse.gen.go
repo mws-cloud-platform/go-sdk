@@ -5,22 +5,22 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 // Real OAPI model name: VirtualMachineSpec
 type VirtualMachineSpecOptionalResponse struct {
-	Zone     string                                                 `json:"zone" yaml:"zone"`
-	VmType   compute.VmTypeRef                                      `json:"vmType" yaml:"vmType"`
-	Hardware commonclient.OptionalNil[HardwareSpecOptionalResponse] `json:"hardware,omitempty" yaml:"hardware,omitempty"`
-	Os       commonclient.OptionalNil[OsSpecOptionalResponse]       `json:"os,omitempty" yaml:"os,omitempty"`
-	Storage  StorageSpecOptionalResponse                            `json:"storage" yaml:"storage"`
-	Network  NetworkSpecOptionalResponse                            `json:"network" yaml:"network"`
+	Zone     string                                             `json:"zone" yaml:"zone"`
+	VmType   compute.VmTypeRef                                  `json:"vmType" yaml:"vmType"`
+	Hardware optional.OptionalNil[HardwareSpecOptionalResponse] `json:"hardware,omitempty" yaml:"hardware,omitempty"`
+	Os       optional.OptionalNil[OsSpecOptionalResponse]       `json:"os,omitempty" yaml:"os,omitempty"`
+	Storage  StorageSpecOptionalResponse                        `json:"storage" yaml:"storage"`
+	Network  NetworkSpecOptionalResponse                        `json:"network" yaml:"network"`
 	// Ссылка на сервис аккаунт привязанный к виртуальной машине.
-	ServiceAccount commonclient.OptionalNil[iam.ServiceAccountRef] `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
+	ServiceAccount optional.OptionalNil[iam.ServiceAccountRef] `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
 }
 
 func (m *VirtualMachineSpecOptionalResponse) GetZone() string {

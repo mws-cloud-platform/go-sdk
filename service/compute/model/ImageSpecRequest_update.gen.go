@@ -6,27 +6,28 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateImageSpecRequest struct {
 	// Семейство образа
-	Family commonclient.Optional[string] `json:"family" yaml:"family"`
+	Family optional.Optional[string] `json:"family" yaml:"family"`
 	// Актуальность образа
-	Activity commonclient.Optional[ImageActivity] `json:"activity" yaml:"activity"`
+	Activity optional.Optional[ImageActivity] `json:"activity" yaml:"activity"`
 	// Тип операционной системы
-	OsType commonclient.Optional[OsType] `json:"osType" yaml:"osType"`
+	OsType optional.Optional[OsType] `json:"osType" yaml:"osType"`
 }
 
 func (m *ImageSpecRequest) AsUpdateModel() UpdateImageSpecRequest {
 	var u UpdateImageSpecRequest
 	if m.Family != nil {
-		u.Family = commonclient.NewOptional(m.GetFamilyOr(""))
+		u.Family = optional.NewOptional(m.GetFamilyOr(""))
 	}
 	if m.Activity != nil {
-		u.Activity = commonclient.NewOptional(m.GetActivityOr(""))
+		u.Activity = optional.NewOptional(m.GetActivityOr(""))
 	}
 	if m.OsType != nil {
-		u.OsType = commonclient.NewOptional(m.GetOsTypeOr(""))
+		u.OsType = optional.NewOptional(m.GetOsTypeOr(""))
 	}
 	return u
 }
@@ -68,17 +69,17 @@ func (m UpdateImageSpecRequest) HasChanges() bool {
 		m.OsType.Set
 }
 
-func (m *ImageSpecRequest) diffFamily(src *ImageSpecRequest) commonclient.Optional[string] {
+func (m *ImageSpecRequest) diffFamily(src *ImageSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetFamily(), m.GetFamily(), nilDiffers)
 }
 
-func (m *ImageSpecRequest) diffActivity(src *ImageSpecRequest) commonclient.Optional[ImageActivity] {
+func (m *ImageSpecRequest) diffActivity(src *ImageSpecRequest) optional.Optional[ImageActivity] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetActivity(), m.GetActivity(), nilDiffers)
 }
 
-func (m *ImageSpecRequest) diffOsType(src *ImageSpecRequest) commonclient.Optional[OsType] {
+func (m *ImageSpecRequest) diffOsType(src *ImageSpecRequest) optional.Optional[OsType] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetOsType(), m.GetOsType(), nilDiffers)
 }

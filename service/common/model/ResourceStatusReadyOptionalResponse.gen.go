@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Информация о статусе реконсиляции
@@ -12,7 +12,7 @@ type ResourceStatusReadyOptionalResponse struct {
 	// Состояние ресурса
 	State ResourceStatusState `json:"state" yaml:"state"`
 	// Описание статуса
-	Message commonclient.Optional[string] `json:"message,omitempty" yaml:"message,omitempty"`
+	Message optional.Optional[string] `json:"message,omitempty" yaml:"message,omitempty"`
 }
 
 func (m *ResourceStatusReadyOptionalResponse) GetState() ResourceStatusState {

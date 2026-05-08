@@ -7,14 +7,15 @@ import (
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 // Возможно 2 варианта:
-// - запросить резервирование случайного адреса (заданы параметры "version")
-// - запросить резервирование конкретного адреса (заданы параметры "version", "ipAddress", остальные пусты)
+//   - запросить резервирование случайного адреса (заданы параметры "version")
+//   - запросить резервирование конкретного адреса (заданы параметры "version", "ipAddress", остальные пусты)
+//
 // Если необходимо привязать внешний адрес, заполняется параметр "oneToOneNat"
 //
 // Real OAPI model name: AddressSpec
@@ -22,9 +23,9 @@ type AddressSpecOptionalResponse struct {
 	// Подсеть облачной сети, к которой принадлежит внутренний адрес
 	Subnet vpc.SubnetRef `json:"subnet" yaml:"subnet"`
 	// Желаемый адрес. Если не указан, то будет выделен из пула адресов подсети.
-	IpAddress commonclient.Optional[ipaddress.IPAddress] `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
+	IpAddress optional.Optional[ipaddress.IPAddress] `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
 	// Настройки DNS
-	Dns commonclient.Optional[[]AddressDnsSpecOptionalResponse] `json:"dns,omitempty" yaml:"dns,omitempty"`
+	Dns optional.Optional[[]AddressDnsSpecOptionalResponse] `json:"dns,omitempty" yaml:"dns,omitempty"`
 }
 
 func (m *AddressSpecOptionalResponse) GetSubnet() vpc.SubnetRef {

@@ -6,8 +6,8 @@ import (
 	"context"
 	"time"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 )
 
@@ -19,9 +19,9 @@ type CommonTypedResourceMetadataOptionalResponse struct {
 	// Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта.
 	//
 	// Deprecated: Отказываемся в пользу metadata.id
-	Name commonclient.Optional[string] `json:"name,omitempty" yaml:"name,omitempty"`
+	Name optional.Optional[string] `json:"name,omitempty" yaml:"name,omitempty"`
 	// Отображаемое имя свойства
-	DisplayName commonclient.Optional[string] `json:"displayName,omitempty" yaml:"displayName,omitempty"`
+	DisplayName optional.Optional[string] `json:"displayName,omitempty" yaml:"displayName,omitempty"`
 	// Дата создания объекта
 	CreateTime *time.Time `json:"createTime,omitempty" yaml:"createTime,omitempty"`
 	// Дата последнего изменения объекта
@@ -31,11 +31,11 @@ type CommonTypedResourceMetadataOptionalResponse struct {
 	// Время удаления ресурса
 	PurgeTime *time.Time `json:"purgeTime,omitempty" yaml:"purgeTime,omitempty"`
 	// Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены
-	Usages commonclient.Optional[[]UsageOptionalResponse] `json:"usages,omitempty" yaml:"usages,omitempty"`
+	Usages optional.Optional[[]UsageOptionalResponse] `json:"usages,omitempty" yaml:"usages,omitempty"`
 	// Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса
-	Etag commonclient.Optional[string] `json:"etag,omitempty" yaml:"etag,omitempty"`
+	Etag optional.Optional[string] `json:"etag,omitempty" yaml:"etag,omitempty"`
 	// Описание ресурса
-	Description commonclient.Optional[string] `json:"description,omitempty" yaml:"description,omitempty"`
+	Description optional.Optional[string] `json:"description,omitempty" yaml:"description,omitempty"`
 }
 
 func (m *CommonTypedResourceMetadataOptionalResponse) GetId() *resmodels.AnyResourceID {

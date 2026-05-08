@@ -143,7 +143,7 @@ func (m *PermissionID) UnmarshalJSON(b []byte) error {
 
 func (m *PermissionID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("PermissionRef")
+		return conv.NewDecodeToNilError("PermissionID")
 	}
 
 	v, err := decode.Str(d)

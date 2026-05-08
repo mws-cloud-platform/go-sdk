@@ -163,7 +163,7 @@ func (m *CertificateID) UnmarshalJSON(b []byte) error {
 
 func (m *CertificateID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("CertificateRef")
+		return conv.NewDecodeToNilError("CertificateID")
 	}
 
 	v, err := decode.Str(d)

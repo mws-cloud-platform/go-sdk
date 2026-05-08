@@ -7,8 +7,8 @@ import (
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -16,8 +16,8 @@ import (
 // Real OAPI model name: ClusterPrimaryEndpointSpec
 type ClusterPrimaryEndpointSpecOptionalResponse struct {
 	// Желаемый IP адрес. Если не указан, то будет выделен из пула адресов подсети.
-	IpAddress commonclient.OptionalNil[ipaddress.IP4Address] `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
-	Subnet    vpc.SubnetRef                                  `json:"subnet" yaml:"subnet"`
+	IpAddress optional.OptionalNil[ipaddress.IP4Address] `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
+	Subnet    vpc.SubnetRef                              `json:"subnet" yaml:"subnet"`
 }
 
 func (m *ClusterPrimaryEndpointSpecOptionalResponse) GetIpAddress() *ipaddress.IP4Address {

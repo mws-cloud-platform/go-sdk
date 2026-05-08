@@ -48,7 +48,7 @@ func (c *Mk8sReleaseChannel) listMk8sReleaseChannelsInvoker(ctx context.Context,
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"releaseChannels")
 
 	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)

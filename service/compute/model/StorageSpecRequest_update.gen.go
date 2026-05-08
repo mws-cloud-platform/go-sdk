@@ -9,15 +9,16 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateStorageSpecRequest struct {
-	Disks commonclient.Optional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest] `json:"disks" yaml:"disks"`
+	Disks optional.Optional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest] `json:"disks" yaml:"disks"`
 }
 
 func (m *StorageSpecRequest) AsUpdateModel() UpdateStorageSpecRequest {
 	var u UpdateStorageSpecRequest
-	u.Disks = commonclient.NewOptional(func() []UpdateStorageDiskSpecOrRefWithAttachmentsRequest {
+	u.Disks = optional.NewOptional(func() []UpdateStorageDiskSpecOrRefWithAttachmentsRequest {
 		var tmp []UpdateStorageDiskSpecOrRefWithAttachmentsRequest
 		if m.GetDisks() != nil {
 			tmp = make([]UpdateStorageDiskSpecOrRefWithAttachmentsRequest, 0, len(m.GetDisks()))
@@ -77,7 +78,7 @@ func (m *UpdateStorageSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *StorageSpecRequest) diffDisks(src *StorageSpecRequest) (commonclient.Optional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest], error) {
+func (m *StorageSpecRequest) diffDisks(src *StorageSpecRequest) (optional.Optional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest], error) {
 	diffFunc := func(fromItem, toItem *StorageDiskSpecOrRefWithAttachmentsRequest, fromNil bool) UpdateStorageDiskSpecOrRefWithAttachmentsRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -89,7 +90,10 @@ func (m *StorageSpecRequest) diffDisks(src *StorageSpecRequest) (commonclient.Op
 		commonclient.ToPointerArray(m.GetDisks()),
 		diffFunc)
 	if err != nil {
-		return commonclient.Optional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest]{}, err
+		return optional.Optional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest]{}, err
 	}
-	return commonclient.NewDirectOptional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest](value, hasChanges), nil
+	return optional.Optional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}, nil
 }

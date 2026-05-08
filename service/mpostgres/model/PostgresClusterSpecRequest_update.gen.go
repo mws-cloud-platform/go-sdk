@@ -12,30 +12,31 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdatePostgresClusterSpecRequest struct {
 	// Версия продукта
-	Version commonclient.Optional[string] `json:"version" yaml:"version"`
+	Version optional.Optional[string] `json:"version" yaml:"version"`
 	// Значение включен/выключен кластер.
-	Active commonclient.Optional[bool] `json:"active" yaml:"active"`
+	Active optional.Optional[bool] `json:"active" yaml:"active"`
 	// Описание эндпойнтов в сетях пользователя (VPC) для подключения к инстансам кластера.
-	Endpoints        commonclient.Optional[[]UpdatePostgresEndpointRequest]       `json:"endpoints" yaml:"endpoints"`
-	InstanceTemplate commonclient.Optional[UpdatePostgresInstanceTemplateRequest] `json:"instanceTemplate" yaml:"instanceTemplate"`
-	Instances        commonclient.Optional[[]UpdatePostgresInstanceRequest]       `json:"instances" yaml:"instances"`
+	Endpoints        optional.Optional[[]UpdatePostgresEndpointRequest]       `json:"endpoints" yaml:"endpoints"`
+	InstanceTemplate optional.Optional[UpdatePostgresInstanceTemplateRequest] `json:"instanceTemplate" yaml:"instanceTemplate"`
+	Instances        optional.Optional[[]UpdatePostgresInstanceRequest]       `json:"instances" yaml:"instances"`
 	// Спецификация автоматического бэкапирования
-	Backup            commonclient.OptionalNil[UpdatePostgresClusterBackupRequest]    `json:"backup" yaml:"backup"`
-	MaintenanceWindow commonclient.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
+	Backup            optional.OptionalNil[UpdatePostgresClusterBackupRequest]    `json:"backup" yaml:"backup"`
+	MaintenanceWindow optional.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
 	// Параметры PostgreSQL. Если не указаны, будут использованы дефолтные параметры.
-	PostgresParameters commonclient.Optional[map[string]string] `json:"postgresParameters" yaml:"postgresParameters"`
+	PostgresParameters optional.Optional[map[string]string] `json:"postgresParameters" yaml:"postgresParameters"`
 }
 
 func (m *PostgresClusterSpecRequest) AsUpdateModel() UpdatePostgresClusterSpecRequest {
 	var u UpdatePostgresClusterSpecRequest
-	u.Version = commonclient.NewOptional(m.GetVersion())
-	u.Active = commonclient.NewOptional(m.GetActive())
-	u.Endpoints = commonclient.NewOptional(func() []UpdatePostgresEndpointRequest {
+	u.Version = optional.NewOptional(m.GetVersion())
+	u.Active = optional.NewOptional(m.GetActive())
+	u.Endpoints = optional.NewOptional(func() []UpdatePostgresEndpointRequest {
 		var tmp []UpdatePostgresEndpointRequest
 		if m.GetEndpoints() != nil {
 			tmp = make([]UpdatePostgresEndpointRequest, 0, len(m.GetEndpoints()))
@@ -45,8 +46,8 @@ func (m *PostgresClusterSpecRequest) AsUpdateModel() UpdatePostgresClusterSpecRe
 		}
 		return tmp
 	}())
-	u.InstanceTemplate = commonclient.NewOptional(m.InstanceTemplate.AsUpdateModel())
-	u.Instances = commonclient.NewOptional(func() []UpdatePostgresInstanceRequest {
+	u.InstanceTemplate = optional.NewOptional(m.InstanceTemplate.AsUpdateModel())
+	u.Instances = optional.NewOptional(func() []UpdatePostgresInstanceRequest {
 		var tmp []UpdatePostgresInstanceRequest
 		if m.GetInstances() != nil {
 			tmp = make([]UpdatePostgresInstanceRequest, 0, len(m.GetInstances()))
@@ -57,13 +58,13 @@ func (m *PostgresClusterSpecRequest) AsUpdateModel() UpdatePostgresClusterSpecRe
 		return tmp
 	}())
 	if m.Backup != nil {
-		u.Backup = commonclient.NewOptionalNil(m.Backup.AsUpdateModel())
+		u.Backup = optional.NewOptionalNil(m.Backup.AsUpdateModel())
 	}
 	if m.MaintenanceWindow != nil {
-		u.MaintenanceWindow = commonclient.NewOptionalNil(m.MaintenanceWindow.AsUpdateModel())
+		u.MaintenanceWindow = optional.NewOptionalNil(m.MaintenanceWindow.AsUpdateModel())
 	}
 	if m.PostgresParameters != nil {
-		u.PostgresParameters = commonclient.NewOptional(m.GetPostgresParameters())
+		u.PostgresParameters = optional.NewOptional(m.GetPostgresParameters())
 	}
 	return u
 }
@@ -156,17 +157,17 @@ func (m *UpdatePostgresClusterSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *PostgresClusterSpecRequest) diffVersion(src *PostgresClusterSpecRequest) commonclient.Optional[string] {
+func (m *PostgresClusterSpecRequest) diffVersion(src *PostgresClusterSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetVersion(), m.GetVersion(), nilDiffers)
 }
 
-func (m *PostgresClusterSpecRequest) diffActive(src *PostgresClusterSpecRequest) commonclient.Optional[bool] {
+func (m *PostgresClusterSpecRequest) diffActive(src *PostgresClusterSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetActive(), m.GetActive(), nilDiffers)
 }
 
-func (m *PostgresClusterSpecRequest) diffEndpoints(src *PostgresClusterSpecRequest) commonclient.Optional[[]UpdatePostgresEndpointRequest] {
+func (m *PostgresClusterSpecRequest) diffEndpoints(src *PostgresClusterSpecRequest) optional.Optional[[]UpdatePostgresEndpointRequest] {
 	diffFunc := func(fromItem, toItem PostgresEndpointRequest, fromNil bool) UpdatePostgresEndpointRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -174,17 +175,23 @@ func (m *PostgresClusterSpecRequest) diffEndpoints(src *PostgresClusterSpecReque
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetEndpoints(), m.GetEndpoints(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdatePostgresEndpointRequest](value, hasChanges)
+	return optional.Optional[[]UpdatePostgresEndpointRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *PostgresClusterSpecRequest) diffInstanceTemplate(src *PostgresClusterSpecRequest) commonclient.Optional[UpdatePostgresInstanceTemplateRequest] {
+func (m *PostgresClusterSpecRequest) diffInstanceTemplate(src *PostgresClusterSpecRequest) optional.Optional[UpdatePostgresInstanceTemplateRequest] {
 	from := src.GetInstanceTemplate()
 	to := m.GetInstanceTemplate()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdatePostgresInstanceTemplateRequest](value, value.HasChanges())
+	return optional.Optional[UpdatePostgresInstanceTemplateRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *PostgresClusterSpecRequest) diffInstances(src *PostgresClusterSpecRequest) commonclient.Optional[[]UpdatePostgresInstanceRequest] {
+func (m *PostgresClusterSpecRequest) diffInstances(src *PostgresClusterSpecRequest) optional.Optional[[]UpdatePostgresInstanceRequest] {
 	diffFunc := func(fromItem, toItem PostgresInstanceRequest, fromNil bool) UpdatePostgresInstanceRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -192,22 +199,36 @@ func (m *PostgresClusterSpecRequest) diffInstances(src *PostgresClusterSpecReque
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetInstances(), m.GetInstances(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdatePostgresInstanceRequest](value, hasChanges)
+	return optional.Optional[[]UpdatePostgresInstanceRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *PostgresClusterSpecRequest) diffBackup(src *PostgresClusterSpecRequest) commonclient.OptionalNil[UpdatePostgresClusterBackupRequest] {
+func (m *PostgresClusterSpecRequest) diffBackup(src *PostgresClusterSpecRequest) optional.OptionalNil[UpdatePostgresClusterBackupRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetBackup().Diff(src.GetBackup())
-	return commonclient.NewDirectOptionalNil[UpdatePostgresClusterBackupRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdatePostgresClusterBackupRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *PostgresClusterSpecRequest) diffMaintenanceWindow(src *PostgresClusterSpecRequest) commonclient.OptionalNil[common.UpdateMaintenanceWindowRequest] {
+func (m *PostgresClusterSpecRequest) diffMaintenanceWindow(src *PostgresClusterSpecRequest) optional.OptionalNil[common.UpdateMaintenanceWindowRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMaintenanceWindow().Diff(src.GetMaintenanceWindow())
-	return commonclient.NewDirectOptionalNil[common.UpdateMaintenanceWindowRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[common.UpdateMaintenanceWindowRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *PostgresClusterSpecRequest) diffPostgresParameters(src *PostgresClusterSpecRequest) commonclient.Optional[map[string]string] {
+func (m *PostgresClusterSpecRequest) diffPostgresParameters(src *PostgresClusterSpecRequest) optional.Optional[map[string]string] {
 	value, hasChanges := commonclient.GetChangesMapPrimitive(src.GetPostgresParameters(), m.GetPostgresParameters())
-	return commonclient.NewDirectOptional[map[string]string](value, hasChanges)
+	return optional.Optional[map[string]string]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

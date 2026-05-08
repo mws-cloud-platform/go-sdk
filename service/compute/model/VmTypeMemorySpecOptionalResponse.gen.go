@@ -5,14 +5,14 @@ package model
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Спецификация RAM, которая доступна для ВМ указанного типа.
 // Real OAPI model name: VmTypeMemorySpec
 type VmTypeMemorySpecOptionalResponse struct {
 	// Количество оперативной памяти.
-	Capacity commonclient.Optional[bytesize.ByteSize] `json:"capacity,omitempty" yaml:"capacity,omitempty"`
+	Capacity optional.Optional[bytesize.ByteSize] `json:"capacity,omitempty" yaml:"capacity,omitempty"`
 }
 
 func (m *VmTypeMemorySpecOptionalResponse) GetCapacity() *bytesize.ByteSize {

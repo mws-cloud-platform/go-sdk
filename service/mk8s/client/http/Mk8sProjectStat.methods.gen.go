@@ -48,7 +48,7 @@ func (c *Mk8sProjectStat) getProjectStatsInvoker(ctx context.Context, anyReq any
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"stats")
 
 	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)

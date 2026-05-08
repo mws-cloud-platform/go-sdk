@@ -49,7 +49,7 @@ func (c *VirtualMachine) listVirtualMachinesInvoker(ctx context.Context, anyReq 
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"virtualMachines")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -141,9 +141,9 @@ func (c *VirtualMachine) deleteVirtualMachineInvoker(ctx context.Context, anyReq
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"virtualMachines",
-		request.VirtualMachine)
+		url.PathEscape(request.VirtualMachine))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -216,9 +216,9 @@ func (c *VirtualMachine) getVirtualMachineInvoker(ctx context.Context, anyReq an
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"virtualMachines",
-		request.VirtualMachine)
+		url.PathEscape(request.VirtualMachine))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "virtualMachine", request.VirtualMachine)
@@ -291,9 +291,9 @@ func (c *VirtualMachine) upsertVirtualMachineInvoker(ctx context.Context, anyReq
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"virtualMachines",
-		request.VirtualMachine)
+		url.PathEscape(request.VirtualMachine))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "virtualMachine", request.VirtualMachine)
@@ -382,9 +382,9 @@ func (c *VirtualMachine) createVirtualMachineInvoker(ctx context.Context, anyReq
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"virtualMachines",
-		request.VirtualMachine)
+		url.PathEscape(request.VirtualMachine))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "virtualMachine", request.VirtualMachine)
@@ -474,9 +474,9 @@ func (c *VirtualMachine) updateVirtualMachineInvoker(ctx context.Context, anyReq
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"virtualMachines",
-		request.VirtualMachine)
+		url.PathEscape(request.VirtualMachine))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "virtualMachine", request.VirtualMachine)

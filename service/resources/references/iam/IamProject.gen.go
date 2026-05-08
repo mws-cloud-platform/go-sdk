@@ -143,7 +143,7 @@ func (m *IamProjectID) UnmarshalJSON(b []byte) error {
 
 func (m *IamProjectID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("IamProjectRef")
+		return conv.NewDecodeToNilError("IamProjectID")
 	}
 
 	v, err := decode.Str(d)

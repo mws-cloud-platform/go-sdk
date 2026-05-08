@@ -203,7 +203,7 @@ func (m *HostNetworkAdapterID) UnmarshalJSON(b []byte) error {
 
 func (m *HostNetworkAdapterID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("HostNetworkAdapterRef")
+		return conv.NewDecodeToNilError("HostNetworkAdapterID")
 	}
 
 	v, err := decode.Str(d)

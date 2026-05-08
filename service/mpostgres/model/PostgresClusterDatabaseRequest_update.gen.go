@@ -10,20 +10,21 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdatePostgresClusterDatabaseRequest struct {
-	Metadata commonclient.OptionalNil[UpdatePostgresClusterDatabaseMetadataRequest] `json:"metadata" yaml:"metadata"`
-	Spec     commonclient.Optional[UpdatePostgresClusterDatabaseSpecRequest]        `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[UpdatePostgresClusterDatabaseMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Spec     optional.Optional[UpdatePostgresClusterDatabaseSpecRequest]        `json:"spec" yaml:"spec"`
 }
 
 func (m *PostgresClusterDatabaseRequest) AsUpdateModel() UpdatePostgresClusterDatabaseRequest {
 	var u UpdatePostgresClusterDatabaseRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -81,17 +82,24 @@ func (m *UpdatePostgresClusterDatabaseRequest) Parse(ctx context.Context) error 
 	return nil
 }
 
-func (m *PostgresClusterDatabaseRequest) diffMetadata(src *PostgresClusterDatabaseRequest) commonclient.OptionalNil[UpdatePostgresClusterDatabaseMetadataRequest] {
+func (m *PostgresClusterDatabaseRequest) diffMetadata(src *PostgresClusterDatabaseRequest) optional.OptionalNil[UpdatePostgresClusterDatabaseMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[UpdatePostgresClusterDatabaseMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdatePostgresClusterDatabaseMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *PostgresClusterDatabaseRequest) diffSpec(src *PostgresClusterDatabaseRequest) commonclient.Optional[UpdatePostgresClusterDatabaseSpecRequest] {
+func (m *PostgresClusterDatabaseRequest) diffSpec(src *PostgresClusterDatabaseRequest) optional.Optional[UpdatePostgresClusterDatabaseSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdatePostgresClusterDatabaseSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdatePostgresClusterDatabaseSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 type UpdatePostgresClusterDatabaseMetadataRequest struct {
@@ -101,10 +109,10 @@ type UpdatePostgresClusterDatabaseMetadataRequest struct {
 func (m *PostgresClusterDatabaseMetadataRequest) AsUpdateModel() UpdatePostgresClusterDatabaseMetadataRequest {
 	var u UpdatePostgresClusterDatabaseMetadataRequest
 	if m.DisplayName != nil {
-		u.DisplayName = commonclient.NewOptional(m.GetDisplayNameOr(""))
+		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = commonclient.NewOptional(func() []common.UpdateTypedUsageRequest {
+		u.Usages = optional.NewOptional(func() []common.UpdateTypedUsageRequest {
 			var tmp []common.UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
 				tmp = make([]common.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
@@ -116,10 +124,10 @@ func (m *PostgresClusterDatabaseMetadataRequest) AsUpdateModel() UpdatePostgresC
 		}())
 	}
 	if m.Etag != nil {
-		u.Etag = commonclient.NewOptional(m.GetEtagOr(""))
+		u.Etag = optional.NewOptional(m.GetEtagOr(""))
 	}
 	if m.Description != nil {
-		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
+		u.Description = optional.NewOptional(m.GetDescriptionOr(""))
 	}
 	return u
 }
@@ -177,12 +185,12 @@ func (m *UpdatePostgresClusterDatabaseMetadataRequest) Parse(ctx context.Context
 	return nil
 }
 
-func (m *PostgresClusterDatabaseMetadataRequest) diffDisplayName(src *PostgresClusterDatabaseMetadataRequest) commonclient.Optional[string] {
+func (m *PostgresClusterDatabaseMetadataRequest) diffDisplayName(src *PostgresClusterDatabaseMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *PostgresClusterDatabaseMetadataRequest) diffUsages(src *PostgresClusterDatabaseMetadataRequest) commonclient.Optional[[]common.UpdateTypedUsageRequest] {
+func (m *PostgresClusterDatabaseMetadataRequest) diffUsages(src *PostgresClusterDatabaseMetadataRequest) optional.Optional[[]common.UpdateTypedUsageRequest] {
 	diffFunc := func(fromItem, toItem common.TypedUsageRequest, fromNil bool) common.UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -190,15 +198,18 @@ func (m *PostgresClusterDatabaseMetadataRequest) diffUsages(src *PostgresCluster
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return commonclient.NewDirectOptional[[]common.UpdateTypedUsageRequest](value, hasChanges)
+	return optional.Optional[[]common.UpdateTypedUsageRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *PostgresClusterDatabaseMetadataRequest) diffEtag(src *PostgresClusterDatabaseMetadataRequest) commonclient.Optional[string] {
+func (m *PostgresClusterDatabaseMetadataRequest) diffEtag(src *PostgresClusterDatabaseMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetEtag(), m.GetEtag(), nilDiffers)
 }
 
-func (m *PostgresClusterDatabaseMetadataRequest) diffDescription(src *PostgresClusterDatabaseMetadataRequest) commonclient.Optional[string] {
+func (m *PostgresClusterDatabaseMetadataRequest) diffDescription(src *PostgresClusterDatabaseMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
 }

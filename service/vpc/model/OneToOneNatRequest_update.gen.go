@@ -7,24 +7,24 @@ import (
 
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateOneToOneNatRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Описывает спецификацию One-to-One NAT-шлюза.
-	Spec commonclient.Optional[UpdateOneToOneNatSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.Optional[UpdateOneToOneNatSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *OneToOneNatRequest) AsUpdateModel() UpdateOneToOneNatRequest {
 	var u UpdateOneToOneNatRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -76,15 +76,22 @@ func (m *UpdateOneToOneNatRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *OneToOneNatRequest) diffMetadata(src *OneToOneNatRequest) commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *OneToOneNatRequest) diffMetadata(src *OneToOneNatRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[common.UpdateCommonTypedResourceMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *OneToOneNatRequest) diffSpec(src *OneToOneNatRequest) commonclient.Optional[UpdateOneToOneNatSpecRequest] {
+func (m *OneToOneNatRequest) diffSpec(src *OneToOneNatRequest) optional.Optional[UpdateOneToOneNatSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateOneToOneNatSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateOneToOneNatSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

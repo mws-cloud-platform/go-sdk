@@ -7,19 +7,20 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 type UpdateCommonRoleBindingSpec struct {
-	Subject commonclient.Optional[UpdateCommonRoleBindingSpecSubject] `json:"subject" yaml:"subject"`
+	Subject optional.Optional[UpdateCommonRoleBindingSpecSubject] `json:"subject" yaml:"subject"`
 	// Роль, определяющая права субъекта на ресурс
-	Role commonclient.Optional[iam.RoleRef] `json:"role" yaml:"role"`
+	Role optional.Optional[iam.RoleRef] `json:"role" yaml:"role"`
 }
 
 func (m *CommonRoleBindingSpec) AsUpdateModel() UpdateCommonRoleBindingSpec {
 	var u UpdateCommonRoleBindingSpec
-	u.Subject = commonclient.NewOptional(m.Subject.AsUpdateModel())
-	u.Role = commonclient.NewOptional(m.GetRole())
+	u.Subject = optional.NewOptional(m.Subject.AsUpdateModel())
+	u.Role = optional.NewOptional(m.GetRole())
 	return u
 }
 
@@ -75,14 +76,17 @@ func (m *UpdateCommonRoleBindingSpec) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *CommonRoleBindingSpec) diffSubject(src *CommonRoleBindingSpec) commonclient.Optional[UpdateCommonRoleBindingSpecSubject] {
+func (m *CommonRoleBindingSpec) diffSubject(src *CommonRoleBindingSpec) optional.Optional[UpdateCommonRoleBindingSpecSubject] {
 	from := src.GetSubject()
 	to := m.GetSubject()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateCommonRoleBindingSpecSubject](value, value.HasChanges())
+	return optional.Optional[UpdateCommonRoleBindingSpecSubject]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *CommonRoleBindingSpec) diffRole(src *CommonRoleBindingSpec) commonclient.Optional[iam.RoleRef] {
+func (m *CommonRoleBindingSpec) diffRole(src *CommonRoleBindingSpec) optional.Optional[iam.RoleRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetRole(), m.GetRole(), nilDiffers)
 }

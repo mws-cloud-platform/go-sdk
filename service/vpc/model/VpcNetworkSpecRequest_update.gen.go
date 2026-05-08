@@ -6,16 +6,17 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateVpcNetworkSpecRequest struct {
-	InternetAccess commonclient.Optional[bool] `json:"internetAccess" yaml:"internetAccess"`
+	InternetAccess optional.Optional[bool] `json:"internetAccess" yaml:"internetAccess"`
 }
 
 func (m *VpcNetworkSpecRequest) AsUpdateModel() UpdateVpcNetworkSpecRequest {
 	var u UpdateVpcNetworkSpecRequest
 	if m.InternetAccess != nil {
-		u.InternetAccess = commonclient.NewOptional(m.GetInternetAccessOr(false))
+		u.InternetAccess = optional.NewOptional(m.GetInternetAccessOr(false))
 	}
 	return u
 }
@@ -47,7 +48,7 @@ func (m UpdateVpcNetworkSpecRequest) HasChanges() bool {
 	return m.InternetAccess.Set
 }
 
-func (m *VpcNetworkSpecRequest) diffInternetAccess(src *VpcNetworkSpecRequest) commonclient.Optional[bool] {
+func (m *VpcNetworkSpecRequest) diffInternetAccess(src *VpcNetworkSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetInternetAccess(), m.GetInternetAccess(), nilDiffers)
 }

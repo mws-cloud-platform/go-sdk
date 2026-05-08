@@ -5,19 +5,20 @@ package model
 import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateKafkaUserSpecRequest struct {
 	// Пароль пользователя.
-	Password commonclient.Optional[string] `json:"password" yaml:"password"`
+	Password optional.Optional[string] `json:"password" yaml:"password"`
 	// Роли пользователя.
-	Roles commonclient.Optional[[]UpdateKafkaClusterRoleRequest] `json:"roles" yaml:"roles"`
+	Roles optional.Optional[[]UpdateKafkaClusterRoleRequest] `json:"roles" yaml:"roles"`
 }
 
 func (m *KafkaUserSpecRequest) AsUpdateModel() UpdateKafkaUserSpecRequest {
 	var u UpdateKafkaUserSpecRequest
-	u.Password = commonclient.NewOptional(m.GetPassword())
-	u.Roles = commonclient.NewOptional(func() []UpdateKafkaClusterRoleRequest {
+	u.Password = optional.NewOptional(m.GetPassword())
+	u.Roles = optional.NewOptional(func() []UpdateKafkaClusterRoleRequest {
 		var tmp []UpdateKafkaClusterRoleRequest
 		if m.GetRoles() != nil {
 			tmp = make([]UpdateKafkaClusterRoleRequest, 0, len(m.GetRoles()))
@@ -62,12 +63,12 @@ func (m UpdateKafkaUserSpecRequest) HasChanges() bool {
 		m.Roles.Set
 }
 
-func (m *KafkaUserSpecRequest) diffPassword(src *KafkaUserSpecRequest) commonclient.Optional[string] {
+func (m *KafkaUserSpecRequest) diffPassword(src *KafkaUserSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetPassword(), m.GetPassword(), nilDiffers)
 }
 
-func (m *KafkaUserSpecRequest) diffRoles(src *KafkaUserSpecRequest) commonclient.Optional[[]UpdateKafkaClusterRoleRequest] {
+func (m *KafkaUserSpecRequest) diffRoles(src *KafkaUserSpecRequest) optional.Optional[[]UpdateKafkaClusterRoleRequest] {
 	diffFunc := func(fromItem, toItem KafkaClusterRoleRequest, fromNil bool) UpdateKafkaClusterRoleRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -75,5 +76,8 @@ func (m *KafkaUserSpecRequest) diffRoles(src *KafkaUserSpecRequest) commonclient
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetRoles(), m.GetRoles(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdateKafkaClusterRoleRequest](value, hasChanges)
+	return optional.Optional[[]UpdateKafkaClusterRoleRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

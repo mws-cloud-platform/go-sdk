@@ -5,23 +5,23 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 // Real OAPI model name: CommonRoleBindingSpecSubject
 type CommonRoleBindingSpecSubjectOptionalResponse struct {
 	// Идентификатор пользователя.
-	User commonclient.Optional[iam.UserRef] `json:"user,omitempty" yaml:"user,omitempty"`
+	User optional.Optional[iam.UserRef] `json:"user,omitempty" yaml:"user,omitempty"`
 	// Идентификатор сервисного аккаунта, принадлежащего проекту.
-	ServiceAccount commonclient.Optional[iam.ServiceAccountRef] `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
+	ServiceAccount optional.Optional[iam.ServiceAccountRef] `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
 	// Идентификатор сервисного агента, связанного с проектом.
-	ServiceAgent commonclient.Optional[iam.ServiceAgentRef] `json:"serviceAgent,omitempty" yaml:"serviceAgent,omitempty"`
+	ServiceAgent optional.Optional[iam.ServiceAgentRef] `json:"serviceAgent,omitempty" yaml:"serviceAgent,omitempty"`
 	// Субъект федерации пользователей.
-	UserFederation commonclient.OptionalNil[CommonRoleBindingFederationOptionalResponse] `json:"userFederation,omitempty" yaml:"userFederation,omitempty"`
+	UserFederation optional.OptionalNil[CommonRoleBindingFederationOptionalResponse] `json:"userFederation,omitempty" yaml:"userFederation,omitempty"`
 	// Идентификатор группы пользователей.
-	UserGroup commonclient.Optional[iam.UserGroupRef] `json:"userGroup,omitempty" yaml:"userGroup,omitempty"`
+	UserGroup optional.Optional[iam.UserGroupRef] `json:"userGroup,omitempty" yaml:"userGroup,omitempty"`
 }
 
 func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetUser() *iam.UserRef {

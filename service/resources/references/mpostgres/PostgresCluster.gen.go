@@ -4,6 +4,8 @@ package mpostgres
 
 import (
 	"context"
+	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -17,9 +19,11 @@ import (
 )
 
 var (
-	PostgresClusterRefTemplate = resparsers.Template{
+	PostgresClusterClusterValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,45}[a-z0-9])?$`)
+	PostgresClusterRefTemplate            = resparsers.Template{
 		{
 			Value:       "cluster",
+			Pattern:     PostgresClusterClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -46,11 +50,24 @@ var (
 	}
 )
 
-func NewPostgresClusterID(project, cluster string) PostgresClusterID {
+func NewPostgresClusterID(project, cluster string) (PostgresClusterID, error) {
+	if match := PostgresClusterClusterValidatePattern.Match([]byte(cluster)); !match {
+		return PostgresClusterID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
+	}
 	m := PostgresClusterID{
 		cluster: cluster,
 		project: project,
 	}
+	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustPostgresClusterID(project, cluster string) PostgresClusterID {
+	m, err := NewPostgresClusterID(project, cluster)
+	if err != nil {
+		panic(err)
+	}
+
 	m.path = m.ID()
 	return m
 }
@@ -163,7 +180,7 @@ func (m *PostgresClusterID) UnmarshalJSON(b []byte) error {
 
 func (m *PostgresClusterID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("PostgresClusterRef")
+		return conv.NewDecodeToNilError("PostgresClusterID")
 	}
 
 	v, err := decode.Str(d)
@@ -175,12 +192,22 @@ func (m *PostgresClusterID) Decode(d *jx.Decoder) error {
 	return nil
 }
 
-func NewPostgresClusterRef(project, cluster string) PostgresClusterRef {
+func NewPostgresClusterRef(project, cluster string) (PostgresClusterRef, error) {
+	id, err := NewPostgresClusterID(project, cluster)
+	if err != nil {
+		return PostgresClusterRef{}, err
+	}
+
 	m := PostgresClusterRef{
-		id: PostgresClusterID{
-			cluster: cluster,
-			project: project,
-		},
+		id: id,
+	}
+	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustPostgresClusterRef(project, cluster string) PostgresClusterRef {
+	m := PostgresClusterRef{
+		id: NewMustPostgresClusterID(project, cluster),
 	}
 	m.id.path = m.absolutePath()
 	return m

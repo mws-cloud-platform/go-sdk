@@ -6,27 +6,28 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateKafkaTopicSpecRequest struct {
 	// Количество партиций.
-	Partitions commonclient.Optional[int32] `json:"partitions" yaml:"partitions"`
+	Partitions optional.Optional[int32] `json:"partitions" yaml:"partitions"`
 	// Фактор репликации.
-	ReplicationFactor commonclient.Optional[int32] `json:"replicationFactor" yaml:"replicationFactor"`
+	ReplicationFactor optional.Optional[int32] `json:"replicationFactor" yaml:"replicationFactor"`
 	// Дополнительные параметры.
-	Config commonclient.Optional[string] `json:"config" yaml:"config"`
+	Config optional.Optional[string] `json:"config" yaml:"config"`
 }
 
 func (m *KafkaTopicSpecRequest) AsUpdateModel() UpdateKafkaTopicSpecRequest {
 	var u UpdateKafkaTopicSpecRequest
 	if m.Partitions != nil {
-		u.Partitions = commonclient.NewOptional(m.GetPartitionsOr(0))
+		u.Partitions = optional.NewOptional(m.GetPartitionsOr(0))
 	}
 	if m.ReplicationFactor != nil {
-		u.ReplicationFactor = commonclient.NewOptional(m.GetReplicationFactorOr(0))
+		u.ReplicationFactor = optional.NewOptional(m.GetReplicationFactorOr(0))
 	}
 	if m.Config != nil {
-		u.Config = commonclient.NewOptional(m.GetConfigOr(""))
+		u.Config = optional.NewOptional(m.GetConfigOr(""))
 	}
 	return u
 }
@@ -68,17 +69,17 @@ func (m UpdateKafkaTopicSpecRequest) HasChanges() bool {
 		m.Config.Set
 }
 
-func (m *KafkaTopicSpecRequest) diffPartitions(src *KafkaTopicSpecRequest) commonclient.Optional[int32] {
+func (m *KafkaTopicSpecRequest) diffPartitions(src *KafkaTopicSpecRequest) optional.Optional[int32] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetPartitions(), m.GetPartitions(), nilDiffers)
 }
 
-func (m *KafkaTopicSpecRequest) diffReplicationFactor(src *KafkaTopicSpecRequest) commonclient.Optional[int32] {
+func (m *KafkaTopicSpecRequest) diffReplicationFactor(src *KafkaTopicSpecRequest) optional.Optional[int32] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetReplicationFactor(), m.GetReplicationFactor(), nilDiffers)
 }
 
-func (m *KafkaTopicSpecRequest) diffConfig(src *KafkaTopicSpecRequest) commonclient.Optional[string] {
+func (m *KafkaTopicSpecRequest) diffConfig(src *KafkaTopicSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetConfig(), m.GetConfig(), nilDiffers)
 }

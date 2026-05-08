@@ -7,7 +7,7 @@ package model
 // Real OAPI model name: Http01Challenge
 type Http01ChallengeResponse struct {
 	// Исходный URL, по которому должен быть доступен HTTP-01 challenge.
-	// Используется для настройки перенаправления при включённой делегации.
+	// Используется для настройки перенаправления при включенной делегации
 	SourceUrl string `json:"sourceUrl" yaml:"sourceUrl"`
 	// Указывает, успешно ли настроена делегация
 	// и может ли challenge ACME быть проверен автоматически.

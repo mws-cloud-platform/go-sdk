@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func HardwareSpecRequestToOptionalResponse(request *HardwareSpecRequest) (*HardwareSpecOptionalResponse, error) {
@@ -16,10 +16,10 @@ func HardwareSpecRequestToOptionalResponse(request *HardwareSpecRequest) (*Hardw
 		if err != nil {
 			return nil, err
 		}
-		response.Power = commonclient.NewOptional(*tmpPower)
+		response.Power = optional.NewOptional(*tmpPower)
 	}
 	if request.GracefulShutdownTimeout != nil {
-		response.GracefulShutdownTimeout = commonclient.NewOptional(*request.GracefulShutdownTimeout)
+		response.GracefulShutdownTimeout = optional.NewOptional(*request.GracefulShutdownTimeout)
 	}
 	return &response, nil
 }

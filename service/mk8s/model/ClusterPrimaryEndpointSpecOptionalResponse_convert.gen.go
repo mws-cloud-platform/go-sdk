@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func ClusterPrimaryEndpointSpecRequestToOptionalResponse(request *ClusterPrimaryEndpointSpecRequest) (*ClusterPrimaryEndpointSpecOptionalResponse, error) {
@@ -12,7 +12,7 @@ func ClusterPrimaryEndpointSpecRequestToOptionalResponse(request *ClusterPrimary
 	}
 	var response ClusterPrimaryEndpointSpecOptionalResponse
 	if request.IpAddress != nil {
-		response.IpAddress = commonclient.NewOptionalNil(*request.IpAddress)
+		response.IpAddress = optional.NewOptionalNil(*request.IpAddress)
 	}
 	response.Subnet = request.Subnet
 	return &response, nil

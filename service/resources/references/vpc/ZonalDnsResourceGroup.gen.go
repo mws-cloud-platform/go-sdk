@@ -163,7 +163,7 @@ func (m *ZonalDnsResourceGroupID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalDnsResourceGroupID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalDnsResourceGroupRef")
+		return conv.NewDecodeToNilError("ZonalDnsResourceGroupID")
 	}
 
 	v, err := decode.Str(d)

@@ -183,7 +183,7 @@ func (m *SecretVersionID) UnmarshalJSON(b []byte) error {
 
 func (m *SecretVersionID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("SecretVersionRef")
+		return conv.NewDecodeToNilError("SecretVersionID")
 	}
 
 	v, err := decode.Str(d)

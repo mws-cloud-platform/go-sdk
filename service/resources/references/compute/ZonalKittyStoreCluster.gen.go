@@ -163,7 +163,7 @@ func (m *ZonalKittyStoreClusterID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalKittyStoreClusterID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalKittyStoreClusterRef")
+		return conv.NewDecodeToNilError("ZonalKittyStoreClusterID")
 	}
 
 	v, err := decode.Str(d)

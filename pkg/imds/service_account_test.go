@@ -10,8 +10,8 @@ import (
 	"go.mws.cloud/util-toolset/pkg/os/env"
 	"go.uber.org/mock/gomock"
 
-	"go.mws.cloud/go-sdk/internal/imds"
-	mockimds "go.mws.cloud/go-sdk/internal/imds/mocks"
+	"go.mws.cloud/go-sdk/pkg/imds"
+	mockimds "go.mws.cloud/go-sdk/pkg/imds/mocks"
 )
 
 func TestGetVMServiceAccount(t *testing.T) {

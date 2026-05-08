@@ -7,11 +7,12 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateHardwareSpecRequest struct {
 	// Целевое состояние питания виртуальной машины
-	Power commonclient.Optional[HardwareSpecPowerRequest] `json:"power" yaml:"power"`
+	Power optional.Optional[HardwareSpecPowerRequest] `json:"power" yaml:"power"`
 	// Время ожидания (таймаут) при отключении по ACPI
 	//
 	// Выключение виртуальной машины происходит в 2 этапа:
@@ -19,16 +20,16 @@ type UpdateHardwareSpecRequest struct {
 	// 2. В случае если гостевая ОС не завершила работу за заданное время, агент принудительно останавливает ВМ.
 	//
 	// При timeout=0 первый этап пропускается
-	GracefulShutdownTimeout commonclient.Optional[duration.Duration] `json:"gracefulShutdownTimeout" yaml:"gracefulShutdownTimeout"`
+	GracefulShutdownTimeout optional.Optional[duration.Duration] `json:"gracefulShutdownTimeout" yaml:"gracefulShutdownTimeout"`
 }
 
 func (m *HardwareSpecRequest) AsUpdateModel() UpdateHardwareSpecRequest {
 	var u UpdateHardwareSpecRequest
 	if m.Power != nil {
-		u.Power = commonclient.NewOptional(m.GetPowerOr(""))
+		u.Power = optional.NewOptional(m.GetPowerOr(""))
 	}
 	if m.GracefulShutdownTimeout != nil {
-		u.GracefulShutdownTimeout = commonclient.NewOptional(m.GetGracefulShutdownTimeoutOr(duration.Duration{}))
+		u.GracefulShutdownTimeout = optional.NewOptional(m.GetGracefulShutdownTimeoutOr(duration.Duration{}))
 	}
 	return u
 }
@@ -65,12 +66,12 @@ func (m UpdateHardwareSpecRequest) HasChanges() bool {
 		m.GracefulShutdownTimeout.Set
 }
 
-func (m *HardwareSpecRequest) diffPower(src *HardwareSpecRequest) commonclient.Optional[HardwareSpecPowerRequest] {
+func (m *HardwareSpecRequest) diffPower(src *HardwareSpecRequest) optional.Optional[HardwareSpecPowerRequest] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetPower(), m.GetPower(), nilDiffers)
 }
 
-func (m *HardwareSpecRequest) diffGracefulShutdownTimeout(src *HardwareSpecRequest) commonclient.Optional[duration.Duration] {
+func (m *HardwareSpecRequest) diffGracefulShutdownTimeout(src *HardwareSpecRequest) optional.Optional[duration.Duration] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceNonRequired(src.GetGracefulShutdownTimeout(), m.GetGracefulShutdownTimeout(), nilDiffers)
 }

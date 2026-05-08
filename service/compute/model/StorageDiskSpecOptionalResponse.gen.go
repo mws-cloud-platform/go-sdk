@@ -7,20 +7,20 @@ import (
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 // Real OAPI model name: StorageDiskSpec
 type StorageDiskSpecOptionalResponse struct {
-	Size commonclient.Optional[bytesize.ByteSize] `json:"size,omitempty" yaml:"size,omitempty"`
+	Size optional.Optional[bytesize.ByteSize] `json:"size,omitempty" yaml:"size,omitempty"`
 	// Источник для создания диска
-	Source commonclient.OptionalNil[StorageDiskSpecSourceOptionalResponse] `json:"source,omitempty" yaml:"source,omitempty"`
+	Source optional.OptionalNil[StorageDiskSpecSourceOptionalResponse] `json:"source,omitempty" yaml:"source,omitempty"`
 	// Ссылка на тип диска
-	DiskType commonclient.Optional[compute.DiskTypeRef] `json:"diskType,omitempty" yaml:"diskType,omitempty"`
+	DiskType optional.Optional[compute.DiskTypeRef] `json:"diskType,omitempty" yaml:"diskType,omitempty"`
 	// Запрашиваемая пользователем IOPS
-	Iops commonclient.Optional[Iops] `json:"iops,omitempty" yaml:"iops,omitempty"`
+	Iops optional.Optional[Iops] `json:"iops,omitempty" yaml:"iops,omitempty"`
 }
 
 func (m *StorageDiskSpecOptionalResponse) GetSize() *bytesize.ByteSize {
@@ -121,7 +121,7 @@ func (m *StorageDiskSpecOptionalResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: StorageDiskSpecSource
 type StorageDiskSpecSourceOptionalResponse struct {
 	// Ссылка на образ
-	Image commonclient.Optional[compute.ImageRef] `json:"image,omitempty" yaml:"image,omitempty"`
+	Image optional.Optional[compute.ImageRef] `json:"image,omitempty" yaml:"image,omitempty"`
 }
 
 func (m *StorageDiskSpecSourceOptionalResponse) GetImage() *compute.ImageRef {

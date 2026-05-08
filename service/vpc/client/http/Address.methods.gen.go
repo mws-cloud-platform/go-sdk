@@ -49,9 +49,9 @@ func (c *Address) listAddressesInvoker(ctx context.Context, anyReq any, response
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"addresses")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -144,11 +144,11 @@ func (c *Address) deleteAddressInvoker(ctx context.Context, anyReq any, response
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"addresses",
-		request.Address)
+		url.PathEscape(request.Address))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -221,11 +221,11 @@ func (c *Address) getAddressInvoker(ctx context.Context, anyReq any, response co
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"addresses",
-		request.Address)
+		url.PathEscape(request.Address))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -299,11 +299,11 @@ func (c *Address) upsertAddressInvoker(ctx context.Context, anyReq any, response
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"addresses",
-		request.Address)
+		url.PathEscape(request.Address))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -395,11 +395,11 @@ func (c *Address) createAddressInvoker(ctx context.Context, anyReq any, response
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"addresses",
-		request.Address)
+		url.PathEscape(request.Address))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -492,11 +492,11 @@ func (c *Address) updateAddressInvoker(ctx context.Context, anyReq any, response
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"addresses",
-		request.Address)
+		url.PathEscape(request.Address))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)

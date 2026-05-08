@@ -9,28 +9,29 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdatePostgresNetworkAddressRequest struct {
 	// Идентификатор адресса, в которые будет трансляция из service-vpc.
-	Ref commonclient.Optional[vpc.AddressRef] `json:"ref" yaml:"ref"`
+	Ref optional.Optional[vpc.AddressRef] `json:"ref" yaml:"ref"`
 	// Описание subnet пользователя, в который будет трансляция из service-vpc.
-	Spec commonclient.OptionalNil[UpdatePostgresNetworkAddressSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdatePostgresNetworkAddressSpecRequest] `json:"spec" yaml:"spec"`
 	// Описание адреса для внешнего подключения к кластеру.
-	ExternalAccess commonclient.OptionalNil[UpdatePostgresExternalAccessSpecRequest] `json:"externalAccess" yaml:"externalAccess"`
+	ExternalAccess optional.OptionalNil[UpdatePostgresExternalAccessSpecRequest] `json:"externalAccess" yaml:"externalAccess"`
 }
 
 func (m *PostgresNetworkAddressRequest) AsUpdateModel() UpdatePostgresNetworkAddressRequest {
 	var u UpdatePostgresNetworkAddressRequest
 	if m.Ref != nil {
-		u.Ref = commonclient.NewOptional(m.GetRefOr(vpc.AddressRef{}))
+		u.Ref = optional.NewOptional(m.GetRefOr(vpc.AddressRef{}))
 	}
 	if m.Spec != nil {
-		u.Spec = commonclient.NewOptionalNil(m.Spec.AsUpdateModel())
+		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
 	}
 	if m.ExternalAccess != nil {
-		u.ExternalAccess = commonclient.NewOptionalNil(m.ExternalAccess.AsUpdateModel())
+		u.ExternalAccess = optional.NewOptionalNil(m.ExternalAccess.AsUpdateModel())
 	}
 	return u
 }
@@ -102,19 +103,27 @@ func (m *UpdatePostgresNetworkAddressRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *PostgresNetworkAddressRequest) diffRef(src *PostgresNetworkAddressRequest) commonclient.Optional[vpc.AddressRef] {
+func (m *PostgresNetworkAddressRequest) diffRef(src *PostgresNetworkAddressRequest) optional.Optional[vpc.AddressRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *PostgresNetworkAddressRequest) diffSpec(src *PostgresNetworkAddressRequest) commonclient.OptionalNil[UpdatePostgresNetworkAddressSpecRequest] {
+func (m *PostgresNetworkAddressRequest) diffSpec(src *PostgresNetworkAddressRequest) optional.OptionalNil[UpdatePostgresNetworkAddressSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return commonclient.NewDirectOptionalNil[UpdatePostgresNetworkAddressSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdatePostgresNetworkAddressSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *PostgresNetworkAddressRequest) diffExternalAccess(src *PostgresNetworkAddressRequest) commonclient.OptionalNil[UpdatePostgresExternalAccessSpecRequest] {
+func (m *PostgresNetworkAddressRequest) diffExternalAccess(src *PostgresNetworkAddressRequest) optional.OptionalNil[UpdatePostgresExternalAccessSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetExternalAccess().Diff(src.GetExternalAccess())
-	return commonclient.NewDirectOptionalNil[UpdatePostgresExternalAccessSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdatePostgresExternalAccessSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

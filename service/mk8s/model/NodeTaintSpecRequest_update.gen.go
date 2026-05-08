@@ -4,24 +4,25 @@ package model
 
 import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateNodeTaintSpecRequest struct {
 	// Ключ может состоять из двух частей: необязательный префикс и ключ, разделенные "/".
 	// Максимальная длина префикса 253 символа.
 	// Максимальная длина ключа 63 символа.
-	Key commonclient.Optional[string] `json:"key" yaml:"key"`
+	Key optional.Optional[string] `json:"key" yaml:"key"`
 	// Значение taint на node. Если строка пустая, то value нет.
-	Value commonclient.Optional[string] `json:"value" yaml:"value"`
+	Value optional.Optional[string] `json:"value" yaml:"value"`
 	// Эффект taint на node, влияющий на pod scheduling, которые под него попадают.
-	Effect commonclient.Optional[NodeTaintSpecEffectRequest] `json:"effect" yaml:"effect"`
+	Effect optional.Optional[NodeTaintSpecEffectRequest] `json:"effect" yaml:"effect"`
 }
 
 func (m *NodeTaintSpecRequest) AsUpdateModel() UpdateNodeTaintSpecRequest {
 	var u UpdateNodeTaintSpecRequest
-	u.Key = commonclient.NewOptional(m.GetKey())
-	u.Value = commonclient.NewOptional(m.GetValue())
-	u.Effect = commonclient.NewOptional(m.GetEffect())
+	u.Key = optional.NewOptional(m.GetKey())
+	u.Value = optional.NewOptional(m.GetValue())
+	u.Effect = optional.NewOptional(m.GetEffect())
 	return u
 }
 
@@ -62,17 +63,17 @@ func (m UpdateNodeTaintSpecRequest) HasChanges() bool {
 		m.Effect.Set
 }
 
-func (m *NodeTaintSpecRequest) diffKey(src *NodeTaintSpecRequest) commonclient.Optional[string] {
+func (m *NodeTaintSpecRequest) diffKey(src *NodeTaintSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetKey(), m.GetKey(), nilDiffers)
 }
 
-func (m *NodeTaintSpecRequest) diffValue(src *NodeTaintSpecRequest) commonclient.Optional[string] {
+func (m *NodeTaintSpecRequest) diffValue(src *NodeTaintSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetValue(), m.GetValue(), nilDiffers)
 }
 
-func (m *NodeTaintSpecRequest) diffEffect(src *NodeTaintSpecRequest) commonclient.Optional[NodeTaintSpecEffectRequest] {
+func (m *NodeTaintSpecRequest) diffEffect(src *NodeTaintSpecRequest) optional.Optional[NodeTaintSpecEffectRequest] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetEffect(), m.GetEffect(), nilDiffers)
 }

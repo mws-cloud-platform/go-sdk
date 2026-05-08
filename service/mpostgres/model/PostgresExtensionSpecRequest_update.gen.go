@@ -4,16 +4,17 @@ package model
 
 import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdatePostgresExtensionSpecRequest struct {
 	// Имя расширения
-	Name commonclient.Optional[string] `json:"name" yaml:"name"`
+	Name optional.Optional[string] `json:"name" yaml:"name"`
 }
 
 func (m *PostgresExtensionSpecRequest) AsUpdateModel() UpdatePostgresExtensionSpecRequest {
 	var u UpdatePostgresExtensionSpecRequest
-	u.Name = commonclient.NewOptional(m.GetName())
+	u.Name = optional.NewOptional(m.GetName())
 	return u
 }
 
@@ -54,10 +55,10 @@ func (m *UpdatePostgresExtensionSpecRequest) GetName() string {
 
 // SetName is used in the Diff function for NamedArray
 func (m *UpdatePostgresExtensionSpecRequest) SetName(name string) {
-	m.Name = commonclient.NewOptional(name)
+	m.Name = optional.NewOptional(name)
 }
 
-func (m *PostgresExtensionSpecRequest) diffName(src *PostgresExtensionSpecRequest) commonclient.Optional[string] {
+func (m *PostgresExtensionSpecRequest) diffName(src *PostgresExtensionSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
 }

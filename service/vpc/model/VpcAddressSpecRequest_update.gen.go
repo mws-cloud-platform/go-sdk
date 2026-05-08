@@ -5,16 +5,17 @@ package model
 import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateVpcAddressSpecRequest struct {
-	Dns commonclient.Optional[[]UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
+	Dns optional.Optional[[]UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
 }
 
 func (m *VpcAddressSpecRequest) AsUpdateModel() UpdateVpcAddressSpecRequest {
 	var u UpdateVpcAddressSpecRequest
 	if m.Dns != nil {
-		u.Dns = commonclient.NewOptional(func() []UpdateVpcAddressDnsSpecRequest {
+		u.Dns = optional.NewOptional(func() []UpdateVpcAddressDnsSpecRequest {
 			var tmp []UpdateVpcAddressDnsSpecRequest
 			if m.GetDns() != nil {
 				tmp = make([]UpdateVpcAddressDnsSpecRequest, 0, len(m.GetDns()))
@@ -55,7 +56,7 @@ func (m UpdateVpcAddressSpecRequest) HasChanges() bool {
 	return m.Dns.Set
 }
 
-func (m *VpcAddressSpecRequest) diffDns(src *VpcAddressSpecRequest) commonclient.Optional[[]UpdateVpcAddressDnsSpecRequest] {
+func (m *VpcAddressSpecRequest) diffDns(src *VpcAddressSpecRequest) optional.Optional[[]UpdateVpcAddressDnsSpecRequest] {
 	diffFunc := func(fromItem, toItem VpcAddressDnsSpecRequest, fromNil bool) UpdateVpcAddressDnsSpecRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -63,5 +64,8 @@ func (m *VpcAddressSpecRequest) diffDns(src *VpcAddressSpecRequest) commonclient
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetDns(), m.GetDns(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdateVpcAddressDnsSpecRequest](value, hasChanges)
+	return optional.Optional[[]UpdateVpcAddressDnsSpecRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

@@ -49,7 +49,7 @@ func (c *ExternalAddress) listExternalAddressesInvoker(ctx context.Context, anyR
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"externalAddresses")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -141,9 +141,9 @@ func (c *ExternalAddress) deleteExternalAddressInvoker(ctx context.Context, anyR
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"externalAddresses",
-		request.ExternalAddress)
+		url.PathEscape(request.ExternalAddress))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -216,9 +216,9 @@ func (c *ExternalAddress) getExternalAddressInvoker(ctx context.Context, anyReq 
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"externalAddresses",
-		request.ExternalAddress)
+		url.PathEscape(request.ExternalAddress))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "externalAddress", request.ExternalAddress)
@@ -291,9 +291,9 @@ func (c *ExternalAddress) upsertExternalAddressInvoker(ctx context.Context, anyR
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"externalAddresses",
-		request.ExternalAddress)
+		url.PathEscape(request.ExternalAddress))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "externalAddress", request.ExternalAddress)
@@ -384,9 +384,9 @@ func (c *ExternalAddress) createExternalAddressInvoker(ctx context.Context, anyR
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"externalAddresses",
-		request.ExternalAddress)
+		url.PathEscape(request.ExternalAddress))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "externalAddress", request.ExternalAddress)
@@ -478,9 +478,9 @@ func (c *ExternalAddress) updateExternalAddressInvoker(ctx context.Context, anyR
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"externalAddresses",
-		request.ExternalAddress)
+		url.PathEscape(request.ExternalAddress))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "externalAddress", request.ExternalAddress)

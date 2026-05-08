@@ -183,7 +183,7 @@ func (m *KafkaConnectorID) UnmarshalJSON(b []byte) error {
 
 func (m *KafkaConnectorID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("KafkaConnectorRef")
+		return conv.NewDecodeToNilError("KafkaConnectorID")
 	}
 
 	v, err := decode.Str(d)

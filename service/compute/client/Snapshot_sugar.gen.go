@@ -26,6 +26,7 @@ func (x *SnapshotSugared) Impl() Snapshot {
 	return x.impl
 }
 
+// Deprecated: Отказываемся в пользу listDiskBackups.
 // ListSnapshots позволяет получить список снимков.
 //
 // Путь: GET /compute/v1/projects/{project}/snapshots
@@ -50,6 +51,7 @@ func (x *SnapshotSugared) respHandlerListSnapshots(resp *ListSnapshotsResponse) 
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+// Deprecated: Отказываемся в пользу deleteDiskBackup.
 // DeleteSnapshot позволяет удалить снимок.
 //
 // Путь: DELETE /compute/v1/projects/{project}/snapshots/{snapshot}
@@ -98,6 +100,7 @@ func (x *SnapshotSugared) waitDeleteSnapshot(ctx context.Context, request GetSna
 	return err
 }
 
+// Deprecated: Отказываемся в пользу getDiskBackup.
 // GetSnapshot позволяет получить информацию о снимке.
 //
 // Путь: GET /compute/v1/projects/{project}/snapshots/{snapshot}
@@ -143,6 +146,7 @@ func (x *SnapshotSugared) waitGetSnapshot(ctx context.Context, request GetSnapsh
 	return waiter.Wait(ctx)
 }
 
+// Deprecated: Отказываемся в пользу upsertDiskBackup.
 // UpsertSnapshot позволяет создать или изменить снимок.
 //
 // Путь: POST /compute/v1/projects/{project}/snapshots/{snapshot}
@@ -188,6 +192,7 @@ func (x *SnapshotSugared) waitUpsertSnapshot(ctx context.Context, request GetSna
 	return waiter.Wait(ctx)
 }
 
+// Deprecated: Отказываемся в пользу upsertDiskBackup.
 // CreateSnapshot позволяет создать или изменить снимок.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
@@ -212,6 +217,7 @@ func (x *SnapshotSugared) CreateSnapshot(ctx context.Context, request UpsertSnap
 	return x.waitUpsertSnapshot(ctx, request.getSnapshotRequest(), config.waitOptions...)
 }
 
+// Deprecated: Отказываемся в пользу upsertDiskBackup.
 // UpdateSnapshot позволяет создать или изменить снимок.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //

@@ -163,7 +163,7 @@ func (m *ZonalCephClusterID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalCephClusterID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalCephClusterRef")
+		return conv.NewDecodeToNilError("ZonalCephClusterID")
 	}
 
 	v, err := decode.Str(d)

@@ -11,6 +11,10 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Сервисный аккаунт — это специальная учетная запись, создаваемая пользователем
+// для вспомогательных целей — чтобы организовать взаимодействие программ и
+// сервисов с облачными ресурсами
+//
 // Real OAPI model name: ServiceAccount
 type ServiceAccountResponse struct {
 	Kind     *string                         `json:"kind,omitempty" yaml:"kind,omitempty"`

@@ -7,23 +7,23 @@ import (
 
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateCertificateRoleBindingRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
-	Spec     commonclient.Optional[common.UpdateCommonRoleBindingSpecRequest]          `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Spec     optional.Optional[common.UpdateCommonRoleBindingSpecRequest]          `json:"spec" yaml:"spec"`
 }
 
 func (m *CertificateRoleBindingRequest) AsUpdateModel() UpdateCertificateRoleBindingRequest {
 	var u UpdateCertificateRoleBindingRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -75,15 +75,22 @@ func (m *UpdateCertificateRoleBindingRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *CertificateRoleBindingRequest) diffMetadata(src *CertificateRoleBindingRequest) commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *CertificateRoleBindingRequest) diffMetadata(src *CertificateRoleBindingRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[common.UpdateCommonTypedResourceMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *CertificateRoleBindingRequest) diffSpec(src *CertificateRoleBindingRequest) commonclient.Optional[common.UpdateCommonRoleBindingSpecRequest] {
+func (m *CertificateRoleBindingRequest) diffSpec(src *CertificateRoleBindingRequest) optional.Optional[common.UpdateCommonRoleBindingSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[common.UpdateCommonRoleBindingSpecRequest](value, value.HasChanges())
+	return optional.Optional[common.UpdateCommonRoleBindingSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func ClusterSpecRequestToOptionalResponse(request *ClusterSpecRequest) (*ClusterSpecOptionalResponse, error) {
@@ -44,7 +44,7 @@ func ClusterSpecNetworkRequestToOptionalResponse(request *ClusterSpecNetworkRequ
 		if err != nil {
 			return nil, err
 		}
-		response.PublicEndpoint = commonclient.NewOptionalNil(*tmpPublicEndpoint)
+		response.PublicEndpoint = optional.NewOptionalNil(*tmpPublicEndpoint)
 	}
 	response.PodsCidr = request.PodsCidr
 	response.ServicesCidr = request.ServicesCidr

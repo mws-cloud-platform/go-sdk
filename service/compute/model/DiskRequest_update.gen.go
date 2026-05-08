@@ -5,23 +5,23 @@ package model
 import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateDiskRequest struct {
 	// Дополнительная информация об объекте
-	Metadata commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Спецификация глобального диска
-	Spec commonclient.Optional[UpdateDiskSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.Optional[UpdateDiskSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *DiskRequest) AsUpdateModel() UpdateDiskRequest {
 	var u UpdateDiskRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -59,15 +59,22 @@ func (m UpdateDiskRequest) HasChanges() bool {
 		m.Spec.Set
 }
 
-func (m *DiskRequest) diffMetadata(src *DiskRequest) commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *DiskRequest) diffMetadata(src *DiskRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[common.UpdateCommonTypedResourceMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *DiskRequest) diffSpec(src *DiskRequest) commonclient.Optional[UpdateDiskSpecRequest] {
+func (m *DiskRequest) diffSpec(src *DiskRequest) optional.Optional[UpdateDiskSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateDiskSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateDiskSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

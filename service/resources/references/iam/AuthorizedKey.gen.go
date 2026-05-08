@@ -183,7 +183,7 @@ func (m *AuthorizedKeyID) UnmarshalJSON(b []byte) error {
 
 func (m *AuthorizedKeyID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("AuthorizedKeyRef")
+		return conv.NewDecodeToNilError("AuthorizedKeyID")
 	}
 
 	v, err := decode.Str(d)

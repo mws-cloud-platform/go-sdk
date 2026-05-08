@@ -3,13 +3,13 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: VpcNetworkSpec
 type VpcNetworkSpecOptionalResponse struct {
-	Mtu            commonclient.Optional[int32] `json:"mtu,omitempty" yaml:"mtu,omitempty"`
-	InternetAccess commonclient.Optional[bool]  `json:"internetAccess,omitempty" yaml:"internetAccess,omitempty"`
+	Mtu            optional.Optional[int32] `json:"mtu,omitempty" yaml:"mtu,omitempty"`
+	InternetAccess optional.Optional[bool]  `json:"internetAccess,omitempty" yaml:"internetAccess,omitempty"`
 }
 
 func (m *VpcNetworkSpecOptionalResponse) GetMtu() *int32 {

@@ -5,18 +5,18 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateOneToOneNatSpecRequest struct {
 	// Группирующий элемент для всего что, касается внешней части (ресурсов, доступных извне).
-	External commonclient.Optional[UpdateOneToOneNatSpecExternalRequest] `json:"external" yaml:"external"`
+	External optional.Optional[UpdateOneToOneNatSpecExternalRequest] `json:"external" yaml:"external"`
 }
 
 func (m *OneToOneNatSpecRequest) AsUpdateModel() UpdateOneToOneNatSpecRequest {
 	var u UpdateOneToOneNatSpecRequest
-	u.External = commonclient.NewOptional(m.External.AsUpdateModel())
+	u.External = optional.NewOptional(m.External.AsUpdateModel())
 	return u
 }
 
@@ -61,9 +61,12 @@ func (m *UpdateOneToOneNatSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *OneToOneNatSpecRequest) diffExternal(src *OneToOneNatSpecRequest) commonclient.Optional[UpdateOneToOneNatSpecExternalRequest] {
+func (m *OneToOneNatSpecRequest) diffExternal(src *OneToOneNatSpecRequest) optional.Optional[UpdateOneToOneNatSpecExternalRequest] {
 	from := src.GetExternal()
 	to := m.GetExternal()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateOneToOneNatSpecExternalRequest](value, value.HasChanges())
+	return optional.Optional[UpdateOneToOneNatSpecExternalRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

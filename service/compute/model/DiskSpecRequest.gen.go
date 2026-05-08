@@ -192,7 +192,11 @@ type DiskSpecSourceRequest struct {
 	// ID образа
 	Image *compute.ImageRef `json:"image,omitempty" yaml:"image,omitempty"`
 	// ID снимка
+	//
+	// Deprecated: Отказываемся в пользу diskBackup
 	Snapshot *compute.SnapshotRef `json:"snapshot,omitempty" yaml:"snapshot,omitempty"`
+	// ID резервной копии диска
+	DiskBackup *compute.DiskBackupRef `json:"diskBackup,omitempty" yaml:"diskBackup,omitempty"`
 }
 
 func (m *DiskSpecSourceRequest) GetImage() *compute.ImageRef {
@@ -213,6 +217,7 @@ func (m *DiskSpecSourceRequest) GetImageOr(val compute.ImageRef) compute.ImageRe
 	return val
 }
 
+// Deprecated: Отказываемся в пользу diskBackup
 func (m *DiskSpecSourceRequest) GetSnapshot() *compute.SnapshotRef {
 	if m != nil {
 		return m.Snapshot
@@ -220,13 +225,33 @@ func (m *DiskSpecSourceRequest) GetSnapshot() *compute.SnapshotRef {
 	return nil
 }
 
+// Deprecated: Отказываемся в пользу diskBackup
 func (m *DiskSpecSourceRequest) SetSnapshot(val *compute.SnapshotRef) {
 	m.Snapshot = val
 }
 
+// Deprecated: Отказываемся в пользу diskBackup
 func (m *DiskSpecSourceRequest) GetSnapshotOr(val compute.SnapshotRef) compute.SnapshotRef {
 	if m != nil && m.Snapshot != nil {
 		return *m.Snapshot
+	}
+	return val
+}
+
+func (m *DiskSpecSourceRequest) GetDiskBackup() *compute.DiskBackupRef {
+	if m != nil {
+		return m.DiskBackup
+	}
+	return nil
+}
+
+func (m *DiskSpecSourceRequest) SetDiskBackup(val *compute.DiskBackupRef) {
+	m.DiskBackup = val
+}
+
+func (m *DiskSpecSourceRequest) GetDiskBackupOr(val compute.DiskBackupRef) compute.DiskBackupRef {
+	if m != nil && m.DiskBackup != nil {
+		return *m.DiskBackup
 	}
 	return val
 }
@@ -239,6 +264,7 @@ func (m *DiskSpecSourceRequest) Clone() *DiskSpecSourceRequest {
 	clone := *m
 	clone.Image = m.Image.Clone()
 	clone.Snapshot = m.Snapshot.Clone()
+	clone.DiskBackup = m.DiskBackup.Clone()
 	return &clone
 }
 
@@ -253,6 +279,10 @@ func (m *DiskSpecSourceRequest) Parse(ctx context.Context) error {
 
 	if err := m.Snapshot.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Snapshot", err)
+	}
+
+	if err := m.DiskBackup.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("DiskBackup", err)
 	}
 
 	return nil

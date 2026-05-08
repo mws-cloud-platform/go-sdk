@@ -3,12 +3,12 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: CertificateSpec
 type CertificateSpecOptionalResponse struct {
-	Managed commonclient.OptionalNil[CertificateManagedSpecOptionalResponse] `json:"managed,omitempty" yaml:"managed,omitempty"`
+	Managed optional.OptionalNil[CertificateManagedSpecOptionalResponse] `json:"managed,omitempty" yaml:"managed,omitempty"`
 }
 
 func (m *CertificateSpecOptionalResponse) GetManaged() *CertificateManagedSpecOptionalResponse {

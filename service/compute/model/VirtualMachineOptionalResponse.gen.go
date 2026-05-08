@@ -6,8 +6,8 @@ import (
 	"context"
 	"time"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
@@ -15,10 +15,10 @@ import (
 // Виртуальная машина (ВМ) — программная эмуляция физического сервера, предназначенная для запуска операционных систем и приложений
 // Real OAPI model name: VirtualMachine
 type VirtualMachineOptionalResponse struct {
-	Kind     *string                                                          `json:"kind,omitempty" yaml:"kind,omitempty"`
-	Metadata commonclient.OptionalNil[VirtualMachineMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     VirtualMachineSpecOptionalResponse                               `json:"spec" yaml:"spec"`
-	Status   *VirtualMachineStatusResponse                                    `json:"status,omitempty" yaml:"status,omitempty"`
+	Kind     *string                                                      `json:"kind,omitempty" yaml:"kind,omitempty"`
+	Metadata optional.OptionalNil[VirtualMachineMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     VirtualMachineSpecOptionalResponse                           `json:"spec" yaml:"spec"`
+	Status   *VirtualMachineStatusResponse                                `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *VirtualMachineOptionalResponse) GetKind() *string {

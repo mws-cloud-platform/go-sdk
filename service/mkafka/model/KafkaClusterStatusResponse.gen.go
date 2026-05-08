@@ -40,6 +40,8 @@ type KafkaClusterStatusResponse struct {
 	// Описание эндпойнтов в сетях пользователя (VPC) для подключения к брокерам кластера.
 	Endpoints         []KafkaEndpointStatusResponse      `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 	MaintenanceWindow *common.MaintenanceWindow2Response `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	// Настройка Schema Registry для кластера.
+	SchemaRegistry *KafkaSchemaRegistrySpecResponse `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`
 }
 
 func (m *KafkaClusterStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -147,6 +149,20 @@ func (m *KafkaClusterStatusResponse) GetMaintenanceWindowOr(val common.Maintenan
 	return val
 }
 
+func (m *KafkaClusterStatusResponse) GetSchemaRegistry() *KafkaSchemaRegistrySpecResponse {
+	if m != nil {
+		return m.SchemaRegistry
+	}
+	return nil
+}
+
+func (m *KafkaClusterStatusResponse) GetSchemaRegistryOr(val KafkaSchemaRegistrySpecResponse) KafkaSchemaRegistrySpecResponse {
+	if m != nil && m.SchemaRegistry != nil {
+		return *m.SchemaRegistry
+	}
+	return val
+}
+
 func (m *KafkaClusterStatusResponse) Clone() *KafkaClusterStatusResponse {
 	if m == nil {
 		return nil
@@ -180,6 +196,7 @@ func (m *KafkaClusterStatusResponse) Clone() *KafkaClusterStatusResponse {
 		}
 	}
 	clone.MaintenanceWindow = m.MaintenanceWindow.Clone()
+	clone.SchemaRegistry = m.SchemaRegistry.Clone()
 
 	return &clone
 }

@@ -163,7 +163,7 @@ func (m *VirtualMachineID) UnmarshalJSON(b []byte) error {
 
 func (m *VirtualMachineID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("VirtualMachineRef")
+		return conv.NewDecodeToNilError("VirtualMachineID")
 	}
 
 	v, err := decode.Str(d)

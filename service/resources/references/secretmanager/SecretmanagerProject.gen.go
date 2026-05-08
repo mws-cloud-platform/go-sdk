@@ -143,7 +143,7 @@ func (m *SecretmanagerProjectID) UnmarshalJSON(b []byte) error {
 
 func (m *SecretmanagerProjectID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("SecretmanagerProjectRef")
+		return conv.NewDecodeToNilError("SecretmanagerProjectID")
 	}
 
 	v, err := decode.Str(d)

@@ -49,7 +49,7 @@ func (c *NatGateway) listNatGatewaysInvoker(ctx context.Context, anyReq any, res
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"natGateways")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)

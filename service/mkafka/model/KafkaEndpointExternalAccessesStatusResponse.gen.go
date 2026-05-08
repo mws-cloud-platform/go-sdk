@@ -20,6 +20,8 @@ type KafkaEndpointExternalAccessesStatusResponse struct {
 	BootstrapServers *string `json:"bootstrapServers,omitempty" yaml:"bootstrapServers,omitempty"`
 	// Список внешних адресов, выделенных для брокеров Kafka.
 	BrokerAddresses []KafkaEndpointExternalAddressStatusResponse `json:"brokerAddresses,omitempty" yaml:"brokerAddresses,omitempty"`
+	// Внешние HTTPS-адреса Schema Registry.
+	SchemaRegistry *KafkaSchemaRegistryUrlsResponse `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`
 }
 
 func (m *KafkaEndpointExternalAccessesStatusResponse) GetAllowed() bool {
@@ -87,6 +89,24 @@ func (m *KafkaEndpointExternalAccessesStatusResponse) GetBrokerAddressesOr(val [
 	return val
 }
 
+func (m *KafkaEndpointExternalAccessesStatusResponse) GetSchemaRegistry() *KafkaSchemaRegistryUrlsResponse {
+	if m != nil {
+		return m.SchemaRegistry
+	}
+	return nil
+}
+
+func (m *KafkaEndpointExternalAccessesStatusResponse) SetSchemaRegistry(val *KafkaSchemaRegistryUrlsResponse) {
+	m.SchemaRegistry = val
+}
+
+func (m *KafkaEndpointExternalAccessesStatusResponse) GetSchemaRegistryOr(val KafkaSchemaRegistryUrlsResponse) KafkaSchemaRegistryUrlsResponse {
+	if m != nil && m.SchemaRegistry != nil {
+		return *m.SchemaRegistry
+	}
+	return val
+}
+
 func (m *KafkaEndpointExternalAccessesStatusResponse) Clone() *KafkaEndpointExternalAccessesStatusResponse {
 	if m == nil {
 		return nil
@@ -107,6 +127,7 @@ func (m *KafkaEndpointExternalAccessesStatusResponse) Clone() *KafkaEndpointExte
 			clone.BrokerAddresses[i] = *v.Clone()
 		}
 	}
+	clone.SchemaRegistry = m.SchemaRegistry.Clone()
 	return &clone
 }
 

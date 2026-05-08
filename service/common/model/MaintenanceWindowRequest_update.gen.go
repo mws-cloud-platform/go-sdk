@@ -3,16 +3,16 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateMaintenanceWindowRequest struct {
-	Weekly commonclient.Optional[UpdateWeeklyMaintenanceWindowRequest] `json:"weekly" yaml:"weekly"`
+	Weekly optional.Optional[UpdateWeeklyMaintenanceWindowRequest] `json:"weekly" yaml:"weekly"`
 }
 
 func (m *MaintenanceWindowRequest) AsUpdateModel() UpdateMaintenanceWindowRequest {
 	var u UpdateMaintenanceWindowRequest
-	u.Weekly = commonclient.NewOptional(m.Weekly.AsUpdateModel())
+	u.Weekly = optional.NewOptional(m.Weekly.AsUpdateModel())
 	return u
 }
 
@@ -43,9 +43,12 @@ func (m UpdateMaintenanceWindowRequest) HasChanges() bool {
 	return m.Weekly.Set
 }
 
-func (m *MaintenanceWindowRequest) diffWeekly(src *MaintenanceWindowRequest) commonclient.Optional[UpdateWeeklyMaintenanceWindowRequest] {
+func (m *MaintenanceWindowRequest) diffWeekly(src *MaintenanceWindowRequest) optional.Optional[UpdateWeeklyMaintenanceWindowRequest] {
 	from := src.GetWeekly()
 	to := m.GetWeekly()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateWeeklyMaintenanceWindowRequest](value, value.HasChanges())
+	return optional.Optional[UpdateWeeklyMaintenanceWindowRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

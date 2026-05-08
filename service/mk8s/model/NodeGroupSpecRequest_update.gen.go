@@ -11,37 +11,43 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 type UpdateNodeGroupSpecRequest struct {
 	// тип VM
-	VmType commonclient.Optional[UpdateNodeGroupSpecVmTypeRequest] `json:"vmType" yaml:"vmType"`
+	VmType optional.Optional[UpdateNodeGroupSpecVmTypeRequest] `json:"vmType" yaml:"vmType"`
 	// размер хранилища для image-ей и контейнеров. Размер в Gb
-	ImageStorageSize commonclient.Optional[bytesize.ByteSize] `json:"imageStorageSize" yaml:"imageStorageSize"`
+	ImageStorageSize optional.Optional[bytesize.ByteSize] `json:"imageStorageSize" yaml:"imageStorageSize"`
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища image-ей и контейнеров
+	ImageStorageIops optional.Optional[int64] `json:"imageStorageIops" yaml:"imageStorageIops"`
 	// Необходимо заполнить одно из полей fixed или auto scale
-	Scale          commonclient.Optional[UpdateNodeGroupSpecScaleRequest]          `json:"scale" yaml:"scale"`
-	Labels         commonclient.OptionalNil[[]UpdateNodeLabelSpecRequest]          `json:"labels" yaml:"labels"`
-	Taints         commonclient.OptionalNil[[]UpdateNodeTaintSpecRequest]          `json:"taints" yaml:"taints"`
-	VersionControl commonclient.Optional[UpdateNodeGroupVersionControlSpecRequest] `json:"versionControl" yaml:"versionControl"`
+	Scale          optional.Optional[UpdateNodeGroupSpecScaleRequest]          `json:"scale" yaml:"scale"`
+	Labels         optional.OptionalNil[[]UpdateNodeLabelSpecRequest]          `json:"labels" yaml:"labels"`
+	Taints         optional.OptionalNil[[]UpdateNodeTaintSpecRequest]          `json:"taints" yaml:"taints"`
+	VersionControl optional.Optional[UpdateNodeGroupVersionControlSpecRequest] `json:"versionControl" yaml:"versionControl"`
 	// Стратегия перекатки (rollout) worker нод в нод группе
-	RolloutStrategy commonclient.Optional[UpdateNodeGroupSpecRolloutStrategyRequest] `json:"rolloutStrategy" yaml:"rolloutStrategy"`
+	RolloutStrategy optional.Optional[UpdateNodeGroupSpecRolloutStrategyRequest] `json:"rolloutStrategy" yaml:"rolloutStrategy"`
 	// serviceAccount необходим для поддержки функций:
 	// - скачивания образов из облачного registry (права на чтение образов)
 	// - сбор системных метрик с worker нод (права на чтение статусов worker нод)
-	ServiceAccount commonclient.Optional[UpdateNodeGroupSpecServiceAccountRequest] `json:"serviceAccount" yaml:"serviceAccount"`
+	ServiceAccount optional.Optional[UpdateNodeGroupSpecServiceAccountRequest] `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
 func (m *NodeGroupSpecRequest) AsUpdateModel() UpdateNodeGroupSpecRequest {
 	var u UpdateNodeGroupSpecRequest
-	u.VmType = commonclient.NewOptional(m.VmType.AsUpdateModel())
+	u.VmType = optional.NewOptional(m.VmType.AsUpdateModel())
 	if m.ImageStorageSize != nil {
-		u.ImageStorageSize = commonclient.NewOptional(m.GetImageStorageSizeOr(bytesize.ByteSize{}))
+		u.ImageStorageSize = optional.NewOptional(m.GetImageStorageSizeOr(bytesize.ByteSize{}))
 	}
-	u.Scale = commonclient.NewOptional(m.Scale.AsUpdateModel())
+	if m.ImageStorageIops != nil {
+		u.ImageStorageIops = optional.NewOptional(m.GetImageStorageIopsOr(0))
+	}
+	u.Scale = optional.NewOptional(m.Scale.AsUpdateModel())
 	if m.Labels != nil {
-		u.Labels = commonclient.NewOptionalNil(func() []UpdateNodeLabelSpecRequest {
+		u.Labels = optional.NewOptionalNil(func() []UpdateNodeLabelSpecRequest {
 			var tmp []UpdateNodeLabelSpecRequest
 			if m.GetLabels() != nil {
 				tmp = make([]UpdateNodeLabelSpecRequest, 0, len(m.GetLabels()))
@@ -53,7 +59,7 @@ func (m *NodeGroupSpecRequest) AsUpdateModel() UpdateNodeGroupSpecRequest {
 		}())
 	}
 	if m.Taints != nil {
-		u.Taints = commonclient.NewOptionalNil(func() []UpdateNodeTaintSpecRequest {
+		u.Taints = optional.NewOptionalNil(func() []UpdateNodeTaintSpecRequest {
 			var tmp []UpdateNodeTaintSpecRequest
 			if m.GetTaints() != nil {
 				tmp = make([]UpdateNodeTaintSpecRequest, 0, len(m.GetTaints()))
@@ -64,9 +70,9 @@ func (m *NodeGroupSpecRequest) AsUpdateModel() UpdateNodeGroupSpecRequest {
 			return tmp
 		}())
 	}
-	u.VersionControl = commonclient.NewOptional(m.VersionControl.AsUpdateModel())
-	u.RolloutStrategy = commonclient.NewOptional(m.RolloutStrategy.AsUpdateModel())
-	u.ServiceAccount = commonclient.NewOptional(m.ServiceAccount.AsUpdateModel())
+	u.VersionControl = optional.NewOptional(m.VersionControl.AsUpdateModel())
+	u.RolloutStrategy = optional.NewOptional(m.RolloutStrategy.AsUpdateModel())
+	u.ServiceAccount = optional.NewOptional(m.ServiceAccount.AsUpdateModel())
 	return u
 }
 
@@ -77,6 +83,7 @@ func (m *NodeGroupSpecRequest) Diff(src *NodeGroupSpecRequest) UpdateNodeGroupSp
 	if !nilDiffers {
 		upd.VmType = m.diffVmType(src)
 		upd.ImageStorageSize = m.diffImageStorageSize(src)
+		upd.ImageStorageIops = m.diffImageStorageIops(src)
 		upd.Scale = m.diffScale(src)
 		upd.Labels = m.diffLabels(src)
 		upd.Taints = m.diffTaints(src)
@@ -98,6 +105,9 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 	}
 	if u.ImageStorageSize.IsSet() {
 		out.ImageStorageSize = ptr.Get(u.ImageStorageSize.Value)
+	}
+	if u.ImageStorageIops.IsSet() {
+		out.ImageStorageIops = ptr.Get(u.ImageStorageIops.Value)
 	}
 	if u.Scale.IsSet() {
 		out.Scale = out.Scale.WithChanges(u.Scale.Value)
@@ -128,6 +138,7 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 func (m UpdateNodeGroupSpecRequest) HasChanges() bool {
 	return m.VmType.Set ||
 		m.ImageStorageSize.Set ||
+		m.ImageStorageIops.Set ||
 		m.Scale.Set ||
 		m.Labels.Set ||
 		m.Taints.Set ||
@@ -156,26 +167,37 @@ func (m *UpdateNodeGroupSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *NodeGroupSpecRequest) diffVmType(src *NodeGroupSpecRequest) commonclient.Optional[UpdateNodeGroupSpecVmTypeRequest] {
+func (m *NodeGroupSpecRequest) diffVmType(src *NodeGroupSpecRequest) optional.Optional[UpdateNodeGroupSpecVmTypeRequest] {
 	from := src.GetVmType()
 	to := m.GetVmType()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateNodeGroupSpecVmTypeRequest](value, value.HasChanges())
+	return optional.Optional[UpdateNodeGroupSpecVmTypeRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *NodeGroupSpecRequest) diffImageStorageSize(src *NodeGroupSpecRequest) commonclient.Optional[bytesize.ByteSize] {
+func (m *NodeGroupSpecRequest) diffImageStorageSize(src *NodeGroupSpecRequest) optional.Optional[bytesize.ByteSize] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceNonRequired(src.GetImageStorageSize(), m.GetImageStorageSize(), nilDiffers)
 }
 
-func (m *NodeGroupSpecRequest) diffScale(src *NodeGroupSpecRequest) commonclient.Optional[UpdateNodeGroupSpecScaleRequest] {
+func (m *NodeGroupSpecRequest) diffImageStorageIops(src *NodeGroupSpecRequest) optional.Optional[int64] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetImageStorageIops(), m.GetImageStorageIops(), nilDiffers)
+}
+
+func (m *NodeGroupSpecRequest) diffScale(src *NodeGroupSpecRequest) optional.Optional[UpdateNodeGroupSpecScaleRequest] {
 	from := src.GetScale()
 	to := m.GetScale()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateNodeGroupSpecScaleRequest](value, value.HasChanges())
+	return optional.Optional[UpdateNodeGroupSpecScaleRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *NodeGroupSpecRequest) diffLabels(src *NodeGroupSpecRequest) commonclient.OptionalNil[[]UpdateNodeLabelSpecRequest] {
+func (m *NodeGroupSpecRequest) diffLabels(src *NodeGroupSpecRequest) optional.OptionalNil[[]UpdateNodeLabelSpecRequest] {
 	diffFunc := func(fromItem, toItem NodeLabelSpecRequest, fromNil bool) UpdateNodeLabelSpecRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -183,10 +205,14 @@ func (m *NodeGroupSpecRequest) diffLabels(src *NodeGroupSpecRequest) commonclien
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetLabels(), m.GetLabels(), diffFunc)
-	return commonclient.NewDirectOptionalNil[[]UpdateNodeLabelSpecRequest](value, hasChanges, value == nil)
+	return optional.OptionalNil[[]UpdateNodeLabelSpecRequest]{
+		Value: value,
+		Set:   hasChanges,
+		Null:  value == nil,
+	}
 }
 
-func (m *NodeGroupSpecRequest) diffTaints(src *NodeGroupSpecRequest) commonclient.OptionalNil[[]UpdateNodeTaintSpecRequest] {
+func (m *NodeGroupSpecRequest) diffTaints(src *NodeGroupSpecRequest) optional.OptionalNil[[]UpdateNodeTaintSpecRequest] {
 	diffFunc := func(fromItem, toItem NodeTaintSpecRequest, fromNil bool) UpdateNodeTaintSpecRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -194,42 +220,55 @@ func (m *NodeGroupSpecRequest) diffTaints(src *NodeGroupSpecRequest) commonclien
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetTaints(), m.GetTaints(), diffFunc)
-	return commonclient.NewDirectOptionalNil[[]UpdateNodeTaintSpecRequest](value, hasChanges, value == nil)
+	return optional.OptionalNil[[]UpdateNodeTaintSpecRequest]{
+		Value: value,
+		Set:   hasChanges,
+		Null:  value == nil,
+	}
 }
 
-func (m *NodeGroupSpecRequest) diffVersionControl(src *NodeGroupSpecRequest) commonclient.Optional[UpdateNodeGroupVersionControlSpecRequest] {
+func (m *NodeGroupSpecRequest) diffVersionControl(src *NodeGroupSpecRequest) optional.Optional[UpdateNodeGroupVersionControlSpecRequest] {
 	from := src.GetVersionControl()
 	to := m.GetVersionControl()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateNodeGroupVersionControlSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateNodeGroupVersionControlSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *NodeGroupSpecRequest) diffRolloutStrategy(src *NodeGroupSpecRequest) commonclient.Optional[UpdateNodeGroupSpecRolloutStrategyRequest] {
+func (m *NodeGroupSpecRequest) diffRolloutStrategy(src *NodeGroupSpecRequest) optional.Optional[UpdateNodeGroupSpecRolloutStrategyRequest] {
 	from := src.GetRolloutStrategy()
 	to := m.GetRolloutStrategy()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateNodeGroupSpecRolloutStrategyRequest](value, value.HasChanges())
+	return optional.Optional[UpdateNodeGroupSpecRolloutStrategyRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *NodeGroupSpecRequest) diffServiceAccount(src *NodeGroupSpecRequest) commonclient.Optional[UpdateNodeGroupSpecServiceAccountRequest] {
+func (m *NodeGroupSpecRequest) diffServiceAccount(src *NodeGroupSpecRequest) optional.Optional[UpdateNodeGroupSpecServiceAccountRequest] {
 	from := src.GetServiceAccount()
 	to := m.GetServiceAccount()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateNodeGroupSpecServiceAccountRequest](value, value.HasChanges())
+	return optional.Optional[UpdateNodeGroupSpecServiceAccountRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 type UpdateNodeGroupSpecRolloutStrategyRequest struct {
-	MaxSurge       commonclient.Optional[int] `json:"maxSurge" yaml:"maxSurge"`
-	MaxUnavailable commonclient.Optional[int] `json:"maxUnavailable" yaml:"maxUnavailable"`
+	MaxSurge       optional.Optional[int] `json:"maxSurge" yaml:"maxSurge"`
+	MaxUnavailable optional.Optional[int] `json:"maxUnavailable" yaml:"maxUnavailable"`
 }
 
 func (m *NodeGroupSpecRolloutStrategyRequest) AsUpdateModel() UpdateNodeGroupSpecRolloutStrategyRequest {
 	var u UpdateNodeGroupSpecRolloutStrategyRequest
 	if m.MaxSurge != nil {
-		u.MaxSurge = commonclient.NewOptional(m.GetMaxSurgeOr(0))
+		u.MaxSurge = optional.NewOptional(m.GetMaxSurgeOr(0))
 	}
 	if m.MaxUnavailable != nil {
-		u.MaxUnavailable = commonclient.NewOptional(m.GetMaxUnavailableOr(0))
+		u.MaxUnavailable = optional.NewOptional(m.GetMaxUnavailableOr(0))
 	}
 	return u
 }
@@ -266,29 +305,29 @@ func (m UpdateNodeGroupSpecRolloutStrategyRequest) HasChanges() bool {
 		m.MaxUnavailable.Set
 }
 
-func (m *NodeGroupSpecRolloutStrategyRequest) diffMaxSurge(src *NodeGroupSpecRolloutStrategyRequest) commonclient.Optional[int] {
+func (m *NodeGroupSpecRolloutStrategyRequest) diffMaxSurge(src *NodeGroupSpecRolloutStrategyRequest) optional.Optional[int] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetMaxSurge(), m.GetMaxSurge(), nilDiffers)
 }
 
-func (m *NodeGroupSpecRolloutStrategyRequest) diffMaxUnavailable(src *NodeGroupSpecRolloutStrategyRequest) commonclient.Optional[int] {
+func (m *NodeGroupSpecRolloutStrategyRequest) diffMaxUnavailable(src *NodeGroupSpecRolloutStrategyRequest) optional.Optional[int] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetMaxUnavailable(), m.GetMaxUnavailable(), nilDiffers)
 }
 
 type UpdateNodeGroupSpecScaleRequest struct {
 	// Количество узлов в node group
-	Fixed       commonclient.Optional[int]                                           `json:"fixed" yaml:"fixed"`
-	Autoscaling commonclient.OptionalNil[UpdateNodeGroupSpecScaleAutoscalingRequest] `json:"autoscaling" yaml:"autoscaling"`
+	Fixed       optional.Optional[int]                                           `json:"fixed" yaml:"fixed"`
+	Autoscaling optional.OptionalNil[UpdateNodeGroupSpecScaleAutoscalingRequest] `json:"autoscaling" yaml:"autoscaling"`
 }
 
 func (m *NodeGroupSpecScaleRequest) AsUpdateModel() UpdateNodeGroupSpecScaleRequest {
 	var u UpdateNodeGroupSpecScaleRequest
 	if m.Fixed != nil {
-		u.Fixed = commonclient.NewOptional(m.GetFixedOr(0))
+		u.Fixed = optional.NewOptional(m.GetFixedOr(0))
 	}
 	if m.Autoscaling != nil {
-		u.Autoscaling = commonclient.NewOptionalNil(m.Autoscaling.AsUpdateModel())
+		u.Autoscaling = optional.NewOptionalNil(m.Autoscaling.AsUpdateModel())
 	}
 	return u
 }
@@ -327,28 +366,32 @@ func (m UpdateNodeGroupSpecScaleRequest) HasChanges() bool {
 		m.Autoscaling.Set
 }
 
-func (m *NodeGroupSpecScaleRequest) diffFixed(src *NodeGroupSpecScaleRequest) commonclient.Optional[int] {
+func (m *NodeGroupSpecScaleRequest) diffFixed(src *NodeGroupSpecScaleRequest) optional.Optional[int] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetFixed(), m.GetFixed(), nilDiffers)
 }
 
-func (m *NodeGroupSpecScaleRequest) diffAutoscaling(src *NodeGroupSpecScaleRequest) commonclient.OptionalNil[UpdateNodeGroupSpecScaleAutoscalingRequest] {
+func (m *NodeGroupSpecScaleRequest) diffAutoscaling(src *NodeGroupSpecScaleRequest) optional.OptionalNil[UpdateNodeGroupSpecScaleAutoscalingRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetAutoscaling().Diff(src.GetAutoscaling())
-	return commonclient.NewDirectOptionalNil[UpdateNodeGroupSpecScaleAutoscalingRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateNodeGroupSpecScaleAutoscalingRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
 type UpdateNodeGroupSpecScaleAutoscalingRequest struct {
 	// Минимально количество нод в Node group.
-	Min commonclient.Optional[int] `json:"min" yaml:"min"`
+	Min optional.Optional[int] `json:"min" yaml:"min"`
 	// Максимальное количество нод в Node group.
-	Max commonclient.Optional[int] `json:"max" yaml:"max"`
+	Max optional.Optional[int] `json:"max" yaml:"max"`
 }
 
 func (m *NodeGroupSpecScaleAutoscalingRequest) AsUpdateModel() UpdateNodeGroupSpecScaleAutoscalingRequest {
 	var u UpdateNodeGroupSpecScaleAutoscalingRequest
-	u.Min = commonclient.NewOptional(m.GetMin())
-	u.Max = commonclient.NewOptional(m.GetMax())
+	u.Min = optional.NewOptional(m.GetMin())
+	u.Max = optional.NewOptional(m.GetMax())
 	return u
 }
 
@@ -384,23 +427,23 @@ func (m UpdateNodeGroupSpecScaleAutoscalingRequest) HasChanges() bool {
 		m.Max.Set
 }
 
-func (m *NodeGroupSpecScaleAutoscalingRequest) diffMin(src *NodeGroupSpecScaleAutoscalingRequest) commonclient.Optional[int] {
+func (m *NodeGroupSpecScaleAutoscalingRequest) diffMin(src *NodeGroupSpecScaleAutoscalingRequest) optional.Optional[int] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetMin(), m.GetMin(), nilDiffers)
 }
 
-func (m *NodeGroupSpecScaleAutoscalingRequest) diffMax(src *NodeGroupSpecScaleAutoscalingRequest) commonclient.Optional[int] {
+func (m *NodeGroupSpecScaleAutoscalingRequest) diffMax(src *NodeGroupSpecScaleAutoscalingRequest) optional.Optional[int] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetMax(), m.GetMax(), nilDiffers)
 }
 
 type UpdateNodeGroupSpecServiceAccountRequest struct {
-	Ref commonclient.Optional[iam.ServiceAccountRef] `json:"ref" yaml:"ref"`
+	Ref optional.Optional[iam.ServiceAccountRef] `json:"ref" yaml:"ref"`
 }
 
 func (m *NodeGroupSpecServiceAccountRequest) AsUpdateModel() UpdateNodeGroupSpecServiceAccountRequest {
 	var u UpdateNodeGroupSpecServiceAccountRequest
-	u.Ref = commonclient.NewOptional(m.GetRef())
+	u.Ref = optional.NewOptional(m.GetRef())
 	return u
 }
 
@@ -445,19 +488,19 @@ func (m *UpdateNodeGroupSpecServiceAccountRequest) Parse(ctx context.Context) er
 	return nil
 }
 
-func (m *NodeGroupSpecServiceAccountRequest) diffRef(src *NodeGroupSpecServiceAccountRequest) commonclient.Optional[iam.ServiceAccountRef] {
+func (m *NodeGroupSpecServiceAccountRequest) diffRef(src *NodeGroupSpecServiceAccountRequest) optional.Optional[iam.ServiceAccountRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
 type UpdateNodeGroupSpecVmTypeRequest struct {
-	Ref commonclient.Optional[compute.VmTypeRef] `json:"ref" yaml:"ref"`
+	Ref optional.Optional[compute.VmTypeRef] `json:"ref" yaml:"ref"`
 }
 
 func (m *NodeGroupSpecVmTypeRequest) AsUpdateModel() UpdateNodeGroupSpecVmTypeRequest {
 	var u UpdateNodeGroupSpecVmTypeRequest
 	if m.Ref != nil {
-		u.Ref = commonclient.NewOptional(m.GetRefOr(compute.VmTypeRef{}))
+		u.Ref = optional.NewOptional(m.GetRefOr(compute.VmTypeRef{}))
 	}
 	return u
 }
@@ -503,7 +546,7 @@ func (m *UpdateNodeGroupSpecVmTypeRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *NodeGroupSpecVmTypeRequest) diffRef(src *NodeGroupSpecVmTypeRequest) commonclient.Optional[compute.VmTypeRef] {
+func (m *NodeGroupSpecVmTypeRequest) diffRef(src *NodeGroupSpecVmTypeRequest) optional.Optional[compute.VmTypeRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }

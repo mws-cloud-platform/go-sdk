@@ -53,6 +53,11 @@ func (m *KafkaEndpointExternalAccessesStatusResponse) encodeFields(e *jx.Encoder
 		}
 		e.ArrEnd()
 	}
+
+	if m.SchemaRegistry != nil {
+		e.FieldStart("schemaRegistry")
+		m.SchemaRegistry.Encode(e)
+	}
 	return nil
 }
 
@@ -105,6 +110,18 @@ func (m *KafkaEndpointExternalAccessesStatusResponse) Decode(d *jx.Decoder) erro
 			}
 
 			m.BrokerAddresses = c
+			return nil
+		case "schemaRegistry":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v KafkaSchemaRegistryUrlsResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SchemaRegistry = &v
 			return nil
 		default:
 			return d.Skip()

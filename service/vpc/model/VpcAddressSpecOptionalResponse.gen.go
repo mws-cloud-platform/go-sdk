@@ -7,8 +7,8 @@ import (
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -18,8 +18,8 @@ type VpcAddressSpecOptionalResponse struct {
 	// Подсеть облачной сети к которой принадлежит адрес.
 	Subnet vpc.SubnetRef `json:"subnet" yaml:"subnet"`
 	// Желаемый IP адрес. Если не указан, то будет выделен из пула адресов подсети.
-	IpAddress commonclient.Optional[ipaddress.IPAddress]                 `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
-	Dns       commonclient.Optional[[]VpcAddressDnsSpecOptionalResponse] `json:"dns,omitempty" yaml:"dns,omitempty"`
+	IpAddress optional.Optional[ipaddress.IPAddress]                 `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
+	Dns       optional.Optional[[]VpcAddressDnsSpecOptionalResponse] `json:"dns,omitempty" yaml:"dns,omitempty"`
 }
 
 func (m *VpcAddressSpecOptionalResponse) GetSubnet() vpc.SubnetRef {

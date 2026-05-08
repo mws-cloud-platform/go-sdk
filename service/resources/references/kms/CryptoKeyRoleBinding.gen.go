@@ -183,7 +183,7 @@ func (m *CryptoKeyRoleBindingID) UnmarshalJSON(b []byte) error {
 
 func (m *CryptoKeyRoleBindingID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("CryptoKeyRoleBindingRef")
+		return conv.NewDecodeToNilError("CryptoKeyRoleBindingID")
 	}
 
 	v, err := decode.Str(d)

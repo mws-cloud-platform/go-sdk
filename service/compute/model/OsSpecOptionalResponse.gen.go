@@ -3,15 +3,15 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: OsSpec
 type OsSpecOptionalResponse struct {
-	Hostname           commonclient.Optional[string]                            `json:"hostname,omitempty" yaml:"hostname,omitempty"`
-	LocalDomain        commonclient.Optional[string]                            `json:"localDomain,omitempty" yaml:"localDomain,omitempty"`
-	StandardDnsRecords commonclient.Optional[bool]                              `json:"standardDnsRecords,omitempty" yaml:"standardDnsRecords,omitempty"`
-	Metadata           commonclient.OptionalNil[OsSpecMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Hostname           optional.Optional[string]                            `json:"hostname,omitempty" yaml:"hostname,omitempty"`
+	LocalDomain        optional.Optional[string]                            `json:"localDomain,omitempty" yaml:"localDomain,omitempty"`
+	StandardDnsRecords optional.Optional[bool]                              `json:"standardDnsRecords,omitempty" yaml:"standardDnsRecords,omitempty"`
+	Metadata           optional.OptionalNil[OsSpecMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 }
 
 func (m *OsSpecOptionalResponse) GetHostname() *string {
@@ -85,7 +85,7 @@ func (m *OsSpecOptionalResponse) Clone() *OsSpecOptionalResponse {
 // Представление поля Metadata анонимного типа структуры OsSpec
 // Real OAPI model name: OsSpecMetadata
 type OsSpecMetadataOptionalResponse struct {
-	Attributes commonclient.Optional[map[string]string] `json:"attributes,omitempty" yaml:"attributes,omitempty"`
+	Attributes optional.Optional[map[string]string] `json:"attributes,omitempty" yaml:"attributes,omitempty"`
 }
 
 func (m *OsSpecMetadataOptionalResponse) GetAttributes() map[string]string {

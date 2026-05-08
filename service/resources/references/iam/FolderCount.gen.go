@@ -163,7 +163,7 @@ func (m *FolderCountID) UnmarshalJSON(b []byte) error {
 
 func (m *FolderCountID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("FolderCountRef")
+		return conv.NewDecodeToNilError("FolderCountID")
 	}
 
 	v, err := decode.Str(d)

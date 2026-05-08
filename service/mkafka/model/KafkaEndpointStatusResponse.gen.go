@@ -19,6 +19,8 @@ type KafkaEndpointStatusResponse struct {
 	Network vpc.NetworkRef `json:"network" yaml:"network"`
 	// Список адресов для первоначального подключения к кластеру внутри пользовательской (VPC).
 	BootstrapServers *string `json:"bootstrapServers,omitempty" yaml:"bootstrapServers,omitempty"`
+	// Адреса Schema Registry во внутренней сети (VPC).
+	SchemaRegistry *KafkaSchemaRegistryUrlsResponse `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`
 	// Порт для доступа к кластеру Kafka внутри пользовательской сети (VPC).
 	Port *int32 `json:"port,omitempty" yaml:"port,omitempty"`
 	// Список адресов в пользовательской сети, на которые "отображаются" брокеры.
@@ -63,6 +65,24 @@ func (m *KafkaEndpointStatusResponse) SetBootstrapServers(val *string) {
 func (m *KafkaEndpointStatusResponse) GetBootstrapServersOr(val string) string {
 	if m != nil && m.BootstrapServers != nil {
 		return *m.BootstrapServers
+	}
+	return val
+}
+
+func (m *KafkaEndpointStatusResponse) GetSchemaRegistry() *KafkaSchemaRegistryUrlsResponse {
+	if m != nil {
+		return m.SchemaRegistry
+	}
+	return nil
+}
+
+func (m *KafkaEndpointStatusResponse) SetSchemaRegistry(val *KafkaSchemaRegistryUrlsResponse) {
+	m.SchemaRegistry = val
+}
+
+func (m *KafkaEndpointStatusResponse) GetSchemaRegistryOr(val KafkaSchemaRegistryUrlsResponse) KafkaSchemaRegistryUrlsResponse {
+	if m != nil && m.SchemaRegistry != nil {
+		return *m.SchemaRegistry
 	}
 	return val
 }
@@ -118,6 +138,7 @@ func (m *KafkaEndpointStatusResponse) Clone() *KafkaEndpointStatusResponse {
 		cloneBootstrapServers := *m.BootstrapServers
 		clone.BootstrapServers = &cloneBootstrapServers
 	}
+	clone.SchemaRegistry = m.SchemaRegistry.Clone()
 	if m.Port != nil {
 		clonePort := *m.Port
 		clone.Port = &clonePort

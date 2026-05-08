@@ -5,17 +5,17 @@ package model
 import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateCertificateSpecRequest struct {
-	SelfManaged commonclient.OptionalNil[UpdateSelfManagedSpecRequest] `json:"selfManaged" yaml:"selfManaged"`
+	SelfManaged optional.OptionalNil[UpdateSelfManagedSpecRequest] `json:"selfManaged" yaml:"selfManaged"`
 }
 
 func (m *CertificateSpecRequest) AsUpdateModel() UpdateCertificateSpecRequest {
 	var u UpdateCertificateSpecRequest
 	if m.SelfManaged != nil {
-		u.SelfManaged = commonclient.NewOptionalNil(m.SelfManaged.AsUpdateModel())
+		u.SelfManaged = optional.NewOptionalNil(m.SelfManaged.AsUpdateModel())
 	}
 	return u
 }
@@ -49,8 +49,12 @@ func (m UpdateCertificateSpecRequest) HasChanges() bool {
 	return m.SelfManaged.Set
 }
 
-func (m *CertificateSpecRequest) diffSelfManaged(src *CertificateSpecRequest) commonclient.OptionalNil[UpdateSelfManagedSpecRequest] {
+func (m *CertificateSpecRequest) diffSelfManaged(src *CertificateSpecRequest) optional.OptionalNil[UpdateSelfManagedSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSelfManaged().Diff(src.GetSelfManaged())
-	return commonclient.NewDirectOptionalNil[UpdateSelfManagedSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateSelfManagedSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

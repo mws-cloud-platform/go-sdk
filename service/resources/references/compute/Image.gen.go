@@ -163,7 +163,7 @@ func (m *ImageID) UnmarshalJSON(b []byte) error {
 
 func (m *ImageID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ImageRef")
+		return conv.NewDecodeToNilError("ImageID")
 	}
 
 	v, err := decode.Str(d)

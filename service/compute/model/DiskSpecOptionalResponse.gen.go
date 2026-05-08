@@ -7,8 +7,8 @@ import (
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
@@ -18,17 +18,17 @@ type DiskSpecOptionalResponse struct {
 	// Зона доступности (ЦОД)
 	Zone string `json:"zone" yaml:"zone"`
 	// Размер диска
-	Size commonclient.Optional[bytesize.ByteSize] `json:"size,omitempty" yaml:"size,omitempty"`
+	Size optional.Optional[bytesize.ByteSize] `json:"size,omitempty" yaml:"size,omitempty"`
 	// Источник для создания диска
-	Source commonclient.OptionalNil[DiskSpecSourceOptionalResponse] `json:"source,omitempty" yaml:"source,omitempty"`
+	Source optional.OptionalNil[DiskSpecSourceOptionalResponse] `json:"source,omitempty" yaml:"source,omitempty"`
 	// ID типа диска
-	DiskType commonclient.Optional[compute.DiskTypeRef] `json:"diskType,omitempty" yaml:"diskType,omitempty"`
+	DiskType optional.Optional[compute.DiskTypeRef] `json:"diskType,omitempty" yaml:"diskType,omitempty"`
 	// Запрашиваемое пользователем количество операций ввода-вывода в секунду (IOPS)
-	Iops commonclient.Optional[Iops] `json:"iops,omitempty" yaml:"iops,omitempty"`
+	Iops optional.Optional[Iops] `json:"iops,omitempty" yaml:"iops,omitempty"`
 	// Размер блока диска
-	BlockSize commonclient.Optional[bytesize.ByteSize] `json:"blockSize,omitempty" yaml:"blockSize,omitempty"`
+	BlockSize optional.Optional[bytesize.ByteSize] `json:"blockSize,omitempty" yaml:"blockSize,omitempty"`
 	// Тип операционной системы
-	OsType commonclient.Optional[OsType] `json:"osType,omitempty" yaml:"osType,omitempty"`
+	OsType optional.Optional[OsType] `json:"osType,omitempty" yaml:"osType,omitempty"`
 }
 
 func (m *DiskSpecOptionalResponse) GetZone() string {
@@ -171,9 +171,13 @@ func (m *DiskSpecOptionalResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: DiskSpecSource
 type DiskSpecSourceOptionalResponse struct {
 	// ID образа
-	Image commonclient.Optional[compute.ImageRef] `json:"image,omitempty" yaml:"image,omitempty"`
+	Image optional.Optional[compute.ImageRef] `json:"image,omitempty" yaml:"image,omitempty"`
 	// ID снимка
-	Snapshot commonclient.Optional[compute.SnapshotRef] `json:"snapshot,omitempty" yaml:"snapshot,omitempty"`
+	//
+	// Deprecated: Отказываемся в пользу diskBackup
+	Snapshot optional.Optional[compute.SnapshotRef] `json:"snapshot,omitempty" yaml:"snapshot,omitempty"`
+	// ID резервной копии диска
+	DiskBackup optional.Optional[compute.DiskBackupRef] `json:"diskBackup,omitempty" yaml:"diskBackup,omitempty"`
 }
 
 func (m *DiskSpecSourceOptionalResponse) GetImage() *compute.ImageRef {
@@ -190,6 +194,7 @@ func (m *DiskSpecSourceOptionalResponse) GetImageOr(val compute.ImageRef) comput
 	return val
 }
 
+// Deprecated: Отказываемся в пользу diskBackup
 func (m *DiskSpecSourceOptionalResponse) GetSnapshot() *compute.SnapshotRef {
 	if m != nil && m.Snapshot.IsSet() {
 		return &m.Snapshot.Value
@@ -197,9 +202,24 @@ func (m *DiskSpecSourceOptionalResponse) GetSnapshot() *compute.SnapshotRef {
 	return nil
 }
 
+// Deprecated: Отказываемся в пользу diskBackup
 func (m *DiskSpecSourceOptionalResponse) GetSnapshotOr(val compute.SnapshotRef) compute.SnapshotRef {
 	if m != nil && m.Snapshot.IsSet() {
 		return m.Snapshot.Value
+	}
+	return val
+}
+
+func (m *DiskSpecSourceOptionalResponse) GetDiskBackup() *compute.DiskBackupRef {
+	if m != nil && m.DiskBackup.IsSet() {
+		return &m.DiskBackup.Value
+	}
+	return nil
+}
+
+func (m *DiskSpecSourceOptionalResponse) GetDiskBackupOr(val compute.DiskBackupRef) compute.DiskBackupRef {
+	if m != nil && m.DiskBackup.IsSet() {
+		return m.DiskBackup.Value
 	}
 	return val
 }
@@ -215,6 +235,9 @@ func (m *DiskSpecSourceOptionalResponse) Clone() *DiskSpecSourceOptionalResponse
 	}
 	if clone.Snapshot.IsSet() {
 		clone.Snapshot.Value = *m.Snapshot.Value.Clone()
+	}
+	if clone.DiskBackup.IsSet() {
+		clone.DiskBackup.Value = *m.DiskBackup.Value.Clone()
 	}
 	return &clone
 }
@@ -233,6 +256,12 @@ func (m *DiskSpecSourceOptionalResponse) Parse(ctx context.Context) error {
 	if m.Snapshot.IsSet() {
 		if err := m.Snapshot.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Snapshot", err)
+		}
+	}
+
+	if m.DiskBackup.IsSet() {
+		if err := m.DiskBackup.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("DiskBackup", err)
 		}
 	}
 

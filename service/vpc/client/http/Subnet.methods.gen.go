@@ -49,9 +49,9 @@ func (c *Subnet) listSubnetsInvoker(ctx context.Context, anyReq any, response co
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"subnets")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -144,11 +144,11 @@ func (c *Subnet) deleteSubnetInvoker(ctx context.Context, anyReq any, response c
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"subnets",
-		request.Subnet)
+		url.PathEscape(request.Subnet))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -221,11 +221,11 @@ func (c *Subnet) getSubnetInvoker(ctx context.Context, anyReq any, response comm
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"subnets",
-		request.Subnet)
+		url.PathEscape(request.Subnet))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -299,11 +299,11 @@ func (c *Subnet) upsertSubnetInvoker(ctx context.Context, anyReq any, response c
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"subnets",
-		request.Subnet)
+		url.PathEscape(request.Subnet))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -393,11 +393,11 @@ func (c *Subnet) createSubnetInvoker(ctx context.Context, anyReq any, response c
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"subnets",
-		request.Subnet)
+		url.PathEscape(request.Subnet))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -488,11 +488,11 @@ func (c *Subnet) updateSubnetInvoker(ctx context.Context, anyReq any, response c
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"subnets",
-		request.Subnet)
+		url.PathEscape(request.Subnet))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)

@@ -49,9 +49,9 @@ func (c *EgressNat) listEgressNatsInvoker(ctx context.Context, anyReq any, respo
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"egressNats")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -144,11 +144,11 @@ func (c *EgressNat) deleteEgressNatInvoker(ctx context.Context, anyReq any, resp
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"egressNats",
-		request.EgressNat)
+		url.PathEscape(request.EgressNat))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -221,11 +221,11 @@ func (c *EgressNat) getEgressNatInvoker(ctx context.Context, anyReq any, respons
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"egressNats",
-		request.EgressNat)
+		url.PathEscape(request.EgressNat))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -299,11 +299,11 @@ func (c *EgressNat) upsertEgressNatInvoker(ctx context.Context, anyReq any, resp
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"egressNats",
-		request.EgressNat)
+		url.PathEscape(request.EgressNat))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -393,11 +393,11 @@ func (c *EgressNat) createEgressNatInvoker(ctx context.Context, anyReq any, resp
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"egressNats",
-		request.EgressNat)
+		url.PathEscape(request.EgressNat))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -488,11 +488,11 @@ func (c *EgressNat) updateEgressNatInvoker(ctx context.Context, anyReq any, resp
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"egressNats",
-		request.EgressNat)
+		url.PathEscape(request.EgressNat))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)

@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func CommonRoleBindingFederationContextRequestToOptionalResponse(request *CommonRoleBindingFederationContextRequest) (*CommonRoleBindingFederationContextOptionalResponse, error) {
@@ -12,14 +12,14 @@ func CommonRoleBindingFederationContextRequestToOptionalResponse(request *Common
 	}
 	var response CommonRoleBindingFederationContextOptionalResponse
 	if request.Subject != nil {
-		response.Subject = commonclient.NewOptional(*request.Subject)
+		response.Subject = optional.NewOptional(*request.Subject)
 	}
 	if request.Attribute != nil {
 		tmpAttribute, err := CommonRoleBindingFederationContextAttributeRequestToOptionalResponse(request.Attribute)
 		if err != nil {
 			return nil, err
 		}
-		response.Attribute = commonclient.NewOptionalNil(*tmpAttribute)
+		response.Attribute = optional.NewOptionalNil(*tmpAttribute)
 	}
 	return &response, nil
 }

@@ -163,7 +163,7 @@ func (m *VpcHostID) UnmarshalJSON(b []byte) error {
 
 func (m *VpcHostID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("VpcHostRef")
+		return conv.NewDecodeToNilError("VpcHostID")
 	}
 
 	v, err := decode.Str(d)

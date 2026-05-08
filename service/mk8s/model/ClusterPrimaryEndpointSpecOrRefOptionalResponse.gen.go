@@ -5,17 +5,17 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 // ip-адрес внутри vpc
 // Real OAPI model name: ClusterPrimaryEndpointSpecOrRef
 type ClusterPrimaryEndpointSpecOrRefOptionalResponse struct {
-	Ref commonclient.Optional[vpc.AddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref optional.Optional[vpc.AddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Описание subnet пользователя, из которого будет выделен ip-адрес
-	Spec commonclient.OptionalNil[ClusterPrimaryEndpointSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec optional.OptionalNil[ClusterPrimaryEndpointSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *ClusterPrimaryEndpointSpecOrRefOptionalResponse) GetRef() *vpc.AddressRef {

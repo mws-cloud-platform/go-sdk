@@ -143,7 +143,7 @@ func (m *RegionID) UnmarshalJSON(b []byte) error {
 
 func (m *RegionID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("RegionRef")
+		return conv.NewDecodeToNilError("RegionID")
 	}
 
 	v, err := decode.Str(d)

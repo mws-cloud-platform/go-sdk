@@ -10,21 +10,22 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateKafkaClusterRequest struct {
-	Metadata commonclient.OptionalNil[UpdateKafkaClusterMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[UpdateKafkaClusterMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Параметры кластера.
-	Spec commonclient.Optional[UpdateKafkaClusterSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.Optional[UpdateKafkaClusterSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *KafkaClusterRequest) AsUpdateModel() UpdateKafkaClusterRequest {
 	var u UpdateKafkaClusterRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -82,17 +83,24 @@ func (m *UpdateKafkaClusterRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *KafkaClusterRequest) diffMetadata(src *KafkaClusterRequest) commonclient.OptionalNil[UpdateKafkaClusterMetadataRequest] {
+func (m *KafkaClusterRequest) diffMetadata(src *KafkaClusterRequest) optional.OptionalNil[UpdateKafkaClusterMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[UpdateKafkaClusterMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateKafkaClusterMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *KafkaClusterRequest) diffSpec(src *KafkaClusterRequest) commonclient.Optional[UpdateKafkaClusterSpecRequest] {
+func (m *KafkaClusterRequest) diffSpec(src *KafkaClusterRequest) optional.Optional[UpdateKafkaClusterSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateKafkaClusterSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateKafkaClusterSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 type UpdateKafkaClusterMetadataRequest struct {
@@ -102,10 +110,10 @@ type UpdateKafkaClusterMetadataRequest struct {
 func (m *KafkaClusterMetadataRequest) AsUpdateModel() UpdateKafkaClusterMetadataRequest {
 	var u UpdateKafkaClusterMetadataRequest
 	if m.DisplayName != nil {
-		u.DisplayName = commonclient.NewOptional(m.GetDisplayNameOr(""))
+		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = commonclient.NewOptional(func() []common.UpdateTypedUsageRequest {
+		u.Usages = optional.NewOptional(func() []common.UpdateTypedUsageRequest {
 			var tmp []common.UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
 				tmp = make([]common.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
@@ -117,10 +125,10 @@ func (m *KafkaClusterMetadataRequest) AsUpdateModel() UpdateKafkaClusterMetadata
 		}())
 	}
 	if m.Etag != nil {
-		u.Etag = commonclient.NewOptional(m.GetEtagOr(""))
+		u.Etag = optional.NewOptional(m.GetEtagOr(""))
 	}
 	if m.Description != nil {
-		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
+		u.Description = optional.NewOptional(m.GetDescriptionOr(""))
 	}
 	return u
 }
@@ -178,12 +186,12 @@ func (m *UpdateKafkaClusterMetadataRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *KafkaClusterMetadataRequest) diffDisplayName(src *KafkaClusterMetadataRequest) commonclient.Optional[string] {
+func (m *KafkaClusterMetadataRequest) diffDisplayName(src *KafkaClusterMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *KafkaClusterMetadataRequest) diffUsages(src *KafkaClusterMetadataRequest) commonclient.Optional[[]common.UpdateTypedUsageRequest] {
+func (m *KafkaClusterMetadataRequest) diffUsages(src *KafkaClusterMetadataRequest) optional.Optional[[]common.UpdateTypedUsageRequest] {
 	diffFunc := func(fromItem, toItem common.TypedUsageRequest, fromNil bool) common.UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -191,15 +199,18 @@ func (m *KafkaClusterMetadataRequest) diffUsages(src *KafkaClusterMetadataReques
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return commonclient.NewDirectOptional[[]common.UpdateTypedUsageRequest](value, hasChanges)
+	return optional.Optional[[]common.UpdateTypedUsageRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *KafkaClusterMetadataRequest) diffEtag(src *KafkaClusterMetadataRequest) commonclient.Optional[string] {
+func (m *KafkaClusterMetadataRequest) diffEtag(src *KafkaClusterMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetEtag(), m.GetEtag(), nilDiffers)
 }
 
-func (m *KafkaClusterMetadataRequest) diffDescription(src *KafkaClusterMetadataRequest) commonclient.Optional[string] {
+func (m *KafkaClusterMetadataRequest) diffDescription(src *KafkaClusterMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
 }

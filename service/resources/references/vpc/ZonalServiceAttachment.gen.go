@@ -203,7 +203,7 @@ func (m *ZonalServiceAttachmentID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalServiceAttachmentID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalServiceAttachmentRef")
+		return conv.NewDecodeToNilError("ZonalServiceAttachmentID")
 	}
 
 	v, err := decode.Str(d)

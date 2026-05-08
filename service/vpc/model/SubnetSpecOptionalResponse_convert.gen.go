@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func SubnetSpecRequestToOptionalResponse(request *SubnetSpecRequest) (*SubnetSpecOptionalResponse, error) {
@@ -17,7 +17,7 @@ func SubnetSpecRequestToOptionalResponse(request *SubnetSpecRequest) (*SubnetSpe
 		if err != nil {
 			return nil, err
 		}
-		response.DhcpOptions = commonclient.NewOptionalNil(*tmpDhcpOptions)
+		response.DhcpOptions = optional.NewOptionalNil(*tmpDhcpOptions)
 	}
 	return &response, nil
 }

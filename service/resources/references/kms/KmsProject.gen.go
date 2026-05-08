@@ -143,7 +143,7 @@ func (m *KmsProjectID) UnmarshalJSON(b []byte) error {
 
 func (m *KmsProjectID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("KmsProjectRef")
+		return conv.NewDecodeToNilError("KmsProjectID")
 	}
 
 	v, err := decode.Str(d)

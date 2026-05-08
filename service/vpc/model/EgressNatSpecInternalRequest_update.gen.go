@@ -9,17 +9,18 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateEgressNatSpecInternalRequest struct {
 	// Коллекция относительных ссылок на подсети, для которых будет осуществляться трансляция.
-	Subnets commonclient.Optional[[]vpc.SubnetRef] `json:"subnets" yaml:"subnets"`
+	Subnets optional.Optional[[]vpc.SubnetRef] `json:"subnets" yaml:"subnets"`
 }
 
 func (m *EgressNatSpecInternalRequest) AsUpdateModel() UpdateEgressNatSpecInternalRequest {
 	var u UpdateEgressNatSpecInternalRequest
-	u.Subnets = commonclient.NewOptional(m.GetSubnets())
+	u.Subnets = optional.NewOptional(m.GetSubnets())
 	return u
 }
 
@@ -66,7 +67,10 @@ func (m *UpdateEgressNatSpecInternalRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *EgressNatSpecInternalRequest) diffSubnets(src *EgressNatSpecInternalRequest) commonclient.Optional[[]vpc.SubnetRef] {
+func (m *EgressNatSpecInternalRequest) diffSubnets(src *EgressNatSpecInternalRequest) optional.Optional[[]vpc.SubnetRef] {
 	value, hasChanges := commonclient.GetChangesArrayPrimitive(src.GetSubnets(), m.GetSubnets())
-	return commonclient.NewDirectOptional[[]vpc.SubnetRef](value, hasChanges)
+	return optional.Optional[[]vpc.SubnetRef]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

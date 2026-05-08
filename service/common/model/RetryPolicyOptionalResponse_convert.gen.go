@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func RetryPolicyRequestToOptionalResponse(request *RetryPolicyRequest) (*RetryPolicyOptionalResponse, error) {
@@ -14,10 +14,10 @@ func RetryPolicyRequestToOptionalResponse(request *RetryPolicyRequest) (*RetryPo
 	response.RetryCount = request.RetryCount
 	response.RetryTimeout = request.RetryTimeout
 	if request.RetryTimeoutScale != nil {
-		response.RetryTimeoutScale = commonclient.NewOptional(*request.RetryTimeoutScale)
+		response.RetryTimeoutScale = optional.NewOptional(*request.RetryTimeoutScale)
 	}
 	if request.MaxRetryTimeout != nil {
-		response.MaxRetryTimeout = commonclient.NewOptional(*request.MaxRetryTimeout)
+		response.MaxRetryTimeout = optional.NewOptional(*request.MaxRetryTimeout)
 	}
 	return &response, nil
 }

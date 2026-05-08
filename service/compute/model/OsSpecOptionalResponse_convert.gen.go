@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func OsSpecRequestToOptionalResponse(request *OsSpecRequest) (*OsSpecOptionalResponse, error) {
@@ -12,20 +12,20 @@ func OsSpecRequestToOptionalResponse(request *OsSpecRequest) (*OsSpecOptionalRes
 	}
 	var response OsSpecOptionalResponse
 	if request.Hostname != nil {
-		response.Hostname = commonclient.NewOptional(*request.Hostname)
+		response.Hostname = optional.NewOptional(*request.Hostname)
 	}
 	if request.LocalDomain != nil {
-		response.LocalDomain = commonclient.NewOptional(*request.LocalDomain)
+		response.LocalDomain = optional.NewOptional(*request.LocalDomain)
 	}
 	if request.StandardDnsRecords != nil {
-		response.StandardDnsRecords = commonclient.NewOptional(*request.StandardDnsRecords)
+		response.StandardDnsRecords = optional.NewOptional(*request.StandardDnsRecords)
 	}
 	if request.Metadata != nil {
 		tmpMetadata, err := OsSpecMetadataRequestToOptionalResponse(request.Metadata)
 		if err != nil {
 			return nil, err
 		}
-		response.Metadata = commonclient.NewOptionalNil(*tmpMetadata)
+		response.Metadata = optional.NewOptionalNil(*tmpMetadata)
 	}
 	return &response, nil
 }
@@ -36,7 +36,7 @@ func OsSpecMetadataRequestToOptionalResponse(request *OsSpecMetadataRequest) (*O
 	}
 	var response OsSpecMetadataOptionalResponse
 	if request.Attributes != nil {
-		response.Attributes = commonclient.NewOptional(request.Attributes)
+		response.Attributes = optional.NewOptional(request.Attributes)
 	}
 	return &response, nil
 }

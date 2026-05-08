@@ -60,6 +60,11 @@ func (m *KafkaClusterSpecResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("maintenanceWindow")
 		m.MaintenanceWindow.Encode(e)
 	}
+
+	if m.SchemaRegistry != nil {
+		e.FieldStart("schemaRegistry")
+		m.SchemaRegistry.Encode(e)
+	}
 	return nil
 }
 
@@ -132,6 +137,18 @@ func (m *KafkaClusterSpecResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.MaintenanceWindow = &v
+			return nil
+		case "schemaRegistry":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v KafkaSchemaRegistrySpecResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SchemaRegistry = &v
 			return nil
 		default:
 			return d.Skip()

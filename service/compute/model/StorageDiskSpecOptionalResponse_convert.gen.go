@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func StorageDiskSpecRequestToOptionalResponse(request *StorageDiskSpecRequest) (*StorageDiskSpecOptionalResponse, error) {
@@ -12,20 +12,20 @@ func StorageDiskSpecRequestToOptionalResponse(request *StorageDiskSpecRequest) (
 	}
 	var response StorageDiskSpecOptionalResponse
 	if request.Size != nil {
-		response.Size = commonclient.NewOptional(*request.Size)
+		response.Size = optional.NewOptional(*request.Size)
 	}
 	if request.Source != nil {
 		tmpSource, err := StorageDiskSpecSourceRequestToOptionalResponse(request.Source)
 		if err != nil {
 			return nil, err
 		}
-		response.Source = commonclient.NewOptionalNil(*tmpSource)
+		response.Source = optional.NewOptionalNil(*tmpSource)
 	}
 	if request.DiskType != nil {
-		response.DiskType = commonclient.NewOptional(*request.DiskType)
+		response.DiskType = optional.NewOptional(*request.DiskType)
 	}
 	if request.Iops != nil {
-		response.Iops = commonclient.NewOptional(*request.Iops)
+		response.Iops = optional.NewOptional(*request.Iops)
 	}
 	return &response, nil
 }
@@ -36,7 +36,7 @@ func StorageDiskSpecSourceRequestToOptionalResponse(request *StorageDiskSpecSour
 	}
 	var response StorageDiskSpecSourceOptionalResponse
 	if request.Image != nil {
-		response.Image = commonclient.NewOptional(*request.Image)
+		response.Image = optional.NewOptional(*request.Image)
 	}
 	return &response, nil
 }

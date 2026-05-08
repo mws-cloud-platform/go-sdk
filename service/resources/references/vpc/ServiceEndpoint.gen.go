@@ -183,7 +183,7 @@ func (m *ServiceEndpointID) UnmarshalJSON(b []byte) error {
 
 func (m *ServiceEndpointID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ServiceEndpointRef")
+		return conv.NewDecodeToNilError("ServiceEndpointID")
 	}
 
 	v, err := decode.Str(d)

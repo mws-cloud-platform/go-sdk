@@ -9,6 +9,11 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Кластер Managed Kafka — это группа узлов (брокеров), объединенных для приема,
+// хранения и передачи потоков данных с помощью Apache Kafka. В облачной
+// инфраструктуре кластер — единый интерфейс для управления потоками данных в
+// реальном времени
+//
 // Real OAPI model name: KafkaCluster
 type KafkaClusterRequest struct {
 	Metadata *KafkaClusterMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`

@@ -7,8 +7,8 @@ import (
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: ClusterSpec
@@ -81,7 +81,7 @@ type ClusterSpecNetworkOptionalResponse struct {
 	// ip-адрес внутри vpc
 	PrimaryEndpoint ClusterPrimaryEndpointSpecOrRefOptionalResponse `json:"primaryEndpoint" yaml:"primaryEndpoint"`
 	// внешний ip-адрес
-	PublicEndpoint commonclient.OptionalNil[ClusterPublicEndpointSpecOrRefOptionalResponse] `json:"publicEndpoint,omitempty" yaml:"publicEndpoint,omitempty"`
+	PublicEndpoint optional.OptionalNil[ClusterPublicEndpointSpecOrRefOptionalResponse] `json:"publicEndpoint,omitempty" yaml:"publicEndpoint,omitempty"`
 	// необходим ip-range v4
 	PodsCidr cidraddress.CIDR4Address `json:"podsCidr" yaml:"podsCidr"`
 	// необходим ip-range v4

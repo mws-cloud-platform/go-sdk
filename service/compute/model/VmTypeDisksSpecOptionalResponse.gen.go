@@ -3,14 +3,14 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Спецификация сетевых дисков, которые доступны для ВМ указанного типа.
 // Real OAPI model name: VmTypeDisksSpec
 type VmTypeDisksSpecOptionalResponse struct {
 	// Максимальное количество операций ввода-вывода в секунду (IOPS) на ВМ. Зависит от количества виртуальных процессорных ядер (vCPU) у ВМ
-	TotalIops commonclient.Optional[int32] `json:"totalIops,omitempty,string" yaml:"totalIops,omitempty"`
+	TotalIops optional.Optional[int32] `json:"totalIops,omitempty,string" yaml:"totalIops,omitempty"`
 }
 
 func (m *VmTypeDisksSpecOptionalResponse) GetTotalIops() *int32 {

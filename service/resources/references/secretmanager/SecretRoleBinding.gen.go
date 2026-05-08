@@ -183,7 +183,7 @@ func (m *SecretRoleBindingID) UnmarshalJSON(b []byte) error {
 
 func (m *SecretRoleBindingID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("SecretRoleBindingRef")
+		return conv.NewDecodeToNilError("SecretRoleBindingID")
 	}
 
 	v, err := decode.Str(d)

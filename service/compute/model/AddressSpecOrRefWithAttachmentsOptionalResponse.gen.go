@@ -5,15 +5,15 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: AddressSpecOrRefWithAttachments
 type AddressSpecOrRefWithAttachmentsOptionalResponse struct {
 	Address AddressSpecOrRefOptionalResponse `json:"address" yaml:"address"`
 	// NAT правило для связи внутреннего адреса с внешним адресом
-	OneToOneNat commonclient.OptionalNil[ComputeOneToOneNatSpecOptionalResponse] `json:"oneToOneNat,omitempty" yaml:"oneToOneNat,omitempty"`
+	OneToOneNat optional.OptionalNil[ComputeOneToOneNatSpecOptionalResponse] `json:"oneToOneNat,omitempty" yaml:"oneToOneNat,omitempty"`
 }
 
 func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) GetAddress() AddressSpecOrRefOptionalResponse {

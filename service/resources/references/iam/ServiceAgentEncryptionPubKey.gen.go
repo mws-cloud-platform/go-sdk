@@ -183,7 +183,7 @@ func (m *ServiceAgentEncryptionPubKeyID) UnmarshalJSON(b []byte) error {
 
 func (m *ServiceAgentEncryptionPubKeyID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ServiceAgentEncryptionPubKeyRef")
+		return conv.NewDecodeToNilError("ServiceAgentEncryptionPubKeyID")
 	}
 
 	v, err := decode.Str(d)

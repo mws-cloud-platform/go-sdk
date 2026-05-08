@@ -49,9 +49,9 @@ func (c *Route) listRoutesInvoker(ctx context.Context, anyReq any, response comm
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"routes")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -144,11 +144,11 @@ func (c *Route) deleteRouteInvoker(ctx context.Context, anyReq any, response com
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"routes",
-		request.Route)
+		url.PathEscape(request.Route))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -221,11 +221,11 @@ func (c *Route) getRouteInvoker(ctx context.Context, anyReq any, response common
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"routes",
-		request.Route)
+		url.PathEscape(request.Route))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -299,11 +299,11 @@ func (c *Route) upsertRouteInvoker(ctx context.Context, anyReq any, response com
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"routes",
-		request.Route)
+		url.PathEscape(request.Route))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -393,11 +393,11 @@ func (c *Route) createRouteInvoker(ctx context.Context, anyReq any, response com
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"routes",
-		request.Route)
+		url.PathEscape(request.Route))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -488,11 +488,11 @@ func (c *Route) updateRouteInvoker(ctx context.Context, anyReq any, response com
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"routes",
-		request.Route)
+		url.PathEscape(request.Route))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)

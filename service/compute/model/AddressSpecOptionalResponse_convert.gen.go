@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func AddressSpecRequestToOptionalResponse(request *AddressSpecRequest) (*AddressSpecOptionalResponse, error) {
@@ -13,7 +13,7 @@ func AddressSpecRequestToOptionalResponse(request *AddressSpecRequest) (*Address
 	var response AddressSpecOptionalResponse
 	response.Subnet = request.Subnet
 	if request.IpAddress != nil {
-		response.IpAddress = commonclient.NewOptional(*request.IpAddress)
+		response.IpAddress = optional.NewOptional(*request.IpAddress)
 	}
 	for _, e := range request.Dns {
 		tmp, err := AddressDnsSpecRequestToOptionalResponse(&e)

@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func RouteNextHopRequestToOptionalResponse(request *RouteNextHopRequest) (*RouteNextHopOptionalResponse, error) {
@@ -12,14 +12,14 @@ func RouteNextHopRequestToOptionalResponse(request *RouteNextHopRequest) (*Route
 	}
 	var response RouteNextHopOptionalResponse
 	if request.NatGateway != nil {
-		response.NatGateway = commonclient.NewOptional(*request.NatGateway)
+		response.NatGateway = optional.NewOptional(*request.NatGateway)
 	}
 	if request.Address != nil {
 		tmpAddress, err := RouteNextHopAddressRequestToOptionalResponse(request.Address)
 		if err != nil {
 			return nil, err
 		}
-		response.Address = commonclient.NewOptionalNil(*tmpAddress)
+		response.Address = optional.NewOptionalNil(*tmpAddress)
 	}
 	return &response, nil
 }

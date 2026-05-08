@@ -49,7 +49,7 @@ func (c *Network) listNetworksInvoker(ctx context.Context, anyReq any, response 
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -141,9 +141,9 @@ func (c *Network) deleteNetworkInvoker(ctx context.Context, anyReq any, response
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network)
+		url.PathEscape(request.Network))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -216,9 +216,9 @@ func (c *Network) getNetworkInvoker(ctx context.Context, anyReq any, response co
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network)
+		url.PathEscape(request.Network))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -291,9 +291,9 @@ func (c *Network) upsertNetworkInvoker(ctx context.Context, anyReq any, response
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network)
+		url.PathEscape(request.Network))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -382,9 +382,9 @@ func (c *Network) createNetworkInvoker(ctx context.Context, anyReq any, response
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network)
+		url.PathEscape(request.Network))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -474,9 +474,9 @@ func (c *Network) updateNetworkInvoker(ctx context.Context, anyReq any, response
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network)
+		url.PathEscape(request.Network))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)

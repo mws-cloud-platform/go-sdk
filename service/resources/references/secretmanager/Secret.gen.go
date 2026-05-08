@@ -163,7 +163,7 @@ func (m *SecretID) UnmarshalJSON(b []byte) error {
 
 func (m *SecretID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("SecretRef")
+		return conv.NewDecodeToNilError("SecretID")
 	}
 
 	v, err := decode.Str(d)

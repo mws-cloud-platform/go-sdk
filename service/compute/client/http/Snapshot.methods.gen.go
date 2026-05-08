@@ -16,6 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/compute/client"
 )
 
+// Deprecated: Отказываемся в пользу listDiskBackups.
 // ListSnapshots позволяет получить список снимков.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -49,7 +50,7 @@ func (c *Snapshot) listSnapshotsInvoker(ctx context.Context, anyReq any, respons
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"snapshots")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -108,6 +109,7 @@ func (c *Snapshot) headerListSnapshots(req *http.Request, request *client.ListSn
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
+// Deprecated: Отказываемся в пользу deleteDiskBackup.
 // DeleteSnapshot позволяет удалить снимок.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -141,9 +143,9 @@ func (c *Snapshot) deleteSnapshotInvoker(ctx context.Context, anyReq any, respon
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"snapshots",
-		request.Snapshot)
+		url.PathEscape(request.Snapshot))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -193,6 +195,7 @@ func (c *Snapshot) headerDeleteSnapshot(req *http.Request, request *client.Delet
 	}
 }
 
+// Deprecated: Отказываемся в пользу getDiskBackup.
 // GetSnapshot позволяет получить информацию о снимке.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -226,9 +229,9 @@ func (c *Snapshot) getSnapshotInvoker(ctx context.Context, anyReq any, response 
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"snapshots",
-		request.Snapshot)
+		url.PathEscape(request.Snapshot))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "snapshot", request.Snapshot)
@@ -278,6 +281,7 @@ func (c *Snapshot) headerGetSnapshot(req *http.Request, request *client.GetSnaps
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
+// Deprecated: Отказываемся в пользу upsertDiskBackup.
 // UpsertSnapshot позволяет создать или изменить снимок.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -311,9 +315,9 @@ func (c *Snapshot) upsertSnapshotInvoker(ctx context.Context, anyReq any, respon
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"snapshots",
-		request.Snapshot)
+		url.PathEscape(request.Snapshot))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "snapshot", request.Snapshot)
@@ -368,6 +372,7 @@ func (c *Snapshot) headerUpsertSnapshot(req *http.Request, request *client.Upser
 	}
 }
 
+// Deprecated: Отказываемся в пользу upsertDiskBackup.
 // CreateSnapshot позволяет создать или изменить снимок.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
@@ -402,9 +407,9 @@ func (c *Snapshot) createSnapshotInvoker(ctx context.Context, anyReq any, respon
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"snapshots",
-		request.Snapshot)
+		url.PathEscape(request.Snapshot))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "snapshot", request.Snapshot)
@@ -460,6 +465,7 @@ func (c *Snapshot) headerCreateSnapshot(req *http.Request, request *client.Upser
 	}
 }
 
+// Deprecated: Отказываемся в пользу upsertDiskBackup.
 // UpdateSnapshot позволяет создать или изменить снимок.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
@@ -494,9 +500,9 @@ func (c *Snapshot) updateSnapshotInvoker(ctx context.Context, anyReq any, respon
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"snapshots",
-		request.Snapshot)
+		url.PathEscape(request.Snapshot))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "snapshot", request.Snapshot)

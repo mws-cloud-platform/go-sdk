@@ -8,15 +8,16 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateRouteDestinationRequest struct {
-	Spec commonclient.Optional[UpdateRouteDestinationSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.Optional[UpdateRouteDestinationSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *RouteDestinationRequest) AsUpdateModel() UpdateRouteDestinationRequest {
 	var u UpdateRouteDestinationRequest
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -47,21 +48,24 @@ func (m UpdateRouteDestinationRequest) HasChanges() bool {
 	return m.Spec.Set
 }
 
-func (m *RouteDestinationRequest) diffSpec(src *RouteDestinationRequest) commonclient.Optional[UpdateRouteDestinationSpecRequest] {
+func (m *RouteDestinationRequest) diffSpec(src *RouteDestinationRequest) optional.Optional[UpdateRouteDestinationSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateRouteDestinationSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateRouteDestinationSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 type UpdateRouteDestinationSpecRequest struct {
 	// Набор IP-Адресов подсетей назначения
-	Cidrs commonclient.Optional[[]cidraddress.CIDRAddress] `json:"cidrs" yaml:"cidrs"`
+	Cidrs optional.Optional[[]cidraddress.CIDRAddress] `json:"cidrs" yaml:"cidrs"`
 }
 
 func (m *RouteDestinationSpecRequest) AsUpdateModel() UpdateRouteDestinationSpecRequest {
 	var u UpdateRouteDestinationSpecRequest
-	u.Cidrs = commonclient.NewOptional(m.GetCidrs())
+	u.Cidrs = optional.NewOptional(m.GetCidrs())
 	return u
 }
 
@@ -92,7 +96,10 @@ func (m UpdateRouteDestinationSpecRequest) HasChanges() bool {
 	return m.Cidrs.Set
 }
 
-func (m *RouteDestinationSpecRequest) diffCidrs(src *RouteDestinationSpecRequest) commonclient.Optional[[]cidraddress.CIDRAddress] {
+func (m *RouteDestinationSpecRequest) diffCidrs(src *RouteDestinationSpecRequest) optional.Optional[[]cidraddress.CIDRAddress] {
 	value, hasChanges := commonclient.GetChangesArrayEquatableIface(src.GetCidrs(), m.GetCidrs())
-	return commonclient.NewDirectOptional[[]cidraddress.CIDRAddress](value, hasChanges)
+	return optional.Optional[[]cidraddress.CIDRAddress]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

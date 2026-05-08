@@ -5,23 +5,23 @@ package model
 import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateFirewallRuleRequest struct {
 	// Метаданные правила Firewall'а.
-	Metadata commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Спецификация правила Firewall'а.
-	Spec commonclient.Optional[UpdateFirewallRuleSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.Optional[UpdateFirewallRuleSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *FirewallRuleRequest) AsUpdateModel() UpdateFirewallRuleRequest {
 	var u UpdateFirewallRuleRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -59,15 +59,22 @@ func (m UpdateFirewallRuleRequest) HasChanges() bool {
 		m.Spec.Set
 }
 
-func (m *FirewallRuleRequest) diffMetadata(src *FirewallRuleRequest) commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *FirewallRuleRequest) diffMetadata(src *FirewallRuleRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[common.UpdateCommonTypedResourceMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *FirewallRuleRequest) diffSpec(src *FirewallRuleRequest) commonclient.Optional[UpdateFirewallRuleSpecRequest] {
+func (m *FirewallRuleRequest) diffSpec(src *FirewallRuleRequest) optional.Optional[UpdateFirewallRuleSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateFirewallRuleSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateFirewallRuleSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

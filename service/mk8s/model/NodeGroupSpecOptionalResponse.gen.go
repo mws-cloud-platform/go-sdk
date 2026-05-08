@@ -7,8 +7,8 @@ import (
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
@@ -21,12 +21,14 @@ type NodeGroupSpecOptionalResponse struct {
 	// тип VM
 	VmType NodeGroupSpecVmTypeOptionalResponse `json:"vmType" yaml:"vmType"`
 	// размер хранилища для image-ей и контейнеров. Размер в Gb
-	ImageStorageSize commonclient.Optional[bytesize.ByteSize] `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
+	ImageStorageSize optional.Optional[bytesize.ByteSize] `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища image-ей и контейнеров
+	ImageStorageIops optional.Optional[int64] `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
 	// Необходимо заполнить одно из полей fixed или auto scale
-	Scale          NodeGroupSpecScaleOptionalResponse                        `json:"scale" yaml:"scale"`
-	Labels         commonclient.OptionalNil[[]NodeLabelSpecOptionalResponse] `json:"labels,omitempty" yaml:"labels,omitempty"`
-	Taints         commonclient.OptionalNil[[]NodeTaintSpecOptionalResponse] `json:"taints,omitempty" yaml:"taints,omitempty"`
-	VersionControl NodeGroupVersionControlSpecOptionalResponse               `json:"versionControl" yaml:"versionControl"`
+	Scale          NodeGroupSpecScaleOptionalResponse                    `json:"scale" yaml:"scale"`
+	Labels         optional.OptionalNil[[]NodeLabelSpecOptionalResponse] `json:"labels,omitempty" yaml:"labels,omitempty"`
+	Taints         optional.OptionalNil[[]NodeTaintSpecOptionalResponse] `json:"taints,omitempty" yaml:"taints,omitempty"`
+	VersionControl NodeGroupVersionControlSpecOptionalResponse           `json:"versionControl" yaml:"versionControl"`
 	// Стратегия перекатки (rollout) worker нод в нод группе
 	RolloutStrategy NodeGroupSpecRolloutStrategyOptionalResponse `json:"rolloutStrategy" yaml:"rolloutStrategy"`
 	// serviceAccount необходим для поддержки функций:
@@ -78,6 +80,20 @@ func (m *NodeGroupSpecOptionalResponse) GetImageStorageSize() *bytesize.ByteSize
 func (m *NodeGroupSpecOptionalResponse) GetImageStorageSizeOr(val bytesize.ByteSize) bytesize.ByteSize {
 	if m != nil && m.ImageStorageSize.IsSet() {
 		return m.ImageStorageSize.Value
+	}
+	return val
+}
+
+func (m *NodeGroupSpecOptionalResponse) GetImageStorageIops() *int64 {
+	if m != nil && m.ImageStorageIops.IsSet() {
+		return &m.ImageStorageIops.Value
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecOptionalResponse) GetImageStorageIopsOr(val int64) int64 {
+	if m != nil && m.ImageStorageIops.IsSet() {
+		return m.ImageStorageIops.Value
 	}
 	return val
 }
@@ -207,8 +223,8 @@ func (m *NodeGroupSpecOptionalResponse) Parse(ctx context.Context) error {
 // Представление поля RolloutStrategy анонимного типа структуры NodeGroupSpec
 // Real OAPI model name: NodeGroupSpecRolloutStrategy
 type NodeGroupSpecRolloutStrategyOptionalResponse struct {
-	MaxSurge       commonclient.Optional[int] `json:"maxSurge,omitempty" yaml:"maxSurge,omitempty"`
-	MaxUnavailable commonclient.Optional[int] `json:"maxUnavailable,omitempty" yaml:"maxUnavailable,omitempty"`
+	MaxSurge       optional.Optional[int] `json:"maxSurge,omitempty" yaml:"maxSurge,omitempty"`
+	MaxUnavailable optional.Optional[int] `json:"maxUnavailable,omitempty" yaml:"maxUnavailable,omitempty"`
 }
 
 func (m *NodeGroupSpecRolloutStrategyOptionalResponse) GetMaxSurge() *int {
@@ -252,8 +268,8 @@ func (m *NodeGroupSpecRolloutStrategyOptionalResponse) Clone() *NodeGroupSpecRol
 // Real OAPI model name: NodeGroupSpecScale
 type NodeGroupSpecScaleOptionalResponse struct {
 	// Количество узлов в node group
-	Fixed       commonclient.Optional[int]                                              `json:"fixed,omitempty" yaml:"fixed,omitempty"`
-	Autoscaling commonclient.OptionalNil[NodeGroupSpecScaleAutoscalingOptionalResponse] `json:"autoscaling,omitempty" yaml:"autoscaling,omitempty"`
+	Fixed       optional.Optional[int]                                              `json:"fixed,omitempty" yaml:"fixed,omitempty"`
+	Autoscaling optional.OptionalNil[NodeGroupSpecScaleAutoscalingOptionalResponse] `json:"autoscaling,omitempty" yaml:"autoscaling,omitempty"`
 }
 
 func (m *NodeGroupSpecScaleOptionalResponse) GetFixed() *int {
@@ -378,7 +394,7 @@ func (m *NodeGroupSpecServiceAccountOptionalResponse) Parse(ctx context.Context)
 // Представление поля Subnet анонимного типа структуры NodeGroupSpec
 // Real OAPI model name: NodeGroupSpecSubnet
 type NodeGroupSpecSubnetOptionalResponse struct {
-	Ref commonclient.Optional[vpc.SubnetRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref optional.Optional[vpc.SubnetRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 }
 
 func (m *NodeGroupSpecSubnetOptionalResponse) GetRef() *vpc.SubnetRef {
@@ -424,7 +440,7 @@ func (m *NodeGroupSpecSubnetOptionalResponse) Parse(ctx context.Context) error {
 // Представление поля VmType анонимного типа структуры NodeGroupSpec
 // Real OAPI model name: NodeGroupSpecVmType
 type NodeGroupSpecVmTypeOptionalResponse struct {
-	Ref commonclient.Optional[compute.VmTypeRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref optional.Optional[compute.VmTypeRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 }
 
 func (m *NodeGroupSpecVmTypeOptionalResponse) GetRef() *compute.VmTypeRef {

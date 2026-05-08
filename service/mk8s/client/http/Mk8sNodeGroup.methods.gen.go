@@ -49,9 +49,9 @@ func (c *Mk8sNodeGroup) listMk8sNodeGroupsInvoker(ctx context.Context, anyReq an
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.ClusterName,
+		url.PathEscape(request.ClusterName),
 		"nodeGroups")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -144,11 +144,11 @@ func (c *Mk8sNodeGroup) deleteMk8sNodeGroupInvoker(ctx context.Context, anyReq a
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.ClusterName,
+		url.PathEscape(request.ClusterName),
 		"nodeGroups",
-		request.NodeGroupName)
+		url.PathEscape(request.NodeGroupName))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -221,11 +221,11 @@ func (c *Mk8sNodeGroup) getMk8sNodeGroupInvoker(ctx context.Context, anyReq any,
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.ClusterName,
+		url.PathEscape(request.ClusterName),
 		"nodeGroups",
-		request.NodeGroupName)
+		url.PathEscape(request.NodeGroupName))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "clusterName", request.ClusterName)
@@ -299,11 +299,11 @@ func (c *Mk8sNodeGroup) upsertMk8sNodeGroupInvoker(ctx context.Context, anyReq a
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.ClusterName,
+		url.PathEscape(request.ClusterName),
 		"nodeGroups",
-		request.NodeGroupName)
+		url.PathEscape(request.NodeGroupName))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "clusterName", request.ClusterName)
@@ -393,11 +393,11 @@ func (c *Mk8sNodeGroup) createMk8sNodeGroupInvoker(ctx context.Context, anyReq a
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.ClusterName,
+		url.PathEscape(request.ClusterName),
 		"nodeGroups",
-		request.NodeGroupName)
+		url.PathEscape(request.NodeGroupName))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "clusterName", request.ClusterName)
@@ -488,11 +488,11 @@ func (c *Mk8sNodeGroup) updateMk8sNodeGroupInvoker(ctx context.Context, anyReq a
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.ClusterName,
+		url.PathEscape(request.ClusterName),
 		"nodeGroups",
-		request.NodeGroupName)
+		url.PathEscape(request.NodeGroupName))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "clusterName", request.ClusterName)

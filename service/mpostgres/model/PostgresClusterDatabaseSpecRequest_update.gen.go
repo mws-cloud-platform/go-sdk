@@ -10,26 +10,27 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/mpostgres"
 )
 
 type UpdatePostgresClusterDatabaseSpecRequest struct {
 	// Имя владельца
-	Owner commonclient.Optional[mpostgres.PostgresClusterUserRef] `json:"owner" yaml:"owner"`
+	Owner optional.Optional[mpostgres.PostgresClusterUserRef] `json:"owner" yaml:"owner"`
 	// Защита от удаления
-	DeletionProtection commonclient.Optional[bool] `json:"deletionProtection" yaml:"deletionProtection"`
+	DeletionProtection optional.Optional[bool] `json:"deletionProtection" yaml:"deletionProtection"`
 	// Список расширений
-	Extensions commonclient.Optional[[]UpdatePostgresExtensionSpecRequest] `json:"extensions" yaml:"extensions"`
+	Extensions optional.Optional[[]UpdatePostgresExtensionSpecRequest] `json:"extensions" yaml:"extensions"`
 }
 
 func (m *PostgresClusterDatabaseSpecRequest) AsUpdateModel() UpdatePostgresClusterDatabaseSpecRequest {
 	var u UpdatePostgresClusterDatabaseSpecRequest
-	u.Owner = commonclient.NewOptional(m.GetOwner())
+	u.Owner = optional.NewOptional(m.GetOwner())
 	if m.DeletionProtection != nil {
-		u.DeletionProtection = commonclient.NewOptional(m.GetDeletionProtectionOr(false))
+		u.DeletionProtection = optional.NewOptional(m.GetDeletionProtectionOr(false))
 	}
 	if m.Extensions != nil {
-		u.Extensions = commonclient.NewOptional(func() []UpdatePostgresExtensionSpecRequest {
+		u.Extensions = optional.NewOptional(func() []UpdatePostgresExtensionSpecRequest {
 			var tmp []UpdatePostgresExtensionSpecRequest
 			if m.GetExtensions() != nil {
 				tmp = make([]UpdatePostgresExtensionSpecRequest, 0, len(m.GetExtensions()))
@@ -94,17 +95,17 @@ func (m *UpdatePostgresClusterDatabaseSpecRequest) Parse(ctx context.Context) er
 	return nil
 }
 
-func (m *PostgresClusterDatabaseSpecRequest) diffOwner(src *PostgresClusterDatabaseSpecRequest) commonclient.Optional[mpostgres.PostgresClusterUserRef] {
+func (m *PostgresClusterDatabaseSpecRequest) diffOwner(src *PostgresClusterDatabaseSpecRequest) optional.Optional[mpostgres.PostgresClusterUserRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetOwner(), m.GetOwner(), nilDiffers)
 }
 
-func (m *PostgresClusterDatabaseSpecRequest) diffDeletionProtection(src *PostgresClusterDatabaseSpecRequest) commonclient.Optional[bool] {
+func (m *PostgresClusterDatabaseSpecRequest) diffDeletionProtection(src *PostgresClusterDatabaseSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDeletionProtection(), m.GetDeletionProtection(), nilDiffers)
 }
 
-func (m *PostgresClusterDatabaseSpecRequest) diffExtensions(src *PostgresClusterDatabaseSpecRequest) commonclient.Optional[[]UpdatePostgresExtensionSpecRequest] {
+func (m *PostgresClusterDatabaseSpecRequest) diffExtensions(src *PostgresClusterDatabaseSpecRequest) optional.Optional[[]UpdatePostgresExtensionSpecRequest] {
 	diffFunc := func(fromItem, toItem PostgresExtensionSpecRequest, fromNil bool) UpdatePostgresExtensionSpecRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -112,5 +113,8 @@ func (m *PostgresClusterDatabaseSpecRequest) diffExtensions(src *PostgresCluster
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetExtensions(), m.GetExtensions(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdatePostgresExtensionSpecRequest](value, hasChanges)
+	return optional.Optional[[]UpdatePostgresExtensionSpecRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

@@ -6,8 +6,8 @@ import (
 	"context"
 	"encoding/json"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -17,9 +17,9 @@ type RouteNextHopOptionalResponse struct {
 	// Локальная сеть.
 	NetworkLocal json.RawMessage `json:"networkLocal,omitempty" yaml:"networkLocal,omitempty"`
 	// NAT шлюз.
-	NatGateway commonclient.Optional[vpc.NatGatewayRef] `json:"natGateway,omitempty" yaml:"natGateway,omitempty"`
+	NatGateway optional.Optional[vpc.NatGatewayRef] `json:"natGateway,omitempty" yaml:"natGateway,omitempty"`
 	// Адрес.
-	Address commonclient.OptionalNil[RouteNextHopAddressOptionalResponse] `json:"address,omitempty" yaml:"address,omitempty"`
+	Address optional.OptionalNil[RouteNextHopAddressOptionalResponse] `json:"address,omitempty" yaml:"address,omitempty"`
 }
 
 func (m *RouteNextHopOptionalResponse) GetNetworkLocal() json.RawMessage {

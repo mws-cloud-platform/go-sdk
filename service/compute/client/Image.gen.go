@@ -8,10 +8,10 @@ import (
 
 	"github.com/go-faster/jx"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
@@ -187,7 +187,7 @@ func (m *ListImagesResponse) SetErrorWrapper(f func(err error) error) {
 type ListImagesResponse200 struct {
 	Items []model.ImageOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken commonclient.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ListImagesResponse200) GetItems() []model.ImageOptionalResponse {

@@ -9,6 +9,7 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Маршрут — это набор правил, определяющих путь пакетов от источника к получателю
 // Real OAPI model name: Route
 type RouteRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.

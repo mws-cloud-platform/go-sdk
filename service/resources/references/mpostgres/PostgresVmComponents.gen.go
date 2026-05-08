@@ -4,6 +4,8 @@ package mpostgres
 
 import (
 	"context"
+	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -17,9 +19,12 @@ import (
 )
 
 var (
-	PostgresVmComponentsRefTemplate = resparsers.Template{
+	PostgresVmComponentsVmComponentValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	PostgresVmComponentsClusterValidatePattern     = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,45}[a-z0-9])?$`)
+	PostgresVmComponentsRefTemplate                = resparsers.Template{
 		{
 			Value:       "vmComponent",
+			Pattern:     PostgresVmComponentsVmComponentValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -30,6 +35,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     PostgresVmComponentsClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -56,12 +62,28 @@ var (
 	}
 )
 
-func NewPostgresVmComponentsID(project, cluster, vmComponent string) PostgresVmComponentsID {
+func NewPostgresVmComponentsID(project, cluster, vmComponent string) (PostgresVmComponentsID, error) {
+	if match := PostgresVmComponentsVmComponentValidatePattern.Match([]byte(vmComponent)); !match {
+		return PostgresVmComponentsID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "vmComponent", vmComponent)
+	}
+	if match := PostgresVmComponentsClusterValidatePattern.Match([]byte(cluster)); !match {
+		return PostgresVmComponentsID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
+	}
 	m := PostgresVmComponentsID{
 		vmComponent: vmComponent,
 		cluster:     cluster,
 		project:     project,
 	}
+	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustPostgresVmComponentsID(project, cluster, vmComponent string) PostgresVmComponentsID {
+	m, err := NewPostgresVmComponentsID(project, cluster, vmComponent)
+	if err != nil {
+		panic(err)
+	}
+
 	m.path = m.ID()
 	return m
 }
@@ -183,7 +205,7 @@ func (m *PostgresVmComponentsID) UnmarshalJSON(b []byte) error {
 
 func (m *PostgresVmComponentsID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("PostgresVmComponentsRef")
+		return conv.NewDecodeToNilError("PostgresVmComponentsID")
 	}
 
 	v, err := decode.Str(d)
@@ -195,13 +217,22 @@ func (m *PostgresVmComponentsID) Decode(d *jx.Decoder) error {
 	return nil
 }
 
-func NewPostgresVmComponentsRef(project, cluster, vmComponent string) PostgresVmComponentsRef {
+func NewPostgresVmComponentsRef(project, cluster, vmComponent string) (PostgresVmComponentsRef, error) {
+	id, err := NewPostgresVmComponentsID(project, cluster, vmComponent)
+	if err != nil {
+		return PostgresVmComponentsRef{}, err
+	}
+
 	m := PostgresVmComponentsRef{
-		id: PostgresVmComponentsID{
-			vmComponent: vmComponent,
-			cluster:     cluster,
-			project:     project,
-		},
+		id: id,
+	}
+	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustPostgresVmComponentsRef(project, cluster, vmComponent string) PostgresVmComponentsRef {
+	m := PostgresVmComponentsRef{
+		id: NewMustPostgresVmComponentsID(project, cluster, vmComponent),
 	}
 	m.id.path = m.absolutePath()
 	return m

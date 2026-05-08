@@ -49,9 +49,9 @@ func (c *Topic) listKafkaTopicsInvoker(ctx context.Context, anyReq any, response
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"topics")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -147,11 +147,11 @@ func (c *Topic) deleteKafkaTopicInvoker(ctx context.Context, anyReq any, respons
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"topics",
-		request.Topic)
+		url.PathEscape(request.Topic))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -234,11 +234,11 @@ func (c *Topic) getKafkaTopicInvoker(ctx context.Context, anyReq any, response c
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"topics",
-		request.Topic)
+		url.PathEscape(request.Topic))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -312,11 +312,11 @@ func (c *Topic) upsertKafkaTopicInvoker(ctx context.Context, anyReq any, respons
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"topics",
-		request.Topic)
+		url.PathEscape(request.Topic))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -406,11 +406,11 @@ func (c *Topic) createKafkaTopicInvoker(ctx context.Context, anyReq any, respons
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"topics",
-		request.Topic)
+		url.PathEscape(request.Topic))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -501,11 +501,11 @@ func (c *Topic) updateKafkaTopicInvoker(ctx context.Context, anyReq any, respons
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"topics",
-		request.Topic)
+		url.PathEscape(request.Topic))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)

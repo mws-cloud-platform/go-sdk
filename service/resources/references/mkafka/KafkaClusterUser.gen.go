@@ -183,7 +183,7 @@ func (m *KafkaClusterUserID) UnmarshalJSON(b []byte) error {
 
 func (m *KafkaClusterUserID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("KafkaClusterUserRef")
+		return conv.NewDecodeToNilError("KafkaClusterUserID")
 	}
 
 	v, err := decode.Str(d)

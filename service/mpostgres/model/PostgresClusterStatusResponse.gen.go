@@ -13,7 +13,7 @@ import (
 type PostgresClusterStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
 	// Состояние кластера
-	//   - `CREATING`     - Создаётся
+	//   - `CREATING`     - Создается
 	//   - `RUNNING`      - Работает в штатном режиме
 	//   - `STOPPING`     - Останавливается
 	//   - `STOPPED`      - Остановлен
@@ -21,8 +21,8 @@ type PostgresClusterStatusResponse struct {
 	//   - `UPDATING`     - Выполняется обновление
 	//   - `ERROR`        - Произошла ошибка, требуется участие команды поддержки
 	//   - `DELETING`     - Удаляется
-	//   - `DELETED`      - Удалён
-	//   - `UNIDENTIFIED` - Не удаётся определить статус
+	//   - `DELETED`      - Удален
+	//   - `UNIDENTIFIED` - Не удается определить статус
 	//   - `RESTORING`    - Восстанавливается
 	//   - `MAINTENANCE`  - Ведутся работы по тех.обслуживанию
 	State *ClusterState `json:"state,omitempty" yaml:"state,omitempty"`
@@ -30,7 +30,7 @@ type PostgresClusterStatusResponse struct {
 	//   - `ALIVE`    - Полностью работоспособен
 	//   - `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны)
 	//   - `FAILED`   - Неработоспособен
-	//   - `UNKNOWN`  - Не удаётся определить состояние (на этапе создания)
+	//   - `UNKNOWN`  - Не удается определить состояние (на этапе создания)
 	Health  *ClusterHealth `json:"health,omitempty" yaml:"health,omitempty"`
 	Message *string        `json:"message,omitempty" yaml:"message,omitempty"`
 	// Описание ip адресов для доступа к кластеру

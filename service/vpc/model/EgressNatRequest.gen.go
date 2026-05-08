@@ -9,7 +9,7 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Описывает Egress (Many-to-Many) NAT-шлюз.
+// Egress (Many-to-Many) NAT-шлюз — механизм для исходящего трафика, при котором несколько внутренних IP-адресов сопоставляются с одним или несколькими внешними IP-адресами
 // Real OAPI model name: EgressNat
 type EgressNatRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.

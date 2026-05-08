@@ -48,9 +48,9 @@ func (c *PostgresClusterSwitchover) requestSwitchoverInvoker(ctx context.Context
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster+":switchover")
+		url.PathEscape(request.Cluster)+":switchover")
 
 	httpReq, err := http.NewRequestWithContext(ctx, "POST", requestURL, http.NoBody)
 	if err != nil {

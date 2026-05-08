@@ -163,7 +163,7 @@ func (m *NatHostID) UnmarshalJSON(b []byte) error {
 
 func (m *NatHostID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("NatHostRef")
+		return conv.NewDecodeToNilError("NatHostID")
 	}
 
 	v, err := decode.Str(d)

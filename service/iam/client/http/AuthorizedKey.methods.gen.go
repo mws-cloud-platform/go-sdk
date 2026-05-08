@@ -49,9 +49,9 @@ func (c *AuthorizedKey) listAuthorizedKeyInvoker(ctx context.Context, anyReq any
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"authorizedKeys")
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
@@ -92,6 +92,289 @@ func (c *AuthorizedKey) headerListAuthorizedKey(req *http.Request, request *clie
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
+// UpsertAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+func (c *AuthorizedKey) UpsertAuthorizedKeyV2(ctx context.Context, request client.UpsertAuthorizedKeyV2Request) (r *client.UpsertAuthorizedKeyV2Response, err error) {
+	ctx = c.setUpsertAuthorizedKeyV2Attributes(ctx)
+	r = &client.UpsertAuthorizedKeyV2Response{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.upsertAuthorizedKeyV2Invoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *AuthorizedKey) setUpsertAuthorizedKeyV2Attributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "UpsertAuthorizedKeyV2"),
+		commonattribute.String(commonattribute.PathTemplate, "/iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}"),
+		commonattribute.String(commonattribute.ProjectName, "iam"),
+		commonattribute.String(commonattribute.ServiceName, "authorizedKey"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *AuthorizedKey) upsertAuthorizedKeyV2Invoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.UpsertAuthorizedKeyV2Request)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"iam",
+		"v2",
+		"projects",
+		url.PathEscape(request.Project),
+		"serviceAccounts",
+		url.PathEscape(request.ServiceAccount),
+		"authorizedKeys",
+		url.PathEscape(request.AuthorizedKey))
+
+	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
+	ctx = valuesctx.With(ctx, "authorizedKey", request.AuthorizedKey)
+	ctx = valuesctx.With(ctx, "project", request.Project)
+
+	httpReq, err := http.NewRequestWithContext(ctx, "POST", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	httpReq.URL.RawQuery = c.queryUpsertAuthorizedKeyV2(request)
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerUpsertAuthorizedKeyV2(httpReq, request)
+
+	err = commonclient.SetJSONBody(httpReq, &request.Body)
+	if err != nil {
+		return err
+	}
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeUpsertAuthorizedKeyV2Response(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.UpsertAuthorizedKeyV2Response)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *AuthorizedKey) queryUpsertAuthorizedKeyV2(request *client.UpsertAuthorizedKeyV2Request) string {
+	q := make(url.Values)
+	return q.Encode()
+}
+
+func (c *AuthorizedKey) headerUpsertAuthorizedKeyV2(req *http.Request, request *client.UpsertAuthorizedKeyV2Request) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	if request.IdempotencyKey != nil {
+		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
+	}
+}
+
+// CreateAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
+// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?createOnly=true
+func (c *AuthorizedKey) CreateAuthorizedKeyV2(ctx context.Context, request client.UpsertAuthorizedKeyV2Request) (r *client.UpsertAuthorizedKeyV2Response, err error) {
+	ctx = c.setCreateAuthorizedKeyV2Attributes(ctx)
+	r = &client.UpsertAuthorizedKeyV2Response{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.createAuthorizedKeyV2Invoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *AuthorizedKey) setCreateAuthorizedKeyV2Attributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "CreateAuthorizedKeyV2"),
+		commonattribute.String(commonattribute.PathTemplate, "/iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?createOnly=true"),
+		commonattribute.String(commonattribute.ProjectName, "iam"),
+		commonattribute.String(commonattribute.ServiceName, "authorizedKey"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *AuthorizedKey) createAuthorizedKeyV2Invoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.UpsertAuthorizedKeyV2Request)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"iam",
+		"v2",
+		"projects",
+		url.PathEscape(request.Project),
+		"serviceAccounts",
+		url.PathEscape(request.ServiceAccount),
+		"authorizedKeys",
+		url.PathEscape(request.AuthorizedKey))
+
+	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
+	ctx = valuesctx.With(ctx, "authorizedKey", request.AuthorizedKey)
+	ctx = valuesctx.With(ctx, "project", request.Project)
+
+	httpReq, err := http.NewRequestWithContext(ctx, "POST", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	httpReq.URL.RawQuery = c.queryCreateAuthorizedKeyV2(request)
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerCreateAuthorizedKeyV2(httpReq, request)
+
+	err = commonclient.SetJSONBody(httpReq, &request.Body)
+	if err != nil {
+		return err
+	}
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeUpsertAuthorizedKeyV2Response(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.UpsertAuthorizedKeyV2Response)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *AuthorizedKey) queryCreateAuthorizedKeyV2(request *client.UpsertAuthorizedKeyV2Request) string {
+	q := make(url.Values)
+	q.Add("createOnly", "true")
+	return q.Encode()
+}
+
+func (c *AuthorizedKey) headerCreateAuthorizedKeyV2(req *http.Request, request *client.UpsertAuthorizedKeyV2Request) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	if request.IdempotencyKey != nil {
+		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
+	}
+}
+
+// UpdateAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
+// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?updateOnly=true
+func (c *AuthorizedKey) UpdateAuthorizedKeyV2(ctx context.Context, request client.UpdateAuthorizedKeyV2Request) (r *client.UpsertAuthorizedKeyV2Response, err error) {
+	ctx = c.setUpdateAuthorizedKeyV2Attributes(ctx)
+	r = &client.UpsertAuthorizedKeyV2Response{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.updateAuthorizedKeyV2Invoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *AuthorizedKey) setUpdateAuthorizedKeyV2Attributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "UpdateAuthorizedKeyV2"),
+		commonattribute.String(commonattribute.PathTemplate, "/iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?updateOnly=true"),
+		commonattribute.String(commonattribute.ProjectName, "iam"),
+		commonattribute.String(commonattribute.ServiceName, "authorizedKey"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *AuthorizedKey) updateAuthorizedKeyV2Invoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.UpdateAuthorizedKeyV2Request)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"iam",
+		"v2",
+		"projects",
+		url.PathEscape(request.Project),
+		"serviceAccounts",
+		url.PathEscape(request.ServiceAccount),
+		"authorizedKeys",
+		url.PathEscape(request.AuthorizedKey))
+
+	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
+	ctx = valuesctx.With(ctx, "authorizedKey", request.AuthorizedKey)
+	ctx = valuesctx.With(ctx, "project", request.Project)
+
+	httpReq, err := http.NewRequestWithContext(ctx, "POST", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	httpReq.URL.RawQuery = c.queryUpdateAuthorizedKeyV2(request)
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerUpdateAuthorizedKeyV2(httpReq, request)
+
+	err = commonclient.SetJSONBody(httpReq, &request.Body)
+	if err != nil {
+		return err
+	}
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeUpsertAuthorizedKeyV2Response(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.UpsertAuthorizedKeyV2Response)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *AuthorizedKey) queryUpdateAuthorizedKeyV2(request *client.UpdateAuthorizedKeyV2Request) string {
+	q := make(url.Values)
+	q.Add("updateOnly", "true")
+	return q.Encode()
+}
+
+func (c *AuthorizedKey) headerUpdateAuthorizedKeyV2(req *http.Request, request *client.UpdateAuthorizedKeyV2Request) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	if request.IdempotencyKey != nil {
+		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
+	}
+}
+
 // DeleteAuthorizedKey позволяет удалить авторизованный ключ.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -125,11 +408,11 @@ func (c *AuthorizedKey) deleteAuthorizedKeyInvoker(ctx context.Context, anyReq a
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"authorizedKeys",
-		request.AuthorizedKey)
+		url.PathEscape(request.AuthorizedKey))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -199,11 +482,11 @@ func (c *AuthorizedKey) getAuthorizedKeyInvoker(ctx context.Context, anyReq any,
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"authorizedKeys",
-		request.AuthorizedKey)
+		url.PathEscape(request.AuthorizedKey))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "authorizedKey", request.AuthorizedKey)
@@ -277,11 +560,11 @@ func (c *AuthorizedKey) upsertAuthorizedKeyInvoker(ctx context.Context, anyReq a
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"authorizedKeys",
-		request.AuthorizedKey)
+		url.PathEscape(request.AuthorizedKey))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "authorizedKey", request.AuthorizedKey)
@@ -371,11 +654,11 @@ func (c *AuthorizedKey) createAuthorizedKeyInvoker(ctx context.Context, anyReq a
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"authorizedKeys",
-		request.AuthorizedKey)
+		url.PathEscape(request.AuthorizedKey))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "authorizedKey", request.AuthorizedKey)
@@ -466,11 +749,11 @@ func (c *AuthorizedKey) updateAuthorizedKeyInvoker(ctx context.Context, anyReq a
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"authorizedKeys",
-		request.AuthorizedKey)
+		url.PathEscape(request.AuthorizedKey))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "authorizedKey", request.AuthorizedKey)

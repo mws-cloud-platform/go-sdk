@@ -163,7 +163,7 @@ func (m *ZonalSrv6RouteID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalSrv6RouteID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalSrv6RouteRef")
+		return conv.NewDecodeToNilError("ZonalSrv6RouteID")
 	}
 
 	v, err := decode.Str(d)

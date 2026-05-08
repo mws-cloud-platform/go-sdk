@@ -10,21 +10,22 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateKafkaTopicRequest struct {
-	Metadata commonclient.OptionalNil[UpdateKafkaTopicMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[UpdateKafkaTopicMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Параметры топика.
-	Spec commonclient.Optional[UpdateKafkaTopicSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.Optional[UpdateKafkaTopicSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *KafkaTopicRequest) AsUpdateModel() UpdateKafkaTopicRequest {
 	var u UpdateKafkaTopicRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -76,17 +77,24 @@ func (m *UpdateKafkaTopicRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *KafkaTopicRequest) diffMetadata(src *KafkaTopicRequest) commonclient.OptionalNil[UpdateKafkaTopicMetadataRequest] {
+func (m *KafkaTopicRequest) diffMetadata(src *KafkaTopicRequest) optional.OptionalNil[UpdateKafkaTopicMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[UpdateKafkaTopicMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateKafkaTopicMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *KafkaTopicRequest) diffSpec(src *KafkaTopicRequest) commonclient.Optional[UpdateKafkaTopicSpecRequest] {
+func (m *KafkaTopicRequest) diffSpec(src *KafkaTopicRequest) optional.Optional[UpdateKafkaTopicSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateKafkaTopicSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateKafkaTopicSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 type UpdateKafkaTopicMetadataRequest struct {
@@ -96,10 +104,10 @@ type UpdateKafkaTopicMetadataRequest struct {
 func (m *KafkaTopicMetadataRequest) AsUpdateModel() UpdateKafkaTopicMetadataRequest {
 	var u UpdateKafkaTopicMetadataRequest
 	if m.DisplayName != nil {
-		u.DisplayName = commonclient.NewOptional(m.GetDisplayNameOr(""))
+		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = commonclient.NewOptional(func() []common.UpdateTypedUsageRequest {
+		u.Usages = optional.NewOptional(func() []common.UpdateTypedUsageRequest {
 			var tmp []common.UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
 				tmp = make([]common.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
@@ -111,10 +119,10 @@ func (m *KafkaTopicMetadataRequest) AsUpdateModel() UpdateKafkaTopicMetadataRequ
 		}())
 	}
 	if m.Etag != nil {
-		u.Etag = commonclient.NewOptional(m.GetEtagOr(""))
+		u.Etag = optional.NewOptional(m.GetEtagOr(""))
 	}
 	if m.Description != nil {
-		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
+		u.Description = optional.NewOptional(m.GetDescriptionOr(""))
 	}
 	return u
 }
@@ -172,12 +180,12 @@ func (m *UpdateKafkaTopicMetadataRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *KafkaTopicMetadataRequest) diffDisplayName(src *KafkaTopicMetadataRequest) commonclient.Optional[string] {
+func (m *KafkaTopicMetadataRequest) diffDisplayName(src *KafkaTopicMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *KafkaTopicMetadataRequest) diffUsages(src *KafkaTopicMetadataRequest) commonclient.Optional[[]common.UpdateTypedUsageRequest] {
+func (m *KafkaTopicMetadataRequest) diffUsages(src *KafkaTopicMetadataRequest) optional.Optional[[]common.UpdateTypedUsageRequest] {
 	diffFunc := func(fromItem, toItem common.TypedUsageRequest, fromNil bool) common.UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -185,15 +193,18 @@ func (m *KafkaTopicMetadataRequest) diffUsages(src *KafkaTopicMetadataRequest) c
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return commonclient.NewDirectOptional[[]common.UpdateTypedUsageRequest](value, hasChanges)
+	return optional.Optional[[]common.UpdateTypedUsageRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *KafkaTopicMetadataRequest) diffEtag(src *KafkaTopicMetadataRequest) commonclient.Optional[string] {
+func (m *KafkaTopicMetadataRequest) diffEtag(src *KafkaTopicMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetEtag(), m.GetEtag(), nilDiffers)
 }
 
-func (m *KafkaTopicMetadataRequest) diffDescription(src *KafkaTopicMetadataRequest) commonclient.Optional[string] {
+func (m *KafkaTopicMetadataRequest) diffDescription(src *KafkaTopicMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
 }

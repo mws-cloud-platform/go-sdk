@@ -17,12 +17,12 @@ import (
 	"go.uber.org/zap"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
-	"go.mws.cloud/go-sdk/internal/imds"
 	"go.mws.cloud/go-sdk/mws/credentials"
 	"go.mws.cloud/go-sdk/mws/endpoints"
 	"go.mws.cloud/go-sdk/mws/iam"
 	"go.mws.cloud/go-sdk/mws/retry"
 	mwshttp "go.mws.cloud/go-sdk/pkg/http"
+	"go.mws.cloud/go-sdk/pkg/imds"
 	iamclient "go.mws.cloud/go-sdk/service/iam/client/http"
 )
 

@@ -4,6 +4,8 @@ package mpostgres
 
 import (
 	"context"
+	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -17,9 +19,12 @@ import (
 )
 
 var (
-	PostgresBackupRefTemplate = resparsers.Template{
+	PostgresBackupBackupValidatePattern  = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	PostgresBackupClusterValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,45}[a-z0-9])?$`)
+	PostgresBackupRefTemplate            = resparsers.Template{
 		{
 			Value:       "backup",
+			Pattern:     PostgresBackupBackupValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -30,6 +35,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     PostgresBackupClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -56,12 +62,28 @@ var (
 	}
 )
 
-func NewPostgresBackupID(project, cluster, backup string) PostgresBackupID {
+func NewPostgresBackupID(project, cluster, backup string) (PostgresBackupID, error) {
+	if match := PostgresBackupBackupValidatePattern.Match([]byte(backup)); !match {
+		return PostgresBackupID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "backup", backup)
+	}
+	if match := PostgresBackupClusterValidatePattern.Match([]byte(cluster)); !match {
+		return PostgresBackupID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
+	}
 	m := PostgresBackupID{
 		backup:  backup,
 		cluster: cluster,
 		project: project,
 	}
+	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustPostgresBackupID(project, cluster, backup string) PostgresBackupID {
+	m, err := NewPostgresBackupID(project, cluster, backup)
+	if err != nil {
+		panic(err)
+	}
+
 	m.path = m.ID()
 	return m
 }
@@ -183,7 +205,7 @@ func (m *PostgresBackupID) UnmarshalJSON(b []byte) error {
 
 func (m *PostgresBackupID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("PostgresBackupRef")
+		return conv.NewDecodeToNilError("PostgresBackupID")
 	}
 
 	v, err := decode.Str(d)
@@ -195,13 +217,22 @@ func (m *PostgresBackupID) Decode(d *jx.Decoder) error {
 	return nil
 }
 
-func NewPostgresBackupRef(project, cluster, backup string) PostgresBackupRef {
+func NewPostgresBackupRef(project, cluster, backup string) (PostgresBackupRef, error) {
+	id, err := NewPostgresBackupID(project, cluster, backup)
+	if err != nil {
+		return PostgresBackupRef{}, err
+	}
+
 	m := PostgresBackupRef{
-		id: PostgresBackupID{
-			backup:  backup,
-			cluster: cluster,
-			project: project,
-		},
+		id: id,
+	}
+	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustPostgresBackupRef(project, cluster, backup string) PostgresBackupRef {
+	m := PostgresBackupRef{
+		id: NewMustPostgresBackupID(project, cluster, backup),
 	}
 	m.id.path = m.absolutePath()
 	return m

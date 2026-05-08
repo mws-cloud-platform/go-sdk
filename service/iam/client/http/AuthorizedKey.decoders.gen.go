@@ -118,6 +118,146 @@ func decodeListAuthorizedKeyResponse(resp *http.Response) (*client.ListAuthorize
 	}
 }
 
+func decodeUpsertAuthorizedKeyV2Response(resp *http.Response) (*client.UpsertAuthorizedKeyV2Response, error) {
+	ct, err := commonclient.GetContentType(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	switch resp.StatusCode {
+	case 200:
+		switch ct {
+		case "application/json":
+			result := &client.UpsertAuthorizedKeyV2Response{
+				Code:        resp.StatusCode,
+				Response200: &model.AuthorizedKeyV2OptionalResponse{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 201:
+		switch ct {
+		case "application/json":
+			result := &client.UpsertAuthorizedKeyV2Response{
+				Code:        resp.StatusCode,
+				Response201: &model.AuthorizedKeyV2OptionalResponse{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			if err = result.Response201.Parse(resp.Request.Context()); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 400:
+		switch ct {
+		case "application/json":
+			result := &client.UpsertAuthorizedKeyV2Response{
+				Code:        resp.StatusCode,
+				Response400: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 403:
+		switch ct {
+		case "application/json":
+			result := &client.UpsertAuthorizedKeyV2Response{
+				Code:        resp.StatusCode,
+				Response403: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 404:
+		switch ct {
+		case "application/json":
+			result := &client.UpsertAuthorizedKeyV2Response{
+				Code:        resp.StatusCode,
+				Response404: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 409:
+		switch ct {
+		case "application/json":
+			result := &client.UpsertAuthorizedKeyV2Response{
+				Code:        resp.StatusCode,
+				Response409: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response409); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 500:
+		switch ct {
+		case "application/json":
+			result := &client.UpsertAuthorizedKeyV2Response{
+				Code:        resp.StatusCode,
+				Response500: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	default:
+		data, err := io.ReadAll(resp.Body)
+		return nil, errors.Join(err, clienterrors.UnexpectedStatusCodeWithData(resp.StatusCode, data))
+	}
+}
+
 func decodeDeleteAuthorizedKeyResponse(resp *http.Response) (*client.DeleteAuthorizedKeyResponse, error) {
 	ct, err := commonclient.GetContentType(resp)
 	if err != nil {

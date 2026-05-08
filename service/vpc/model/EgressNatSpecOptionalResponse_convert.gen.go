@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func EgressNatSpecRequestToOptionalResponse(request *EgressNatSpecRequest) (*EgressNatSpecOptionalResponse, error) {
@@ -26,7 +26,7 @@ func EgressNatSpecRequestToOptionalResponse(request *EgressNatSpecRequest) (*Egr
 		if err != nil {
 			return nil, err
 		}
-		response.PortAllocation = commonclient.NewOptionalNil(*tmpPortAllocation)
+		response.PortAllocation = optional.NewOptionalNil(*tmpPortAllocation)
 	}
 	return &response, nil
 }

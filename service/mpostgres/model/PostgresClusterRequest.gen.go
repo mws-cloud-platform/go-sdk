@@ -9,6 +9,7 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Кластер в Managed PostgreSQL — это группа узлов (виртуальных машин), объединенных для хранения и обработки данных с помощью СУБД PostgreSQL. В облачной инфраструктуре кластер — единый интерфейс для управления базами данных
 // Real OAPI model name: PostgresCluster
 type PostgresClusterRequest struct {
 	Metadata *PostgresClusterMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`

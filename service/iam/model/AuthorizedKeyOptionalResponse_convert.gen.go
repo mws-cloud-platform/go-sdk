@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -17,7 +17,7 @@ func AuthorizedKeyRequestToOptionalResponse(request *AuthorizedKeyRequest) (*Aut
 		if err != nil {
 			return nil, err
 		}
-		response.Metadata = commonclient.NewOptionalNil(*tmpMetadata)
+		response.Metadata = optional.NewOptionalNil(*tmpMetadata)
 	}
 	tmpSpec, err := AuthorizedKeySpecRequestToOptionalResponse(&request.Spec)
 	if err != nil {
@@ -33,7 +33,7 @@ func AuthorizedKeyMetadataRequestToOptionalResponse(request *AuthorizedKeyMetada
 	}
 	var response AuthorizedKeyMetadataOptionalResponse
 	if request.DisplayName != nil {
-		response.DisplayName = commonclient.NewOptional(*request.DisplayName)
+		response.DisplayName = optional.NewOptional(*request.DisplayName)
 	}
 	for _, e := range request.Usages {
 		tmp, err := common.TypedUsageRequestToOptionalResponse(&e)
@@ -43,10 +43,10 @@ func AuthorizedKeyMetadataRequestToOptionalResponse(request *AuthorizedKeyMetada
 		response.Usages.SetTo(append(response.Usages.Value, *tmp))
 	}
 	if request.Etag != nil {
-		response.Etag = commonclient.NewOptional(*request.Etag)
+		response.Etag = optional.NewOptional(*request.Etag)
 	}
 	if request.Description != nil {
-		response.Description = commonclient.NewOptional(*request.Description)
+		response.Description = optional.NewOptional(*request.Description)
 	}
 	return &response, nil
 }

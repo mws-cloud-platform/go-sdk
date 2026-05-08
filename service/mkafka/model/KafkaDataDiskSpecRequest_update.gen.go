@@ -7,26 +7,27 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateKafkaDataDiskSpecRequest struct {
 	// Размер диска.
-	Size commonclient.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
+	Size optional.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
 	// Тип используемого диска:
 	// * `NETWORK_STANDARD_SSD` — сетевой SSD
-	Type commonclient.Optional[KafkaDataDiskType] `json:"type" yaml:"type"`
+	Type optional.Optional[KafkaDataDiskType] `json:"type" yaml:"type"`
 	// Количество дисковых операций в секунду.
-	Iops commonclient.Optional[KafkaDataDiskIops] `json:"iops" yaml:"iops"`
+	Iops optional.Optional[KafkaDataDiskIops] `json:"iops" yaml:"iops"`
 }
 
 func (m *KafkaDataDiskSpecRequest) AsUpdateModel() UpdateKafkaDataDiskSpecRequest {
 	var u UpdateKafkaDataDiskSpecRequest
-	u.Size = commonclient.NewOptional(m.GetSize())
+	u.Size = optional.NewOptional(m.GetSize())
 	if m.Type != nil {
-		u.Type = commonclient.NewOptional(m.GetTypeOr(""))
+		u.Type = optional.NewOptional(m.GetTypeOr(""))
 	}
 	if m.Iops != nil {
-		u.Iops = commonclient.NewOptional(m.GetIopsOr(0))
+		u.Iops = optional.NewOptional(m.GetIopsOr(0))
 	}
 	return u
 }
@@ -68,17 +69,17 @@ func (m UpdateKafkaDataDiskSpecRequest) HasChanges() bool {
 		m.Iops.Set
 }
 
-func (m *KafkaDataDiskSpecRequest) diffSize(src *KafkaDataDiskSpecRequest) commonclient.Optional[bytesize.ByteSize] {
+func (m *KafkaDataDiskSpecRequest) diffSize(src *KafkaDataDiskSpecRequest) optional.Optional[bytesize.ByteSize] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceRequired(src.GetSize(), m.GetSize(), nilDiffers)
 }
 
-func (m *KafkaDataDiskSpecRequest) diffType(src *KafkaDataDiskSpecRequest) commonclient.Optional[KafkaDataDiskType] {
+func (m *KafkaDataDiskSpecRequest) diffType(src *KafkaDataDiskSpecRequest) optional.Optional[KafkaDataDiskType] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetType(), m.GetType(), nilDiffers)
 }
 
-func (m *KafkaDataDiskSpecRequest) diffIops(src *KafkaDataDiskSpecRequest) commonclient.Optional[KafkaDataDiskIops] {
+func (m *KafkaDataDiskSpecRequest) diffIops(src *KafkaDataDiskSpecRequest) optional.Optional[KafkaDataDiskIops] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetIops(), m.GetIops(), nilDiffers)
 }

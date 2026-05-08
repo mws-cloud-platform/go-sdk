@@ -5,17 +5,20 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Группа узлов в кластере Managed Kubernetes — это группа виртуальных машин
+// Compute, на которых запускаются контейнеры с приложениями
+//
 // Real OAPI model name: NodeGroup
 type NodeGroupOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata commonclient.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     NodeGroupSpecOptionalResponse                                                `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     NodeGroupSpecOptionalResponse                                            `json:"spec" yaml:"spec"`
 	// Описывает статусную модель k8s нод групп.
 	Status *NodeGroupStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }

@@ -5,13 +5,13 @@ package model
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: SubnetSpec
 type SubnetSpecOptionalResponse struct {
-	Cidr        cidraddress.CIDR4Address                                    `json:"cidr" yaml:"cidr"`
-	DhcpOptions commonclient.OptionalNil[SubnetDhcpOptionsOptionalResponse] `json:"dhcpOptions,omitempty" yaml:"dhcpOptions,omitempty"`
+	Cidr        cidraddress.CIDR4Address                                `json:"cidr" yaml:"cidr"`
+	DhcpOptions optional.OptionalNil[SubnetDhcpOptionsOptionalResponse] `json:"dhcpOptions,omitempty" yaml:"dhcpOptions,omitempty"`
 }
 
 func (m *SubnetSpecOptionalResponse) GetCidr() cidraddress.CIDR4Address {

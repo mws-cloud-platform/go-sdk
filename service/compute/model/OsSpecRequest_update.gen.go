@@ -8,16 +8,17 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateOsSpecRequest struct {
-	Metadata commonclient.OptionalNil[UpdateOsSpecMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[UpdateOsSpecMetadataRequest] `json:"metadata" yaml:"metadata"`
 }
 
 func (m *OsSpecRequest) AsUpdateModel() UpdateOsSpecRequest {
 	var u UpdateOsSpecRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
 	return u
 }
@@ -51,20 +52,24 @@ func (m UpdateOsSpecRequest) HasChanges() bool {
 	return m.Metadata.Set
 }
 
-func (m *OsSpecRequest) diffMetadata(src *OsSpecRequest) commonclient.OptionalNil[UpdateOsSpecMetadataRequest] {
+func (m *OsSpecRequest) diffMetadata(src *OsSpecRequest) optional.OptionalNil[UpdateOsSpecMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[UpdateOsSpecMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateOsSpecMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
 type UpdateOsSpecMetadataRequest struct {
-	Attributes commonclient.Optional[map[string]string] `json:"attributes" yaml:"attributes"`
+	Attributes optional.Optional[map[string]string] `json:"attributes" yaml:"attributes"`
 }
 
 func (m *OsSpecMetadataRequest) AsUpdateModel() UpdateOsSpecMetadataRequest {
 	var u UpdateOsSpecMetadataRequest
 	if m.Attributes != nil {
-		u.Attributes = commonclient.NewOptional(m.GetAttributes())
+		u.Attributes = optional.NewOptional(m.GetAttributes())
 	}
 	return u
 }
@@ -96,7 +101,10 @@ func (m UpdateOsSpecMetadataRequest) HasChanges() bool {
 	return m.Attributes.Set
 }
 
-func (m *OsSpecMetadataRequest) diffAttributes(src *OsSpecMetadataRequest) commonclient.Optional[map[string]string] {
+func (m *OsSpecMetadataRequest) diffAttributes(src *OsSpecMetadataRequest) optional.Optional[map[string]string] {
 	value, hasChanges := commonclient.GetChangesMapPrimitive(src.GetAttributes(), m.GetAttributes())
-	return commonclient.NewDirectOptional[map[string]string](value, hasChanges)
+	return optional.Optional[map[string]string]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

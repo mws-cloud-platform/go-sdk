@@ -45,6 +45,11 @@ func (m *AuthorizedKeyStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.Str(*m.PrivateKeyFile)
 	}
 
+	if m.PublicKey != nil {
+		e.FieldStart("publicKey")
+		e.Str(*m.PublicKey)
+	}
+
 	if m.LastAuthTime != nil {
 		e.FieldStart("lastAuthTime")
 		conv.EncodeDateTimeUTC(e, *m.LastAuthTime)
@@ -86,6 +91,14 @@ func (m *AuthorizedKeyStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.PrivateKeyFile = &v
+			return nil
+		case "publicKey":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.PublicKey = &v
 			return nil
 		case "lastAuthTime":
 			v, err := decode.DateTime(d)

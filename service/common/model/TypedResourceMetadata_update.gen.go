@@ -11,26 +11,27 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateTypedResourceMetadata struct {
 	// Отображаемое имя. Необязательное поле, можно свободно задавать и изменять для удобства организации ресурсов.
-	DisplayName commonclient.Optional[string] `json:"displayName" yaml:"displayName"`
+	DisplayName optional.Optional[string] `json:"displayName" yaml:"displayName"`
 	// Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены.
-	Usages commonclient.Optional[[]UpdateTypedUsage] `json:"usages" yaml:"usages"`
+	Usages optional.Optional[[]UpdateTypedUsage] `json:"usages" yaml:"usages"`
 	// Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса.
-	Etag commonclient.Optional[string] `json:"etag" yaml:"etag"`
+	Etag optional.Optional[string] `json:"etag" yaml:"etag"`
 	// Описание ресурса.
-	Description commonclient.Optional[string] `json:"description" yaml:"description"`
+	Description optional.Optional[string] `json:"description" yaml:"description"`
 }
 
 func (m *TypedResourceMetadata) AsUpdateModel() UpdateTypedResourceMetadata {
 	var u UpdateTypedResourceMetadata
 	if m.DisplayName != nil {
-		u.DisplayName = commonclient.NewOptional(m.GetDisplayNameOr(""))
+		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = commonclient.NewOptional(func() []UpdateTypedUsage {
+		u.Usages = optional.NewOptional(func() []UpdateTypedUsage {
 			var tmp []UpdateTypedUsage
 			if m.GetUsages() != nil {
 				tmp = make([]UpdateTypedUsage, 0, len(m.GetUsages()))
@@ -42,10 +43,10 @@ func (m *TypedResourceMetadata) AsUpdateModel() UpdateTypedResourceMetadata {
 		}())
 	}
 	if m.Etag != nil {
-		u.Etag = commonclient.NewOptional(m.GetEtagOr(""))
+		u.Etag = optional.NewOptional(m.GetEtagOr(""))
 	}
 	if m.Description != nil {
-		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
+		u.Description = optional.NewOptional(m.GetDescriptionOr(""))
 	}
 	return u
 }
@@ -108,12 +109,12 @@ func (m *UpdateTypedResourceMetadata) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *TypedResourceMetadata) diffDisplayName(src *TypedResourceMetadata) commonclient.Optional[string] {
+func (m *TypedResourceMetadata) diffDisplayName(src *TypedResourceMetadata) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *TypedResourceMetadata) diffUsages(src *TypedResourceMetadata) commonclient.Optional[[]UpdateTypedUsage] {
+func (m *TypedResourceMetadata) diffUsages(src *TypedResourceMetadata) optional.Optional[[]UpdateTypedUsage] {
 	diffFunc := func(fromItem, toItem TypedUsage, fromNil bool) UpdateTypedUsage {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -121,15 +122,18 @@ func (m *TypedResourceMetadata) diffUsages(src *TypedResourceMetadata) commoncli
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdateTypedUsage](value, hasChanges)
+	return optional.Optional[[]UpdateTypedUsage]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *TypedResourceMetadata) diffEtag(src *TypedResourceMetadata) commonclient.Optional[string] {
+func (m *TypedResourceMetadata) diffEtag(src *TypedResourceMetadata) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetEtag(), m.GetEtag(), nilDiffers)
 }
 
-func (m *TypedResourceMetadata) diffDescription(src *TypedResourceMetadata) commonclient.Optional[string] {
+func (m *TypedResourceMetadata) diffDescription(src *TypedResourceMetadata) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
 }

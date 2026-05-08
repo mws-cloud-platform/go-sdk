@@ -163,7 +163,7 @@ func (m *FlagMkafkaPreviewID) UnmarshalJSON(b []byte) error {
 
 func (m *FlagMkafkaPreviewID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("FlagMkafkaPreviewRef")
+		return conv.NewDecodeToNilError("FlagMkafkaPreviewID")
 	}
 
 	v, err := decode.Str(d)

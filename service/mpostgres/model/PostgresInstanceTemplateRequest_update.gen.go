@@ -7,20 +7,21 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 type UpdatePostgresInstanceTemplateRequest struct {
 	// Тип виртуальной машины, описывающий ресурсы (vCPU, memory).
-	VmType commonclient.Optional[compute.VmTypeRef] `json:"vmType" yaml:"vmType"`
+	VmType optional.Optional[compute.VmTypeRef] `json:"vmType" yaml:"vmType"`
 	// Параметры диска с данными на узле кластера.
-	Disk commonclient.Optional[UpdateDataDiskSpecRequest] `json:"disk" yaml:"disk"`
+	Disk optional.Optional[UpdateDataDiskSpecRequest] `json:"disk" yaml:"disk"`
 }
 
 func (m *PostgresInstanceTemplateRequest) AsUpdateModel() UpdatePostgresInstanceTemplateRequest {
 	var u UpdatePostgresInstanceTemplateRequest
-	u.VmType = commonclient.NewOptional(m.GetVmType())
-	u.Disk = commonclient.NewOptional(m.Disk.AsUpdateModel())
+	u.VmType = optional.NewOptional(m.GetVmType())
+	u.Disk = optional.NewOptional(m.Disk.AsUpdateModel())
 	return u
 }
 
@@ -70,14 +71,17 @@ func (m *UpdatePostgresInstanceTemplateRequest) Parse(ctx context.Context) error
 	return nil
 }
 
-func (m *PostgresInstanceTemplateRequest) diffVmType(src *PostgresInstanceTemplateRequest) commonclient.Optional[compute.VmTypeRef] {
+func (m *PostgresInstanceTemplateRequest) diffVmType(src *PostgresInstanceTemplateRequest) optional.Optional[compute.VmTypeRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetVmType(), m.GetVmType(), nilDiffers)
 }
 
-func (m *PostgresInstanceTemplateRequest) diffDisk(src *PostgresInstanceTemplateRequest) commonclient.Optional[UpdateDataDiskSpecRequest] {
+func (m *PostgresInstanceTemplateRequest) diffDisk(src *PostgresInstanceTemplateRequest) optional.Optional[UpdateDataDiskSpecRequest] {
 	from := src.GetDisk()
 	to := m.GetDisk()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateDataDiskSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateDataDiskSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

@@ -7,27 +7,28 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateDiskSpecRequest struct {
 	// Размер диска
-	Size commonclient.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
+	Size optional.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
 	// Запрашиваемое пользователем количество операций ввода-вывода в секунду (IOPS)
-	Iops commonclient.Optional[Iops] `json:"iops" yaml:"iops"`
+	Iops optional.Optional[Iops] `json:"iops" yaml:"iops"`
 	// Тип операционной системы
-	OsType commonclient.Optional[OsType] `json:"osType" yaml:"osType"`
+	OsType optional.Optional[OsType] `json:"osType" yaml:"osType"`
 }
 
 func (m *DiskSpecRequest) AsUpdateModel() UpdateDiskSpecRequest {
 	var u UpdateDiskSpecRequest
 	if m.Size != nil {
-		u.Size = commonclient.NewOptional(m.GetSizeOr(bytesize.ByteSize{}))
+		u.Size = optional.NewOptional(m.GetSizeOr(bytesize.ByteSize{}))
 	}
 	if m.Iops != nil {
-		u.Iops = commonclient.NewOptional(m.GetIopsOr(0))
+		u.Iops = optional.NewOptional(m.GetIopsOr(0))
 	}
 	if m.OsType != nil {
-		u.OsType = commonclient.NewOptional(m.GetOsTypeOr(""))
+		u.OsType = optional.NewOptional(m.GetOsTypeOr(""))
 	}
 	return u
 }
@@ -69,17 +70,17 @@ func (m UpdateDiskSpecRequest) HasChanges() bool {
 		m.OsType.Set
 }
 
-func (m *DiskSpecRequest) diffSize(src *DiskSpecRequest) commonclient.Optional[bytesize.ByteSize] {
+func (m *DiskSpecRequest) diffSize(src *DiskSpecRequest) optional.Optional[bytesize.ByteSize] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceNonRequired(src.GetSize(), m.GetSize(), nilDiffers)
 }
 
-func (m *DiskSpecRequest) diffIops(src *DiskSpecRequest) commonclient.Optional[Iops] {
+func (m *DiskSpecRequest) diffIops(src *DiskSpecRequest) optional.Optional[Iops] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetIops(), m.GetIops(), nilDiffers)
 }
 
-func (m *DiskSpecRequest) diffOsType(src *DiskSpecRequest) commonclient.Optional[OsType] {
+func (m *DiskSpecRequest) diffOsType(src *DiskSpecRequest) optional.Optional[OsType] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetOsType(), m.GetOsType(), nilDiffers)
 }

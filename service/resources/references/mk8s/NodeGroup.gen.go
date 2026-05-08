@@ -183,7 +183,7 @@ func (m *NodeGroupID) UnmarshalJSON(b []byte) error {
 
 func (m *NodeGroupID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("NodeGroupRef")
+		return conv.NewDecodeToNilError("NodeGroupID")
 	}
 
 	v, err := decode.Str(d)

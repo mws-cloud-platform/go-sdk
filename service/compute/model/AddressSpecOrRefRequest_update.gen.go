@@ -10,25 +10,27 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateAddressSpecOrRefRequest struct {
-	Ref commonclient.Optional[vpc.AddressRef] `json:"ref" yaml:"ref"`
+	Ref optional.Optional[vpc.AddressRef] `json:"ref" yaml:"ref"`
 	// Возможно 2 варианта:
-	// - запросить резервирование случайного адреса (заданы параметры "version")
-	// - запросить резервирование конкретного адреса (заданы параметры "version", "ipAddress", остальные пусты)
+	//   - запросить резервирование случайного адреса (заданы параметры "version")
+	//   - запросить резервирование конкретного адреса (заданы параметры "version", "ipAddress", остальные пусты)
+	//
 	// Если необходимо привязать внешний адрес, заполняется параметр "oneToOneNat"
-	Spec commonclient.OptionalNil[UpdateAddressSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateAddressSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *AddressSpecOrRefRequest) AsUpdateModel() UpdateAddressSpecOrRefRequest {
 	var u UpdateAddressSpecOrRefRequest
 	if m.Ref != nil {
-		u.Ref = commonclient.NewOptional(m.GetRefOr(vpc.AddressRef{}))
+		u.Ref = optional.NewOptional(m.GetRefOr(vpc.AddressRef{}))
 	}
 	if m.Spec != nil {
-		u.Spec = commonclient.NewOptionalNil(m.Spec.AsUpdateModel())
+		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
 	}
 	return u
 }
@@ -91,16 +93,20 @@ func (m *UpdateAddressSpecOrRefRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *AddressSpecOrRefRequest) diffRef(src *AddressSpecOrRefRequest) commonclient.Optional[vpc.AddressRef] {
+func (m *AddressSpecOrRefRequest) diffRef(src *AddressSpecOrRefRequest) optional.Optional[vpc.AddressRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *AddressSpecOrRefRequest) diffSpec(src *AddressSpecOrRefRequest) (commonclient.OptionalNil[UpdateAddressSpecRequest], error) {
+func (m *AddressSpecOrRefRequest) diffSpec(src *AddressSpecOrRefRequest) (optional.OptionalNil[UpdateAddressSpecRequest], error) {
 	nilDiffers := src != nil && m == nil
 	value, err := m.GetSpec().Diff(src.GetSpec())
 	if err != nil {
-		return commonclient.OptionalNil[UpdateAddressSpecRequest]{}, err
+		return optional.OptionalNil[UpdateAddressSpecRequest]{}, err
 	}
-	return commonclient.NewDirectOptionalNil[UpdateAddressSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers), nil
+	return optional.OptionalNil[UpdateAddressSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}, nil
 }

@@ -5,8 +5,8 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -15,7 +15,7 @@ import (
 type AddressOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Метаданные адреса.
-	Metadata commonclient.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация адреса.
 	Spec VpcAddressSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Статус адреса.

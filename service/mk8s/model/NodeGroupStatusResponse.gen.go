@@ -21,8 +21,10 @@ type NodeGroupStatusResponse struct {
 	// Количество виртуальных ядер на ноде
 	Cpu *string `json:"cpu,omitempty" yaml:"cpu,omitempty"`
 	// Количество оперативной памяти на ноде
-	Memory           *bytesize.ByteSize            `json:"memory,omitempty" yaml:"memory,omitempty"`
-	ImageStorageSize *bytesize.ByteSize            `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
+	Memory           *bytesize.ByteSize `json:"memory,omitempty" yaml:"memory,omitempty"`
+	ImageStorageSize *bytesize.ByteSize `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища image-ей и контейнеров
+	ImageStorageIops *int64                        `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
 	Scale            *NodeGroupStatusScaleResponse `json:"scale,omitempty" yaml:"scale,omitempty"`
 	// Текущее количество нод готовых для работы
 	NodesReady *int                    `json:"nodesReady,omitempty" yaml:"nodesReady,omitempty"`
@@ -94,6 +96,20 @@ func (m *NodeGroupStatusResponse) GetImageStorageSize() *bytesize.ByteSize {
 func (m *NodeGroupStatusResponse) GetImageStorageSizeOr(val bytesize.ByteSize) bytesize.ByteSize {
 	if m != nil && m.ImageStorageSize != nil {
 		return *m.ImageStorageSize
+	}
+	return val
+}
+
+func (m *NodeGroupStatusResponse) GetImageStorageIops() *int64 {
+	if m != nil {
+		return m.ImageStorageIops
+	}
+	return nil
+}
+
+func (m *NodeGroupStatusResponse) GetImageStorageIopsOr(val int64) int64 {
+	if m != nil && m.ImageStorageIops != nil {
+		return *m.ImageStorageIops
 	}
 	return val
 }
@@ -224,6 +240,10 @@ func (m *NodeGroupStatusResponse) Clone() *NodeGroupStatusResponse {
 	}
 	clone.Memory = m.Memory.Clone()
 	clone.ImageStorageSize = m.ImageStorageSize.Clone()
+	if m.ImageStorageIops != nil {
+		cloneImageStorageIops := *m.ImageStorageIops
+		clone.ImageStorageIops = &cloneImageStorageIops
+	}
 	clone.Scale = m.Scale.Clone()
 	if m.NodesReady != nil {
 		cloneNodesReady := *m.NodesReady

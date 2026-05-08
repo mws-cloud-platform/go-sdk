@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func WeeklyMaintenanceWindowRequestToOptionalResponse(request *WeeklyMaintenanceWindowRequest) (*WeeklyMaintenanceWindowOptionalResponse, error) {
@@ -14,7 +14,7 @@ func WeeklyMaintenanceWindowRequestToOptionalResponse(request *WeeklyMaintenance
 	response.Days = request.Days
 	response.Hour = request.Hour
 	if request.Duration != nil {
-		response.Duration = commonclient.NewOptionalNil(*request.Duration)
+		response.Duration = optional.NewOptionalNil(*request.Duration)
 	}
 	return &response, nil
 }

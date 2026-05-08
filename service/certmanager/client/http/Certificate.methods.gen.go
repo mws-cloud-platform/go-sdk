@@ -49,7 +49,7 @@ func (c *Certificate) listCertificatesInvoker(ctx context.Context, anyReq any, r
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -141,9 +141,9 @@ func (c *Certificate) getCertificateContentInvoker(ctx context.Context, anyReq a
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name+":download")
+		url.PathEscape(request.Name)+":download")
 
 	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)
 	if err != nil {
@@ -213,9 +213,9 @@ func (c *Certificate) deleteCertificateInvoker(ctx context.Context, anyReq any, 
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name)
+		url.PathEscape(request.Name))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -288,9 +288,9 @@ func (c *Certificate) getCertificateInvoker(ctx context.Context, anyReq any, res
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name)
+		url.PathEscape(request.Name))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -363,9 +363,9 @@ func (c *Certificate) upsertCertificateInvoker(ctx context.Context, anyReq any, 
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name)
+		url.PathEscape(request.Name))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -454,9 +454,9 @@ func (c *Certificate) createCertificateInvoker(ctx context.Context, anyReq any, 
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name)
+		url.PathEscape(request.Name))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -546,9 +546,9 @@ func (c *Certificate) updateCertificateInvoker(ctx context.Context, anyReq any, 
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name)
+		url.PathEscape(request.Name))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)

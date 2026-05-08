@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func StorageDiskSpecOrRefWithAttachmentsRequestToOptionalResponse(request *StorageDiskSpecOrRefWithAttachmentsRequest) (*StorageDiskSpecOrRefWithAttachmentsOptionalResponse, error) {
@@ -13,10 +13,10 @@ func StorageDiskSpecOrRefWithAttachmentsRequestToOptionalResponse(request *Stora
 	var response StorageDiskSpecOrRefWithAttachmentsOptionalResponse
 	response.Name = request.Name
 	if request.Boot != nil {
-		response.Boot = commonclient.NewOptional(*request.Boot)
+		response.Boot = optional.NewOptional(*request.Boot)
 	}
 	if request.DeviceName != nil {
-		response.DeviceName = commonclient.NewOptional(*request.DeviceName)
+		response.DeviceName = optional.NewOptional(*request.DeviceName)
 	}
 	tmpDisk, err := StorageDiskSpecOrRefRequestToOptionalResponse(&request.Disk)
 	if err != nil {

@@ -49,7 +49,7 @@ func (c *Kafka) listKafkaClustersInvoker(ctx context.Context, anyReq any, respon
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -144,9 +144,9 @@ func (c *Kafka) stopClusterInvoker(ctx context.Context, anyReq any, response com
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster+":stop")
+		url.PathEscape(request.Cluster)+":stop")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -222,9 +222,9 @@ func (c *Kafka) startClusterInvoker(ctx context.Context, anyReq any, response co
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster+":start")
+		url.PathEscape(request.Cluster)+":start")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -300,9 +300,9 @@ func (c *Kafka) deleteKafkaClusterInvoker(ctx context.Context, anyReq any, respo
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster)
+		url.PathEscape(request.Cluster))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -385,9 +385,9 @@ func (c *Kafka) getKafkaClusterInvoker(ctx context.Context, anyReq any, response
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster)
+		url.PathEscape(request.Cluster))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -460,9 +460,9 @@ func (c *Kafka) upsertKafkaClusterInvoker(ctx context.Context, anyReq any, respo
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster)
+		url.PathEscape(request.Cluster))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -551,9 +551,9 @@ func (c *Kafka) createKafkaClusterInvoker(ctx context.Context, anyReq any, respo
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster)
+		url.PathEscape(request.Cluster))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -643,9 +643,9 @@ func (c *Kafka) updateKafkaClusterInvoker(ctx context.Context, anyReq any, respo
 		"mkafka",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster)
+		url.PathEscape(request.Cluster))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)

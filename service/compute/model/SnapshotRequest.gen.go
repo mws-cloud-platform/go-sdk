@@ -11,6 +11,8 @@ import (
 
 // Снимок (snapshot) диска — это копия состояния диска
 // Real OAPI model name: Snapshot
+//
+// Deprecated: Отказываемся в пользу DiskBackup
 type SnapshotRequest struct {
 	// Дополнительная информация об объекте
 	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`

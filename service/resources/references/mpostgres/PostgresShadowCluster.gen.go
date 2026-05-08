@@ -4,6 +4,8 @@ package mpostgres
 
 import (
 	"context"
+	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -17,9 +19,12 @@ import (
 )
 
 var (
-	PostgresShadowClusterRefTemplate = resparsers.Template{
+	PostgresShadowClusterClusterValidatePattern       = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,45}[a-z0-9])?$`)
+	PostgresShadowClusterShadowProjectValidatePattern = regexp.MustCompile(`^pg-[a-z2-7]{26,32}$`)
+	PostgresShadowClusterRefTemplate                  = resparsers.Template{
 		{
 			Value:       "cluster",
+			Pattern:     PostgresShadowClusterClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -30,6 +35,7 @@ var (
 		},
 		{
 			Value:       "shadowProject",
+			Pattern:     PostgresShadowClusterShadowProjectValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -46,11 +52,27 @@ var (
 	}
 )
 
-func NewPostgresShadowClusterID(shadowProject, cluster string) PostgresShadowClusterID {
+func NewPostgresShadowClusterID(shadowProject, cluster string) (PostgresShadowClusterID, error) {
+	if match := PostgresShadowClusterClusterValidatePattern.Match([]byte(cluster)); !match {
+		return PostgresShadowClusterID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
+	}
+	if match := PostgresShadowClusterShadowProjectValidatePattern.Match([]byte(shadowProject)); !match {
+		return PostgresShadowClusterID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "shadowProject", shadowProject)
+	}
 	m := PostgresShadowClusterID{
 		cluster:       cluster,
 		shadowProject: shadowProject,
 	}
+	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustPostgresShadowClusterID(shadowProject, cluster string) PostgresShadowClusterID {
+	m, err := NewPostgresShadowClusterID(shadowProject, cluster)
+	if err != nil {
+		panic(err)
+	}
+
 	m.path = m.ID()
 	return m
 }
@@ -163,7 +185,7 @@ func (m *PostgresShadowClusterID) UnmarshalJSON(b []byte) error {
 
 func (m *PostgresShadowClusterID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("PostgresShadowClusterRef")
+		return conv.NewDecodeToNilError("PostgresShadowClusterID")
 	}
 
 	v, err := decode.Str(d)
@@ -175,12 +197,22 @@ func (m *PostgresShadowClusterID) Decode(d *jx.Decoder) error {
 	return nil
 }
 
-func NewPostgresShadowClusterRef(shadowProject, cluster string) PostgresShadowClusterRef {
+func NewPostgresShadowClusterRef(shadowProject, cluster string) (PostgresShadowClusterRef, error) {
+	id, err := NewPostgresShadowClusterID(shadowProject, cluster)
+	if err != nil {
+		return PostgresShadowClusterRef{}, err
+	}
+
 	m := PostgresShadowClusterRef{
-		id: PostgresShadowClusterID{
-			cluster:       cluster,
-			shadowProject: shadowProject,
-		},
+		id: id,
+	}
+	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustPostgresShadowClusterRef(shadowProject, cluster string) PostgresShadowClusterRef {
+	m := PostgresShadowClusterRef{
+		id: NewMustPostgresShadowClusterID(shadowProject, cluster),
 	}
 	m.id.path = m.absolutePath()
 	return m

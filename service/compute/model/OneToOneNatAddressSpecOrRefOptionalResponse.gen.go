@@ -5,16 +5,16 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 // Real OAPI model name: OneToOneNatAddressSpecOrRef
 type OneToOneNatAddressSpecOrRefOptionalResponse struct {
-	Ref commonclient.Optional[vpc.ExternalAddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// NAT правило для связи внутреннего адреса с внешним адресом.
-	Spec commonclient.OptionalNil[OneToOneNatAddressSpecOrRefSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec optional.OptionalNil[OneToOneNatAddressSpecOrRefSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *OneToOneNatAddressSpecOrRefOptionalResponse) GetRef() *vpc.ExternalAddressRef {

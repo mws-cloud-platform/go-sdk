@@ -49,7 +49,7 @@ func (c *Secret) listSecretsInvoker(ctx context.Context, anyReq any, response co
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -141,9 +141,9 @@ func (c *Secret) createSecretWithSecretVersionInvoker(ctx context.Context, anyRe
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name+":createSecretWithSecretVersion")
+		url.PathEscape(request.Name)+":createSecretWithSecretVersion")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -221,9 +221,9 @@ func (c *Secret) deleteSecretInvoker(ctx context.Context, anyReq any, response c
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name)
+		url.PathEscape(request.Name))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -296,9 +296,9 @@ func (c *Secret) getSecretInvoker(ctx context.Context, anyReq any, response comm
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name)
+		url.PathEscape(request.Name))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -371,9 +371,9 @@ func (c *Secret) upsertSecretInvoker(ctx context.Context, anyReq any, response c
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name)
+		url.PathEscape(request.Name))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -462,9 +462,9 @@ func (c *Secret) createSecretInvoker(ctx context.Context, anyReq any, response c
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name)
+		url.PathEscape(request.Name))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -554,9 +554,9 @@ func (c *Secret) updateSecretInvoker(ctx context.Context, anyReq any, response c
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name)
+		url.PathEscape(request.Name))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)

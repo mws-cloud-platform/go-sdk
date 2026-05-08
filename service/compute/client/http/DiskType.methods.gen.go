@@ -137,7 +137,7 @@ func (c *DiskType) getDiskTypeInvoker(ctx context.Context, anyReq any, response 
 		"compute",
 		"v1",
 		"diskTypes",
-		request.Type)
+		url.PathEscape(request.Type))
 
 	ctx = valuesctx.With(ctx, "type", request.Type)
 

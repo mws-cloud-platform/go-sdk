@@ -9,21 +9,22 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 type UpdateStorageDiskSpecOrRefRequest struct {
-	Ref  commonclient.Optional[compute.DiskRef]                 `json:"ref" yaml:"ref"`
-	Spec commonclient.OptionalNil[UpdateStorageDiskSpecRequest] `json:"spec" yaml:"spec"`
+	Ref  optional.Optional[compute.DiskRef]                 `json:"ref" yaml:"ref"`
+	Spec optional.OptionalNil[UpdateStorageDiskSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *StorageDiskSpecOrRefRequest) AsUpdateModel() UpdateStorageDiskSpecOrRefRequest {
 	var u UpdateStorageDiskSpecOrRefRequest
 	if m.Ref != nil {
-		u.Ref = commonclient.NewOptional(m.GetRefOr(compute.DiskRef{}))
+		u.Ref = optional.NewOptional(m.GetRefOr(compute.DiskRef{}))
 	}
 	if m.Spec != nil {
-		u.Spec = commonclient.NewOptionalNil(m.Spec.AsUpdateModel())
+		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
 	}
 	return u
 }
@@ -76,13 +77,17 @@ func (m *UpdateStorageDiskSpecOrRefRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *StorageDiskSpecOrRefRequest) diffRef(src *StorageDiskSpecOrRefRequest) commonclient.Optional[compute.DiskRef] {
+func (m *StorageDiskSpecOrRefRequest) diffRef(src *StorageDiskSpecOrRefRequest) optional.Optional[compute.DiskRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *StorageDiskSpecOrRefRequest) diffSpec(src *StorageDiskSpecOrRefRequest) commonclient.OptionalNil[UpdateStorageDiskSpecRequest] {
+func (m *StorageDiskSpecOrRefRequest) diffSpec(src *StorageDiskSpecOrRefRequest) optional.OptionalNil[UpdateStorageDiskSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return commonclient.NewDirectOptionalNil[UpdateStorageDiskSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateStorageDiskSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

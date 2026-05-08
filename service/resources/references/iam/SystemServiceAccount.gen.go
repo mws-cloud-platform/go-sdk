@@ -143,7 +143,7 @@ func (m *SystemServiceAccountID) UnmarshalJSON(b []byte) error {
 
 func (m *SystemServiceAccountID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("SystemServiceAccountRef")
+		return conv.NewDecodeToNilError("SystemServiceAccountID")
 	}
 
 	v, err := decode.Str(d)

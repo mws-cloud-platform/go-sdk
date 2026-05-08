@@ -5,15 +5,15 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 // Real OAPI model name: StorageDiskSpecOrRef
 type StorageDiskSpecOrRefOptionalResponse struct {
-	Ref  commonclient.Optional[compute.DiskRef]                    `json:"ref,omitempty" yaml:"ref,omitempty"`
-	Spec commonclient.OptionalNil[StorageDiskSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Ref  optional.Optional[compute.DiskRef]                    `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Spec optional.OptionalNil[StorageDiskSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *StorageDiskSpecOrRefOptionalResponse) GetRef() *compute.DiskRef {

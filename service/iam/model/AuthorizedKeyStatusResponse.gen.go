@@ -11,10 +11,12 @@ import (
 // Real OAPI model name: AuthorizedKeyStatus
 type AuthorizedKeyStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
-	// Закрытый ключ, сгенерированный на стороне сервиса. Возвращается только в ответ на первый запрос генерации ключей.
+	// Закрытый ключ, сгенерированный на стороне сервиса.
 	PrivateKey *string `json:"privateKey,omitempty" yaml:"privateKey,omitempty"`
 	// Файл с закрытым ключом, сгенерированным на стороне сервиса, в формате base64
 	PrivateKeyFile *string `json:"privateKeyFile,omitempty" yaml:"privateKeyFile,omitempty"`
+	// Открытый ключ, сгенерированный на стороне сервиса.
+	PublicKey *string `json:"publicKey,omitempty" yaml:"publicKey,omitempty"`
 	// Время последней аутентификации.
 	LastAuthTime *time.Time `json:"lastAuthTime,omitempty" yaml:"lastAuthTime,omitempty"`
 }
@@ -54,6 +56,20 @@ func (m *AuthorizedKeyStatusResponse) GetPrivateKeyFileOr(val string) string {
 	return val
 }
 
+func (m *AuthorizedKeyStatusResponse) GetPublicKey() *string {
+	if m != nil {
+		return m.PublicKey
+	}
+	return nil
+}
+
+func (m *AuthorizedKeyStatusResponse) GetPublicKeyOr(val string) string {
+	if m != nil && m.PublicKey != nil {
+		return *m.PublicKey
+	}
+	return val
+}
+
 func (m *AuthorizedKeyStatusResponse) GetLastAuthTime() *time.Time {
 	if m != nil {
 		return m.LastAuthTime
@@ -82,6 +98,10 @@ func (m *AuthorizedKeyStatusResponse) Clone() *AuthorizedKeyStatusResponse {
 	if m.PrivateKeyFile != nil {
 		clonePrivateKeyFile := *m.PrivateKeyFile
 		clone.PrivateKeyFile = &clonePrivateKeyFile
+	}
+	if m.PublicKey != nil {
+		clonePublicKey := *m.PublicKey
+		clone.PublicKey = &clonePublicKey
 	}
 
 	return &clone

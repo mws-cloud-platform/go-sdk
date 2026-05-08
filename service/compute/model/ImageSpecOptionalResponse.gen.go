@@ -7,8 +7,8 @@ import (
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
@@ -16,15 +16,15 @@ import (
 // Real OAPI model name: ImageSpec
 type ImageSpecOptionalResponse struct {
 	// Семейство образа
-	Family commonclient.Optional[string] `json:"family,omitempty" yaml:"family,omitempty"`
+	Family optional.Optional[string] `json:"family,omitempty" yaml:"family,omitempty"`
 	// Источник для создания образа
 	Source ImageSpecSourceOptionalResponse `json:"source" yaml:"source"`
 	// Актуальность образа
-	Activity commonclient.Optional[ImageActivity] `json:"activity,omitempty" yaml:"activity,omitempty"`
+	Activity optional.Optional[ImageActivity] `json:"activity,omitempty" yaml:"activity,omitempty"`
 	// Минимальный допустимый размер диска, создаваемого из образа
-	MinDiskSize commonclient.Optional[bytesize.ByteSize] `json:"minDiskSize,omitempty" yaml:"minDiskSize,omitempty"`
+	MinDiskSize optional.Optional[bytesize.ByteSize] `json:"minDiskSize,omitempty" yaml:"minDiskSize,omitempty"`
 	// Тип операционной системы
-	OsType commonclient.Optional[OsType] `json:"osType,omitempty" yaml:"osType,omitempty"`
+	OsType optional.Optional[OsType] `json:"osType,omitempty" yaml:"osType,omitempty"`
 }
 
 func (m *ImageSpecOptionalResponse) GetFamily() *string {
@@ -123,11 +123,11 @@ func (m *ImageSpecOptionalResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: ImageSpecSource
 type ImageSpecSourceOptionalResponse struct {
 	// URL для загрузки образа
-	ExternalUrl commonclient.Optional[string] `json:"externalUrl,omitempty" yaml:"externalUrl,omitempty"`
+	ExternalUrl optional.Optional[string] `json:"externalUrl,omitempty" yaml:"externalUrl,omitempty"`
 	// ID диска-источника
-	DiskId commonclient.Optional[compute.DiskRef] `json:"diskId,omitempty" yaml:"diskId,omitempty"`
+	DiskId optional.Optional[compute.DiskRef] `json:"diskId,omitempty" yaml:"diskId,omitempty"`
 	// ID образа-источника
-	ImageId commonclient.Optional[compute.ImageRef] `json:"imageId,omitempty" yaml:"imageId,omitempty"`
+	ImageId optional.Optional[compute.ImageRef] `json:"imageId,omitempty" yaml:"imageId,omitempty"`
 }
 
 func (m *ImageSpecSourceOptionalResponse) GetExternalUrl() *string {

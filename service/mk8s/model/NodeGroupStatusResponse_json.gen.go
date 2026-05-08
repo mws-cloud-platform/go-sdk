@@ -58,6 +58,11 @@ func (m *NodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 		m.ImageStorageSize.Encode(e)
 	}
 
+	if m.ImageStorageIops != nil {
+		e.FieldStart("imageStorageIops")
+		e.Int64(*m.ImageStorageIops)
+	}
+
 	if m.Scale != nil {
 		e.FieldStart("scale")
 		m.Scale.Encode(e)
@@ -162,6 +167,14 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.ImageStorageSize = &v
+			return nil
+		case "imageStorageIops":
+			v, err := decode.Int64(d)
+			if err != nil {
+				return err
+			}
+
+			m.ImageStorageIops = &v
 			return nil
 		case "scale":
 			if d.Next() == jx.Null {

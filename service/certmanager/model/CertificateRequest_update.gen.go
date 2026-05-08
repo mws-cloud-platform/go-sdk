@@ -5,22 +5,22 @@ package model
 import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateCertificateRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
-	Spec     commonclient.Optional[UpdateCertificateSpecRequest]                       `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Spec     optional.Optional[UpdateCertificateSpecRequest]                       `json:"spec" yaml:"spec"`
 }
 
 func (m *CertificateRequest) AsUpdateModel() UpdateCertificateRequest {
 	var u UpdateCertificateRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -58,15 +58,22 @@ func (m UpdateCertificateRequest) HasChanges() bool {
 		m.Spec.Set
 }
 
-func (m *CertificateRequest) diffMetadata(src *CertificateRequest) commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *CertificateRequest) diffMetadata(src *CertificateRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[common.UpdateCommonTypedResourceMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *CertificateRequest) diffSpec(src *CertificateRequest) commonclient.Optional[UpdateCertificateSpecRequest] {
+func (m *CertificateRequest) diffSpec(src *CertificateRequest) optional.Optional[UpdateCertificateSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateCertificateSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateCertificateSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

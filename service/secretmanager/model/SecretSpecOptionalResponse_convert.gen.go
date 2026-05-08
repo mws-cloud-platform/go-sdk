@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func SecretSpecRequestToOptionalResponse(request *SecretSpecRequest) (*SecretSpecOptionalResponse, error) {
@@ -12,17 +12,17 @@ func SecretSpecRequestToOptionalResponse(request *SecretSpecRequest) (*SecretSpe
 	}
 	var response SecretSpecOptionalResponse
 	if request.Active != nil {
-		response.Active = commonclient.NewOptional(*request.Active)
+		response.Active = optional.NewOptional(*request.Active)
 	}
 	if request.CurrentSecretVersion != nil {
-		response.CurrentSecretVersion = commonclient.NewOptional(*request.CurrentSecretVersion)
+		response.CurrentSecretVersion = optional.NewOptional(*request.CurrentSecretVersion)
 	}
 	if request.Encryption != nil {
 		tmpEncryption, err := EncryptionSpecRequestToOptionalResponse(request.Encryption)
 		if err != nil {
 			return nil, err
 		}
-		response.Encryption = commonclient.NewOptionalNil(*tmpEncryption)
+		response.Encryption = optional.NewOptionalNil(*tmpEncryption)
 	}
 	return &response, nil
 }

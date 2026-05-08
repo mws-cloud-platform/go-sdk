@@ -49,9 +49,9 @@ func (c *FirewallRule) listFirewallRulesInvoker(ctx context.Context, anyReq any,
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"firewallRules")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -144,11 +144,11 @@ func (c *FirewallRule) deleteFirewallRuleInvoker(ctx context.Context, anyReq any
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"firewallRules",
-		request.FirewallRule)
+		url.PathEscape(request.FirewallRule))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -221,11 +221,11 @@ func (c *FirewallRule) getFirewallRuleInvoker(ctx context.Context, anyReq any, r
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"firewallRules",
-		request.FirewallRule)
+		url.PathEscape(request.FirewallRule))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -299,11 +299,11 @@ func (c *FirewallRule) upsertFirewallRuleInvoker(ctx context.Context, anyReq any
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"firewallRules",
-		request.FirewallRule)
+		url.PathEscape(request.FirewallRule))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -393,11 +393,11 @@ func (c *FirewallRule) createFirewallRuleInvoker(ctx context.Context, anyReq any
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"firewallRules",
-		request.FirewallRule)
+		url.PathEscape(request.FirewallRule))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)
@@ -488,11 +488,11 @@ func (c *FirewallRule) updateFirewallRuleInvoker(ctx context.Context, anyReq any
 		"vpc",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"networks",
-		request.Network,
+		url.PathEscape(request.Network),
 		"firewallRules",
-		request.FirewallRule)
+		url.PathEscape(request.FirewallRule))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "network", request.Network)

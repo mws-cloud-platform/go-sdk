@@ -3,18 +3,18 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: NodeGroupVersionControlSpec
 type NodeGroupVersionControlSpecOptionalResponse struct {
 	// Минимальная версия NodeGroup. Не может быть выше версии кластера.  Автоматически обновляется до default-версии в окно обслуживания. Если указанная версия выше текущей, обновление запустится немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе NodeGroup
-	Version commonclient.OptionalNil[string] `json:"version,omitempty" yaml:"version,omitempty"`
+	Version optional.OptionalNil[string] `json:"version,omitempty" yaml:"version,omitempty"`
 	// авто обновление версии нод группы в рамках релизного канала и окна обслуживания
-	AutoUpdate commonclient.Optional[bool] `json:"autoUpdate,omitempty" yaml:"autoUpdate,omitempty"`
+	AutoUpdate optional.Optional[bool] `json:"autoUpdate,omitempty" yaml:"autoUpdate,omitempty"`
 	// Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration можно указывать. Если отсутствует, то не ограничено по времени
-	MaintenanceWindow commonclient.OptionalNil[common.MaintenanceWindowOptionalResponse] `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	MaintenanceWindow optional.OptionalNil[common.MaintenanceWindowOptionalResponse] `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 }
 
 func (m *NodeGroupVersionControlSpecOptionalResponse) GetVersion() *string {

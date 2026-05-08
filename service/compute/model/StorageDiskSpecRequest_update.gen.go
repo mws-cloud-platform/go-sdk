@@ -7,21 +7,22 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateStorageDiskSpecRequest struct {
-	Size commonclient.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
+	Size optional.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
 	// Запрашиваемая пользователем IOPS
-	Iops commonclient.Optional[Iops] `json:"iops" yaml:"iops"`
+	Iops optional.Optional[Iops] `json:"iops" yaml:"iops"`
 }
 
 func (m *StorageDiskSpecRequest) AsUpdateModel() UpdateStorageDiskSpecRequest {
 	var u UpdateStorageDiskSpecRequest
 	if m.Size != nil {
-		u.Size = commonclient.NewOptional(m.GetSizeOr(bytesize.ByteSize{}))
+		u.Size = optional.NewOptional(m.GetSizeOr(bytesize.ByteSize{}))
 	}
 	if m.Iops != nil {
-		u.Iops = commonclient.NewOptional(m.GetIopsOr(0))
+		u.Iops = optional.NewOptional(m.GetIopsOr(0))
 	}
 	return u
 }
@@ -58,12 +59,12 @@ func (m UpdateStorageDiskSpecRequest) HasChanges() bool {
 		m.Iops.Set
 }
 
-func (m *StorageDiskSpecRequest) diffSize(src *StorageDiskSpecRequest) commonclient.Optional[bytesize.ByteSize] {
+func (m *StorageDiskSpecRequest) diffSize(src *StorageDiskSpecRequest) optional.Optional[bytesize.ByteSize] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceNonRequired(src.GetSize(), m.GetSize(), nilDiffers)
 }
 
-func (m *StorageDiskSpecRequest) diffIops(src *StorageDiskSpecRequest) commonclient.Optional[Iops] {
+func (m *StorageDiskSpecRequest) diffIops(src *StorageDiskSpecRequest) optional.Optional[Iops] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetIops(), m.GetIops(), nilDiffers)
 }

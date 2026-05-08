@@ -183,7 +183,7 @@ func (m *KafkaVmComponentsID) UnmarshalJSON(b []byte) error {
 
 func (m *KafkaVmComponentsID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("KafkaVmComponentsRef")
+		return conv.NewDecodeToNilError("KafkaVmComponentsID")
 	}
 
 	v, err := decode.Str(d)

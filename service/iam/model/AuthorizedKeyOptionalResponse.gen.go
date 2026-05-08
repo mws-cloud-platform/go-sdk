@@ -6,16 +6,16 @@ import (
 	"context"
 	"time"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: AuthorizedKey
 type AuthorizedKeyOptionalResponse struct {
-	Kind     *string                                                         `json:"kind,omitempty" yaml:"kind,omitempty"`
-	Metadata commonclient.OptionalNil[AuthorizedKeyMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Kind     *string                                                     `json:"kind,omitempty" yaml:"kind,omitempty"`
+	Metadata optional.OptionalNil[AuthorizedKeyMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Описание спецификация для авторизированных ключей.
 	Spec   AuthorizedKeySpecOptionalResponse `json:"spec" yaml:"spec"`
 	Status *AuthorizedKeyStatusResponse      `json:"status,omitempty" yaml:"status,omitempty"`

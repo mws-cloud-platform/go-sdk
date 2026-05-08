@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func SubnetDhcpOptionsRequestToOptionalResponse(request *SubnetDhcpOptionsRequest) (*SubnetDhcpOptionsOptionalResponse, error) {
@@ -12,13 +12,13 @@ func SubnetDhcpOptionsRequestToOptionalResponse(request *SubnetDhcpOptionsReques
 	}
 	var response SubnetDhcpOptionsOptionalResponse
 	if request.DomainName != nil {
-		response.DomainName = commonclient.NewOptional(*request.DomainName)
+		response.DomainName = optional.NewOptional(*request.DomainName)
 	}
 	if request.DomainNameServers != nil {
-		response.DomainNameServers = commonclient.NewOptional(request.DomainNameServers)
+		response.DomainNameServers = optional.NewOptional(request.DomainNameServers)
 	}
 	if request.NtpServers != nil {
-		response.NtpServers = commonclient.NewOptional(request.NtpServers)
+		response.NtpServers = optional.NewOptional(request.NtpServers)
 	}
 	return &response, nil
 }

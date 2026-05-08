@@ -9,16 +9,17 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateEgressNatSpecExternalRequest struct {
 	// Список спецификаций внешних адресов, через которых будет осуществляться трансляция.
-	Addresses commonclient.Optional[[]UpdateResourceExternalAddressSpecOrRefRequest] `json:"addresses" yaml:"addresses"`
+	Addresses optional.Optional[[]UpdateResourceExternalAddressSpecOrRefRequest] `json:"addresses" yaml:"addresses"`
 }
 
 func (m *EgressNatSpecExternalRequest) AsUpdateModel() UpdateEgressNatSpecExternalRequest {
 	var u UpdateEgressNatSpecExternalRequest
-	u.Addresses = commonclient.NewOptional(func() []UpdateResourceExternalAddressSpecOrRefRequest {
+	u.Addresses = optional.NewOptional(func() []UpdateResourceExternalAddressSpecOrRefRequest {
 		var tmp []UpdateResourceExternalAddressSpecOrRefRequest
 		if m.GetAddresses() != nil {
 			tmp = make([]UpdateResourceExternalAddressSpecOrRefRequest, 0, len(m.GetAddresses()))
@@ -74,7 +75,7 @@ func (m *UpdateEgressNatSpecExternalRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *EgressNatSpecExternalRequest) diffAddresses(src *EgressNatSpecExternalRequest) commonclient.Optional[[]UpdateResourceExternalAddressSpecOrRefRequest] {
+func (m *EgressNatSpecExternalRequest) diffAddresses(src *EgressNatSpecExternalRequest) optional.Optional[[]UpdateResourceExternalAddressSpecOrRefRequest] {
 	diffFunc := func(fromItem, toItem ResourceExternalAddressSpecOrRefRequest, fromNil bool) UpdateResourceExternalAddressSpecOrRefRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -82,5 +83,8 @@ func (m *EgressNatSpecExternalRequest) diffAddresses(src *EgressNatSpecExternalR
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetAddresses(), m.GetAddresses(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdateResourceExternalAddressSpecOrRefRequest](value, hasChanges)
+	return optional.Optional[[]UpdateResourceExternalAddressSpecOrRefRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

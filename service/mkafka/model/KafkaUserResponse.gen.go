@@ -11,6 +11,8 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/mkafka"
 )
 
+// Пользователь — это внутренняя учетная запись Kafka для аутентификации в кластере
+//
 // Real OAPI model name: KafkaUser
 type KafkaUserResponse struct {
 	Kind     *string                    `json:"kind,omitempty" yaml:"kind,omitempty"`

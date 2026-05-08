@@ -9,6 +9,9 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Группа узлов в кластере Managed Kubernetes — это группа виртуальных машин
+// Compute, на которых запускаются контейнеры с приложениями
+//
 // Real OAPI model name: NodeGroup
 type NodeGroupRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.

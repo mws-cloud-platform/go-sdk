@@ -183,7 +183,7 @@ func (m *UserFederationProviderID) UnmarshalJSON(b []byte) error {
 
 func (m *UserFederationProviderID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("UserFederationProviderRef")
+		return conv.NewDecodeToNilError("UserFederationProviderID")
 	}
 
 	v, err := decode.Str(d)

@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func AddressSpecOrRefWithAttachmentsRequestToOptionalResponse(request *AddressSpecOrRefWithAttachmentsRequest) (*AddressSpecOrRefWithAttachmentsOptionalResponse, error) {
@@ -21,7 +21,7 @@ func AddressSpecOrRefWithAttachmentsRequestToOptionalResponse(request *AddressSp
 		if err != nil {
 			return nil, err
 		}
-		response.OneToOneNat = commonclient.NewOptionalNil(*tmpOneToOneNat)
+		response.OneToOneNat = optional.NewOptionalNil(*tmpOneToOneNat)
 	}
 	return &response, nil
 }

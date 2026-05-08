@@ -5,17 +5,17 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 // внешний ip-адрес
 // Real OAPI model name: ClusterPublicEndpointSpecOrRef
 type ClusterPublicEndpointSpecOrRefOptionalResponse struct {
-	Ref commonclient.Optional[vpc.ExternalAddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
-	Spec commonclient.OptionalNil[ClusterPublicEndpointSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec optional.OptionalNil[ClusterPublicEndpointSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *ClusterPublicEndpointSpecOrRefOptionalResponse) GetRef() *vpc.ExternalAddressRef {

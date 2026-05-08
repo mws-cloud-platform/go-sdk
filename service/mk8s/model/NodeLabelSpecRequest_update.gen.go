@@ -4,21 +4,22 @@ package model
 
 import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateNodeLabelSpecRequest struct {
 	// Ключ может состоять из двух частей: необязательный префикс и ключ, разделенные '/'
 	// Максимальная длина префикса 253 символа.
 	// Максимальная длина ключа 63 символа.
-	Key commonclient.Optional[string] `json:"key" yaml:"key"`
+	Key optional.Optional[string] `json:"key" yaml:"key"`
 	// Значение метки на узле.
-	Value commonclient.Optional[string] `json:"value" yaml:"value"`
+	Value optional.Optional[string] `json:"value" yaml:"value"`
 }
 
 func (m *NodeLabelSpecRequest) AsUpdateModel() UpdateNodeLabelSpecRequest {
 	var u UpdateNodeLabelSpecRequest
-	u.Key = commonclient.NewOptional(m.GetKey())
-	u.Value = commonclient.NewOptional(m.GetValue())
+	u.Key = optional.NewOptional(m.GetKey())
+	u.Value = optional.NewOptional(m.GetValue())
 	return u
 }
 
@@ -54,12 +55,12 @@ func (m UpdateNodeLabelSpecRequest) HasChanges() bool {
 		m.Value.Set
 }
 
-func (m *NodeLabelSpecRequest) diffKey(src *NodeLabelSpecRequest) commonclient.Optional[string] {
+func (m *NodeLabelSpecRequest) diffKey(src *NodeLabelSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetKey(), m.GetKey(), nilDiffers)
 }
 
-func (m *NodeLabelSpecRequest) diffValue(src *NodeLabelSpecRequest) commonclient.Optional[string] {
+func (m *NodeLabelSpecRequest) diffValue(src *NodeLabelSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetValue(), m.GetValue(), nilDiffers)
 }

@@ -163,7 +163,7 @@ func (m *ProjectCountID) UnmarshalJSON(b []byte) error {
 
 func (m *ProjectCountID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ProjectCountRef")
+		return conv.NewDecodeToNilError("ProjectCountID")
 	}
 
 	v, err := decode.Str(d)

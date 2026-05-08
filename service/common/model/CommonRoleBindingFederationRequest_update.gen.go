@@ -7,19 +7,20 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 type UpdateCommonRoleBindingFederationRequest struct {
 	// Идентификатор федерации.
-	Id      commonclient.Optional[iam.UserFederationRef]                           `json:"id" yaml:"id"`
-	Context commonclient.Optional[UpdateCommonRoleBindingFederationContextRequest] `json:"context" yaml:"context"`
+	Id      optional.Optional[iam.UserFederationRef]                           `json:"id" yaml:"id"`
+	Context optional.Optional[UpdateCommonRoleBindingFederationContextRequest] `json:"context" yaml:"context"`
 }
 
 func (m *CommonRoleBindingFederationRequest) AsUpdateModel() UpdateCommonRoleBindingFederationRequest {
 	var u UpdateCommonRoleBindingFederationRequest
-	u.Id = commonclient.NewOptional(m.GetId())
-	u.Context = commonclient.NewOptional(m.Context.AsUpdateModel())
+	u.Id = optional.NewOptional(m.GetId())
+	u.Context = optional.NewOptional(m.Context.AsUpdateModel())
 	return u
 }
 
@@ -69,14 +70,17 @@ func (m *UpdateCommonRoleBindingFederationRequest) Parse(ctx context.Context) er
 	return nil
 }
 
-func (m *CommonRoleBindingFederationRequest) diffId(src *CommonRoleBindingFederationRequest) commonclient.Optional[iam.UserFederationRef] {
+func (m *CommonRoleBindingFederationRequest) diffId(src *CommonRoleBindingFederationRequest) optional.Optional[iam.UserFederationRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetId(), m.GetId(), nilDiffers)
 }
 
-func (m *CommonRoleBindingFederationRequest) diffContext(src *CommonRoleBindingFederationRequest) commonclient.Optional[UpdateCommonRoleBindingFederationContextRequest] {
+func (m *CommonRoleBindingFederationRequest) diffContext(src *CommonRoleBindingFederationRequest) optional.Optional[UpdateCommonRoleBindingFederationContextRequest] {
 	from := src.GetContext()
 	to := m.GetContext()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateCommonRoleBindingFederationContextRequest](value, value.HasChanges())
+	return optional.Optional[UpdateCommonRoleBindingFederationContextRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

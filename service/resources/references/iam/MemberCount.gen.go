@@ -163,7 +163,7 @@ func (m *MemberCountID) UnmarshalJSON(b []byte) error {
 
 func (m *MemberCountID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("MemberCountRef")
+		return conv.NewDecodeToNilError("MemberCountID")
 	}
 
 	v, err := decode.Str(d)

@@ -6,7 +6,7 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Описывает правило Firewall'а.
+// Правило файрвола — набор параметров, который разрешает или запрещает определенный тип трафика
 // Real OAPI model name: FirewallRule
 type FirewallRuleRequest struct {
 	// Метаданные правила Firewall'а.

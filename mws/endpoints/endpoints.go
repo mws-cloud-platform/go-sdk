@@ -37,15 +37,15 @@ type chain struct {
 	resolvers []ServiceEndpointResolver
 }
 
-func (c chain) Resolve(ctx context.Context, service ServiceName) (Endpoint, error) {
+func (c chain) Resolve(ctx context.Context, service ServiceName) (endpoint Endpoint, err error) {
 	for _, r := range c.resolvers {
-		endpoint, err := r.Resolve(ctx, service)
+		endpoint, err = r.Resolve(ctx, service)
 		if err != nil {
 			continue
 		}
 		return endpoint, nil
 	}
-	return "", errServiceEndpointNotFound(service)
+	return "", err
 }
 
 func errServiceEndpointNotFound(service ServiceName) error {

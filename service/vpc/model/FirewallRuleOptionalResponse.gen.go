@@ -5,17 +5,17 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Описывает правило Firewall'а.
+// Правило файрвола — набор параметров, который разрешает или запрещает определенный тип трафика
 // Real OAPI model name: FirewallRule
 type FirewallRuleOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Метаданные правила Firewall'а.
-	Metadata commonclient.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация правила Firewall'а.
 	Spec FirewallRuleSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Статус правила Firewall'а.

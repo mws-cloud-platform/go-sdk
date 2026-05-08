@@ -5,19 +5,20 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 // Real OAPI model name: AddressSpecOrRef
 type AddressSpecOrRefOptionalResponse struct {
-	Ref commonclient.Optional[vpc.AddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref optional.Optional[vpc.AddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Возможно 2 варианта:
-	// - запросить резервирование случайного адреса (заданы параметры "version")
-	// - запросить резервирование конкретного адреса (заданы параметры "version", "ipAddress", остальные пусты)
+	//   - запросить резервирование случайного адреса (заданы параметры "version")
+	//   - запросить резервирование конкретного адреса (заданы параметры "version", "ipAddress", остальные пусты)
+	//
 	// Если необходимо привязать внешний адрес, заполняется параметр "oneToOneNat"
-	Spec commonclient.OptionalNil[AddressSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec optional.OptionalNil[AddressSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *AddressSpecOrRefOptionalResponse) GetRef() *vpc.AddressRef {

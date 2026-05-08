@@ -3,14 +3,14 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Спецификация процессора, который доступен для ВМ указанного типа.
 // Real OAPI model name: VmTypeCpuSpec
 type VmTypeCpuSpecOptionalResponse struct {
 	// Количество виртуальных ядер.
-	VcpuCount commonclient.Optional[int32] `json:"vcpuCount,omitempty,string" yaml:"vcpuCount,omitempty"`
+	VcpuCount optional.Optional[int32] `json:"vcpuCount,omitempty,string" yaml:"vcpuCount,omitempty"`
 }
 
 func (m *VmTypeCpuSpecOptionalResponse) GetVcpuCount() *int32 {

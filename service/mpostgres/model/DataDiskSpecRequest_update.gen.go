@@ -7,25 +7,26 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateDataDiskSpecRequest struct {
 	// Размер диска.
-	Size commonclient.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
+	Size optional.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
 	// Тип используемого диска:
 	// * `NETWORK_STANDARD_SSD` — сетевой SSD
 	// * `LOCAL` — локальный диск
-	Type commonclient.Optional[DataDiskType] `json:"type" yaml:"type"`
+	Type optional.Optional[DataDiskType] `json:"type" yaml:"type"`
 	// IOPS
-	Iops commonclient.Optional[Iops] `json:"iops" yaml:"iops"`
+	Iops optional.Optional[Iops] `json:"iops" yaml:"iops"`
 }
 
 func (m *DataDiskSpecRequest) AsUpdateModel() UpdateDataDiskSpecRequest {
 	var u UpdateDataDiskSpecRequest
-	u.Size = commonclient.NewOptional(m.GetSize())
-	u.Type = commonclient.NewOptional(m.GetType())
+	u.Size = optional.NewOptional(m.GetSize())
+	u.Type = optional.NewOptional(m.GetType())
 	if m.Iops != nil {
-		u.Iops = commonclient.NewOptional(m.GetIopsOr(0))
+		u.Iops = optional.NewOptional(m.GetIopsOr(0))
 	}
 	return u
 }
@@ -67,17 +68,17 @@ func (m UpdateDataDiskSpecRequest) HasChanges() bool {
 		m.Iops.Set
 }
 
-func (m *DataDiskSpecRequest) diffSize(src *DataDiskSpecRequest) commonclient.Optional[bytesize.ByteSize] {
+func (m *DataDiskSpecRequest) diffSize(src *DataDiskSpecRequest) optional.Optional[bytesize.ByteSize] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceRequired(src.GetSize(), m.GetSize(), nilDiffers)
 }
 
-func (m *DataDiskSpecRequest) diffType(src *DataDiskSpecRequest) commonclient.Optional[DataDiskType] {
+func (m *DataDiskSpecRequest) diffType(src *DataDiskSpecRequest) optional.Optional[DataDiskType] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetType(), m.GetType(), nilDiffers)
 }
 
-func (m *DataDiskSpecRequest) diffIops(src *DataDiskSpecRequest) commonclient.Optional[Iops] {
+func (m *DataDiskSpecRequest) diffIops(src *DataDiskSpecRequest) optional.Optional[Iops] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetIops(), m.GetIops(), nilDiffers)
 }

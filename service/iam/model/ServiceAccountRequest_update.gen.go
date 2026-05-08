@@ -10,20 +10,21 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateServiceAccountRequest struct {
-	Metadata commonclient.OptionalNil[UpdateServiceAccountMetadataRequest] `json:"metadata" yaml:"metadata"`
-	Spec     commonclient.Optional[UpdateServiceAccountSpecRequest]        `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[UpdateServiceAccountMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Spec     optional.Optional[UpdateServiceAccountSpecRequest]        `json:"spec" yaml:"spec"`
 }
 
 func (m *ServiceAccountRequest) AsUpdateModel() UpdateServiceAccountRequest {
 	var u UpdateServiceAccountRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -75,32 +76,39 @@ func (m *UpdateServiceAccountRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *ServiceAccountRequest) diffMetadata(src *ServiceAccountRequest) commonclient.OptionalNil[UpdateServiceAccountMetadataRequest] {
+func (m *ServiceAccountRequest) diffMetadata(src *ServiceAccountRequest) optional.OptionalNil[UpdateServiceAccountMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[UpdateServiceAccountMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateServiceAccountMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *ServiceAccountRequest) diffSpec(src *ServiceAccountRequest) commonclient.Optional[UpdateServiceAccountSpecRequest] {
+func (m *ServiceAccountRequest) diffSpec(src *ServiceAccountRequest) optional.Optional[UpdateServiceAccountSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateServiceAccountSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateServiceAccountSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 type UpdateServiceAccountMetadataRequest struct {
 	common.UpdateTypedResourceMetadataRequest
 	// Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта.
-	Name commonclient.Optional[string] `json:"name" yaml:"name"`
+	Name optional.Optional[string] `json:"name" yaml:"name"`
 }
 
 func (m *ServiceAccountMetadataRequest) AsUpdateModel() UpdateServiceAccountMetadataRequest {
 	var u UpdateServiceAccountMetadataRequest
 	if m.DisplayName != nil {
-		u.DisplayName = commonclient.NewOptional(m.GetDisplayNameOr(""))
+		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = commonclient.NewOptional(func() []common.UpdateTypedUsageRequest {
+		u.Usages = optional.NewOptional(func() []common.UpdateTypedUsageRequest {
 			var tmp []common.UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
 				tmp = make([]common.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
@@ -112,13 +120,13 @@ func (m *ServiceAccountMetadataRequest) AsUpdateModel() UpdateServiceAccountMeta
 		}())
 	}
 	if m.Etag != nil {
-		u.Etag = commonclient.NewOptional(m.GetEtagOr(""))
+		u.Etag = optional.NewOptional(m.GetEtagOr(""))
 	}
 	if m.Description != nil {
-		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
+		u.Description = optional.NewOptional(m.GetDescriptionOr(""))
 	}
 	if m.Name != nil {
-		u.Name = commonclient.NewOptional(m.GetNameOr(""))
+		u.Name = optional.NewOptional(m.GetNameOr(""))
 	}
 	return u
 }
@@ -172,7 +180,7 @@ func (m UpdateServiceAccountMetadataRequest) HasChanges() bool {
 
 // SetName is used in the Diff function for NamedArray
 func (m *UpdateServiceAccountMetadataRequest) SetName(name string) {
-	m.Name = commonclient.NewOptional(name)
+	m.Name = optional.NewOptional(name)
 }
 
 func (m *UpdateServiceAccountMetadataRequest) Parse(ctx context.Context) error {
@@ -186,12 +194,12 @@ func (m *UpdateServiceAccountMetadataRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *ServiceAccountMetadataRequest) diffDisplayName(src *ServiceAccountMetadataRequest) commonclient.Optional[string] {
+func (m *ServiceAccountMetadataRequest) diffDisplayName(src *ServiceAccountMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *ServiceAccountMetadataRequest) diffUsages(src *ServiceAccountMetadataRequest) commonclient.Optional[[]common.UpdateTypedUsageRequest] {
+func (m *ServiceAccountMetadataRequest) diffUsages(src *ServiceAccountMetadataRequest) optional.Optional[[]common.UpdateTypedUsageRequest] {
 	diffFunc := func(fromItem, toItem common.TypedUsageRequest, fromNil bool) common.UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -199,20 +207,23 @@ func (m *ServiceAccountMetadataRequest) diffUsages(src *ServiceAccountMetadataRe
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return commonclient.NewDirectOptional[[]common.UpdateTypedUsageRequest](value, hasChanges)
+	return optional.Optional[[]common.UpdateTypedUsageRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *ServiceAccountMetadataRequest) diffEtag(src *ServiceAccountMetadataRequest) commonclient.Optional[string] {
+func (m *ServiceAccountMetadataRequest) diffEtag(src *ServiceAccountMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetEtag(), m.GetEtag(), nilDiffers)
 }
 
-func (m *ServiceAccountMetadataRequest) diffDescription(src *ServiceAccountMetadataRequest) commonclient.Optional[string] {
+func (m *ServiceAccountMetadataRequest) diffDescription(src *ServiceAccountMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
 }
 
-func (m *ServiceAccountMetadataRequest) diffName(src *ServiceAccountMetadataRequest) commonclient.Optional[string] {
+func (m *ServiceAccountMetadataRequest) diffName(src *ServiceAccountMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetName(), m.GetName(), nilDiffers)
 }

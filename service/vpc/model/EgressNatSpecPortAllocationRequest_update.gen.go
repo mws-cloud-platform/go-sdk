@@ -7,16 +7,17 @@ import (
 	unitsrange "go.mws.cloud/go-sdk/pkg/apimodels/units/range"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateEgressNatSpecPortAllocationRequest struct {
 	// Диапазон количества портов, которые может использовать один клиент.
-	PortsPerClient commonclient.Optional[unitsrange.Range[largenumber.LargeNumber]] `json:"portsPerClient" yaml:"portsPerClient"`
+	PortsPerClient optional.Optional[unitsrange.Range[largenumber.LargeNumber]] `json:"portsPerClient" yaml:"portsPerClient"`
 }
 
 func (m *EgressNatSpecPortAllocationRequest) AsUpdateModel() UpdateEgressNatSpecPortAllocationRequest {
 	var u UpdateEgressNatSpecPortAllocationRequest
-	u.PortsPerClient = commonclient.NewOptional(m.GetPortsPerClient())
+	u.PortsPerClient = optional.NewOptional(m.GetPortsPerClient())
 	return u
 }
 
@@ -47,7 +48,7 @@ func (m UpdateEgressNatSpecPortAllocationRequest) HasChanges() bool {
 	return m.PortsPerClient.Set
 }
 
-func (m *EgressNatSpecPortAllocationRequest) diffPortsPerClient(src *EgressNatSpecPortAllocationRequest) commonclient.Optional[unitsrange.Range[largenumber.LargeNumber]] {
+func (m *EgressNatSpecPortAllocationRequest) diffPortsPerClient(src *EgressNatSpecPortAllocationRequest) optional.Optional[unitsrange.Range[largenumber.LargeNumber]] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceRequired(src.GetPortsPerClient(), m.GetPortsPerClient(), nilDiffers)
 }

@@ -5,18 +5,18 @@ package model
 import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateFirewallRuleDestinationRequest struct {
 	// Спецификация группы адресов.
-	Spec commonclient.OptionalNil[UpdateFirewallRuleDestinationSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateFirewallRuleDestinationSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *FirewallRuleDestinationRequest) AsUpdateModel() UpdateFirewallRuleDestinationRequest {
 	var u UpdateFirewallRuleDestinationRequest
 	if m.Spec != nil {
-		u.Spec = commonclient.NewOptionalNil(m.Spec.AsUpdateModel())
+		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
 	}
 	return u
 }
@@ -50,8 +50,12 @@ func (m UpdateFirewallRuleDestinationRequest) HasChanges() bool {
 	return m.Spec.Set
 }
 
-func (m *FirewallRuleDestinationRequest) diffSpec(src *FirewallRuleDestinationRequest) commonclient.OptionalNil[UpdateFirewallRuleDestinationSpecRequest] {
+func (m *FirewallRuleDestinationRequest) diffSpec(src *FirewallRuleDestinationRequest) optional.OptionalNil[UpdateFirewallRuleDestinationSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return commonclient.NewDirectOptionalNil[UpdateFirewallRuleDestinationSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateFirewallRuleDestinationSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

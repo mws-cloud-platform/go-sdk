@@ -7,25 +7,25 @@ import (
 
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateEgressNatSpecRequest struct {
 	// Группирующий элемент для всего, что касается внутренних ресурсов.
-	Internal commonclient.Optional[UpdateEgressNatSpecInternalRequest] `json:"internal" yaml:"internal"`
+	Internal optional.Optional[UpdateEgressNatSpecInternalRequest] `json:"internal" yaml:"internal"`
 	// Группирующий элемент для всего, что касается внешней части (ресурсов, доступных извне).
-	External commonclient.Optional[UpdateEgressNatSpecExternalRequest] `json:"external" yaml:"external"`
+	External optional.Optional[UpdateEgressNatSpecExternalRequest] `json:"external" yaml:"external"`
 	// Описывает настройки управления портами.
-	PortAllocation commonclient.OptionalNil[UpdateEgressNatSpecPortAllocationRequest] `json:"portAllocation" yaml:"portAllocation"`
+	PortAllocation optional.OptionalNil[UpdateEgressNatSpecPortAllocationRequest] `json:"portAllocation" yaml:"portAllocation"`
 }
 
 func (m *EgressNatSpecRequest) AsUpdateModel() UpdateEgressNatSpecRequest {
 	var u UpdateEgressNatSpecRequest
-	u.Internal = commonclient.NewOptional(m.Internal.AsUpdateModel())
-	u.External = commonclient.NewOptional(m.External.AsUpdateModel())
+	u.Internal = optional.NewOptional(m.Internal.AsUpdateModel())
+	u.External = optional.NewOptional(m.External.AsUpdateModel())
 	if m.PortAllocation != nil {
-		u.PortAllocation = commonclient.NewOptionalNil(m.PortAllocation.AsUpdateModel())
+		u.PortAllocation = optional.NewOptionalNil(m.PortAllocation.AsUpdateModel())
 	}
 	return u
 }
@@ -89,22 +89,32 @@ func (m *UpdateEgressNatSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *EgressNatSpecRequest) diffInternal(src *EgressNatSpecRequest) commonclient.Optional[UpdateEgressNatSpecInternalRequest] {
+func (m *EgressNatSpecRequest) diffInternal(src *EgressNatSpecRequest) optional.Optional[UpdateEgressNatSpecInternalRequest] {
 	from := src.GetInternal()
 	to := m.GetInternal()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateEgressNatSpecInternalRequest](value, value.HasChanges())
+	return optional.Optional[UpdateEgressNatSpecInternalRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *EgressNatSpecRequest) diffExternal(src *EgressNatSpecRequest) commonclient.Optional[UpdateEgressNatSpecExternalRequest] {
+func (m *EgressNatSpecRequest) diffExternal(src *EgressNatSpecRequest) optional.Optional[UpdateEgressNatSpecExternalRequest] {
 	from := src.GetExternal()
 	to := m.GetExternal()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateEgressNatSpecExternalRequest](value, value.HasChanges())
+	return optional.Optional[UpdateEgressNatSpecExternalRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *EgressNatSpecRequest) diffPortAllocation(src *EgressNatSpecRequest) commonclient.OptionalNil[UpdateEgressNatSpecPortAllocationRequest] {
+func (m *EgressNatSpecRequest) diffPortAllocation(src *EgressNatSpecRequest) optional.OptionalNil[UpdateEgressNatSpecPortAllocationRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetPortAllocation().Diff(src.GetPortAllocation())
-	return commonclient.NewDirectOptionalNil[UpdateEgressNatSpecPortAllocationRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateEgressNatSpecPortAllocationRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

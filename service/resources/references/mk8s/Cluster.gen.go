@@ -163,7 +163,7 @@ func (m *ClusterID) UnmarshalJSON(b []byte) error {
 
 func (m *ClusterID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ClusterRef")
+		return conv.NewDecodeToNilError("ClusterID")
 	}
 
 	v, err := decode.Str(d)

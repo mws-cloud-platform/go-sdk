@@ -174,3 +174,9 @@ func (c *DumbCache) Delete(key string) error {
 func (c *DumbCache) Close(context.Context) error {
 	return nil
 }
+
+func (c *DumbCache) IsEmpty() bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return len(c.data) == 0
+}

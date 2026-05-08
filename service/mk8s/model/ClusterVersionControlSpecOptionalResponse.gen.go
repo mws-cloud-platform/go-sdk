@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -12,9 +12,9 @@ type ClusterVersionControlSpecOptionalResponse struct {
 	// Cluster обновляется всегда до default версии, поэтому необходимо выбрать релизный канал и настроить окно обслуживания
 	ReleaseChannel string `json:"releaseChannel" yaml:"releaseChannel"`
 	// Минимальная версия Cluster. Автоматически обновляется до версии default в окно обслуживания. При указании версии выше default обновление запускается немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе Cluster
-	Version commonclient.OptionalNil[string] `json:"version,omitempty" yaml:"version,omitempty"`
+	Version optional.OptionalNil[string] `json:"version,omitempty" yaml:"version,omitempty"`
 	// Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration нельзя указывать, так как обновление мастер нод не прерывается
-	MaintenanceWindow commonclient.OptionalNil[common.MaintenanceWindowOptionalResponse] `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	MaintenanceWindow optional.OptionalNil[common.MaintenanceWindowOptionalResponse] `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 }
 
 func (m *ClusterVersionControlSpecOptionalResponse) GetReleaseChannel() string {

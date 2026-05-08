@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func DiskSpecRequestToOptionalResponse(request *DiskSpecRequest) (*DiskSpecOptionalResponse, error) {
@@ -13,26 +13,26 @@ func DiskSpecRequestToOptionalResponse(request *DiskSpecRequest) (*DiskSpecOptio
 	var response DiskSpecOptionalResponse
 	response.Zone = request.Zone
 	if request.Size != nil {
-		response.Size = commonclient.NewOptional(*request.Size)
+		response.Size = optional.NewOptional(*request.Size)
 	}
 	if request.Source != nil {
 		tmpSource, err := DiskSpecSourceRequestToOptionalResponse(request.Source)
 		if err != nil {
 			return nil, err
 		}
-		response.Source = commonclient.NewOptionalNil(*tmpSource)
+		response.Source = optional.NewOptionalNil(*tmpSource)
 	}
 	if request.DiskType != nil {
-		response.DiskType = commonclient.NewOptional(*request.DiskType)
+		response.DiskType = optional.NewOptional(*request.DiskType)
 	}
 	if request.Iops != nil {
-		response.Iops = commonclient.NewOptional(*request.Iops)
+		response.Iops = optional.NewOptional(*request.Iops)
 	}
 	if request.BlockSize != nil {
-		response.BlockSize = commonclient.NewOptional(*request.BlockSize)
+		response.BlockSize = optional.NewOptional(*request.BlockSize)
 	}
 	if request.OsType != nil {
-		response.OsType = commonclient.NewOptional(*request.OsType)
+		response.OsType = optional.NewOptional(*request.OsType)
 	}
 	return &response, nil
 }
@@ -43,10 +43,13 @@ func DiskSpecSourceRequestToOptionalResponse(request *DiskSpecSourceRequest) (*D
 	}
 	var response DiskSpecSourceOptionalResponse
 	if request.Image != nil {
-		response.Image = commonclient.NewOptional(*request.Image)
+		response.Image = optional.NewOptional(*request.Image)
 	}
 	if request.Snapshot != nil {
-		response.Snapshot = commonclient.NewOptional(*request.Snapshot)
+		response.Snapshot = optional.NewOptional(*request.Snapshot)
+	}
+	if request.DiskBackup != nil {
+		response.DiskBackup = optional.NewOptional(*request.DiskBackup)
 	}
 	return &response, nil
 }

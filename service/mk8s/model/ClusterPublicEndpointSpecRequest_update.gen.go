@@ -6,17 +6,18 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateClusterPublicEndpointSpecRequest struct {
 	// Версия IP протокола.
-	Version commonclient.Optional[ClusterPublicEndpointSpecVersionRequest] `json:"version" yaml:"version"`
+	Version optional.Optional[ClusterPublicEndpointSpecVersionRequest] `json:"version" yaml:"version"`
 }
 
 func (m *ClusterPublicEndpointSpecRequest) AsUpdateModel() UpdateClusterPublicEndpointSpecRequest {
 	var u UpdateClusterPublicEndpointSpecRequest
 	if m.Version != nil {
-		u.Version = commonclient.NewOptional(m.GetVersionOr(""))
+		u.Version = optional.NewOptional(m.GetVersionOr(""))
 	}
 	return u
 }
@@ -48,7 +49,7 @@ func (m UpdateClusterPublicEndpointSpecRequest) HasChanges() bool {
 	return m.Version.Set
 }
 
-func (m *ClusterPublicEndpointSpecRequest) diffVersion(src *ClusterPublicEndpointSpecRequest) commonclient.Optional[ClusterPublicEndpointSpecVersionRequest] {
+func (m *ClusterPublicEndpointSpecRequest) diffVersion(src *ClusterPublicEndpointSpecRequest) optional.Optional[ClusterPublicEndpointSpecVersionRequest] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetVersion(), m.GetVersion(), nilDiffers)
 }

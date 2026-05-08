@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func NetworkInterfaceSpecRequestToOptionalResponse(request *NetworkInterfaceSpecRequest) (*NetworkInterfaceSpecOptionalResponse, error) {
@@ -13,10 +13,10 @@ func NetworkInterfaceSpecRequestToOptionalResponse(request *NetworkInterfaceSpec
 	var response NetworkInterfaceSpecOptionalResponse
 	response.Name = request.Name
 	if request.Primary != nil {
-		response.Primary = commonclient.NewOptional(*request.Primary)
+		response.Primary = optional.NewOptional(*request.Primary)
 	}
 	if request.IpForwardingEnabled != nil {
-		response.IpForwardingEnabled = commonclient.NewOptional(*request.IpForwardingEnabled)
+		response.IpForwardingEnabled = optional.NewOptional(*request.IpForwardingEnabled)
 	}
 	for _, e := range request.Addresses {
 		tmp, err := AddressSpecOrRefWithAttachmentsRequestToOptionalResponse(&e)

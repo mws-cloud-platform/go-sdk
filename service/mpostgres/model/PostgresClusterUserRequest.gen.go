@@ -9,6 +9,7 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Пользователь в Managed PostgreSQL — это внутренняя учетная запись PostgreSQL для аутентификации в кластере
 // Real OAPI model name: PostgresClusterUser
 type PostgresClusterUserRequest struct {
 	Metadata *PostgresClusterUserMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`

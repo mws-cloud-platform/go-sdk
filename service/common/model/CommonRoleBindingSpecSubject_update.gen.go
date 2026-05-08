@@ -9,38 +9,39 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 type UpdateCommonRoleBindingSpecSubject struct {
 	// Идентификатор пользователя.
-	User commonclient.Optional[iam.UserRef] `json:"user" yaml:"user"`
+	User optional.Optional[iam.UserRef] `json:"user" yaml:"user"`
 	// Идентификатор сервисного аккаунта, принадлежащего проекту.
-	ServiceAccount commonclient.Optional[iam.ServiceAccountRef] `json:"serviceAccount" yaml:"serviceAccount"`
+	ServiceAccount optional.Optional[iam.ServiceAccountRef] `json:"serviceAccount" yaml:"serviceAccount"`
 	// Идентификатор сервисного агента, связанного с проектом.
-	ServiceAgent commonclient.Optional[iam.ServiceAgentRef] `json:"serviceAgent" yaml:"serviceAgent"`
+	ServiceAgent optional.Optional[iam.ServiceAgentRef] `json:"serviceAgent" yaml:"serviceAgent"`
 	// Субъект федерации пользователей.
-	UserFederation commonclient.OptionalNil[UpdateCommonRoleBindingFederation] `json:"userFederation" yaml:"userFederation"`
+	UserFederation optional.OptionalNil[UpdateCommonRoleBindingFederation] `json:"userFederation" yaml:"userFederation"`
 	// Идентификатор группы пользователей.
-	UserGroup commonclient.Optional[iam.UserGroupRef] `json:"userGroup" yaml:"userGroup"`
+	UserGroup optional.Optional[iam.UserGroupRef] `json:"userGroup" yaml:"userGroup"`
 }
 
 func (m *CommonRoleBindingSpecSubject) AsUpdateModel() UpdateCommonRoleBindingSpecSubject {
 	var u UpdateCommonRoleBindingSpecSubject
 	if m.User != nil {
-		u.User = commonclient.NewOptional(m.GetUserOr(iam.UserRef{}))
+		u.User = optional.NewOptional(m.GetUserOr(iam.UserRef{}))
 	}
 	if m.ServiceAccount != nil {
-		u.ServiceAccount = commonclient.NewOptional(m.GetServiceAccountOr(iam.ServiceAccountRef{}))
+		u.ServiceAccount = optional.NewOptional(m.GetServiceAccountOr(iam.ServiceAccountRef{}))
 	}
 	if m.ServiceAgent != nil {
-		u.ServiceAgent = commonclient.NewOptional(m.GetServiceAgentOr(iam.ServiceAgentRef{}))
+		u.ServiceAgent = optional.NewOptional(m.GetServiceAgentOr(iam.ServiceAgentRef{}))
 	}
 	if m.UserFederation != nil {
-		u.UserFederation = commonclient.NewOptionalNil(m.UserFederation.AsUpdateModel())
+		u.UserFederation = optional.NewOptionalNil(m.UserFederation.AsUpdateModel())
 	}
 	if m.UserGroup != nil {
-		u.UserGroup = commonclient.NewOptional(m.GetUserGroupOr(iam.UserGroupRef{}))
+		u.UserGroup = optional.NewOptional(m.GetUserGroupOr(iam.UserGroupRef{}))
 	}
 	return u
 }
@@ -132,28 +133,32 @@ func (m *UpdateCommonRoleBindingSpecSubject) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *CommonRoleBindingSpecSubject) diffUser(src *CommonRoleBindingSpecSubject) commonclient.Optional[iam.UserRef] {
+func (m *CommonRoleBindingSpecSubject) diffUser(src *CommonRoleBindingSpecSubject) optional.Optional[iam.UserRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetUser(), m.GetUser(), nilDiffers)
 }
 
-func (m *CommonRoleBindingSpecSubject) diffServiceAccount(src *CommonRoleBindingSpecSubject) commonclient.Optional[iam.ServiceAccountRef] {
+func (m *CommonRoleBindingSpecSubject) diffServiceAccount(src *CommonRoleBindingSpecSubject) optional.Optional[iam.ServiceAccountRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetServiceAccount(), m.GetServiceAccount(), nilDiffers)
 }
 
-func (m *CommonRoleBindingSpecSubject) diffServiceAgent(src *CommonRoleBindingSpecSubject) commonclient.Optional[iam.ServiceAgentRef] {
+func (m *CommonRoleBindingSpecSubject) diffServiceAgent(src *CommonRoleBindingSpecSubject) optional.Optional[iam.ServiceAgentRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetServiceAgent(), m.GetServiceAgent(), nilDiffers)
 }
 
-func (m *CommonRoleBindingSpecSubject) diffUserFederation(src *CommonRoleBindingSpecSubject) commonclient.OptionalNil[UpdateCommonRoleBindingFederation] {
+func (m *CommonRoleBindingSpecSubject) diffUserFederation(src *CommonRoleBindingSpecSubject) optional.OptionalNil[UpdateCommonRoleBindingFederation] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetUserFederation().Diff(src.GetUserFederation())
-	return commonclient.NewDirectOptionalNil[UpdateCommonRoleBindingFederation](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateCommonRoleBindingFederation]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *CommonRoleBindingSpecSubject) diffUserGroup(src *CommonRoleBindingSpecSubject) commonclient.Optional[iam.UserGroupRef] {
+func (m *CommonRoleBindingSpecSubject) diffUserGroup(src *CommonRoleBindingSpecSubject) optional.Optional[iam.UserGroupRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetUserGroup(), m.GetUserGroup(), nilDiffers)
 }

@@ -15,6 +15,20 @@ type AuthorizedKey interface {
 	//
 	// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys
 	ListAuthorizedKey(context.Context, ListAuthorizedKeyRequest) (*ListAuthorizedKeyResponse, error)
+	// UpsertAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
+	//
+	// Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+	UpsertAuthorizedKeyV2(context.Context, UpsertAuthorizedKeyV2Request) (*UpsertAuthorizedKeyV2Response, error)
+	// CreateAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
+	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
+	//
+	// Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?createOnly=true
+	CreateAuthorizedKeyV2(context.Context, UpsertAuthorizedKeyV2Request) (*UpsertAuthorizedKeyV2Response, error)
+	// UpdateAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
+	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
+	//
+	// Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?updateOnly=true
+	UpdateAuthorizedKeyV2(context.Context, UpdateAuthorizedKeyV2Request) (*UpsertAuthorizedKeyV2Response, error)
 	// DeleteAuthorizedKey позволяет удалить авторизованный ключ.
 	//
 	// Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
@@ -96,6 +110,101 @@ func (m *ListAuthorizedKeyResponse) GetErr() (err error) {
 }
 
 func (m *ListAuthorizedKeyResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
+}
+
+type UpsertAuthorizedKeyV2Request struct {
+	ServiceAccount string // path: "serviceAccount"
+	AuthorizedKey  string // path: "authorizedKey"
+	// Путь к проекту
+	Project string // path: "project"
+	// Токен авторизации IAM
+	Authorization string // header: "Authorization"
+	// Ключ идемпотентности
+	IdempotencyKey *string                      // header: "Idempotency-Key"
+	Body           model.AuthorizedKeyV2Request // body
+}
+
+func (m *UpsertAuthorizedKeyV2Request) SetAuthorization(authorization string) {
+	m.Authorization = authorization
+}
+
+func (m UpsertAuthorizedKeyV2Request) GetProject() string {
+	return m.Project
+}
+
+func (m *UpsertAuthorizedKeyV2Request) SetProject(project string) {
+	m.Project = project
+}
+
+type UpdateAuthorizedKeyV2Request struct {
+	ServiceAccount string // path: "serviceAccount"
+	AuthorizedKey  string // path: "authorizedKey"
+	// Путь к проекту
+	Project string // path: "project"
+	// Токен авторизации IAM
+	Authorization string // header: "Authorization"
+	// Ключ идемпотентности
+	IdempotencyKey *string                            // header: "Idempotency-Key"
+	Body           model.UpdateAuthorizedKeyV2Request // body
+}
+
+func (m *UpdateAuthorizedKeyV2Request) SetAuthorization(authorization string) {
+	m.Authorization = authorization
+}
+
+func (m UpdateAuthorizedKeyV2Request) GetProject() string {
+	return m.Project
+}
+
+func (m *UpdateAuthorizedKeyV2Request) SetProject(project string) {
+	m.Project = project
+}
+
+type UpsertAuthorizedKeyV2Response struct {
+	Code        int
+	Response200 *model.AuthorizedKeyV2OptionalResponse
+	Response201 *model.AuthorizedKeyV2OptionalResponse
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
+	Response409 *common.ApiError
+	Response500 *common.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *UpsertAuthorizedKeyV2Response) GetCode() int {
+	return m.Code
+}
+
+func (m *UpsertAuthorizedKeyV2Response) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response409 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response409)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *UpsertAuthorizedKeyV2Response) SetErrorWrapper(f func(err error) error) {
 	if m != nil {
 		m.errorWrapper = f
 	}

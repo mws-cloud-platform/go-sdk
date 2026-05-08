@@ -9,22 +9,23 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateClusterPublicEndpointSpecOrRefRequest struct {
-	Ref commonclient.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
+	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
 	// Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
-	Spec commonclient.OptionalNil[UpdateClusterPublicEndpointSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateClusterPublicEndpointSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *ClusterPublicEndpointSpecOrRefRequest) AsUpdateModel() UpdateClusterPublicEndpointSpecOrRefRequest {
 	var u UpdateClusterPublicEndpointSpecOrRefRequest
 	if m.Ref != nil {
-		u.Ref = commonclient.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
+		u.Ref = optional.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
 	}
 	if m.Spec != nil {
-		u.Spec = commonclient.NewOptionalNil(m.Spec.AsUpdateModel())
+		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
 	}
 	return u
 }
@@ -77,13 +78,17 @@ func (m *UpdateClusterPublicEndpointSpecOrRefRequest) Parse(ctx context.Context)
 	return nil
 }
 
-func (m *ClusterPublicEndpointSpecOrRefRequest) diffRef(src *ClusterPublicEndpointSpecOrRefRequest) commonclient.Optional[vpc.ExternalAddressRef] {
+func (m *ClusterPublicEndpointSpecOrRefRequest) diffRef(src *ClusterPublicEndpointSpecOrRefRequest) optional.Optional[vpc.ExternalAddressRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *ClusterPublicEndpointSpecOrRefRequest) diffSpec(src *ClusterPublicEndpointSpecOrRefRequest) commonclient.OptionalNil[UpdateClusterPublicEndpointSpecRequest] {
+func (m *ClusterPublicEndpointSpecOrRefRequest) diffSpec(src *ClusterPublicEndpointSpecOrRefRequest) optional.OptionalNil[UpdateClusterPublicEndpointSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return commonclient.NewDirectOptionalNil[UpdateClusterPublicEndpointSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateClusterPublicEndpointSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

@@ -10,33 +10,34 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 type UpdateVirtualMachineSpecRequest struct {
-	VmType   commonclient.Optional[compute.VmTypeRef]            `json:"vmType" yaml:"vmType"`
-	Hardware commonclient.OptionalNil[UpdateHardwareSpecRequest] `json:"hardware" yaml:"hardware"`
-	Os       commonclient.OptionalNil[UpdateOsSpecRequest]       `json:"os" yaml:"os"`
-	Storage  commonclient.Optional[UpdateStorageSpecRequest]     `json:"storage" yaml:"storage"`
-	Network  commonclient.Optional[UpdateNetworkSpecRequest]     `json:"network" yaml:"network"`
+	VmType   optional.Optional[compute.VmTypeRef]            `json:"vmType" yaml:"vmType"`
+	Hardware optional.OptionalNil[UpdateHardwareSpecRequest] `json:"hardware" yaml:"hardware"`
+	Os       optional.OptionalNil[UpdateOsSpecRequest]       `json:"os" yaml:"os"`
+	Storage  optional.Optional[UpdateStorageSpecRequest]     `json:"storage" yaml:"storage"`
+	Network  optional.Optional[UpdateNetworkSpecRequest]     `json:"network" yaml:"network"`
 	// Ссылка на сервис аккаунт привязанный к виртуальной машине.
-	ServiceAccount commonclient.OptionalNil[iam.ServiceAccountRef] `json:"serviceAccount" yaml:"serviceAccount"`
+	ServiceAccount optional.OptionalNil[iam.ServiceAccountRef] `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
 func (m *VirtualMachineSpecRequest) AsUpdateModel() UpdateVirtualMachineSpecRequest {
 	var u UpdateVirtualMachineSpecRequest
-	u.VmType = commonclient.NewOptional(m.GetVmType())
+	u.VmType = optional.NewOptional(m.GetVmType())
 	if m.Hardware != nil {
-		u.Hardware = commonclient.NewOptionalNil(m.Hardware.AsUpdateModel())
+		u.Hardware = optional.NewOptionalNil(m.Hardware.AsUpdateModel())
 	}
 	if m.Os != nil {
-		u.Os = commonclient.NewOptionalNil(m.Os.AsUpdateModel())
+		u.Os = optional.NewOptionalNil(m.Os.AsUpdateModel())
 	}
-	u.Storage = commonclient.NewOptional(m.Storage.AsUpdateModel())
-	u.Network = commonclient.NewOptional(m.Network.AsUpdateModel())
+	u.Storage = optional.NewOptional(m.Storage.AsUpdateModel())
+	u.Network = optional.NewOptional(m.Network.AsUpdateModel())
 	if m.ServiceAccount != nil {
-		u.ServiceAccount = commonclient.NewOptionalNil(m.GetServiceAccountOr(iam.ServiceAccountRef{}))
+		u.ServiceAccount = optional.NewOptionalNil(m.GetServiceAccountOr(iam.ServiceAccountRef{}))
 	}
 	return u
 }
@@ -138,44 +139,58 @@ func (m *UpdateVirtualMachineSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *VirtualMachineSpecRequest) diffVmType(src *VirtualMachineSpecRequest) commonclient.Optional[compute.VmTypeRef] {
+func (m *VirtualMachineSpecRequest) diffVmType(src *VirtualMachineSpecRequest) optional.Optional[compute.VmTypeRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetVmType(), m.GetVmType(), nilDiffers)
 }
 
-func (m *VirtualMachineSpecRequest) diffHardware(src *VirtualMachineSpecRequest) commonclient.OptionalNil[UpdateHardwareSpecRequest] {
+func (m *VirtualMachineSpecRequest) diffHardware(src *VirtualMachineSpecRequest) optional.OptionalNil[UpdateHardwareSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetHardware().Diff(src.GetHardware())
-	return commonclient.NewDirectOptionalNil[UpdateHardwareSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateHardwareSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *VirtualMachineSpecRequest) diffOs(src *VirtualMachineSpecRequest) commonclient.OptionalNil[UpdateOsSpecRequest] {
+func (m *VirtualMachineSpecRequest) diffOs(src *VirtualMachineSpecRequest) optional.OptionalNil[UpdateOsSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetOs().Diff(src.GetOs())
-	return commonclient.NewDirectOptionalNil[UpdateOsSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateOsSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *VirtualMachineSpecRequest) diffStorage(src *VirtualMachineSpecRequest) (commonclient.Optional[UpdateStorageSpecRequest], error) {
+func (m *VirtualMachineSpecRequest) diffStorage(src *VirtualMachineSpecRequest) (optional.Optional[UpdateStorageSpecRequest], error) {
 	from := src.GetStorage()
 	to := m.GetStorage()
 	value, err := to.Diff(&from)
 	if err != nil {
-		return commonclient.Optional[UpdateStorageSpecRequest]{}, err
+		return optional.Optional[UpdateStorageSpecRequest]{}, err
 	}
-	return commonclient.NewDirectOptional[UpdateStorageSpecRequest](value, value.HasChanges()), nil
+	return optional.Optional[UpdateStorageSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}, nil
 }
 
-func (m *VirtualMachineSpecRequest) diffNetwork(src *VirtualMachineSpecRequest) (commonclient.Optional[UpdateNetworkSpecRequest], error) {
+func (m *VirtualMachineSpecRequest) diffNetwork(src *VirtualMachineSpecRequest) (optional.Optional[UpdateNetworkSpecRequest], error) {
 	from := src.GetNetwork()
 	to := m.GetNetwork()
 	value, err := to.Diff(&from)
 	if err != nil {
-		return commonclient.Optional[UpdateNetworkSpecRequest]{}, err
+		return optional.Optional[UpdateNetworkSpecRequest]{}, err
 	}
-	return commonclient.NewDirectOptional[UpdateNetworkSpecRequest](value, value.HasChanges()), nil
+	return optional.Optional[UpdateNetworkSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}, nil
 }
 
-func (m *VirtualMachineSpecRequest) diffServiceAccount(src *VirtualMachineSpecRequest) commonclient.OptionalNil[iam.ServiceAccountRef] {
+func (m *VirtualMachineSpecRequest) diffServiceAccount(src *VirtualMachineSpecRequest) optional.OptionalNil[iam.ServiceAccountRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNullable(src.GetServiceAccount(), m.GetServiceAccount(), nilDiffers)
 }

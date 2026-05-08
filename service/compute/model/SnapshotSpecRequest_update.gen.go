@@ -6,17 +6,19 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
+// Deprecated: Отказываемся в пользу DiskBackupSpec
 type UpdateSnapshotSpecRequest struct {
 	// Тип операционной системы
-	OsType commonclient.Optional[OsType] `json:"osType" yaml:"osType"`
+	OsType optional.Optional[OsType] `json:"osType" yaml:"osType"`
 }
 
 func (m *SnapshotSpecRequest) AsUpdateModel() UpdateSnapshotSpecRequest {
 	var u UpdateSnapshotSpecRequest
 	if m.OsType != nil {
-		u.OsType = commonclient.NewOptional(m.GetOsTypeOr(""))
+		u.OsType = optional.NewOptional(m.GetOsTypeOr(""))
 	}
 	return u
 }
@@ -48,7 +50,7 @@ func (m UpdateSnapshotSpecRequest) HasChanges() bool {
 	return m.OsType.Set
 }
 
-func (m *SnapshotSpecRequest) diffOsType(src *SnapshotSpecRequest) commonclient.Optional[OsType] {
+func (m *SnapshotSpecRequest) diffOsType(src *SnapshotSpecRequest) optional.Optional[OsType] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetOsType(), m.GetOsType(), nilDiffers)
 }

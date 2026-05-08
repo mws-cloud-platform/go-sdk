@@ -183,7 +183,7 @@ func (m *FirewallRuleID) UnmarshalJSON(b []byte) error {
 
 func (m *FirewallRuleID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("FirewallRuleRef")
+		return conv.NewDecodeToNilError("FirewallRuleID")
 	}
 
 	v, err := decode.Str(d)

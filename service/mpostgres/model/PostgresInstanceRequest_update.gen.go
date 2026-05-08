@@ -6,20 +6,21 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdatePostgresInstanceRequest struct {
 	// Количество экземпляров в зоне доступности
-	Count commonclient.Optional[int] `json:"count" yaml:"count"`
+	Count optional.Optional[int] `json:"count" yaml:"count"`
 	// Зона доступности
-	Zone commonclient.Optional[string] `json:"zone" yaml:"zone"`
+	Zone optional.Optional[string] `json:"zone" yaml:"zone"`
 }
 
 func (m *PostgresInstanceRequest) AsUpdateModel() UpdatePostgresInstanceRequest {
 	var u UpdatePostgresInstanceRequest
-	u.Count = commonclient.NewOptional(m.GetCount())
+	u.Count = optional.NewOptional(m.GetCount())
 	if m.Zone != nil {
-		u.Zone = commonclient.NewOptional(m.GetZoneOr(""))
+		u.Zone = optional.NewOptional(m.GetZoneOr(""))
 	}
 	return u
 }
@@ -56,12 +57,12 @@ func (m UpdatePostgresInstanceRequest) HasChanges() bool {
 		m.Zone.Set
 }
 
-func (m *PostgresInstanceRequest) diffCount(src *PostgresInstanceRequest) commonclient.Optional[int] {
+func (m *PostgresInstanceRequest) diffCount(src *PostgresInstanceRequest) optional.Optional[int] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetCount(), m.GetCount(), nilDiffers)
 }
 
-func (m *PostgresInstanceRequest) diffZone(src *PostgresInstanceRequest) commonclient.Optional[string] {
+func (m *PostgresInstanceRequest) diffZone(src *PostgresInstanceRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetZone(), m.GetZone(), nilDiffers)
 }

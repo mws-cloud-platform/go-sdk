@@ -21,6 +21,8 @@ type NodeGroupSpecRequest struct {
 	VmType NodeGroupSpecVmTypeRequest `json:"vmType" yaml:"vmType"`
 	// размер хранилища для image-ей и контейнеров. Размер в Gb
 	ImageStorageSize *bytesize.ByteSize `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища image-ей и контейнеров
+	ImageStorageIops *int64 `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
 	// Необходимо заполнить одно из полей fixed или auto scale
 	Scale          NodeGroupSpecScaleRequest          `json:"scale" yaml:"scale"`
 	Labels         []NodeLabelSpecRequest             `json:"labels,omitempty" yaml:"labels,omitempty"`
@@ -81,6 +83,24 @@ func (m *NodeGroupSpecRequest) SetImageStorageSize(val *bytesize.ByteSize) {
 func (m *NodeGroupSpecRequest) GetImageStorageSizeOr(val bytesize.ByteSize) bytesize.ByteSize {
 	if m != nil && m.ImageStorageSize != nil {
 		return *m.ImageStorageSize
+	}
+	return val
+}
+
+func (m *NodeGroupSpecRequest) GetImageStorageIops() *int64 {
+	if m != nil {
+		return m.ImageStorageIops
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecRequest) SetImageStorageIops(val *int64) {
+	m.ImageStorageIops = val
+}
+
+func (m *NodeGroupSpecRequest) GetImageStorageIopsOr(val int64) int64 {
+	if m != nil && m.ImageStorageIops != nil {
+		return *m.ImageStorageIops
 	}
 	return val
 }
@@ -174,6 +194,10 @@ func (m *NodeGroupSpecRequest) Clone() *NodeGroupSpecRequest {
 	clone.Subnet = *m.Subnet.Clone()
 	clone.VmType = *m.VmType.Clone()
 	clone.ImageStorageSize = m.ImageStorageSize.Clone()
+	if m.ImageStorageIops != nil {
+		cloneImageStorageIops := *m.ImageStorageIops
+		clone.ImageStorageIops = &cloneImageStorageIops
+	}
 	clone.Scale = *m.Scale.Clone()
 	if m.Labels != nil {
 		clone.Labels = make([]NodeLabelSpecRequest, len(m.Labels))

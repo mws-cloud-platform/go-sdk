@@ -6,8 +6,8 @@ import (
 	"context"
 	"fmt"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -15,7 +15,7 @@ import (
 type ClusterListOptionalResponse struct {
 	Items []ClusterOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken commonclient.OptionalNil[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.OptionalNil[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ClusterListOptionalResponse) GetItems() []ClusterOptionalResponse {

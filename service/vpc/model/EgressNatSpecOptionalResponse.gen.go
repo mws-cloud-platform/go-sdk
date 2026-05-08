@@ -5,8 +5,8 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Описывает спецификацию Egress (Many-to-Many) NAT-шлюза.
@@ -17,7 +17,7 @@ type EgressNatSpecOptionalResponse struct {
 	// Группирующий элемент для всего, что касается внешней части (ресурсов, доступных извне).
 	External EgressNatSpecExternalOptionalResponse `json:"external" yaml:"external"`
 	// Описывает настройки управления портами.
-	PortAllocation commonclient.OptionalNil[EgressNatSpecPortAllocationOptionalResponse] `json:"portAllocation,omitempty" yaml:"portAllocation,omitempty"`
+	PortAllocation optional.OptionalNil[EgressNatSpecPortAllocationOptionalResponse] `json:"portAllocation,omitempty" yaml:"portAllocation,omitempty"`
 }
 
 func (m *EgressNatSpecOptionalResponse) GetInternal() EgressNatSpecInternalOptionalResponse {

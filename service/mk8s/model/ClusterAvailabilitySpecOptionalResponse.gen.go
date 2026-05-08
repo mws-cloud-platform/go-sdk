@@ -3,15 +3,15 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: ClusterAvailabilitySpec
 type ClusterAvailabilitySpecOptionalResponse struct {
 	// Кластер с одним мастером
-	Standalone commonclient.OptionalNil[ClusterAvailabilitySpecStandaloneOptionalResponse] `json:"standalone,omitempty" yaml:"standalone,omitempty"`
+	Standalone optional.OptionalNil[ClusterAvailabilitySpecStandaloneOptionalResponse] `json:"standalone,omitempty" yaml:"standalone,omitempty"`
 	// Зональный высокодоступный кластер с несколькими мастерами
-	ZonalHa commonclient.OptionalNil[ClusterAvailabilitySpecZonalHaOptionalResponse] `json:"zonalHa,omitempty" yaml:"zonalHa,omitempty"`
+	ZonalHa optional.OptionalNil[ClusterAvailabilitySpecZonalHaOptionalResponse] `json:"zonalHa,omitempty" yaml:"zonalHa,omitempty"`
 }
 
 func (m *ClusterAvailabilitySpecOptionalResponse) GetStandalone() *ClusterAvailabilitySpecStandaloneOptionalResponse {

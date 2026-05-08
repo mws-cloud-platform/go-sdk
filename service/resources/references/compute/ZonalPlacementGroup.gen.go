@@ -183,7 +183,7 @@ func (m *ZonalPlacementGroupID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalPlacementGroupID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalPlacementGroupRef")
+		return conv.NewDecodeToNilError("ZonalPlacementGroupID")
 	}
 
 	v, err := decode.Str(d)

@@ -6,15 +6,15 @@ import (
 	"context"
 	"fmt"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: NetworkInterfaceSpec
 type NetworkInterfaceSpecOptionalResponse struct {
-	Name                string                      `json:"name" yaml:"name"`
-	Primary             commonclient.Optional[bool] `json:"primary,omitempty" yaml:"primary,omitempty"`
-	IpForwardingEnabled commonclient.Optional[bool] `json:"ipForwardingEnabled,omitempty" yaml:"ipForwardingEnabled,omitempty"`
+	Name                string                  `json:"name" yaml:"name"`
+	Primary             optional.Optional[bool] `json:"primary,omitempty" yaml:"primary,omitempty"`
+	IpForwardingEnabled optional.Optional[bool] `json:"ipForwardingEnabled,omitempty" yaml:"ipForwardingEnabled,omitempty"`
 	// К одному сетевому интерфейсу можно подключить одновременно 4 разных сетевых адреса
 	// - IPv4 internal
 	// - IPv4 external

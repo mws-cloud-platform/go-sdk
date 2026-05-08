@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func NodeGroupSpecRequestToOptionalResponse(request *NodeGroupSpecRequest) (*NodeGroupSpecOptionalResponse, error) {
@@ -23,7 +23,10 @@ func NodeGroupSpecRequestToOptionalResponse(request *NodeGroupSpecRequest) (*Nod
 	}
 	response.VmType = *tmpVmType
 	if request.ImageStorageSize != nil {
-		response.ImageStorageSize = commonclient.NewOptional(*request.ImageStorageSize)
+		response.ImageStorageSize = optional.NewOptional(*request.ImageStorageSize)
+	}
+	if request.ImageStorageIops != nil {
+		response.ImageStorageIops = optional.NewOptional(*request.ImageStorageIops)
 	}
 	tmpScale, err := NodeGroupSpecScaleRequestToOptionalResponse(&request.Scale)
 	if err != nil {
@@ -68,10 +71,10 @@ func NodeGroupSpecRolloutStrategyRequestToOptionalResponse(request *NodeGroupSpe
 	}
 	var response NodeGroupSpecRolloutStrategyOptionalResponse
 	if request.MaxSurge != nil {
-		response.MaxSurge = commonclient.NewOptional(*request.MaxSurge)
+		response.MaxSurge = optional.NewOptional(*request.MaxSurge)
 	}
 	if request.MaxUnavailable != nil {
-		response.MaxUnavailable = commonclient.NewOptional(*request.MaxUnavailable)
+		response.MaxUnavailable = optional.NewOptional(*request.MaxUnavailable)
 	}
 	return &response, nil
 }
@@ -82,14 +85,14 @@ func NodeGroupSpecScaleRequestToOptionalResponse(request *NodeGroupSpecScaleRequ
 	}
 	var response NodeGroupSpecScaleOptionalResponse
 	if request.Fixed != nil {
-		response.Fixed = commonclient.NewOptional(*request.Fixed)
+		response.Fixed = optional.NewOptional(*request.Fixed)
 	}
 	if request.Autoscaling != nil {
 		tmpAutoscaling, err := NodeGroupSpecScaleAutoscalingRequestToOptionalResponse(request.Autoscaling)
 		if err != nil {
 			return nil, err
 		}
-		response.Autoscaling = commonclient.NewOptionalNil(*tmpAutoscaling)
+		response.Autoscaling = optional.NewOptionalNil(*tmpAutoscaling)
 	}
 	return &response, nil
 }
@@ -119,7 +122,7 @@ func NodeGroupSpecSubnetRequestToOptionalResponse(request *NodeGroupSpecSubnetRe
 	}
 	var response NodeGroupSpecSubnetOptionalResponse
 	if request.Ref != nil {
-		response.Ref = commonclient.NewOptional(*request.Ref)
+		response.Ref = optional.NewOptional(*request.Ref)
 	}
 	return &response, nil
 }
@@ -130,7 +133,7 @@ func NodeGroupSpecVmTypeRequestToOptionalResponse(request *NodeGroupSpecVmTypeRe
 	}
 	var response NodeGroupSpecVmTypeOptionalResponse
 	if request.Ref != nil {
-		response.Ref = commonclient.NewOptional(*request.Ref)
+		response.Ref = optional.NewOptional(*request.Ref)
 	}
 	return &response, nil
 }

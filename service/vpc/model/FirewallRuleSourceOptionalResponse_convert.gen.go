@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func FirewallRuleSourceRequestToOptionalResponse(request *FirewallRuleSourceRequest) (*FirewallRuleSourceOptionalResponse, error) {
@@ -16,7 +16,7 @@ func FirewallRuleSourceRequestToOptionalResponse(request *FirewallRuleSourceRequ
 		if err != nil {
 			return nil, err
 		}
-		response.Spec = commonclient.NewOptionalNil(*tmpSpec)
+		response.Spec = optional.NewOptionalNil(*tmpSpec)
 	}
 	return &response, nil
 }

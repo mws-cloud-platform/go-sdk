@@ -143,7 +143,7 @@ func (m *IpRangeID) UnmarshalJSON(b []byte) error {
 
 func (m *IpRangeID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("IpRangeRef")
+		return conv.NewDecodeToNilError("IpRangeID")
 	}
 
 	v, err := decode.Str(d)

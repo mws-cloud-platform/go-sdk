@@ -9,20 +9,21 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateWeeklyMaintenanceWindow struct {
 	// Дни недели, в который будет запущено задание на тех.обслуживание
-	Days commonclient.Optional[[]DayOfWeek] `json:"days" yaml:"days"`
+	Days optional.Optional[[]DayOfWeek] `json:"days" yaml:"days"`
 	// Час, в который будет запущено задание на тех.обслуживание
-	Hour commonclient.Optional[int] `json:"hour" yaml:"hour"`
+	Hour optional.Optional[int] `json:"hour" yaml:"hour"`
 	// Допустимая продолжительность процесса обновления. Если не указано, то не ограничено по времени. Принимается только формат в часах (h)
-	Duration commonclient.OptionalNil[duration.Duration] `json:"duration" yaml:"duration"`
+	Duration optional.OptionalNil[duration.Duration] `json:"duration" yaml:"duration"`
 }
 
 func (m *WeeklyMaintenanceWindow) AsUpdateModel() UpdateWeeklyMaintenanceWindow {
 	var u UpdateWeeklyMaintenanceWindow
-	u.Days = commonclient.NewOptional(func() []DayOfWeek {
+	u.Days = optional.NewOptional(func() []DayOfWeek {
 		var tmp []DayOfWeek
 		if m.GetDays() != nil {
 			tmp = make([]DayOfWeek, 0, len(m.GetDays()))
@@ -32,9 +33,9 @@ func (m *WeeklyMaintenanceWindow) AsUpdateModel() UpdateWeeklyMaintenanceWindow 
 		}
 		return tmp
 	}())
-	u.Hour = commonclient.NewOptional(m.GetHour())
+	u.Hour = optional.NewOptional(m.GetHour())
 	if m.Duration != nil {
-		u.Duration = commonclient.NewOptionalNil(m.GetDurationOr(duration.Duration{}))
+		u.Duration = optional.NewOptionalNil(m.GetDurationOr(duration.Duration{}))
 	}
 	return u
 }
@@ -78,17 +79,20 @@ func (m UpdateWeeklyMaintenanceWindow) HasChanges() bool {
 		m.Duration.Set
 }
 
-func (m *WeeklyMaintenanceWindow) diffDays(src *WeeklyMaintenanceWindow) commonclient.Optional[[]DayOfWeek] {
+func (m *WeeklyMaintenanceWindow) diffDays(src *WeeklyMaintenanceWindow) optional.Optional[[]DayOfWeek] {
 	value, hasChanges := commonclient.GetChangesArrayPrimitive(src.GetDays(), m.GetDays())
-	return commonclient.NewDirectOptional[[]DayOfWeek](value, hasChanges)
+	return optional.Optional[[]DayOfWeek]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *WeeklyMaintenanceWindow) diffHour(src *WeeklyMaintenanceWindow) commonclient.Optional[int] {
+func (m *WeeklyMaintenanceWindow) diffHour(src *WeeklyMaintenanceWindow) optional.Optional[int] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetHour(), m.GetHour(), nilDiffers)
 }
 
-func (m *WeeklyMaintenanceWindow) diffDuration(src *WeeklyMaintenanceWindow) commonclient.OptionalNil[duration.Duration] {
+func (m *WeeklyMaintenanceWindow) diffDuration(src *WeeklyMaintenanceWindow) optional.OptionalNil[duration.Duration] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceNullable(src.GetDuration(), m.GetDuration(), nilDiffers)
 }

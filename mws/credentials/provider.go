@@ -49,20 +49,26 @@ func (p *provider) do(key string, fn func() (Credentials, error)) (Credentials, 
 		return Credentials{}, cacheErr
 	}
 
-	res, err, _ := p.singleflight.Do(key, func() (any, error) { return fn() })
+	res, err, _ := p.singleflight.Do(key, func() (any, error) {
+		creds, err := fn()
+		if err != nil {
+			return creds, fmt.Errorf("issue token: %w", err)
+		}
+		return creds, p.cache.Store(key, creds)
+	})
 	if err != nil {
 		// If there is a credentials in the cache, we will return it to the user in case of error in the passed function.
 		if cacheErr == nil && cached.ExpiresAt.After(p.clock.Now()) {
 			p.logger.Warn("using expiring credentials due to token issue error", zap.Error(err))
 			return cached, nil
 		}
-		return Credentials{}, fmt.Errorf("issue token: %w", err)
+		return Credentials{}, err
 	}
 	creds := res.(Credentials)
 
 	p.logger.Info("credentials issued", zap.Time("access_token_expires_at", creds.ExpiresAt))
 
-	return creds, p.cache.Store(key, creds)
+	return creds, nil
 }
 
 func (p *provider) invalidateCredentials(key string) error {

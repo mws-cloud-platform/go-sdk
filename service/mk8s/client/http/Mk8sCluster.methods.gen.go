@@ -49,7 +49,7 @@ func (c *Mk8sCluster) listMk8sClustersInvoker(ctx context.Context, anyReq any, r
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -141,9 +141,9 @@ func (c *Mk8sCluster) deleteMk8sClusterInvoker(ctx context.Context, anyReq any, 
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.ClusterName)
+		url.PathEscape(request.ClusterName))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -216,9 +216,9 @@ func (c *Mk8sCluster) getMk8sClusterInvoker(ctx context.Context, anyReq any, res
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.ClusterName)
+		url.PathEscape(request.ClusterName))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "clusterName", request.ClusterName)
@@ -291,9 +291,9 @@ func (c *Mk8sCluster) upsertMk8sClusterInvoker(ctx context.Context, anyReq any, 
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.ClusterName)
+		url.PathEscape(request.ClusterName))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "clusterName", request.ClusterName)
@@ -382,9 +382,9 @@ func (c *Mk8sCluster) createMk8sClusterInvoker(ctx context.Context, anyReq any, 
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.ClusterName)
+		url.PathEscape(request.ClusterName))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "clusterName", request.ClusterName)
@@ -474,9 +474,9 @@ func (c *Mk8sCluster) updateMk8sClusterInvoker(ctx context.Context, anyReq any, 
 		"mk8s",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.ClusterName)
+		url.PathEscape(request.ClusterName))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "clusterName", request.ClusterName)

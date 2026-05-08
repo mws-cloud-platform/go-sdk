@@ -163,7 +163,7 @@ func (m *UserEncryptionPubKeyID) UnmarshalJSON(b []byte) error {
 
 func (m *UserEncryptionPubKeyID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("UserEncryptionPubKeyRef")
+		return conv.NewDecodeToNilError("UserEncryptionPubKeyID")
 	}
 
 	v, err := decode.Str(d)

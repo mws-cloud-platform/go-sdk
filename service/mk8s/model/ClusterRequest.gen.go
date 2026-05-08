@@ -9,6 +9,10 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Кластер Managed Kubernetes — кластер Kubernetes на базе облачной
+// инфраструктуры MWS Cloud Platform. Представляет собой совокупность Control
+// Plane (управляющего слоя) и групп рабочих узлов
+//
 // Real OAPI model name: Cluster
 type ClusterRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.

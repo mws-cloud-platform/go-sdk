@@ -163,7 +163,7 @@ func (m *SnapshotID) UnmarshalJSON(b []byte) error {
 
 func (m *SnapshotID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("SnapshotRef")
+		return conv.NewDecodeToNilError("SnapshotID")
 	}
 
 	v, err := decode.Str(d)

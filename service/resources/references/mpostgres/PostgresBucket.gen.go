@@ -4,6 +4,8 @@ package mpostgres
 
 import (
 	"context"
+	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -17,7 +19,8 @@ import (
 )
 
 var (
-	PostgresBucketRefTemplate = resparsers.Template{
+	PostgresBucketClusterValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,45}[a-z0-9])?$`)
+	PostgresBucketRefTemplate            = resparsers.Template{
 		{
 			Value:       "bucket",
 			IsConstant:  false,
@@ -30,6 +33,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     PostgresBucketClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -56,12 +60,25 @@ var (
 	}
 )
 
-func NewPostgresBucketID(project, cluster, bucket string) PostgresBucketID {
+func NewPostgresBucketID(project, cluster, bucket string) (PostgresBucketID, error) {
+	if match := PostgresBucketClusterValidatePattern.Match([]byte(cluster)); !match {
+		return PostgresBucketID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
+	}
 	m := PostgresBucketID{
 		bucket:  bucket,
 		cluster: cluster,
 		project: project,
 	}
+	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustPostgresBucketID(project, cluster, bucket string) PostgresBucketID {
+	m, err := NewPostgresBucketID(project, cluster, bucket)
+	if err != nil {
+		panic(err)
+	}
+
 	m.path = m.ID()
 	return m
 }
@@ -183,7 +200,7 @@ func (m *PostgresBucketID) UnmarshalJSON(b []byte) error {
 
 func (m *PostgresBucketID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("PostgresBucketRef")
+		return conv.NewDecodeToNilError("PostgresBucketID")
 	}
 
 	v, err := decode.Str(d)
@@ -195,13 +212,22 @@ func (m *PostgresBucketID) Decode(d *jx.Decoder) error {
 	return nil
 }
 
-func NewPostgresBucketRef(project, cluster, bucket string) PostgresBucketRef {
+func NewPostgresBucketRef(project, cluster, bucket string) (PostgresBucketRef, error) {
+	id, err := NewPostgresBucketID(project, cluster, bucket)
+	if err != nil {
+		return PostgresBucketRef{}, err
+	}
+
 	m := PostgresBucketRef{
-		id: PostgresBucketID{
-			bucket:  bucket,
-			cluster: cluster,
-			project: project,
-		},
+		id: id,
+	}
+	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustPostgresBucketRef(project, cluster, bucket string) PostgresBucketRef {
+	m := PostgresBucketRef{
+		id: NewMustPostgresBucketID(project, cluster, bucket),
 	}
 	m.id.path = m.absolutePath()
 	return m

@@ -49,9 +49,9 @@ func (c *SecretVersion) addSecretVersionInvoker(ctx context.Context, anyReq any,
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name+":addSecretVersion")
+		url.PathEscape(request.Name)+":addSecretVersion")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -129,9 +129,9 @@ func (c *SecretVersion) listSecretVersionsInvoker(ctx context.Context, anyReq an
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name,
+		url.PathEscape(request.Name),
 		"secretVersions")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -224,11 +224,11 @@ func (c *SecretVersion) getDataInvoker(ctx context.Context, anyReq any, response
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name,
+		url.PathEscape(request.Name),
 		"secretVersions",
-		request.Version+":getData")
+		url.PathEscape(request.Version)+":getData")
 
 	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)
 	if err != nil {
@@ -298,11 +298,11 @@ func (c *SecretVersion) deleteSecretVersionInvoker(ctx context.Context, anyReq a
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name,
+		url.PathEscape(request.Name),
 		"secretVersions",
-		request.Version)
+		url.PathEscape(request.Version))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -375,11 +375,11 @@ func (c *SecretVersion) getSecretVersionInvoker(ctx context.Context, anyReq any,
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name,
+		url.PathEscape(request.Name),
 		"secretVersions",
-		request.Version)
+		url.PathEscape(request.Version))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -453,11 +453,11 @@ func (c *SecretVersion) upsertSecretVersionInvoker(ctx context.Context, anyReq a
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name,
+		url.PathEscape(request.Name),
 		"secretVersions",
-		request.Version)
+		url.PathEscape(request.Version))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -547,11 +547,11 @@ func (c *SecretVersion) createSecretVersionInvoker(ctx context.Context, anyReq a
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name,
+		url.PathEscape(request.Name),
 		"secretVersions",
-		request.Version)
+		url.PathEscape(request.Version))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -642,11 +642,11 @@ func (c *SecretVersion) updateSecretVersionInvoker(ctx context.Context, anyReq a
 		"secretmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"secrets",
-		request.Name,
+		url.PathEscape(request.Name),
 		"secretVersions",
-		request.Version)
+		url.PathEscape(request.Version))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)

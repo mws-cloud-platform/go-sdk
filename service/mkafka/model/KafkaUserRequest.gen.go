@@ -9,6 +9,8 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Пользователь — это внутренняя учетная запись Kafka для аутентификации в кластере
+//
 // Real OAPI model name: KafkaUser
 type KafkaUserRequest struct {
 	Metadata *KafkaUserMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`

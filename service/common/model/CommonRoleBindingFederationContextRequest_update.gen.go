@@ -6,21 +6,22 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateCommonRoleBindingFederationContextRequest struct {
 	// Идентификатор субъекта федерации.
-	Subject   commonclient.Optional[string]                                                      `json:"subject" yaml:"subject"`
-	Attribute commonclient.OptionalNil[UpdateCommonRoleBindingFederationContextAttributeRequest] `json:"attribute" yaml:"attribute"`
+	Subject   optional.Optional[string]                                                      `json:"subject" yaml:"subject"`
+	Attribute optional.OptionalNil[UpdateCommonRoleBindingFederationContextAttributeRequest] `json:"attribute" yaml:"attribute"`
 }
 
 func (m *CommonRoleBindingFederationContextRequest) AsUpdateModel() UpdateCommonRoleBindingFederationContextRequest {
 	var u UpdateCommonRoleBindingFederationContextRequest
 	if m.Subject != nil {
-		u.Subject = commonclient.NewOptional(m.GetSubjectOr(""))
+		u.Subject = optional.NewOptional(m.GetSubjectOr(""))
 	}
 	if m.Attribute != nil {
-		u.Attribute = commonclient.NewOptionalNil(m.Attribute.AsUpdateModel())
+		u.Attribute = optional.NewOptionalNil(m.Attribute.AsUpdateModel())
 	}
 	return u
 }
@@ -59,13 +60,17 @@ func (m UpdateCommonRoleBindingFederationContextRequest) HasChanges() bool {
 		m.Attribute.Set
 }
 
-func (m *CommonRoleBindingFederationContextRequest) diffSubject(src *CommonRoleBindingFederationContextRequest) commonclient.Optional[string] {
+func (m *CommonRoleBindingFederationContextRequest) diffSubject(src *CommonRoleBindingFederationContextRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetSubject(), m.GetSubject(), nilDiffers)
 }
 
-func (m *CommonRoleBindingFederationContextRequest) diffAttribute(src *CommonRoleBindingFederationContextRequest) commonclient.OptionalNil[UpdateCommonRoleBindingFederationContextAttributeRequest] {
+func (m *CommonRoleBindingFederationContextRequest) diffAttribute(src *CommonRoleBindingFederationContextRequest) optional.OptionalNil[UpdateCommonRoleBindingFederationContextAttributeRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetAttribute().Diff(src.GetAttribute())
-	return commonclient.NewDirectOptionalNil[UpdateCommonRoleBindingFederationContextAttributeRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateCommonRoleBindingFederationContextAttributeRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

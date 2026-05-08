@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"time"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 // Real OAPI model name: TypedResourceMetadata
 type TypedResourceMetadataOptionalResponse struct {
 	// Отображаемое имя. Необязательное поле, можно свободно задавать и изменять для удобства организации ресурсов.
-	DisplayName commonclient.Optional[string] `json:"displayName,omitempty" yaml:"displayName,omitempty"`
+	DisplayName optional.Optional[string] `json:"displayName,omitempty" yaml:"displayName,omitempty"`
 	// Дата создания объекта.
 	CreateTime *time.Time `json:"createTime,omitempty" yaml:"createTime,omitempty"`
 	// Дата последнего изменения объекта.
@@ -24,11 +24,11 @@ type TypedResourceMetadataOptionalResponse struct {
 	DeleteTime *time.Time `json:"deleteTime,omitempty" yaml:"deleteTime,omitempty"`
 	PurgeTime  *time.Time `json:"purgeTime,omitempty" yaml:"purgeTime,omitempty"`
 	// Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены.
-	Usages commonclient.Optional[[]TypedUsageOptionalResponse] `json:"usages,omitempty" yaml:"usages,omitempty"`
+	Usages optional.Optional[[]TypedUsageOptionalResponse] `json:"usages,omitempty" yaml:"usages,omitempty"`
 	// Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса.
-	Etag commonclient.Optional[string] `json:"etag,omitempty" yaml:"etag,omitempty"`
+	Etag optional.Optional[string] `json:"etag,omitempty" yaml:"etag,omitempty"`
 	// Описание ресурса.
-	Description commonclient.Optional[string] `json:"description,omitempty" yaml:"description,omitempty"`
+	Description optional.Optional[string] `json:"description,omitempty" yaml:"description,omitempty"`
 }
 
 func (m *TypedResourceMetadataOptionalResponse) GetDisplayName() *string {

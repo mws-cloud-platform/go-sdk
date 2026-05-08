@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func ResourceExternalAddressSpecRequestToOptionalResponse(request *ResourceExternalAddressSpecRequest) (*ResourceExternalAddressSpecOptionalResponse, error) {
@@ -12,7 +12,7 @@ func ResourceExternalAddressSpecRequestToOptionalResponse(request *ResourceExter
 	}
 	var response ResourceExternalAddressSpecOptionalResponse
 	if request.NatGateway != nil {
-		response.NatGateway = commonclient.NewOptional(*request.NatGateway)
+		response.NatGateway = optional.NewOptional(*request.NatGateway)
 	}
 	return &response, nil
 }

@@ -11,6 +11,9 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/mkafka"
 )
 
+// Топик — это логический поток сообщений, который создается пользователем в
+// кластере и обеспечивает группировку сообщений по темам
+//
 // Real OAPI model name: KafkaTopic
 type KafkaTopicResponse struct {
 	Kind     *string                     `json:"kind,omitempty" yaml:"kind,omitempty"`

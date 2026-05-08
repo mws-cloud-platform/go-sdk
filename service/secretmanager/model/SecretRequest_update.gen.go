@@ -7,23 +7,23 @@ import (
 
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateSecretRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
-	Spec     commonclient.Optional[UpdateSecretSpecRequest]                            `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Spec     optional.Optional[UpdateSecretSpecRequest]                            `json:"spec" yaml:"spec"`
 }
 
 func (m *SecretRequest) AsUpdateModel() UpdateSecretRequest {
 	var u UpdateSecretRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -75,15 +75,22 @@ func (m *UpdateSecretRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *SecretRequest) diffMetadata(src *SecretRequest) commonclient.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *SecretRequest) diffMetadata(src *SecretRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[common.UpdateCommonTypedResourceMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *SecretRequest) diffSpec(src *SecretRequest) commonclient.Optional[UpdateSecretSpecRequest] {
+func (m *SecretRequest) diffSpec(src *SecretRequest) optional.Optional[UpdateSecretSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateSecretSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateSecretSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

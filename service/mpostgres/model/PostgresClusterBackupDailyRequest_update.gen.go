@@ -6,17 +6,18 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdatePostgresClusterBackupDailyRequest struct {
 	// Час начала автоматического бэкапирования
-	Hour commonclient.Optional[int] `json:"hour" yaml:"hour"`
+	Hour optional.Optional[int] `json:"hour" yaml:"hour"`
 }
 
 func (m *PostgresClusterBackupDailyRequest) AsUpdateModel() UpdatePostgresClusterBackupDailyRequest {
 	var u UpdatePostgresClusterBackupDailyRequest
 	if m.Hour != nil {
-		u.Hour = commonclient.NewOptional(m.GetHourOr(0))
+		u.Hour = optional.NewOptional(m.GetHourOr(0))
 	}
 	return u
 }
@@ -48,7 +49,7 @@ func (m UpdatePostgresClusterBackupDailyRequest) HasChanges() bool {
 	return m.Hour.Set
 }
 
-func (m *PostgresClusterBackupDailyRequest) diffHour(src *PostgresClusterBackupDailyRequest) commonclient.Optional[int] {
+func (m *PostgresClusterBackupDailyRequest) diffHour(src *PostgresClusterBackupDailyRequest) optional.Optional[int] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetHour(), m.GetHour(), nilDiffers)
 }

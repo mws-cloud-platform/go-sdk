@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func SnapshotSourceRequestToOptionalResponse(request *SnapshotSourceRequest) (*SnapshotSourceOptionalResponse, error) {
@@ -16,7 +16,7 @@ func SnapshotSourceRequestToOptionalResponse(request *SnapshotSourceRequest) (*S
 		if err != nil {
 			return nil, err
 		}
-		response.Disk = commonclient.NewOptionalNil(*tmpDisk)
+		response.Disk = optional.NewOptionalNil(*tmpDisk)
 	}
 	return &response, nil
 }

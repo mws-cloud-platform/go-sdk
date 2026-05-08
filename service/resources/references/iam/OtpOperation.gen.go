@@ -143,7 +143,7 @@ func (m *OtpOperationID) UnmarshalJSON(b []byte) error {
 
 func (m *OtpOperationID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("OtpOperationRef")
+		return conv.NewDecodeToNilError("OtpOperationID")
 	}
 
 	v, err := decode.Str(d)

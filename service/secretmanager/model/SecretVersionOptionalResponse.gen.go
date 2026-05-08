@@ -5,8 +5,8 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -14,9 +14,9 @@ import (
 type SecretVersionOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata commonclient.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     SecretVersionSpecOptionalResponse                                            `json:"spec" yaml:"spec"`
-	Status   SecretVersionStatusResponse                                                  `json:"status" yaml:"status"`
+	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     SecretVersionSpecOptionalResponse                                        `json:"spec" yaml:"spec"`
+	Status   SecretVersionStatusResponse                                              `json:"status" yaml:"status"`
 }
 
 func (m *SecretVersionOptionalResponse) GetKind() string {

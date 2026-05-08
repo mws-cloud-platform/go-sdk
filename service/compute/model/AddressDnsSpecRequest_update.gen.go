@@ -6,22 +6,23 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateAddressDnsSpecRequest struct {
 	// DNS-имя виртуальной машины в MWS Cloud Platform
-	Name commonclient.Optional[string] `json:"name" yaml:"name"`
+	Name optional.Optional[string] `json:"name" yaml:"name"`
 	// Продолжительность хранения DNS записи в кеше
-	Ttl commonclient.Optional[duration.Duration] `json:"ttl" yaml:"ttl"`
+	Ttl optional.Optional[duration.Duration] `json:"ttl" yaml:"ttl"`
 	// Создать обратную DNS-запись
-	Ptr commonclient.Optional[bool] `json:"ptr" yaml:"ptr"`
+	Ptr optional.Optional[bool] `json:"ptr" yaml:"ptr"`
 }
 
 func (m *AddressDnsSpecRequest) AsUpdateModel() UpdateAddressDnsSpecRequest {
 	var u UpdateAddressDnsSpecRequest
-	u.Name = commonclient.NewOptional(m.GetName())
-	u.Ttl = commonclient.NewOptional(m.GetTtl())
-	u.Ptr = commonclient.NewOptional(m.GetPtr())
+	u.Name = optional.NewOptional(m.GetName())
+	u.Ttl = optional.NewOptional(m.GetTtl())
+	u.Ptr = optional.NewOptional(m.GetPtr())
 	return u
 }
 
@@ -72,20 +73,20 @@ func (m *UpdateAddressDnsSpecRequest) GetName() string {
 
 // SetName is used in the Diff function for NamedArray
 func (m *UpdateAddressDnsSpecRequest) SetName(name string) {
-	m.Name = commonclient.NewOptional(name)
+	m.Name = optional.NewOptional(name)
 }
 
-func (m *AddressDnsSpecRequest) diffName(src *AddressDnsSpecRequest) commonclient.Optional[string] {
+func (m *AddressDnsSpecRequest) diffName(src *AddressDnsSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
 }
 
-func (m *AddressDnsSpecRequest) diffTtl(src *AddressDnsSpecRequest) commonclient.Optional[duration.Duration] {
+func (m *AddressDnsSpecRequest) diffTtl(src *AddressDnsSpecRequest) optional.Optional[duration.Duration] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceRequired(src.GetTtl(), m.GetTtl(), nilDiffers)
 }
 
-func (m *AddressDnsSpecRequest) diffPtr(src *AddressDnsSpecRequest) commonclient.Optional[bool] {
+func (m *AddressDnsSpecRequest) diffPtr(src *AddressDnsSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetPtr(), m.GetPtr(), nilDiffers)
 }

@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func ClusterPrimaryEndpointSpecOrRefRequestToOptionalResponse(request *ClusterPrimaryEndpointSpecOrRefRequest) (*ClusterPrimaryEndpointSpecOrRefOptionalResponse, error) {
@@ -12,14 +12,14 @@ func ClusterPrimaryEndpointSpecOrRefRequestToOptionalResponse(request *ClusterPr
 	}
 	var response ClusterPrimaryEndpointSpecOrRefOptionalResponse
 	if request.Ref != nil {
-		response.Ref = commonclient.NewOptional(*request.Ref)
+		response.Ref = optional.NewOptional(*request.Ref)
 	}
 	if request.Spec != nil {
 		tmpSpec, err := ClusterPrimaryEndpointSpecRequestToOptionalResponse(request.Spec)
 		if err != nil {
 			return nil, err
 		}
-		response.Spec = commonclient.NewOptionalNil(*tmpSpec)
+		response.Spec = optional.NewOptionalNil(*tmpSpec)
 	}
 	return &response, nil
 }

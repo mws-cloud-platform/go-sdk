@@ -9,23 +9,24 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdatePostgresEndpointRequest struct {
 	// Имя эндпойнта.
-	Name commonclient.Optional[string] `json:"name" yaml:"name"`
+	Name optional.Optional[string] `json:"name" yaml:"name"`
 	// Идентификатор пользовательской сети (VPC).
-	Network           commonclient.Optional[vpc.NetworkRef]                        `json:"network" yaml:"network"`
-	PrimaryAddresses  commonclient.Optional[[]UpdatePostgresNetworkAddressRequest] `json:"primaryAddresses" yaml:"primaryAddresses"`
-	ReadOnlyAddresses commonclient.Optional[[]UpdatePostgresNetworkAddressRequest] `json:"readOnlyAddresses" yaml:"readOnlyAddresses"`
+	Network           optional.Optional[vpc.NetworkRef]                        `json:"network" yaml:"network"`
+	PrimaryAddresses  optional.Optional[[]UpdatePostgresNetworkAddressRequest] `json:"primaryAddresses" yaml:"primaryAddresses"`
+	ReadOnlyAddresses optional.Optional[[]UpdatePostgresNetworkAddressRequest] `json:"readOnlyAddresses" yaml:"readOnlyAddresses"`
 }
 
 func (m *PostgresEndpointRequest) AsUpdateModel() UpdatePostgresEndpointRequest {
 	var u UpdatePostgresEndpointRequest
-	u.Name = commonclient.NewOptional(m.GetName())
-	u.Network = commonclient.NewOptional(m.GetNetwork())
-	u.PrimaryAddresses = commonclient.NewOptional(func() []UpdatePostgresNetworkAddressRequest {
+	u.Name = optional.NewOptional(m.GetName())
+	u.Network = optional.NewOptional(m.GetNetwork())
+	u.PrimaryAddresses = optional.NewOptional(func() []UpdatePostgresNetworkAddressRequest {
 		var tmp []UpdatePostgresNetworkAddressRequest
 		if m.GetPrimaryAddresses() != nil {
 			tmp = make([]UpdatePostgresNetworkAddressRequest, 0, len(m.GetPrimaryAddresses()))
@@ -36,7 +37,7 @@ func (m *PostgresEndpointRequest) AsUpdateModel() UpdatePostgresEndpointRequest 
 		return tmp
 	}())
 	if m.ReadOnlyAddresses != nil {
-		u.ReadOnlyAddresses = commonclient.NewOptional(func() []UpdatePostgresNetworkAddressRequest {
+		u.ReadOnlyAddresses = optional.NewOptional(func() []UpdatePostgresNetworkAddressRequest {
 			var tmp []UpdatePostgresNetworkAddressRequest
 			if m.GetReadOnlyAddresses() != nil {
 				tmp = make([]UpdatePostgresNetworkAddressRequest, 0, len(m.GetReadOnlyAddresses()))
@@ -102,7 +103,7 @@ func (m *UpdatePostgresEndpointRequest) GetName() string {
 
 // SetName is used in the Diff function for NamedArray
 func (m *UpdatePostgresEndpointRequest) SetName(name string) {
-	m.Name = commonclient.NewOptional(name)
+	m.Name = optional.NewOptional(name)
 }
 
 func (m *UpdatePostgresEndpointRequest) Parse(ctx context.Context) error {
@@ -135,17 +136,17 @@ func (m *UpdatePostgresEndpointRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *PostgresEndpointRequest) diffName(src *PostgresEndpointRequest) commonclient.Optional[string] {
+func (m *PostgresEndpointRequest) diffName(src *PostgresEndpointRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
 }
 
-func (m *PostgresEndpointRequest) diffNetwork(src *PostgresEndpointRequest) commonclient.Optional[vpc.NetworkRef] {
+func (m *PostgresEndpointRequest) diffNetwork(src *PostgresEndpointRequest) optional.Optional[vpc.NetworkRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetNetwork(), m.GetNetwork(), nilDiffers)
 }
 
-func (m *PostgresEndpointRequest) diffPrimaryAddresses(src *PostgresEndpointRequest) commonclient.Optional[[]UpdatePostgresNetworkAddressRequest] {
+func (m *PostgresEndpointRequest) diffPrimaryAddresses(src *PostgresEndpointRequest) optional.Optional[[]UpdatePostgresNetworkAddressRequest] {
 	diffFunc := func(fromItem, toItem PostgresNetworkAddressRequest, fromNil bool) UpdatePostgresNetworkAddressRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -153,10 +154,13 @@ func (m *PostgresEndpointRequest) diffPrimaryAddresses(src *PostgresEndpointRequ
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetPrimaryAddresses(), m.GetPrimaryAddresses(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdatePostgresNetworkAddressRequest](value, hasChanges)
+	return optional.Optional[[]UpdatePostgresNetworkAddressRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *PostgresEndpointRequest) diffReadOnlyAddresses(src *PostgresEndpointRequest) commonclient.Optional[[]UpdatePostgresNetworkAddressRequest] {
+func (m *PostgresEndpointRequest) diffReadOnlyAddresses(src *PostgresEndpointRequest) optional.Optional[[]UpdatePostgresNetworkAddressRequest] {
 	diffFunc := func(fromItem, toItem PostgresNetworkAddressRequest, fromNil bool) UpdatePostgresNetworkAddressRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -164,5 +168,8 @@ func (m *PostgresEndpointRequest) diffReadOnlyAddresses(src *PostgresEndpointReq
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetReadOnlyAddresses(), m.GetReadOnlyAddresses(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdatePostgresNetworkAddressRequest](value, hasChanges)
+	return optional.Optional[[]UpdatePostgresNetworkAddressRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

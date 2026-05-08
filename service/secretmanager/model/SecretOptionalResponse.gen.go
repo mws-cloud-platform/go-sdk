@@ -5,18 +5,19 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Секрет — это текстовая строка, содержащая любую информацию, которую пользователь хочет защитить, например, пароли, токены или ключи API
 // Real OAPI model name: Secret
 type SecretOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata commonclient.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     SecretSpecOptionalResponse                                                   `json:"spec" yaml:"spec"`
-	Status   SecretStatusResponse                                                         `json:"status" yaml:"status"`
+	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     SecretSpecOptionalResponse                                               `json:"spec" yaml:"spec"`
+	Status   SecretStatusResponse                                                     `json:"status" yaml:"status"`
 }
 
 func (m *SecretOptionalResponse) GetKind() string {

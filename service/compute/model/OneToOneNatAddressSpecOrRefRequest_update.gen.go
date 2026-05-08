@@ -9,22 +9,23 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateOneToOneNatAddressSpecOrRefRequest struct {
-	Ref commonclient.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
+	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
 	// NAT правило для связи внутреннего адреса с внешним адресом.
-	Spec commonclient.OptionalNil[UpdateOneToOneNatAddressSpecOrRefSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateOneToOneNatAddressSpecOrRefSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *OneToOneNatAddressSpecOrRefRequest) AsUpdateModel() UpdateOneToOneNatAddressSpecOrRefRequest {
 	var u UpdateOneToOneNatAddressSpecOrRefRequest
 	if m.Ref != nil {
-		u.Ref = commonclient.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
+		u.Ref = optional.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
 	}
 	if m.Spec != nil {
-		u.Spec = commonclient.NewOptionalNil(m.Spec.AsUpdateModel())
+		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
 	}
 	return u
 }
@@ -77,15 +78,19 @@ func (m *UpdateOneToOneNatAddressSpecOrRefRequest) Parse(ctx context.Context) er
 	return nil
 }
 
-func (m *OneToOneNatAddressSpecOrRefRequest) diffRef(src *OneToOneNatAddressSpecOrRefRequest) commonclient.Optional[vpc.ExternalAddressRef] {
+func (m *OneToOneNatAddressSpecOrRefRequest) diffRef(src *OneToOneNatAddressSpecOrRefRequest) optional.Optional[vpc.ExternalAddressRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *OneToOneNatAddressSpecOrRefRequest) diffSpec(src *OneToOneNatAddressSpecOrRefRequest) commonclient.OptionalNil[UpdateOneToOneNatAddressSpecOrRefSpecRequest] {
+func (m *OneToOneNatAddressSpecOrRefRequest) diffSpec(src *OneToOneNatAddressSpecOrRefRequest) optional.OptionalNil[UpdateOneToOneNatAddressSpecOrRefSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return commonclient.NewDirectOptionalNil[UpdateOneToOneNatAddressSpecOrRefSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateOneToOneNatAddressSpecOrRefSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
 type UpdateOneToOneNatAddressSpecOrRefSpecRequest struct {

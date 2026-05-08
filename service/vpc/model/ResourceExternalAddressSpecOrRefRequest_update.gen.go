@@ -9,23 +9,24 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateResourceExternalAddressSpecOrRefRequest struct {
 	// Относительная ссылка на статический внешний адрес.
-	Ref commonclient.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
+	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
 	// Спецификация внешнего адреса.
-	Spec commonclient.OptionalNil[UpdateResourceExternalAddressSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateResourceExternalAddressSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *ResourceExternalAddressSpecOrRefRequest) AsUpdateModel() UpdateResourceExternalAddressSpecOrRefRequest {
 	var u UpdateResourceExternalAddressSpecOrRefRequest
 	if m.Ref != nil {
-		u.Ref = commonclient.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
+		u.Ref = optional.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
 	}
 	if m.Spec != nil {
-		u.Spec = commonclient.NewOptionalNil(m.Spec.AsUpdateModel())
+		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
 	}
 	return u
 }
@@ -78,13 +79,17 @@ func (m *UpdateResourceExternalAddressSpecOrRefRequest) Parse(ctx context.Contex
 	return nil
 }
 
-func (m *ResourceExternalAddressSpecOrRefRequest) diffRef(src *ResourceExternalAddressSpecOrRefRequest) commonclient.Optional[vpc.ExternalAddressRef] {
+func (m *ResourceExternalAddressSpecOrRefRequest) diffRef(src *ResourceExternalAddressSpecOrRefRequest) optional.Optional[vpc.ExternalAddressRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *ResourceExternalAddressSpecOrRefRequest) diffSpec(src *ResourceExternalAddressSpecOrRefRequest) commonclient.OptionalNil[UpdateResourceExternalAddressSpecRequest] {
+func (m *ResourceExternalAddressSpecOrRefRequest) diffSpec(src *ResourceExternalAddressSpecOrRefRequest) optional.OptionalNil[UpdateResourceExternalAddressSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return commonclient.NewDirectOptionalNil[UpdateResourceExternalAddressSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateResourceExternalAddressSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

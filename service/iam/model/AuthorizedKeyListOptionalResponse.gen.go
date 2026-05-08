@@ -6,16 +6,16 @@ import (
 	"context"
 	"fmt"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: AuthorizedKeyList
 type AuthorizedKeyListOptionalResponse struct {
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken commonclient.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
-	Items         []AuthorizedKeyOptionalResponse             `json:"items" yaml:"items"`
+	NextPageToken optional.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	Items         []AuthorizedKeyOptionalResponse         `json:"items" yaml:"items"`
 }
 
 func (m *AuthorizedKeyListOptionalResponse) GetNextPageToken() *common.NextPageToken {

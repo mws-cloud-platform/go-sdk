@@ -49,9 +49,9 @@ func (c *ApiKey) listApiKeyInvoker(ctx context.Context, anyReq any, response com
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"apiKeys")
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
@@ -144,11 +144,11 @@ func (c *ApiKey) deleteApiKeyInvoker(ctx context.Context, anyReq any, response c
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"apiKeys",
-		request.ApiKey)
+		url.PathEscape(request.ApiKey))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -218,11 +218,11 @@ func (c *ApiKey) getApiKeyInvoker(ctx context.Context, anyReq any, response comm
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"apiKeys",
-		request.ApiKey)
+		url.PathEscape(request.ApiKey))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "apiKey", request.ApiKey)
@@ -296,11 +296,11 @@ func (c *ApiKey) upsertApiKeyInvoker(ctx context.Context, anyReq any, response c
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"apiKeys",
-		request.ApiKey)
+		url.PathEscape(request.ApiKey))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "apiKey", request.ApiKey)
@@ -390,11 +390,11 @@ func (c *ApiKey) createApiKeyInvoker(ctx context.Context, anyReq any, response c
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"apiKeys",
-		request.ApiKey)
+		url.PathEscape(request.ApiKey))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "apiKey", request.ApiKey)
@@ -485,11 +485,11 @@ func (c *ApiKey) updateApiKeyInvoker(ctx context.Context, anyReq any, response c
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"apiKeys",
-		request.ApiKey)
+		url.PathEscape(request.ApiKey))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "apiKey", request.ApiKey)

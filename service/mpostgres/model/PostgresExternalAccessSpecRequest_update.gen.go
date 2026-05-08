@@ -9,21 +9,22 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdatePostgresExternalAccessSpecRequest struct {
 	// Флаг, разрешающий внешнее подключение к кластеру.
-	Allowed commonclient.Optional[bool] `json:"allowed" yaml:"allowed"`
+	Allowed optional.Optional[bool] `json:"allowed" yaml:"allowed"`
 	// Идентификатор внешнего адреса.
-	Ref commonclient.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
+	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
 }
 
 func (m *PostgresExternalAccessSpecRequest) AsUpdateModel() UpdatePostgresExternalAccessSpecRequest {
 	var u UpdatePostgresExternalAccessSpecRequest
-	u.Allowed = commonclient.NewOptional(m.GetAllowed())
+	u.Allowed = optional.NewOptional(m.GetAllowed())
 	if m.Ref != nil {
-		u.Ref = commonclient.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
+		u.Ref = optional.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
 	}
 	return u
 }
@@ -74,12 +75,12 @@ func (m *UpdatePostgresExternalAccessSpecRequest) Parse(ctx context.Context) err
 	return nil
 }
 
-func (m *PostgresExternalAccessSpecRequest) diffAllowed(src *PostgresExternalAccessSpecRequest) commonclient.Optional[bool] {
+func (m *PostgresExternalAccessSpecRequest) diffAllowed(src *PostgresExternalAccessSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetAllowed(), m.GetAllowed(), nilDiffers)
 }
 
-func (m *PostgresExternalAccessSpecRequest) diffRef(src *PostgresExternalAccessSpecRequest) commonclient.Optional[vpc.ExternalAddressRef] {
+func (m *PostgresExternalAccessSpecRequest) diffRef(src *PostgresExternalAccessSpecRequest) optional.Optional[vpc.ExternalAddressRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }

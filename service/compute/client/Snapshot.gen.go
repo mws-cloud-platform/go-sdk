@@ -8,36 +8,42 @@ import (
 
 	"github.com/go-faster/jx"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
 
 type Snapshot interface {
+	// Deprecated: Отказываемся в пользу listDiskBackups.
 	// ListSnapshots позволяет получить список снимков.
 	//
 	// Путь: GET /compute/v1/projects/{project}/snapshots
 	ListSnapshots(context.Context, ListSnapshotsRequest) (*ListSnapshotsResponse, error)
+	// Deprecated: Отказываемся в пользу deleteDiskBackup.
 	// DeleteSnapshot позволяет удалить снимок.
 	//
 	// Путь: DELETE /compute/v1/projects/{project}/snapshots/{snapshot}
 	DeleteSnapshot(context.Context, DeleteSnapshotRequest) (*DeleteSnapshotResponse, error)
+	// Deprecated: Отказываемся в пользу getDiskBackup.
 	// GetSnapshot позволяет получить информацию о снимке.
 	//
 	// Путь: GET /compute/v1/projects/{project}/snapshots/{snapshot}
 	GetSnapshot(context.Context, GetSnapshotRequest) (*GetSnapshotResponse, error)
+	// Deprecated: Отказываемся в пользу upsertDiskBackup.
 	// UpsertSnapshot позволяет создать или изменить снимок.
 	//
 	// Путь: POST /compute/v1/projects/{project}/snapshots/{snapshot}
 	UpsertSnapshot(context.Context, UpsertSnapshotRequest) (*UpsertSnapshotResponse, error)
+	// Deprecated: Отказываемся в пользу upsertDiskBackup.
 	// CreateSnapshot позволяет создать или изменить снимок.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /compute/v1/projects/{project}/snapshots/{snapshot}?createOnly=true
 	CreateSnapshot(context.Context, UpsertSnapshotRequest) (*UpsertSnapshotResponse, error)
+	// Deprecated: Отказываемся в пользу upsertDiskBackup.
 	// UpdateSnapshot позволяет создать или изменить снимок.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
@@ -120,7 +126,7 @@ func (m *ListSnapshotsResponse) SetErrorWrapper(f func(err error) error) {
 type ListSnapshotsResponse200 struct {
 	Items []model.SnapshotOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken commonclient.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ListSnapshotsResponse200) GetItems() []model.SnapshotOptionalResponse {

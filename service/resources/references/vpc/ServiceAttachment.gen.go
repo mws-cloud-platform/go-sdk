@@ -183,7 +183,7 @@ func (m *ServiceAttachmentID) UnmarshalJSON(b []byte) error {
 
 func (m *ServiceAttachmentID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ServiceAttachmentRef")
+		return conv.NewDecodeToNilError("ServiceAttachmentID")
 	}
 
 	v, err := decode.Str(d)

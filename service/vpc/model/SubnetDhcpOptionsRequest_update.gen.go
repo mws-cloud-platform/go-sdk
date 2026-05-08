@@ -9,27 +9,28 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateSubnetDhcpOptionsRequest struct {
 	// Базовое доменное имя для разрешения имен.
-	DomainName commonclient.Optional[string] `json:"domainName" yaml:"domainName"`
+	DomainName optional.Optional[string] `json:"domainName" yaml:"domainName"`
 	// Список адресов DNS серверов.
-	DomainNameServers commonclient.Optional[[]ipaddress.IP4Address] `json:"domainNameServers" yaml:"domainNameServers"`
+	DomainNameServers optional.Optional[[]ipaddress.IP4Address] `json:"domainNameServers" yaml:"domainNameServers"`
 	// Список адресов NTP серверов.
-	NtpServers commonclient.Optional[[]ipaddress.IP4Address] `json:"ntpServers" yaml:"ntpServers"`
+	NtpServers optional.Optional[[]ipaddress.IP4Address] `json:"ntpServers" yaml:"ntpServers"`
 }
 
 func (m *SubnetDhcpOptionsRequest) AsUpdateModel() UpdateSubnetDhcpOptionsRequest {
 	var u UpdateSubnetDhcpOptionsRequest
 	if m.DomainName != nil {
-		u.DomainName = commonclient.NewOptional(m.GetDomainNameOr(""))
+		u.DomainName = optional.NewOptional(m.GetDomainNameOr(""))
 	}
 	if m.DomainNameServers != nil {
-		u.DomainNameServers = commonclient.NewOptional(m.GetDomainNameServers())
+		u.DomainNameServers = optional.NewOptional(m.GetDomainNameServers())
 	}
 	if m.NtpServers != nil {
-		u.NtpServers = commonclient.NewOptional(m.GetNtpServers())
+		u.NtpServers = optional.NewOptional(m.GetNtpServers())
 	}
 	return u
 }
@@ -71,17 +72,23 @@ func (m UpdateSubnetDhcpOptionsRequest) HasChanges() bool {
 		m.NtpServers.Set
 }
 
-func (m *SubnetDhcpOptionsRequest) diffDomainName(src *SubnetDhcpOptionsRequest) commonclient.Optional[string] {
+func (m *SubnetDhcpOptionsRequest) diffDomainName(src *SubnetDhcpOptionsRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDomainName(), m.GetDomainName(), nilDiffers)
 }
 
-func (m *SubnetDhcpOptionsRequest) diffDomainNameServers(src *SubnetDhcpOptionsRequest) commonclient.Optional[[]ipaddress.IP4Address] {
+func (m *SubnetDhcpOptionsRequest) diffDomainNameServers(src *SubnetDhcpOptionsRequest) optional.Optional[[]ipaddress.IP4Address] {
 	value, hasChanges := commonclient.GetChangesArrayEquatableIface(src.GetDomainNameServers(), m.GetDomainNameServers())
-	return commonclient.NewDirectOptional[[]ipaddress.IP4Address](value, hasChanges)
+	return optional.Optional[[]ipaddress.IP4Address]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *SubnetDhcpOptionsRequest) diffNtpServers(src *SubnetDhcpOptionsRequest) commonclient.Optional[[]ipaddress.IP4Address] {
+func (m *SubnetDhcpOptionsRequest) diffNtpServers(src *SubnetDhcpOptionsRequest) optional.Optional[[]ipaddress.IP4Address] {
 	value, hasChanges := commonclient.GetChangesArrayEquatableIface(src.GetNtpServers(), m.GetNtpServers())
-	return commonclient.NewDirectOptional[[]ipaddress.IP4Address](value, hasChanges)
+	return optional.Optional[[]ipaddress.IP4Address]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

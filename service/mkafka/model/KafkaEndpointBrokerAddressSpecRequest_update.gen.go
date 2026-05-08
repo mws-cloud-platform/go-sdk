@@ -7,17 +7,18 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateKafkaEndpointBrokerAddressSpecRequest struct {
 	// Идентификатор подсети, в которой необходимо выделить адрес.
-	Subnet commonclient.Optional[vpc.SubnetRef] `json:"subnet" yaml:"subnet"`
+	Subnet optional.Optional[vpc.SubnetRef] `json:"subnet" yaml:"subnet"`
 }
 
 func (m *KafkaEndpointBrokerAddressSpecRequest) AsUpdateModel() UpdateKafkaEndpointBrokerAddressSpecRequest {
 	var u UpdateKafkaEndpointBrokerAddressSpecRequest
-	u.Subnet = commonclient.NewOptional(m.GetSubnet())
+	u.Subnet = optional.NewOptional(m.GetSubnet())
 	return u
 }
 
@@ -62,7 +63,7 @@ func (m *UpdateKafkaEndpointBrokerAddressSpecRequest) Parse(ctx context.Context)
 	return nil
 }
 
-func (m *KafkaEndpointBrokerAddressSpecRequest) diffSubnet(src *KafkaEndpointBrokerAddressSpecRequest) commonclient.Optional[vpc.SubnetRef] {
+func (m *KafkaEndpointBrokerAddressSpecRequest) diffSubnet(src *KafkaEndpointBrokerAddressSpecRequest) optional.Optional[vpc.SubnetRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetSubnet(), m.GetSubnet(), nilDiffers)
 }

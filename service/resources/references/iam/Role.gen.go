@@ -143,7 +143,7 @@ func (m *RoleID) UnmarshalJSON(b []byte) error {
 
 func (m *RoleID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("RoleRef")
+		return conv.NewDecodeToNilError("RoleID")
 	}
 
 	v, err := decode.Str(d)

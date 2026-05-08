@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func ResourceAddressSpecRequestToOptionalResponse(request *ResourceAddressSpecRequest) (*ResourceAddressSpecOptionalResponse, error) {
@@ -13,7 +13,7 @@ func ResourceAddressSpecRequestToOptionalResponse(request *ResourceAddressSpecRe
 	var response ResourceAddressSpecOptionalResponse
 	response.Subnet = request.Subnet
 	if request.IpAddress != nil {
-		response.IpAddress = commonclient.NewOptional(*request.IpAddress)
+		response.IpAddress = optional.NewOptional(*request.IpAddress)
 	}
 	for _, e := range request.Dns {
 		tmp, err := VpcAddressDnsSpecRequestToOptionalResponse(&e)

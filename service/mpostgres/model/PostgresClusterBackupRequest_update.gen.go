@@ -6,22 +6,23 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdatePostgresClusterBackupRequest struct {
 	// Спецификация ежедневного автоматического бэкапирования
-	Daily commonclient.OptionalNil[UpdatePostgresClusterBackupDailyRequest] `json:"daily" yaml:"daily"`
+	Daily optional.OptionalNil[UpdatePostgresClusterBackupDailyRequest] `json:"daily" yaml:"daily"`
 	// Количество дней хранения бэкапа
-	RetainPeriodDays commonclient.Optional[int] `json:"retainPeriodDays" yaml:"retainPeriodDays"`
+	RetainPeriodDays optional.Optional[int] `json:"retainPeriodDays" yaml:"retainPeriodDays"`
 }
 
 func (m *PostgresClusterBackupRequest) AsUpdateModel() UpdatePostgresClusterBackupRequest {
 	var u UpdatePostgresClusterBackupRequest
 	if m.Daily != nil {
-		u.Daily = commonclient.NewOptionalNil(m.Daily.AsUpdateModel())
+		u.Daily = optional.NewOptionalNil(m.Daily.AsUpdateModel())
 	}
 	if m.RetainPeriodDays != nil {
-		u.RetainPeriodDays = commonclient.NewOptional(m.GetRetainPeriodDaysOr(0))
+		u.RetainPeriodDays = optional.NewOptional(m.GetRetainPeriodDaysOr(0))
 	}
 	return u
 }
@@ -60,13 +61,17 @@ func (m UpdatePostgresClusterBackupRequest) HasChanges() bool {
 		m.RetainPeriodDays.Set
 }
 
-func (m *PostgresClusterBackupRequest) diffDaily(src *PostgresClusterBackupRequest) commonclient.OptionalNil[UpdatePostgresClusterBackupDailyRequest] {
+func (m *PostgresClusterBackupRequest) diffDaily(src *PostgresClusterBackupRequest) optional.OptionalNil[UpdatePostgresClusterBackupDailyRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetDaily().Diff(src.GetDaily())
-	return commonclient.NewDirectOptionalNil[UpdatePostgresClusterBackupDailyRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdatePostgresClusterBackupDailyRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *PostgresClusterBackupRequest) diffRetainPeriodDays(src *PostgresClusterBackupRequest) commonclient.Optional[int] {
+func (m *PostgresClusterBackupRequest) diffRetainPeriodDays(src *PostgresClusterBackupRequest) optional.Optional[int] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRetainPeriodDays(), m.GetRetainPeriodDays(), nilDiffers)
 }

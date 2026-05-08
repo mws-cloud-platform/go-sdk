@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func FirewallRuleSpecRequestToOptionalResponse(request *FirewallRuleSpecRequest) (*FirewallRuleSpecOptionalResponse, error) {
@@ -17,7 +17,7 @@ func FirewallRuleSpecRequestToOptionalResponse(request *FirewallRuleSpecRequest)
 	}
 	response.Direction = *tmpDirection
 	if request.Priority != nil {
-		response.Priority = commonclient.NewOptional(*request.Priority)
+		response.Priority = optional.NewOptional(*request.Priority)
 	}
 	tmpAction, err := FirewallRuleSpecActionRequestToOptionalResponse(&request.Action)
 	if err != nil {
@@ -25,7 +25,7 @@ func FirewallRuleSpecRequestToOptionalResponse(request *FirewallRuleSpecRequest)
 	}
 	response.Action = *tmpAction
 	if request.Active != nil {
-		response.Active = commonclient.NewOptional(*request.Active)
+		response.Active = optional.NewOptional(*request.Active)
 	}
 	tmpSource, err := FirewallRuleSourceRequestToOptionalResponse(&request.Source)
 	if err != nil {
@@ -38,7 +38,7 @@ func FirewallRuleSpecRequestToOptionalResponse(request *FirewallRuleSpecRequest)
 	}
 	response.Destination = *tmpDestination
 	if request.ProtoPorts != nil {
-		response.ProtoPorts = commonclient.NewOptional(request.ProtoPorts)
+		response.ProtoPorts = optional.NewOptional(request.ProtoPorts)
 	}
 	return &response, nil
 }

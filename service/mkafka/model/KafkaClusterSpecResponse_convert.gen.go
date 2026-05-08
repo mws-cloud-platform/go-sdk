@@ -31,5 +31,10 @@ func KafkaClusterSpecRequestToResponse(request *KafkaClusterSpecRequest) (*Kafka
 		return nil, err
 	}
 	response.MaintenanceWindow = tmpMaintenanceWindow
+	tmpSchemaRegistry, err := KafkaSchemaRegistrySpecRequestToResponse(request.SchemaRegistry)
+	if err != nil {
+		return nil, err
+	}
+	response.SchemaRegistry = tmpSchemaRegistry
 	return &response, nil
 }

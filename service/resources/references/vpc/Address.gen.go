@@ -183,7 +183,7 @@ func (m *AddressID) UnmarshalJSON(b []byte) error {
 
 func (m *AddressID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("AddressRef")
+		return conv.NewDecodeToNilError("AddressID")
 	}
 
 	v, err := decode.Str(d)

@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func ResourceStatusReadyRequestToOptionalResponse(request *ResourceStatusReadyRequest) (*ResourceStatusReadyOptionalResponse, error) {
@@ -13,7 +13,7 @@ func ResourceStatusReadyRequestToOptionalResponse(request *ResourceStatusReadyRe
 	var response ResourceStatusReadyOptionalResponse
 	response.State = request.State
 	if request.Message != nil {
-		response.Message = commonclient.NewOptional(*request.Message)
+		response.Message = optional.NewOptional(*request.Message)
 	}
 	return &response, nil
 }

@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func SecretVersionSpecRequestToOptionalResponse(request *SecretVersionSpecRequest) (*SecretVersionSpecOptionalResponse, error) {
@@ -12,7 +12,7 @@ func SecretVersionSpecRequestToOptionalResponse(request *SecretVersionSpecReques
 	}
 	var response SecretVersionSpecOptionalResponse
 	if request.Active != nil {
-		response.Active = commonclient.NewOptional(*request.Active)
+		response.Active = optional.NewOptional(*request.Active)
 	}
 	return &response, nil
 }

@@ -9,23 +9,24 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateRouteNextHopRequest struct {
 	// NAT шлюз.
-	NatGateway commonclient.Optional[vpc.NatGatewayRef] `json:"natGateway" yaml:"natGateway"`
+	NatGateway optional.Optional[vpc.NatGatewayRef] `json:"natGateway" yaml:"natGateway"`
 	// Адрес.
-	Address commonclient.OptionalNil[UpdateRouteNextHopAddressRequest] `json:"address" yaml:"address"`
+	Address optional.OptionalNil[UpdateRouteNextHopAddressRequest] `json:"address" yaml:"address"`
 }
 
 func (m *RouteNextHopRequest) AsUpdateModel() UpdateRouteNextHopRequest {
 	var u UpdateRouteNextHopRequest
 	if m.NatGateway != nil {
-		u.NatGateway = commonclient.NewOptional(m.GetNatGatewayOr(vpc.NatGatewayRef{}))
+		u.NatGateway = optional.NewOptional(m.GetNatGatewayOr(vpc.NatGatewayRef{}))
 	}
 	if m.Address != nil {
-		u.Address = commonclient.NewOptionalNil(m.Address.AsUpdateModel())
+		u.Address = optional.NewOptionalNil(m.Address.AsUpdateModel())
 	}
 	return u
 }
@@ -84,25 +85,29 @@ func (m *UpdateRouteNextHopRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *RouteNextHopRequest) diffNatGateway(src *RouteNextHopRequest) commonclient.Optional[vpc.NatGatewayRef] {
+func (m *RouteNextHopRequest) diffNatGateway(src *RouteNextHopRequest) optional.Optional[vpc.NatGatewayRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetNatGateway(), m.GetNatGateway(), nilDiffers)
 }
 
-func (m *RouteNextHopRequest) diffAddress(src *RouteNextHopRequest) commonclient.OptionalNil[UpdateRouteNextHopAddressRequest] {
+func (m *RouteNextHopRequest) diffAddress(src *RouteNextHopRequest) optional.OptionalNil[UpdateRouteNextHopAddressRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetAddress().Diff(src.GetAddress())
-	return commonclient.NewDirectOptionalNil[UpdateRouteNextHopAddressRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateRouteNextHopAddressRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
 type UpdateRouteNextHopAddressRequest struct {
 	// ссылка на IP-Адрес назначения
-	Ref commonclient.Optional[vpc.AddressRef] `json:"ref" yaml:"ref"`
+	Ref optional.Optional[vpc.AddressRef] `json:"ref" yaml:"ref"`
 }
 
 func (m *RouteNextHopAddressRequest) AsUpdateModel() UpdateRouteNextHopAddressRequest {
 	var u UpdateRouteNextHopAddressRequest
-	u.Ref = commonclient.NewOptional(m.GetRef())
+	u.Ref = optional.NewOptional(m.GetRef())
 	return u
 }
 
@@ -147,7 +152,7 @@ func (m *UpdateRouteNextHopAddressRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *RouteNextHopAddressRequest) diffRef(src *RouteNextHopAddressRequest) commonclient.Optional[vpc.AddressRef] {
+func (m *RouteNextHopAddressRequest) diffRef(src *RouteNextHopAddressRequest) optional.Optional[vpc.AddressRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }

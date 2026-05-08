@@ -5,18 +5,20 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Снимок (snapshot) диска — это копия состояния диска
 // Real OAPI model name: Snapshot
+//
+// Deprecated: Отказываемся в пользу DiskBackup
 type SnapshotOptionalResponse struct {
 	// Тип объекта (snapshot)
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Дополнительная информация об объекте
-	Metadata commonclient.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация глобального снимка
 	Spec SnapshotSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Статус глобального снимка

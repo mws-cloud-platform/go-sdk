@@ -5,8 +5,8 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -14,9 +14,9 @@ import (
 // Real OAPI model name: ResourceAddressSpecOrRef
 type ResourceAddressSpecOrRefOptionalResponse struct {
 	// Относительная ссылка на статический внутренний адрес.
-	Ref commonclient.Optional[vpc.AddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref optional.Optional[vpc.AddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Спецификация внутреннего адреса.
-	Spec commonclient.OptionalNil[ResourceAddressSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec optional.OptionalNil[ResourceAddressSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *ResourceAddressSpecOrRefOptionalResponse) GetRef() *vpc.AddressRef {

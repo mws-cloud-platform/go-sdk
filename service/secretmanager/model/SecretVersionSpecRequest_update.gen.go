@@ -6,17 +6,18 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateSecretVersionSpecRequest struct {
 	// Версия секрета активна/неактивна
-	Active commonclient.Optional[bool] `json:"active" yaml:"active"`
+	Active optional.Optional[bool] `json:"active" yaml:"active"`
 }
 
 func (m *SecretVersionSpecRequest) AsUpdateModel() UpdateSecretVersionSpecRequest {
 	var u UpdateSecretVersionSpecRequest
 	if m.Active != nil {
-		u.Active = commonclient.NewOptional(m.GetActiveOr(false))
+		u.Active = optional.NewOptional(m.GetActiveOr(false))
 	}
 	return u
 }
@@ -48,7 +49,7 @@ func (m UpdateSecretVersionSpecRequest) HasChanges() bool {
 	return m.Active.Set
 }
 
-func (m *SecretVersionSpecRequest) diffActive(src *SecretVersionSpecRequest) commonclient.Optional[bool] {
+func (m *SecretVersionSpecRequest) diffActive(src *SecretVersionSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetActive(), m.GetActive(), nilDiffers)
 }

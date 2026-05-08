@@ -6,28 +6,29 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateNodeGroupVersionControlSpecRequest struct {
 	// Минимальная версия NodeGroup. Не может быть выше версии кластера.  Автоматически обновляется до default-версии в окно обслуживания. Если указанная версия выше текущей, обновление запустится немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе NodeGroup
-	Version commonclient.OptionalNil[string] `json:"version" yaml:"version"`
+	Version optional.OptionalNil[string] `json:"version" yaml:"version"`
 	// авто обновление версии нод группы в рамках релизного канала и окна обслуживания
-	AutoUpdate commonclient.Optional[bool] `json:"autoUpdate" yaml:"autoUpdate"`
+	AutoUpdate optional.Optional[bool] `json:"autoUpdate" yaml:"autoUpdate"`
 	// Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration можно указывать. Если отсутствует, то не ограничено по времени
-	MaintenanceWindow commonclient.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
+	MaintenanceWindow optional.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
 }
 
 func (m *NodeGroupVersionControlSpecRequest) AsUpdateModel() UpdateNodeGroupVersionControlSpecRequest {
 	var u UpdateNodeGroupVersionControlSpecRequest
 	if m.Version != nil {
-		u.Version = commonclient.NewOptionalNil(m.GetVersionOr(""))
+		u.Version = optional.NewOptionalNil(m.GetVersionOr(""))
 	}
 	if m.AutoUpdate != nil {
-		u.AutoUpdate = commonclient.NewOptional(m.GetAutoUpdateOr(false))
+		u.AutoUpdate = optional.NewOptional(m.GetAutoUpdateOr(false))
 	}
 	if m.MaintenanceWindow != nil {
-		u.MaintenanceWindow = commonclient.NewOptionalNil(m.MaintenanceWindow.AsUpdateModel())
+		u.MaintenanceWindow = optional.NewOptionalNil(m.MaintenanceWindow.AsUpdateModel())
 	}
 	return u
 }
@@ -73,18 +74,22 @@ func (m UpdateNodeGroupVersionControlSpecRequest) HasChanges() bool {
 		m.MaintenanceWindow.Set
 }
 
-func (m *NodeGroupVersionControlSpecRequest) diffVersion(src *NodeGroupVersionControlSpecRequest) commonclient.OptionalNil[string] {
+func (m *NodeGroupVersionControlSpecRequest) diffVersion(src *NodeGroupVersionControlSpecRequest) optional.OptionalNil[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNullable(src.GetVersion(), m.GetVersion(), nilDiffers)
 }
 
-func (m *NodeGroupVersionControlSpecRequest) diffAutoUpdate(src *NodeGroupVersionControlSpecRequest) commonclient.Optional[bool] {
+func (m *NodeGroupVersionControlSpecRequest) diffAutoUpdate(src *NodeGroupVersionControlSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetAutoUpdate(), m.GetAutoUpdate(), nilDiffers)
 }
 
-func (m *NodeGroupVersionControlSpecRequest) diffMaintenanceWindow(src *NodeGroupVersionControlSpecRequest) commonclient.OptionalNil[common.UpdateMaintenanceWindowRequest] {
+func (m *NodeGroupVersionControlSpecRequest) diffMaintenanceWindow(src *NodeGroupVersionControlSpecRequest) optional.OptionalNil[common.UpdateMaintenanceWindowRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMaintenanceWindow().Diff(src.GetMaintenanceWindow())
-	return commonclient.NewDirectOptionalNil[common.UpdateMaintenanceWindowRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[common.UpdateMaintenanceWindowRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func CommonRoleBindingSpecSubjectRequestToOptionalResponse(request *CommonRoleBindingSpecSubjectRequest) (*CommonRoleBindingSpecSubjectOptionalResponse, error) {
@@ -12,23 +12,23 @@ func CommonRoleBindingSpecSubjectRequestToOptionalResponse(request *CommonRoleBi
 	}
 	var response CommonRoleBindingSpecSubjectOptionalResponse
 	if request.User != nil {
-		response.User = commonclient.NewOptional(*request.User)
+		response.User = optional.NewOptional(*request.User)
 	}
 	if request.ServiceAccount != nil {
-		response.ServiceAccount = commonclient.NewOptional(*request.ServiceAccount)
+		response.ServiceAccount = optional.NewOptional(*request.ServiceAccount)
 	}
 	if request.ServiceAgent != nil {
-		response.ServiceAgent = commonclient.NewOptional(*request.ServiceAgent)
+		response.ServiceAgent = optional.NewOptional(*request.ServiceAgent)
 	}
 	if request.UserFederation != nil {
 		tmpUserFederation, err := CommonRoleBindingFederationRequestToOptionalResponse(request.UserFederation)
 		if err != nil {
 			return nil, err
 		}
-		response.UserFederation = commonclient.NewOptionalNil(*tmpUserFederation)
+		response.UserFederation = optional.NewOptionalNil(*tmpUserFederation)
 	}
 	if request.UserGroup != nil {
-		response.UserGroup = commonclient.NewOptional(*request.UserGroup)
+		response.UserGroup = optional.NewOptional(*request.UserGroup)
 	}
 	return &response, nil
 }

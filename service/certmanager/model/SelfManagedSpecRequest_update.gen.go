@@ -6,23 +6,24 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateSelfManagedSpecRequest struct {
 	// Сертификат.
-	Certificate commonclient.Optional[string] `json:"certificate" yaml:"certificate"`
+	Certificate optional.Optional[string] `json:"certificate" yaml:"certificate"`
 	// Закрытый ключ сертификата.
-	PrivateKey commonclient.Optional[string] `json:"privateKey" yaml:"privateKey"`
+	PrivateKey optional.Optional[string] `json:"privateKey" yaml:"privateKey"`
 	// Цепочка сертификатов.
-	ChainedCert commonclient.Optional[string] `json:"chainedCert" yaml:"chainedCert"`
+	ChainedCert optional.Optional[string] `json:"chainedCert" yaml:"chainedCert"`
 }
 
 func (m *SelfManagedSpecRequest) AsUpdateModel() UpdateSelfManagedSpecRequest {
 	var u UpdateSelfManagedSpecRequest
-	u.Certificate = commonclient.NewOptional(m.GetCertificate())
-	u.PrivateKey = commonclient.NewOptional(m.GetPrivateKey())
+	u.Certificate = optional.NewOptional(m.GetCertificate())
+	u.PrivateKey = optional.NewOptional(m.GetPrivateKey())
 	if m.ChainedCert != nil {
-		u.ChainedCert = commonclient.NewOptional(m.GetChainedCertOr(""))
+		u.ChainedCert = optional.NewOptional(m.GetChainedCertOr(""))
 	}
 	return u
 }
@@ -64,17 +65,17 @@ func (m UpdateSelfManagedSpecRequest) HasChanges() bool {
 		m.ChainedCert.Set
 }
 
-func (m *SelfManagedSpecRequest) diffCertificate(src *SelfManagedSpecRequest) commonclient.Optional[string] {
+func (m *SelfManagedSpecRequest) diffCertificate(src *SelfManagedSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetCertificate(), m.GetCertificate(), nilDiffers)
 }
 
-func (m *SelfManagedSpecRequest) diffPrivateKey(src *SelfManagedSpecRequest) commonclient.Optional[string] {
+func (m *SelfManagedSpecRequest) diffPrivateKey(src *SelfManagedSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetPrivateKey(), m.GetPrivateKey(), nilDiffers)
 }
 
-func (m *SelfManagedSpecRequest) diffChainedCert(src *SelfManagedSpecRequest) commonclient.Optional[string] {
+func (m *SelfManagedSpecRequest) diffChainedCert(src *SelfManagedSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetChainedCert(), m.GetChainedCert(), nilDiffers)
 }

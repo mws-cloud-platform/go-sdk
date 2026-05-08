@@ -9,20 +9,21 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateKafkaEndpointExternalAccessesRequest struct {
 	// Назначить внешние адреса для кластера Kafka.
-	Allowed commonclient.Optional[bool] `json:"allowed" yaml:"allowed"`
+	Allowed optional.Optional[bool] `json:"allowed" yaml:"allowed"`
 	// Список внешних адресов, используемых для настройки доступа к кластеру Kafka. Если флаг `allowed` установлен в true и адреса не указаны, внешние адреса будут выделены автоматически.
-	BrokerAddresses commonclient.Optional[[]UpdateKafkaEndpointExternalAddressSpecOrRefRequest] `json:"brokerAddresses" yaml:"brokerAddresses"`
+	BrokerAddresses optional.Optional[[]UpdateKafkaEndpointExternalAddressSpecOrRefRequest] `json:"brokerAddresses" yaml:"brokerAddresses"`
 }
 
 func (m *KafkaEndpointExternalAccessesRequest) AsUpdateModel() UpdateKafkaEndpointExternalAccessesRequest {
 	var u UpdateKafkaEndpointExternalAccessesRequest
-	u.Allowed = commonclient.NewOptional(m.GetAllowed())
+	u.Allowed = optional.NewOptional(m.GetAllowed())
 	if m.BrokerAddresses != nil {
-		u.BrokerAddresses = commonclient.NewOptional(func() []UpdateKafkaEndpointExternalAddressSpecOrRefRequest {
+		u.BrokerAddresses = optional.NewOptional(func() []UpdateKafkaEndpointExternalAddressSpecOrRefRequest {
 			var tmp []UpdateKafkaEndpointExternalAddressSpecOrRefRequest
 			if m.GetBrokerAddresses() != nil {
 				tmp = make([]UpdateKafkaEndpointExternalAddressSpecOrRefRequest, 0, len(m.GetBrokerAddresses()))
@@ -84,12 +85,12 @@ func (m *UpdateKafkaEndpointExternalAccessesRequest) Parse(ctx context.Context) 
 	return nil
 }
 
-func (m *KafkaEndpointExternalAccessesRequest) diffAllowed(src *KafkaEndpointExternalAccessesRequest) commonclient.Optional[bool] {
+func (m *KafkaEndpointExternalAccessesRequest) diffAllowed(src *KafkaEndpointExternalAccessesRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetAllowed(), m.GetAllowed(), nilDiffers)
 }
 
-func (m *KafkaEndpointExternalAccessesRequest) diffBrokerAddresses(src *KafkaEndpointExternalAccessesRequest) commonclient.Optional[[]UpdateKafkaEndpointExternalAddressSpecOrRefRequest] {
+func (m *KafkaEndpointExternalAccessesRequest) diffBrokerAddresses(src *KafkaEndpointExternalAccessesRequest) optional.Optional[[]UpdateKafkaEndpointExternalAddressSpecOrRefRequest] {
 	diffFunc := func(fromItem, toItem KafkaEndpointExternalAddressSpecOrRefRequest, fromNil bool) UpdateKafkaEndpointExternalAddressSpecOrRefRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -97,5 +98,8 @@ func (m *KafkaEndpointExternalAccessesRequest) diffBrokerAddresses(src *KafkaEnd
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetBrokerAddresses(), m.GetBrokerAddresses(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdateKafkaEndpointExternalAddressSpecOrRefRequest](value, hasChanges)
+	return optional.Optional[[]UpdateKafkaEndpointExternalAddressSpecOrRefRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

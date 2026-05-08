@@ -163,7 +163,7 @@ func (m *PlacementGroupID) UnmarshalJSON(b []byte) error {
 
 func (m *PlacementGroupID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("PlacementGroupRef")
+		return conv.NewDecodeToNilError("PlacementGroupID")
 	}
 
 	v, err := decode.Str(d)

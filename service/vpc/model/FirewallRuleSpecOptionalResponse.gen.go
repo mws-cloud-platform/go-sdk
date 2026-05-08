@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Спецификация правила Firewall'а.
@@ -12,17 +12,17 @@ type FirewallRuleSpecOptionalResponse struct {
 	// Направление трафика, к которому применяется правило.
 	Direction FirewallRuleSpecDirectionOptionalResponse `json:"direction" yaml:"direction"`
 	// Приоритет правила. Чем меньше число, тем больший приоритет имеет правило.
-	Priority commonclient.Optional[int32] `json:"priority,omitempty" yaml:"priority,omitempty"`
+	Priority optional.Optional[int32] `json:"priority,omitempty" yaml:"priority,omitempty"`
 	// Действие, которое должно быть применено к трафику при срабатывании правила.
 	Action FirewallRuleSpecActionOptionalResponse `json:"action" yaml:"action"`
 	// Состояние правила. True - правило активно и контролирует поведение трафика. False - правило не активно.
-	Active commonclient.Optional[bool] `json:"active,omitempty" yaml:"active,omitempty"`
+	Active optional.Optional[bool] `json:"active,omitempty" yaml:"active,omitempty"`
 	// Критерий применимости правила, описывает источник отправления пакета.
 	Source FirewallRuleSourceOptionalResponse `json:"source" yaml:"source"`
 	// Критерий применимости правила, описывает пункт назначения пакета.
 	Destination FirewallRuleDestinationOptionalResponse `json:"destination" yaml:"destination"`
 	// Критерий применимости правила. Определяет список протоколов и соответствующих портов (если применимо) назначения пакета. Значение по умолчанию - пустое значение. Означает любой протокол и порт.
-	ProtoPorts commonclient.Optional[[]string] `json:"protoPorts,omitempty" yaml:"protoPorts,omitempty"`
+	ProtoPorts optional.Optional[[]string] `json:"protoPorts,omitempty" yaml:"protoPorts,omitempty"`
 }
 
 func (m *FirewallRuleSpecOptionalResponse) GetDirection() FirewallRuleSpecDirectionOptionalResponse {

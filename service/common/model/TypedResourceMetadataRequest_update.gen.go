@@ -11,26 +11,27 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateTypedResourceMetadataRequest struct {
 	// Отображаемое имя. Необязательное поле, можно свободно задавать и изменять для удобства организации ресурсов.
-	DisplayName commonclient.Optional[string] `json:"displayName" yaml:"displayName"`
+	DisplayName optional.Optional[string] `json:"displayName" yaml:"displayName"`
 	// Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены.
-	Usages commonclient.Optional[[]UpdateTypedUsageRequest] `json:"usages" yaml:"usages"`
+	Usages optional.Optional[[]UpdateTypedUsageRequest] `json:"usages" yaml:"usages"`
 	// Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса.
-	Etag commonclient.Optional[string] `json:"etag" yaml:"etag"`
+	Etag optional.Optional[string] `json:"etag" yaml:"etag"`
 	// Описание ресурса.
-	Description commonclient.Optional[string] `json:"description" yaml:"description"`
+	Description optional.Optional[string] `json:"description" yaml:"description"`
 }
 
 func (m *TypedResourceMetadataRequest) AsUpdateModel() UpdateTypedResourceMetadataRequest {
 	var u UpdateTypedResourceMetadataRequest
 	if m.DisplayName != nil {
-		u.DisplayName = commonclient.NewOptional(m.GetDisplayNameOr(""))
+		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = commonclient.NewOptional(func() []UpdateTypedUsageRequest {
+		u.Usages = optional.NewOptional(func() []UpdateTypedUsageRequest {
 			var tmp []UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
 				tmp = make([]UpdateTypedUsageRequest, 0, len(m.GetUsages()))
@@ -42,10 +43,10 @@ func (m *TypedResourceMetadataRequest) AsUpdateModel() UpdateTypedResourceMetada
 		}())
 	}
 	if m.Etag != nil {
-		u.Etag = commonclient.NewOptional(m.GetEtagOr(""))
+		u.Etag = optional.NewOptional(m.GetEtagOr(""))
 	}
 	if m.Description != nil {
-		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
+		u.Description = optional.NewOptional(m.GetDescriptionOr(""))
 	}
 	return u
 }
@@ -108,12 +109,12 @@ func (m *UpdateTypedResourceMetadataRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *TypedResourceMetadataRequest) diffDisplayName(src *TypedResourceMetadataRequest) commonclient.Optional[string] {
+func (m *TypedResourceMetadataRequest) diffDisplayName(src *TypedResourceMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *TypedResourceMetadataRequest) diffUsages(src *TypedResourceMetadataRequest) commonclient.Optional[[]UpdateTypedUsageRequest] {
+func (m *TypedResourceMetadataRequest) diffUsages(src *TypedResourceMetadataRequest) optional.Optional[[]UpdateTypedUsageRequest] {
 	diffFunc := func(fromItem, toItem TypedUsageRequest, fromNil bool) UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -121,15 +122,18 @@ func (m *TypedResourceMetadataRequest) diffUsages(src *TypedResourceMetadataRequ
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdateTypedUsageRequest](value, hasChanges)
+	return optional.Optional[[]UpdateTypedUsageRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *TypedResourceMetadataRequest) diffEtag(src *TypedResourceMetadataRequest) commonclient.Optional[string] {
+func (m *TypedResourceMetadataRequest) diffEtag(src *TypedResourceMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetEtag(), m.GetEtag(), nilDiffers)
 }
 
-func (m *TypedResourceMetadataRequest) diffDescription(src *TypedResourceMetadataRequest) commonclient.Optional[string] {
+func (m *TypedResourceMetadataRequest) diffDescription(src *TypedResourceMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
 }

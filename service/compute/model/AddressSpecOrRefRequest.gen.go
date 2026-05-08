@@ -13,8 +13,9 @@ import (
 type AddressSpecOrRefRequest struct {
 	Ref *vpc.AddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Возможно 2 варианта:
-	// - запросить резервирование случайного адреса (заданы параметры "version")
-	// - запросить резервирование конкретного адреса (заданы параметры "version", "ipAddress", остальные пусты)
+	//   - запросить резервирование случайного адреса (заданы параметры "version")
+	//   - запросить резервирование конкретного адреса (заданы параметры "version", "ipAddress", остальные пусты)
+	//
 	// Если необходимо привязать внешний адрес, заполняется параметр "oneToOneNat"
 	Spec *AddressSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
 }

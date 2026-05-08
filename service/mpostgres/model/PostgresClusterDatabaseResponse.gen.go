@@ -11,6 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/mpostgres"
 )
 
+// База данных в Managed PostgreSQL — это логически изолированный набор данных внутри кластера PostgreSQL
 // Real OAPI model name: PostgresClusterDatabase
 type PostgresClusterDatabaseResponse struct {
 	Kind     *string                                  `json:"kind,omitempty" yaml:"kind,omitempty"`

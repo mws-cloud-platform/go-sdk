@@ -14,6 +14,8 @@ import (
 
 // Статус глобального снимка
 // Real OAPI model name: SnapshotStatus
+//
+// Deprecated: Отказываемся в пользу DiskBackupStatus
 type SnapshotStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
 	// Размер снимка

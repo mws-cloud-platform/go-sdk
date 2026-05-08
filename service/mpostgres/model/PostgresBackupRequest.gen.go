@@ -9,6 +9,7 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Резервное копирование в Managed PostgreSQL позволяет автоматизировать создание резервных копий кластера и его восстановление. С помощью резервных копий можно восстановить кластер в случае повреждения, потери данных или совершения ошибочных операций
 // Real OAPI model name: PostgresBackup
 type PostgresBackupRequest struct {
 	Metadata *PostgresBackupMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`

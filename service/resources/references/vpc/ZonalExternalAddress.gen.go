@@ -183,7 +183,7 @@ func (m *ZonalExternalAddressID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalExternalAddressID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalExternalAddressRef")
+		return conv.NewDecodeToNilError("ZonalExternalAddressID")
 	}
 
 	v, err := decode.Str(d)

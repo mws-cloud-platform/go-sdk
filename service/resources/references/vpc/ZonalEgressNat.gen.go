@@ -203,7 +203,7 @@ func (m *ZonalEgressNatID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalEgressNatID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalEgressNatRef")
+		return conv.NewDecodeToNilError("ZonalEgressNatID")
 	}
 
 	v, err := decode.Str(d)

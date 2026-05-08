@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func ImageSpecRequestToOptionalResponse(request *ImageSpecRequest) (*ImageSpecOptionalResponse, error) {
@@ -12,7 +12,7 @@ func ImageSpecRequestToOptionalResponse(request *ImageSpecRequest) (*ImageSpecOp
 	}
 	var response ImageSpecOptionalResponse
 	if request.Family != nil {
-		response.Family = commonclient.NewOptional(*request.Family)
+		response.Family = optional.NewOptional(*request.Family)
 	}
 	tmpSource, err := ImageSpecSourceRequestToOptionalResponse(&request.Source)
 	if err != nil {
@@ -20,13 +20,13 @@ func ImageSpecRequestToOptionalResponse(request *ImageSpecRequest) (*ImageSpecOp
 	}
 	response.Source = *tmpSource
 	if request.Activity != nil {
-		response.Activity = commonclient.NewOptional(*request.Activity)
+		response.Activity = optional.NewOptional(*request.Activity)
 	}
 	if request.MinDiskSize != nil {
-		response.MinDiskSize = commonclient.NewOptional(*request.MinDiskSize)
+		response.MinDiskSize = optional.NewOptional(*request.MinDiskSize)
 	}
 	if request.OsType != nil {
-		response.OsType = commonclient.NewOptional(*request.OsType)
+		response.OsType = optional.NewOptional(*request.OsType)
 	}
 	return &response, nil
 }
@@ -37,13 +37,13 @@ func ImageSpecSourceRequestToOptionalResponse(request *ImageSpecSourceRequest) (
 	}
 	var response ImageSpecSourceOptionalResponse
 	if request.ExternalUrl != nil {
-		response.ExternalUrl = commonclient.NewOptional(*request.ExternalUrl)
+		response.ExternalUrl = optional.NewOptional(*request.ExternalUrl)
 	}
 	if request.DiskId != nil {
-		response.DiskId = commonclient.NewOptional(*request.DiskId)
+		response.DiskId = optional.NewOptional(*request.DiskId)
 	}
 	if request.ImageId != nil {
-		response.ImageId = commonclient.NewOptional(*request.ImageId)
+		response.ImageId = optional.NewOptional(*request.ImageId)
 	}
 	return &response, nil
 }

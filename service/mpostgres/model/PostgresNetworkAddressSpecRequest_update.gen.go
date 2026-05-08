@@ -7,16 +7,17 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdatePostgresNetworkAddressSpecRequest struct {
-	Subnet commonclient.Optional[vpc.SubnetRef] `json:"subnet" yaml:"subnet"`
+	Subnet optional.Optional[vpc.SubnetRef] `json:"subnet" yaml:"subnet"`
 }
 
 func (m *PostgresNetworkAddressSpecRequest) AsUpdateModel() UpdatePostgresNetworkAddressSpecRequest {
 	var u UpdatePostgresNetworkAddressSpecRequest
-	u.Subnet = commonclient.NewOptional(m.GetSubnet())
+	u.Subnet = optional.NewOptional(m.GetSubnet())
 	return u
 }
 
@@ -61,7 +62,7 @@ func (m *UpdatePostgresNetworkAddressSpecRequest) Parse(ctx context.Context) err
 	return nil
 }
 
-func (m *PostgresNetworkAddressSpecRequest) diffSubnet(src *PostgresNetworkAddressSpecRequest) commonclient.Optional[vpc.SubnetRef] {
+func (m *PostgresNetworkAddressSpecRequest) diffSubnet(src *PostgresNetworkAddressSpecRequest) optional.Optional[vpc.SubnetRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetSubnet(), m.GetSubnet(), nilDiffers)
 }

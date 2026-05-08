@@ -7,19 +7,19 @@ import (
 
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateClusterSpecRequest struct {
-	Network        commonclient.Optional[UpdateClusterSpecNetworkRequest]        `json:"network" yaml:"network"`
-	VersionControl commonclient.Optional[UpdateClusterVersionControlSpecRequest] `json:"versionControl" yaml:"versionControl"`
+	Network        optional.Optional[UpdateClusterSpecNetworkRequest]        `json:"network" yaml:"network"`
+	VersionControl optional.Optional[UpdateClusterVersionControlSpecRequest] `json:"versionControl" yaml:"versionControl"`
 }
 
 func (m *ClusterSpecRequest) AsUpdateModel() UpdateClusterSpecRequest {
 	var u UpdateClusterSpecRequest
-	u.Network = commonclient.NewOptional(m.Network.AsUpdateModel())
-	u.VersionControl = commonclient.NewOptional(m.VersionControl.AsUpdateModel())
+	u.Network = optional.NewOptional(m.Network.AsUpdateModel())
+	u.VersionControl = optional.NewOptional(m.VersionControl.AsUpdateModel())
 	return u
 }
 
@@ -69,29 +69,35 @@ func (m *UpdateClusterSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *ClusterSpecRequest) diffNetwork(src *ClusterSpecRequest) commonclient.Optional[UpdateClusterSpecNetworkRequest] {
+func (m *ClusterSpecRequest) diffNetwork(src *ClusterSpecRequest) optional.Optional[UpdateClusterSpecNetworkRequest] {
 	from := src.GetNetwork()
 	to := m.GetNetwork()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateClusterSpecNetworkRequest](value, value.HasChanges())
+	return optional.Optional[UpdateClusterSpecNetworkRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *ClusterSpecRequest) diffVersionControl(src *ClusterSpecRequest) commonclient.Optional[UpdateClusterVersionControlSpecRequest] {
+func (m *ClusterSpecRequest) diffVersionControl(src *ClusterSpecRequest) optional.Optional[UpdateClusterVersionControlSpecRequest] {
 	from := src.GetVersionControl()
 	to := m.GetVersionControl()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateClusterVersionControlSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateClusterVersionControlSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 type UpdateClusterSpecNetworkRequest struct {
 	// внешний ip-адрес
-	PublicEndpoint commonclient.OptionalNil[UpdateClusterPublicEndpointSpecOrRefRequest] `json:"publicEndpoint" yaml:"publicEndpoint"`
+	PublicEndpoint optional.OptionalNil[UpdateClusterPublicEndpointSpecOrRefRequest] `json:"publicEndpoint" yaml:"publicEndpoint"`
 }
 
 func (m *ClusterSpecNetworkRequest) AsUpdateModel() UpdateClusterSpecNetworkRequest {
 	var u UpdateClusterSpecNetworkRequest
 	if m.PublicEndpoint != nil {
-		u.PublicEndpoint = commonclient.NewOptionalNil(m.PublicEndpoint.AsUpdateModel())
+		u.PublicEndpoint = optional.NewOptionalNil(m.PublicEndpoint.AsUpdateModel())
 	}
 	return u
 }
@@ -139,8 +145,12 @@ func (m *UpdateClusterSpecNetworkRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *ClusterSpecNetworkRequest) diffPublicEndpoint(src *ClusterSpecNetworkRequest) commonclient.OptionalNil[UpdateClusterPublicEndpointSpecOrRefRequest] {
+func (m *ClusterSpecNetworkRequest) diffPublicEndpoint(src *ClusterSpecNetworkRequest) optional.OptionalNil[UpdateClusterPublicEndpointSpecOrRefRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetPublicEndpoint().Diff(src.GetPublicEndpoint())
-	return commonclient.NewDirectOptionalNil[UpdateClusterPublicEndpointSpecOrRefRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateClusterPublicEndpointSpecOrRefRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

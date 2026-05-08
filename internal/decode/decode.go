@@ -6,12 +6,14 @@ import (
 	"time"
 
 	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
+
+const ErrRawDataNull = consterr.Error("raw data cannot be null")
 
 func Str(d *jx.Decoder) (string, error) {
 	return primitive(d, d.Str)
 }
-
 func StrBytes(d *jx.Decoder) ([]byte, error) { return primitive(d, d.StrBytes) }
 func Bool(d *jx.Decoder) (bool, error)       { return primitive(d, d.Bool) }
 func UInt(d *jx.Decoder) (uint, error)       { return primitive(d, d.UInt) }

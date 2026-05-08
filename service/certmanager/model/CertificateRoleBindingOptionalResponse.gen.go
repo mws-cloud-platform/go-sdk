@@ -5,8 +5,8 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -14,9 +14,9 @@ import (
 type CertificateRoleBindingOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata commonclient.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     common.CommonRoleBindingSpecOptionalResponse                                 `json:"spec" yaml:"spec"`
-	Status   *common.CommonRoleBindingStatusResponse                                      `json:"status,omitempty" yaml:"status,omitempty"`
+	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     common.CommonRoleBindingSpecOptionalResponse                             `json:"spec" yaml:"spec"`
+	Status   *common.CommonRoleBindingStatusResponse                                  `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *CertificateRoleBindingOptionalResponse) GetKind() string {

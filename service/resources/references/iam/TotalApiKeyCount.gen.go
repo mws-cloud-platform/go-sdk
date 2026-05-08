@@ -163,7 +163,7 @@ func (m *TotalApiKeyCountID) UnmarshalJSON(b []byte) error {
 
 func (m *TotalApiKeyCountID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("TotalApiKeyCountRef")
+		return conv.NewDecodeToNilError("TotalApiKeyCountID")
 	}
 
 	v, err := decode.Str(d)

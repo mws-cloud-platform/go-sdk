@@ -163,7 +163,7 @@ func (m *ZonalStorageAgentDeploymentID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalStorageAgentDeploymentID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalStorageAgentDeploymentRef")
+		return conv.NewDecodeToNilError("ZonalStorageAgentDeploymentID")
 	}
 
 	v, err := decode.Str(d)

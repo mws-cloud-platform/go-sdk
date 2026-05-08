@@ -5,8 +5,8 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -14,7 +14,7 @@ import (
 // Real OAPI model name: ResourceExternalAddressSpec
 type ResourceExternalAddressSpecOptionalResponse struct {
 	// Шлюз, к которому относится адрес. Если шлюз не указан, для трансляции IP-адресов используется шлюз по умолчанию для выхода в интернет (ref=natGateways/internet-gateway).
-	NatGateway commonclient.Optional[vpc.NatGatewayRef] `json:"natGateway,omitempty" yaml:"natGateway,omitempty"`
+	NatGateway optional.Optional[vpc.NatGatewayRef] `json:"natGateway,omitempty" yaml:"natGateway,omitempty"`
 }
 
 func (m *ResourceExternalAddressSpecOptionalResponse) GetNatGateway() *vpc.NatGatewayRef {

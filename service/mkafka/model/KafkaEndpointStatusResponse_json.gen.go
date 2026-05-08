@@ -44,6 +44,11 @@ func (m *KafkaEndpointStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.Str(*m.BootstrapServers)
 	}
 
+	if m.SchemaRegistry != nil {
+		e.FieldStart("schemaRegistry")
+		m.SchemaRegistry.Encode(e)
+	}
+
 	if m.Port != nil {
 		e.FieldStart("port")
 		e.Int32(*m.Port)
@@ -95,6 +100,18 @@ func (m *KafkaEndpointStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.BootstrapServers = &v
+			return nil
+		case "schemaRegistry":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v KafkaSchemaRegistryUrlsResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SchemaRegistry = &v
 			return nil
 		case "port":
 			v, err := decode.Int32(d)

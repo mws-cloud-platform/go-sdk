@@ -3,14 +3,14 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
 // Real OAPI model name: ClusterPublicEndpointSpec
 type ClusterPublicEndpointSpecOptionalResponse struct {
 	// Версия IP протокола.
-	Version commonclient.Optional[ClusterPublicEndpointSpecVersionOptionalResponse] `json:"version,omitempty" yaml:"version,omitempty"`
+	Version optional.Optional[ClusterPublicEndpointSpecVersionOptionalResponse] `json:"version,omitempty" yaml:"version,omitempty"`
 }
 
 func (m *ClusterPublicEndpointSpecOptionalResponse) GetVersion() *ClusterPublicEndpointSpecVersionOptionalResponse {

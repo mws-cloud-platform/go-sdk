@@ -4,19 +4,20 @@ package model
 
 import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateKafkaAllocationRequest struct {
 	// Зона расположения узла.
-	Zone commonclient.Optional[string] `json:"zone" yaml:"zone"`
+	Zone optional.Optional[string] `json:"zone" yaml:"zone"`
 	// Количество брокеров в зоне/подсети.
-	Count commonclient.Optional[int32] `json:"count" yaml:"count"`
+	Count optional.Optional[int32] `json:"count" yaml:"count"`
 }
 
 func (m *KafkaAllocationRequest) AsUpdateModel() UpdateKafkaAllocationRequest {
 	var u UpdateKafkaAllocationRequest
-	u.Zone = commonclient.NewOptional(m.GetZone())
-	u.Count = commonclient.NewOptional(m.GetCount())
+	u.Zone = optional.NewOptional(m.GetZone())
+	u.Count = optional.NewOptional(m.GetCount())
 	return u
 }
 
@@ -52,12 +53,12 @@ func (m UpdateKafkaAllocationRequest) HasChanges() bool {
 		m.Count.Set
 }
 
-func (m *KafkaAllocationRequest) diffZone(src *KafkaAllocationRequest) commonclient.Optional[string] {
+func (m *KafkaAllocationRequest) diffZone(src *KafkaAllocationRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetZone(), m.GetZone(), nilDiffers)
 }
 
-func (m *KafkaAllocationRequest) diffCount(src *KafkaAllocationRequest) commonclient.Optional[int32] {
+func (m *KafkaAllocationRequest) diffCount(src *KafkaAllocationRequest) optional.Optional[int32] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetCount(), m.GetCount(), nilDiffers)
 }

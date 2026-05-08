@@ -6,8 +6,8 @@ import (
 	"context"
 	"time"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
@@ -18,7 +18,7 @@ type VmTypeOptionalResponse struct {
 	// Тип объекта - vmType.
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Метаданные типа ВМ.
-	Metadata commonclient.OptionalNil[VmTypeMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata optional.OptionalNil[VmTypeMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация типа ВМ.
 	Spec VmTypeSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Статус типа ВМ.

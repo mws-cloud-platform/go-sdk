@@ -10,28 +10,29 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 type UpdateKafkaControllerInstanceSpecRequest struct {
 	// Тип виртуальной машины, описывающий ресурсы (vCPU, memory).
-	VmType commonclient.Optional[compute.VmTypeRef] `json:"vmType" yaml:"vmType"`
+	VmType optional.Optional[compute.VmTypeRef] `json:"vmType" yaml:"vmType"`
 	// Параметры диска с данными на узле кластера.
-	Disk commonclient.OptionalNil[UpdateKafkaDataDiskSpecRequest] `json:"disk" yaml:"disk"`
+	Disk optional.OptionalNil[UpdateKafkaDataDiskSpecRequest] `json:"disk" yaml:"disk"`
 	// Параметры размещения контроллеров по зонам.
-	Allocation commonclient.Optional[[]UpdateKafkaAllocationRequest] `json:"allocation" yaml:"allocation"`
+	Allocation optional.Optional[[]UpdateKafkaAllocationRequest] `json:"allocation" yaml:"allocation"`
 }
 
 func (m *KafkaControllerInstanceSpecRequest) AsUpdateModel() UpdateKafkaControllerInstanceSpecRequest {
 	var u UpdateKafkaControllerInstanceSpecRequest
 	if m.VmType != nil {
-		u.VmType = commonclient.NewOptional(m.GetVmTypeOr(compute.VmTypeRef{}))
+		u.VmType = optional.NewOptional(m.GetVmTypeOr(compute.VmTypeRef{}))
 	}
 	if m.Disk != nil {
-		u.Disk = commonclient.NewOptionalNil(m.Disk.AsUpdateModel())
+		u.Disk = optional.NewOptionalNil(m.Disk.AsUpdateModel())
 	}
 	if m.Allocation != nil {
-		u.Allocation = commonclient.NewOptional(func() []UpdateKafkaAllocationRequest {
+		u.Allocation = optional.NewOptional(func() []UpdateKafkaAllocationRequest {
 			var tmp []UpdateKafkaAllocationRequest
 			if m.GetAllocation() != nil {
 				tmp = make([]UpdateKafkaAllocationRequest, 0, len(m.GetAllocation()))
@@ -98,18 +99,22 @@ func (m *UpdateKafkaControllerInstanceSpecRequest) Parse(ctx context.Context) er
 	return nil
 }
 
-func (m *KafkaControllerInstanceSpecRequest) diffVmType(src *KafkaControllerInstanceSpecRequest) commonclient.Optional[compute.VmTypeRef] {
+func (m *KafkaControllerInstanceSpecRequest) diffVmType(src *KafkaControllerInstanceSpecRequest) optional.Optional[compute.VmTypeRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetVmType(), m.GetVmType(), nilDiffers)
 }
 
-func (m *KafkaControllerInstanceSpecRequest) diffDisk(src *KafkaControllerInstanceSpecRequest) commonclient.OptionalNil[UpdateKafkaDataDiskSpecRequest] {
+func (m *KafkaControllerInstanceSpecRequest) diffDisk(src *KafkaControllerInstanceSpecRequest) optional.OptionalNil[UpdateKafkaDataDiskSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetDisk().Diff(src.GetDisk())
-	return commonclient.NewDirectOptionalNil[UpdateKafkaDataDiskSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateKafkaDataDiskSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *KafkaControllerInstanceSpecRequest) diffAllocation(src *KafkaControllerInstanceSpecRequest) commonclient.Optional[[]UpdateKafkaAllocationRequest] {
+func (m *KafkaControllerInstanceSpecRequest) diffAllocation(src *KafkaControllerInstanceSpecRequest) optional.Optional[[]UpdateKafkaAllocationRequest] {
 	diffFunc := func(fromItem, toItem KafkaAllocationRequest, fromNil bool) UpdateKafkaAllocationRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -117,5 +122,8 @@ func (m *KafkaControllerInstanceSpecRequest) diffAllocation(src *KafkaController
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetAllocation(), m.GetAllocation(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdateKafkaAllocationRequest](value, hasChanges)
+	return optional.Optional[[]UpdateKafkaAllocationRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

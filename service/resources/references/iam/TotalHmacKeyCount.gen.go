@@ -163,7 +163,7 @@ func (m *TotalHmacKeyCountID) UnmarshalJSON(b []byte) error {
 
 func (m *TotalHmacKeyCountID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("TotalHmacKeyCountRef")
+		return conv.NewDecodeToNilError("TotalHmacKeyCountID")
 	}
 
 	v, err := decode.Str(d)

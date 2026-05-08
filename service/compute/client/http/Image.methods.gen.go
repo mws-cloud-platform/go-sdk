@@ -49,7 +49,7 @@ func (c *Image) latestImageInvoker(ctx context.Context, anyReq any, response com
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"images:latest")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -130,7 +130,7 @@ func (c *Image) listImagesInvoker(ctx context.Context, anyReq any, response comm
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"images")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -222,9 +222,9 @@ func (c *Image) deleteImageInvoker(ctx context.Context, anyReq any, response com
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"images",
-		request.Image)
+		url.PathEscape(request.Image))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -307,9 +307,9 @@ func (c *Image) getImageInvoker(ctx context.Context, anyReq any, response common
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"images",
-		request.Image)
+		url.PathEscape(request.Image))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "image", request.Image)
@@ -392,9 +392,9 @@ func (c *Image) upsertImageInvoker(ctx context.Context, anyReq any, response com
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"images",
-		request.Image)
+		url.PathEscape(request.Image))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "image", request.Image)
@@ -483,9 +483,9 @@ func (c *Image) createImageInvoker(ctx context.Context, anyReq any, response com
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"images",
-		request.Image)
+		url.PathEscape(request.Image))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "image", request.Image)
@@ -575,9 +575,9 @@ func (c *Image) updateImageInvoker(ctx context.Context, anyReq any, response com
 		"compute",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"images",
-		request.Image)
+		url.PathEscape(request.Image))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "image", request.Image)

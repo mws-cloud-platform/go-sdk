@@ -11,30 +11,33 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateKafkaClusterSpecRequest struct {
 	// Значение включен/выключен кластер.
-	Active commonclient.Optional[bool] `json:"active" yaml:"active"`
+	Active optional.Optional[bool] `json:"active" yaml:"active"`
 	// Версия продукта.
-	Version commonclient.Optional[string] `json:"version" yaml:"version"`
+	Version optional.Optional[string] `json:"version" yaml:"version"`
 	// Описание эндпойнтов в сетях пользователя (VPC) для подключения к брокерам кластера.
-	Endpoints commonclient.Optional[[]UpdateKafkaEndpointRequest] `json:"endpoints" yaml:"endpoints"`
+	Endpoints optional.Optional[[]UpdateKafkaEndpointRequest] `json:"endpoints" yaml:"endpoints"`
 	// Описание ресурсов хостов брокеров и контроллеров.
-	Instances commonclient.Optional[UpdateKafkaInstanceRequest] `json:"instances" yaml:"instances"`
+	Instances optional.Optional[UpdateKafkaInstanceRequest] `json:"instances" yaml:"instances"`
 	// Настройки Kafka. Если не указаны, будут использованы настройки по-умолчанию.
-	ProductConfig     commonclient.Optional[string]                                   `json:"productConfig" yaml:"productConfig"`
-	MaintenanceWindow commonclient.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
+	ProductConfig     optional.Optional[string]                                   `json:"productConfig" yaml:"productConfig"`
+	MaintenanceWindow optional.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
+	// Настройка Schema Registry для кластера.
+	SchemaRegistry optional.OptionalNil[UpdateKafkaSchemaRegistrySpecRequest] `json:"schemaRegistry" yaml:"schemaRegistry"`
 }
 
 func (m *KafkaClusterSpecRequest) AsUpdateModel() UpdateKafkaClusterSpecRequest {
 	var u UpdateKafkaClusterSpecRequest
 	if m.Active != nil {
-		u.Active = commonclient.NewOptional(m.GetActiveOr(false))
+		u.Active = optional.NewOptional(m.GetActiveOr(false))
 	}
-	u.Version = commonclient.NewOptional(m.GetVersion())
-	u.Endpoints = commonclient.NewOptional(func() []UpdateKafkaEndpointRequest {
+	u.Version = optional.NewOptional(m.GetVersion())
+	u.Endpoints = optional.NewOptional(func() []UpdateKafkaEndpointRequest {
 		var tmp []UpdateKafkaEndpointRequest
 		if m.GetEndpoints() != nil {
 			tmp = make([]UpdateKafkaEndpointRequest, 0, len(m.GetEndpoints()))
@@ -44,12 +47,15 @@ func (m *KafkaClusterSpecRequest) AsUpdateModel() UpdateKafkaClusterSpecRequest 
 		}
 		return tmp
 	}())
-	u.Instances = commonclient.NewOptional(m.Instances.AsUpdateModel())
+	u.Instances = optional.NewOptional(m.Instances.AsUpdateModel())
 	if m.ProductConfig != nil {
-		u.ProductConfig = commonclient.NewOptional(m.GetProductConfigOr(""))
+		u.ProductConfig = optional.NewOptional(m.GetProductConfigOr(""))
 	}
 	if m.MaintenanceWindow != nil {
-		u.MaintenanceWindow = commonclient.NewOptionalNil(m.MaintenanceWindow.AsUpdateModel())
+		u.MaintenanceWindow = optional.NewOptionalNil(m.MaintenanceWindow.AsUpdateModel())
+	}
+	if m.SchemaRegistry != nil {
+		u.SchemaRegistry = optional.NewOptionalNil(m.SchemaRegistry.AsUpdateModel())
 	}
 	return u
 }
@@ -65,6 +71,7 @@ func (m *KafkaClusterSpecRequest) Diff(src *KafkaClusterSpecRequest) UpdateKafka
 		upd.Instances = m.diffInstances(src)
 		upd.ProductConfig = m.diffProductConfig(src)
 		upd.MaintenanceWindow = m.diffMaintenanceWindow(src)
+		upd.SchemaRegistry = m.diffSchemaRegistry(src)
 	}
 	return upd
 }
@@ -95,6 +102,11 @@ func (m *KafkaClusterSpecRequest) WithChanges(u UpdateKafkaClusterSpecRequest) K
 	} else if u.MaintenanceWindow.IsNull() {
 		out.MaintenanceWindow = nil
 	}
+	if u.SchemaRegistry.IsSet() {
+		out.SchemaRegistry = ptr.Get(out.SchemaRegistry.WithChanges(u.SchemaRegistry.Value))
+	} else if u.SchemaRegistry.IsNull() {
+		out.SchemaRegistry = nil
+	}
 	return out
 }
 
@@ -105,7 +117,8 @@ func (m UpdateKafkaClusterSpecRequest) HasChanges() bool {
 		m.Endpoints.Set ||
 		m.Instances.Set ||
 		m.ProductConfig.Set ||
-		m.MaintenanceWindow.Set
+		m.MaintenanceWindow.Set ||
+		m.SchemaRegistry.Set
 }
 
 func (m *UpdateKafkaClusterSpecRequest) Parse(ctx context.Context) error {
@@ -130,17 +143,17 @@ func (m *UpdateKafkaClusterSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *KafkaClusterSpecRequest) diffActive(src *KafkaClusterSpecRequest) commonclient.Optional[bool] {
+func (m *KafkaClusterSpecRequest) diffActive(src *KafkaClusterSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetActive(), m.GetActive(), nilDiffers)
 }
 
-func (m *KafkaClusterSpecRequest) diffVersion(src *KafkaClusterSpecRequest) commonclient.Optional[string] {
+func (m *KafkaClusterSpecRequest) diffVersion(src *KafkaClusterSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetVersion(), m.GetVersion(), nilDiffers)
 }
 
-func (m *KafkaClusterSpecRequest) diffEndpoints(src *KafkaClusterSpecRequest) commonclient.Optional[[]UpdateKafkaEndpointRequest] {
+func (m *KafkaClusterSpecRequest) diffEndpoints(src *KafkaClusterSpecRequest) optional.Optional[[]UpdateKafkaEndpointRequest] {
 	diffFunc := func(fromItem, toItem KafkaEndpointRequest, fromNil bool) UpdateKafkaEndpointRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -148,23 +161,43 @@ func (m *KafkaClusterSpecRequest) diffEndpoints(src *KafkaClusterSpecRequest) co
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetEndpoints(), m.GetEndpoints(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdateKafkaEndpointRequest](value, hasChanges)
+	return optional.Optional[[]UpdateKafkaEndpointRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *KafkaClusterSpecRequest) diffInstances(src *KafkaClusterSpecRequest) commonclient.Optional[UpdateKafkaInstanceRequest] {
+func (m *KafkaClusterSpecRequest) diffInstances(src *KafkaClusterSpecRequest) optional.Optional[UpdateKafkaInstanceRequest] {
 	from := src.GetInstances()
 	to := m.GetInstances()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateKafkaInstanceRequest](value, value.HasChanges())
+	return optional.Optional[UpdateKafkaInstanceRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *KafkaClusterSpecRequest) diffProductConfig(src *KafkaClusterSpecRequest) commonclient.Optional[string] {
+func (m *KafkaClusterSpecRequest) diffProductConfig(src *KafkaClusterSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetProductConfig(), m.GetProductConfig(), nilDiffers)
 }
 
-func (m *KafkaClusterSpecRequest) diffMaintenanceWindow(src *KafkaClusterSpecRequest) commonclient.OptionalNil[common.UpdateMaintenanceWindowRequest] {
+func (m *KafkaClusterSpecRequest) diffMaintenanceWindow(src *KafkaClusterSpecRequest) optional.OptionalNil[common.UpdateMaintenanceWindowRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMaintenanceWindow().Diff(src.GetMaintenanceWindow())
-	return commonclient.NewDirectOptionalNil[common.UpdateMaintenanceWindowRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[common.UpdateMaintenanceWindowRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
+}
+
+func (m *KafkaClusterSpecRequest) diffSchemaRegistry(src *KafkaClusterSpecRequest) optional.OptionalNil[UpdateKafkaSchemaRegistrySpecRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetSchemaRegistry().Diff(src.GetSchemaRegistry())
+	return optional.OptionalNil[UpdateKafkaSchemaRegistrySpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

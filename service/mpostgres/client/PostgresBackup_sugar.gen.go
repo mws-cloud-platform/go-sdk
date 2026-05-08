@@ -4,6 +4,7 @@ package client
 
 import (
 	"context"
+	"time"
 
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
@@ -184,6 +185,7 @@ func (x *PostgresBackupSugared) waitUpsertPostgresBackup(ctx context.Context, re
 		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
 		return response, stop, err
 	}
+	opts = append([]wait.WaiterOption{wait.WithTimeout(1800 * time.Second)}, opts...)
 	waiter := wait.NewWaiter(callback, opts...)
 	return waiter.Wait(ctx)
 }

@@ -10,21 +10,22 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateApiKeyRequest struct {
-	Metadata commonclient.OptionalNil[UpdateApiKeyMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[UpdateApiKeyMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Спецификация API-ключа
-	Spec commonclient.Optional[UpdateApiKeySpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.Optional[UpdateApiKeySpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *ApiKeyRequest) AsUpdateModel() UpdateApiKeyRequest {
 	var u UpdateApiKeyRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -76,17 +77,24 @@ func (m *UpdateApiKeyRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *ApiKeyRequest) diffMetadata(src *ApiKeyRequest) commonclient.OptionalNil[UpdateApiKeyMetadataRequest] {
+func (m *ApiKeyRequest) diffMetadata(src *ApiKeyRequest) optional.OptionalNil[UpdateApiKeyMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[UpdateApiKeyMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateApiKeyMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *ApiKeyRequest) diffSpec(src *ApiKeyRequest) commonclient.Optional[UpdateApiKeySpecRequest] {
+func (m *ApiKeyRequest) diffSpec(src *ApiKeyRequest) optional.Optional[UpdateApiKeySpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateApiKeySpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateApiKeySpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 type UpdateApiKeyMetadataRequest struct {
@@ -96,10 +104,10 @@ type UpdateApiKeyMetadataRequest struct {
 func (m *ApiKeyMetadataRequest) AsUpdateModel() UpdateApiKeyMetadataRequest {
 	var u UpdateApiKeyMetadataRequest
 	if m.DisplayName != nil {
-		u.DisplayName = commonclient.NewOptional(m.GetDisplayNameOr(""))
+		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = commonclient.NewOptional(func() []common.UpdateTypedUsageRequest {
+		u.Usages = optional.NewOptional(func() []common.UpdateTypedUsageRequest {
 			var tmp []common.UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
 				tmp = make([]common.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
@@ -111,10 +119,10 @@ func (m *ApiKeyMetadataRequest) AsUpdateModel() UpdateApiKeyMetadataRequest {
 		}())
 	}
 	if m.Etag != nil {
-		u.Etag = commonclient.NewOptional(m.GetEtagOr(""))
+		u.Etag = optional.NewOptional(m.GetEtagOr(""))
 	}
 	if m.Description != nil {
-		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
+		u.Description = optional.NewOptional(m.GetDescriptionOr(""))
 	}
 	return u
 }
@@ -172,12 +180,12 @@ func (m *UpdateApiKeyMetadataRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *ApiKeyMetadataRequest) diffDisplayName(src *ApiKeyMetadataRequest) commonclient.Optional[string] {
+func (m *ApiKeyMetadataRequest) diffDisplayName(src *ApiKeyMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *ApiKeyMetadataRequest) diffUsages(src *ApiKeyMetadataRequest) commonclient.Optional[[]common.UpdateTypedUsageRequest] {
+func (m *ApiKeyMetadataRequest) diffUsages(src *ApiKeyMetadataRequest) optional.Optional[[]common.UpdateTypedUsageRequest] {
 	diffFunc := func(fromItem, toItem common.TypedUsageRequest, fromNil bool) common.UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -185,15 +193,18 @@ func (m *ApiKeyMetadataRequest) diffUsages(src *ApiKeyMetadataRequest) commoncli
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return commonclient.NewDirectOptional[[]common.UpdateTypedUsageRequest](value, hasChanges)
+	return optional.Optional[[]common.UpdateTypedUsageRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *ApiKeyMetadataRequest) diffEtag(src *ApiKeyMetadataRequest) commonclient.Optional[string] {
+func (m *ApiKeyMetadataRequest) diffEtag(src *ApiKeyMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetEtag(), m.GetEtag(), nilDiffers)
 }
 
-func (m *ApiKeyMetadataRequest) diffDescription(src *ApiKeyMetadataRequest) commonclient.Optional[string] {
+func (m *ApiKeyMetadataRequest) diffDescription(src *ApiKeyMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
 }

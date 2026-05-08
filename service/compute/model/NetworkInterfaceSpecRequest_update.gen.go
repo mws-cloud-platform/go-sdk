@@ -11,26 +11,27 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateNetworkInterfaceSpecRequest struct {
-	Name                commonclient.Optional[string] `json:"name" yaml:"name"`
-	IpForwardingEnabled commonclient.Optional[bool]   `json:"ipForwardingEnabled" yaml:"ipForwardingEnabled"`
+	Name                optional.Optional[string] `json:"name" yaml:"name"`
+	IpForwardingEnabled optional.Optional[bool]   `json:"ipForwardingEnabled" yaml:"ipForwardingEnabled"`
 	// К одному сетевому интерфейсу можно подключить одновременно 4 разных сетевых адреса
 	// - IPv4 internal
 	// - IPv4 external
 	// - IPv6 internal
 	// - IPv6 external
-	Addresses commonclient.Optional[[]UpdateAddressSpecOrRefWithAttachmentsRequest] `json:"addresses" yaml:"addresses"`
+	Addresses optional.Optional[[]UpdateAddressSpecOrRefWithAttachmentsRequest] `json:"addresses" yaml:"addresses"`
 }
 
 func (m *NetworkInterfaceSpecRequest) AsUpdateModel() UpdateNetworkInterfaceSpecRequest {
 	var u UpdateNetworkInterfaceSpecRequest
-	u.Name = commonclient.NewOptional(m.GetName())
+	u.Name = optional.NewOptional(m.GetName())
 	if m.IpForwardingEnabled != nil {
-		u.IpForwardingEnabled = commonclient.NewOptional(m.GetIpForwardingEnabledOr(false))
+		u.IpForwardingEnabled = optional.NewOptional(m.GetIpForwardingEnabledOr(false))
 	}
-	u.Addresses = commonclient.NewOptional(func() []UpdateAddressSpecOrRefWithAttachmentsRequest {
+	u.Addresses = optional.NewOptional(func() []UpdateAddressSpecOrRefWithAttachmentsRequest {
 		var tmp []UpdateAddressSpecOrRefWithAttachmentsRequest
 		if m.GetAddresses() != nil {
 			tmp = make([]UpdateAddressSpecOrRefWithAttachmentsRequest, 0, len(m.GetAddresses()))
@@ -94,7 +95,7 @@ func (m *UpdateNetworkInterfaceSpecRequest) GetName() string {
 
 // SetName is used in the Diff function for NamedArray
 func (m *UpdateNetworkInterfaceSpecRequest) SetName(name string) {
-	m.Name = commonclient.NewOptional(name)
+	m.Name = optional.NewOptional(name)
 }
 
 func (m *UpdateNetworkInterfaceSpecRequest) Parse(ctx context.Context) error {
@@ -113,17 +114,17 @@ func (m *UpdateNetworkInterfaceSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *NetworkInterfaceSpecRequest) diffName(src *NetworkInterfaceSpecRequest) commonclient.Optional[string] {
+func (m *NetworkInterfaceSpecRequest) diffName(src *NetworkInterfaceSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
 }
 
-func (m *NetworkInterfaceSpecRequest) diffIpForwardingEnabled(src *NetworkInterfaceSpecRequest) commonclient.Optional[bool] {
+func (m *NetworkInterfaceSpecRequest) diffIpForwardingEnabled(src *NetworkInterfaceSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetIpForwardingEnabled(), m.GetIpForwardingEnabled(), nilDiffers)
 }
 
-func (m *NetworkInterfaceSpecRequest) diffAddresses(src *NetworkInterfaceSpecRequest) (commonclient.Optional[[]UpdateAddressSpecOrRefWithAttachmentsRequest], error) {
+func (m *NetworkInterfaceSpecRequest) diffAddresses(src *NetworkInterfaceSpecRequest) (optional.Optional[[]UpdateAddressSpecOrRefWithAttachmentsRequest], error) {
 	diffFunc := func(fromItem, toItem AddressSpecOrRefWithAttachmentsRequest, fromNil bool) (UpdateAddressSpecOrRefWithAttachmentsRequest, error) {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -132,7 +133,10 @@ func (m *NetworkInterfaceSpecRequest) diffAddresses(src *NetworkInterfaceSpecReq
 	}
 	value, hasChanges, err := commonclient.GetChangesArrayObjectError(src.GetAddresses(), m.GetAddresses(), diffFunc)
 	if err != nil {
-		return commonclient.Optional[[]UpdateAddressSpecOrRefWithAttachmentsRequest]{}, err
+		return optional.Optional[[]UpdateAddressSpecOrRefWithAttachmentsRequest]{}, err
 	}
-	return commonclient.NewDirectOptional[[]UpdateAddressSpecOrRefWithAttachmentsRequest](value, hasChanges), nil
+	return optional.Optional[[]UpdateAddressSpecOrRefWithAttachmentsRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}, nil
 }

@@ -5,7 +5,7 @@ package model
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Правила выполнения повторных попыток в случае ошибки
@@ -16,9 +16,9 @@ type RetryPolicyOptionalResponse struct {
 	// Пауза между повторными попытками
 	RetryTimeout duration.Duration `json:"retryTimeout" yaml:"retryTimeout"`
 	// Шаг увеличения таймаута
-	RetryTimeoutScale commonclient.Optional[RetryTimeoutScale] `json:"retryTimeoutScale,omitempty" yaml:"retryTimeoutScale,omitempty"`
+	RetryTimeoutScale optional.Optional[RetryTimeoutScale] `json:"retryTimeoutScale,omitempty" yaml:"retryTimeoutScale,omitempty"`
 	// Максимальная длительность таймаута
-	MaxRetryTimeout commonclient.Optional[duration.Duration] `json:"maxRetryTimeout,omitempty" yaml:"maxRetryTimeout,omitempty"`
+	MaxRetryTimeout optional.Optional[duration.Duration] `json:"maxRetryTimeout,omitempty" yaml:"maxRetryTimeout,omitempty"`
 }
 
 func (m *RetryPolicyOptionalResponse) GetRetryCount() int {

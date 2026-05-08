@@ -8,16 +8,17 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateFirewallRuleDestinationSpecRequest struct {
 	// Диапазоны IPv4 адресов, которые входят в группу.
-	Cidrs commonclient.Optional[[]cidraddress.CIDR4Address] `json:"cidrs" yaml:"cidrs"`
+	Cidrs optional.Optional[[]cidraddress.CIDR4Address] `json:"cidrs" yaml:"cidrs"`
 }
 
 func (m *FirewallRuleDestinationSpecRequest) AsUpdateModel() UpdateFirewallRuleDestinationSpecRequest {
 	var u UpdateFirewallRuleDestinationSpecRequest
-	u.Cidrs = commonclient.NewOptional(m.GetCidrs())
+	u.Cidrs = optional.NewOptional(m.GetCidrs())
 	return u
 }
 
@@ -48,7 +49,10 @@ func (m UpdateFirewallRuleDestinationSpecRequest) HasChanges() bool {
 	return m.Cidrs.Set
 }
 
-func (m *FirewallRuleDestinationSpecRequest) diffCidrs(src *FirewallRuleDestinationSpecRequest) commonclient.Optional[[]cidraddress.CIDR4Address] {
+func (m *FirewallRuleDestinationSpecRequest) diffCidrs(src *FirewallRuleDestinationSpecRequest) optional.Optional[[]cidraddress.CIDR4Address] {
 	value, hasChanges := commonclient.GetChangesArrayEquatableIface(src.GetCidrs(), m.GetCidrs())
-	return commonclient.NewDirectOptional[[]cidraddress.CIDR4Address](value, hasChanges)
+	return optional.Optional[[]cidraddress.CIDR4Address]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

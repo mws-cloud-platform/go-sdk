@@ -9,23 +9,24 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateKafkaEndpointExternalAddressSpecOrRefRequest struct {
 	// Идентификатор существующего внешнего адреса.
-	Ref commonclient.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
+	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
 	// Спецификация нового внешнего адреса. Адрес будет выделен в ходе реконсиляции кластера.
-	Spec commonclient.OptionalNil[UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *KafkaEndpointExternalAddressSpecOrRefRequest) AsUpdateModel() UpdateKafkaEndpointExternalAddressSpecOrRefRequest {
 	var u UpdateKafkaEndpointExternalAddressSpecOrRefRequest
 	if m.Ref != nil {
-		u.Ref = commonclient.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
+		u.Ref = optional.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
 	}
 	if m.Spec != nil {
-		u.Spec = commonclient.NewOptionalNil(m.Spec.AsUpdateModel())
+		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
 	}
 	return u
 }
@@ -78,15 +79,19 @@ func (m *UpdateKafkaEndpointExternalAddressSpecOrRefRequest) Parse(ctx context.C
 	return nil
 }
 
-func (m *KafkaEndpointExternalAddressSpecOrRefRequest) diffRef(src *KafkaEndpointExternalAddressSpecOrRefRequest) commonclient.Optional[vpc.ExternalAddressRef] {
+func (m *KafkaEndpointExternalAddressSpecOrRefRequest) diffRef(src *KafkaEndpointExternalAddressSpecOrRefRequest) optional.Optional[vpc.ExternalAddressRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *KafkaEndpointExternalAddressSpecOrRefRequest) diffSpec(src *KafkaEndpointExternalAddressSpecOrRefRequest) commonclient.OptionalNil[UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest] {
+func (m *KafkaEndpointExternalAddressSpecOrRefRequest) diffSpec(src *KafkaEndpointExternalAddressSpecOrRefRequest) optional.OptionalNil[UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return commonclient.NewDirectOptionalNil[UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
 type UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest struct {

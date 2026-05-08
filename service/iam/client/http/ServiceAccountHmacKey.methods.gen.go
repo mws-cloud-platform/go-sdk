@@ -49,9 +49,9 @@ func (c *ServiceAccountHmacKey) listHmacKeyInvoker(ctx context.Context, anyReq a
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"hmacKeys")
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
@@ -144,11 +144,11 @@ func (c *ServiceAccountHmacKey) deleteHmacKeyInvoker(ctx context.Context, anyReq
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"hmacKeys",
-		request.KeyName)
+		url.PathEscape(request.KeyName))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -218,11 +218,11 @@ func (c *ServiceAccountHmacKey) getHmacKeyInvoker(ctx context.Context, anyReq an
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"hmacKeys",
-		request.KeyName)
+		url.PathEscape(request.KeyName))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "keyName", request.KeyName)
@@ -296,11 +296,11 @@ func (c *ServiceAccountHmacKey) upsertHmacKeyInvoker(ctx context.Context, anyReq
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"hmacKeys",
-		request.KeyName)
+		url.PathEscape(request.KeyName))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "keyName", request.KeyName)
@@ -390,11 +390,11 @@ func (c *ServiceAccountHmacKey) createHmacKeyInvoker(ctx context.Context, anyReq
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"hmacKeys",
-		request.KeyName)
+		url.PathEscape(request.KeyName))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "keyName", request.KeyName)
@@ -485,11 +485,11 @@ func (c *ServiceAccountHmacKey) updateHmacKeyInvoker(ctx context.Context, anyReq
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount,
+		url.PathEscape(request.ServiceAccount),
 		"hmacKeys",
-		request.KeyName)
+		url.PathEscape(request.KeyName))
 
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
 	ctx = valuesctx.With(ctx, "keyName", request.KeyName)

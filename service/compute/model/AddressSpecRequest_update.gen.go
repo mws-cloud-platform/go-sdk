@@ -12,26 +12,27 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateAddressSpecRequest struct {
 	// Подсеть облачной сети, к которой принадлежит внутренний адрес
-	Subnet commonclient.Optional[vpc.SubnetRef] `json:"subnet" yaml:"subnet"`
+	Subnet optional.Optional[vpc.SubnetRef] `json:"subnet" yaml:"subnet"`
 	// Желаемый адрес. Если не указан, то будет выделен из пула адресов подсети.
-	IpAddress commonclient.Optional[ipaddress.IPAddress] `json:"ipAddress" yaml:"ipAddress"`
+	IpAddress optional.Optional[ipaddress.IPAddress] `json:"ipAddress" yaml:"ipAddress"`
 	// Настройки DNS
-	Dns commonclient.Optional[[]UpdateAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
+	Dns optional.Optional[[]UpdateAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
 }
 
 func (m *AddressSpecRequest) AsUpdateModel() UpdateAddressSpecRequest {
 	var u UpdateAddressSpecRequest
-	u.Subnet = commonclient.NewOptional(m.GetSubnet())
+	u.Subnet = optional.NewOptional(m.GetSubnet())
 	if m.IpAddress != nil {
-		u.IpAddress = commonclient.NewOptional(m.GetIpAddressOr(ipaddress.IPAddress{}))
+		u.IpAddress = optional.NewOptional(m.GetIpAddressOr(ipaddress.IPAddress{}))
 	}
 	if m.Dns != nil {
-		u.Dns = commonclient.NewOptional(func() []UpdateAddressDnsSpecRequest {
+		u.Dns = optional.NewOptional(func() []UpdateAddressDnsSpecRequest {
 			var tmp []UpdateAddressDnsSpecRequest
 			if m.GetDns() != nil {
 				tmp = make([]UpdateAddressDnsSpecRequest, 0, len(m.GetDns()))
@@ -100,17 +101,17 @@ func (m *UpdateAddressSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *AddressSpecRequest) diffSubnet(src *AddressSpecRequest) commonclient.Optional[vpc.SubnetRef] {
+func (m *AddressSpecRequest) diffSubnet(src *AddressSpecRequest) optional.Optional[vpc.SubnetRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetSubnet(), m.GetSubnet(), nilDiffers)
 }
 
-func (m *AddressSpecRequest) diffIpAddress(src *AddressSpecRequest) commonclient.Optional[ipaddress.IPAddress] {
+func (m *AddressSpecRequest) diffIpAddress(src *AddressSpecRequest) optional.Optional[ipaddress.IPAddress] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceNonRequired(src.GetIpAddress(), m.GetIpAddress(), nilDiffers)
 }
 
-func (m *AddressSpecRequest) diffDns(src *AddressSpecRequest) (commonclient.Optional[[]UpdateAddressDnsSpecRequest], error) {
+func (m *AddressSpecRequest) diffDns(src *AddressSpecRequest) (optional.Optional[[]UpdateAddressDnsSpecRequest], error) {
 	diffFunc := func(fromItem, toItem *AddressDnsSpecRequest, fromNil bool) UpdateAddressDnsSpecRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -122,7 +123,10 @@ func (m *AddressSpecRequest) diffDns(src *AddressSpecRequest) (commonclient.Opti
 		commonclient.ToPointerArray(m.GetDns()),
 		diffFunc)
 	if err != nil {
-		return commonclient.Optional[[]UpdateAddressDnsSpecRequest]{}, err
+		return optional.Optional[[]UpdateAddressDnsSpecRequest]{}, err
 	}
-	return commonclient.NewDirectOptional[[]UpdateAddressDnsSpecRequest](value, hasChanges), nil
+	return optional.Optional[[]UpdateAddressDnsSpecRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}, nil
 }

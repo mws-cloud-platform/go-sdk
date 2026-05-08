@@ -11,20 +11,21 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateVirtualMachineRequest struct {
-	Metadata commonclient.OptionalNil[UpdateVirtualMachineMetadataRequest] `json:"metadata" yaml:"metadata"`
-	Spec     commonclient.Optional[UpdateVirtualMachineSpecRequest]        `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[UpdateVirtualMachineMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Spec     optional.Optional[UpdateVirtualMachineSpecRequest]        `json:"spec" yaml:"spec"`
 }
 
 func (m *VirtualMachineRequest) AsUpdateModel() UpdateVirtualMachineRequest {
 	var u UpdateVirtualMachineRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -86,20 +87,27 @@ func (m *UpdateVirtualMachineRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *VirtualMachineRequest) diffMetadata(src *VirtualMachineRequest) commonclient.OptionalNil[UpdateVirtualMachineMetadataRequest] {
+func (m *VirtualMachineRequest) diffMetadata(src *VirtualMachineRequest) optional.OptionalNil[UpdateVirtualMachineMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[UpdateVirtualMachineMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateVirtualMachineMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *VirtualMachineRequest) diffSpec(src *VirtualMachineRequest) (commonclient.Optional[UpdateVirtualMachineSpecRequest], error) {
+func (m *VirtualMachineRequest) diffSpec(src *VirtualMachineRequest) (optional.Optional[UpdateVirtualMachineSpecRequest], error) {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value, err := to.Diff(&from)
 	if err != nil {
-		return commonclient.Optional[UpdateVirtualMachineSpecRequest]{}, err
+		return optional.Optional[UpdateVirtualMachineSpecRequest]{}, err
 	}
-	return commonclient.NewDirectOptional[UpdateVirtualMachineSpecRequest](value, value.HasChanges()), nil
+	return optional.Optional[UpdateVirtualMachineSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}, nil
 }
 
 type UpdateVirtualMachineMetadataRequest struct {
@@ -109,10 +117,10 @@ type UpdateVirtualMachineMetadataRequest struct {
 func (m *VirtualMachineMetadataRequest) AsUpdateModel() UpdateVirtualMachineMetadataRequest {
 	var u UpdateVirtualMachineMetadataRequest
 	if m.DisplayName != nil {
-		u.DisplayName = commonclient.NewOptional(m.GetDisplayNameOr(""))
+		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = commonclient.NewOptional(func() []common.UpdateTypedUsageRequest {
+		u.Usages = optional.NewOptional(func() []common.UpdateTypedUsageRequest {
 			var tmp []common.UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
 				tmp = make([]common.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
@@ -124,10 +132,10 @@ func (m *VirtualMachineMetadataRequest) AsUpdateModel() UpdateVirtualMachineMeta
 		}())
 	}
 	if m.Etag != nil {
-		u.Etag = commonclient.NewOptional(m.GetEtagOr(""))
+		u.Etag = optional.NewOptional(m.GetEtagOr(""))
 	}
 	if m.Description != nil {
-		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
+		u.Description = optional.NewOptional(m.GetDescriptionOr(""))
 	}
 	return u
 }
@@ -185,12 +193,12 @@ func (m *UpdateVirtualMachineMetadataRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *VirtualMachineMetadataRequest) diffDisplayName(src *VirtualMachineMetadataRequest) commonclient.Optional[string] {
+func (m *VirtualMachineMetadataRequest) diffDisplayName(src *VirtualMachineMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *VirtualMachineMetadataRequest) diffUsages(src *VirtualMachineMetadataRequest) commonclient.Optional[[]common.UpdateTypedUsageRequest] {
+func (m *VirtualMachineMetadataRequest) diffUsages(src *VirtualMachineMetadataRequest) optional.Optional[[]common.UpdateTypedUsageRequest] {
 	diffFunc := func(fromItem, toItem common.TypedUsageRequest, fromNil bool) common.UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -198,15 +206,18 @@ func (m *VirtualMachineMetadataRequest) diffUsages(src *VirtualMachineMetadataRe
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return commonclient.NewDirectOptional[[]common.UpdateTypedUsageRequest](value, hasChanges)
+	return optional.Optional[[]common.UpdateTypedUsageRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *VirtualMachineMetadataRequest) diffEtag(src *VirtualMachineMetadataRequest) commonclient.Optional[string] {
+func (m *VirtualMachineMetadataRequest) diffEtag(src *VirtualMachineMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetEtag(), m.GetEtag(), nilDiffers)
 }
 
-func (m *VirtualMachineMetadataRequest) diffDescription(src *VirtualMachineMetadataRequest) commonclient.Optional[string] {
+func (m *VirtualMachineMetadataRequest) diffDescription(src *VirtualMachineMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
 }

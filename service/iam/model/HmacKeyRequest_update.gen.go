@@ -10,20 +10,21 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateHmacKeyRequest struct {
-	Metadata commonclient.OptionalNil[UpdateHmacKeyMetadataRequest] `json:"metadata" yaml:"metadata"`
-	Spec     commonclient.Optional[UpdateHmacKeySpecRequest]        `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[UpdateHmacKeyMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Spec     optional.Optional[UpdateHmacKeySpecRequest]        `json:"spec" yaml:"spec"`
 }
 
 func (m *HmacKeyRequest) AsUpdateModel() UpdateHmacKeyRequest {
 	var u UpdateHmacKeyRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
-	u.Spec = commonclient.NewOptional(m.Spec.AsUpdateModel())
+	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
 	return u
 }
 
@@ -75,17 +76,24 @@ func (m *UpdateHmacKeyRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *HmacKeyRequest) diffMetadata(src *HmacKeyRequest) commonclient.OptionalNil[UpdateHmacKeyMetadataRequest] {
+func (m *HmacKeyRequest) diffMetadata(src *HmacKeyRequest) optional.OptionalNil[UpdateHmacKeyMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[UpdateHmacKeyMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdateHmacKeyMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *HmacKeyRequest) diffSpec(src *HmacKeyRequest) commonclient.Optional[UpdateHmacKeySpecRequest] {
+func (m *HmacKeyRequest) diffSpec(src *HmacKeyRequest) optional.Optional[UpdateHmacKeySpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateHmacKeySpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateHmacKeySpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 type UpdateHmacKeyMetadataRequest struct {
@@ -95,10 +103,10 @@ type UpdateHmacKeyMetadataRequest struct {
 func (m *HmacKeyMetadataRequest) AsUpdateModel() UpdateHmacKeyMetadataRequest {
 	var u UpdateHmacKeyMetadataRequest
 	if m.DisplayName != nil {
-		u.DisplayName = commonclient.NewOptional(m.GetDisplayNameOr(""))
+		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = commonclient.NewOptional(func() []common.UpdateTypedUsageRequest {
+		u.Usages = optional.NewOptional(func() []common.UpdateTypedUsageRequest {
 			var tmp []common.UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
 				tmp = make([]common.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
@@ -110,10 +118,10 @@ func (m *HmacKeyMetadataRequest) AsUpdateModel() UpdateHmacKeyMetadataRequest {
 		}())
 	}
 	if m.Etag != nil {
-		u.Etag = commonclient.NewOptional(m.GetEtagOr(""))
+		u.Etag = optional.NewOptional(m.GetEtagOr(""))
 	}
 	if m.Description != nil {
-		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
+		u.Description = optional.NewOptional(m.GetDescriptionOr(""))
 	}
 	return u
 }
@@ -171,12 +179,12 @@ func (m *UpdateHmacKeyMetadataRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *HmacKeyMetadataRequest) diffDisplayName(src *HmacKeyMetadataRequest) commonclient.Optional[string] {
+func (m *HmacKeyMetadataRequest) diffDisplayName(src *HmacKeyMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *HmacKeyMetadataRequest) diffUsages(src *HmacKeyMetadataRequest) commonclient.Optional[[]common.UpdateTypedUsageRequest] {
+func (m *HmacKeyMetadataRequest) diffUsages(src *HmacKeyMetadataRequest) optional.Optional[[]common.UpdateTypedUsageRequest] {
 	diffFunc := func(fromItem, toItem common.TypedUsageRequest, fromNil bool) common.UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -184,15 +192,18 @@ func (m *HmacKeyMetadataRequest) diffUsages(src *HmacKeyMetadataRequest) commonc
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return commonclient.NewDirectOptional[[]common.UpdateTypedUsageRequest](value, hasChanges)
+	return optional.Optional[[]common.UpdateTypedUsageRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *HmacKeyMetadataRequest) diffEtag(src *HmacKeyMetadataRequest) commonclient.Optional[string] {
+func (m *HmacKeyMetadataRequest) diffEtag(src *HmacKeyMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetEtag(), m.GetEtag(), nilDiffers)
 }
 
-func (m *HmacKeyMetadataRequest) diffDescription(src *HmacKeyMetadataRequest) commonclient.Optional[string] {
+func (m *HmacKeyMetadataRequest) diffDescription(src *HmacKeyMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
 }

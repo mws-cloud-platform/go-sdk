@@ -183,7 +183,7 @@ func (m *CertificateRoleBindingID) UnmarshalJSON(b []byte) error {
 
 func (m *CertificateRoleBindingID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("CertificateRoleBindingRef")
+		return conv.NewDecodeToNilError("CertificateRoleBindingID")
 	}
 
 	v, err := decode.Str(d)

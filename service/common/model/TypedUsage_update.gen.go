@@ -7,23 +7,24 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 )
 
 type UpdateTypedUsage struct {
 	// Тип связи. Помимо стандартных own и use могут быть добавлены специализированные типы для конкретных сервисов
-	UsageType commonclient.Optional[string] `json:"usageType" yaml:"usageType"`
+	UsageType optional.Optional[string] `json:"usageType" yaml:"usageType"`
 	// Имя связи, требуется для модификации коллекции
-	Name commonclient.Optional[string] `json:"name" yaml:"name"`
+	Name optional.Optional[string] `json:"name" yaml:"name"`
 	// ссылка на ресурс
-	Resource commonclient.Optional[resmodels.AnyResourceID] `json:"resource" yaml:"resource"`
+	Resource optional.Optional[resmodels.AnyResourceID] `json:"resource" yaml:"resource"`
 }
 
 func (m *TypedUsage) AsUpdateModel() UpdateTypedUsage {
 	var u UpdateTypedUsage
-	u.UsageType = commonclient.NewOptional(m.GetUsageType())
-	u.Name = commonclient.NewOptional(m.GetName())
-	u.Resource = commonclient.NewOptional(m.GetResource())
+	u.UsageType = optional.NewOptional(m.GetUsageType())
+	u.Name = optional.NewOptional(m.GetName())
+	u.Resource = optional.NewOptional(m.GetResource())
 	return u
 }
 
@@ -74,7 +75,7 @@ func (m *UpdateTypedUsage) GetName() string {
 
 // SetName is used in the Diff function for NamedArray
 func (m *UpdateTypedUsage) SetName(name string) {
-	m.Name = commonclient.NewOptional(name)
+	m.Name = optional.NewOptional(name)
 }
 
 func (m *UpdateTypedUsage) Parse(ctx context.Context) error {
@@ -91,17 +92,17 @@ func (m *UpdateTypedUsage) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *TypedUsage) diffUsageType(src *TypedUsage) commonclient.Optional[string] {
+func (m *TypedUsage) diffUsageType(src *TypedUsage) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetUsageType(), m.GetUsageType(), nilDiffers)
 }
 
-func (m *TypedUsage) diffName(src *TypedUsage) commonclient.Optional[string] {
+func (m *TypedUsage) diffName(src *TypedUsage) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
 }
 
-func (m *TypedUsage) diffResource(src *TypedUsage) commonclient.Optional[resmodels.AnyResourceID] {
+func (m *TypedUsage) diffResource(src *TypedUsage) optional.Optional[resmodels.AnyResourceID] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceRequired(src.GetResource(), m.GetResource(), nilDiffers)
 }

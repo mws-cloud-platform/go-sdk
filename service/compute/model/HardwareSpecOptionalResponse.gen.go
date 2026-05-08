@@ -5,13 +5,13 @@ package model
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: HardwareSpec
 type HardwareSpecOptionalResponse struct {
 	// Целевое состояние питания виртуальной машины
-	Power commonclient.Optional[HardwareSpecPowerOptionalResponse] `json:"power,omitempty" yaml:"power,omitempty"`
+	Power optional.Optional[HardwareSpecPowerOptionalResponse] `json:"power,omitempty" yaml:"power,omitempty"`
 	// Время ожидания (таймаут) при отключении по ACPI
 	//
 	// Выключение виртуальной машины происходит в 2 этапа:
@@ -19,7 +19,7 @@ type HardwareSpecOptionalResponse struct {
 	// 2. В случае если гостевая ОС не завершила работу за заданное время, агент принудительно останавливает ВМ.
 	//
 	// При timeout=0 первый этап пропускается
-	GracefulShutdownTimeout commonclient.Optional[duration.Duration] `json:"gracefulShutdownTimeout,omitempty" yaml:"gracefulShutdownTimeout,omitempty"`
+	GracefulShutdownTimeout optional.Optional[duration.Duration] `json:"gracefulShutdownTimeout,omitempty" yaml:"gracefulShutdownTimeout,omitempty"`
 }
 
 func (m *HardwareSpecOptionalResponse) GetPower() *HardwareSpecPowerOptionalResponse {

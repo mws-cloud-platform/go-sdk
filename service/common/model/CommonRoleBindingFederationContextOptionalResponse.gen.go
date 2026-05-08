@@ -3,14 +3,14 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: CommonRoleBindingFederationContext
 type CommonRoleBindingFederationContextOptionalResponse struct {
 	// Идентификатор субъекта федерации.
-	Subject   commonclient.Optional[string]                                                         `json:"subject,omitempty" yaml:"subject,omitempty"`
-	Attribute commonclient.OptionalNil[CommonRoleBindingFederationContextAttributeOptionalResponse] `json:"attribute,omitempty" yaml:"attribute,omitempty"`
+	Subject   optional.Optional[string]                                                         `json:"subject,omitempty" yaml:"subject,omitempty"`
+	Attribute optional.OptionalNil[CommonRoleBindingFederationContextAttributeOptionalResponse] `json:"attribute,omitempty" yaml:"attribute,omitempty"`
 }
 
 func (m *CommonRoleBindingFederationContextOptionalResponse) GetSubject() *string {

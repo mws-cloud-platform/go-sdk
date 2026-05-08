@@ -183,7 +183,7 @@ func (m *BucketPolicyID) UnmarshalJSON(b []byte) error {
 
 func (m *BucketPolicyID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("BucketPolicyRef")
+		return conv.NewDecodeToNilError("BucketPolicyID")
 	}
 
 	v, err := decode.Str(d)

@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -13,17 +13,17 @@ func NodeGroupVersionControlSpecRequestToOptionalResponse(request *NodeGroupVers
 	}
 	var response NodeGroupVersionControlSpecOptionalResponse
 	if request.Version != nil {
-		response.Version = commonclient.NewOptionalNil(*request.Version)
+		response.Version = optional.NewOptionalNil(*request.Version)
 	}
 	if request.AutoUpdate != nil {
-		response.AutoUpdate = commonclient.NewOptional(*request.AutoUpdate)
+		response.AutoUpdate = optional.NewOptional(*request.AutoUpdate)
 	}
 	if request.MaintenanceWindow != nil {
 		tmpMaintenanceWindow, err := common.MaintenanceWindowRequestToOptionalResponse(request.MaintenanceWindow)
 		if err != nil {
 			return nil, err
 		}
-		response.MaintenanceWindow = commonclient.NewOptionalNil(*tmpMaintenanceWindow)
+		response.MaintenanceWindow = optional.NewOptionalNil(*tmpMaintenanceWindow)
 	}
 	return &response, nil
 }

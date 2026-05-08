@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func VirtualMachineSpecRequestToOptionalResponse(request *VirtualMachineSpecRequest) (*VirtualMachineSpecOptionalResponse, error) {
@@ -18,14 +18,14 @@ func VirtualMachineSpecRequestToOptionalResponse(request *VirtualMachineSpecRequ
 		if err != nil {
 			return nil, err
 		}
-		response.Hardware = commonclient.NewOptionalNil(*tmpHardware)
+		response.Hardware = optional.NewOptionalNil(*tmpHardware)
 	}
 	if request.Os != nil {
 		tmpOs, err := OsSpecRequestToOptionalResponse(request.Os)
 		if err != nil {
 			return nil, err
 		}
-		response.Os = commonclient.NewOptionalNil(*tmpOs)
+		response.Os = optional.NewOptionalNil(*tmpOs)
 	}
 	tmpStorage, err := StorageSpecRequestToOptionalResponse(&request.Storage)
 	if err != nil {
@@ -38,7 +38,7 @@ func VirtualMachineSpecRequestToOptionalResponse(request *VirtualMachineSpecRequ
 	}
 	response.Network = *tmpNetwork
 	if request.ServiceAccount != nil {
-		response.ServiceAccount = commonclient.NewOptionalNil(*request.ServiceAccount)
+		response.ServiceAccount = optional.NewOptionalNil(*request.ServiceAccount)
 	}
 	return &response, nil
 }

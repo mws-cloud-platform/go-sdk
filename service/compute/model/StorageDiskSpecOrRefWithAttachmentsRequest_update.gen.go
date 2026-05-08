@@ -7,18 +7,19 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateStorageDiskSpecOrRefWithAttachmentsRequest struct {
 	// Уникальное имя диска в рамках виртуальной машины
-	Name commonclient.Optional[string]                            `json:"name" yaml:"name"`
-	Disk commonclient.Optional[UpdateStorageDiskSpecOrRefRequest] `json:"disk" yaml:"disk"`
+	Name optional.Optional[string]                            `json:"name" yaml:"name"`
+	Disk optional.Optional[UpdateStorageDiskSpecOrRefRequest] `json:"disk" yaml:"disk"`
 }
 
 func (m *StorageDiskSpecOrRefWithAttachmentsRequest) AsUpdateModel() UpdateStorageDiskSpecOrRefWithAttachmentsRequest {
 	var u UpdateStorageDiskSpecOrRefWithAttachmentsRequest
-	u.Name = commonclient.NewOptional(m.GetName())
-	u.Disk = commonclient.NewOptional(m.Disk.AsUpdateModel())
+	u.Name = optional.NewOptional(m.GetName())
+	u.Disk = optional.NewOptional(m.Disk.AsUpdateModel())
 	return u
 }
 
@@ -64,7 +65,7 @@ func (m *UpdateStorageDiskSpecOrRefWithAttachmentsRequest) GetName() string {
 
 // SetName is used in the Diff function for NamedArray
 func (m *UpdateStorageDiskSpecOrRefWithAttachmentsRequest) SetName(name string) {
-	m.Name = commonclient.NewOptional(name)
+	m.Name = optional.NewOptional(name)
 }
 
 func (m *UpdateStorageDiskSpecOrRefWithAttachmentsRequest) Parse(ctx context.Context) error {
@@ -81,14 +82,17 @@ func (m *UpdateStorageDiskSpecOrRefWithAttachmentsRequest) Parse(ctx context.Con
 	return nil
 }
 
-func (m *StorageDiskSpecOrRefWithAttachmentsRequest) diffName(src *StorageDiskSpecOrRefWithAttachmentsRequest) commonclient.Optional[string] {
+func (m *StorageDiskSpecOrRefWithAttachmentsRequest) diffName(src *StorageDiskSpecOrRefWithAttachmentsRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
 }
 
-func (m *StorageDiskSpecOrRefWithAttachmentsRequest) diffDisk(src *StorageDiskSpecOrRefWithAttachmentsRequest) commonclient.Optional[UpdateStorageDiskSpecOrRefRequest] {
+func (m *StorageDiskSpecOrRefWithAttachmentsRequest) diffDisk(src *StorageDiskSpecOrRefWithAttachmentsRequest) optional.Optional[UpdateStorageDiskSpecOrRefRequest] {
 	from := src.GetDisk()
 	to := m.GetDisk()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateStorageDiskSpecOrRefRequest](value, value.HasChanges())
+	return optional.Optional[UpdateStorageDiskSpecOrRefRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

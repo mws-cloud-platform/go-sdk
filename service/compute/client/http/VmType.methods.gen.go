@@ -137,7 +137,7 @@ func (c *VmType) getVmTypeInvoker(ctx context.Context, anyReq any, response comm
 		"compute",
 		"v1",
 		"vmTypes",
-		request.VmType)
+		url.PathEscape(request.VmType))
 
 	ctx = valuesctx.With(ctx, "vmType", request.VmType)
 

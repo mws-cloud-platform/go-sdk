@@ -9,15 +9,16 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateNetworkSpecRequest struct {
-	NetworkInterfaces commonclient.Optional[[]UpdateNetworkInterfaceSpecRequest] `json:"networkInterfaces" yaml:"networkInterfaces"`
+	NetworkInterfaces optional.Optional[[]UpdateNetworkInterfaceSpecRequest] `json:"networkInterfaces" yaml:"networkInterfaces"`
 }
 
 func (m *NetworkSpecRequest) AsUpdateModel() UpdateNetworkSpecRequest {
 	var u UpdateNetworkSpecRequest
-	u.NetworkInterfaces = commonclient.NewOptional(func() []UpdateNetworkInterfaceSpecRequest {
+	u.NetworkInterfaces = optional.NewOptional(func() []UpdateNetworkInterfaceSpecRequest {
 		var tmp []UpdateNetworkInterfaceSpecRequest
 		if m.GetNetworkInterfaces() != nil {
 			tmp = make([]UpdateNetworkInterfaceSpecRequest, 0, len(m.GetNetworkInterfaces()))
@@ -77,7 +78,7 @@ func (m *UpdateNetworkSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *NetworkSpecRequest) diffNetworkInterfaces(src *NetworkSpecRequest) (commonclient.Optional[[]UpdateNetworkInterfaceSpecRequest], error) {
+func (m *NetworkSpecRequest) diffNetworkInterfaces(src *NetworkSpecRequest) (optional.Optional[[]UpdateNetworkInterfaceSpecRequest], error) {
 	diffFunc := func(fromItem, toItem *NetworkInterfaceSpecRequest, fromNil bool) (UpdateNetworkInterfaceSpecRequest, error) {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -89,7 +90,10 @@ func (m *NetworkSpecRequest) diffNetworkInterfaces(src *NetworkSpecRequest) (com
 		commonclient.ToPointerArray(m.GetNetworkInterfaces()),
 		diffFunc)
 	if err != nil {
-		return commonclient.Optional[[]UpdateNetworkInterfaceSpecRequest]{}, err
+		return optional.Optional[[]UpdateNetworkInterfaceSpecRequest]{}, err
 	}
-	return commonclient.NewDirectOptional[[]UpdateNetworkInterfaceSpecRequest](value, hasChanges), nil
+	return optional.Optional[[]UpdateNetworkInterfaceSpecRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}, nil
 }

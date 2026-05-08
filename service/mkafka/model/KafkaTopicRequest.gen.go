@@ -9,6 +9,9 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Топик — это логический поток сообщений, который создается пользователем в
+// кластере и обеспечивает группировку сообщений по темам
+//
 // Real OAPI model name: KafkaTopic
 type KafkaTopicRequest struct {
 	Metadata *KafkaTopicMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`

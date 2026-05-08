@@ -3,14 +3,14 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Критерий применимости правила, описывает источник отправления пакета.
 // Real OAPI model name: FirewallRuleSource
 type FirewallRuleSourceOptionalResponse struct {
 	// Спецификация группы адресов.
-	Spec commonclient.OptionalNil[FirewallRuleSourceSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec optional.OptionalNil[FirewallRuleSourceSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *FirewallRuleSourceOptionalResponse) GetSpec() *FirewallRuleSourceSpecOptionalResponse {

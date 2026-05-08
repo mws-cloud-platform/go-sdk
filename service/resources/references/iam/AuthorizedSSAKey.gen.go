@@ -163,7 +163,7 @@ func (m *AuthorizedSSAKeyID) UnmarshalJSON(b []byte) error {
 
 func (m *AuthorizedSSAKeyID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("AuthorizedSSAKeyRef")
+		return conv.NewDecodeToNilError("AuthorizedSSAKeyID")
 	}
 
 	v, err := decode.Str(d)

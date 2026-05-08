@@ -49,9 +49,9 @@ func (c *PostgresClusterDatabase) listPostgresClusterDatabasesInvoker(ctx contex
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"databases")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -147,11 +147,11 @@ func (c *PostgresClusterDatabase) deletePostgresClusterDatabaseInvoker(ctx conte
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"databases",
-		request.Database)
+		url.PathEscape(request.Database))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -224,11 +224,11 @@ func (c *PostgresClusterDatabase) getPostgresClusterDatabaseInvoker(ctx context.
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"databases",
-		request.Database)
+		url.PathEscape(request.Database))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -302,11 +302,11 @@ func (c *PostgresClusterDatabase) upsertPostgresClusterDatabaseInvoker(ctx conte
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"databases",
-		request.Database)
+		url.PathEscape(request.Database))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -396,11 +396,11 @@ func (c *PostgresClusterDatabase) createPostgresClusterDatabaseInvoker(ctx conte
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"databases",
-		request.Database)
+		url.PathEscape(request.Database))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -491,11 +491,11 @@ func (c *PostgresClusterDatabase) updatePostgresClusterDatabaseInvoker(ctx conte
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"databases",
-		request.Database)
+		url.PathEscape(request.Database))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)

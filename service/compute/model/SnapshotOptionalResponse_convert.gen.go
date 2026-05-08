@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -17,7 +17,7 @@ func SnapshotRequestToOptionalResponse(request *SnapshotRequest) (*SnapshotOptio
 		if err != nil {
 			return nil, err
 		}
-		response.Metadata = commonclient.NewOptionalNil(*tmpMetadata)
+		response.Metadata = optional.NewOptionalNil(*tmpMetadata)
 	}
 	tmpSpec, err := SnapshotSpecRequestToOptionalResponse(&request.Spec)
 	if err != nil {

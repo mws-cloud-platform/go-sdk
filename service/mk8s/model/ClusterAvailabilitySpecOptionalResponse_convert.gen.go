@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func ClusterAvailabilitySpecRequestToOptionalResponse(request *ClusterAvailabilitySpecRequest) (*ClusterAvailabilitySpecOptionalResponse, error) {
@@ -16,14 +16,14 @@ func ClusterAvailabilitySpecRequestToOptionalResponse(request *ClusterAvailabili
 		if err != nil {
 			return nil, err
 		}
-		response.Standalone = commonclient.NewOptionalNil(*tmpStandalone)
+		response.Standalone = optional.NewOptionalNil(*tmpStandalone)
 	}
 	if request.ZonalHa != nil {
 		tmpZonalHa, err := ClusterAvailabilitySpecZonalHaRequestToOptionalResponse(request.ZonalHa)
 		if err != nil {
 			return nil, err
 		}
-		response.ZonalHa = commonclient.NewOptionalNil(*tmpZonalHa)
+		response.ZonalHa = optional.NewOptionalNil(*tmpZonalHa)
 	}
 	return &response, nil
 }

@@ -8,24 +8,25 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 type UpdateKafkaInstanceSpecRequest struct {
 	// Тип виртуальной машины, описывающий ресурсы (vCPU, memory).
-	VmType commonclient.Optional[compute.VmTypeRef] `json:"vmType" yaml:"vmType"`
+	VmType optional.Optional[compute.VmTypeRef] `json:"vmType" yaml:"vmType"`
 	// Параметры диска с данными на узле кластера.
-	Disk commonclient.Optional[UpdateKafkaDataDiskSpecRequest] `json:"disk" yaml:"disk"`
+	Disk optional.Optional[UpdateKafkaDataDiskSpecRequest] `json:"disk" yaml:"disk"`
 	// Параметры размещения брокеров по зонам.
-	Allocation commonclient.Optional[[]UpdateKafkaAllocationRequest] `json:"allocation" yaml:"allocation"`
+	Allocation optional.Optional[[]UpdateKafkaAllocationRequest] `json:"allocation" yaml:"allocation"`
 }
 
 func (m *KafkaInstanceSpecRequest) AsUpdateModel() UpdateKafkaInstanceSpecRequest {
 	var u UpdateKafkaInstanceSpecRequest
-	u.VmType = commonclient.NewOptional(m.GetVmType())
-	u.Disk = commonclient.NewOptional(m.Disk.AsUpdateModel())
+	u.VmType = optional.NewOptional(m.GetVmType())
+	u.Disk = optional.NewOptional(m.Disk.AsUpdateModel())
 	if m.Allocation != nil {
-		u.Allocation = commonclient.NewOptional(func() []UpdateKafkaAllocationRequest {
+		u.Allocation = optional.NewOptional(func() []UpdateKafkaAllocationRequest {
 			var tmp []UpdateKafkaAllocationRequest
 			if m.GetAllocation() != nil {
 				tmp = make([]UpdateKafkaAllocationRequest, 0, len(m.GetAllocation()))
@@ -90,19 +91,22 @@ func (m *UpdateKafkaInstanceSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *KafkaInstanceSpecRequest) diffVmType(src *KafkaInstanceSpecRequest) commonclient.Optional[compute.VmTypeRef] {
+func (m *KafkaInstanceSpecRequest) diffVmType(src *KafkaInstanceSpecRequest) optional.Optional[compute.VmTypeRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetVmType(), m.GetVmType(), nilDiffers)
 }
 
-func (m *KafkaInstanceSpecRequest) diffDisk(src *KafkaInstanceSpecRequest) commonclient.Optional[UpdateKafkaDataDiskSpecRequest] {
+func (m *KafkaInstanceSpecRequest) diffDisk(src *KafkaInstanceSpecRequest) optional.Optional[UpdateKafkaDataDiskSpecRequest] {
 	from := src.GetDisk()
 	to := m.GetDisk()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateKafkaDataDiskSpecRequest](value, value.HasChanges())
+	return optional.Optional[UpdateKafkaDataDiskSpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *KafkaInstanceSpecRequest) diffAllocation(src *KafkaInstanceSpecRequest) commonclient.Optional[[]UpdateKafkaAllocationRequest] {
+func (m *KafkaInstanceSpecRequest) diffAllocation(src *KafkaInstanceSpecRequest) optional.Optional[[]UpdateKafkaAllocationRequest] {
 	diffFunc := func(fromItem, toItem KafkaAllocationRequest, fromNil bool) UpdateKafkaAllocationRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -110,5 +114,8 @@ func (m *KafkaInstanceSpecRequest) diffAllocation(src *KafkaInstanceSpecRequest)
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetAllocation(), m.GetAllocation(), diffFunc)
-	return commonclient.NewDirectOptional[[]UpdateKafkaAllocationRequest](value, hasChanges)
+	return optional.Optional[[]UpdateKafkaAllocationRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

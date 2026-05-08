@@ -183,7 +183,7 @@ func (m *EgressNatID) UnmarshalJSON(b []byte) error {
 
 func (m *EgressNatID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("EgressNatRef")
+		return conv.NewDecodeToNilError("EgressNatID")
 	}
 
 	v, err := decode.Str(d)

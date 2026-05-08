@@ -10,21 +10,22 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdatePostgresBackupRequest struct {
-	Metadata commonclient.OptionalNil[UpdatePostgresBackupMetadataRequest] `json:"metadata" yaml:"metadata"`
-	Spec     commonclient.OptionalNil[UpdatePostgresBackupSpecRequest]     `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[UpdatePostgresBackupMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Spec     optional.OptionalNil[UpdatePostgresBackupSpecRequest]     `json:"spec" yaml:"spec"`
 }
 
 func (m *PostgresBackupRequest) AsUpdateModel() UpdatePostgresBackupRequest {
 	var u UpdatePostgresBackupRequest
 	if m.Metadata != nil {
-		u.Metadata = commonclient.NewOptionalNil(m.Metadata.AsUpdateModel())
+		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
 	if m.Spec != nil {
-		u.Spec = commonclient.NewOptionalNil(m.Spec.AsUpdateModel())
+		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
 	}
 	return u
 }
@@ -79,16 +80,24 @@ func (m *UpdatePostgresBackupRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *PostgresBackupRequest) diffMetadata(src *PostgresBackupRequest) commonclient.OptionalNil[UpdatePostgresBackupMetadataRequest] {
+func (m *PostgresBackupRequest) diffMetadata(src *PostgresBackupRequest) optional.OptionalNil[UpdatePostgresBackupMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return commonclient.NewDirectOptionalNil[UpdatePostgresBackupMetadataRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdatePostgresBackupMetadataRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
-func (m *PostgresBackupRequest) diffSpec(src *PostgresBackupRequest) commonclient.OptionalNil[UpdatePostgresBackupSpecRequest] {
+func (m *PostgresBackupRequest) diffSpec(src *PostgresBackupRequest) optional.OptionalNil[UpdatePostgresBackupSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return commonclient.NewDirectOptionalNil[UpdatePostgresBackupSpecRequest](value, nilDiffers || value.HasChanges(), nilDiffers)
+	return optional.OptionalNil[UpdatePostgresBackupSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
 type UpdatePostgresBackupMetadataRequest struct {
@@ -98,10 +107,10 @@ type UpdatePostgresBackupMetadataRequest struct {
 func (m *PostgresBackupMetadataRequest) AsUpdateModel() UpdatePostgresBackupMetadataRequest {
 	var u UpdatePostgresBackupMetadataRequest
 	if m.DisplayName != nil {
-		u.DisplayName = commonclient.NewOptional(m.GetDisplayNameOr(""))
+		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = commonclient.NewOptional(func() []common.UpdateTypedUsageRequest {
+		u.Usages = optional.NewOptional(func() []common.UpdateTypedUsageRequest {
 			var tmp []common.UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
 				tmp = make([]common.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
@@ -113,10 +122,10 @@ func (m *PostgresBackupMetadataRequest) AsUpdateModel() UpdatePostgresBackupMeta
 		}())
 	}
 	if m.Etag != nil {
-		u.Etag = commonclient.NewOptional(m.GetEtagOr(""))
+		u.Etag = optional.NewOptional(m.GetEtagOr(""))
 	}
 	if m.Description != nil {
-		u.Description = commonclient.NewOptional(m.GetDescriptionOr(""))
+		u.Description = optional.NewOptional(m.GetDescriptionOr(""))
 	}
 	return u
 }
@@ -174,12 +183,12 @@ func (m *UpdatePostgresBackupMetadataRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *PostgresBackupMetadataRequest) diffDisplayName(src *PostgresBackupMetadataRequest) commonclient.Optional[string] {
+func (m *PostgresBackupMetadataRequest) diffDisplayName(src *PostgresBackupMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *PostgresBackupMetadataRequest) diffUsages(src *PostgresBackupMetadataRequest) commonclient.Optional[[]common.UpdateTypedUsageRequest] {
+func (m *PostgresBackupMetadataRequest) diffUsages(src *PostgresBackupMetadataRequest) optional.Optional[[]common.UpdateTypedUsageRequest] {
 	diffFunc := func(fromItem, toItem common.TypedUsageRequest, fromNil bool) common.UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -187,15 +196,18 @@ func (m *PostgresBackupMetadataRequest) diffUsages(src *PostgresBackupMetadataRe
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return commonclient.NewDirectOptional[[]common.UpdateTypedUsageRequest](value, hasChanges)
+	return optional.Optional[[]common.UpdateTypedUsageRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func (m *PostgresBackupMetadataRequest) diffEtag(src *PostgresBackupMetadataRequest) commonclient.Optional[string] {
+func (m *PostgresBackupMetadataRequest) diffEtag(src *PostgresBackupMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetEtag(), m.GetEtag(), nilDiffers)
 }
 
-func (m *PostgresBackupMetadataRequest) diffDescription(src *PostgresBackupMetadataRequest) commonclient.Optional[string] {
+func (m *PostgresBackupMetadataRequest) diffDescription(src *PostgresBackupMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
 }

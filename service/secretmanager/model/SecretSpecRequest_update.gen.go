@@ -9,23 +9,24 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/secretmanager"
 )
 
 type UpdateSecretSpecRequest struct {
 	// Секрет активен/неактивен
-	Active commonclient.Optional[bool] `json:"active" yaml:"active"`
+	Active optional.Optional[bool] `json:"active" yaml:"active"`
 	// Номер текущей версии секрета.
-	CurrentSecretVersion commonclient.Optional[secretmanager.SecretVersionRef] `json:"currentSecretVersion" yaml:"currentSecretVersion"`
+	CurrentSecretVersion optional.Optional[secretmanager.SecretVersionRef] `json:"currentSecretVersion" yaml:"currentSecretVersion"`
 }
 
 func (m *SecretSpecRequest) AsUpdateModel() UpdateSecretSpecRequest {
 	var u UpdateSecretSpecRequest
 	if m.Active != nil {
-		u.Active = commonclient.NewOptional(m.GetActiveOr(false))
+		u.Active = optional.NewOptional(m.GetActiveOr(false))
 	}
 	if m.CurrentSecretVersion != nil {
-		u.CurrentSecretVersion = commonclient.NewOptional(m.GetCurrentSecretVersionOr(secretmanager.SecretVersionRef{}))
+		u.CurrentSecretVersion = optional.NewOptional(m.GetCurrentSecretVersionOr(secretmanager.SecretVersionRef{}))
 	}
 	return u
 }
@@ -76,12 +77,12 @@ func (m *UpdateSecretSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *SecretSpecRequest) diffActive(src *SecretSpecRequest) commonclient.Optional[bool] {
+func (m *SecretSpecRequest) diffActive(src *SecretSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetActive(), m.GetActive(), nilDiffers)
 }
 
-func (m *SecretSpecRequest) diffCurrentSecretVersion(src *SecretSpecRequest) commonclient.Optional[secretmanager.SecretVersionRef] {
+func (m *SecretSpecRequest) diffCurrentSecretVersion(src *SecretSpecRequest) optional.Optional[secretmanager.SecretVersionRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetCurrentSecretVersion(), m.GetCurrentSecretVersion(), nilDiffers)
 }

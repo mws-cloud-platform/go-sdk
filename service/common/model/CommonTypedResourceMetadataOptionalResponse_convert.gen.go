@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func CommonTypedResourceMetadataRequestToOptionalResponse(request *CommonTypedResourceMetadataRequest) (*CommonTypedResourceMetadataOptionalResponse, error) {
@@ -12,10 +12,10 @@ func CommonTypedResourceMetadataRequestToOptionalResponse(request *CommonTypedRe
 	}
 	var response CommonTypedResourceMetadataOptionalResponse
 	if request.Name != nil {
-		response.Name = commonclient.NewOptional(*request.Name)
+		response.Name = optional.NewOptional(*request.Name)
 	}
 	if request.DisplayName != nil {
-		response.DisplayName = commonclient.NewOptional(*request.DisplayName)
+		response.DisplayName = optional.NewOptional(*request.DisplayName)
 	}
 	for _, e := range request.Usages {
 		tmp, err := UsageRequestToOptionalResponse(&e)
@@ -25,10 +25,10 @@ func CommonTypedResourceMetadataRequestToOptionalResponse(request *CommonTypedRe
 		response.Usages.SetTo(append(response.Usages.Value, *tmp))
 	}
 	if request.Etag != nil {
-		response.Etag = commonclient.NewOptional(*request.Etag)
+		response.Etag = optional.NewOptional(*request.Etag)
 	}
 	if request.Description != nil {
-		response.Description = commonclient.NewOptional(*request.Description)
+		response.Description = optional.NewOptional(*request.Description)
 	}
 	return &response, nil
 }

@@ -143,7 +143,7 @@ func (m *VmTypeID) UnmarshalJSON(b []byte) error {
 
 func (m *VmTypeID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("VmTypeRef")
+		return conv.NewDecodeToNilError("VmTypeID")
 	}
 
 	v, err := decode.Str(d)

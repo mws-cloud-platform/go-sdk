@@ -5,21 +5,21 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateRouteSpecRequest struct {
 	// Назначение
-	Destination commonclient.Optional[UpdateRouteDestinationRequest] `json:"destination" yaml:"destination"`
+	Destination optional.Optional[UpdateRouteDestinationRequest] `json:"destination" yaml:"destination"`
 	// Переход
-	NextHop commonclient.Optional[UpdateRouteNextHopRequest] `json:"nextHop" yaml:"nextHop"`
+	NextHop optional.Optional[UpdateRouteNextHopRequest] `json:"nextHop" yaml:"nextHop"`
 }
 
 func (m *RouteSpecRequest) AsUpdateModel() UpdateRouteSpecRequest {
 	var u UpdateRouteSpecRequest
-	u.Destination = commonclient.NewOptional(m.Destination.AsUpdateModel())
-	u.NextHop = commonclient.NewOptional(m.NextHop.AsUpdateModel())
+	u.Destination = optional.NewOptional(m.Destination.AsUpdateModel())
+	u.NextHop = optional.NewOptional(m.NextHop.AsUpdateModel())
 	return u
 }
 
@@ -69,16 +69,22 @@ func (m *UpdateRouteSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *RouteSpecRequest) diffDestination(src *RouteSpecRequest) commonclient.Optional[UpdateRouteDestinationRequest] {
+func (m *RouteSpecRequest) diffDestination(src *RouteSpecRequest) optional.Optional[UpdateRouteDestinationRequest] {
 	from := src.GetDestination()
 	to := m.GetDestination()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateRouteDestinationRequest](value, value.HasChanges())
+	return optional.Optional[UpdateRouteDestinationRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *RouteSpecRequest) diffNextHop(src *RouteSpecRequest) commonclient.Optional[UpdateRouteNextHopRequest] {
+func (m *RouteSpecRequest) diffNextHop(src *RouteSpecRequest) optional.Optional[UpdateRouteNextHopRequest] {
 	from := src.GetNextHop()
 	to := m.GetNextHop()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateRouteNextHopRequest](value, value.HasChanges())
+	return optional.Optional[UpdateRouteNextHopRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }

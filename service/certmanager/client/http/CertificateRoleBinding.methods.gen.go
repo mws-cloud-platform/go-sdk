@@ -49,9 +49,9 @@ func (c *CertificateRoleBinding) listCertificateRoleBindingsInvoker(ctx context.
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name,
+		url.PathEscape(request.Name),
 		"certificateRoleBindings")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -144,11 +144,11 @@ func (c *CertificateRoleBinding) deleteCertificateRoleBindingInvoker(ctx context
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name,
+		url.PathEscape(request.Name),
 		"certificateRoleBindings",
-		request.RoleBinding)
+		url.PathEscape(request.RoleBinding))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -218,11 +218,11 @@ func (c *CertificateRoleBinding) getCertificateRoleBindingInvoker(ctx context.Co
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name,
+		url.PathEscape(request.Name),
 		"certificateRoleBindings",
-		request.RoleBinding)
+		url.PathEscape(request.RoleBinding))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -296,11 +296,11 @@ func (c *CertificateRoleBinding) upsertCertificateRoleBindingInvoker(ctx context
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name,
+		url.PathEscape(request.Name),
 		"certificateRoleBindings",
-		request.RoleBinding)
+		url.PathEscape(request.RoleBinding))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -390,11 +390,11 @@ func (c *CertificateRoleBinding) createCertificateRoleBindingInvoker(ctx context
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name,
+		url.PathEscape(request.Name),
 		"certificateRoleBindings",
-		request.RoleBinding)
+		url.PathEscape(request.RoleBinding))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)
@@ -485,11 +485,11 @@ func (c *CertificateRoleBinding) updateCertificateRoleBindingInvoker(ctx context
 		"certmanager",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"certificates",
-		request.Name,
+		url.PathEscape(request.Name),
 		"certificateRoleBindings",
-		request.RoleBinding)
+		url.PathEscape(request.RoleBinding))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "name", request.Name)

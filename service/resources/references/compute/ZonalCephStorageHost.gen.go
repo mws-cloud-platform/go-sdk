@@ -163,7 +163,7 @@ func (m *ZonalCephStorageHostID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalCephStorageHostID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalCephStorageHostRef")
+		return conv.NewDecodeToNilError("ZonalCephStorageHostID")
 	}
 
 	v, err := decode.Str(d)

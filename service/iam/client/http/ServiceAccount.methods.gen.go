@@ -49,7 +49,7 @@ func (c *ServiceAccount) listServiceAccountInvoker(ctx context.Context, anyReq a
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -144,9 +144,9 @@ func (c *ServiceAccount) deleteServiceAccountInvoker(ctx context.Context, anyReq
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount)
+		url.PathEscape(request.ServiceAccount))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -216,9 +216,9 @@ func (c *ServiceAccount) getServiceAccountInvoker(ctx context.Context, anyReq an
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount)
+		url.PathEscape(request.ServiceAccount))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
@@ -291,9 +291,9 @@ func (c *ServiceAccount) upsertServiceAccountInvoker(ctx context.Context, anyReq
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount)
+		url.PathEscape(request.ServiceAccount))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
@@ -379,9 +379,9 @@ func (c *ServiceAccount) createServiceAccountInvoker(ctx context.Context, anyReq
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount)
+		url.PathEscape(request.ServiceAccount))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
@@ -468,9 +468,9 @@ func (c *ServiceAccount) updateServiceAccountInvoker(ctx context.Context, anyReq
 		"iam",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"serviceAccounts",
-		request.ServiceAccount)
+		url.PathEscape(request.ServiceAccount))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)

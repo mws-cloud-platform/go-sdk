@@ -163,7 +163,7 @@ func (m *NetworkID) UnmarshalJSON(b []byte) error {
 
 func (m *NetworkID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("NetworkRef")
+		return conv.NewDecodeToNilError("NetworkID")
 	}
 
 	v, err := decode.Str(d)

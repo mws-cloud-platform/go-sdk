@@ -183,7 +183,7 @@ func (m *CryptoKeyVersionID) UnmarshalJSON(b []byte) error {
 
 func (m *CryptoKeyVersionID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("CryptoKeyVersionRef")
+		return conv.NewDecodeToNilError("CryptoKeyVersionID")
 	}
 
 	v, err := decode.Str(d)

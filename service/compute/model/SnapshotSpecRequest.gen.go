@@ -10,6 +10,8 @@ import (
 
 // Спецификация глобального снимка
 // Real OAPI model name: SnapshotSpec
+//
+// Deprecated: Отказываемся в пользу DiskBackupSpec
 type SnapshotSpecRequest struct {
 	// Источник для создания снимка (На текущий момент поддерживается только диск, но в будущем будут и другие источники)
 	Source SnapshotSourceRequest `json:"source" yaml:"source"`

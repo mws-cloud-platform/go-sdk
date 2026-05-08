@@ -5,8 +5,8 @@ package model
 import (
 	"context"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -15,7 +15,7 @@ import (
 type OneToOneNatOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata commonclient.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Описывает спецификацию One-to-One NAT-шлюза.
 	Spec OneToOneNatSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Описывает статус One-to-One NAT-шлюза.

@@ -203,7 +203,7 @@ func (m *ZonalFirewallRuleID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalFirewallRuleID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalFirewallRuleRef")
+		return conv.NewDecodeToNilError("ZonalFirewallRuleID")
 	}
 
 	v, err := decode.Str(d)

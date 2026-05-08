@@ -11,6 +11,10 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// API-ключ — это уникальная строка длиной 128 символов, предназначенная для
+// упрощенной аутентификации сервисных аккаунтов в тех облачных сервисах, которые
+// не поддерживают авторизованные ключи
+//
 // Real OAPI model name: ApiKey
 type ApiKeyResponse struct {
 	Kind     *string                 `json:"kind,omitempty" yaml:"kind,omitempty"`

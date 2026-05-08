@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func AuthorizedKeySpecRequestToOptionalResponse(request *AuthorizedKeySpecRequest) (*AuthorizedKeySpecOptionalResponse, error) {
@@ -12,14 +12,14 @@ func AuthorizedKeySpecRequestToOptionalResponse(request *AuthorizedKeySpecReques
 	}
 	var response AuthorizedKeySpecOptionalResponse
 	if request.PublicKey != nil {
-		response.PublicKey = commonclient.NewOptional(*request.PublicKey)
+		response.PublicKey = optional.NewOptional(*request.PublicKey)
 	}
 	response.KeyAlgorithm = request.KeyAlgorithm
 	if request.ExpirationTime != nil {
-		response.ExpirationTime = commonclient.NewOptional(*request.ExpirationTime)
+		response.ExpirationTime = optional.NewOptional(*request.ExpirationTime)
 	}
 	if request.Active != nil {
-		response.Active = commonclient.NewOptional(*request.Active)
+		response.Active = optional.NewOptional(*request.Active)
 	}
 	return &response, nil
 }

@@ -3,7 +3,7 @@
 package model
 
 import (
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func CertificateSpecRequestToOptionalResponse(request *CertificateSpecRequest) (*CertificateSpecOptionalResponse, error) {
@@ -16,7 +16,7 @@ func CertificateSpecRequestToOptionalResponse(request *CertificateSpecRequest) (
 		if err != nil {
 			return nil, err
 		}
-		response.Managed = commonclient.NewOptionalNil(*tmpManaged)
+		response.Managed = optional.NewOptionalNil(*tmpManaged)
 	}
 	return &response, nil
 }

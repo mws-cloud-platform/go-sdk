@@ -49,9 +49,9 @@ func (c *PostgresBackup) listPostgresBackupInvoker(ctx context.Context, anyReq a
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"backups")
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
@@ -147,11 +147,11 @@ func (c *PostgresBackup) deletePostgresBackupInvoker(ctx context.Context, anyReq
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"backups",
-		request.Backup)
+		url.PathEscape(request.Backup))
 
 	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
 	if err != nil {
@@ -224,11 +224,11 @@ func (c *PostgresBackup) getPostgresBackupInvoker(ctx context.Context, anyReq an
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"backups",
-		request.Backup)
+		url.PathEscape(request.Backup))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -302,11 +302,11 @@ func (c *PostgresBackup) upsertPostgresBackupInvoker(ctx context.Context, anyReq
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"backups",
-		request.Backup)
+		url.PathEscape(request.Backup))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -396,11 +396,11 @@ func (c *PostgresBackup) createPostgresBackupInvoker(ctx context.Context, anyReq
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"backups",
-		request.Backup)
+		url.PathEscape(request.Backup))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
@@ -491,11 +491,11 @@ func (c *PostgresBackup) updatePostgresBackupInvoker(ctx context.Context, anyReq
 		"mpostgres",
 		"v1",
 		"projects",
-		request.Project,
+		url.PathEscape(request.Project),
 		"clusters",
-		request.Cluster,
+		url.PathEscape(request.Cluster),
 		"backups",
-		request.Backup)
+		url.PathEscape(request.Backup))
 
 	ctx = valuesctx.With(ctx, "project", request.Project)
 	ctx = valuesctx.With(ctx, "cluster", request.Cluster)

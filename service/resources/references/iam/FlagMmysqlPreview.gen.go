@@ -163,7 +163,7 @@ func (m *FlagMmysqlPreviewID) UnmarshalJSON(b []byte) error {
 
 func (m *FlagMmysqlPreviewID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("FlagMmysqlPreviewRef")
+		return conv.NewDecodeToNilError("FlagMmysqlPreviewID")
 	}
 
 	v, err := decode.Str(d)

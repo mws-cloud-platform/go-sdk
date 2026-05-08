@@ -203,7 +203,7 @@ func (m *ZonalCloudEndpointID) UnmarshalJSON(b []byte) error {
 
 func (m *ZonalCloudEndpointID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ZonalCloudEndpointRef")
+		return conv.NewDecodeToNilError("ZonalCloudEndpointID")
 	}
 
 	v, err := decode.Str(d)

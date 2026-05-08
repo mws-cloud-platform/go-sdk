@@ -5,20 +5,20 @@ package model
 import (
 	"time"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Описание спецификация для авторизированных ключей.
 // Real OAPI model name: AuthorizedKeySpec
 type AuthorizedKeySpecOptionalResponse struct {
 	// Открытый ключ. Если данный параметр в запросе отсутствует, то сервис сам сгенерирует ключ для указанного алгоритма и вернет приватный ключ в поле статуса в ответе.
-	PublicKey commonclient.Optional[string] `json:"publicKey,omitempty" yaml:"publicKey,omitempty"`
+	PublicKey optional.Optional[string] `json:"publicKey,omitempty" yaml:"publicKey,omitempty"`
 	// Алгоритм шифрования.
 	KeyAlgorithm string `json:"keyAlgorithm" yaml:"keyAlgorithm"`
 	// Время истечения срока действия ключа.
-	ExpirationTime commonclient.Optional[time.Time] `json:"expirationTime,omitempty" yaml:"expirationTime,omitempty"`
+	ExpirationTime optional.Optional[time.Time] `json:"expirationTime,omitempty" yaml:"expirationTime,omitempty"`
 	// Флаг активности ключа.
-	Active commonclient.Optional[bool] `json:"active,omitempty" yaml:"active,omitempty"`
+	Active optional.Optional[bool] `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
 func (m *AuthorizedKeySpecOptionalResponse) GetPublicKey() *string {

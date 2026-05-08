@@ -203,7 +203,7 @@ func (m *VpcHostNetworkAttachmentID) UnmarshalJSON(b []byte) error {
 
 func (m *VpcHostNetworkAttachmentID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("VpcHostNetworkAttachmentRef")
+		return conv.NewDecodeToNilError("VpcHostNetworkAttachmentID")
 	}
 
 	v, err := decode.Str(d)

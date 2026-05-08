@@ -143,7 +143,7 @@ func (m *AccessGraphNodeID) UnmarshalJSON(b []byte) error {
 
 func (m *AccessGraphNodeID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("AccessGraphNodeRef")
+		return conv.NewDecodeToNilError("AccessGraphNodeID")
 	}
 
 	v, err := decode.Str(d)

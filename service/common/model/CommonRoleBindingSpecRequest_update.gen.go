@@ -7,19 +7,20 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 type UpdateCommonRoleBindingSpecRequest struct {
-	Subject commonclient.Optional[UpdateCommonRoleBindingSpecSubjectRequest] `json:"subject" yaml:"subject"`
+	Subject optional.Optional[UpdateCommonRoleBindingSpecSubjectRequest] `json:"subject" yaml:"subject"`
 	// Роль, определяющая права субъекта на ресурс
-	Role commonclient.Optional[iam.RoleRef] `json:"role" yaml:"role"`
+	Role optional.Optional[iam.RoleRef] `json:"role" yaml:"role"`
 }
 
 func (m *CommonRoleBindingSpecRequest) AsUpdateModel() UpdateCommonRoleBindingSpecRequest {
 	var u UpdateCommonRoleBindingSpecRequest
-	u.Subject = commonclient.NewOptional(m.Subject.AsUpdateModel())
-	u.Role = commonclient.NewOptional(m.GetRole())
+	u.Subject = optional.NewOptional(m.Subject.AsUpdateModel())
+	u.Role = optional.NewOptional(m.GetRole())
 	return u
 }
 
@@ -75,14 +76,17 @@ func (m *UpdateCommonRoleBindingSpecRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *CommonRoleBindingSpecRequest) diffSubject(src *CommonRoleBindingSpecRequest) commonclient.Optional[UpdateCommonRoleBindingSpecSubjectRequest] {
+func (m *CommonRoleBindingSpecRequest) diffSubject(src *CommonRoleBindingSpecRequest) optional.Optional[UpdateCommonRoleBindingSpecSubjectRequest] {
 	from := src.GetSubject()
 	to := m.GetSubject()
 	value := to.Diff(&from)
-	return commonclient.NewDirectOptional[UpdateCommonRoleBindingSpecSubjectRequest](value, value.HasChanges())
+	return optional.Optional[UpdateCommonRoleBindingSpecSubjectRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
-func (m *CommonRoleBindingSpecRequest) diffRole(src *CommonRoleBindingSpecRequest) commonclient.Optional[iam.RoleRef] {
+func (m *CommonRoleBindingSpecRequest) diffRole(src *CommonRoleBindingSpecRequest) optional.Optional[iam.RoleRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetRole(), m.GetRole(), nilDiffers)
 }

@@ -35,6 +35,8 @@ func (m *MockSnapshot) EXPECT() *MockSnapshotMockRecorder {
 }
 
 // CreateSnapshot mocks base method.
+//
+// Deprecated: Отказываемся в пользу upsertDiskBackup
 func (m *MockSnapshot) CreateSnapshot(arg0 context.Context, arg1 client.UpsertSnapshotRequest) (*client.UpsertSnapshotResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSnapshot", arg0, arg1)
@@ -44,12 +46,16 @@ func (m *MockSnapshot) CreateSnapshot(arg0 context.Context, arg1 client.UpsertSn
 }
 
 // CreateSnapshot indicates an expected call of CreateSnapshot.
+//
+// Deprecated: Отказываемся в пользу upsertDiskBackup
 func (mr *MockSnapshotMockRecorder) CreateSnapshot(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSnapshot", reflect.TypeOf((*MockSnapshot)(nil).CreateSnapshot), arg0, arg1)
 }
 
 // DeleteSnapshot mocks base method.
+//
+// Deprecated: Отказываемся в пользу deleteDiskBackup
 func (m *MockSnapshot) DeleteSnapshot(arg0 context.Context, arg1 client.DeleteSnapshotRequest) (*client.DeleteSnapshotResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteSnapshot", arg0, arg1)
@@ -59,12 +65,16 @@ func (m *MockSnapshot) DeleteSnapshot(arg0 context.Context, arg1 client.DeleteSn
 }
 
 // DeleteSnapshot indicates an expected call of DeleteSnapshot.
+//
+// Deprecated: Отказываемся в пользу deleteDiskBackup
 func (mr *MockSnapshotMockRecorder) DeleteSnapshot(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSnapshot", reflect.TypeOf((*MockSnapshot)(nil).DeleteSnapshot), arg0, arg1)
 }
 
 // GetSnapshot mocks base method.
+//
+// Deprecated: Отказываемся в пользу getDiskBackup
 func (m *MockSnapshot) GetSnapshot(arg0 context.Context, arg1 client.GetSnapshotRequest) (*client.GetSnapshotResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetSnapshot", arg0, arg1)
@@ -74,12 +84,16 @@ func (m *MockSnapshot) GetSnapshot(arg0 context.Context, arg1 client.GetSnapshot
 }
 
 // GetSnapshot indicates an expected call of GetSnapshot.
+//
+// Deprecated: Отказываемся в пользу getDiskBackup
 func (mr *MockSnapshotMockRecorder) GetSnapshot(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSnapshot", reflect.TypeOf((*MockSnapshot)(nil).GetSnapshot), arg0, arg1)
 }
 
 // ListSnapshots mocks base method.
+//
+// Deprecated: Отказываемся в пользу listDiskBackups
 func (m *MockSnapshot) ListSnapshots(arg0 context.Context, arg1 client.ListSnapshotsRequest) (*client.ListSnapshotsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListSnapshots", arg0, arg1)
@@ -89,12 +103,16 @@ func (m *MockSnapshot) ListSnapshots(arg0 context.Context, arg1 client.ListSnaps
 }
 
 // ListSnapshots indicates an expected call of ListSnapshots.
+//
+// Deprecated: Отказываемся в пользу listDiskBackups
 func (mr *MockSnapshotMockRecorder) ListSnapshots(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListSnapshots", reflect.TypeOf((*MockSnapshot)(nil).ListSnapshots), arg0, arg1)
 }
 
 // UpdateSnapshot mocks base method.
+//
+// Deprecated: Отказываемся в пользу upsertDiskBackup
 func (m *MockSnapshot) UpdateSnapshot(arg0 context.Context, arg1 client.UpdateSnapshotRequest) (*client.UpsertSnapshotResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateSnapshot", arg0, arg1)
@@ -104,12 +122,16 @@ func (m *MockSnapshot) UpdateSnapshot(arg0 context.Context, arg1 client.UpdateSn
 }
 
 // UpdateSnapshot indicates an expected call of UpdateSnapshot.
+//
+// Deprecated: Отказываемся в пользу upsertDiskBackup
 func (mr *MockSnapshotMockRecorder) UpdateSnapshot(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSnapshot", reflect.TypeOf((*MockSnapshot)(nil).UpdateSnapshot), arg0, arg1)
 }
 
 // UpsertSnapshot mocks base method.
+//
+// Deprecated: Отказываемся в пользу upsertDiskBackup
 func (m *MockSnapshot) UpsertSnapshot(arg0 context.Context, arg1 client.UpsertSnapshotRequest) (*client.UpsertSnapshotResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpsertSnapshot", arg0, arg1)
@@ -119,6 +141,8 @@ func (m *MockSnapshot) UpsertSnapshot(arg0 context.Context, arg1 client.UpsertSn
 }
 
 // UpsertSnapshot indicates an expected call of UpsertSnapshot.
+//
+// Deprecated: Отказываемся в пользу upsertDiskBackup
 func (mr *MockSnapshotMockRecorder) UpsertSnapshot(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertSnapshot", reflect.TypeOf((*MockSnapshot)(nil).UpsertSnapshot), arg0, arg1)

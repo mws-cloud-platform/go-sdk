@@ -49,6 +49,21 @@ func (mr *MockAuthorizedKeyMockRecorder) CreateAuthorizedKey(arg0, arg1 any) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).CreateAuthorizedKey), arg0, arg1)
 }
 
+// CreateAuthorizedKeyV2 mocks base method.
+func (m *MockAuthorizedKey) CreateAuthorizedKeyV2(arg0 context.Context, arg1 client.UpsertAuthorizedKeyV2Request) (*client.UpsertAuthorizedKeyV2Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateAuthorizedKeyV2", arg0, arg1)
+	ret0, _ := ret[0].(*client.UpsertAuthorizedKeyV2Response)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateAuthorizedKeyV2 indicates an expected call of CreateAuthorizedKeyV2.
+func (mr *MockAuthorizedKeyMockRecorder) CreateAuthorizedKeyV2(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAuthorizedKeyV2", reflect.TypeOf((*MockAuthorizedKey)(nil).CreateAuthorizedKeyV2), arg0, arg1)
+}
+
 // DeleteAuthorizedKey mocks base method.
 func (m *MockAuthorizedKey) DeleteAuthorizedKey(arg0 context.Context, arg1 client.DeleteAuthorizedKeyRequest) (*client.DeleteAuthorizedKeyResponse, error) {
 	m.ctrl.T.Helper()
@@ -109,6 +124,21 @@ func (mr *MockAuthorizedKeyMockRecorder) UpdateAuthorizedKey(arg0, arg1 any) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).UpdateAuthorizedKey), arg0, arg1)
 }
 
+// UpdateAuthorizedKeyV2 mocks base method.
+func (m *MockAuthorizedKey) UpdateAuthorizedKeyV2(arg0 context.Context, arg1 client.UpdateAuthorizedKeyV2Request) (*client.UpsertAuthorizedKeyV2Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAuthorizedKeyV2", arg0, arg1)
+	ret0, _ := ret[0].(*client.UpsertAuthorizedKeyV2Response)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateAuthorizedKeyV2 indicates an expected call of UpdateAuthorizedKeyV2.
+func (mr *MockAuthorizedKeyMockRecorder) UpdateAuthorizedKeyV2(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthorizedKeyV2", reflect.TypeOf((*MockAuthorizedKey)(nil).UpdateAuthorizedKeyV2), arg0, arg1)
+}
+
 // UpsertAuthorizedKey mocks base method.
 func (m *MockAuthorizedKey) UpsertAuthorizedKey(arg0 context.Context, arg1 client.UpsertAuthorizedKeyRequest) (*client.UpsertAuthorizedKeyResponse, error) {
 	m.ctrl.T.Helper()
@@ -122,4 +152,19 @@ func (m *MockAuthorizedKey) UpsertAuthorizedKey(arg0 context.Context, arg1 clien
 func (mr *MockAuthorizedKeyMockRecorder) UpsertAuthorizedKey(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).UpsertAuthorizedKey), arg0, arg1)
+}
+
+// UpsertAuthorizedKeyV2 mocks base method.
+func (m *MockAuthorizedKey) UpsertAuthorizedKeyV2(arg0 context.Context, arg1 client.UpsertAuthorizedKeyV2Request) (*client.UpsertAuthorizedKeyV2Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertAuthorizedKeyV2", arg0, arg1)
+	ret0, _ := ret[0].(*client.UpsertAuthorizedKeyV2Response)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpsertAuthorizedKeyV2 indicates an expected call of UpsertAuthorizedKeyV2.
+func (mr *MockAuthorizedKeyMockRecorder) UpsertAuthorizedKeyV2(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertAuthorizedKeyV2", reflect.TypeOf((*MockAuthorizedKey)(nil).UpsertAuthorizedKeyV2), arg0, arg1)
 }
