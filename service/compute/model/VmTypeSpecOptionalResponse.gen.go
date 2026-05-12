@@ -15,6 +15,8 @@ type VmTypeSpecOptionalResponse struct {
 	Memory optional.OptionalNil[VmTypeMemorySpecOptionalResponse] `json:"memory,omitempty" yaml:"memory,omitempty"`
 	// Спецификация сетевых дисков, которые доступны для ВМ указанного типа.
 	Disks optional.OptionalNil[VmTypeDisksSpecOptionalResponse] `json:"disks,omitempty" yaml:"disks,omitempty"`
+	// Спецификация локальных дисков, которые доступны для ВМ указанного типа.
+	LocalDisks optional.OptionalNil[VmTypeLocalDisksSpecOptionalResponse] `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
 	// Спецификация сети, которая доступна для ВМ указанного типа.
 	Network optional.OptionalNil[VmTypeSpecNetworkOptionalResponse] `json:"network,omitempty" yaml:"network,omitempty"`
 }
@@ -61,6 +63,20 @@ func (m *VmTypeSpecOptionalResponse) GetDisksOr(val VmTypeDisksSpecOptionalRespo
 	return val
 }
 
+func (m *VmTypeSpecOptionalResponse) GetLocalDisks() *VmTypeLocalDisksSpecOptionalResponse {
+	if m != nil && m.LocalDisks.IsSet() {
+		return &m.LocalDisks.Value
+	}
+	return nil
+}
+
+func (m *VmTypeSpecOptionalResponse) GetLocalDisksOr(val VmTypeLocalDisksSpecOptionalResponse) VmTypeLocalDisksSpecOptionalResponse {
+	if m != nil && m.LocalDisks.IsSet() {
+		return m.LocalDisks.Value
+	}
+	return val
+}
+
 func (m *VmTypeSpecOptionalResponse) GetNetwork() *VmTypeSpecNetworkOptionalResponse {
 	if m != nil && m.Network.IsSet() {
 		return &m.Network.Value
@@ -89,6 +105,9 @@ func (m *VmTypeSpecOptionalResponse) Clone() *VmTypeSpecOptionalResponse {
 	}
 	if clone.Disks.IsSet() {
 		clone.Disks.Value = *m.Disks.Value.Clone()
+	}
+	if clone.LocalDisks.IsSet() {
+		clone.LocalDisks.Value = *m.LocalDisks.Value.Clone()
 	}
 	if clone.Network.IsSet() {
 		clone.Network.Value = *m.Network.Value.Clone()

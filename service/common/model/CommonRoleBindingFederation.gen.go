@@ -11,8 +11,8 @@ import (
 
 type CommonRoleBindingFederation struct {
 	// Идентификатор федерации.
-	Id      iam.UserFederationRef              `json:"id" yaml:"id"`
-	Context CommonRoleBindingFederationContext `json:"context" yaml:"context"`
+	Id      iam.UserFederationRef               `json:"id" yaml:"id"`
+	Context *CommonRoleBindingFederationContext `json:"context,omitempty" yaml:"context,omitempty"`
 }
 
 func (m *CommonRoleBindingFederation) GetId() iam.UserFederationRef {
@@ -26,15 +26,22 @@ func (m *CommonRoleBindingFederation) SetId(val iam.UserFederationRef) {
 	m.Id = val
 }
 
-func (m *CommonRoleBindingFederation) GetContext() CommonRoleBindingFederationContext {
+func (m *CommonRoleBindingFederation) GetContext() *CommonRoleBindingFederationContext {
 	if m != nil {
 		return m.Context
 	}
-	return CommonRoleBindingFederationContext{}
+	return nil
 }
 
-func (m *CommonRoleBindingFederation) SetContext(val CommonRoleBindingFederationContext) {
+func (m *CommonRoleBindingFederation) SetContext(val *CommonRoleBindingFederationContext) {
 	m.Context = val
+}
+
+func (m *CommonRoleBindingFederation) GetContextOr(val CommonRoleBindingFederationContext) CommonRoleBindingFederationContext {
+	if m != nil && m.Context != nil {
+		return *m.Context
+	}
+	return val
 }
 
 func (m *CommonRoleBindingFederation) Clone() *CommonRoleBindingFederation {
@@ -44,7 +51,7 @@ func (m *CommonRoleBindingFederation) Clone() *CommonRoleBindingFederation {
 
 	clone := *m
 	clone.Id = *m.Id.Clone()
-	clone.Context = *m.Context.Clone()
+	clone.Context = m.Context.Clone()
 	return &clone
 }
 

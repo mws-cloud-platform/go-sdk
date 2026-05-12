@@ -2,16 +2,22 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/optional"
+)
+
 func CommonRoleBindingFederationRequestToOptionalResponse(request *CommonRoleBindingFederationRequest) (*CommonRoleBindingFederationOptionalResponse, error) {
 	if request == nil {
 		return nil, nil
 	}
 	var response CommonRoleBindingFederationOptionalResponse
 	response.Id = request.Id
-	tmpContext, err := CommonRoleBindingFederationContextRequestToOptionalResponse(&request.Context)
-	if err != nil {
-		return nil, err
+	if request.Context != nil {
+		tmpContext, err := CommonRoleBindingFederationContextRequestToOptionalResponse(request.Context)
+		if err != nil {
+			return nil, err
+		}
+		response.Context = optional.NewOptionalNil(*tmpContext)
 	}
-	response.Context = *tmpContext
 	return &response, nil
 }

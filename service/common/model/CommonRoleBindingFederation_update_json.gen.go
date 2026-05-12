@@ -39,7 +39,11 @@ func (m *UpdateCommonRoleBindingFederation) encodeFields(e *jx.Encoder) error {
 
 	if m.Context.IsSet() {
 		e.FieldStart("context")
-		m.Context.Value.Encode(e)
+		if m.Context.IsNull() {
+			e.Null()
+		} else {
+			m.Context.Value.Encode(e)
+		}
 	}
 	return nil
 }
@@ -64,6 +68,11 @@ func (m *UpdateCommonRoleBindingFederation) Decode(d *jx.Decoder) error {
 			m.Id.SetTo(v)
 			return nil
 		case "context":
+			if d.Next() == jx.Null {
+				m.Context.SetToNull()
+				return d.Null()
+			}
+
 			var v UpdateCommonRoleBindingFederationContext
 			if err := v.Decode(d); err != nil {
 				return err

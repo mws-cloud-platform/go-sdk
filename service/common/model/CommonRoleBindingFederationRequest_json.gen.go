@@ -35,8 +35,10 @@ func (m *CommonRoleBindingFederationRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("id")
 	m.Id.Encode(e)
 
-	e.FieldStart("context")
-	m.Context.Encode(e)
+	if m.Context != nil {
+		e.FieldStart("context")
+		m.Context.Encode(e)
+	}
 	return nil
 }
 
@@ -50,8 +52,7 @@ func (m *CommonRoleBindingFederationRequest) Decode(d *jx.Decoder) error {
 	}
 
 	requiredFilled := map[string]bool{
-		"id":      false,
-		"context": false,
+		"id": false,
 	}
 	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -65,13 +66,16 @@ func (m *CommonRoleBindingFederationRequest) Decode(d *jx.Decoder) error {
 			requiredFilled["id"] = true
 			return nil
 		case "context":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			var v CommonRoleBindingFederationContextRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Context = v
-			requiredFilled["context"] = true
+			m.Context = &v
 			return nil
 		default:
 			return d.Skip()

@@ -58,6 +58,15 @@ func (m *VmTypeSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		}
 	}
 
+	if m.LocalDisks.IsSet() {
+		e.FieldStart("localDisks")
+		if m.LocalDisks.IsNull() {
+			e.Null()
+		} else {
+			m.LocalDisks.Value.Encode(e)
+		}
+	}
+
 	if m.Network.IsSet() {
 		e.FieldStart("network")
 		if m.Network.IsNull() {
@@ -118,6 +127,19 @@ func (m *VmTypeSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Disks.SetTo(v)
+			return nil
+		case "localDisks":
+			if d.Next() == jx.Null {
+				m.LocalDisks.SetToNull()
+				return d.Null()
+			}
+
+			var v VmTypeLocalDisksSpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.LocalDisks.SetTo(v)
 			return nil
 		case "network":
 			if d.Next() == jx.Null {

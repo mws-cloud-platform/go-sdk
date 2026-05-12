@@ -6,14 +6,15 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 // Real OAPI model name: CommonRoleBindingFederation
 type CommonRoleBindingFederationOptionalResponse struct {
 	// Идентификатор федерации.
-	Id      iam.UserFederationRef                              `json:"id" yaml:"id"`
-	Context CommonRoleBindingFederationContextOptionalResponse `json:"context" yaml:"context"`
+	Id      iam.UserFederationRef                                                    `json:"id" yaml:"id"`
+	Context optional.OptionalNil[CommonRoleBindingFederationContextOptionalResponse] `json:"context,omitempty" yaml:"context,omitempty"`
 }
 
 func (m *CommonRoleBindingFederationOptionalResponse) GetId() iam.UserFederationRef {
@@ -27,15 +28,18 @@ func (m *CommonRoleBindingFederationOptionalResponse) SetId(val iam.UserFederati
 	m.Id = val
 }
 
-func (m *CommonRoleBindingFederationOptionalResponse) GetContext() CommonRoleBindingFederationContextOptionalResponse {
-	if m != nil {
-		return m.Context
+func (m *CommonRoleBindingFederationOptionalResponse) GetContext() *CommonRoleBindingFederationContextOptionalResponse {
+	if m != nil && m.Context.IsSet() {
+		return &m.Context.Value
 	}
-	return CommonRoleBindingFederationContextOptionalResponse{}
+	return nil
 }
 
-func (m *CommonRoleBindingFederationOptionalResponse) SetContext(val CommonRoleBindingFederationContextOptionalResponse) {
-	m.Context = val
+func (m *CommonRoleBindingFederationOptionalResponse) GetContextOr(val CommonRoleBindingFederationContextOptionalResponse) CommonRoleBindingFederationContextOptionalResponse {
+	if m != nil && m.Context.IsSet() {
+		return m.Context.Value
+	}
+	return val
 }
 
 func (m *CommonRoleBindingFederationOptionalResponse) Clone() *CommonRoleBindingFederationOptionalResponse {
@@ -45,7 +49,9 @@ func (m *CommonRoleBindingFederationOptionalResponse) Clone() *CommonRoleBinding
 
 	clone := *m
 	clone.Id = *m.Id.Clone()
-	clone.Context = *m.Context.Clone()
+	if clone.Context.IsSet() {
+		clone.Context.Value = *m.Context.Value.Clone()
+	}
 	return &clone
 }
 

@@ -35,8 +35,14 @@ func (m *CommonRoleBindingFederationOptionalResponse) encodeFields(e *jx.Encoder
 	e.FieldStart("id")
 	m.Id.Encode(e)
 
-	e.FieldStart("context")
-	m.Context.Encode(e)
+	if m.Context.IsSet() {
+		e.FieldStart("context")
+		if m.Context.IsNull() {
+			e.Null()
+		} else {
+			m.Context.Value.Encode(e)
+		}
+	}
 	return nil
 }
 
@@ -60,12 +66,17 @@ func (m *CommonRoleBindingFederationOptionalResponse) Decode(d *jx.Decoder) erro
 			m.Id = v
 			return nil
 		case "context":
+			if d.Next() == jx.Null {
+				m.Context.SetToNull()
+				return d.Null()
+			}
+
 			var v CommonRoleBindingFederationContextOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Context = v
+			m.Context.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

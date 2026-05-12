@@ -12,8 +12,8 @@ import (
 // Real OAPI model name: CommonRoleBindingFederation
 type CommonRoleBindingFederationRequest struct {
 	// Идентификатор федерации.
-	Id      iam.UserFederationRef                     `json:"id" yaml:"id"`
-	Context CommonRoleBindingFederationContextRequest `json:"context" yaml:"context"`
+	Id      iam.UserFederationRef                      `json:"id" yaml:"id"`
+	Context *CommonRoleBindingFederationContextRequest `json:"context,omitempty" yaml:"context,omitempty"`
 }
 
 func (m *CommonRoleBindingFederationRequest) GetId() iam.UserFederationRef {
@@ -27,15 +27,22 @@ func (m *CommonRoleBindingFederationRequest) SetId(val iam.UserFederationRef) {
 	m.Id = val
 }
 
-func (m *CommonRoleBindingFederationRequest) GetContext() CommonRoleBindingFederationContextRequest {
+func (m *CommonRoleBindingFederationRequest) GetContext() *CommonRoleBindingFederationContextRequest {
 	if m != nil {
 		return m.Context
 	}
-	return CommonRoleBindingFederationContextRequest{}
+	return nil
 }
 
-func (m *CommonRoleBindingFederationRequest) SetContext(val CommonRoleBindingFederationContextRequest) {
+func (m *CommonRoleBindingFederationRequest) SetContext(val *CommonRoleBindingFederationContextRequest) {
 	m.Context = val
+}
+
+func (m *CommonRoleBindingFederationRequest) GetContextOr(val CommonRoleBindingFederationContextRequest) CommonRoleBindingFederationContextRequest {
+	if m != nil && m.Context != nil {
+		return *m.Context
+	}
+	return val
 }
 
 func (m *CommonRoleBindingFederationRequest) Clone() *CommonRoleBindingFederationRequest {
@@ -45,7 +52,7 @@ func (m *CommonRoleBindingFederationRequest) Clone() *CommonRoleBindingFederatio
 
 	clone := *m
 	clone.Id = *m.Id.Clone()
-	clone.Context = *m.Context.Clone()
+	clone.Context = m.Context.Clone()
 	return &clone
 }
 

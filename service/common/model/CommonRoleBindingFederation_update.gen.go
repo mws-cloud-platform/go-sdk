@@ -5,6 +5,8 @@ package model
 import (
 	"context"
 
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -13,14 +15,16 @@ import (
 
 type UpdateCommonRoleBindingFederation struct {
 	// Идентификатор федерации.
-	Id      optional.Optional[iam.UserFederationRef]                    `json:"id" yaml:"id"`
-	Context optional.Optional[UpdateCommonRoleBindingFederationContext] `json:"context" yaml:"context"`
+	Id      optional.Optional[iam.UserFederationRef]                       `json:"id" yaml:"id"`
+	Context optional.OptionalNil[UpdateCommonRoleBindingFederationContext] `json:"context" yaml:"context"`
 }
 
 func (m *CommonRoleBindingFederation) AsUpdateModel() UpdateCommonRoleBindingFederation {
 	var u UpdateCommonRoleBindingFederation
 	u.Id = optional.NewOptional(m.GetId())
-	u.Context = optional.NewOptional(m.Context.AsUpdateModel())
+	if m.Context != nil {
+		u.Context = optional.NewOptionalNil(m.Context.AsUpdateModel())
+	}
 	return u
 }
 
@@ -45,7 +49,9 @@ func (m *CommonRoleBindingFederation) WithChanges(u UpdateCommonRoleBindingFeder
 		out.Id = u.Id.Value
 	}
 	if u.Context.IsSet() {
-		out.Context = out.Context.WithChanges(u.Context.Value)
+		out.Context = ptr.Get(out.Context.WithChanges(u.Context.Value))
+	} else if u.Context.IsNull() {
+		out.Context = nil
 	}
 	return out
 }
@@ -75,12 +81,12 @@ func (m *CommonRoleBindingFederation) diffId(src *CommonRoleBindingFederation) o
 	return commonclient.DiffPrimitiveRequired(src.GetId(), m.GetId(), nilDiffers)
 }
 
-func (m *CommonRoleBindingFederation) diffContext(src *CommonRoleBindingFederation) optional.Optional[UpdateCommonRoleBindingFederationContext] {
-	from := src.GetContext()
-	to := m.GetContext()
-	value := to.Diff(&from)
-	return optional.Optional[UpdateCommonRoleBindingFederationContext]{
+func (m *CommonRoleBindingFederation) diffContext(src *CommonRoleBindingFederation) optional.OptionalNil[UpdateCommonRoleBindingFederationContext] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetContext().Diff(src.GetContext())
+	return optional.OptionalNil[UpdateCommonRoleBindingFederationContext]{
 		Value: value,
-		Set:   value.HasChanges(),
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
 	}
 }

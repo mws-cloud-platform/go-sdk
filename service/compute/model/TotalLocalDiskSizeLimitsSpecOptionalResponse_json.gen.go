@@ -4,13 +4,13 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
-func (m CommonRoleBindingFederationResponse) MarshalJSON() ([]byte, error) {
+func (m TotalLocalDiskSizeLimitsSpecOptionalResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -18,7 +18,7 @@ func (m CommonRoleBindingFederationResponse) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *CommonRoleBindingFederationResponse) Encode(e *jx.Encoder) error {
+func (m *TotalLocalDiskSizeLimitsSpecOptionalResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -31,47 +31,45 @@ func (m *CommonRoleBindingFederationResponse) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *CommonRoleBindingFederationResponse) encodeFields(e *jx.Encoder) error {
-	e.FieldStart("id")
-	m.Id.Encode(e)
+func (m *TotalLocalDiskSizeLimitsSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Min.IsSet() {
+		e.FieldStart("min")
+		m.Min.Value.Encode(e)
+	}
 
-	if m.Context != nil {
-		e.FieldStart("context")
-		m.Context.Encode(e)
+	if m.Max.IsSet() {
+		e.FieldStart("max")
+		m.Max.Value.Encode(e)
 	}
 	return nil
 }
 
-func (m *CommonRoleBindingFederationResponse) UnmarshalJSON(b []byte) error {
+func (m *TotalLocalDiskSizeLimitsSpecOptionalResponse) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *CommonRoleBindingFederationResponse) Decode(d *jx.Decoder) error {
+func (m *TotalLocalDiskSizeLimitsSpecOptionalResponse) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("CommonRoleBindingFederationResponse")
+		return conv.NewDecodeToNilError("TotalLocalDiskSizeLimitsSpecOptionalResponse")
 	}
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "id":
-			var v iam.UserFederationRef
+		case "min":
+			var v bytesize.ByteSize
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Id = v
+			m.Min.SetTo(v)
 			return nil
-		case "context":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
-			var v CommonRoleBindingFederationContextResponse
+		case "max":
+			var v bytesize.ByteSize
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Context = &v
+			m.Max.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

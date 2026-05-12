@@ -8,10 +8,10 @@ func CommonRoleBindingFederationRequestToResponse(request *CommonRoleBindingFede
 	}
 	var response CommonRoleBindingFederationResponse
 	response.Id = request.Id
-	tmpContext, err := CommonRoleBindingFederationContextRequestToResponse(&request.Context)
+	tmpContext, err := CommonRoleBindingFederationContextRequestToResponse(request.Context)
 	if err != nil {
 		return nil, err
 	}
-	response.Context = *tmpContext
+	response.Context = tmpContext
 	return &response, nil
 }
