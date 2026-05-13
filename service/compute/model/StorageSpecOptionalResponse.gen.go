@@ -7,11 +7,13 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Real OAPI model name: StorageSpec
 type StorageSpecOptionalResponse struct {
-	Disks []StorageDiskSpecOrRefWithAttachmentsOptionalResponse `json:"disks" yaml:"disks"`
+	Disks      []StorageDiskSpecOrRefWithAttachmentsOptionalResponse     `json:"disks" yaml:"disks"`
+	LocalDisks optional.Optional[[]StorageLocalDiskSpecOptionalResponse] `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
 }
 
 func (m *StorageSpecOptionalResponse) GetDisks() []StorageDiskSpecOrRefWithAttachmentsOptionalResponse {
@@ -25,6 +27,20 @@ func (m *StorageSpecOptionalResponse) SetDisks(val []StorageDiskSpecOrRefWithAtt
 	m.Disks = val
 }
 
+func (m *StorageSpecOptionalResponse) GetLocalDisks() []StorageLocalDiskSpecOptionalResponse {
+	if m != nil && m.LocalDisks.IsSet() {
+		return m.LocalDisks.Value
+	}
+	return nil
+}
+
+func (m *StorageSpecOptionalResponse) GetLocalDisksOr(val []StorageLocalDiskSpecOptionalResponse) []StorageLocalDiskSpecOptionalResponse {
+	if m != nil && m.LocalDisks.IsSet() {
+		return m.LocalDisks.Value
+	}
+	return val
+}
+
 func (m *StorageSpecOptionalResponse) Clone() *StorageSpecOptionalResponse {
 	if m == nil {
 		return nil
@@ -35,6 +51,12 @@ func (m *StorageSpecOptionalResponse) Clone() *StorageSpecOptionalResponse {
 		clone.Disks = make([]StorageDiskSpecOrRefWithAttachmentsOptionalResponse, len(m.Disks))
 		for i, v := range m.Disks {
 			clone.Disks[i] = *v.Clone()
+		}
+	}
+	if m.LocalDisks.Value != nil {
+		clone.LocalDisks.Value = make([]StorageLocalDiskSpecOptionalResponse, len(m.LocalDisks.Value))
+		for i, v := range m.LocalDisks.Value {
+			clone.LocalDisks.Value[i] = *v.Clone()
 		}
 	}
 	return &clone

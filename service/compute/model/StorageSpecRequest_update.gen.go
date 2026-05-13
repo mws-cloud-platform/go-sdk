@@ -13,7 +13,8 @@ import (
 )
 
 type UpdateStorageSpecRequest struct {
-	Disks optional.Optional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest] `json:"disks" yaml:"disks"`
+	Disks      optional.Optional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest] `json:"disks" yaml:"disks"`
+	LocalDisks optional.Optional[[]UpdateStorageLocalDiskSpecRequest]                `json:"localDisks" yaml:"localDisks"`
 }
 
 func (m *StorageSpecRequest) AsUpdateModel() UpdateStorageSpecRequest {
@@ -28,6 +29,18 @@ func (m *StorageSpecRequest) AsUpdateModel() UpdateStorageSpecRequest {
 		}
 		return tmp
 	}())
+	if m.LocalDisks != nil {
+		u.LocalDisks = optional.NewOptional(func() []UpdateStorageLocalDiskSpecRequest {
+			var tmp []UpdateStorageLocalDiskSpecRequest
+			if m.GetLocalDisks() != nil {
+				tmp = make([]UpdateStorageLocalDiskSpecRequest, 0, len(m.GetLocalDisks()))
+			}
+			for _, val := range m.GetLocalDisks() {
+				tmp = append(tmp, val.AsUpdateModel())
+			}
+			return tmp
+		}())
+	}
 	return u
 }
 
@@ -40,6 +53,10 @@ func (m *StorageSpecRequest) Diff(src *StorageSpecRequest) (UpdateStorageSpecReq
 		upd.Disks, err = m.diffDisks(src)
 		if err != nil {
 			return UpdateStorageSpecRequest{}, fmt.Errorf("Disks: %w", err)
+		}
+		upd.LocalDisks, err = m.diffLocalDisks(src)
+		if err != nil {
+			return UpdateStorageSpecRequest{}, fmt.Errorf("LocalDisks: %w", err)
 		}
 	}
 	return upd, nil
@@ -54,12 +71,16 @@ func (m *StorageSpecRequest) WithChanges(u UpdateStorageSpecRequest) StorageSpec
 	if u.Disks.IsSet() {
 		out.Disks = merge.Slice(out.Disks, u.Disks.Value, (*StorageDiskSpecOrRefWithAttachmentsRequest).WithChanges, (*StorageDiskSpecOrRefWithAttachmentsRequest).GetName, (*UpdateStorageDiskSpecOrRefWithAttachmentsRequest).GetName)
 	}
+	if u.LocalDisks.IsSet() {
+		out.LocalDisks = merge.Slice(out.LocalDisks, u.LocalDisks.Value, (*StorageLocalDiskSpecRequest).WithChanges, (*StorageLocalDiskSpecRequest).GetName, (*UpdateStorageLocalDiskSpecRequest).GetName)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateStorageSpecRequest) HasChanges() bool {
-	return m.Disks.Set
+	return m.Disks.Set ||
+		m.LocalDisks.Set
 }
 
 func (m *UpdateStorageSpecRequest) Parse(ctx context.Context) error {
@@ -93,6 +114,26 @@ func (m *StorageSpecRequest) diffDisks(src *StorageSpecRequest) (optional.Option
 		return optional.Optional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest]{}, err
 	}
 	return optional.Optional[[]UpdateStorageDiskSpecOrRefWithAttachmentsRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}, nil
+}
+
+func (m *StorageSpecRequest) diffLocalDisks(src *StorageSpecRequest) (optional.Optional[[]UpdateStorageLocalDiskSpecRequest], error) {
+	diffFunc := func(fromItem, toItem *StorageLocalDiskSpecRequest, fromNil bool) UpdateStorageLocalDiskSpecRequest {
+		if fromNil {
+			return toItem.Diff(nil)
+		}
+		return toItem.Diff(fromItem)
+	}
+	value, hasChanges, err := commonclient.GetChangesArrayObjectNamed(
+		commonclient.ToPointerArray(src.GetLocalDisks()),
+		commonclient.ToPointerArray(m.GetLocalDisks()),
+		diffFunc)
+	if err != nil {
+		return optional.Optional[[]UpdateStorageLocalDiskSpecRequest]{}, err
+	}
+	return optional.Optional[[]UpdateStorageLocalDiskSpecRequest]{
 		Value: value,
 		Set:   hasChanges,
 	}, nil

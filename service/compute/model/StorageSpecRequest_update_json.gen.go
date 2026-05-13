@@ -39,6 +39,15 @@ func (m *UpdateStorageSpecRequest) encodeFields(e *jx.Encoder) error {
 		}
 		e.ArrEnd()
 	}
+
+	if m.LocalDisks.IsSet() {
+		e.FieldStart("localDisks")
+		e.ArrStart()
+		for _, elem := range m.LocalDisks.Value {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
 	return nil
 }
 
@@ -67,6 +76,21 @@ func (m *UpdateStorageSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Disks.SetTo(c)
+			return nil
+		case "localDisks":
+			c := make([]UpdateStorageLocalDiskSpecRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v UpdateStorageLocalDiskSpecRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.LocalDisks.SetTo(c)
 			return nil
 		default:
 			return d.Skip()

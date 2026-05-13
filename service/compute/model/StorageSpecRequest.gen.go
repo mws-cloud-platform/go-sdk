@@ -11,7 +11,8 @@ import (
 
 // Real OAPI model name: StorageSpec
 type StorageSpecRequest struct {
-	Disks []StorageDiskSpecOrRefWithAttachmentsRequest `json:"disks" yaml:"disks"`
+	Disks      []StorageDiskSpecOrRefWithAttachmentsRequest `json:"disks" yaml:"disks"`
+	LocalDisks []StorageLocalDiskSpecRequest                `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
 }
 
 func (m *StorageSpecRequest) GetDisks() []StorageDiskSpecOrRefWithAttachmentsRequest {
@@ -25,6 +26,24 @@ func (m *StorageSpecRequest) SetDisks(val []StorageDiskSpecOrRefWithAttachmentsR
 	m.Disks = val
 }
 
+func (m *StorageSpecRequest) GetLocalDisks() []StorageLocalDiskSpecRequest {
+	if m != nil {
+		return m.LocalDisks
+	}
+	return nil
+}
+
+func (m *StorageSpecRequest) SetLocalDisks(val []StorageLocalDiskSpecRequest) {
+	m.LocalDisks = val
+}
+
+func (m *StorageSpecRequest) GetLocalDisksOr(val []StorageLocalDiskSpecRequest) []StorageLocalDiskSpecRequest {
+	if m != nil && m.LocalDisks != nil {
+		return m.LocalDisks
+	}
+	return val
+}
+
 func (m *StorageSpecRequest) Clone() *StorageSpecRequest {
 	if m == nil {
 		return nil
@@ -35,6 +54,12 @@ func (m *StorageSpecRequest) Clone() *StorageSpecRequest {
 		clone.Disks = make([]StorageDiskSpecOrRefWithAttachmentsRequest, len(m.Disks))
 		for i, v := range m.Disks {
 			clone.Disks[i] = *v.Clone()
+		}
+	}
+	if m.LocalDisks != nil {
+		clone.LocalDisks = make([]StorageLocalDiskSpecRequest, len(m.LocalDisks))
+		for i, v := range m.LocalDisks {
+			clone.LocalDisks[i] = *v.Clone()
 		}
 	}
 	return &clone

@@ -14,5 +14,12 @@ func StorageSpecRequestToOptionalResponse(request *StorageSpecRequest) (*Storage
 		}
 		response.Disks = append(response.Disks, *tmp)
 	}
+	for _, e := range request.LocalDisks {
+		tmp, err := StorageLocalDiskSpecRequestToOptionalResponse(&e)
+		if err != nil {
+			return nil, err
+		}
+		response.LocalDisks.SetTo(append(response.LocalDisks.Value, *tmp))
+	}
 	return &response, nil
 }
