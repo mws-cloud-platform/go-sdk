@@ -26,6 +26,14 @@ func (e Error) Is(err error) bool {
 	return errors.As(err, &Error{})
 }
 
+func (e Error) GetRequestID() string {
+	return e.RequestID
+}
+
+func (e Error) GetTraceID() string {
+	return e.TraceID
+}
+
 type ErrorWrapperSetter interface {
 	SetErrorWrapper(f func(error) error)
 }

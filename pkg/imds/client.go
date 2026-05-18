@@ -1,3 +1,4 @@
+// Package imds (Instance Metadata Service) provides helpers for reading Compute Engine instance metadata.
 package imds
 
 import (
@@ -24,15 +25,18 @@ const (
 	metadataFlavorValue  = "Google"
 )
 
+// HTTPClient is a minimal HTTP transport used by Client.
 type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
+// Client is an IMDS HTTP client configured via environment-aware defaults.
 type Client struct {
 	httpClient HTTPClient
 	env        env.Env
 }
 
+// NewClient creates a Client that uses the provided HTTP transport and environment source.
 func NewClient(client HTTPClient, env env.Env) Client {
 	return Client{
 		httpClient: client,
@@ -40,6 +44,13 @@ func NewClient(client HTTPClient, env env.Env) Client {
 	}
 }
 
+// GetWithContext fetches metadata value by key from IMDS.
+//
+// It uses defaults compatible with Compute metadata service and can be overridden via:
+//   - MWS_COMPUTE_METADATA_HOST
+//   - MWS_COMPUTE_METADATA_CLIENT_TIMEOUT
+//
+// Non-200 responses are returned as Error.
 func (p Client) GetWithContext(ctx context.Context, key string) (_ string, err error) {
 	host := metadataHost
 	if hostEnv, ok := p.env.LookupEnv(metadataHostEnv); ok {
@@ -93,11 +104,13 @@ func (p Client) GetWithContext(ctx context.Context, key string) (_ string, err e
 	return string(body), nil
 }
 
+// Error describes an IMDS response with non-OK status code.
 type Error struct {
 	Code    int
 	Message string
 }
 
+// Error formats IMDS HTTP error details.
 func (e Error) Error() string {
 	return fmt.Sprintf("%s (code: %d)", e.Message, e.Code)
 }
