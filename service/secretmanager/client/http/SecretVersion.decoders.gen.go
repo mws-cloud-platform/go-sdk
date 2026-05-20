@@ -28,7 +28,7 @@ func decodeAddSecretVersionResponse(resp *http.Response) (*client.AddSecretVersi
 		case "application/json":
 			result := &client.AddSecretVersionResponse{
 				Code:        resp.StatusCode,
-				Response201: &model.SecretVersionResponse{},
+				Response201: &model.SecretVersionOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {

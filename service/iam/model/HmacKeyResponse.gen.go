@@ -11,6 +11,7 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// HMAC-ключ (англ. Hash-based Message Authentication Code) — это статический ключ, необходимый для аутентификации сервисного аккаунта в AWS-совместимом API
 // Real OAPI model name: HmacKey
 type HmacKeyResponse struct {
 	Kind     *string                        `json:"kind,omitempty" yaml:"kind,omitempty"`

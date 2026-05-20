@@ -29,7 +29,7 @@ func (x *SecretVersionSugared) Impl() SecretVersion {
 // AddSecretVersion позволяет добавить новую версию указанного секрета.
 //
 // Путь: POST /secretmanager/v1/projects/{project}/secrets/{name}:addSecretVersion
-func (x *SecretVersionSugared) AddSecretVersion(ctx context.Context, request AddSecretVersionRequest) (*model.SecretVersionResponse, error) {
+func (x *SecretVersionSugared) AddSecretVersion(ctx context.Context, request AddSecretVersionRequest) (*model.SecretVersionOptionalResponse, error) {
 	resp, err := x.impl.AddSecretVersion(ctx, request)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (x *SecretVersionSugared) AddSecretVersion(ctx context.Context, request Add
 	return x.respHandlerAddSecretVersion(resp)
 }
 
-func (x *SecretVersionSugared) respHandlerAddSecretVersion(resp *AddSecretVersionResponse) (*model.SecretVersionResponse, error) {
+func (x *SecretVersionSugared) respHandlerAddSecretVersion(resp *AddSecretVersionResponse) (*model.SecretVersionOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}

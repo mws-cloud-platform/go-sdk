@@ -71,7 +71,7 @@ func (m *AddSecretVersionRequest) SetProject(project string) {
 
 type AddSecretVersionResponse struct {
 	Code        int
-	Response201 *model.SecretVersionResponse
+	Response201 *model.SecretVersionOptionalResponse
 	Response400 *common.ApiError
 	Response401 *common.ApiError
 	Response403 *common.ApiError
