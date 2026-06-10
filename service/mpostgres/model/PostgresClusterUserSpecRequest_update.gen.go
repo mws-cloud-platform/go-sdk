@@ -6,6 +6,7 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/internal/merge"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -17,6 +18,8 @@ type UpdatePostgresClusterUserSpecRequest struct {
 	//   - `DB_WRITER_USER`: Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
 	//   - `DB_READER_USER`: Пользовательская роль, наследует разрешения групповой роли db_reader.
 	Role optional.Optional[PostgresUserRole] `json:"role" yaml:"role"`
+	// Дополнительные роли пользователя
+	AdditionalRoles optional.Optional[[]UpdatePostgresUserAdditionalRoleRequest] `json:"additionalRoles" yaml:"additionalRoles"`
 }
 
 func (m *PostgresClusterUserSpecRequest) AsUpdateModel() UpdatePostgresClusterUserSpecRequest {
@@ -24,6 +27,18 @@ func (m *PostgresClusterUserSpecRequest) AsUpdateModel() UpdatePostgresClusterUs
 	u.Password = optional.NewOptional(m.GetPassword())
 	if m.Role != nil {
 		u.Role = optional.NewOptional(m.GetRoleOr(""))
+	}
+	if m.AdditionalRoles != nil {
+		u.AdditionalRoles = optional.NewOptional(func() []UpdatePostgresUserAdditionalRoleRequest {
+			var tmp []UpdatePostgresUserAdditionalRoleRequest
+			if m.GetAdditionalRoles() != nil {
+				tmp = make([]UpdatePostgresUserAdditionalRoleRequest, 0, len(m.GetAdditionalRoles()))
+			}
+			for _, val := range m.GetAdditionalRoles() {
+				tmp = append(tmp, val.AsUpdateModel())
+			}
+			return tmp
+		}())
 	}
 	return u
 }
@@ -35,6 +50,7 @@ func (m *PostgresClusterUserSpecRequest) Diff(src *PostgresClusterUserSpecReques
 	if !nilDiffers {
 		upd.Password = m.diffPassword(src)
 		upd.Role = m.diffRole(src)
+		upd.AdditionalRoles = m.diffAdditionalRoles(src)
 	}
 	return upd
 }
@@ -51,13 +67,17 @@ func (m *PostgresClusterUserSpecRequest) WithChanges(u UpdatePostgresClusterUser
 	if u.Role.IsSet() {
 		out.Role = ptr.Get(u.Role.Value)
 	}
+	if u.AdditionalRoles.IsSet() {
+		out.AdditionalRoles = merge.InapplicableSlice(u.AdditionalRoles.Value, (*PostgresUserAdditionalRoleRequest).WithChanges)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdatePostgresClusterUserSpecRequest) HasChanges() bool {
 	return m.Password.Set ||
-		m.Role.Set
+		m.Role.Set ||
+		m.AdditionalRoles.Set
 }
 
 func (m *PostgresClusterUserSpecRequest) diffPassword(src *PostgresClusterUserSpecRequest) optional.Optional[string] {
@@ -68,4 +88,18 @@ func (m *PostgresClusterUserSpecRequest) diffPassword(src *PostgresClusterUserSp
 func (m *PostgresClusterUserSpecRequest) diffRole(src *PostgresClusterUserSpecRequest) optional.Optional[PostgresUserRole] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetRole(), m.GetRole(), nilDiffers)
+}
+
+func (m *PostgresClusterUserSpecRequest) diffAdditionalRoles(src *PostgresClusterUserSpecRequest) optional.Optional[[]UpdatePostgresUserAdditionalRoleRequest] {
+	diffFunc := func(fromItem, toItem PostgresUserAdditionalRoleRequest, fromNil bool) UpdatePostgresUserAdditionalRoleRequest {
+		if fromNil {
+			return toItem.Diff(nil)
+		}
+		return toItem.Diff(&fromItem)
+	}
+	value, hasChanges := commonclient.GetChangesArrayObject(src.GetAdditionalRoles(), m.GetAdditionalRoles(), diffFunc)
+	return optional.Optional[[]UpdatePostgresUserAdditionalRoleRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

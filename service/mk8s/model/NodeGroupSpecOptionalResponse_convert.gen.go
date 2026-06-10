@@ -85,7 +85,7 @@ func NodeGroupSpecScaleRequestToOptionalResponse(request *NodeGroupSpecScaleRequ
 	}
 	var response NodeGroupSpecScaleOptionalResponse
 	if request.Fixed != nil {
-		response.Fixed = optional.NewOptional(*request.Fixed)
+		response.Fixed = optional.NewOptionalNil(*request.Fixed)
 	}
 	if request.Autoscaling != nil {
 		tmpAutoscaling, err := NodeGroupSpecScaleAutoscalingRequestToOptionalResponse(request.Autoscaling)
@@ -121,9 +121,7 @@ func NodeGroupSpecSubnetRequestToOptionalResponse(request *NodeGroupSpecSubnetRe
 		return nil, nil
 	}
 	var response NodeGroupSpecSubnetOptionalResponse
-	if request.Ref != nil {
-		response.Ref = optional.NewOptional(*request.Ref)
-	}
+	response.Ref = request.Ref
 	return &response, nil
 }
 
@@ -132,8 +130,6 @@ func NodeGroupSpecVmTypeRequestToOptionalResponse(request *NodeGroupSpecVmTypeRe
 		return nil, nil
 	}
 	var response NodeGroupSpecVmTypeOptionalResponse
-	if request.Ref != nil {
-		response.Ref = optional.NewOptional(*request.Ref)
-	}
+	response.Ref = request.Ref
 	return &response, nil
 }

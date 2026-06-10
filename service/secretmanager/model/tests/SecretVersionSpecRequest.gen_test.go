@@ -24,6 +24,5 @@ func TestSecretVersionSpecRequestMarshalling(t *testing.T) {
 
 func initSecretVersionSpecRequest() model.SecretVersionSpecRequest {
 	var v model.SecretVersionSpecRequest
-	v.Data = make(map[string]string)
 	return v
 }

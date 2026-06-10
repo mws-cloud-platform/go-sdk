@@ -16,9 +16,10 @@ type PostgresEndpointResponse struct {
 	// Имя эндпойнта.
 	Name string `json:"name" yaml:"name"`
 	// Идентификатор пользовательской сети (VPC).
-	Network           vpc.NetworkRef                   `json:"network" yaml:"network"`
-	PrimaryAddresses  []PostgresNetworkAddressResponse `json:"primaryAddresses" yaml:"primaryAddresses"`
-	ReadOnlyAddresses []PostgresNetworkAddressResponse `json:"readOnlyAddresses,omitempty" yaml:"readOnlyAddresses,omitempty"`
+	Network           vpc.NetworkRef                         `json:"network" yaml:"network"`
+	PrimaryAddresses  []PostgresNetworkAddressResponse       `json:"primaryAddresses" yaml:"primaryAddresses"`
+	ReadOnlyAddresses []PostgresNetworkAddressResponse       `json:"readOnlyAddresses,omitempty" yaml:"readOnlyAddresses,omitempty"`
+	DirectAddresses   []PostgresNetworkDirectAddressResponse `json:"directAddresses,omitempty" yaml:"directAddresses,omitempty"`
 }
 
 func (m *PostgresEndpointResponse) GetName() string {
@@ -72,6 +73,24 @@ func (m *PostgresEndpointResponse) GetReadOnlyAddressesOr(val []PostgresNetworkA
 	return val
 }
 
+func (m *PostgresEndpointResponse) GetDirectAddresses() []PostgresNetworkDirectAddressResponse {
+	if m != nil {
+		return m.DirectAddresses
+	}
+	return nil
+}
+
+func (m *PostgresEndpointResponse) SetDirectAddresses(val []PostgresNetworkDirectAddressResponse) {
+	m.DirectAddresses = val
+}
+
+func (m *PostgresEndpointResponse) GetDirectAddressesOr(val []PostgresNetworkDirectAddressResponse) []PostgresNetworkDirectAddressResponse {
+	if m != nil && m.DirectAddresses != nil {
+		return m.DirectAddresses
+	}
+	return val
+}
+
 func (m *PostgresEndpointResponse) Clone() *PostgresEndpointResponse {
 	if m == nil {
 		return nil
@@ -89,6 +108,12 @@ func (m *PostgresEndpointResponse) Clone() *PostgresEndpointResponse {
 		clone.ReadOnlyAddresses = make([]PostgresNetworkAddressResponse, len(m.ReadOnlyAddresses))
 		for i, v := range m.ReadOnlyAddresses {
 			clone.ReadOnlyAddresses[i] = *v.Clone()
+		}
+	}
+	if m.DirectAddresses != nil {
+		clone.DirectAddresses = make([]PostgresNetworkDirectAddressResponse, len(m.DirectAddresses))
+		for i, v := range m.DirectAddresses {
+			clone.DirectAddresses[i] = *v.Clone()
 		}
 	}
 	return &clone
@@ -112,6 +137,12 @@ func (m *PostgresEndpointResponse) Parse(ctx context.Context) error {
 	for index := range m.ReadOnlyAddresses {
 		if err := m.ReadOnlyAddresses[index].Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("ReadOnlyAddresses"+fmt.Sprint("[", index, "]"), err)
+		}
+	}
+
+	for index := range m.DirectAddresses {
+		if err := m.DirectAddresses[index].Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("DirectAddresses"+fmt.Sprint("[", index, "]"), err)
 		}
 	}
 

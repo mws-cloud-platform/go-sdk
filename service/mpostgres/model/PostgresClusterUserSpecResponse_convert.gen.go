@@ -8,5 +8,12 @@ func PostgresClusterUserSpecRequestToResponse(request *PostgresClusterUserSpecRe
 	}
 	var response PostgresClusterUserSpecResponse
 	response.Role = request.Role
+	for _, e := range request.AdditionalRoles {
+		tmp, err := PostgresUserAdditionalRoleRequestToResponse(&e)
+		if err != nil {
+			return nil, err
+		}
+		response.AdditionalRoles = append(response.AdditionalRoles, *tmp)
+	}
 	return &response, nil
 }

@@ -17,7 +17,7 @@ import (
 )
 
 type Image interface {
-	// LatestImage позволяет получить latest образ.
+	// LatestImage позволяет получить последний созданный образ в рамках проекта и семейства.
 	//
 	// Путь: GET /compute/v1/projects/{project}/images:latest
 	LatestImage(context.Context, LatestImageRequest) (*LatestImageResponse, error)

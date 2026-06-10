@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/compute/client"
 )
 
-// LatestImage позволяет получить latest образ.
+// LatestImage позволяет получить последний созданный образ в рамках проекта и семейства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /compute/v1/projects/{project}/images:latest

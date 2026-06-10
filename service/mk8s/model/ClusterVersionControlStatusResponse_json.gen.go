@@ -62,6 +62,10 @@ func (m *ClusterVersionControlStatusResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "releaseChannel":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Str(d)
 			if err != nil {
 				return err
@@ -70,6 +74,10 @@ func (m *ClusterVersionControlStatusResponse) Decode(d *jx.Decoder) error {
 			m.ReleaseChannel = &v
 			return nil
 		case "version":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Str(d)
 			if err != nil {
 				return err

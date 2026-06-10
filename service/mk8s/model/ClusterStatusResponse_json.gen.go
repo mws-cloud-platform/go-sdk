@@ -79,6 +79,10 @@ func (m *ClusterStatusResponse) Decode(d *jx.Decoder) error {
 			m.Ready = v
 			return nil
 		case "clusterCaCertificate":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := d.Base64()
 			if err != nil {
 				return err
@@ -174,6 +178,10 @@ func (m *ClusterStatusClusterStatusResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "state":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			var v ClusterStatusClusterStatusStateResponse
 			if err := v.Decode(d); err != nil {
 				return err
@@ -182,6 +190,10 @@ func (m *ClusterStatusClusterStatusResponse) Decode(d *jx.Decoder) error {
 			m.State = &v
 			return nil
 		case "message":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Str(d)
 			if err != nil {
 				return err
@@ -332,6 +344,10 @@ func (m *ClusterStatusNetworkResponse) Decode(d *jx.Decoder) error {
 			m.PrimaryEndpoint = &v
 			return nil
 		case "primaryAddress":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			var v ipaddress.IP4Address
 			if err := v.Decode(d); err != nil {
 				return err
@@ -352,6 +368,10 @@ func (m *ClusterStatusNetworkResponse) Decode(d *jx.Decoder) error {
 			m.PublicEndpoint = &v
 			return nil
 		case "publicAddress":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			var v ipaddress.IP4Address
 			if err := v.Decode(d); err != nil {
 				return err
@@ -387,10 +407,8 @@ func (m *ClusterStatusNetworkPrimaryEndpointResponse) Encode(e *jx.Encoder) erro
 }
 
 func (m *ClusterStatusNetworkPrimaryEndpointResponse) encodeFields(e *jx.Encoder) error {
-	if m.Ref != nil {
-		e.FieldStart("ref")
-		m.Ref.Encode(e)
-	}
+	e.FieldStart("ref")
+	m.Ref.Encode(e)
 	return nil
 }
 
@@ -411,7 +429,7 @@ func (m *ClusterStatusNetworkPrimaryEndpointResponse) Decode(d *jx.Decoder) erro
 				return err
 			}
 
-			m.Ref = &v
+			m.Ref = v
 			return nil
 		default:
 			return d.Skip()
@@ -441,10 +459,8 @@ func (m *ClusterStatusNetworkPublicEndpointResponse) Encode(e *jx.Encoder) error
 }
 
 func (m *ClusterStatusNetworkPublicEndpointResponse) encodeFields(e *jx.Encoder) error {
-	if m.Ref != nil {
-		e.FieldStart("ref")
-		m.Ref.Encode(e)
-	}
+	e.FieldStart("ref")
+	m.Ref.Encode(e)
 	return nil
 }
 
@@ -465,7 +481,7 @@ func (m *ClusterStatusNetworkPublicEndpointResponse) Decode(d *jx.Decoder) error
 				return err
 			}
 
-			m.Ref = &v
+			m.Ref = v
 			return nil
 		default:
 			return d.Skip()
@@ -495,10 +511,8 @@ func (m *ClusterStatusNetworkSubnetResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *ClusterStatusNetworkSubnetResponse) encodeFields(e *jx.Encoder) error {
-	if m.Ref != nil {
-		e.FieldStart("ref")
-		m.Ref.Encode(e)
-	}
+	e.FieldStart("ref")
+	m.Ref.Encode(e)
 	return nil
 }
 
@@ -519,7 +533,7 @@ func (m *ClusterStatusNetworkSubnetResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ref = &v
+			m.Ref = v
 			return nil
 		default:
 			return d.Skip()
@@ -549,10 +563,8 @@ func (m *ClusterStatusNetworkVpcNetworkResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *ClusterStatusNetworkVpcNetworkResponse) encodeFields(e *jx.Encoder) error {
-	if m.Ref != nil {
-		e.FieldStart("ref")
-		m.Ref.Encode(e)
-	}
+	e.FieldStart("ref")
+	m.Ref.Encode(e)
 	return nil
 }
 
@@ -573,7 +585,7 @@ func (m *ClusterStatusNetworkVpcNetworkResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ref = &v
+			m.Ref = v
 			return nil
 		default:
 			return d.Skip()

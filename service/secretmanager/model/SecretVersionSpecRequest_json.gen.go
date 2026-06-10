@@ -37,8 +37,10 @@ func (m *SecretVersionSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.Bool(*m.Active)
 	}
 
-	e.FieldStart("data")
-	m.Data.Encode(e)
+	if m.Data != nil {
+		e.FieldStart("data")
+		m.Data.Encode(e)
+	}
 	return nil
 }
 
@@ -51,10 +53,7 @@ func (m *SecretVersionSpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("SecretVersionSpecRequest")
 	}
 
-	requiredFilled := map[string]bool{
-		"data": false,
-	}
-	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "active":
 			v, err := decode.Bool(d)
@@ -71,15 +70,9 @@ func (m *SecretVersionSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Data = v
-			requiredFilled["data"] = true
 			return nil
 		default:
 			return d.Skip()
 		}
 	}))
-	if err != nil {
-		return err
-	}
-
-	return conv.ValidateRequired(requiredFilled)
 }

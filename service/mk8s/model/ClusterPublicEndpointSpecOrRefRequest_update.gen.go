@@ -14,7 +14,7 @@ import (
 )
 
 type UpdateClusterPublicEndpointSpecOrRefRequest struct {
-	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
+	Ref optional.OptionalNil[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
 	// Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
 	Spec optional.OptionalNil[UpdateClusterPublicEndpointSpecRequest] `json:"spec" yaml:"spec"`
 }
@@ -22,7 +22,7 @@ type UpdateClusterPublicEndpointSpecOrRefRequest struct {
 func (m *ClusterPublicEndpointSpecOrRefRequest) AsUpdateModel() UpdateClusterPublicEndpointSpecOrRefRequest {
 	var u UpdateClusterPublicEndpointSpecOrRefRequest
 	if m.Ref != nil {
-		u.Ref = optional.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
+		u.Ref = optional.NewOptionalNil(m.GetRefOr(vpc.ExternalAddressRef{}))
 	}
 	if m.Spec != nil {
 		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
@@ -49,6 +49,8 @@ func (m *ClusterPublicEndpointSpecOrRefRequest) WithChanges(u UpdateClusterPubli
 
 	if u.Ref.IsSet() {
 		out.Ref = ptr.Get(u.Ref.Value)
+	} else if u.Ref.IsNull() {
+		out.Ref = nil
 	}
 	if u.Spec.IsSet() {
 		out.Spec = ptr.Get(out.Spec.WithChanges(u.Spec.Value))
@@ -78,9 +80,9 @@ func (m *UpdateClusterPublicEndpointSpecOrRefRequest) Parse(ctx context.Context)
 	return nil
 }
 
-func (m *ClusterPublicEndpointSpecOrRefRequest) diffRef(src *ClusterPublicEndpointSpecOrRefRequest) optional.Optional[vpc.ExternalAddressRef] {
+func (m *ClusterPublicEndpointSpecOrRefRequest) diffRef(src *ClusterPublicEndpointSpecOrRefRequest) optional.OptionalNil[vpc.ExternalAddressRef] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
+	return commonclient.DiffPrimitiveNullable(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
 func (m *ClusterPublicEndpointSpecOrRefRequest) diffSpec(src *ClusterPublicEndpointSpecOrRefRequest) optional.OptionalNil[UpdateClusterPublicEndpointSpecRequest] {

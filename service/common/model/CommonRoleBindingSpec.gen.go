@@ -7,12 +7,15 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
+	"go.mws.cloud/go-sdk/service/resources/references/support"
 )
 
 type CommonRoleBindingSpec struct {
 	Subject CommonRoleBindingSpecSubject `json:"subject" yaml:"subject"`
 	// Роль, определяющая права субъекта на ресурс
 	Role iam.RoleRef `json:"role" yaml:"role"`
+	// Идентификатор запроса в службу поддержки, в рамках которого был создан биндинг
+	SupportRequestId *support.RequestIDRef `json:"supportRequestId,omitempty" yaml:"supportRequestId,omitempty"`
 }
 
 func (m *CommonRoleBindingSpec) GetSubject() CommonRoleBindingSpecSubject {
@@ -37,6 +40,24 @@ func (m *CommonRoleBindingSpec) SetRole(val iam.RoleRef) {
 	m.Role = val
 }
 
+func (m *CommonRoleBindingSpec) GetSupportRequestId() *support.RequestIDRef {
+	if m != nil {
+		return m.SupportRequestId
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpec) SetSupportRequestId(val *support.RequestIDRef) {
+	m.SupportRequestId = val
+}
+
+func (m *CommonRoleBindingSpec) GetSupportRequestIdOr(val support.RequestIDRef) support.RequestIDRef {
+	if m != nil && m.SupportRequestId != nil {
+		return *m.SupportRequestId
+	}
+	return val
+}
+
 func (m *CommonRoleBindingSpec) Clone() *CommonRoleBindingSpec {
 	if m == nil {
 		return nil
@@ -45,6 +66,7 @@ func (m *CommonRoleBindingSpec) Clone() *CommonRoleBindingSpec {
 	clone := *m
 	clone.Subject = *m.Subject.Clone()
 	clone.Role = *m.Role.Clone()
+	clone.SupportRequestId = m.SupportRequestId.Clone()
 	return &clone
 }
 
@@ -59,6 +81,10 @@ func (m *CommonRoleBindingSpec) Parse(ctx context.Context) error {
 
 	if err := m.Role.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Role", err)
+	}
+
+	if err := m.SupportRequestId.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("SupportRequestId", err)
 	}
 
 	return nil

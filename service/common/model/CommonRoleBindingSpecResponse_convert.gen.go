@@ -13,5 +13,6 @@ func CommonRoleBindingSpecRequestToResponse(request *CommonRoleBindingSpecReques
 	}
 	response.Subject = *tmpSubject
 	response.Role = request.Role
+	response.SupportRequestId = request.SupportRequestId
 	return &response, nil
 }

@@ -13,7 +13,7 @@ import (
 // ip-адрес внутри vpc
 // Real OAPI model name: ClusterPrimaryEndpointSpecOrRef
 type ClusterPrimaryEndpointSpecOrRefOptionalResponse struct {
-	Ref optional.Optional[vpc.AddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref optional.OptionalNil[vpc.AddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Описание subnet пользователя, из которого будет выделен ip-адрес
 	Spec optional.OptionalNil[ClusterPrimaryEndpointSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }

@@ -303,7 +303,11 @@ func (m *UpdateNodeGroupSpecScaleRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateNodeGroupSpecScaleRequest) encodeFields(e *jx.Encoder) error {
 	if m.Fixed.IsSet() {
 		e.FieldStart("fixed")
-		e.Int(m.Fixed.Value)
+		if m.Fixed.IsNull() {
+			e.Null()
+		} else {
+			e.Int(m.Fixed.Value)
+		}
 	}
 
 	if m.Autoscaling.IsSet() {
@@ -329,6 +333,11 @@ func (m *UpdateNodeGroupSpecScaleRequest) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "fixed":
+			if d.Next() == jx.Null {
+				m.Fixed.SetToNull()
+				return d.Null()
+			}
+
 			v, err := decode.Int(d)
 			if err != nil {
 				return err

@@ -12,7 +12,7 @@ func ClusterPrimaryEndpointSpecOrRefRequestToOptionalResponse(request *ClusterPr
 	}
 	var response ClusterPrimaryEndpointSpecOrRefOptionalResponse
 	if request.Ref != nil {
-		response.Ref = optional.NewOptional(*request.Ref)
+		response.Ref = optional.NewOptionalNil(*request.Ref)
 	}
 	if request.Spec != nil {
 		tmpSpec, err := ClusterPrimaryEndpointSpecRequestToOptionalResponse(request.Spec)

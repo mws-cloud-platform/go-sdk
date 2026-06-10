@@ -5,22 +5,30 @@ package model
 import (
 	"context"
 
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
+	"go.mws.cloud/go-sdk/service/resources/references/support"
 )
 
 type UpdateCommonRoleBindingSpecRequest struct {
 	Subject optional.Optional[UpdateCommonRoleBindingSpecSubjectRequest] `json:"subject" yaml:"subject"`
 	// Роль, определяющая права субъекта на ресурс
 	Role optional.Optional[iam.RoleRef] `json:"role" yaml:"role"`
+	// Идентификатор запроса в службу поддержки, в рамках которого был создан биндинг
+	SupportRequestId optional.Optional[support.RequestIDRef] `json:"supportRequestId" yaml:"supportRequestId"`
 }
 
 func (m *CommonRoleBindingSpecRequest) AsUpdateModel() UpdateCommonRoleBindingSpecRequest {
 	var u UpdateCommonRoleBindingSpecRequest
 	u.Subject = optional.NewOptional(m.Subject.AsUpdateModel())
 	u.Role = optional.NewOptional(m.GetRole())
+	if m.SupportRequestId != nil {
+		u.SupportRequestId = optional.NewOptional(m.GetSupportRequestIdOr(support.RequestIDRef{}))
+	}
 	return u
 }
 
@@ -31,6 +39,7 @@ func (m *CommonRoleBindingSpecRequest) Diff(src *CommonRoleBindingSpecRequest) U
 	if !nilDiffers {
 		upd.Subject = m.diffSubject(src)
 		upd.Role = m.diffRole(src)
+		upd.SupportRequestId = m.diffSupportRequestId(src)
 	}
 	return upd
 }
@@ -47,13 +56,17 @@ func (m *CommonRoleBindingSpecRequest) WithChanges(u UpdateCommonRoleBindingSpec
 	if u.Role.IsSet() {
 		out.Role = u.Role.Value
 	}
+	if u.SupportRequestId.IsSet() {
+		out.SupportRequestId = ptr.Get(u.SupportRequestId.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateCommonRoleBindingSpecRequest) HasChanges() bool {
 	return m.Subject.Set ||
-		m.Role.Set
+		m.Role.Set ||
+		m.SupportRequestId.Set
 }
 
 func (m *UpdateCommonRoleBindingSpecRequest) Parse(ctx context.Context) error {
@@ -73,6 +86,12 @@ func (m *UpdateCommonRoleBindingSpecRequest) Parse(ctx context.Context) error {
 		}
 	}
 
+	if m.SupportRequestId.IsSet() {
+		if err := m.SupportRequestId.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("SupportRequestId", err)
+		}
+	}
+
 	return nil
 }
 
@@ -89,4 +108,9 @@ func (m *CommonRoleBindingSpecRequest) diffSubject(src *CommonRoleBindingSpecReq
 func (m *CommonRoleBindingSpecRequest) diffRole(src *CommonRoleBindingSpecRequest) optional.Optional[iam.RoleRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetRole(), m.GetRole(), nilDiffers)
+}
+
+func (m *CommonRoleBindingSpecRequest) diffSupportRequestId(src *CommonRoleBindingSpecRequest) optional.Optional[support.RequestIDRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetSupportRequestId(), m.GetSupportRequestId(), nilDiffers)
 }

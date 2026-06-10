@@ -37,8 +37,10 @@ func (m *CreateSecretWithSecretVersionRequest) encodeFields(e *jx.Encoder) error
 		e.Bool(*m.Active)
 	}
 
-	e.FieldStart("data")
-	m.Data.Encode(e)
+	if m.Data != nil {
+		e.FieldStart("data")
+		m.Data.Encode(e)
+	}
 	if m.Encryption != nil {
 		e.FieldStart("encryption")
 		m.Encryption.Encode(e)
@@ -55,10 +57,7 @@ func (m *CreateSecretWithSecretVersionRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("CreateSecretWithSecretVersionRequest")
 	}
 
-	requiredFilled := map[string]bool{
-		"data": false,
-	}
-	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "active":
 			v, err := decode.Bool(d)
@@ -75,7 +74,6 @@ func (m *CreateSecretWithSecretVersionRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Data = v
-			requiredFilled["data"] = true
 			return nil
 		case "encryption":
 			if d.Next() == jx.Null {
@@ -93,9 +91,4 @@ func (m *CreateSecretWithSecretVersionRequest) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}))
-	if err != nil {
-		return err
-	}
-
-	return conv.ValidateRequired(requiredFilled)
 }

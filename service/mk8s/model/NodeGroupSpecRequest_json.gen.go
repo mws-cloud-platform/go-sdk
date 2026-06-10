@@ -348,6 +348,10 @@ func (m *NodeGroupSpecScaleRequest) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "fixed":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Int(d)
 			if err != nil {
 				return err
@@ -530,10 +534,8 @@ func (m *NodeGroupSpecSubnetRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *NodeGroupSpecSubnetRequest) encodeFields(e *jx.Encoder) error {
-	if m.Ref != nil {
-		e.FieldStart("ref")
-		m.Ref.Encode(e)
-	}
+	e.FieldStart("ref")
+	m.Ref.Encode(e)
 	return nil
 }
 
@@ -546,7 +548,10 @@ func (m *NodeGroupSpecSubnetRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("NodeGroupSpecSubnetRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	requiredFilled := map[string]bool{
+		"ref": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "ref":
 			var v vpc.SubnetRef
@@ -554,12 +559,18 @@ func (m *NodeGroupSpecSubnetRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ref = &v
+			m.Ref = v
+			requiredFilled["ref"] = true
 			return nil
 		default:
 			return d.Skip()
 		}
 	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }
 
 func (m NodeGroupSpecVmTypeRequest) MarshalJSON() ([]byte, error) {
@@ -584,10 +595,8 @@ func (m *NodeGroupSpecVmTypeRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *NodeGroupSpecVmTypeRequest) encodeFields(e *jx.Encoder) error {
-	if m.Ref != nil {
-		e.FieldStart("ref")
-		m.Ref.Encode(e)
-	}
+	e.FieldStart("ref")
+	m.Ref.Encode(e)
 	return nil
 }
 
@@ -600,7 +609,10 @@ func (m *NodeGroupSpecVmTypeRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("NodeGroupSpecVmTypeRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	requiredFilled := map[string]bool{
+		"ref": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "ref":
 			var v compute.VmTypeRef
@@ -608,10 +620,16 @@ func (m *NodeGroupSpecVmTypeRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ref = &v
+			m.Ref = v
+			requiredFilled["ref"] = true
 			return nil
 		default:
 			return d.Skip()
 		}
 	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

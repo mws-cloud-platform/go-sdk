@@ -39,6 +39,8 @@ type ListGlobalRoleV2Request struct {
 	OrderBy *string // query: "orderBy"
 	// Вывод удаленных объектов для ресурсов, поддерживающих soft delete
 	ShowDeleted *string // query: "showDeleted"
+	// Тип ролей
+	Type *string // query: "type"
 }
 
 func (m *ListGlobalRoleV2Request) SetAuthorization(authorization string) {

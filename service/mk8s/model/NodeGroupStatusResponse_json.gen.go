@@ -145,6 +145,10 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			m.VmType = &v
 			return nil
 		case "cpu":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Str(d)
 			if err != nil {
 				return err
@@ -153,6 +157,10 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			m.Cpu = &v
 			return nil
 		case "memory":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			var v bytesize.ByteSize
 			if err := v.Decode(d); err != nil {
 				return err
@@ -161,6 +169,10 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			m.Memory = &v
 			return nil
 		case "imageStorageSize":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			var v bytesize.ByteSize
 			if err := v.Decode(d); err != nil {
 				return err
@@ -169,6 +181,10 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			m.ImageStorageSize = &v
 			return nil
 		case "imageStorageIops":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Int64(d)
 			if err != nil {
 				return err
@@ -189,6 +205,10 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			m.Scale = &v
 			return nil
 		case "nodesReady":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Int(d)
 			if err != nil {
 				return err
@@ -197,6 +217,10 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			m.NodesReady = &v
 			return nil
 		case "labels":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			c := make([]NodeLabelSpecResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
 				var v NodeLabelSpecResponse
@@ -212,6 +236,10 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			m.Labels = c
 			return nil
 		case "taints":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			c := make([]NodeTaintSpecResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
 				var v NodeTaintSpecResponse
@@ -326,6 +354,10 @@ func (m *NodeGroupStatusNodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "state":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			var v NodeGroupStatusNodeGroupStatusStateResponse
 			if err := v.Decode(d); err != nil {
 				return err
@@ -334,6 +366,10 @@ func (m *NodeGroupStatusNodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			m.State = &v
 			return nil
 		case "message":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Str(d)
 			if err != nil {
 				return err
@@ -404,15 +440,11 @@ func (m *NodeGroupStatusRolloutStrategyResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *NodeGroupStatusRolloutStrategyResponse) encodeFields(e *jx.Encoder) error {
-	if m.MaxSurge != nil {
-		e.FieldStart("maxSurge")
-		e.Int(*m.MaxSurge)
-	}
+	e.FieldStart("maxSurge")
+	e.Int(m.MaxSurge)
 
-	if m.MaxUnavailable != nil {
-		e.FieldStart("maxUnavailable")
-		e.Int(*m.MaxUnavailable)
-	}
+	e.FieldStart("maxUnavailable")
+	e.Int(m.MaxUnavailable)
 	return nil
 }
 
@@ -433,7 +465,7 @@ func (m *NodeGroupStatusRolloutStrategyResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.MaxSurge = &v
+			m.MaxSurge = v
 			return nil
 		case "maxUnavailable":
 			v, err := decode.Int(d)
@@ -441,7 +473,7 @@ func (m *NodeGroupStatusRolloutStrategyResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.MaxUnavailable = &v
+			m.MaxUnavailable = v
 			return nil
 		default:
 			return d.Skip()
@@ -495,6 +527,10 @@ func (m *NodeGroupStatusScaleResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "fixed":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Int(d)
 			if err != nil {
 				return err
@@ -542,15 +578,11 @@ func (m *NodeGroupStatusScaleAutoscalingResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *NodeGroupStatusScaleAutoscalingResponse) encodeFields(e *jx.Encoder) error {
-	if m.Min != nil {
-		e.FieldStart("min")
-		e.Int(*m.Min)
-	}
+	e.FieldStart("min")
+	e.Int(m.Min)
 
-	if m.Max != nil {
-		e.FieldStart("max")
-		e.Int(*m.Max)
-	}
+	e.FieldStart("max")
+	e.Int(m.Max)
 	return nil
 }
 
@@ -571,7 +603,7 @@ func (m *NodeGroupStatusScaleAutoscalingResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Min = &v
+			m.Min = v
 			return nil
 		case "max":
 			v, err := decode.Int(d)
@@ -579,7 +611,7 @@ func (m *NodeGroupStatusScaleAutoscalingResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Max = &v
+			m.Max = v
 			return nil
 		default:
 			return d.Skip()
@@ -609,10 +641,8 @@ func (m *NodeGroupStatusServiceAccountResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *NodeGroupStatusServiceAccountResponse) encodeFields(e *jx.Encoder) error {
-	if m.Ref != nil {
-		e.FieldStart("ref")
-		m.Ref.Encode(e)
-	}
+	e.FieldStart("ref")
+	m.Ref.Encode(e)
 	return nil
 }
 
@@ -633,7 +663,7 @@ func (m *NodeGroupStatusServiceAccountResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ref = &v
+			m.Ref = v
 			return nil
 		default:
 			return d.Skip()
@@ -663,10 +693,8 @@ func (m *NodeGroupStatusVmTypeResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *NodeGroupStatusVmTypeResponse) encodeFields(e *jx.Encoder) error {
-	if m.Ref != nil {
-		e.FieldStart("ref")
-		m.Ref.Encode(e)
-	}
+	e.FieldStart("ref")
+	m.Ref.Encode(e)
 	return nil
 }
 
@@ -687,7 +715,7 @@ func (m *NodeGroupStatusVmTypeResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ref = &v
+			m.Ref = v
 			return nil
 		default:
 			return d.Skip()

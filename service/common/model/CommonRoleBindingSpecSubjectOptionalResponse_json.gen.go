@@ -60,6 +60,11 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) encodeFields(e *jx.Encode
 		e.FieldStart("userGroup")
 		m.UserGroup.Value.Encode(e)
 	}
+
+	if m.Employee.IsSet() {
+		e.FieldStart("employee")
+		m.Employee.Value.Encode(e)
+	}
 	return nil
 }
 
@@ -118,6 +123,14 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) Decode(d *jx.Decoder) err
 			}
 
 			m.UserGroup.SetTo(v)
+			return nil
+		case "employee":
+			var v iam.EmployeeRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Employee.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

@@ -26,7 +26,7 @@ func (x *ImageSugared) Impl() Image {
 	return x.impl
 }
 
-// LatestImage позволяет получить latest образ.
+// LatestImage позволяет получить последний созданный образ в рамках проекта и семейства.
 //
 // Путь: GET /compute/v1/projects/{project}/images:latest
 func (x *ImageSugared) LatestImage(ctx context.Context, request LatestImageRequest, opts ...Option) (*model.ImageOptionalResponse, error) {

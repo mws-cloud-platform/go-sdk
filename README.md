@@ -20,6 +20,7 @@ MWS Cloud Platform SDK for Go.
 		- [IAM Token](#iam-token)
 		- [Service Account Authorized Key](#service-account-authorized-key)
 		- [Custom Credentials Provider](#custom-credentials-provider)
+		- [Instance Metadata Service](#instance-metadata-service)
 	- [Examples](#examples)
 	- [Documentation](#documentation)
 	- [Get Help](#get-help)

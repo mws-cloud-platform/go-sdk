@@ -60,6 +60,15 @@ func (m *UpdatePostgresEndpointRequest) encodeFields(e *jx.Encoder) error {
 		}
 		e.ArrEnd()
 	}
+
+	if m.DirectAddresses.IsSet() {
+		e.FieldStart("directAddresses")
+		e.ArrStart()
+		for _, elem := range m.DirectAddresses.Value {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
 	return nil
 }
 
@@ -119,6 +128,21 @@ func (m *UpdatePostgresEndpointRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.ReadOnlyAddresses.SetTo(c)
+			return nil
+		case "directAddresses":
+			c := make([]UpdatePostgresNetworkDirectAddressRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v UpdatePostgresNetworkDirectAddressRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.DirectAddresses.SetTo(c)
 			return nil
 		default:
 			return d.Skip()

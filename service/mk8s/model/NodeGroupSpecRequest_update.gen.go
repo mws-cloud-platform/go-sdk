@@ -317,14 +317,14 @@ func (m *NodeGroupSpecRolloutStrategyRequest) diffMaxUnavailable(src *NodeGroupS
 
 type UpdateNodeGroupSpecScaleRequest struct {
 	// Количество узлов в node group
-	Fixed       optional.Optional[int]                                           `json:"fixed" yaml:"fixed"`
+	Fixed       optional.OptionalNil[int]                                        `json:"fixed" yaml:"fixed"`
 	Autoscaling optional.OptionalNil[UpdateNodeGroupSpecScaleAutoscalingRequest] `json:"autoscaling" yaml:"autoscaling"`
 }
 
 func (m *NodeGroupSpecScaleRequest) AsUpdateModel() UpdateNodeGroupSpecScaleRequest {
 	var u UpdateNodeGroupSpecScaleRequest
 	if m.Fixed != nil {
-		u.Fixed = optional.NewOptional(m.GetFixedOr(0))
+		u.Fixed = optional.NewOptionalNil(m.GetFixedOr(0))
 	}
 	if m.Autoscaling != nil {
 		u.Autoscaling = optional.NewOptionalNil(m.Autoscaling.AsUpdateModel())
@@ -351,6 +351,8 @@ func (m *NodeGroupSpecScaleRequest) WithChanges(u UpdateNodeGroupSpecScaleReques
 
 	if u.Fixed.IsSet() {
 		out.Fixed = ptr.Get(u.Fixed.Value)
+	} else if u.Fixed.IsNull() {
+		out.Fixed = nil
 	}
 	if u.Autoscaling.IsSet() {
 		out.Autoscaling = ptr.Get(out.Autoscaling.WithChanges(u.Autoscaling.Value))
@@ -366,9 +368,9 @@ func (m UpdateNodeGroupSpecScaleRequest) HasChanges() bool {
 		m.Autoscaling.Set
 }
 
-func (m *NodeGroupSpecScaleRequest) diffFixed(src *NodeGroupSpecScaleRequest) optional.Optional[int] {
+func (m *NodeGroupSpecScaleRequest) diffFixed(src *NodeGroupSpecScaleRequest) optional.OptionalNil[int] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetFixed(), m.GetFixed(), nilDiffers)
+	return commonclient.DiffPrimitiveNullable(src.GetFixed(), m.GetFixed(), nilDiffers)
 }
 
 func (m *NodeGroupSpecScaleRequest) diffAutoscaling(src *NodeGroupSpecScaleRequest) optional.OptionalNil[UpdateNodeGroupSpecScaleAutoscalingRequest] {
@@ -499,9 +501,7 @@ type UpdateNodeGroupSpecVmTypeRequest struct {
 
 func (m *NodeGroupSpecVmTypeRequest) AsUpdateModel() UpdateNodeGroupSpecVmTypeRequest {
 	var u UpdateNodeGroupSpecVmTypeRequest
-	if m.Ref != nil {
-		u.Ref = optional.NewOptional(m.GetRefOr(compute.VmTypeRef{}))
-	}
+	u.Ref = optional.NewOptional(m.GetRef())
 	return u
 }
 
@@ -522,7 +522,7 @@ func (m *NodeGroupSpecVmTypeRequest) WithChanges(u UpdateNodeGroupSpecVmTypeRequ
 	}
 
 	if u.Ref.IsSet() {
-		out.Ref = ptr.Get(u.Ref.Value)
+		out.Ref = u.Ref.Value
 	}
 	return out
 }
@@ -548,5 +548,5 @@ func (m *UpdateNodeGroupSpecVmTypeRequest) Parse(ctx context.Context) error {
 
 func (m *NodeGroupSpecVmTypeRequest) diffRef(src *NodeGroupSpecVmTypeRequest) optional.Optional[compute.VmTypeRef] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
+	return commonclient.DiffPrimitiveRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }

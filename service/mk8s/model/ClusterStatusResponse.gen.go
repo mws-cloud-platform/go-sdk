@@ -360,25 +360,18 @@ func (m *ClusterStatusNetworkResponse) Parse(ctx context.Context) error {
 // Представление поля PrimaryEndpoint анонимного типа структуры ClusterStatusNetwork
 // Real OAPI model name: ClusterStatusNetworkPrimaryEndpoint
 type ClusterStatusNetworkPrimaryEndpointResponse struct {
-	Ref *vpc.AddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref vpc.AddressRef `json:"ref" yaml:"ref"`
 }
 
-func (m *ClusterStatusNetworkPrimaryEndpointResponse) GetRef() *vpc.AddressRef {
+func (m *ClusterStatusNetworkPrimaryEndpointResponse) GetRef() vpc.AddressRef {
 	if m != nil {
 		return m.Ref
 	}
-	return nil
+	return vpc.AddressRef{}
 }
 
-func (m *ClusterStatusNetworkPrimaryEndpointResponse) SetRef(val *vpc.AddressRef) {
+func (m *ClusterStatusNetworkPrimaryEndpointResponse) SetRef(val vpc.AddressRef) {
 	m.Ref = val
-}
-
-func (m *ClusterStatusNetworkPrimaryEndpointResponse) GetRefOr(val vpc.AddressRef) vpc.AddressRef {
-	if m != nil && m.Ref != nil {
-		return *m.Ref
-	}
-	return val
 }
 
 func (m *ClusterStatusNetworkPrimaryEndpointResponse) Clone() *ClusterStatusNetworkPrimaryEndpointResponse {
@@ -387,7 +380,7 @@ func (m *ClusterStatusNetworkPrimaryEndpointResponse) Clone() *ClusterStatusNetw
 	}
 
 	clone := *m
-	clone.Ref = m.Ref.Clone()
+	clone.Ref = *m.Ref.Clone()
 	return &clone
 }
 
@@ -406,25 +399,18 @@ func (m *ClusterStatusNetworkPrimaryEndpointResponse) Parse(ctx context.Context)
 // Представление поля PublicEndpoint анонимного типа структуры ClusterStatusNetwork
 // Real OAPI model name: ClusterStatusNetworkPublicEndpoint
 type ClusterStatusNetworkPublicEndpointResponse struct {
-	Ref *vpc.ExternalAddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref vpc.ExternalAddressRef `json:"ref" yaml:"ref"`
 }
 
-func (m *ClusterStatusNetworkPublicEndpointResponse) GetRef() *vpc.ExternalAddressRef {
+func (m *ClusterStatusNetworkPublicEndpointResponse) GetRef() vpc.ExternalAddressRef {
 	if m != nil {
 		return m.Ref
 	}
-	return nil
+	return vpc.ExternalAddressRef{}
 }
 
-func (m *ClusterStatusNetworkPublicEndpointResponse) SetRef(val *vpc.ExternalAddressRef) {
+func (m *ClusterStatusNetworkPublicEndpointResponse) SetRef(val vpc.ExternalAddressRef) {
 	m.Ref = val
-}
-
-func (m *ClusterStatusNetworkPublicEndpointResponse) GetRefOr(val vpc.ExternalAddressRef) vpc.ExternalAddressRef {
-	if m != nil && m.Ref != nil {
-		return *m.Ref
-	}
-	return val
 }
 
 func (m *ClusterStatusNetworkPublicEndpointResponse) Clone() *ClusterStatusNetworkPublicEndpointResponse {
@@ -433,7 +419,7 @@ func (m *ClusterStatusNetworkPublicEndpointResponse) Clone() *ClusterStatusNetwo
 	}
 
 	clone := *m
-	clone.Ref = m.Ref.Clone()
+	clone.Ref = *m.Ref.Clone()
 	return &clone
 }
 
@@ -452,25 +438,18 @@ func (m *ClusterStatusNetworkPublicEndpointResponse) Parse(ctx context.Context) 
 // Представление поля Subnet анонимного типа структуры ClusterStatusNetwork
 // Real OAPI model name: ClusterStatusNetworkSubnet
 type ClusterStatusNetworkSubnetResponse struct {
-	Ref *vpc.SubnetRef `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref vpc.SubnetRef `json:"ref" yaml:"ref"`
 }
 
-func (m *ClusterStatusNetworkSubnetResponse) GetRef() *vpc.SubnetRef {
+func (m *ClusterStatusNetworkSubnetResponse) GetRef() vpc.SubnetRef {
 	if m != nil {
 		return m.Ref
 	}
-	return nil
+	return vpc.SubnetRef{}
 }
 
-func (m *ClusterStatusNetworkSubnetResponse) SetRef(val *vpc.SubnetRef) {
+func (m *ClusterStatusNetworkSubnetResponse) SetRef(val vpc.SubnetRef) {
 	m.Ref = val
-}
-
-func (m *ClusterStatusNetworkSubnetResponse) GetRefOr(val vpc.SubnetRef) vpc.SubnetRef {
-	if m != nil && m.Ref != nil {
-		return *m.Ref
-	}
-	return val
 }
 
 func (m *ClusterStatusNetworkSubnetResponse) Clone() *ClusterStatusNetworkSubnetResponse {
@@ -479,7 +458,7 @@ func (m *ClusterStatusNetworkSubnetResponse) Clone() *ClusterStatusNetworkSubnet
 	}
 
 	clone := *m
-	clone.Ref = m.Ref.Clone()
+	clone.Ref = *m.Ref.Clone()
 	return &clone
 }
 
@@ -498,25 +477,18 @@ func (m *ClusterStatusNetworkSubnetResponse) Parse(ctx context.Context) error {
 // Представление поля VpcNetwork анонимного типа структуры ClusterStatusNetwork
 // Real OAPI model name: ClusterStatusNetworkVpcNetwork
 type ClusterStatusNetworkVpcNetworkResponse struct {
-	Ref *vpc.NetworkRef `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref vpc.NetworkRef `json:"ref" yaml:"ref"`
 }
 
-func (m *ClusterStatusNetworkVpcNetworkResponse) GetRef() *vpc.NetworkRef {
+func (m *ClusterStatusNetworkVpcNetworkResponse) GetRef() vpc.NetworkRef {
 	if m != nil {
 		return m.Ref
 	}
-	return nil
+	return vpc.NetworkRef{}
 }
 
-func (m *ClusterStatusNetworkVpcNetworkResponse) SetRef(val *vpc.NetworkRef) {
+func (m *ClusterStatusNetworkVpcNetworkResponse) SetRef(val vpc.NetworkRef) {
 	m.Ref = val
-}
-
-func (m *ClusterStatusNetworkVpcNetworkResponse) GetRefOr(val vpc.NetworkRef) vpc.NetworkRef {
-	if m != nil && m.Ref != nil {
-		return *m.Ref
-	}
-	return val
 }
 
 func (m *ClusterStatusNetworkVpcNetworkResponse) Clone() *ClusterStatusNetworkVpcNetworkResponse {
@@ -525,7 +497,7 @@ func (m *ClusterStatusNetworkVpcNetworkResponse) Clone() *ClusterStatusNetworkVp
 	}
 
 	clone := *m
-	clone.Ref = m.Ref.Clone()
+	clone.Ref = *m.Ref.Clone()
 	return &clone
 }
 

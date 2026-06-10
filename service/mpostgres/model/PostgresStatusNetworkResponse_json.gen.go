@@ -48,6 +48,15 @@ func (m *PostgresStatusNetworkResponse) encodeFields(e *jx.Encoder) error {
 		}
 		e.ArrEnd()
 	}
+
+	if m.DirectAddresses != nil {
+		e.FieldStart("directAddresses")
+		e.ArrStart()
+		for _, elem := range m.DirectAddresses {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
 	return nil
 }
 
@@ -91,6 +100,21 @@ func (m *PostgresStatusNetworkResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.ReadOnlyAddresses = c
+			return nil
+		case "directAddresses":
+			c := make([]PostgresStatusDirectAddressResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v PostgresStatusDirectAddressResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.DirectAddresses = c
 			return nil
 		default:
 			return d.Skip()

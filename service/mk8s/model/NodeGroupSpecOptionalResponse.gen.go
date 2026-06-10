@@ -268,7 +268,7 @@ func (m *NodeGroupSpecRolloutStrategyOptionalResponse) Clone() *NodeGroupSpecRol
 // Real OAPI model name: NodeGroupSpecScale
 type NodeGroupSpecScaleOptionalResponse struct {
 	// Количество узлов в node group
-	Fixed       optional.Optional[int]                                              `json:"fixed,omitempty" yaml:"fixed,omitempty"`
+	Fixed       optional.OptionalNil[int]                                           `json:"fixed,omitempty" yaml:"fixed,omitempty"`
 	Autoscaling optional.OptionalNil[NodeGroupSpecScaleAutoscalingOptionalResponse] `json:"autoscaling,omitempty" yaml:"autoscaling,omitempty"`
 }
 
@@ -394,21 +394,18 @@ func (m *NodeGroupSpecServiceAccountOptionalResponse) Parse(ctx context.Context)
 // Представление поля Subnet анонимного типа структуры NodeGroupSpec
 // Real OAPI model name: NodeGroupSpecSubnet
 type NodeGroupSpecSubnetOptionalResponse struct {
-	Ref optional.Optional[vpc.SubnetRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref vpc.SubnetRef `json:"ref" yaml:"ref"`
 }
 
-func (m *NodeGroupSpecSubnetOptionalResponse) GetRef() *vpc.SubnetRef {
-	if m != nil && m.Ref.IsSet() {
-		return &m.Ref.Value
+func (m *NodeGroupSpecSubnetOptionalResponse) GetRef() vpc.SubnetRef {
+	if m != nil {
+		return m.Ref
 	}
-	return nil
+	return vpc.SubnetRef{}
 }
 
-func (m *NodeGroupSpecSubnetOptionalResponse) GetRefOr(val vpc.SubnetRef) vpc.SubnetRef {
-	if m != nil && m.Ref.IsSet() {
-		return m.Ref.Value
-	}
-	return val
+func (m *NodeGroupSpecSubnetOptionalResponse) SetRef(val vpc.SubnetRef) {
+	m.Ref = val
 }
 
 func (m *NodeGroupSpecSubnetOptionalResponse) Clone() *NodeGroupSpecSubnetOptionalResponse {
@@ -417,9 +414,7 @@ func (m *NodeGroupSpecSubnetOptionalResponse) Clone() *NodeGroupSpecSubnetOption
 	}
 
 	clone := *m
-	if clone.Ref.IsSet() {
-		clone.Ref.Value = *m.Ref.Value.Clone()
-	}
+	clone.Ref = *m.Ref.Clone()
 	return &clone
 }
 
@@ -428,10 +423,8 @@ func (m *NodeGroupSpecSubnetOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Ref.IsSet() {
-		if err := m.Ref.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Ref", err)
-		}
+	if err := m.Ref.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Ref", err)
 	}
 
 	return nil
@@ -440,21 +433,18 @@ func (m *NodeGroupSpecSubnetOptionalResponse) Parse(ctx context.Context) error {
 // Представление поля VmType анонимного типа структуры NodeGroupSpec
 // Real OAPI model name: NodeGroupSpecVmType
 type NodeGroupSpecVmTypeOptionalResponse struct {
-	Ref optional.Optional[compute.VmTypeRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref compute.VmTypeRef `json:"ref" yaml:"ref"`
 }
 
-func (m *NodeGroupSpecVmTypeOptionalResponse) GetRef() *compute.VmTypeRef {
-	if m != nil && m.Ref.IsSet() {
-		return &m.Ref.Value
+func (m *NodeGroupSpecVmTypeOptionalResponse) GetRef() compute.VmTypeRef {
+	if m != nil {
+		return m.Ref
 	}
-	return nil
+	return compute.VmTypeRef{}
 }
 
-func (m *NodeGroupSpecVmTypeOptionalResponse) GetRefOr(val compute.VmTypeRef) compute.VmTypeRef {
-	if m != nil && m.Ref.IsSet() {
-		return m.Ref.Value
-	}
-	return val
+func (m *NodeGroupSpecVmTypeOptionalResponse) SetRef(val compute.VmTypeRef) {
+	m.Ref = val
 }
 
 func (m *NodeGroupSpecVmTypeOptionalResponse) Clone() *NodeGroupSpecVmTypeOptionalResponse {
@@ -463,9 +453,7 @@ func (m *NodeGroupSpecVmTypeOptionalResponse) Clone() *NodeGroupSpecVmTypeOption
 	}
 
 	clone := *m
-	if clone.Ref.IsSet() {
-		clone.Ref.Value = *m.Ref.Value.Clone()
-	}
+	clone.Ref = *m.Ref.Clone()
 	return &clone
 }
 
@@ -474,10 +462,8 @@ func (m *NodeGroupSpecVmTypeOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Ref.IsSet() {
-		if err := m.Ref.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Ref", err)
-		}
+	if err := m.Ref.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Ref", err)
 	}
 
 	return nil

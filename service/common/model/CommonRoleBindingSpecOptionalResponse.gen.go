@@ -6,7 +6,9 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
+	"go.mws.cloud/go-sdk/service/resources/references/support"
 )
 
 // Real OAPI model name: CommonRoleBindingSpec
@@ -14,6 +16,8 @@ type CommonRoleBindingSpecOptionalResponse struct {
 	Subject CommonRoleBindingSpecSubjectOptionalResponse `json:"subject" yaml:"subject"`
 	// Роль, определяющая права субъекта на ресурс
 	Role iam.RoleRef `json:"role" yaml:"role"`
+	// Идентификатор запроса в службу поддержки, в рамках которого был создан биндинг
+	SupportRequestId optional.Optional[support.RequestIDRef] `json:"supportRequestId,omitempty" yaml:"supportRequestId,omitempty"`
 }
 
 func (m *CommonRoleBindingSpecOptionalResponse) GetSubject() CommonRoleBindingSpecSubjectOptionalResponse {
@@ -38,6 +42,20 @@ func (m *CommonRoleBindingSpecOptionalResponse) SetRole(val iam.RoleRef) {
 	m.Role = val
 }
 
+func (m *CommonRoleBindingSpecOptionalResponse) GetSupportRequestId() *support.RequestIDRef {
+	if m != nil && m.SupportRequestId.IsSet() {
+		return &m.SupportRequestId.Value
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpecOptionalResponse) GetSupportRequestIdOr(val support.RequestIDRef) support.RequestIDRef {
+	if m != nil && m.SupportRequestId.IsSet() {
+		return m.SupportRequestId.Value
+	}
+	return val
+}
+
 func (m *CommonRoleBindingSpecOptionalResponse) Clone() *CommonRoleBindingSpecOptionalResponse {
 	if m == nil {
 		return nil
@@ -46,6 +64,9 @@ func (m *CommonRoleBindingSpecOptionalResponse) Clone() *CommonRoleBindingSpecOp
 	clone := *m
 	clone.Subject = *m.Subject.Clone()
 	clone.Role = *m.Role.Clone()
+	if clone.SupportRequestId.IsSet() {
+		clone.SupportRequestId.Value = *m.SupportRequestId.Value.Clone()
+	}
 	return &clone
 }
 
@@ -60,6 +81,12 @@ func (m *CommonRoleBindingSpecOptionalResponse) Parse(ctx context.Context) error
 
 	if err := m.Role.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Role", err)
+	}
+
+	if m.SupportRequestId.IsSet() {
+		if err := m.SupportRequestId.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("SupportRequestId", err)
+		}
 	}
 
 	return nil

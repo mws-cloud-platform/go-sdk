@@ -20,6 +20,8 @@ type CommonRoleBindingSpecSubject struct {
 	UserFederation *CommonRoleBindingFederation `json:"userFederation,omitempty" yaml:"userFederation,omitempty"`
 	// Идентификатор группы пользователей.
 	UserGroup *iam.UserGroupRef `json:"userGroup,omitempty" yaml:"userGroup,omitempty"`
+	// Идентификатор пользователя backoffice.
+	Employee *iam.EmployeeRef `json:"employee,omitempty" yaml:"employee,omitempty"`
 }
 
 func (m *CommonRoleBindingSpecSubject) GetUser() *iam.UserRef {
@@ -112,6 +114,24 @@ func (m *CommonRoleBindingSpecSubject) GetUserGroupOr(val iam.UserGroupRef) iam.
 	return val
 }
 
+func (m *CommonRoleBindingSpecSubject) GetEmployee() *iam.EmployeeRef {
+	if m != nil {
+		return m.Employee
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpecSubject) SetEmployee(val *iam.EmployeeRef) {
+	m.Employee = val
+}
+
+func (m *CommonRoleBindingSpecSubject) GetEmployeeOr(val iam.EmployeeRef) iam.EmployeeRef {
+	if m != nil && m.Employee != nil {
+		return *m.Employee
+	}
+	return val
+}
+
 func (m *CommonRoleBindingSpecSubject) Clone() *CommonRoleBindingSpecSubject {
 	if m == nil {
 		return nil
@@ -123,6 +143,7 @@ func (m *CommonRoleBindingSpecSubject) Clone() *CommonRoleBindingSpecSubject {
 	clone.ServiceAgent = m.ServiceAgent.Clone()
 	clone.UserFederation = m.UserFederation.Clone()
 	clone.UserGroup = m.UserGroup.Clone()
+	clone.Employee = m.Employee.Clone()
 	return &clone
 }
 
@@ -149,6 +170,10 @@ func (m *CommonRoleBindingSpecSubject) Parse(ctx context.Context) error {
 
 	if err := m.UserGroup.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("UserGroup", err)
+	}
+
+	if err := m.Employee.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Employee", err)
 	}
 
 	return nil

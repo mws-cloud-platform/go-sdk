@@ -22,6 +22,8 @@ type CommonRoleBindingSpecSubjectOptionalResponse struct {
 	UserFederation optional.OptionalNil[CommonRoleBindingFederationOptionalResponse] `json:"userFederation,omitempty" yaml:"userFederation,omitempty"`
 	// Идентификатор группы пользователей.
 	UserGroup optional.Optional[iam.UserGroupRef] `json:"userGroup,omitempty" yaml:"userGroup,omitempty"`
+	// Идентификатор пользователя backoffice.
+	Employee optional.Optional[iam.EmployeeRef] `json:"employee,omitempty" yaml:"employee,omitempty"`
 }
 
 func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetUser() *iam.UserRef {
@@ -94,6 +96,20 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetUserGroupOr(val iam.Us
 	return val
 }
 
+func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetEmployee() *iam.EmployeeRef {
+	if m != nil && m.Employee.IsSet() {
+		return &m.Employee.Value
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetEmployeeOr(val iam.EmployeeRef) iam.EmployeeRef {
+	if m != nil && m.Employee.IsSet() {
+		return m.Employee.Value
+	}
+	return val
+}
+
 func (m *CommonRoleBindingSpecSubjectOptionalResponse) Clone() *CommonRoleBindingSpecSubjectOptionalResponse {
 	if m == nil {
 		return nil
@@ -114,6 +130,9 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) Clone() *CommonRoleBindin
 	}
 	if clone.UserGroup.IsSet() {
 		clone.UserGroup.Value = *m.UserGroup.Value.Clone()
+	}
+	if clone.Employee.IsSet() {
+		clone.Employee.Value = *m.Employee.Value.Clone()
 	}
 	return &clone
 }
@@ -150,6 +169,12 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) Parse(ctx context.Context
 	if m.UserGroup.IsSet() {
 		if err := m.UserGroup.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("UserGroup", err)
+		}
+	}
+
+	if m.Employee.IsSet() {
+		if err := m.Employee.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Employee", err)
 		}
 	}
 

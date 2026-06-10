@@ -26,6 +26,8 @@ type KafkaClusterSpecResponse struct {
 	MaintenanceWindow *common.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry *KafkaSchemaRegistrySpecResponse `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`
+	// Настройка Auto Rebalance для кластера.
+	AutoRebalance *KafkaAutoRebalanceSpecResponse `json:"autoRebalance,omitempty" yaml:"autoRebalance,omitempty"`
 }
 
 func (m *KafkaClusterSpecResponse) GetActive() *bool {
@@ -133,6 +135,24 @@ func (m *KafkaClusterSpecResponse) GetSchemaRegistryOr(val KafkaSchemaRegistrySp
 	return val
 }
 
+func (m *KafkaClusterSpecResponse) GetAutoRebalance() *KafkaAutoRebalanceSpecResponse {
+	if m != nil {
+		return m.AutoRebalance
+	}
+	return nil
+}
+
+func (m *KafkaClusterSpecResponse) SetAutoRebalance(val *KafkaAutoRebalanceSpecResponse) {
+	m.AutoRebalance = val
+}
+
+func (m *KafkaClusterSpecResponse) GetAutoRebalanceOr(val KafkaAutoRebalanceSpecResponse) KafkaAutoRebalanceSpecResponse {
+	if m != nil && m.AutoRebalance != nil {
+		return *m.AutoRebalance
+	}
+	return val
+}
+
 func (m *KafkaClusterSpecResponse) Clone() *KafkaClusterSpecResponse {
 	if m == nil {
 		return nil
@@ -156,6 +176,7 @@ func (m *KafkaClusterSpecResponse) Clone() *KafkaClusterSpecResponse {
 	}
 	clone.MaintenanceWindow = m.MaintenanceWindow.Clone()
 	clone.SchemaRegistry = m.SchemaRegistry.Clone()
+	clone.AutoRebalance = m.AutoRebalance.Clone()
 	return &clone
 }
 

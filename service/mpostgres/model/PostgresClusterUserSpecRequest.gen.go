@@ -11,6 +11,8 @@ type PostgresClusterUserSpecRequest struct {
 	//   - `DB_WRITER_USER`: Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
 	//   - `DB_READER_USER`: Пользовательская роль, наследует разрешения групповой роли db_reader.
 	Role *PostgresUserRole `json:"role,omitempty" yaml:"role,omitempty"`
+	// Дополнительные роли пользователя
+	AdditionalRoles []PostgresUserAdditionalRoleRequest `json:"additionalRoles,omitempty" yaml:"additionalRoles,omitempty"`
 }
 
 func (m *PostgresClusterUserSpecRequest) GetPassword() string {
@@ -42,6 +44,24 @@ func (m *PostgresClusterUserSpecRequest) GetRoleOr(val PostgresUserRole) Postgre
 	return val
 }
 
+func (m *PostgresClusterUserSpecRequest) GetAdditionalRoles() []PostgresUserAdditionalRoleRequest {
+	if m != nil {
+		return m.AdditionalRoles
+	}
+	return nil
+}
+
+func (m *PostgresClusterUserSpecRequest) SetAdditionalRoles(val []PostgresUserAdditionalRoleRequest) {
+	m.AdditionalRoles = val
+}
+
+func (m *PostgresClusterUserSpecRequest) GetAdditionalRolesOr(val []PostgresUserAdditionalRoleRequest) []PostgresUserAdditionalRoleRequest {
+	if m != nil && m.AdditionalRoles != nil {
+		return m.AdditionalRoles
+	}
+	return val
+}
+
 func (m *PostgresClusterUserSpecRequest) Clone() *PostgresClusterUserSpecRequest {
 	if m == nil {
 		return nil
@@ -51,6 +71,12 @@ func (m *PostgresClusterUserSpecRequest) Clone() *PostgresClusterUserSpecRequest
 	if m.Role != nil {
 		cloneRole := *m.Role
 		clone.Role = &cloneRole
+	}
+	if m.AdditionalRoles != nil {
+		clone.AdditionalRoles = make([]PostgresUserAdditionalRoleRequest, len(m.AdditionalRoles))
+		for i, v := range m.AdditionalRoles {
+			clone.AdditionalRoles[i] = *v.Clone()
+		}
 	}
 	return &clone
 }

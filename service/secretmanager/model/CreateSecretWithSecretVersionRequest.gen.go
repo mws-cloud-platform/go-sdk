@@ -35,6 +35,13 @@ func (m *CreateSecretWithSecretVersionRequest) GetData() SecretVersionDataSpec {
 	return nil
 }
 
+func (m *CreateSecretWithSecretVersionRequest) GetDataOr(val SecretVersionDataSpec) SecretVersionDataSpec {
+	if m != nil {
+		return m.SecretVersionSpecRequest.GetDataOr(val)
+	}
+	return val
+}
+
 func (m *CreateSecretWithSecretVersionRequest) GetEncryption() *EncryptionSpecRequest {
 	if m != nil {
 		return m.Encryption

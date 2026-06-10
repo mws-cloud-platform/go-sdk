@@ -368,44 +368,30 @@ func (m NodeGroupStatusNodeGroupStatusStateResponse) String() string {
 // Представление поля RolloutStrategy анонимного типа структуры NodeGroupStatus
 // Real OAPI model name: NodeGroupStatusRolloutStrategy
 type NodeGroupStatusRolloutStrategyResponse struct {
-	MaxSurge       *int `json:"maxSurge,omitempty" yaml:"maxSurge,omitempty"`
-	MaxUnavailable *int `json:"maxUnavailable,omitempty" yaml:"maxUnavailable,omitempty"`
+	MaxSurge       int `json:"maxSurge" yaml:"maxSurge"`
+	MaxUnavailable int `json:"maxUnavailable" yaml:"maxUnavailable"`
 }
 
-func (m *NodeGroupStatusRolloutStrategyResponse) GetMaxSurge() *int {
+func (m *NodeGroupStatusRolloutStrategyResponse) GetMaxSurge() int {
 	if m != nil {
 		return m.MaxSurge
 	}
-	return nil
+	return 0
 }
 
-func (m *NodeGroupStatusRolloutStrategyResponse) SetMaxSurge(val *int) {
+func (m *NodeGroupStatusRolloutStrategyResponse) SetMaxSurge(val int) {
 	m.MaxSurge = val
 }
 
-func (m *NodeGroupStatusRolloutStrategyResponse) GetMaxSurgeOr(val int) int {
-	if m != nil && m.MaxSurge != nil {
-		return *m.MaxSurge
-	}
-	return val
-}
-
-func (m *NodeGroupStatusRolloutStrategyResponse) GetMaxUnavailable() *int {
+func (m *NodeGroupStatusRolloutStrategyResponse) GetMaxUnavailable() int {
 	if m != nil {
 		return m.MaxUnavailable
 	}
-	return nil
+	return 0
 }
 
-func (m *NodeGroupStatusRolloutStrategyResponse) SetMaxUnavailable(val *int) {
+func (m *NodeGroupStatusRolloutStrategyResponse) SetMaxUnavailable(val int) {
 	m.MaxUnavailable = val
-}
-
-func (m *NodeGroupStatusRolloutStrategyResponse) GetMaxUnavailableOr(val int) int {
-	if m != nil && m.MaxUnavailable != nil {
-		return *m.MaxUnavailable
-	}
-	return val
 }
 
 func (m *NodeGroupStatusRolloutStrategyResponse) Clone() *NodeGroupStatusRolloutStrategyResponse {
@@ -414,14 +400,6 @@ func (m *NodeGroupStatusRolloutStrategyResponse) Clone() *NodeGroupStatusRollout
 	}
 
 	clone := *m
-	if m.MaxSurge != nil {
-		cloneMaxSurge := *m.MaxSurge
-		clone.MaxSurge = &cloneMaxSurge
-	}
-	if m.MaxUnavailable != nil {
-		cloneMaxUnavailable := *m.MaxUnavailable
-		clone.MaxUnavailable = &cloneMaxUnavailable
-	}
 	return &clone
 }
 
@@ -486,45 +464,31 @@ func (m *NodeGroupStatusScaleResponse) Clone() *NodeGroupStatusScaleResponse {
 // Real OAPI model name: NodeGroupStatusScaleAutoscaling
 type NodeGroupStatusScaleAutoscalingResponse struct {
 	// Минимально количество нод в Node group.
-	Min *int `json:"min,omitempty" yaml:"min,omitempty"`
+	Min int `json:"min" yaml:"min"`
 	// Максимальное количество нод в Node group.
-	Max *int `json:"max,omitempty" yaml:"max,omitempty"`
+	Max int `json:"max" yaml:"max"`
 }
 
-func (m *NodeGroupStatusScaleAutoscalingResponse) GetMin() *int {
+func (m *NodeGroupStatusScaleAutoscalingResponse) GetMin() int {
 	if m != nil {
 		return m.Min
 	}
-	return nil
+	return 0
 }
 
-func (m *NodeGroupStatusScaleAutoscalingResponse) SetMin(val *int) {
+func (m *NodeGroupStatusScaleAutoscalingResponse) SetMin(val int) {
 	m.Min = val
 }
 
-func (m *NodeGroupStatusScaleAutoscalingResponse) GetMinOr(val int) int {
-	if m != nil && m.Min != nil {
-		return *m.Min
-	}
-	return val
-}
-
-func (m *NodeGroupStatusScaleAutoscalingResponse) GetMax() *int {
+func (m *NodeGroupStatusScaleAutoscalingResponse) GetMax() int {
 	if m != nil {
 		return m.Max
 	}
-	return nil
+	return 0
 }
 
-func (m *NodeGroupStatusScaleAutoscalingResponse) SetMax(val *int) {
+func (m *NodeGroupStatusScaleAutoscalingResponse) SetMax(val int) {
 	m.Max = val
-}
-
-func (m *NodeGroupStatusScaleAutoscalingResponse) GetMaxOr(val int) int {
-	if m != nil && m.Max != nil {
-		return *m.Max
-	}
-	return val
 }
 
 func (m *NodeGroupStatusScaleAutoscalingResponse) Clone() *NodeGroupStatusScaleAutoscalingResponse {
@@ -533,39 +497,24 @@ func (m *NodeGroupStatusScaleAutoscalingResponse) Clone() *NodeGroupStatusScaleA
 	}
 
 	clone := *m
-	if m.Min != nil {
-		cloneMin := *m.Min
-		clone.Min = &cloneMin
-	}
-	if m.Max != nil {
-		cloneMax := *m.Max
-		clone.Max = &cloneMax
-	}
 	return &clone
 }
 
 // Представление поля ServiceAccount анонимного типа структуры NodeGroupStatus
 // Real OAPI model name: NodeGroupStatusServiceAccount
 type NodeGroupStatusServiceAccountResponse struct {
-	Ref *iam.ServiceAccountRef `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref iam.ServiceAccountRef `json:"ref" yaml:"ref"`
 }
 
-func (m *NodeGroupStatusServiceAccountResponse) GetRef() *iam.ServiceAccountRef {
+func (m *NodeGroupStatusServiceAccountResponse) GetRef() iam.ServiceAccountRef {
 	if m != nil {
 		return m.Ref
 	}
-	return nil
+	return iam.ServiceAccountRef{}
 }
 
-func (m *NodeGroupStatusServiceAccountResponse) SetRef(val *iam.ServiceAccountRef) {
+func (m *NodeGroupStatusServiceAccountResponse) SetRef(val iam.ServiceAccountRef) {
 	m.Ref = val
-}
-
-func (m *NodeGroupStatusServiceAccountResponse) GetRefOr(val iam.ServiceAccountRef) iam.ServiceAccountRef {
-	if m != nil && m.Ref != nil {
-		return *m.Ref
-	}
-	return val
 }
 
 func (m *NodeGroupStatusServiceAccountResponse) Clone() *NodeGroupStatusServiceAccountResponse {
@@ -574,7 +523,7 @@ func (m *NodeGroupStatusServiceAccountResponse) Clone() *NodeGroupStatusServiceA
 	}
 
 	clone := *m
-	clone.Ref = m.Ref.Clone()
+	clone.Ref = *m.Ref.Clone()
 	return &clone
 }
 
@@ -593,25 +542,18 @@ func (m *NodeGroupStatusServiceAccountResponse) Parse(ctx context.Context) error
 // Представление поля VmType анонимного типа структуры NodeGroupStatus
 // Real OAPI model name: NodeGroupStatusVmType
 type NodeGroupStatusVmTypeResponse struct {
-	Ref *compute.VmTypeRef `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref compute.VmTypeRef `json:"ref" yaml:"ref"`
 }
 
-func (m *NodeGroupStatusVmTypeResponse) GetRef() *compute.VmTypeRef {
+func (m *NodeGroupStatusVmTypeResponse) GetRef() compute.VmTypeRef {
 	if m != nil {
 		return m.Ref
 	}
-	return nil
+	return compute.VmTypeRef{}
 }
 
-func (m *NodeGroupStatusVmTypeResponse) SetRef(val *compute.VmTypeRef) {
+func (m *NodeGroupStatusVmTypeResponse) SetRef(val compute.VmTypeRef) {
 	m.Ref = val
-}
-
-func (m *NodeGroupStatusVmTypeResponse) GetRefOr(val compute.VmTypeRef) compute.VmTypeRef {
-	if m != nil && m.Ref != nil {
-		return *m.Ref
-	}
-	return val
 }
 
 func (m *NodeGroupStatusVmTypeResponse) Clone() *NodeGroupStatusVmTypeResponse {
@@ -620,7 +562,7 @@ func (m *NodeGroupStatusVmTypeResponse) Clone() *NodeGroupStatusVmTypeResponse {
 	}
 
 	clone := *m
-	clone.Ref = m.Ref.Clone()
+	clone.Ref = *m.Ref.Clone()
 	return &clone
 }
 

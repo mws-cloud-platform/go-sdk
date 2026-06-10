@@ -23,5 +23,12 @@ func PostgresEndpointRequestToResponse(request *PostgresEndpointRequest) (*Postg
 		}
 		response.ReadOnlyAddresses = append(response.ReadOnlyAddresses, *tmp)
 	}
+	for _, e := range request.DirectAddresses {
+		tmp, err := PostgresNetworkDirectAddressRequestToResponse(&e)
+		if err != nil {
+			return nil, err
+		}
+		response.DirectAddresses = append(response.DirectAddresses, *tmp)
+	}
 	return &response, nil
 }

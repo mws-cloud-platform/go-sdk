@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
+	"go.mws.cloud/go-sdk/service/resources/references/support"
 )
 
 func (m CommonRoleBindingSpec) MarshalJSON() ([]byte, error) {
@@ -37,6 +38,11 @@ func (m *CommonRoleBindingSpec) encodeFields(e *jx.Encoder) error {
 
 	e.FieldStart("role")
 	m.Role.Encode(e)
+
+	if m.SupportRequestId != nil {
+		e.FieldStart("supportRequestId")
+		m.SupportRequestId.Encode(e)
+	}
 	return nil
 }
 
@@ -72,6 +78,14 @@ func (m *CommonRoleBindingSpec) Decode(d *jx.Decoder) error {
 
 			m.Role = v
 			requiredFilled["role"] = true
+			return nil
+		case "supportRequestId":
+			var v support.RequestIDRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SupportRequestId = &v
 			return nil
 		default:
 			return d.Skip()

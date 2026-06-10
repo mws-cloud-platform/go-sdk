@@ -437,25 +437,18 @@ func (m *NodeGroupSpecServiceAccountRequest) Parse(ctx context.Context) error {
 // Представление поля Subnet анонимного типа структуры NodeGroupSpec
 // Real OAPI model name: NodeGroupSpecSubnet
 type NodeGroupSpecSubnetRequest struct {
-	Ref *vpc.SubnetRef `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref vpc.SubnetRef `json:"ref" yaml:"ref"`
 }
 
-func (m *NodeGroupSpecSubnetRequest) GetRef() *vpc.SubnetRef {
+func (m *NodeGroupSpecSubnetRequest) GetRef() vpc.SubnetRef {
 	if m != nil {
 		return m.Ref
 	}
-	return nil
+	return vpc.SubnetRef{}
 }
 
-func (m *NodeGroupSpecSubnetRequest) SetRef(val *vpc.SubnetRef) {
+func (m *NodeGroupSpecSubnetRequest) SetRef(val vpc.SubnetRef) {
 	m.Ref = val
-}
-
-func (m *NodeGroupSpecSubnetRequest) GetRefOr(val vpc.SubnetRef) vpc.SubnetRef {
-	if m != nil && m.Ref != nil {
-		return *m.Ref
-	}
-	return val
 }
 
 func (m *NodeGroupSpecSubnetRequest) Clone() *NodeGroupSpecSubnetRequest {
@@ -464,7 +457,7 @@ func (m *NodeGroupSpecSubnetRequest) Clone() *NodeGroupSpecSubnetRequest {
 	}
 
 	clone := *m
-	clone.Ref = m.Ref.Clone()
+	clone.Ref = *m.Ref.Clone()
 	return &clone
 }
 
@@ -483,25 +476,18 @@ func (m *NodeGroupSpecSubnetRequest) Parse(ctx context.Context) error {
 // Представление поля VmType анонимного типа структуры NodeGroupSpec
 // Real OAPI model name: NodeGroupSpecVmType
 type NodeGroupSpecVmTypeRequest struct {
-	Ref *compute.VmTypeRef `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref compute.VmTypeRef `json:"ref" yaml:"ref"`
 }
 
-func (m *NodeGroupSpecVmTypeRequest) GetRef() *compute.VmTypeRef {
+func (m *NodeGroupSpecVmTypeRequest) GetRef() compute.VmTypeRef {
 	if m != nil {
 		return m.Ref
 	}
-	return nil
+	return compute.VmTypeRef{}
 }
 
-func (m *NodeGroupSpecVmTypeRequest) SetRef(val *compute.VmTypeRef) {
+func (m *NodeGroupSpecVmTypeRequest) SetRef(val compute.VmTypeRef) {
 	m.Ref = val
-}
-
-func (m *NodeGroupSpecVmTypeRequest) GetRefOr(val compute.VmTypeRef) compute.VmTypeRef {
-	if m != nil && m.Ref != nil {
-		return *m.Ref
-	}
-	return val
 }
 
 func (m *NodeGroupSpecVmTypeRequest) Clone() *NodeGroupSpecVmTypeRequest {
@@ -510,7 +496,7 @@ func (m *NodeGroupSpecVmTypeRequest) Clone() *NodeGroupSpecVmTypeRequest {
 	}
 
 	clone := *m
-	clone.Ref = m.Ref.Clone()
+	clone.Ref = *m.Ref.Clone()
 	return &clone
 }
 

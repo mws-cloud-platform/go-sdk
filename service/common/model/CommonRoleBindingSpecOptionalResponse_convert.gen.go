@@ -2,6 +2,10 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/optional"
+)
+
 func CommonRoleBindingSpecRequestToOptionalResponse(request *CommonRoleBindingSpecRequest) (*CommonRoleBindingSpecOptionalResponse, error) {
 	if request == nil {
 		return nil, nil
@@ -13,5 +17,8 @@ func CommonRoleBindingSpecRequestToOptionalResponse(request *CommonRoleBindingSp
 	}
 	response.Subject = *tmpSubject
 	response.Role = request.Role
+	if request.SupportRequestId != nil {
+		response.SupportRequestId = optional.NewOptional(*request.SupportRequestId)
+	}
 	return &response, nil
 }

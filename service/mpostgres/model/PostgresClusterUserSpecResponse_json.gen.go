@@ -35,6 +35,15 @@ func (m *PostgresClusterUserSpecResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("role")
 		m.Role.Encode(e)
 	}
+
+	if m.AdditionalRoles != nil {
+		e.FieldStart("additionalRoles")
+		e.ArrStart()
+		for _, elem := range m.AdditionalRoles {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
 	return nil
 }
 
@@ -56,6 +65,21 @@ func (m *PostgresClusterUserSpecResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Role = &v
+			return nil
+		case "additionalRoles":
+			c := make([]PostgresUserAdditionalRoleResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v PostgresUserAdditionalRoleResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.AdditionalRoles = c
 			return nil
 		default:
 			return d.Skip()

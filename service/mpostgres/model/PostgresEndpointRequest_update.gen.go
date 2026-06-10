@@ -17,9 +17,10 @@ type UpdatePostgresEndpointRequest struct {
 	// Имя эндпойнта.
 	Name optional.Optional[string] `json:"name" yaml:"name"`
 	// Идентификатор пользовательской сети (VPC).
-	Network           optional.Optional[vpc.NetworkRef]                        `json:"network" yaml:"network"`
-	PrimaryAddresses  optional.Optional[[]UpdatePostgresNetworkAddressRequest] `json:"primaryAddresses" yaml:"primaryAddresses"`
-	ReadOnlyAddresses optional.Optional[[]UpdatePostgresNetworkAddressRequest] `json:"readOnlyAddresses" yaml:"readOnlyAddresses"`
+	Network           optional.Optional[vpc.NetworkRef]                              `json:"network" yaml:"network"`
+	PrimaryAddresses  optional.Optional[[]UpdatePostgresNetworkAddressRequest]       `json:"primaryAddresses" yaml:"primaryAddresses"`
+	ReadOnlyAddresses optional.Optional[[]UpdatePostgresNetworkAddressRequest]       `json:"readOnlyAddresses" yaml:"readOnlyAddresses"`
+	DirectAddresses   optional.Optional[[]UpdatePostgresNetworkDirectAddressRequest] `json:"directAddresses" yaml:"directAddresses"`
 }
 
 func (m *PostgresEndpointRequest) AsUpdateModel() UpdatePostgresEndpointRequest {
@@ -48,6 +49,18 @@ func (m *PostgresEndpointRequest) AsUpdateModel() UpdatePostgresEndpointRequest 
 			return tmp
 		}())
 	}
+	if m.DirectAddresses != nil {
+		u.DirectAddresses = optional.NewOptional(func() []UpdatePostgresNetworkDirectAddressRequest {
+			var tmp []UpdatePostgresNetworkDirectAddressRequest
+			if m.GetDirectAddresses() != nil {
+				tmp = make([]UpdatePostgresNetworkDirectAddressRequest, 0, len(m.GetDirectAddresses()))
+			}
+			for _, val := range m.GetDirectAddresses() {
+				tmp = append(tmp, val.AsUpdateModel())
+			}
+			return tmp
+		}())
+	}
 	return u
 }
 
@@ -60,6 +73,7 @@ func (m *PostgresEndpointRequest) Diff(src *PostgresEndpointRequest) UpdatePostg
 		upd.Network = m.diffNetwork(src)
 		upd.PrimaryAddresses = m.diffPrimaryAddresses(src)
 		upd.ReadOnlyAddresses = m.diffReadOnlyAddresses(src)
+		upd.DirectAddresses = m.diffDirectAddresses(src)
 	}
 	return upd
 }
@@ -82,6 +96,9 @@ func (m *PostgresEndpointRequest) WithChanges(u UpdatePostgresEndpointRequest) P
 	if u.ReadOnlyAddresses.IsSet() {
 		out.ReadOnlyAddresses = merge.InapplicableSlice(u.ReadOnlyAddresses.Value, (*PostgresNetworkAddressRequest).WithChanges)
 	}
+	if u.DirectAddresses.IsSet() {
+		out.DirectAddresses = merge.InapplicableSlice(u.DirectAddresses.Value, (*PostgresNetworkDirectAddressRequest).WithChanges)
+	}
 	return out
 }
 
@@ -90,7 +107,8 @@ func (m UpdatePostgresEndpointRequest) HasChanges() bool {
 	return m.Name.Set ||
 		m.Network.Set ||
 		m.PrimaryAddresses.Set ||
-		m.ReadOnlyAddresses.Set
+		m.ReadOnlyAddresses.Set ||
+		m.DirectAddresses.Set
 }
 
 // GetName is used in the merge functions
@@ -133,6 +151,14 @@ func (m *UpdatePostgresEndpointRequest) Parse(ctx context.Context) error {
 		}
 	}
 
+	if m.DirectAddresses.IsSet() {
+		for index := range m.DirectAddresses.Value {
+			if err := m.DirectAddresses.Value[index].Parse(ctx); err != nil {
+				return reserrors.NewPathAccumulatorError("DirectAddresses"+fmt.Sprint("[", index, "]"), err)
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -169,6 +195,20 @@ func (m *PostgresEndpointRequest) diffReadOnlyAddresses(src *PostgresEndpointReq
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetReadOnlyAddresses(), m.GetReadOnlyAddresses(), diffFunc)
 	return optional.Optional[[]UpdatePostgresNetworkAddressRequest]{
+		Value: value,
+		Set:   hasChanges,
+	}
+}
+
+func (m *PostgresEndpointRequest) diffDirectAddresses(src *PostgresEndpointRequest) optional.Optional[[]UpdatePostgresNetworkDirectAddressRequest] {
+	diffFunc := func(fromItem, toItem PostgresNetworkDirectAddressRequest, fromNil bool) UpdatePostgresNetworkDirectAddressRequest {
+		if fromNil {
+			return toItem.Diff(nil)
+		}
+		return toItem.Diff(&fromItem)
+	}
+	value, hasChanges := commonclient.GetChangesArrayObject(src.GetDirectAddresses(), m.GetDirectAddresses(), diffFunc)
+	return optional.Optional[[]UpdatePostgresNetworkDirectAddressRequest]{
 		Value: value,
 		Set:   hasChanges,
 	}

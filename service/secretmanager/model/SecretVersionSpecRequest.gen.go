@@ -7,7 +7,7 @@ type SecretVersionSpecRequest struct {
 	// Версия секрета активна/неактивна
 	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 	// Содержимое секрета
-	Data SecretVersionDataSpec `json:"data" yaml:"data"`
+	Data SecretVersionDataSpec `json:"data,omitempty" yaml:"data,omitempty"`
 }
 
 func (m *SecretVersionSpecRequest) GetActive() *bool {
@@ -37,6 +37,13 @@ func (m *SecretVersionSpecRequest) GetData() SecretVersionDataSpec {
 
 func (m *SecretVersionSpecRequest) SetData(val SecretVersionDataSpec) {
 	m.Data = val
+}
+
+func (m *SecretVersionSpecRequest) GetDataOr(val SecretVersionDataSpec) SecretVersionDataSpec {
+	if m != nil && m.Data != nil {
+		return m.Data
+	}
+	return val
 }
 
 func (m *SecretVersionSpecRequest) Clone() *SecretVersionSpecRequest {

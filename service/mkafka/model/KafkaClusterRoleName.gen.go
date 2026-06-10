@@ -6,9 +6,12 @@ package model
 type KafkaClusterRoleName string
 
 const (
-	KafkaClusterRoleName_CLUSTER_ADMIN KafkaClusterRoleName = "CLUSTER_ADMIN"
-	KafkaClusterRoleName_PRODUCER      KafkaClusterRoleName = "PRODUCER"
-	KafkaClusterRoleName_CONSUMER      KafkaClusterRoleName = "CONSUMER"
+	KafkaClusterRoleName_CLUSTER_ADMIN          KafkaClusterRoleName = "CLUSTER_ADMIN"
+	KafkaClusterRoleName_PRODUCER               KafkaClusterRoleName = "PRODUCER"
+	KafkaClusterRoleName_CONSUMER               KafkaClusterRoleName = "CONSUMER"
+	KafkaClusterRoleName_SCHEMA_REGISTRY_ADMIN  KafkaClusterRoleName = "SCHEMA_REGISTRY_ADMIN"
+	KafkaClusterRoleName_SCHEMA_REGISTRY_WRITER KafkaClusterRoleName = "SCHEMA_REGISTRY_WRITER"
+	KafkaClusterRoleName_SCHEMA_REGISTRY_READER KafkaClusterRoleName = "SCHEMA_REGISTRY_READER"
 )
 
 func (m KafkaClusterRoleName) String() string {

@@ -30,5 +30,8 @@ func CommonRoleBindingSpecSubjectRequestToOptionalResponse(request *CommonRoleBi
 	if request.UserGroup != nil {
 		response.UserGroup = optional.NewOptional(*request.UserGroup)
 	}
+	if request.Employee != nil {
+		response.Employee = optional.NewOptional(*request.Employee)
+	}
 	return &response, nil
 }

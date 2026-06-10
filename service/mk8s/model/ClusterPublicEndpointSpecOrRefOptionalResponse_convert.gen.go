@@ -12,7 +12,7 @@ func ClusterPublicEndpointSpecOrRefRequestToOptionalResponse(request *ClusterPub
 	}
 	var response ClusterPublicEndpointSpecOrRefOptionalResponse
 	if request.Ref != nil {
-		response.Ref = optional.NewOptional(*request.Ref)
+		response.Ref = optional.NewOptionalNil(*request.Ref)
 	}
 	if request.Spec != nil {
 		tmpSpec, err := ClusterPublicEndpointSpecRequestToOptionalResponse(request.Spec)

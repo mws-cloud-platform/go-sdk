@@ -41,6 +41,15 @@ func (m *UpdatePostgresClusterUserSpecRequest) encodeFields(e *jx.Encoder) error
 		e.FieldStart("role")
 		m.Role.Value.Encode(e)
 	}
+
+	if m.AdditionalRoles.IsSet() {
+		e.FieldStart("additionalRoles")
+		e.ArrStart()
+		for _, elem := range m.AdditionalRoles.Value {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
 	return nil
 }
 
@@ -70,6 +79,21 @@ func (m *UpdatePostgresClusterUserSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Role.SetTo(v)
+			return nil
+		case "additionalRoles":
+			c := make([]UpdatePostgresUserAdditionalRoleRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v UpdatePostgresUserAdditionalRoleRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.AdditionalRoles.SetTo(c)
 			return nil
 		default:
 			return d.Skip()

@@ -36,5 +36,10 @@ func KafkaClusterSpecRequestToResponse(request *KafkaClusterSpecRequest) (*Kafka
 		return nil, err
 	}
 	response.SchemaRegistry = tmpSchemaRegistry
+	tmpAutoRebalance, err := KafkaAutoRebalanceSpecRequestToResponse(request.AutoRebalance)
+	if err != nil {
+		return nil, err
+	}
+	response.AutoRebalance = tmpAutoRebalance
 	return &response, nil
 }

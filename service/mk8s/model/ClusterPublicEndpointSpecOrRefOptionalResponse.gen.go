@@ -13,7 +13,7 @@ import (
 // внешний ip-адрес
 // Real OAPI model name: ClusterPublicEndpointSpecOrRef
 type ClusterPublicEndpointSpecOrRefOptionalResponse struct {
-	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref optional.OptionalNil[vpc.ExternalAddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
 	Spec optional.OptionalNil[ClusterPublicEndpointSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }

@@ -10,6 +10,7 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Ключ — ресурс облака, который объединяет несколько экземпляров криптографических ключей, называемых версиями ключа
 // Real OAPI model name: CryptoKey
 type CryptoKeyOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`

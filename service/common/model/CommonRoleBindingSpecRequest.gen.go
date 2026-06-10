@@ -7,6 +7,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
+	"go.mws.cloud/go-sdk/service/resources/references/support"
 )
 
 // Real OAPI model name: CommonRoleBindingSpec
@@ -14,6 +15,8 @@ type CommonRoleBindingSpecRequest struct {
 	Subject CommonRoleBindingSpecSubjectRequest `json:"subject" yaml:"subject"`
 	// Роль, определяющая права субъекта на ресурс
 	Role iam.RoleRef `json:"role" yaml:"role"`
+	// Идентификатор запроса в службу поддержки, в рамках которого был создан биндинг
+	SupportRequestId *support.RequestIDRef `json:"supportRequestId,omitempty" yaml:"supportRequestId,omitempty"`
 }
 
 func (m *CommonRoleBindingSpecRequest) GetSubject() CommonRoleBindingSpecSubjectRequest {
@@ -38,6 +41,24 @@ func (m *CommonRoleBindingSpecRequest) SetRole(val iam.RoleRef) {
 	m.Role = val
 }
 
+func (m *CommonRoleBindingSpecRequest) GetSupportRequestId() *support.RequestIDRef {
+	if m != nil {
+		return m.SupportRequestId
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpecRequest) SetSupportRequestId(val *support.RequestIDRef) {
+	m.SupportRequestId = val
+}
+
+func (m *CommonRoleBindingSpecRequest) GetSupportRequestIdOr(val support.RequestIDRef) support.RequestIDRef {
+	if m != nil && m.SupportRequestId != nil {
+		return *m.SupportRequestId
+	}
+	return val
+}
+
 func (m *CommonRoleBindingSpecRequest) Clone() *CommonRoleBindingSpecRequest {
 	if m == nil {
 		return nil
@@ -46,6 +67,7 @@ func (m *CommonRoleBindingSpecRequest) Clone() *CommonRoleBindingSpecRequest {
 	clone := *m
 	clone.Subject = *m.Subject.Clone()
 	clone.Role = *m.Role.Clone()
+	clone.SupportRequestId = m.SupportRequestId.Clone()
 	return &clone
 }
 
@@ -60,6 +82,10 @@ func (m *CommonRoleBindingSpecRequest) Parse(ctx context.Context) error {
 
 	if err := m.Role.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Role", err)
+	}
+
+	if err := m.SupportRequestId.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("SupportRequestId", err)
 	}
 
 	return nil

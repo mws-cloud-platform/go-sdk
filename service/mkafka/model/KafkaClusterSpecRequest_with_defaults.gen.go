@@ -16,5 +16,6 @@ func (m *KafkaClusterSpecRequest) WithDefaults() KafkaClusterSpecRequest {
 		out.Active = ptr.Get(true)
 	}
 	out.Instances = out.Instances.WithDefaults()
+	out.AutoRebalance = ptr.Get(out.AutoRebalance.WithDefaults())
 	return out
 }

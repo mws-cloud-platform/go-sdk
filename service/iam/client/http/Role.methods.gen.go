@@ -100,6 +100,9 @@ func (c *Role) queryListGlobalRoleV2(request *client.ListGlobalRoleV2Request) st
 	if request.ShowDeleted != nil {
 		q.Add("showDeleted", conv.StringToString(*request.ShowDeleted))
 	}
+	if request.Type != nil {
+		q.Add("type", conv.StringToString(*request.Type))
+	}
 	return q.Encode()
 }
 

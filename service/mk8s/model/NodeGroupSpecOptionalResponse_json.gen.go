@@ -315,7 +315,11 @@ func (m *NodeGroupSpecScaleOptionalResponse) Encode(e *jx.Encoder) error {
 func (m *NodeGroupSpecScaleOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Fixed.IsSet() {
 		e.FieldStart("fixed")
-		e.Int(m.Fixed.Value)
+		if m.Fixed.IsNull() {
+			e.Null()
+		} else {
+			e.Int(m.Fixed.Value)
+		}
 	}
 
 	if m.Autoscaling.IsSet() {
@@ -341,6 +345,11 @@ func (m *NodeGroupSpecScaleOptionalResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "fixed":
+			if d.Next() == jx.Null {
+				m.Fixed.SetToNull()
+				return d.Null()
+			}
+
 			v, err := decode.Int(d)
 			if err != nil {
 				return err
@@ -504,10 +513,8 @@ func (m *NodeGroupSpecSubnetOptionalResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *NodeGroupSpecSubnetOptionalResponse) encodeFields(e *jx.Encoder) error {
-	if m.Ref.IsSet() {
-		e.FieldStart("ref")
-		m.Ref.Value.Encode(e)
-	}
+	e.FieldStart("ref")
+	m.Ref.Encode(e)
 	return nil
 }
 
@@ -528,7 +535,7 @@ func (m *NodeGroupSpecSubnetOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ref.SetTo(v)
+			m.Ref = v
 			return nil
 		default:
 			return d.Skip()
@@ -558,10 +565,8 @@ func (m *NodeGroupSpecVmTypeOptionalResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *NodeGroupSpecVmTypeOptionalResponse) encodeFields(e *jx.Encoder) error {
-	if m.Ref.IsSet() {
-		e.FieldStart("ref")
-		m.Ref.Value.Encode(e)
-	}
+	e.FieldStart("ref")
+	m.Ref.Encode(e)
 	return nil
 }
 
@@ -582,7 +587,7 @@ func (m *NodeGroupSpecVmTypeOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ref.SetTo(v)
+			m.Ref = v
 			return nil
 		default:
 			return d.Skip()

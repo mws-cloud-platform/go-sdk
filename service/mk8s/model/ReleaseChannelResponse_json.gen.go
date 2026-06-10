@@ -65,6 +65,10 @@ func (m *ReleaseChannelResponse) Decode(d *jx.Decoder) error {
 			m.Name = v
 			return nil
 		case "description":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Str(d)
 			if err != nil {
 				return err

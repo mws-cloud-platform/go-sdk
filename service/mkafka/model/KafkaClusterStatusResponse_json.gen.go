@@ -83,6 +83,11 @@ func (m *KafkaClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("schemaRegistry")
 		m.SchemaRegistry.Encode(e)
 	}
+
+	if m.AutoRebalance != nil {
+		e.FieldStart("autoRebalance")
+		m.AutoRebalance.Encode(e)
+	}
 	return nil
 }
 
@@ -195,6 +200,18 @@ func (m *KafkaClusterStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.SchemaRegistry = &v
+			return nil
+		case "autoRebalance":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v KafkaAutoRebalanceSpecResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.AutoRebalance = &v
 			return nil
 		default:
 			return d.Skip()
