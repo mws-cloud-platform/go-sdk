@@ -12,14 +12,14 @@ type CertificateSpecOptionalResponse struct {
 }
 
 func (m *CertificateSpecOptionalResponse) GetManaged() *CertificateManagedSpecOptionalResponse {
-	if m != nil && m.Managed.IsSet() {
+	if m != nil && m.Managed.IsSet() && !m.Managed.IsNull() {
 		return &m.Managed.Value
 	}
 	return nil
 }
 
 func (m *CertificateSpecOptionalResponse) GetManagedOr(val CertificateManagedSpecOptionalResponse) CertificateManagedSpecOptionalResponse {
-	if m != nil && m.Managed.IsSet() {
+	if m != nil && m.Managed.IsSet() && !m.Managed.IsNull() {
 		return m.Managed.Value
 	}
 	return val

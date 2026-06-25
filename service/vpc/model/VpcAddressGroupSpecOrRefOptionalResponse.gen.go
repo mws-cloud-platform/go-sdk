@@ -34,14 +34,14 @@ func (m *VpcAddressGroupSpecOrRefOptionalResponse) GetRefOr(val vpc.AddressGroup
 }
 
 func (m *VpcAddressGroupSpecOrRefOptionalResponse) GetSpec() *VpcAddressGroupSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
 func (m *VpcAddressGroupSpecOrRefOptionalResponse) GetSpecOr(val VpcAddressGroupSpecOptionalResponse) VpcAddressGroupSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
 	return val

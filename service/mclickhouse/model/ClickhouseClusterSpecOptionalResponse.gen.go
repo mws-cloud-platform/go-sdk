@@ -77,14 +77,14 @@ func (m *ClickhouseClusterSpecOptionalResponse) GetEndpointsOr(val []ClickhouseE
 }
 
 func (m *ClickhouseClusterSpecOptionalResponse) GetCoordinator() *ClickhouseClusterCoordinatorOptionalResponse {
-	if m != nil && m.Coordinator.IsSet() {
+	if m != nil && m.Coordinator.IsSet() && !m.Coordinator.IsNull() {
 		return &m.Coordinator.Value
 	}
 	return nil
 }
 
 func (m *ClickhouseClusterSpecOptionalResponse) GetCoordinatorOr(val ClickhouseClusterCoordinatorOptionalResponse) ClickhouseClusterCoordinatorOptionalResponse {
-	if m != nil && m.Coordinator.IsSet() {
+	if m != nil && m.Coordinator.IsSet() && !m.Coordinator.IsNull() {
 		return m.Coordinator.Value
 	}
 	return val
@@ -116,14 +116,14 @@ func (m *ClickhouseClusterSpecOptionalResponse) GetConfigOr(val map[string]json.
 }
 
 func (m *ClickhouseClusterSpecOptionalResponse) GetStorage() *ClickhouseStorageConfigurationOptionalResponse {
-	if m != nil && m.Storage.IsSet() {
+	if m != nil && m.Storage.IsSet() && !m.Storage.IsNull() {
 		return &m.Storage.Value
 	}
 	return nil
 }
 
 func (m *ClickhouseClusterSpecOptionalResponse) GetStorageOr(val ClickhouseStorageConfigurationOptionalResponse) ClickhouseStorageConfigurationOptionalResponse {
-	if m != nil && m.Storage.IsSet() {
+	if m != nil && m.Storage.IsSet() && !m.Storage.IsNull() {
 		return m.Storage.Value
 	}
 	return val
@@ -141,28 +141,28 @@ func (m *ClickhouseClusterSpecOptionalResponse) SetBootstrapAdmin(val Clickhouse
 }
 
 func (m *ClickhouseClusterSpecOptionalResponse) GetBackup() *ClickhouseClusterBackupOptionalResponse {
-	if m != nil && m.Backup.IsSet() {
+	if m != nil && m.Backup.IsSet() && !m.Backup.IsNull() {
 		return &m.Backup.Value
 	}
 	return nil
 }
 
 func (m *ClickhouseClusterSpecOptionalResponse) GetBackupOr(val ClickhouseClusterBackupOptionalResponse) ClickhouseClusterBackupOptionalResponse {
-	if m != nil && m.Backup.IsSet() {
+	if m != nil && m.Backup.IsSet() && !m.Backup.IsNull() {
 		return m.Backup.Value
 	}
 	return val
 }
 
 func (m *ClickhouseClusterSpecOptionalResponse) GetMaintenanceWindow() *common.MaintenanceWindowOptionalResponse {
-	if m != nil && m.MaintenanceWindow.IsSet() {
+	if m != nil && m.MaintenanceWindow.IsSet() && !m.MaintenanceWindow.IsNull() {
 		return &m.MaintenanceWindow.Value
 	}
 	return nil
 }
 
 func (m *ClickhouseClusterSpecOptionalResponse) GetMaintenanceWindowOr(val common.MaintenanceWindowOptionalResponse) common.MaintenanceWindowOptionalResponse {
-	if m != nil && m.MaintenanceWindow.IsSet() {
+	if m != nil && m.MaintenanceWindow.IsSet() && !m.MaintenanceWindow.IsNull() {
 		return m.MaintenanceWindow.Value
 	}
 	return val

@@ -30,14 +30,14 @@ func (m *ClusterListOptionalResponse) SetItems(val []ClusterOptionalResponse) {
 }
 
 func (m *ClusterListOptionalResponse) GetNextPageToken() *common.NextPageToken {
-	if m != nil && m.NextPageToken.IsSet() {
+	if m != nil && m.NextPageToken.IsSet() && !m.NextPageToken.IsNull() {
 		return &m.NextPageToken.Value
 	}
 	return nil
 }
 
 func (m *ClusterListOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
-	if m != nil && m.NextPageToken.IsSet() {
+	if m != nil && m.NextPageToken.IsSet() && !m.NextPageToken.IsNull() {
 		return m.NextPageToken.Value
 	}
 	return val

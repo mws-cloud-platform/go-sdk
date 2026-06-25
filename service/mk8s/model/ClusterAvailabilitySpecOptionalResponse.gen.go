@@ -15,28 +15,28 @@ type ClusterAvailabilitySpecOptionalResponse struct {
 }
 
 func (m *ClusterAvailabilitySpecOptionalResponse) GetStandalone() *ClusterAvailabilitySpecStandaloneOptionalResponse {
-	if m != nil && m.Standalone.IsSet() {
+	if m != nil && m.Standalone.IsSet() && !m.Standalone.IsNull() {
 		return &m.Standalone.Value
 	}
 	return nil
 }
 
 func (m *ClusterAvailabilitySpecOptionalResponse) GetStandaloneOr(val ClusterAvailabilitySpecStandaloneOptionalResponse) ClusterAvailabilitySpecStandaloneOptionalResponse {
-	if m != nil && m.Standalone.IsSet() {
+	if m != nil && m.Standalone.IsSet() && !m.Standalone.IsNull() {
 		return m.Standalone.Value
 	}
 	return val
 }
 
 func (m *ClusterAvailabilitySpecOptionalResponse) GetZonalHa() *ClusterAvailabilitySpecZonalHaOptionalResponse {
-	if m != nil && m.ZonalHa.IsSet() {
+	if m != nil && m.ZonalHa.IsSet() && !m.ZonalHa.IsNull() {
 		return &m.ZonalHa.Value
 	}
 	return nil
 }
 
 func (m *ClusterAvailabilitySpecOptionalResponse) GetZonalHaOr(val ClusterAvailabilitySpecZonalHaOptionalResponse) ClusterAvailabilitySpecZonalHaOptionalResponse {
-	if m != nil && m.ZonalHa.IsSet() {
+	if m != nil && m.ZonalHa.IsSet() && !m.ZonalHa.IsNull() {
 		return m.ZonalHa.Value
 	}
 	return val

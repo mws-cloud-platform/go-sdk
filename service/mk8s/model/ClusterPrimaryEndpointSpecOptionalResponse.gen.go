@@ -21,14 +21,14 @@ type ClusterPrimaryEndpointSpecOptionalResponse struct {
 }
 
 func (m *ClusterPrimaryEndpointSpecOptionalResponse) GetIpAddress() *ipaddress.IP4Address {
-	if m != nil && m.IpAddress.IsSet() {
+	if m != nil && m.IpAddress.IsSet() && !m.IpAddress.IsNull() {
 		return &m.IpAddress.Value
 	}
 	return nil
 }
 
 func (m *ClusterPrimaryEndpointSpecOptionalResponse) GetIpAddressOr(val ipaddress.IP4Address) ipaddress.IP4Address {
-	if m != nil && m.IpAddress.IsSet() {
+	if m != nil && m.IpAddress.IsSet() && !m.IpAddress.IsNull() {
 		return m.IpAddress.Value
 	}
 	return val

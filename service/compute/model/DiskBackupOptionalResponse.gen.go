@@ -42,14 +42,14 @@ func (m *DiskBackupOptionalResponse) GetKindOr(val string) string {
 }
 
 func (m *DiskBackupOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
 func (m *DiskBackupOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}
 	return val

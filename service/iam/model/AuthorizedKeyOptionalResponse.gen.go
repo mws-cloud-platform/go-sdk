@@ -40,14 +40,14 @@ func (m *AuthorizedKeyOptionalResponse) GetKindOr(val string) string {
 }
 
 func (m *AuthorizedKeyOptionalResponse) GetMetadata() *AuthorizedKeyMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
 func (m *AuthorizedKeyOptionalResponse) GetMetadataOr(val AuthorizedKeyMetadataOptionalResponse) AuthorizedKeyMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}
 	return val

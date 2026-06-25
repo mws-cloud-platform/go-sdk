@@ -32,14 +32,14 @@ func (m *SecretOptionalResponse) SetKind(val string) {
 }
 
 func (m *SecretOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
 func (m *SecretOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}
 	return val

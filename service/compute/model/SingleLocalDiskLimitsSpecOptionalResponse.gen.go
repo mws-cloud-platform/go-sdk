@@ -14,14 +14,14 @@ type SingleLocalDiskLimitsSpecOptionalResponse struct {
 }
 
 func (m *SingleLocalDiskLimitsSpecOptionalResponse) GetSize() *SingleLocalDiskSizeLimitsSpecOptionalResponse {
-	if m != nil && m.Size.IsSet() {
+	if m != nil && m.Size.IsSet() && !m.Size.IsNull() {
 		return &m.Size.Value
 	}
 	return nil
 }
 
 func (m *SingleLocalDiskLimitsSpecOptionalResponse) GetSizeOr(val SingleLocalDiskSizeLimitsSpecOptionalResponse) SingleLocalDiskSizeLimitsSpecOptionalResponse {
-	if m != nil && m.Size.IsSet() {
+	if m != nil && m.Size.IsSet() && !m.Size.IsNull() {
 		return m.Size.Value
 	}
 	return val

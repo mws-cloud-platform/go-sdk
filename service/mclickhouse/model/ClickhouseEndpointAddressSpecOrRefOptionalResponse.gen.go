@@ -34,14 +34,14 @@ func (m *ClickhouseEndpointAddressSpecOrRefOptionalResponse) GetRefOr(val vpc.Ad
 }
 
 func (m *ClickhouseEndpointAddressSpecOrRefOptionalResponse) GetSpec() *ClickhouseEndpointAddressSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
 func (m *ClickhouseEndpointAddressSpecOrRefOptionalResponse) GetSpecOr(val ClickhouseEndpointAddressSpecOptionalResponse) ClickhouseEndpointAddressSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
 	return val

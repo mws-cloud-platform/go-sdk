@@ -20,14 +20,14 @@ type SnapshotSourceOptionalResponse struct {
 }
 
 func (m *SnapshotSourceOptionalResponse) GetDisk() *SnapshotSourceDiskOptionalResponse {
-	if m != nil && m.Disk.IsSet() {
+	if m != nil && m.Disk.IsSet() && !m.Disk.IsNull() {
 		return &m.Disk.Value
 	}
 	return nil
 }
 
 func (m *SnapshotSourceOptionalResponse) GetDiskOr(val SnapshotSourceDiskOptionalResponse) SnapshotSourceDiskOptionalResponse {
-	if m != nil && m.Disk.IsSet() {
+	if m != nil && m.Disk.IsSet() && !m.Disk.IsNull() {
 		return m.Disk.Value
 	}
 	return val

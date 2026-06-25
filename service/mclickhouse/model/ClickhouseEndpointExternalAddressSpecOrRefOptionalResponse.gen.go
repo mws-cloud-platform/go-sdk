@@ -34,14 +34,14 @@ func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) GetRefOr(va
 }
 
 func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) GetSpec() *ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
 func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) GetSpecOr(val ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse) ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
 	return val

@@ -30,14 +30,14 @@ func (m *NodeGroupListOptionalResponse) SetItems(val []NodeGroupOptionalResponse
 }
 
 func (m *NodeGroupListOptionalResponse) GetNextPageToken() *common.NextPageToken {
-	if m != nil && m.NextPageToken.IsSet() {
+	if m != nil && m.NextPageToken.IsSet() && !m.NextPageToken.IsNull() {
 		return &m.NextPageToken.Value
 	}
 	return nil
 }
 
 func (m *NodeGroupListOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
-	if m != nil && m.NextPageToken.IsSet() {
+	if m != nil && m.NextPageToken.IsSet() && !m.NextPageToken.IsNull() {
 		return m.NextPageToken.Value
 	}
 	return val

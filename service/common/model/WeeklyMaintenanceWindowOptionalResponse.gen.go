@@ -41,14 +41,14 @@ func (m *WeeklyMaintenanceWindowOptionalResponse) SetHour(val int) {
 }
 
 func (m *WeeklyMaintenanceWindowOptionalResponse) GetDuration() *duration.Duration {
-	if m != nil && m.Duration.IsSet() {
+	if m != nil && m.Duration.IsSet() && !m.Duration.IsNull() {
 		return &m.Duration.Value
 	}
 	return nil
 }
 
 func (m *WeeklyMaintenanceWindowOptionalResponse) GetDurationOr(val duration.Duration) duration.Duration {
-	if m != nil && m.Duration.IsSet() {
+	if m != nil && m.Duration.IsSet() && !m.Duration.IsNull() {
 		return m.Duration.Value
 	}
 	return val

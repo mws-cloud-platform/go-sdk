@@ -57,14 +57,14 @@ func (m *OsSpecOptionalResponse) GetStandardDnsRecordsOr(val bool) bool {
 }
 
 func (m *OsSpecOptionalResponse) GetMetadata() *OsSpecMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
 func (m *OsSpecOptionalResponse) GetMetadataOr(val OsSpecMetadataOptionalResponse) OsSpecMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}
 	return val

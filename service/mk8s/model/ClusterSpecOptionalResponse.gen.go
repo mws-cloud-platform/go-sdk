@@ -100,14 +100,14 @@ func (m *ClusterSpecNetworkOptionalResponse) SetPrimaryEndpoint(val ClusterPrima
 }
 
 func (m *ClusterSpecNetworkOptionalResponse) GetPublicEndpoint() *ClusterPublicEndpointSpecOrRefOptionalResponse {
-	if m != nil && m.PublicEndpoint.IsSet() {
+	if m != nil && m.PublicEndpoint.IsSet() && !m.PublicEndpoint.IsNull() {
 		return &m.PublicEndpoint.Value
 	}
 	return nil
 }
 
 func (m *ClusterSpecNetworkOptionalResponse) GetPublicEndpointOr(val ClusterPublicEndpointSpecOrRefOptionalResponse) ClusterPublicEndpointSpecOrRefOptionalResponse {
-	if m != nil && m.PublicEndpoint.IsSet() {
+	if m != nil && m.PublicEndpoint.IsSet() && !m.PublicEndpoint.IsNull() {
 		return m.PublicEndpoint.Value
 	}
 	return val

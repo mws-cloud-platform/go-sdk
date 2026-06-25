@@ -31,14 +31,14 @@ func (m *StorageDiskSpecOrRefOptionalResponse) GetRefOr(val compute.DiskRef) com
 }
 
 func (m *StorageDiskSpecOrRefOptionalResponse) GetSpec() *StorageDiskSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
 func (m *StorageDiskSpecOrRefOptionalResponse) GetSpecOr(val StorageDiskSpecOptionalResponse) StorageDiskSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
 	return val

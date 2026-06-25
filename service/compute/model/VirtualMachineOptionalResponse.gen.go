@@ -40,14 +40,14 @@ func (m *VirtualMachineOptionalResponse) GetKindOr(val string) string {
 }
 
 func (m *VirtualMachineOptionalResponse) GetMetadata() *VirtualMachineMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
 func (m *VirtualMachineOptionalResponse) GetMetadataOr(val VirtualMachineMetadataOptionalResponse) VirtualMachineMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}
 	return val

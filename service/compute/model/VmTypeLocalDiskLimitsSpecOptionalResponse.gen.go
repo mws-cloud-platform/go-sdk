@@ -16,28 +16,28 @@ type VmTypeLocalDiskLimitsSpecOptionalResponse struct {
 }
 
 func (m *VmTypeLocalDiskLimitsSpecOptionalResponse) GetDisk() *SingleLocalDiskLimitsSpecOptionalResponse {
-	if m != nil && m.Disk.IsSet() {
+	if m != nil && m.Disk.IsSet() && !m.Disk.IsNull() {
 		return &m.Disk.Value
 	}
 	return nil
 }
 
 func (m *VmTypeLocalDiskLimitsSpecOptionalResponse) GetDiskOr(val SingleLocalDiskLimitsSpecOptionalResponse) SingleLocalDiskLimitsSpecOptionalResponse {
-	if m != nil && m.Disk.IsSet() {
+	if m != nil && m.Disk.IsSet() && !m.Disk.IsNull() {
 		return m.Disk.Value
 	}
 	return val
 }
 
 func (m *VmTypeLocalDiskLimitsSpecOptionalResponse) GetTotal() *TotalLocalDiskLimitsSpecOptionalResponse {
-	if m != nil && m.Total.IsSet() {
+	if m != nil && m.Total.IsSet() && !m.Total.IsNull() {
 		return &m.Total.Value
 	}
 	return nil
 }
 
 func (m *VmTypeLocalDiskLimitsSpecOptionalResponse) GetTotalOr(val TotalLocalDiskLimitsSpecOptionalResponse) TotalLocalDiskLimitsSpecOptionalResponse {
-	if m != nil && m.Total.IsSet() {
+	if m != nil && m.Total.IsSet() && !m.Total.IsNull() {
 		return m.Total.Value
 	}
 	return val

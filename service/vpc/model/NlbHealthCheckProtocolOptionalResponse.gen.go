@@ -18,42 +18,42 @@ type NlbHealthCheckProtocolOptionalResponse struct {
 }
 
 func (m *NlbHealthCheckProtocolOptionalResponse) GetHttp() *NlbHealthCheckHttpOptionalResponse {
-	if m != nil && m.Http.IsSet() {
+	if m != nil && m.Http.IsSet() && !m.Http.IsNull() {
 		return &m.Http.Value
 	}
 	return nil
 }
 
 func (m *NlbHealthCheckProtocolOptionalResponse) GetHttpOr(val NlbHealthCheckHttpOptionalResponse) NlbHealthCheckHttpOptionalResponse {
-	if m != nil && m.Http.IsSet() {
+	if m != nil && m.Http.IsSet() && !m.Http.IsNull() {
 		return m.Http.Value
 	}
 	return val
 }
 
 func (m *NlbHealthCheckProtocolOptionalResponse) GetHttps() *NlbHealthCheckHttpsOptionalResponse {
-	if m != nil && m.Https.IsSet() {
+	if m != nil && m.Https.IsSet() && !m.Https.IsNull() {
 		return &m.Https.Value
 	}
 	return nil
 }
 
 func (m *NlbHealthCheckProtocolOptionalResponse) GetHttpsOr(val NlbHealthCheckHttpsOptionalResponse) NlbHealthCheckHttpsOptionalResponse {
-	if m != nil && m.Https.IsSet() {
+	if m != nil && m.Https.IsSet() && !m.Https.IsNull() {
 		return m.Https.Value
 	}
 	return val
 }
 
 func (m *NlbHealthCheckProtocolOptionalResponse) GetTcp() *NlbHealthCheckTcpOptionalResponse {
-	if m != nil && m.Tcp.IsSet() {
+	if m != nil && m.Tcp.IsSet() && !m.Tcp.IsNull() {
 		return &m.Tcp.Value
 	}
 	return nil
 }
 
 func (m *NlbHealthCheckProtocolOptionalResponse) GetTcpOr(val NlbHealthCheckTcpOptionalResponse) NlbHealthCheckTcpOptionalResponse {
-	if m != nil && m.Tcp.IsSet() {
+	if m != nil && m.Tcp.IsSet() && !m.Tcp.IsNull() {
 		return m.Tcp.Value
 	}
 	return val

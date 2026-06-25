@@ -55,14 +55,14 @@ func (m *RouteNextHopOptionalResponse) GetNatGatewayOr(val vpc.NatGatewayRef) vp
 }
 
 func (m *RouteNextHopOptionalResponse) GetAddress() *RouteNextHopAddressOptionalResponse {
-	if m != nil && m.Address.IsSet() {
+	if m != nil && m.Address.IsSet() && !m.Address.IsNull() {
 		return &m.Address.Value
 	}
 	return nil
 }
 
 func (m *RouteNextHopOptionalResponse) GetAddressOr(val RouteNextHopAddressOptionalResponse) RouteNextHopAddressOptionalResponse {
-	if m != nil && m.Address.IsSet() {
+	if m != nil && m.Address.IsSet() && !m.Address.IsNull() {
 		return m.Address.Value
 	}
 	return val

@@ -46,28 +46,28 @@ func (m *VirtualMachineSpecOptionalResponse) SetVmType(val compute.VmTypeRef) {
 }
 
 func (m *VirtualMachineSpecOptionalResponse) GetHardware() *HardwareSpecOptionalResponse {
-	if m != nil && m.Hardware.IsSet() {
+	if m != nil && m.Hardware.IsSet() && !m.Hardware.IsNull() {
 		return &m.Hardware.Value
 	}
 	return nil
 }
 
 func (m *VirtualMachineSpecOptionalResponse) GetHardwareOr(val HardwareSpecOptionalResponse) HardwareSpecOptionalResponse {
-	if m != nil && m.Hardware.IsSet() {
+	if m != nil && m.Hardware.IsSet() && !m.Hardware.IsNull() {
 		return m.Hardware.Value
 	}
 	return val
 }
 
 func (m *VirtualMachineSpecOptionalResponse) GetOs() *OsSpecOptionalResponse {
-	if m != nil && m.Os.IsSet() {
+	if m != nil && m.Os.IsSet() && !m.Os.IsNull() {
 		return &m.Os.Value
 	}
 	return nil
 }
 
 func (m *VirtualMachineSpecOptionalResponse) GetOsOr(val OsSpecOptionalResponse) OsSpecOptionalResponse {
-	if m != nil && m.Os.IsSet() {
+	if m != nil && m.Os.IsSet() && !m.Os.IsNull() {
 		return m.Os.Value
 	}
 	return val
@@ -96,14 +96,14 @@ func (m *VirtualMachineSpecOptionalResponse) SetNetwork(val NetworkSpecOptionalR
 }
 
 func (m *VirtualMachineSpecOptionalResponse) GetServiceAccount() *iam.ServiceAccountRef {
-	if m != nil && m.ServiceAccount.IsSet() {
+	if m != nil && m.ServiceAccount.IsSet() && !m.ServiceAccount.IsNull() {
 		return &m.ServiceAccount.Value
 	}
 	return nil
 }
 
 func (m *VirtualMachineSpecOptionalResponse) GetServiceAccountOr(val iam.ServiceAccountRef) iam.ServiceAccountRef {
-	if m != nil && m.ServiceAccount.IsSet() {
+	if m != nil && m.ServiceAccount.IsSet() && !m.ServiceAccount.IsNull() {
 		return m.ServiceAccount.Value
 	}
 	return val

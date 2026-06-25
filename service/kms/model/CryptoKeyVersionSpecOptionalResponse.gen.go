@@ -17,28 +17,28 @@ type CryptoKeyVersionSpecOptionalResponse struct {
 }
 
 func (m *CryptoKeyVersionSpecOptionalResponse) GetUsagePolicy() *CryptoKeyVersionSpecUsagePolicyOptionalResponse {
-	if m != nil && m.UsagePolicy.IsSet() {
+	if m != nil && m.UsagePolicy.IsSet() && !m.UsagePolicy.IsNull() {
 		return &m.UsagePolicy.Value
 	}
 	return nil
 }
 
 func (m *CryptoKeyVersionSpecOptionalResponse) GetUsagePolicyOr(val CryptoKeyVersionSpecUsagePolicyOptionalResponse) CryptoKeyVersionSpecUsagePolicyOptionalResponse {
-	if m != nil && m.UsagePolicy.IsSet() {
+	if m != nil && m.UsagePolicy.IsSet() && !m.UsagePolicy.IsNull() {
 		return m.UsagePolicy.Value
 	}
 	return val
 }
 
 func (m *CryptoKeyVersionSpecOptionalResponse) GetDestructionPolicy() *CryptoKeyVersionSpecDestructionPolicyOptionalResponse {
-	if m != nil && m.DestructionPolicy.IsSet() {
+	if m != nil && m.DestructionPolicy.IsSet() && !m.DestructionPolicy.IsNull() {
 		return &m.DestructionPolicy.Value
 	}
 	return nil
 }
 
 func (m *CryptoKeyVersionSpecOptionalResponse) GetDestructionPolicyOr(val CryptoKeyVersionSpecDestructionPolicyOptionalResponse) CryptoKeyVersionSpecDestructionPolicyOptionalResponse {
-	if m != nil && m.DestructionPolicy.IsSet() {
+	if m != nil && m.DestructionPolicy.IsSet() && !m.DestructionPolicy.IsNull() {
 		return m.DestructionPolicy.Value
 	}
 	return val

@@ -29,14 +29,14 @@ func (m *CommonRoleBindingFederationOptionalResponse) SetId(val iam.UserFederati
 }
 
 func (m *CommonRoleBindingFederationOptionalResponse) GetContext() *CommonRoleBindingFederationContextOptionalResponse {
-	if m != nil && m.Context.IsSet() {
+	if m != nil && m.Context.IsSet() && !m.Context.IsNull() {
 		return &m.Context.Value
 	}
 	return nil
 }
 
 func (m *CommonRoleBindingFederationOptionalResponse) GetContextOr(val CommonRoleBindingFederationContextOptionalResponse) CommonRoleBindingFederationContextOptionalResponse {
-	if m != nil && m.Context.IsSet() {
+	if m != nil && m.Context.IsSet() && !m.Context.IsNull() {
 		return m.Context.Value
 	}
 	return val

@@ -18,14 +18,14 @@ type DiskBackupSourceOptionalResponse struct {
 }
 
 func (m *DiskBackupSourceOptionalResponse) GetDisk() *DiskBackupSourceDiskOptionalResponse {
-	if m != nil && m.Disk.IsSet() {
+	if m != nil && m.Disk.IsSet() && !m.Disk.IsNull() {
 		return &m.Disk.Value
 	}
 	return nil
 }
 
 func (m *DiskBackupSourceOptionalResponse) GetDiskOr(val DiskBackupSourceDiskOptionalResponse) DiskBackupSourceDiskOptionalResponse {
-	if m != nil && m.Disk.IsSet() {
+	if m != nil && m.Disk.IsSet() && !m.Disk.IsNull() {
 		return m.Disk.Value
 	}
 	return val

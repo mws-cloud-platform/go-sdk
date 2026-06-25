@@ -39,14 +39,14 @@ func (m *ClickhouseClusterUserOptionalResponse) GetKindOr(val string) string {
 }
 
 func (m *ClickhouseClusterUserOptionalResponse) GetMetadata() *ClickhouseClusterUserMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
 func (m *ClickhouseClusterUserOptionalResponse) GetMetadataOr(val ClickhouseClusterUserMetadataOptionalResponse) ClickhouseClusterUserMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}
 	return val

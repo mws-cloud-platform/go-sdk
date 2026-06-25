@@ -14,14 +14,14 @@ type FirewallRuleDestinationOptionalResponse struct {
 }
 
 func (m *FirewallRuleDestinationOptionalResponse) GetSpec() *FirewallRuleDestinationSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
 func (m *FirewallRuleDestinationOptionalResponse) GetSpecOr(val FirewallRuleDestinationSpecOptionalResponse) FirewallRuleDestinationSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
 	return val

@@ -19,28 +19,28 @@ type ClusterPublicEndpointSpecOrRefOptionalResponse struct {
 }
 
 func (m *ClusterPublicEndpointSpecOrRefOptionalResponse) GetRef() *vpc.ExternalAddressRef {
-	if m != nil && m.Ref.IsSet() {
+	if m != nil && m.Ref.IsSet() && !m.Ref.IsNull() {
 		return &m.Ref.Value
 	}
 	return nil
 }
 
 func (m *ClusterPublicEndpointSpecOrRefOptionalResponse) GetRefOr(val vpc.ExternalAddressRef) vpc.ExternalAddressRef {
-	if m != nil && m.Ref.IsSet() {
+	if m != nil && m.Ref.IsSet() && !m.Ref.IsNull() {
 		return m.Ref.Value
 	}
 	return val
 }
 
 func (m *ClusterPublicEndpointSpecOrRefOptionalResponse) GetSpec() *ClusterPublicEndpointSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
 func (m *ClusterPublicEndpointSpecOrRefOptionalResponse) GetSpecOr(val ClusterPublicEndpointSpecOptionalResponse) ClusterPublicEndpointSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
 	return val

@@ -28,14 +28,14 @@ func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) SetAddress(val Address
 }
 
 func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) GetOneToOneNat() *ComputeOneToOneNatSpecOptionalResponse {
-	if m != nil && m.OneToOneNat.IsSet() {
+	if m != nil && m.OneToOneNat.IsSet() && !m.OneToOneNat.IsNull() {
 		return &m.OneToOneNat.Value
 	}
 	return nil
 }
 
 func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) GetOneToOneNatOr(val ComputeOneToOneNatSpecOptionalResponse) ComputeOneToOneNatSpecOptionalResponse {
-	if m != nil && m.OneToOneNat.IsSet() {
+	if m != nil && m.OneToOneNat.IsSet() && !m.OneToOneNat.IsNull() {
 		return m.OneToOneNat.Value
 	}
 	return val

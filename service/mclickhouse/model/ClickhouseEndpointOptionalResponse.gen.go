@@ -30,14 +30,14 @@ func (m *ClickhouseEndpointOptionalResponse) SetAddress(val ClickhouseEndpointAd
 }
 
 func (m *ClickhouseEndpointOptionalResponse) GetExternalAddress() *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse {
-	if m != nil && m.ExternalAddress.IsSet() {
+	if m != nil && m.ExternalAddress.IsSet() && !m.ExternalAddress.IsNull() {
 		return &m.ExternalAddress.Value
 	}
 	return nil
 }
 
 func (m *ClickhouseEndpointOptionalResponse) GetExternalAddressOr(val ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse {
-	if m != nil && m.ExternalAddress.IsSet() {
+	if m != nil && m.ExternalAddress.IsSet() && !m.ExternalAddress.IsNull() {
 		return m.ExternalAddress.Value
 	}
 	return val

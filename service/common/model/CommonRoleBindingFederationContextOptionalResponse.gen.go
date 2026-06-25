@@ -28,14 +28,14 @@ func (m *CommonRoleBindingFederationContextOptionalResponse) GetSubjectOr(val st
 }
 
 func (m *CommonRoleBindingFederationContextOptionalResponse) GetAttribute() *CommonRoleBindingFederationContextAttributeOptionalResponse {
-	if m != nil && m.Attribute.IsSet() {
+	if m != nil && m.Attribute.IsSet() && !m.Attribute.IsNull() {
 		return &m.Attribute.Value
 	}
 	return nil
 }
 
 func (m *CommonRoleBindingFederationContextOptionalResponse) GetAttributeOr(val CommonRoleBindingFederationContextAttributeOptionalResponse) CommonRoleBindingFederationContextAttributeOptionalResponse {
-	if m != nil && m.Attribute.IsSet() {
+	if m != nil && m.Attribute.IsSet() && !m.Attribute.IsNull() {
 		return m.Attribute.Value
 	}
 	return val

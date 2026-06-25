@@ -19,28 +19,28 @@ type NlbListenerOptionalResponse struct {
 }
 
 func (m *NlbListenerOptionalResponse) GetInternal() *NlbListenerInternalOptionalResponse {
-	if m != nil && m.Internal.IsSet() {
+	if m != nil && m.Internal.IsSet() && !m.Internal.IsNull() {
 		return &m.Internal.Value
 	}
 	return nil
 }
 
 func (m *NlbListenerOptionalResponse) GetInternalOr(val NlbListenerInternalOptionalResponse) NlbListenerInternalOptionalResponse {
-	if m != nil && m.Internal.IsSet() {
+	if m != nil && m.Internal.IsSet() && !m.Internal.IsNull() {
 		return m.Internal.Value
 	}
 	return val
 }
 
 func (m *NlbListenerOptionalResponse) GetExternal() *NlbListenerExternalOptionalResponse {
-	if m != nil && m.External.IsSet() {
+	if m != nil && m.External.IsSet() && !m.External.IsNull() {
 		return &m.External.Value
 	}
 	return nil
 }
 
 func (m *NlbListenerOptionalResponse) GetExternalOr(val NlbListenerExternalOptionalResponse) NlbListenerExternalOptionalResponse {
-	if m != nil && m.External.IsSet() {
+	if m != nil && m.External.IsSet() && !m.External.IsNull() {
 		return m.External.Value
 	}
 	return val

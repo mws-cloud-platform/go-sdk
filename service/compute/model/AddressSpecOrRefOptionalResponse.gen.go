@@ -36,14 +36,14 @@ func (m *AddressSpecOrRefOptionalResponse) GetRefOr(val vpc.AddressRef) vpc.Addr
 }
 
 func (m *AddressSpecOrRefOptionalResponse) GetSpec() *AddressSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
 func (m *AddressSpecOrRefOptionalResponse) GetSpecOr(val AddressSpecOptionalResponse) AddressSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
 	return val

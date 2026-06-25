@@ -34,14 +34,14 @@ func (m *ResourceExternalAddressSpecOrRefOptionalResponse) GetRefOr(val vpc.Exte
 }
 
 func (m *ResourceExternalAddressSpecOrRefOptionalResponse) GetSpec() *ResourceExternalAddressSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
 func (m *ResourceExternalAddressSpecOrRefOptionalResponse) GetSpecOr(val ResourceExternalAddressSpecOptionalResponse) ResourceExternalAddressSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
 	return val

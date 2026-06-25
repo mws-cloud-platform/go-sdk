@@ -43,14 +43,14 @@ func (m *EgressNatSpecOptionalResponse) SetExternal(val EgressNatSpecExternalOpt
 }
 
 func (m *EgressNatSpecOptionalResponse) GetPortAllocation() *EgressNatSpecPortAllocationOptionalResponse {
-	if m != nil && m.PortAllocation.IsSet() {
+	if m != nil && m.PortAllocation.IsSet() && !m.PortAllocation.IsNull() {
 		return &m.PortAllocation.Value
 	}
 	return nil
 }
 
 func (m *EgressNatSpecOptionalResponse) GetPortAllocationOr(val EgressNatSpecPortAllocationOptionalResponse) EgressNatSpecPortAllocationOptionalResponse {
-	if m != nil && m.PortAllocation.IsSet() {
+	if m != nil && m.PortAllocation.IsSet() && !m.PortAllocation.IsNull() {
 		return m.PortAllocation.Value
 	}
 	return val

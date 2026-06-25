@@ -60,14 +60,14 @@ func (m *NlbRuleOptionalResponse) SetTargetAddressGroups(val []VpcAddressGroupSp
 }
 
 func (m *NlbRuleOptionalResponse) GetHealthCheck() *NlbHealthCheckOptionalResponse {
-	if m != nil && m.HealthCheck.IsSet() {
+	if m != nil && m.HealthCheck.IsSet() && !m.HealthCheck.IsNull() {
 		return &m.HealthCheck.Value
 	}
 	return nil
 }
 
 func (m *NlbRuleOptionalResponse) GetHealthCheckOr(val NlbHealthCheckOptionalResponse) NlbHealthCheckOptionalResponse {
-	if m != nil && m.HealthCheck.IsSet() {
+	if m != nil && m.HealthCheck.IsSet() && !m.HealthCheck.IsNull() {
 		return m.HealthCheck.Value
 	}
 	return val

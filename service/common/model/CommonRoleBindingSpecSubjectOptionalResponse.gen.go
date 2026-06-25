@@ -69,14 +69,14 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetServiceAgentOr(val iam
 }
 
 func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetUserFederation() *CommonRoleBindingFederationOptionalResponse {
-	if m != nil && m.UserFederation.IsSet() {
+	if m != nil && m.UserFederation.IsSet() && !m.UserFederation.IsNull() {
 		return &m.UserFederation.Value
 	}
 	return nil
 }
 
 func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetUserFederationOr(val CommonRoleBindingFederationOptionalResponse) CommonRoleBindingFederationOptionalResponse {
-	if m != nil && m.UserFederation.IsSet() {
+	if m != nil && m.UserFederation.IsSet() && !m.UserFederation.IsNull() {
 		return m.UserFederation.Value
 	}
 	return val

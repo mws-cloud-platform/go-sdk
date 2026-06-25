@@ -22,70 +22,70 @@ type VmTypeSpecOptionalResponse struct {
 }
 
 func (m *VmTypeSpecOptionalResponse) GetCpu() *VmTypeCpuSpecOptionalResponse {
-	if m != nil && m.Cpu.IsSet() {
+	if m != nil && m.Cpu.IsSet() && !m.Cpu.IsNull() {
 		return &m.Cpu.Value
 	}
 	return nil
 }
 
 func (m *VmTypeSpecOptionalResponse) GetCpuOr(val VmTypeCpuSpecOptionalResponse) VmTypeCpuSpecOptionalResponse {
-	if m != nil && m.Cpu.IsSet() {
+	if m != nil && m.Cpu.IsSet() && !m.Cpu.IsNull() {
 		return m.Cpu.Value
 	}
 	return val
 }
 
 func (m *VmTypeSpecOptionalResponse) GetMemory() *VmTypeMemorySpecOptionalResponse {
-	if m != nil && m.Memory.IsSet() {
+	if m != nil && m.Memory.IsSet() && !m.Memory.IsNull() {
 		return &m.Memory.Value
 	}
 	return nil
 }
 
 func (m *VmTypeSpecOptionalResponse) GetMemoryOr(val VmTypeMemorySpecOptionalResponse) VmTypeMemorySpecOptionalResponse {
-	if m != nil && m.Memory.IsSet() {
+	if m != nil && m.Memory.IsSet() && !m.Memory.IsNull() {
 		return m.Memory.Value
 	}
 	return val
 }
 
 func (m *VmTypeSpecOptionalResponse) GetDisks() *VmTypeDisksSpecOptionalResponse {
-	if m != nil && m.Disks.IsSet() {
+	if m != nil && m.Disks.IsSet() && !m.Disks.IsNull() {
 		return &m.Disks.Value
 	}
 	return nil
 }
 
 func (m *VmTypeSpecOptionalResponse) GetDisksOr(val VmTypeDisksSpecOptionalResponse) VmTypeDisksSpecOptionalResponse {
-	if m != nil && m.Disks.IsSet() {
+	if m != nil && m.Disks.IsSet() && !m.Disks.IsNull() {
 		return m.Disks.Value
 	}
 	return val
 }
 
 func (m *VmTypeSpecOptionalResponse) GetLocalDisks() *VmTypeLocalDisksSpecOptionalResponse {
-	if m != nil && m.LocalDisks.IsSet() {
+	if m != nil && m.LocalDisks.IsSet() && !m.LocalDisks.IsNull() {
 		return &m.LocalDisks.Value
 	}
 	return nil
 }
 
 func (m *VmTypeSpecOptionalResponse) GetLocalDisksOr(val VmTypeLocalDisksSpecOptionalResponse) VmTypeLocalDisksSpecOptionalResponse {
-	if m != nil && m.LocalDisks.IsSet() {
+	if m != nil && m.LocalDisks.IsSet() && !m.LocalDisks.IsNull() {
 		return m.LocalDisks.Value
 	}
 	return val
 }
 
 func (m *VmTypeSpecOptionalResponse) GetNetwork() *VmTypeSpecNetworkOptionalResponse {
-	if m != nil && m.Network.IsSet() {
+	if m != nil && m.Network.IsSet() && !m.Network.IsNull() {
 		return &m.Network.Value
 	}
 	return nil
 }
 
 func (m *VmTypeSpecOptionalResponse) GetNetworkOr(val VmTypeSpecNetworkOptionalResponse) VmTypeSpecNetworkOptionalResponse {
-	if m != nil && m.Network.IsSet() {
+	if m != nil && m.Network.IsSet() && !m.Network.IsNull() {
 		return m.Network.Value
 	}
 	return val

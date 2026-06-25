@@ -18,14 +18,14 @@ type NodeGroupVersionControlSpecOptionalResponse struct {
 }
 
 func (m *NodeGroupVersionControlSpecOptionalResponse) GetVersion() *string {
-	if m != nil && m.Version.IsSet() {
+	if m != nil && m.Version.IsSet() && !m.Version.IsNull() {
 		return &m.Version.Value
 	}
 	return nil
 }
 
 func (m *NodeGroupVersionControlSpecOptionalResponse) GetVersionOr(val string) string {
-	if m != nil && m.Version.IsSet() {
+	if m != nil && m.Version.IsSet() && !m.Version.IsNull() {
 		return m.Version.Value
 	}
 	return val
@@ -46,14 +46,14 @@ func (m *NodeGroupVersionControlSpecOptionalResponse) GetAutoUpdateOr(val bool) 
 }
 
 func (m *NodeGroupVersionControlSpecOptionalResponse) GetMaintenanceWindow() *common.MaintenanceWindowOptionalResponse {
-	if m != nil && m.MaintenanceWindow.IsSet() {
+	if m != nil && m.MaintenanceWindow.IsSet() && !m.MaintenanceWindow.IsNull() {
 		return &m.MaintenanceWindow.Value
 	}
 	return nil
 }
 
 func (m *NodeGroupVersionControlSpecOptionalResponse) GetMaintenanceWindowOr(val common.MaintenanceWindowOptionalResponse) common.MaintenanceWindowOptionalResponse {
-	if m != nil && m.MaintenanceWindow.IsSet() {
+	if m != nil && m.MaintenanceWindow.IsSet() && !m.MaintenanceWindow.IsNull() {
 		return m.MaintenanceWindow.Value
 	}
 	return val

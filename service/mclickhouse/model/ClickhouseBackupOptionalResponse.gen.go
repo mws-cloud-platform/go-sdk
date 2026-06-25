@@ -41,28 +41,28 @@ func (m *ClickhouseBackupOptionalResponse) GetKindOr(val string) string {
 }
 
 func (m *ClickhouseBackupOptionalResponse) GetMetadata() *ClickhouseBackupMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
 func (m *ClickhouseBackupOptionalResponse) GetMetadataOr(val ClickhouseBackupMetadataOptionalResponse) ClickhouseBackupMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() {
+	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}
 	return val
 }
 
 func (m *ClickhouseBackupOptionalResponse) GetSpec() *ClickhouseBackupSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
 func (m *ClickhouseBackupOptionalResponse) GetSpecOr(val ClickhouseBackupSpecOptionalResponse) ClickhouseBackupSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
 	return val

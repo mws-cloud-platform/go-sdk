@@ -116,14 +116,14 @@ func (m *VmTypeLocalDisksSpecOptionalResponse) GetSizeOr(val bytesize.ByteSize) 
 }
 
 func (m *VmTypeLocalDisksSpecOptionalResponse) GetLimits() *VmTypeLocalDiskLimitsSpecOptionalResponse {
-	if m != nil && m.Limits.IsSet() {
+	if m != nil && m.Limits.IsSet() && !m.Limits.IsNull() {
 		return &m.Limits.Value
 	}
 	return nil
 }
 
 func (m *VmTypeLocalDisksSpecOptionalResponse) GetLimitsOr(val VmTypeLocalDiskLimitsSpecOptionalResponse) VmTypeLocalDiskLimitsSpecOptionalResponse {
-	if m != nil && m.Limits.IsSet() {
+	if m != nil && m.Limits.IsSet() && !m.Limits.IsNull() {
 		return m.Limits.Value
 	}
 	return val

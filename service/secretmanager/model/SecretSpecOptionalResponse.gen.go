@@ -48,14 +48,14 @@ func (m *SecretSpecOptionalResponse) GetCurrentSecretVersionOr(val secretmanager
 }
 
 func (m *SecretSpecOptionalResponse) GetEncryption() *EncryptionSpecOptionalResponse {
-	if m != nil && m.Encryption.IsSet() {
+	if m != nil && m.Encryption.IsSet() && !m.Encryption.IsNull() {
 		return &m.Encryption.Value
 	}
 	return nil
 }
 
 func (m *SecretSpecOptionalResponse) GetEncryptionOr(val EncryptionSpecOptionalResponse) EncryptionSpecOptionalResponse {
-	if m != nil && m.Encryption.IsSet() {
+	if m != nil && m.Encryption.IsSet() && !m.Encryption.IsNull() {
 		return m.Encryption.Value
 	}
 	return val

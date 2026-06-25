@@ -110,28 +110,28 @@ func (m *NodeGroupSpecOptionalResponse) SetScale(val NodeGroupSpecScaleOptionalR
 }
 
 func (m *NodeGroupSpecOptionalResponse) GetLabels() []NodeLabelSpecOptionalResponse {
-	if m != nil && m.Labels.IsSet() {
+	if m != nil && m.Labels.IsSet() && !m.Labels.IsNull() {
 		return m.Labels.Value
 	}
 	return nil
 }
 
 func (m *NodeGroupSpecOptionalResponse) GetLabelsOr(val []NodeLabelSpecOptionalResponse) []NodeLabelSpecOptionalResponse {
-	if m != nil && m.Labels.IsSet() {
+	if m != nil && m.Labels.IsSet() && !m.Labels.IsNull() {
 		return m.Labels.Value
 	}
 	return val
 }
 
 func (m *NodeGroupSpecOptionalResponse) GetTaints() []NodeTaintSpecOptionalResponse {
-	if m != nil && m.Taints.IsSet() {
+	if m != nil && m.Taints.IsSet() && !m.Taints.IsNull() {
 		return m.Taints.Value
 	}
 	return nil
 }
 
 func (m *NodeGroupSpecOptionalResponse) GetTaintsOr(val []NodeTaintSpecOptionalResponse) []NodeTaintSpecOptionalResponse {
-	if m != nil && m.Taints.IsSet() {
+	if m != nil && m.Taints.IsSet() && !m.Taints.IsNull() {
 		return m.Taints.Value
 	}
 	return val
@@ -273,28 +273,28 @@ type NodeGroupSpecScaleOptionalResponse struct {
 }
 
 func (m *NodeGroupSpecScaleOptionalResponse) GetFixed() *int {
-	if m != nil && m.Fixed.IsSet() {
+	if m != nil && m.Fixed.IsSet() && !m.Fixed.IsNull() {
 		return &m.Fixed.Value
 	}
 	return nil
 }
 
 func (m *NodeGroupSpecScaleOptionalResponse) GetFixedOr(val int) int {
-	if m != nil && m.Fixed.IsSet() {
+	if m != nil && m.Fixed.IsSet() && !m.Fixed.IsNull() {
 		return m.Fixed.Value
 	}
 	return val
 }
 
 func (m *NodeGroupSpecScaleOptionalResponse) GetAutoscaling() *NodeGroupSpecScaleAutoscalingOptionalResponse {
-	if m != nil && m.Autoscaling.IsSet() {
+	if m != nil && m.Autoscaling.IsSet() && !m.Autoscaling.IsNull() {
 		return &m.Autoscaling.Value
 	}
 	return nil
 }
 
 func (m *NodeGroupSpecScaleOptionalResponse) GetAutoscalingOr(val NodeGroupSpecScaleAutoscalingOptionalResponse) NodeGroupSpecScaleAutoscalingOptionalResponse {
-	if m != nil && m.Autoscaling.IsSet() {
+	if m != nil && m.Autoscaling.IsSet() && !m.Autoscaling.IsNull() {
 		return m.Autoscaling.Value
 	}
 	return val

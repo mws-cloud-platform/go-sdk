@@ -19,28 +19,28 @@ type ClusterPrimaryEndpointSpecOrRefOptionalResponse struct {
 }
 
 func (m *ClusterPrimaryEndpointSpecOrRefOptionalResponse) GetRef() *vpc.AddressRef {
-	if m != nil && m.Ref.IsSet() {
+	if m != nil && m.Ref.IsSet() && !m.Ref.IsNull() {
 		return &m.Ref.Value
 	}
 	return nil
 }
 
 func (m *ClusterPrimaryEndpointSpecOrRefOptionalResponse) GetRefOr(val vpc.AddressRef) vpc.AddressRef {
-	if m != nil && m.Ref.IsSet() {
+	if m != nil && m.Ref.IsSet() && !m.Ref.IsNull() {
 		return m.Ref.Value
 	}
 	return val
 }
 
 func (m *ClusterPrimaryEndpointSpecOrRefOptionalResponse) GetSpec() *ClusterPrimaryEndpointSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
 func (m *ClusterPrimaryEndpointSpecOrRefOptionalResponse) GetSpecOr(val ClusterPrimaryEndpointSpecOptionalResponse) ClusterPrimaryEndpointSpecOptionalResponse {
-	if m != nil && m.Spec.IsSet() {
+	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
 	return val

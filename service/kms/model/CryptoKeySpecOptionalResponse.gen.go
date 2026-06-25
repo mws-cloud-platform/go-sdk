@@ -42,56 +42,56 @@ func (m *CryptoKeySpecOptionalResponse) GetDefaultAlgorithmOr(val CryptoKeyAlgor
 }
 
 func (m *CryptoKeySpecOptionalResponse) GetDestructionPolicy() *CryptoKeySpecDestructionPolicyOptionalResponse {
-	if m != nil && m.DestructionPolicy.IsSet() {
+	if m != nil && m.DestructionPolicy.IsSet() && !m.DestructionPolicy.IsNull() {
 		return &m.DestructionPolicy.Value
 	}
 	return nil
 }
 
 func (m *CryptoKeySpecOptionalResponse) GetDestructionPolicyOr(val CryptoKeySpecDestructionPolicyOptionalResponse) CryptoKeySpecDestructionPolicyOptionalResponse {
-	if m != nil && m.DestructionPolicy.IsSet() {
+	if m != nil && m.DestructionPolicy.IsSet() && !m.DestructionPolicy.IsNull() {
 		return m.DestructionPolicy.Value
 	}
 	return val
 }
 
 func (m *CryptoKeySpecOptionalResponse) GetUsagePolicy() *CryptoKeySpecUsagePolicyOptionalResponse {
-	if m != nil && m.UsagePolicy.IsSet() {
+	if m != nil && m.UsagePolicy.IsSet() && !m.UsagePolicy.IsNull() {
 		return &m.UsagePolicy.Value
 	}
 	return nil
 }
 
 func (m *CryptoKeySpecOptionalResponse) GetUsagePolicyOr(val CryptoKeySpecUsagePolicyOptionalResponse) CryptoKeySpecUsagePolicyOptionalResponse {
-	if m != nil && m.UsagePolicy.IsSet() {
+	if m != nil && m.UsagePolicy.IsSet() && !m.UsagePolicy.IsNull() {
 		return m.UsagePolicy.Value
 	}
 	return val
 }
 
 func (m *CryptoKeySpecOptionalResponse) GetRotationPolicy() *CryptoKeySpecRotationPolicyOptionalResponse {
-	if m != nil && m.RotationPolicy.IsSet() {
+	if m != nil && m.RotationPolicy.IsSet() && !m.RotationPolicy.IsNull() {
 		return &m.RotationPolicy.Value
 	}
 	return nil
 }
 
 func (m *CryptoKeySpecOptionalResponse) GetRotationPolicyOr(val CryptoKeySpecRotationPolicyOptionalResponse) CryptoKeySpecRotationPolicyOptionalResponse {
-	if m != nil && m.RotationPolicy.IsSet() {
+	if m != nil && m.RotationPolicy.IsSet() && !m.RotationPolicy.IsNull() {
 		return m.RotationPolicy.Value
 	}
 	return val
 }
 
 func (m *CryptoKeySpecOptionalResponse) GetPrimaryKeyVersionRef() *kms.CryptoKeyVersionRef {
-	if m != nil && m.PrimaryKeyVersionRef.IsSet() {
+	if m != nil && m.PrimaryKeyVersionRef.IsSet() && !m.PrimaryKeyVersionRef.IsNull() {
 		return &m.PrimaryKeyVersionRef.Value
 	}
 	return nil
 }
 
 func (m *CryptoKeySpecOptionalResponse) GetPrimaryKeyVersionRefOr(val kms.CryptoKeyVersionRef) kms.CryptoKeyVersionRef {
-	if m != nil && m.PrimaryKeyVersionRef.IsSet() {
+	if m != nil && m.PrimaryKeyVersionRef.IsSet() && !m.PrimaryKeyVersionRef.IsNull() {
 		return m.PrimaryKeyVersionRef.Value
 	}
 	return val

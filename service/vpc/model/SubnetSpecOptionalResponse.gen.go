@@ -26,14 +26,14 @@ func (m *SubnetSpecOptionalResponse) SetCidr(val cidraddress.CIDR4Address) {
 }
 
 func (m *SubnetSpecOptionalResponse) GetDhcpOptions() *SubnetDhcpOptionsOptionalResponse {
-	if m != nil && m.DhcpOptions.IsSet() {
+	if m != nil && m.DhcpOptions.IsSet() && !m.DhcpOptions.IsNull() {
 		return &m.DhcpOptions.Value
 	}
 	return nil
 }
 
 func (m *SubnetSpecOptionalResponse) GetDhcpOptionsOr(val SubnetDhcpOptionsOptionalResponse) SubnetDhcpOptionsOptionalResponse {
-	if m != nil && m.DhcpOptions.IsSet() {
+	if m != nil && m.DhcpOptions.IsSet() && !m.DhcpOptions.IsNull() {
 		return m.DhcpOptions.Value
 	}
 	return val

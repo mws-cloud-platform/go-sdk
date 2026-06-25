@@ -57,14 +57,14 @@ func (m *DiskSpecOptionalResponse) GetSizeOr(val bytesize.ByteSize) bytesize.Byt
 }
 
 func (m *DiskSpecOptionalResponse) GetSource() *DiskSpecSourceOptionalResponse {
-	if m != nil && m.Source.IsSet() {
+	if m != nil && m.Source.IsSet() && !m.Source.IsNull() {
 		return &m.Source.Value
 	}
 	return nil
 }
 
 func (m *DiskSpecOptionalResponse) GetSourceOr(val DiskSpecSourceOptionalResponse) DiskSpecSourceOptionalResponse {
-	if m != nil && m.Source.IsSet() {
+	if m != nil && m.Source.IsSet() && !m.Source.IsNull() {
 		return m.Source.Value
 	}
 	return val
