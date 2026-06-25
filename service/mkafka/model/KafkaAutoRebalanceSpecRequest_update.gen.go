@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateKafkaAutoRebalanceSpecRequest struct {
-	// Значение включен/выключен auto rebalance.
+	// Состояние автоматической ребалансировки — включена или выключена
 	Enabled optional.Optional[bool] `json:"enabled" yaml:"enabled"`
 }
 

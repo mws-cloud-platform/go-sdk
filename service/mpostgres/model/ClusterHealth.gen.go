@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Работоспособность кластера
 //   - `ALIVE`    - Полностью работоспособен
 //   - `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны)
@@ -14,8 +20,32 @@ const (
 	ClusterHealth_DEGRADED ClusterHealth = "DEGRADED"
 	ClusterHealth_FAILED   ClusterHealth = "FAILED"
 	ClusterHealth_UNKNOWN  ClusterHealth = "UNKNOWN"
+
+	ErrUnknownClusterHealth = consterr.Error(`unknown kind, want one of "ALIVE", "DEGRADED", "FAILED", "UNKNOWN"`)
 )
+
+func NewClusterHealth(s string) (ClusterHealth, error) {
+	v := ClusterHealth(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownClusterHealth, s)
+	}
+	return v, nil
+}
 
 func (m ClusterHealth) String() string {
 	return string(m)
+}
+
+func (m ClusterHealth) IsValid() bool {
+	switch m {
+	case ClusterHealth_ALIVE:
+		return true
+	case ClusterHealth_DEGRADED:
+		return true
+	case ClusterHealth_FAILED:
+		return true
+	case ClusterHealth_UNKNOWN:
+		return true
+	}
+	return false
 }

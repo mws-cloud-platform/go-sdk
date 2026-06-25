@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Состояние кластера
 //   - `CREATING`     - Создается
 //   - `RUNNING`      - Работает в штатном режиме
@@ -30,8 +36,48 @@ const (
 	ClusterState_DELETED      ClusterState = "DELETED"
 	ClusterState_RESTORING    ClusterState = "RESTORING"
 	ClusterState_MAINTENANCE  ClusterState = "MAINTENANCE"
+
+	ErrUnknownClusterState = consterr.Error(`unknown kind, want one of "CREATING", "RUNNING", "STOPPING", "STOPPED", "STARTING", "UPDATING", "ERROR", "UNIDENTIFIED", "DELETING", "DELETED", "RESTORING", "MAINTENANCE"`)
 )
+
+func NewClusterState(s string) (ClusterState, error) {
+	v := ClusterState(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownClusterState, s)
+	}
+	return v, nil
+}
 
 func (m ClusterState) String() string {
 	return string(m)
+}
+
+func (m ClusterState) IsValid() bool {
+	switch m {
+	case ClusterState_CREATING:
+		return true
+	case ClusterState_RUNNING:
+		return true
+	case ClusterState_STOPPING:
+		return true
+	case ClusterState_STOPPED:
+		return true
+	case ClusterState_STARTING:
+		return true
+	case ClusterState_UPDATING:
+		return true
+	case ClusterState_ERROR:
+		return true
+	case ClusterState_UNIDENTIFIED:
+		return true
+	case ClusterState_DELETING:
+		return true
+	case ClusterState_DELETED:
+		return true
+	case ClusterState_RESTORING:
+		return true
+	case ClusterState_MAINTENANCE:
+		return true
+	}
+	return false
 }

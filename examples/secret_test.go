@@ -6,8 +6,6 @@ import (
 	"log"
 	"strings"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/mws"
 	"go.mws.cloud/go-sdk/mws/page"
 	"go.mws.cloud/go-sdk/service/common/model"
@@ -47,8 +45,8 @@ func Example_secret() {
 		Name: secretName,
 		Body: secretmanagermodel.SecretRequest{
 			Metadata: &model.CommonTypedResourceMetadataRequest{
-				DisplayName: ptr.Get("Display name"),
-				Description: ptr.Get("Description of secret"),
+				DisplayName: new("Display name"),
+				Description: new("Description of secret"),
 			},
 			Spec: secretmanagermodel.SecretSpecRequest{},
 		},
@@ -63,8 +61,8 @@ func Example_secret() {
 		Name: secretName,
 		Body: (&secretmanagermodel.SecretRequest{
 			Metadata: &model.CommonTypedResourceMetadataRequest{
-				DisplayName: ptr.Get("New display name"),
-				Description: ptr.Get("New description of secret"),
+				DisplayName: new("New display name"),
+				Description: new("New description of secret"),
 			},
 		}).AsUpdateModel(),
 	}, secretmanagerclient.WithWait())
@@ -78,7 +76,7 @@ func Example_secret() {
 		Name: secretName,
 		Body: (&secretmanagermodel.SecretRequest{
 			Spec: secretmanagermodel.SecretSpecRequest{
-				Active: ptr.Get(true),
+				Active: new(true),
 			},
 		}).AsUpdateModel(),
 	}, secretmanagerclient.WithWait())
@@ -92,7 +90,7 @@ func Example_secret() {
 		Name: secretName,
 		Body: (&secretmanagermodel.SecretRequest{
 			Spec: secretmanagermodel.SecretSpecRequest{
-				Active: ptr.Get(false),
+				Active: new(false),
 			},
 		}).AsUpdateModel(),
 	}, secretmanagerclient.WithWait())
@@ -104,7 +102,7 @@ func Example_secret() {
 	// List secrets.
 	resourceNames := make([]string, 0)
 	pager := page.NewPager(secretmanagerclient.ListSecretsRequest{
-		PageSize: ptr.Get(10),
+		PageSize: new(10),
 	}, secretClient.ListSecrets)
 	for resource, err := range pager.All(ctx) {
 		if err != nil {

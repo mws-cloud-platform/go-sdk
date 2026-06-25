@@ -2,14 +2,40 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Тип операционной системы
 type OsType2 string
 
 const (
 	OsType2_LINUX   OsType2 = "LINUX"
 	OsType2_WINDOWS OsType2 = "WINDOWS"
+
+	ErrUnknownOsType2 = consterr.Error(`unknown kind, want one of "LINUX", "WINDOWS"`)
 )
+
+func NewOsType2(s string) (OsType2, error) {
+	v := OsType2(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownOsType2, s)
+	}
+	return v, nil
+}
 
 func (m OsType2) String() string {
 	return string(m)
+}
+
+func (m OsType2) IsValid() bool {
+	switch m {
+	case OsType2_LINUX:
+		return true
+	case OsType2_WINDOWS:
+		return true
+	}
+	return false
 }

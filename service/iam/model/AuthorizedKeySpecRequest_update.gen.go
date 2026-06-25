@@ -10,20 +10,12 @@ import (
 )
 
 type UpdateAuthorizedKeySpecRequest struct {
-	// Открытый ключ. Если данный параметр в запросе отсутствует, то сервис сам сгенерирует ключ для указанного алгоритма и вернет приватный ключ в поле статуса в ответе.
-	PublicKey optional.Optional[string] `json:"publicKey" yaml:"publicKey"`
-	// Алгоритм шифрования.
-	KeyAlgorithm optional.Optional[string] `json:"keyAlgorithm" yaml:"keyAlgorithm"`
 	// Флаг активности ключа.
 	Active optional.Optional[bool] `json:"active" yaml:"active"`
 }
 
 func (m *AuthorizedKeySpecRequest) AsUpdateModel() UpdateAuthorizedKeySpecRequest {
 	var u UpdateAuthorizedKeySpecRequest
-	if m.PublicKey != nil {
-		u.PublicKey = optional.NewOptional(m.GetPublicKeyOr(""))
-	}
-	u.KeyAlgorithm = optional.NewOptional(m.GetKeyAlgorithm())
 	if m.Active != nil {
 		u.Active = optional.NewOptional(m.GetActiveOr(false))
 	}
@@ -35,8 +27,6 @@ func (m *AuthorizedKeySpecRequest) Diff(src *AuthorizedKeySpecRequest) UpdateAut
 	nilDiffers := src != nil && m == nil
 	upd := UpdateAuthorizedKeySpecRequest{}
 	if !nilDiffers {
-		upd.PublicKey = m.diffPublicKey(src)
-		upd.KeyAlgorithm = m.diffKeyAlgorithm(src)
 		upd.Active = m.diffActive(src)
 	}
 	return upd
@@ -48,12 +38,6 @@ func (m *AuthorizedKeySpecRequest) WithChanges(u UpdateAuthorizedKeySpecRequest)
 		out = *m
 	}
 
-	if u.PublicKey.IsSet() {
-		out.PublicKey = ptr.Get(u.PublicKey.Value)
-	}
-	if u.KeyAlgorithm.IsSet() {
-		out.KeyAlgorithm = u.KeyAlgorithm.Value
-	}
 	if u.Active.IsSet() {
 		out.Active = ptr.Get(u.Active.Value)
 	}
@@ -62,19 +46,7 @@ func (m *AuthorizedKeySpecRequest) WithChanges(u UpdateAuthorizedKeySpecRequest)
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateAuthorizedKeySpecRequest) HasChanges() bool {
-	return m.PublicKey.Set ||
-		m.KeyAlgorithm.Set ||
-		m.Active.Set
-}
-
-func (m *AuthorizedKeySpecRequest) diffPublicKey(src *AuthorizedKeySpecRequest) optional.Optional[string] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetPublicKey(), m.GetPublicKey(), nilDiffers)
-}
-
-func (m *AuthorizedKeySpecRequest) diffKeyAlgorithm(src *AuthorizedKeySpecRequest) optional.Optional[string] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetKeyAlgorithm(), m.GetKeyAlgorithm(), nilDiffers)
+	return m.Active.Set
 }
 
 func (m *AuthorizedKeySpecRequest) diffActive(src *AuthorizedKeySpecRequest) optional.Optional[bool] {

@@ -3,6 +3,10 @@
 package model
 
 import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -43,8 +47,28 @@ type ClusterPublicEndpointSpecVersionOptionalResponse string
 const (
 	ClusterPublicEndpointSpecVersionOptionalResponse_IPV4 ClusterPublicEndpointSpecVersionOptionalResponse = "IPV4"
 	ClusterPublicEndpointSpecVersionOptionalResponse_IPV6 ClusterPublicEndpointSpecVersionOptionalResponse = "IPV6"
+
+	ErrUnknownClusterPublicEndpointSpecVersionOptionalResponse = consterr.Error(`unknown kind, want one of "IPV4", "IPV6"`)
 )
+
+func NewClusterPublicEndpointSpecVersionOptionalResponse(s string) (ClusterPublicEndpointSpecVersionOptionalResponse, error) {
+	v := ClusterPublicEndpointSpecVersionOptionalResponse(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownClusterPublicEndpointSpecVersionOptionalResponse, s)
+	}
+	return v, nil
+}
 
 func (m ClusterPublicEndpointSpecVersionOptionalResponse) String() string {
 	return string(m)
+}
+
+func (m ClusterPublicEndpointSpecVersionOptionalResponse) IsValid() bool {
+	switch m {
+	case ClusterPublicEndpointSpecVersionOptionalResponse_IPV4:
+		return true
+	case ClusterPublicEndpointSpecVersionOptionalResponse_IPV6:
+		return true
+	}
+	return false
 }

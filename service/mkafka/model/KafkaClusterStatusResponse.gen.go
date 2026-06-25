@@ -42,7 +42,7 @@ type KafkaClusterStatusResponse struct {
 	MaintenanceWindow *common.MaintenanceWindow2Response `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry *KafkaSchemaRegistrySpecResponse `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`
-	// Настройка Auto Rebalance для кластера.
+	// Настройка автоматической ребалансировки для кластера.
 	AutoRebalance *KafkaAutoRebalanceSpecResponse `json:"autoRebalance,omitempty" yaml:"autoRebalance,omitempty"`
 }
 

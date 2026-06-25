@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m KafkaAllocationRequest) MarshalJSON() ([]byte, error) {
@@ -33,7 +34,7 @@ func (m *KafkaAllocationRequest) Encode(e *jx.Encoder) error {
 
 func (m *KafkaAllocationRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("zone")
-	e.Str(m.Zone)
+	m.Zone.Encode(e)
 
 	e.FieldStart("count")
 	e.Int32(m.Count)
@@ -56,8 +57,8 @@ func (m *KafkaAllocationRequest) Decode(d *jx.Decoder) error {
 	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "zone":
-			v, err := decode.Str(d)
-			if err != nil {
+			var v rm.ZoneRef
+			if err := v.Decode(d); err != nil {
 				return err
 			}
 

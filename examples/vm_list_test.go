@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/mws"
 	"go.mws.cloud/go-sdk/mws/page"
 	computeclient "go.mws.cloud/go-sdk/service/compute/client"
@@ -36,7 +34,7 @@ func Example_vmList() {
 
 	// List virtual machines with the page size limit.
 	virtualMachines, err := client.ListVirtualMachines(ctx, computeclient.ListVirtualMachinesRequest{
-		PageSize: ptr.Get(10),
+		PageSize: new(10),
 	})
 	if err != nil {
 		log.Panicln("list virtual machines:", err)
@@ -72,7 +70,7 @@ func Example_vmListIterators() {
 
 	// Create a pager for listing virtual machines with a page size equal to 5.
 	pager := page.NewPager(computeclient.ListVirtualMachinesRequest{
-		PageSize: ptr.Get(5),
+		PageSize: new(5),
 	}, client.ListVirtualMachines)
 
 	// Iterate over all pages with virtual machines and print their identifiers.

@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Подробная причина, по которой сертификат не может быть использован.
 type CertificateStatusReason string
 
@@ -12,8 +18,36 @@ const (
 	CertificateStatusReason_VALIDATING  CertificateStatusReason = "VALIDATING"
 	CertificateStatusReason_ISSUING     CertificateStatusReason = "ISSUING"
 	CertificateStatusReason_FAILED      CertificateStatusReason = "FAILED"
+
+	ErrUnknownCertificateStatusReason = consterr.Error(`unknown kind, want one of "VALID", "EXPIRED", "NOT_STARTED", "VALIDATING", "ISSUING", "FAILED"`)
 )
+
+func NewCertificateStatusReason(s string) (CertificateStatusReason, error) {
+	v := CertificateStatusReason(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownCertificateStatusReason, s)
+	}
+	return v, nil
+}
 
 func (m CertificateStatusReason) String() string {
 	return string(m)
+}
+
+func (m CertificateStatusReason) IsValid() bool {
+	switch m {
+	case CertificateStatusReason_VALID:
+		return true
+	case CertificateStatusReason_EXPIRED:
+		return true
+	case CertificateStatusReason_NOT_STARTED:
+		return true
+	case CertificateStatusReason_VALIDATING:
+		return true
+	case CertificateStatusReason_ISSUING:
+		return true
+	case CertificateStatusReason_FAILED:
+		return true
+	}
+	return false
 }

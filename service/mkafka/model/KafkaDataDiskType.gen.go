@@ -2,14 +2,38 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Тип используемого диска:
 // * `NETWORK_STANDARD_SSD` — сетевой SSD
 type KafkaDataDiskType string
 
 const (
 	KafkaDataDiskType_NETWORK_STANDARD_SSD KafkaDataDiskType = "NETWORK_STANDARD_SSD"
+
+	ErrUnknownKafkaDataDiskType = consterr.Error(`unknown kind, want one of "NETWORK_STANDARD_SSD"`)
 )
+
+func NewKafkaDataDiskType(s string) (KafkaDataDiskType, error) {
+	v := KafkaDataDiskType(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownKafkaDataDiskType, s)
+	}
+	return v, nil
+}
 
 func (m KafkaDataDiskType) String() string {
 	return string(m)
+}
+
+func (m KafkaDataDiskType) IsValid() bool {
+	switch m {
+	case KafkaDataDiskType_NETWORK_STANDARD_SSD:
+		return true
+	}
+	return false
 }

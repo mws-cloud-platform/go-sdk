@@ -2,13 +2,37 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Провайдер сертификатов, например Let's Encrypt или другой центр сертификации.
 type CertificateProvider string
 
 const (
 	CertificateProvider_LETS_ENCRYPT CertificateProvider = "LETS_ENCRYPT"
+
+	ErrUnknownCertificateProvider = consterr.Error(`unknown kind, want one of "LETS_ENCRYPT"`)
 )
+
+func NewCertificateProvider(s string) (CertificateProvider, error) {
+	v := CertificateProvider(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownCertificateProvider, s)
+	}
+	return v, nil
+}
 
 func (m CertificateProvider) String() string {
 	return string(m)
+}
+
+func (m CertificateProvider) IsValid() bool {
+	switch m {
+	case CertificateProvider_LETS_ENCRYPT:
+		return true
+	}
+	return false
 }

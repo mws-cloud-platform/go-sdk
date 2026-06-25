@@ -2,14 +2,40 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Managed certificate renewal status
 type CertificateRenewalStatus string
 
 const (
 	CertificateRenewalStatus_RENEWAL_FAILED CertificateRenewalStatus = "RENEWAL_FAILED"
 	CertificateRenewalStatus_RENEWING       CertificateRenewalStatus = "RENEWING"
+
+	ErrUnknownCertificateRenewalStatus = consterr.Error(`unknown kind, want one of "RENEWAL_FAILED", "RENEWING"`)
 )
+
+func NewCertificateRenewalStatus(s string) (CertificateRenewalStatus, error) {
+	v := CertificateRenewalStatus(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownCertificateRenewalStatus, s)
+	}
+	return v, nil
+}
 
 func (m CertificateRenewalStatus) String() string {
 	return string(m)
+}
+
+func (m CertificateRenewalStatus) IsValid() bool {
+	switch m {
+	case CertificateRenewalStatus_RENEWAL_FAILED:
+		return true
+	case CertificateRenewalStatus_RENEWING:
+		return true
+	}
+	return false
 }

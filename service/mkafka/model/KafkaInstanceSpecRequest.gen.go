@@ -4,6 +4,7 @@ package model
 
 import (
 	"context"
+	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
@@ -84,6 +85,12 @@ func (m *KafkaInstanceSpecRequest) Parse(ctx context.Context) error {
 
 	if err := m.VmType.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("VmType", err)
+	}
+
+	for index := range m.Allocation {
+		if err := m.Allocation[index].Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Allocation"+fmt.Sprint("[", index, "]"), err)
+		}
 	}
 
 	return nil

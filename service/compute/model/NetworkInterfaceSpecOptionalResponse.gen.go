@@ -12,14 +12,11 @@ import (
 
 // Real OAPI model name: NetworkInterfaceSpec
 type NetworkInterfaceSpecOptionalResponse struct {
+	// Имя сетевого интерфейса
 	Name                string                  `json:"name" yaml:"name"`
 	Primary             optional.Optional[bool] `json:"primary,omitempty" yaml:"primary,omitempty"`
 	IpForwardingEnabled optional.Optional[bool] `json:"ipForwardingEnabled,omitempty" yaml:"ipForwardingEnabled,omitempty"`
-	// К одному сетевому интерфейсу можно подключить одновременно 4 разных сетевых адреса
-	// - IPv4 internal
-	// - IPv4 external
-	// - IPv6 internal
-	// - IPv6 external
+	// IP-адреса сетевого интерфейса
 	Addresses []AddressSpecOrRefWithAttachmentsOptionalResponse `json:"addresses" yaml:"addresses"`
 }
 

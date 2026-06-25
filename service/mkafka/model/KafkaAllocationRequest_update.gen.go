@@ -3,13 +3,17 @@
 package model
 
 import (
+	"context"
+
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 type UpdateKafkaAllocationRequest struct {
 	// Зона расположения узла.
-	Zone optional.Optional[string] `json:"zone" yaml:"zone"`
+	Zone optional.Optional[rm.ZoneRef] `json:"zone" yaml:"zone"`
 	// Количество брокеров в зоне/подсети.
 	Count optional.Optional[int32] `json:"count" yaml:"count"`
 }
@@ -53,7 +57,21 @@ func (m UpdateKafkaAllocationRequest) HasChanges() bool {
 		m.Count.Set
 }
 
-func (m *KafkaAllocationRequest) diffZone(src *KafkaAllocationRequest) optional.Optional[string] {
+func (m *UpdateKafkaAllocationRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if m.Zone.IsSet() {
+		if err := m.Zone.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Zone", err)
+		}
+	}
+
+	return nil
+}
+
+func (m *KafkaAllocationRequest) diffZone(src *KafkaAllocationRequest) optional.Optional[rm.ZoneRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetZone(), m.GetZone(), nilDiffers)
 }

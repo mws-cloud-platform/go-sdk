@@ -3,7 +3,10 @@
 package model
 
 import (
+	"fmt"
+
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -69,8 +72,28 @@ type HardwareSpecPowerOptionalResponse string
 const (
 	HardwareSpecPowerOptionalResponse_ON  HardwareSpecPowerOptionalResponse = "ON"
 	HardwareSpecPowerOptionalResponse_OFF HardwareSpecPowerOptionalResponse = "OFF"
+
+	ErrUnknownHardwareSpecPowerOptionalResponse = consterr.Error(`unknown kind, want one of "ON", "OFF"`)
 )
+
+func NewHardwareSpecPowerOptionalResponse(s string) (HardwareSpecPowerOptionalResponse, error) {
+	v := HardwareSpecPowerOptionalResponse(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownHardwareSpecPowerOptionalResponse, s)
+	}
+	return v, nil
+}
 
 func (m HardwareSpecPowerOptionalResponse) String() string {
 	return string(m)
+}
+
+func (m HardwareSpecPowerOptionalResponse) IsValid() bool {
+	switch m {
+	case HardwareSpecPowerOptionalResponse_ON:
+		return true
+	case HardwareSpecPowerOptionalResponse_OFF:
+		return true
+	}
+	return false
 }

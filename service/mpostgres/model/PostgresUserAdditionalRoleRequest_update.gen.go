@@ -12,7 +12,7 @@ import (
 )
 
 type UpdatePostgresUserAdditionalRoleRequest struct {
-	// - `DB_MIGRATOR_ROLE`: Дополнительная роль, позволяющая пользователю владельцу бд управлять миграцией данных в mpostgres
+	// - `DB_MIGRATOR_ROLE`: Дополнительная роль, позволяющая пользователю БД управлять миграцией данных в mpostgres
 	Name optional.Optional[PostgresUserAdditionalRoleNameRequest] `json:"name" yaml:"name"`
 	// Дата отзыва дополнительной роли
 	ExpiresAt optional.Optional[time.Time] `json:"expiresAt" yaml:"expiresAt"`

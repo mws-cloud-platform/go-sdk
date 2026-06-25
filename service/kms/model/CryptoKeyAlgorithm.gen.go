@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Криптографический алгоритм по-умолчанию, используемый для выпуска новых версий ключа.
 // Этот алгоритм будет применяться при создании новых версий ключа во время ротации.
 type CryptoKeyAlgorithm string
@@ -10,8 +16,30 @@ const (
 	CryptoKeyAlgorithm_AES_128_GCM CryptoKeyAlgorithm = "AES_128_GCM"
 	CryptoKeyAlgorithm_AES_192_GCM CryptoKeyAlgorithm = "AES_192_GCM"
 	CryptoKeyAlgorithm_AES_256_GCM CryptoKeyAlgorithm = "AES_256_GCM"
+
+	ErrUnknownCryptoKeyAlgorithm = consterr.Error(`unknown kind, want one of "AES_128_GCM", "AES_192_GCM", "AES_256_GCM"`)
 )
+
+func NewCryptoKeyAlgorithm(s string) (CryptoKeyAlgorithm, error) {
+	v := CryptoKeyAlgorithm(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownCryptoKeyAlgorithm, s)
+	}
+	return v, nil
+}
 
 func (m CryptoKeyAlgorithm) String() string {
 	return string(m)
+}
+
+func (m CryptoKeyAlgorithm) IsValid() bool {
+	switch m {
+	case CryptoKeyAlgorithm_AES_128_GCM:
+		return true
+	case CryptoKeyAlgorithm_AES_192_GCM:
+		return true
+	case CryptoKeyAlgorithm_AES_256_GCM:
+		return true
+	}
+	return false
 }

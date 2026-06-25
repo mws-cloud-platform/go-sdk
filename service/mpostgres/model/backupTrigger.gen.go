@@ -2,13 +2,39 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 type BackupTrigger string
 
 const (
 	BackupTrigger_AUTOMATIC BackupTrigger = "AUTOMATIC"
 	BackupTrigger_USER      BackupTrigger = "USER"
+
+	ErrUnknownBackupTrigger = consterr.Error(`unknown kind, want one of "AUTOMATIC", "USER"`)
 )
+
+func NewBackupTrigger(s string) (BackupTrigger, error) {
+	v := BackupTrigger(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownBackupTrigger, s)
+	}
+	return v, nil
+}
 
 func (m BackupTrigger) String() string {
 	return string(m)
+}
+
+func (m BackupTrigger) IsValid() bool {
+	switch m {
+	case BackupTrigger_AUTOMATIC:
+		return true
+	case BackupTrigger_USER:
+		return true
+	}
+	return false
 }

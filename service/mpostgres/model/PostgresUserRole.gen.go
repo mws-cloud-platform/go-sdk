@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Пользовательские роли (они же роли приложений):
 //   - `DB_OWNER_USER`: Пользователь с правами владельца базы данных. Это не суперпользователь,
 //     не имеет права создавать бд или роли, наследует разрешения db_owner.
@@ -13,8 +19,30 @@ const (
 	PostgresUserRole_DB_OWNER_USER  PostgresUserRole = "DB_OWNER_USER"
 	PostgresUserRole_DB_WRITER_USER PostgresUserRole = "DB_WRITER_USER"
 	PostgresUserRole_DB_READER_USER PostgresUserRole = "DB_READER_USER"
+
+	ErrUnknownPostgresUserRole = consterr.Error(`unknown kind, want one of "DB_OWNER_USER", "DB_WRITER_USER", "DB_READER_USER"`)
 )
+
+func NewPostgresUserRole(s string) (PostgresUserRole, error) {
+	v := PostgresUserRole(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownPostgresUserRole, s)
+	}
+	return v, nil
+}
 
 func (m PostgresUserRole) String() string {
 	return string(m)
+}
+
+func (m PostgresUserRole) IsValid() bool {
+	switch m {
+	case PostgresUserRole_DB_OWNER_USER:
+		return true
+	case PostgresUserRole_DB_WRITER_USER:
+		return true
+	case PostgresUserRole_DB_READER_USER:
+		return true
+	}
+	return false
 }

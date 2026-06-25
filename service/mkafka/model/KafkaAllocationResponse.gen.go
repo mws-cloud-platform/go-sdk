@@ -2,23 +2,30 @@
 
 package model
 
+import (
+	"context"
+
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
+)
+
 // Конфигурация (размещение) узлов кластера по зонам.
 // Real OAPI model name: KafkaAllocation
 type KafkaAllocationResponse struct {
 	// Зона расположения узла.
-	Zone string `json:"zone" yaml:"zone"`
+	Zone rm.ZoneRef `json:"zone" yaml:"zone"`
 	// Количество брокеров в зоне/подсети.
 	Count int32 `json:"count" yaml:"count"`
 }
 
-func (m *KafkaAllocationResponse) GetZone() string {
+func (m *KafkaAllocationResponse) GetZone() rm.ZoneRef {
 	if m != nil {
 		return m.Zone
 	}
-	return ""
+	return rm.ZoneRef{}
 }
 
-func (m *KafkaAllocationResponse) SetZone(val string) {
+func (m *KafkaAllocationResponse) SetZone(val rm.ZoneRef) {
 	m.Zone = val
 }
 
@@ -39,5 +46,18 @@ func (m *KafkaAllocationResponse) Clone() *KafkaAllocationResponse {
 	}
 
 	clone := *m
+	clone.Zone = *m.Zone.Clone()
 	return &clone
+}
+
+func (m *KafkaAllocationResponse) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if err := m.Zone.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Zone", err)
+	}
+
+	return nil
 }

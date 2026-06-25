@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Real OAPI model name: OsStatus
 type OsStatusResponse struct {
 	// Предоставляет информацию о результирующем FQDN, доступном в виртуальной машине
@@ -84,8 +90,28 @@ type OsStatusOsTypeResponse string
 const (
 	OsStatusOsTypeResponse_LINUX   OsStatusOsTypeResponse = "LINUX"
 	OsStatusOsTypeResponse_WINDOWS OsStatusOsTypeResponse = "WINDOWS"
+
+	ErrUnknownOsStatusOsTypeResponse = consterr.Error(`unknown kind, want one of "LINUX", "WINDOWS"`)
 )
+
+func NewOsStatusOsTypeResponse(s string) (OsStatusOsTypeResponse, error) {
+	v := OsStatusOsTypeResponse(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownOsStatusOsTypeResponse, s)
+	}
+	return v, nil
+}
 
 func (m OsStatusOsTypeResponse) String() string {
 	return string(m)
+}
+
+func (m OsStatusOsTypeResponse) IsValid() bool {
+	switch m {
+	case OsStatusOsTypeResponse_LINUX:
+		return true
+	case OsStatusOsTypeResponse_WINDOWS:
+		return true
+	}
+	return false
 }

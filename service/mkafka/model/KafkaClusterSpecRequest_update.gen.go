@@ -29,7 +29,7 @@ type UpdateKafkaClusterSpecRequest struct {
 	MaintenanceWindow optional.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry optional.OptionalNil[UpdateKafkaSchemaRegistrySpecRequest] `json:"schemaRegistry" yaml:"schemaRegistry"`
-	// Настройка Auto Rebalance для кластера.
+	// Настройка автоматической ребалансировки для кластера.
 	AutoRebalance optional.OptionalNil[UpdateKafkaAutoRebalanceSpecRequest] `json:"autoRebalance" yaml:"autoRebalance"`
 }
 

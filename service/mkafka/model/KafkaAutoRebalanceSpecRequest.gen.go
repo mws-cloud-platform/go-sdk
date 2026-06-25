@@ -2,10 +2,10 @@
 
 package model
 
-// Настройка Auto Rebalance для кластера.
+// Настройка автоматической ребалансировки для кластера.
 // Real OAPI model name: KafkaAutoRebalanceSpec
 type KafkaAutoRebalanceSpecRequest struct {
-	// Значение включен/выключен auto rebalance.
+	// Состояние автоматической ребалансировки — включена или выключена
 	Enabled *bool `json:"enabled,omitempty" yaml:"enabled,omitempty"`
 }
 

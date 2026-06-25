@@ -4,8 +4,10 @@ package model
 
 import (
 	"context"
+	"fmt"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
@@ -191,10 +193,40 @@ const (
 	ClusterStatusClusterStatusStateResponse_DEGRADED  ClusterStatusClusterStatusStateResponse = "DEGRADED"
 	ClusterStatusClusterStatusStateResponse_DELETING  ClusterStatusClusterStatusStateResponse = "DELETING"
 	ClusterStatusClusterStatusStateResponse_UNKNOWN   ClusterStatusClusterStatusStateResponse = "UNKNOWN"
+
+	ErrUnknownClusterStatusClusterStatusStateResponse = consterr.Error(`unknown kind, want one of "INIT", "PENDING", "RUNNING", "UPGRADING", "DEGRADED", "DELETING", "UNKNOWN"`)
 )
+
+func NewClusterStatusClusterStatusStateResponse(s string) (ClusterStatusClusterStatusStateResponse, error) {
+	v := ClusterStatusClusterStatusStateResponse(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownClusterStatusClusterStatusStateResponse, s)
+	}
+	return v, nil
+}
 
 func (m ClusterStatusClusterStatusStateResponse) String() string {
 	return string(m)
+}
+
+func (m ClusterStatusClusterStatusStateResponse) IsValid() bool {
+	switch m {
+	case ClusterStatusClusterStatusStateResponse_INIT:
+		return true
+	case ClusterStatusClusterStatusStateResponse_PENDING:
+		return true
+	case ClusterStatusClusterStatusStateResponse_RUNNING:
+		return true
+	case ClusterStatusClusterStatusStateResponse_UPGRADING:
+		return true
+	case ClusterStatusClusterStatusStateResponse_DEGRADED:
+		return true
+	case ClusterStatusClusterStatusStateResponse_DELETING:
+		return true
+	case ClusterStatusClusterStatusStateResponse_UNKNOWN:
+		return true
+	}
+	return false
 }
 
 // Представление поля Network анонимного типа структуры ClusterStatus

@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/mws"
 	vpcclient "go.mws.cloud/go-sdk/service/vpc/client"
 	vpcmodel "go.mws.cloud/go-sdk/service/vpc/model"
@@ -42,8 +40,8 @@ func Example_network() {
 		Network: networkName,
 		Body: vpcmodel.NetworkRequest{
 			Spec: vpcmodel.VpcNetworkSpecRequest{
-				InternetAccess: ptr.Get(true),
-				Mtu:            ptr.Get(int32(1500)),
+				InternetAccess: new(true),
+				Mtu:            new(int32(1500)),
 			},
 		},
 	}, vpcclient.WithWait())
@@ -57,7 +55,7 @@ func Example_network() {
 		Network: networkName,
 		Body: (&vpcmodel.NetworkRequest{
 			Spec: vpcmodel.VpcNetworkSpecRequest{
-				InternetAccess: ptr.Get(false),
+				InternetAccess: new(false),
 			},
 		}).AsUpdateModel(),
 	}, vpcclient.WithWait())

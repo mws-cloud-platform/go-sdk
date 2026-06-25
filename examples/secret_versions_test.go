@@ -6,8 +6,6 @@ import (
 	"log"
 	"strings"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/mws"
 	"go.mws.cloud/go-sdk/mws/page"
 	secretmanagerclient "go.mws.cloud/go-sdk/service/secretmanager/client"
@@ -104,7 +102,7 @@ func Example_secret_version() {
 	resourceNames := make([]string, 0)
 	pager := page.NewPager(secretmanagerclient.ListSecretVersionsRequest{
 		Name:     secretName,
-		PageSize: ptr.Get(10),
+		PageSize: new(10),
 	}, secretVersionClient.ListSecretVersions)
 	for resource, err := range pager.All(ctx) {
 		if err != nil {
@@ -120,7 +118,7 @@ func Example_secret_version() {
 		Version: secondVersionName,
 		Body: (&secretmanagermodel.SecretVersionRequest{
 			Spec: secretmanagermodel.SecretVersionSpecRequest{
-				Active: ptr.Get(false),
+				Active: new(false),
 			},
 		}).AsUpdateModel(),
 	})
@@ -135,7 +133,7 @@ func Example_secret_version() {
 		Version: secondVersionName,
 		Body: (&secretmanagermodel.SecretVersionRequest{
 			Spec: secretmanagermodel.SecretVersionSpecRequest{
-				Active: ptr.Get(true),
+				Active: new(true),
 			},
 		}).AsUpdateModel(),
 	})

@@ -4,8 +4,10 @@ package model
 
 import (
 	"context"
+	"fmt"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
@@ -356,13 +358,48 @@ const (
 	NodeGroupStatusNodeGroupStatusStateResponse_RUNNING      NodeGroupStatusNodeGroupStatusStateResponse = "RUNNING"
 	NodeGroupStatusNodeGroupStatusStateResponse_SCALING_UP   NodeGroupStatusNodeGroupStatusStateResponse = "SCALING_UP"
 	NodeGroupStatusNodeGroupStatusStateResponse_SCALING_DOWN NodeGroupStatusNodeGroupStatusStateResponse = "SCALING_DOWN"
+	NodeGroupStatusNodeGroupStatusStateResponse_UPGRADING    NodeGroupStatusNodeGroupStatusStateResponse = "UPGRADING"
 	NodeGroupStatusNodeGroupStatusStateResponse_DEGRADED     NodeGroupStatusNodeGroupStatusStateResponse = "DEGRADED"
 	NodeGroupStatusNodeGroupStatusStateResponse_DELETING     NodeGroupStatusNodeGroupStatusStateResponse = "DELETING"
 	NodeGroupStatusNodeGroupStatusStateResponse_UNKNOWN      NodeGroupStatusNodeGroupStatusStateResponse = "UNKNOWN"
+
+	ErrUnknownNodeGroupStatusNodeGroupStatusStateResponse = consterr.Error(`unknown kind, want one of "INIT", "PENDING", "RUNNING", "SCALING_UP", "SCALING_DOWN", "UPGRADING", "DEGRADED", "DELETING", "UNKNOWN"`)
 )
+
+func NewNodeGroupStatusNodeGroupStatusStateResponse(s string) (NodeGroupStatusNodeGroupStatusStateResponse, error) {
+	v := NodeGroupStatusNodeGroupStatusStateResponse(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownNodeGroupStatusNodeGroupStatusStateResponse, s)
+	}
+	return v, nil
+}
 
 func (m NodeGroupStatusNodeGroupStatusStateResponse) String() string {
 	return string(m)
+}
+
+func (m NodeGroupStatusNodeGroupStatusStateResponse) IsValid() bool {
+	switch m {
+	case NodeGroupStatusNodeGroupStatusStateResponse_INIT:
+		return true
+	case NodeGroupStatusNodeGroupStatusStateResponse_PENDING:
+		return true
+	case NodeGroupStatusNodeGroupStatusStateResponse_RUNNING:
+		return true
+	case NodeGroupStatusNodeGroupStatusStateResponse_SCALING_UP:
+		return true
+	case NodeGroupStatusNodeGroupStatusStateResponse_SCALING_DOWN:
+		return true
+	case NodeGroupStatusNodeGroupStatusStateResponse_UPGRADING:
+		return true
+	case NodeGroupStatusNodeGroupStatusStateResponse_DEGRADED:
+		return true
+	case NodeGroupStatusNodeGroupStatusStateResponse_DELETING:
+		return true
+	case NodeGroupStatusNodeGroupStatusStateResponse_UNKNOWN:
+		return true
+	}
+	return false
 }
 
 // Представление поля RolloutStrategy анонимного типа структуры NodeGroupStatus

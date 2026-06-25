@@ -43,8 +43,8 @@ func (i *retryInvoker) interceptor(ctx context.Context, request any, response co
 		retryer         = i.retryer
 	)
 	for attempt < maxAttempts {
-		ctx = WithAttempt(ctx, attempt)
-		if invokerErr = invoker(ctx, request, response); invokerErr != nil {
+		ictx := WithAttempt(ctx, attempt)
+		if invokerErr = invoker(ictx, request, response); invokerErr != nil {
 			err = invokerErr
 		} else {
 			err = response.GetErr()
@@ -71,8 +71,8 @@ func (i *retryInvoker) interceptor(ctx context.Context, request any, response co
 		}
 
 		select {
-		case <-ctx.Done():
-			return ctx.Err()
+		case <-ictx.Done():
+			return ictx.Err()
 		case <-time.After(delay):
 			attempt++
 		}

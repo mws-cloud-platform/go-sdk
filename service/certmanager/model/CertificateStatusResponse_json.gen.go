@@ -67,6 +67,11 @@ func (m *CertificateStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("renewalAt")
 		conv.EncodeDateTimeUTC(e, *m.RenewalAt)
 	}
+
+	if m.ChallengesDeadline != nil {
+		e.FieldStart("challengesDeadline")
+		conv.EncodeDateTimeUTC(e, *m.ChallengesDeadline)
+	}
 	return nil
 }
 
@@ -155,6 +160,14 @@ func (m *CertificateStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.RenewalAt = &v
+			return nil
+		case "challengesDeadline":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.ChallengesDeadline = &v
 			return nil
 		default:
 			return d.Skip()

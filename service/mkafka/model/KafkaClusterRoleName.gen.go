@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Название роли.
 type KafkaClusterRoleName string
 
@@ -12,8 +18,36 @@ const (
 	KafkaClusterRoleName_SCHEMA_REGISTRY_ADMIN  KafkaClusterRoleName = "SCHEMA_REGISTRY_ADMIN"
 	KafkaClusterRoleName_SCHEMA_REGISTRY_WRITER KafkaClusterRoleName = "SCHEMA_REGISTRY_WRITER"
 	KafkaClusterRoleName_SCHEMA_REGISTRY_READER KafkaClusterRoleName = "SCHEMA_REGISTRY_READER"
+
+	ErrUnknownKafkaClusterRoleName = consterr.Error(`unknown kind, want one of "CLUSTER_ADMIN", "PRODUCER", "CONSUMER", "SCHEMA_REGISTRY_ADMIN", "SCHEMA_REGISTRY_WRITER", "SCHEMA_REGISTRY_READER"`)
 )
+
+func NewKafkaClusterRoleName(s string) (KafkaClusterRoleName, error) {
+	v := KafkaClusterRoleName(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownKafkaClusterRoleName, s)
+	}
+	return v, nil
+}
 
 func (m KafkaClusterRoleName) String() string {
 	return string(m)
+}
+
+func (m KafkaClusterRoleName) IsValid() bool {
+	switch m {
+	case KafkaClusterRoleName_CLUSTER_ADMIN:
+		return true
+	case KafkaClusterRoleName_PRODUCER:
+		return true
+	case KafkaClusterRoleName_CONSUMER:
+		return true
+	case KafkaClusterRoleName_SCHEMA_REGISTRY_ADMIN:
+		return true
+	case KafkaClusterRoleName_SCHEMA_REGISTRY_WRITER:
+		return true
+	case KafkaClusterRoleName_SCHEMA_REGISTRY_READER:
+		return true
+	}
+	return false
 }

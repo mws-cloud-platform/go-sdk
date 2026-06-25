@@ -3,12 +3,15 @@
 package model
 
 import (
+	"fmt"
 	"time"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
 
 // Real OAPI model name: PostgresUserAdditionalRole
 type PostgresUserAdditionalRoleRequest struct {
-	// - `DB_MIGRATOR_ROLE`: Дополнительная роль, позволяющая пользователю владельцу бд управлять миграцией данных в mpostgres
+	// - `DB_MIGRATOR_ROLE`: Дополнительная роль, позволяющая пользователю БД управлять миграцией данных в mpostgres
 	Name *PostgresUserAdditionalRoleNameRequest `json:"name,omitempty" yaml:"name,omitempty"`
 	// Дата отзыва дополнительной роли
 	ExpiresAt *time.Time `json:"expiresAt,omitempty" yaml:"expiresAt,omitempty"`
@@ -69,8 +72,26 @@ type PostgresUserAdditionalRoleNameRequest string
 
 const (
 	PostgresUserAdditionalRoleNameRequest_DB_MIGRATOR_ROLE PostgresUserAdditionalRoleNameRequest = "DB_MIGRATOR_ROLE"
+
+	ErrUnknownPostgresUserAdditionalRoleNameRequest = consterr.Error(`unknown kind, want one of "DB_MIGRATOR_ROLE"`)
 )
+
+func NewPostgresUserAdditionalRoleNameRequest(s string) (PostgresUserAdditionalRoleNameRequest, error) {
+	v := PostgresUserAdditionalRoleNameRequest(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownPostgresUserAdditionalRoleNameRequest, s)
+	}
+	return v, nil
+}
 
 func (m PostgresUserAdditionalRoleNameRequest) String() string {
 	return string(m)
+}
+
+func (m PostgresUserAdditionalRoleNameRequest) IsValid() bool {
+	switch m {
+	case PostgresUserAdditionalRoleNameRequest_DB_MIGRATOR_ROLE:
+		return true
+	}
+	return false
 }

@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Спецификация правила Firewall'а.
 // Real OAPI model name: FirewallRuleSpec
 type FirewallRuleSpecRequest struct {
@@ -151,10 +157,30 @@ type FirewallRuleSpecActionRequest string
 const (
 	FirewallRuleSpecActionRequest_ALLOW FirewallRuleSpecActionRequest = "ALLOW"
 	FirewallRuleSpecActionRequest_DENY  FirewallRuleSpecActionRequest = "DENY"
+
+	ErrUnknownFirewallRuleSpecActionRequest = consterr.Error(`unknown kind, want one of "ALLOW", "DENY"`)
 )
+
+func NewFirewallRuleSpecActionRequest(s string) (FirewallRuleSpecActionRequest, error) {
+	v := FirewallRuleSpecActionRequest(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownFirewallRuleSpecActionRequest, s)
+	}
+	return v, nil
+}
 
 func (m FirewallRuleSpecActionRequest) String() string {
 	return string(m)
+}
+
+func (m FirewallRuleSpecActionRequest) IsValid() bool {
+	switch m {
+	case FirewallRuleSpecActionRequest_ALLOW:
+		return true
+	case FirewallRuleSpecActionRequest_DENY:
+		return true
+	}
+	return false
 }
 
 // Представление поля Direction enum типа структуры FirewallRuleSpec
@@ -164,8 +190,28 @@ type FirewallRuleSpecDirectionRequest string
 const (
 	FirewallRuleSpecDirectionRequest_INGRESS FirewallRuleSpecDirectionRequest = "INGRESS"
 	FirewallRuleSpecDirectionRequest_EGRESS  FirewallRuleSpecDirectionRequest = "EGRESS"
+
+	ErrUnknownFirewallRuleSpecDirectionRequest = consterr.Error(`unknown kind, want one of "INGRESS", "EGRESS"`)
 )
+
+func NewFirewallRuleSpecDirectionRequest(s string) (FirewallRuleSpecDirectionRequest, error) {
+	v := FirewallRuleSpecDirectionRequest(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownFirewallRuleSpecDirectionRequest, s)
+	}
+	return v, nil
+}
 
 func (m FirewallRuleSpecDirectionRequest) String() string {
 	return string(m)
+}
+
+func (m FirewallRuleSpecDirectionRequest) IsValid() bool {
+	switch m {
+	case FirewallRuleSpecDirectionRequest_INGRESS:
+		return true
+	case FirewallRuleSpecDirectionRequest_EGRESS:
+		return true
+	}
+	return false
 }

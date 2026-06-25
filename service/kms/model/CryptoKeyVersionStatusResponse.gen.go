@@ -3,7 +3,10 @@
 package model
 
 import (
+	"fmt"
 	"time"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -227,8 +230,28 @@ type CryptoKeyVersionStatusDestructionStatusResponse string
 const (
 	CryptoKeyVersionStatusDestructionStatusResponse_SCHEDULED_FOR_DESTRUCTION CryptoKeyVersionStatusDestructionStatusResponse = "SCHEDULED_FOR_DESTRUCTION"
 	CryptoKeyVersionStatusDestructionStatusResponse_DESTROYED                 CryptoKeyVersionStatusDestructionStatusResponse = "DESTROYED"
+
+	ErrUnknownCryptoKeyVersionStatusDestructionStatusResponse = consterr.Error(`unknown kind, want one of "SCHEDULED_FOR_DESTRUCTION", "DESTROYED"`)
 )
+
+func NewCryptoKeyVersionStatusDestructionStatusResponse(s string) (CryptoKeyVersionStatusDestructionStatusResponse, error) {
+	v := CryptoKeyVersionStatusDestructionStatusResponse(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownCryptoKeyVersionStatusDestructionStatusResponse, s)
+	}
+	return v, nil
+}
 
 func (m CryptoKeyVersionStatusDestructionStatusResponse) String() string {
 	return string(m)
+}
+
+func (m CryptoKeyVersionStatusDestructionStatusResponse) IsValid() bool {
+	switch m {
+	case CryptoKeyVersionStatusDestructionStatusResponse_SCHEDULED_FOR_DESTRUCTION:
+		return true
+	case CryptoKeyVersionStatusDestructionStatusResponse_DESTROYED:
+		return true
+	}
+	return false
 }

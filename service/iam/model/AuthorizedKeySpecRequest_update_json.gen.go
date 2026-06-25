@@ -32,15 +32,6 @@ func (m *UpdateAuthorizedKeySpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateAuthorizedKeySpecRequest) encodeFields(e *jx.Encoder) error {
-	if m.PublicKey.IsSet() {
-		e.FieldStart("publicKey")
-		e.Str(m.PublicKey.Value)
-	}
-
-	if m.KeyAlgorithm.IsSet() {
-		e.FieldStart("keyAlgorithm")
-		e.Str(m.KeyAlgorithm.Value)
-	}
 
 	if m.Active.IsSet() {
 		e.FieldStart("active")
@@ -60,22 +51,6 @@ func (m *UpdateAuthorizedKeySpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "publicKey":
-			v, err := decode.Str(d)
-			if err != nil {
-				return err
-			}
-
-			m.PublicKey.SetTo(v)
-			return nil
-		case "keyAlgorithm":
-			v, err := decode.Str(d)
-			if err != nil {
-				return err
-			}
-
-			m.KeyAlgorithm.SetTo(v)
-			return nil
 		case "active":
 			v, err := decode.Bool(d)
 			if err != nil {

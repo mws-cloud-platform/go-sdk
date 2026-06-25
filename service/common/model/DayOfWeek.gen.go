@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // День недели.
 type DayOfWeek string
 
@@ -13,8 +19,38 @@ const (
 	DayOfWeek_FRIDAY    DayOfWeek = "FRIDAY"
 	DayOfWeek_SATURDAY  DayOfWeek = "SATURDAY"
 	DayOfWeek_SUNDAY    DayOfWeek = "SUNDAY"
+
+	ErrUnknownDayOfWeek = consterr.Error(`unknown kind, want one of "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"`)
 )
+
+func NewDayOfWeek(s string) (DayOfWeek, error) {
+	v := DayOfWeek(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownDayOfWeek, s)
+	}
+	return v, nil
+}
 
 func (m DayOfWeek) String() string {
 	return string(m)
+}
+
+func (m DayOfWeek) IsValid() bool {
+	switch m {
+	case DayOfWeek_MONDAY:
+		return true
+	case DayOfWeek_TUESDAY:
+		return true
+	case DayOfWeek_WEDNESDAY:
+		return true
+	case DayOfWeek_THURSDAY:
+		return true
+	case DayOfWeek_FRIDAY:
+		return true
+	case DayOfWeek_SATURDAY:
+		return true
+	case DayOfWeek_SUNDAY:
+		return true
+	}
+	return false
 }

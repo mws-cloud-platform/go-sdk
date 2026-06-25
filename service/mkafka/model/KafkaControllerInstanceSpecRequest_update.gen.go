@@ -4,6 +4,7 @@ package model
 
 import (
 	"context"
+	"fmt"
 
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
@@ -93,6 +94,14 @@ func (m *UpdateKafkaControllerInstanceSpecRequest) Parse(ctx context.Context) er
 	if m.VmType.IsSet() {
 		if err := m.VmType.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("VmType", err)
+		}
+	}
+
+	if m.Allocation.IsSet() {
+		for index := range m.Allocation.Value {
+			if err := m.Allocation.Value[index].Parse(ctx); err != nil {
+				return reserrors.NewPathAccumulatorError("Allocation"+fmt.Sprint("[", index, "]"), err)
+			}
 		}
 	}
 

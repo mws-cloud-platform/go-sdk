@@ -26,7 +26,7 @@ type KafkaClusterSpecRequest struct {
 	MaintenanceWindow *common.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry *KafkaSchemaRegistrySpecRequest `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`
-	// Настройка Auto Rebalance для кластера.
+	// Настройка автоматической ребалансировки для кластера.
 	AutoRebalance *KafkaAutoRebalanceSpecRequest `json:"autoRebalance,omitempty" yaml:"autoRebalance,omitempty"`
 }
 

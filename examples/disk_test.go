@@ -5,11 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/mws"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	computeclient "go.mws.cloud/go-sdk/service/compute/client"
 	computemodel "go.mws.cloud/go-sdk/service/compute/model"
 	computesdk "go.mws.cloud/go-sdk/service/compute/sdk"
@@ -46,10 +44,10 @@ func Example_disk() {
 		Disk: diskName,
 		Body: computemodel.DiskRequest{
 			Spec: computemodel.DiskSpecRequest{
-				BlockSize: ptr.Get(bytesize.MustParseString("4096 B")),
-				DiskType:  ptr.Get(computeref.NewDiskTypeRef("nbs-pl2")),
-				Iops:      ptr.Get(computemodel.Iops(1000)),
-				Size:      ptr.Get(bytesize.MustParseString("1 GB")),
+				BlockSize: new(bytesize.MustParseString("4096 B")),
+				DiskType:  new(computeref.NewDiskTypeRef("nbs-pl2")),
+				Iops:      new(computemodel.Iops(1000)),
+				Size:      new(bytesize.MustParseString("1 GB")),
 				Zone:      "ru-central1-a",
 			},
 		},
@@ -64,8 +62,8 @@ func Example_disk() {
 	disk, err = diskClient.UpdateDisk(ctx, computeclient.UpdateDiskRequest{
 		Disk: diskName,
 		Body: computemodel.UpdateDiskRequest{
-			Spec: commonclient.NewOptional(computemodel.UpdateDiskSpecRequest{
-				Size: commonclient.NewOptional(bytesize.MustParseString("2 GB")),
+			Spec: optional.NewOptional(computemodel.UpdateDiskSpecRequest{
+				Size: optional.NewOptional(bytesize.MustParseString("2 GB")),
 			}),
 		},
 	}, computeclient.WithWait())

@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
 // Real OAPI model name: ClusterPublicEndpointSpec
 type ClusterPublicEndpointSpecRequest struct {
@@ -47,8 +53,28 @@ type ClusterPublicEndpointSpecVersionRequest string
 const (
 	ClusterPublicEndpointSpecVersionRequest_IPV4 ClusterPublicEndpointSpecVersionRequest = "IPV4"
 	ClusterPublicEndpointSpecVersionRequest_IPV6 ClusterPublicEndpointSpecVersionRequest = "IPV6"
+
+	ErrUnknownClusterPublicEndpointSpecVersionRequest = consterr.Error(`unknown kind, want one of "IPV4", "IPV6"`)
 )
+
+func NewClusterPublicEndpointSpecVersionRequest(s string) (ClusterPublicEndpointSpecVersionRequest, error) {
+	v := ClusterPublicEndpointSpecVersionRequest(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownClusterPublicEndpointSpecVersionRequest, s)
+	}
+	return v, nil
+}
 
 func (m ClusterPublicEndpointSpecVersionRequest) String() string {
 	return string(m)
+}
+
+func (m ClusterPublicEndpointSpecVersionRequest) IsValid() bool {
+	switch m {
+	case ClusterPublicEndpointSpecVersionRequest_IPV4:
+		return true
+	case ClusterPublicEndpointSpecVersionRequest_IPV6:
+		return true
+	}
+	return false
 }

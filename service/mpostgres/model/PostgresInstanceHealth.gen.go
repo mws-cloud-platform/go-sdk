@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Исправность экземпляра postgres
 type PostgresInstanceHealth string
 
@@ -12,8 +18,36 @@ const (
 	PostgresInstanceHealth_FAILED      PostgresInstanceHealth = "FAILED"
 	PostgresInstanceHealth_UNAVAILABLE PostgresInstanceHealth = "UNAVAILABLE"
 	PostgresInstanceHealth_UNKNOWN     PostgresInstanceHealth = "UNKNOWN"
+
+	ErrUnknownPostgresInstanceHealth = consterr.Error(`unknown kind, want one of "ALIVE", "PROCESSING", "INACTIVE", "FAILED", "UNAVAILABLE", "UNKNOWN"`)
 )
+
+func NewPostgresInstanceHealth(s string) (PostgresInstanceHealth, error) {
+	v := PostgresInstanceHealth(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownPostgresInstanceHealth, s)
+	}
+	return v, nil
+}
 
 func (m PostgresInstanceHealth) String() string {
 	return string(m)
+}
+
+func (m PostgresInstanceHealth) IsValid() bool {
+	switch m {
+	case PostgresInstanceHealth_ALIVE:
+		return true
+	case PostgresInstanceHealth_PROCESSING:
+		return true
+	case PostgresInstanceHealth_INACTIVE:
+		return true
+	case PostgresInstanceHealth_FAILED:
+		return true
+	case PostgresInstanceHealth_UNAVAILABLE:
+		return true
+	case PostgresInstanceHealth_UNKNOWN:
+		return true
+	}
+	return false
 }

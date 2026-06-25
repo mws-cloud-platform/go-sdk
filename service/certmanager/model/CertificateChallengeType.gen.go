@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Предпочтительный тип проверки домена (challenge).
 // Возможные значения: DNS01 или HTTP01. По умолчанию используется DNS01.
 type CertificateChallengeType string
@@ -9,8 +15,28 @@ type CertificateChallengeType string
 const (
 	CertificateChallengeType_DNS01  CertificateChallengeType = "DNS01"
 	CertificateChallengeType_HTTP01 CertificateChallengeType = "HTTP01"
+
+	ErrUnknownCertificateChallengeType = consterr.Error(`unknown kind, want one of "DNS01", "HTTP01"`)
 )
+
+func NewCertificateChallengeType(s string) (CertificateChallengeType, error) {
+	v := CertificateChallengeType(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownCertificateChallengeType, s)
+	}
+	return v, nil
+}
 
 func (m CertificateChallengeType) String() string {
 	return string(m)
+}
+
+func (m CertificateChallengeType) IsValid() bool {
+	switch m {
+	case CertificateChallengeType_DNS01:
+		return true
+	case CertificateChallengeType_HTTP01:
+		return true
+	}
+	return false
 }

@@ -4,6 +4,7 @@ package model
 
 import (
 	"context"
+	"fmt"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
@@ -85,6 +86,14 @@ func (m *UpdateKafkaInstanceSpecRequest) Parse(ctx context.Context) error {
 	if m.VmType.IsSet() {
 		if err := m.VmType.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("VmType", err)
+		}
+	}
+
+	if m.Allocation.IsSet() {
+		for index := range m.Allocation.Value {
+			if err := m.Allocation.Value[index].Parse(ctx); err != nil {
+				return reserrors.NewPathAccumulatorError("Allocation"+fmt.Sprint("[", index, "]"), err)
+			}
 		}
 	}
 

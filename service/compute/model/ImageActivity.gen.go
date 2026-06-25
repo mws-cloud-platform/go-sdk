@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Актуальность образа
 type ImageActivity string
 
@@ -9,8 +15,30 @@ const (
 	ImageActivity_ACTUAL     ImageActivity = "ACTUAL"
 	ImageActivity_DEPRECATED ImageActivity = "DEPRECATED"
 	ImageActivity_DISABLED   ImageActivity = "DISABLED"
+
+	ErrUnknownImageActivity = consterr.Error(`unknown kind, want one of "ACTUAL", "DEPRECATED", "DISABLED"`)
 )
+
+func NewImageActivity(s string) (ImageActivity, error) {
+	v := ImageActivity(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownImageActivity, s)
+	}
+	return v, nil
+}
 
 func (m ImageActivity) String() string {
 	return string(m)
+}
+
+func (m ImageActivity) IsValid() bool {
+	switch m {
+	case ImageActivity_ACTUAL:
+		return true
+	case ImageActivity_DEPRECATED:
+		return true
+	case ImageActivity_DISABLED:
+		return true
+	}
+	return false
 }

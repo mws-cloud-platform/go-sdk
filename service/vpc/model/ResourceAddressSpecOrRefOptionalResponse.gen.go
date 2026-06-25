@@ -10,7 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Спецификация внутреннего адреса, для которого будет осуществляться трансляция.
+// Описывает ссылку на внутренний адрес или спецификацию внутреннего адреса как дополнительный ресурс.
 // Real OAPI model name: ResourceAddressSpecOrRef
 type ResourceAddressSpecOrRefOptionalResponse struct {
 	// Относительная ссылка на статический внутренний адрес.

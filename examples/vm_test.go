@@ -6,13 +6,11 @@ import (
 	"log"
 	"time"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
-	"go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/mws"
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	computeclient "go.mws.cloud/go-sdk/service/compute/client"
 	computemodel "go.mws.cloud/go-sdk/service/compute/model"
 	computesdk "go.mws.cloud/go-sdk/service/compute/sdk"
@@ -84,21 +82,21 @@ func createVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachi
 				VmType: computeref.NewVmTypeRef("gen-2-8"),
 				Zone:   "ru-central1-a",
 				Hardware: &computemodel.HardwareSpecRequest{
-					Power:                   ptr.Get(computemodel.HardwareSpecPowerRequest_OFF),
-					GracefulShutdownTimeout: ptr.Get(duration.NewFromTimeDuration(90 * time.Second)),
+					Power:                   new(computemodel.HardwareSpecPowerRequest_OFF),
+					GracefulShutdownTimeout: new(duration.NewFromTimeDuration(90 * time.Second)),
 				},
 				Storage: computemodel.StorageSpecRequest{
 					Disks: []computemodel.StorageDiskSpecOrRefWithAttachmentsRequest{
 						{
 							Name: "boot",
-							Boot: ptr.Get(true),
+							Boot: new(true),
 							Disk: computemodel.StorageDiskSpecOrRefRequest{
 								Spec: &computemodel.StorageDiskSpecRequest{
-									DiskType: ptr.Get(computeref.NewDiskTypeRef("nbs-pl2")),
-									Iops:     ptr.Get(computemodel.Iops(1000)),
-									Size:     ptr.Get(bytesize.MustParseString("10 GB")),
+									DiskType: new(computeref.NewDiskTypeRef("nbs-pl2")),
+									Iops:     new(computemodel.Iops(1000)),
+									Size:     new(bytesize.MustParseString("10 GB")),
 									Source: &computemodel.StorageDiskSpecSourceRequest{
-										Image: ptr.Get(computeref.NewImageRef(
+										Image: new(computeref.NewImageRef(
 											"mws-ubuntu",
 											"mws-ubuntu-2404-lts-v20260324",
 										)),
@@ -112,7 +110,7 @@ func createVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachi
 					NetworkInterfaces: []computemodel.NetworkInterfaceSpecRequest{
 						{
 							Name:    virtualMachineName + "-network-interface-primary",
-							Primary: ptr.Get(true),
+							Primary: new(true),
 							Addresses: []computemodel.AddressSpecOrRefWithAttachmentsRequest{
 								{
 									Address: computemodel.AddressSpecOrRefRequest{
@@ -138,7 +136,7 @@ func createVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachi
 	if err != nil {
 		log.Panicln("create virtual machine:", err)
 	}
-	fmt.Println("virtual machine created:", ptr.Get(virtualMachine.GetMetadata().GetId()).ResourceName())
+	fmt.Println("virtual machine created:", new(virtualMachine.GetMetadata().GetId()).ResourceName())
 }
 
 func getVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachine, virtualMachineName string) {
@@ -148,22 +146,22 @@ func getVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachine,
 	if err != nil {
 		log.Panicln("get virtual machine:", err)
 	}
-	fmt.Println("virtual machine received:", ptr.Get(virtualMachine.GetMetadata().GetId()).ResourceName())
+	fmt.Println("virtual machine received:", new(virtualMachine.GetMetadata().GetId()).ResourceName())
 }
 
 func updateVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachine, virtualMachineName string) {
 	virtualMachine, err := virtualMachineClient.UpdateVirtualMachine(ctx, computeclient.UpdateVirtualMachineRequest{
 		VirtualMachine: virtualMachineName,
 		Body: computemodel.UpdateVirtualMachineRequest{
-			Spec: client.NewOptional(computemodel.UpdateVirtualMachineSpecRequest{
-				VmType: client.NewOptional(computeref.NewVmTypeRef("gen-2-16")),
+			Spec: optional.NewOptional(computemodel.UpdateVirtualMachineSpecRequest{
+				VmType: optional.NewOptional(computeref.NewVmTypeRef("gen-2-16")),
 			}),
 		},
 	}, computeclient.WithWait())
 	if err != nil {
 		log.Panicln("update virtual machine:", err)
 	}
-	fmt.Println("virtual machine updated:", ptr.Get(virtualMachine.GetMetadata().GetId()).ResourceName())
+	fmt.Println("virtual machine updated:", new(virtualMachine.GetMetadata().GetId()).ResourceName())
 }
 
 func deleteVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachine, virtualMachineName string) {
@@ -186,8 +184,8 @@ func createNetwork(ctx context.Context, sdk *mws.SDK, networkName string) func()
 		Network: networkName,
 		Body: vpcmodel.NetworkRequest{
 			Spec: vpcmodel.VpcNetworkSpecRequest{
-				InternetAccess: ptr.Get(true),
-				Mtu:            ptr.Get(int32(1500)),
+				InternetAccess: new(true),
+				Mtu:            new(int32(1500)),
 			},
 		},
 	}, vpcclient.WithWait())

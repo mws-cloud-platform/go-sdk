@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Шаг увеличения таймаута
 type RetryTimeoutScale string
 
@@ -10,8 +16,32 @@ const (
 	RetryTimeoutScale_LINEAR      RetryTimeoutScale = "LINEAR"
 	RetryTimeoutScale_PROGRESSIVE RetryTimeoutScale = "PROGRESSIVE"
 	RetryTimeoutScale_EXPONENTIAL RetryTimeoutScale = "EXPONENTIAL"
+
+	ErrUnknownRetryTimeoutScale = consterr.Error(`unknown kind, want one of "FIXED", "LINEAR", "PROGRESSIVE", "EXPONENTIAL"`)
 )
+
+func NewRetryTimeoutScale(s string) (RetryTimeoutScale, error) {
+	v := RetryTimeoutScale(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownRetryTimeoutScale, s)
+	}
+	return v, nil
+}
 
 func (m RetryTimeoutScale) String() string {
 	return string(m)
+}
+
+func (m RetryTimeoutScale) IsValid() bool {
+	switch m {
+	case RetryTimeoutScale_FIXED:
+		return true
+	case RetryTimeoutScale_LINEAR:
+		return true
+	case RetryTimeoutScale_PROGRESSIVE:
+		return true
+	case RetryTimeoutScale_EXPONENTIAL:
+		return true
+	}
+	return false
 }

@@ -26,6 +26,9 @@ type CertificateStatusResponse struct {
 	Challenges []CertificateChallengeResponse `json:"challenges,omitempty" yaml:"challenges,omitempty"`
 	// Время следующего обновления сертификата.
 	RenewalAt *time.Time `json:"renewalAt,omitempty" yaml:"renewalAt,omitempty"`
+	// Время, до которого необходимо настроить делегацию для прохождения проверки прав на домены.
+	// Присутствует только в случае, если сертификат управляемый.
+	ChallengesDeadline *time.Time `json:"challengesDeadline,omitempty" yaml:"challengesDeadline,omitempty"`
 }
 
 func (m *CertificateStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -108,6 +111,20 @@ func (m *CertificateStatusResponse) GetRenewalAt() *time.Time {
 func (m *CertificateStatusResponse) GetRenewalAtOr(val time.Time) time.Time {
 	if m != nil && m.RenewalAt != nil {
 		return *m.RenewalAt
+	}
+	return val
+}
+
+func (m *CertificateStatusResponse) GetChallengesDeadline() *time.Time {
+	if m != nil {
+		return m.ChallengesDeadline
+	}
+	return nil
+}
+
+func (m *CertificateStatusResponse) GetChallengesDeadlineOr(val time.Time) time.Time {
+	if m != nil && m.ChallengesDeadline != nil {
+		return *m.ChallengesDeadline
 	}
 	return val
 }

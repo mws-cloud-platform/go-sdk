@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Тип сертификата. Если указано SELF_MANAGED, тело запроса должно содержать данные сертификата.
 // Если указано MANAGED, сертификат будет создан центром сертификации (например, Let's Encrypt).
 type CertificateManagementType string
@@ -9,8 +15,28 @@ type CertificateManagementType string
 const (
 	CertificateManagementType_SELF_MANAGED CertificateManagementType = "SELF_MANAGED"
 	CertificateManagementType_MANAGED      CertificateManagementType = "MANAGED"
+
+	ErrUnknownCertificateManagementType = consterr.Error(`unknown kind, want one of "SELF_MANAGED", "MANAGED"`)
 )
+
+func NewCertificateManagementType(s string) (CertificateManagementType, error) {
+	v := CertificateManagementType(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownCertificateManagementType, s)
+	}
+	return v, nil
+}
 
 func (m CertificateManagementType) String() string {
 	return string(m)
+}
+
+func (m CertificateManagementType) IsValid() bool {
+	switch m {
+	case CertificateManagementType_SELF_MANAGED:
+		return true
+	case CertificateManagementType_MANAGED:
+		return true
+	}
+	return false
 }

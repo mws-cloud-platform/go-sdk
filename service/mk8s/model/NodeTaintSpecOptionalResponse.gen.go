@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Real OAPI model name: NodeTaintSpec
 type NodeTaintSpecOptionalResponse struct {
 	// Ключ может состоять из двух частей: необязательный префикс и ключ, разделенные "/".
@@ -64,8 +70,30 @@ const (
 	NodeTaintSpecEffectOptionalResponse_NO_SCHEDULE        NodeTaintSpecEffectOptionalResponse = "NO_SCHEDULE"
 	NodeTaintSpecEffectOptionalResponse_PREFER_NO_SCHEDULE NodeTaintSpecEffectOptionalResponse = "PREFER_NO_SCHEDULE"
 	NodeTaintSpecEffectOptionalResponse_NO_EXECUTE         NodeTaintSpecEffectOptionalResponse = "NO_EXECUTE"
+
+	ErrUnknownNodeTaintSpecEffectOptionalResponse = consterr.Error(`unknown kind, want one of "NO_SCHEDULE", "PREFER_NO_SCHEDULE", "NO_EXECUTE"`)
 )
+
+func NewNodeTaintSpecEffectOptionalResponse(s string) (NodeTaintSpecEffectOptionalResponse, error) {
+	v := NodeTaintSpecEffectOptionalResponse(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownNodeTaintSpecEffectOptionalResponse, s)
+	}
+	return v, nil
+}
 
 func (m NodeTaintSpecEffectOptionalResponse) String() string {
 	return string(m)
+}
+
+func (m NodeTaintSpecEffectOptionalResponse) IsValid() bool {
+	switch m {
+	case NodeTaintSpecEffectOptionalResponse_NO_SCHEDULE:
+		return true
+	case NodeTaintSpecEffectOptionalResponse_PREFER_NO_SCHEDULE:
+		return true
+	case NodeTaintSpecEffectOptionalResponse_NO_EXECUTE:
+		return true
+	}
+	return false
 }

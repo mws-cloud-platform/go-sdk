@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/mws"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	computeclient "go.mws.cloud/go-sdk/service/compute/client"
@@ -67,7 +65,7 @@ func createDiskFromSnapshot(ctx context.Context, sdk *mws.SDK, diskName string, 
 	var source *computemodel.DiskSpecSourceRequest
 	if snapshotID != nil {
 		source = &computemodel.DiskSpecSourceRequest{
-			Snapshot: ptr.Get(computeref.NewSnapshotRef(snapshotID.GetProject(), snapshotID.GetSnapshot())),
+			Snapshot: new(computeref.NewSnapshotRef(snapshotID.GetProject(), snapshotID.GetSnapshot())),
 		}
 	}
 
@@ -76,10 +74,10 @@ func createDiskFromSnapshot(ctx context.Context, sdk *mws.SDK, diskName string, 
 		Disk: diskName,
 		Body: computemodel.DiskRequest{
 			Spec: computemodel.DiskSpecRequest{
-				BlockSize: ptr.Get(bytesize.MustParseString("4096 B")),
-				DiskType:  ptr.Get(computeref.NewDiskTypeRef("nbs-pl2")),
-				Iops:      ptr.Get(computemodel.Iops(1000)),
-				Size:      ptr.Get(bytesize.MustParseString("1 GB")),
+				BlockSize: new(bytesize.MustParseString("4096 B")),
+				DiskType:  new(computeref.NewDiskTypeRef("nbs-pl2")),
+				Iops:      new(computemodel.Iops(1000)),
+				Size:      new(bytesize.MustParseString("1 GB")),
 				Zone:      "ru-central1-a",
 				Source:    source,
 			},

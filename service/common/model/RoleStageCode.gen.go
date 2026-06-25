@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 type RoleStageCode string
 
 const (
@@ -9,8 +15,32 @@ const (
 	RoleStageCode_DEPRECATED RoleStageCode = "DEPRECATED"
 	RoleStageCode_ARCHIVED   RoleStageCode = "ARCHIVED"
 	RoleStageCode_DELETED    RoleStageCode = "DELETED"
+
+	ErrUnknownRoleStageCode = consterr.Error(`unknown kind, want one of "ACTIVE", "DEPRECATED", "ARCHIVED", "DELETED"`)
 )
+
+func NewRoleStageCode(s string) (RoleStageCode, error) {
+	v := RoleStageCode(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownRoleStageCode, s)
+	}
+	return v, nil
+}
 
 func (m RoleStageCode) String() string {
 	return string(m)
+}
+
+func (m RoleStageCode) IsValid() bool {
+	switch m {
+	case RoleStageCode_ACTIVE:
+		return true
+	case RoleStageCode_DEPRECATED:
+		return true
+	case RoleStageCode_ARCHIVED:
+		return true
+	case RoleStageCode_DELETED:
+		return true
+	}
+	return false
 }

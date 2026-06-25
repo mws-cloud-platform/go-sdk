@@ -3,7 +3,10 @@
 package model
 
 import (
+	"fmt"
+
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
 
 // Real OAPI model name: HardwareStatus
@@ -77,8 +80,28 @@ type HardwareStatusPowerResponse string
 const (
 	HardwareStatusPowerResponse_ON  HardwareStatusPowerResponse = "ON"
 	HardwareStatusPowerResponse_OFF HardwareStatusPowerResponse = "OFF"
+
+	ErrUnknownHardwareStatusPowerResponse = consterr.Error(`unknown kind, want one of "ON", "OFF"`)
 )
+
+func NewHardwareStatusPowerResponse(s string) (HardwareStatusPowerResponse, error) {
+	v := HardwareStatusPowerResponse(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownHardwareStatusPowerResponse, s)
+	}
+	return v, nil
+}
 
 func (m HardwareStatusPowerResponse) String() string {
 	return string(m)
+}
+
+func (m HardwareStatusPowerResponse) IsValid() bool {
+	switch m {
+	case HardwareStatusPowerResponse_ON:
+		return true
+	case HardwareStatusPowerResponse_OFF:
+		return true
+	}
+	return false
 }

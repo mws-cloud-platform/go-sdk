@@ -15,13 +15,10 @@ import (
 )
 
 type UpdateNetworkInterfaceSpecRequest struct {
+	// Имя сетевого интерфейса
 	Name                optional.Optional[string] `json:"name" yaml:"name"`
 	IpForwardingEnabled optional.Optional[bool]   `json:"ipForwardingEnabled" yaml:"ipForwardingEnabled"`
-	// К одному сетевому интерфейсу можно подключить одновременно 4 разных сетевых адреса
-	// - IPv4 internal
-	// - IPv4 external
-	// - IPv6 internal
-	// - IPv6 external
+	// IP-адреса сетевого интерфейса
 	Addresses optional.Optional[[]UpdateAddressSpecOrRefWithAttachmentsRequest] `json:"addresses" yaml:"addresses"`
 }
 

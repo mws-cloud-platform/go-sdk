@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Роль экземпляра postgres
 type PostgresInstanceRole string
 
@@ -9,8 +15,30 @@ const (
 	PostgresInstanceRole_PRIMARY PostgresInstanceRole = "PRIMARY"
 	PostgresInstanceRole_STANDBY PostgresInstanceRole = "STANDBY"
 	PostgresInstanceRole_UNKNOWN PostgresInstanceRole = "UNKNOWN"
+
+	ErrUnknownPostgresInstanceRole = consterr.Error(`unknown kind, want one of "PRIMARY", "STANDBY", "UNKNOWN"`)
 )
+
+func NewPostgresInstanceRole(s string) (PostgresInstanceRole, error) {
+	v := PostgresInstanceRole(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownPostgresInstanceRole, s)
+	}
+	return v, nil
+}
 
 func (m PostgresInstanceRole) String() string {
 	return string(m)
+}
+
+func (m PostgresInstanceRole) IsValid() bool {
+	switch m {
+	case PostgresInstanceRole_PRIMARY:
+		return true
+	case PostgresInstanceRole_STANDBY:
+		return true
+	case PostgresInstanceRole_UNKNOWN:
+		return true
+	}
+	return false
 }

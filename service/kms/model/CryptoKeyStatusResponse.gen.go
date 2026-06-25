@@ -4,7 +4,10 @@ package model
 
 import (
 	"context"
+	"fmt"
 	"time"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
@@ -196,10 +199,30 @@ type CryptoKeyStatusDestructionStatusResponse string
 const (
 	CryptoKeyStatusDestructionStatusResponse_SCHEDULED_FOR_DESTRUCTION CryptoKeyStatusDestructionStatusResponse = "SCHEDULED_FOR_DESTRUCTION"
 	CryptoKeyStatusDestructionStatusResponse_DESTROYED                 CryptoKeyStatusDestructionStatusResponse = "DESTROYED"
+
+	ErrUnknownCryptoKeyStatusDestructionStatusResponse = consterr.Error(`unknown kind, want one of "SCHEDULED_FOR_DESTRUCTION", "DESTROYED"`)
 )
+
+func NewCryptoKeyStatusDestructionStatusResponse(s string) (CryptoKeyStatusDestructionStatusResponse, error) {
+	v := CryptoKeyStatusDestructionStatusResponse(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownCryptoKeyStatusDestructionStatusResponse, s)
+	}
+	return v, nil
+}
 
 func (m CryptoKeyStatusDestructionStatusResponse) String() string {
 	return string(m)
+}
+
+func (m CryptoKeyStatusDestructionStatusResponse) IsValid() bool {
+	switch m {
+	case CryptoKeyStatusDestructionStatusResponse_SCHEDULED_FOR_DESTRUCTION:
+		return true
+	case CryptoKeyStatusDestructionStatusResponse_DESTROYED:
+		return true
+	}
+	return false
 }
 
 // Представление поля Rotation анонимного типа структуры CryptoKeyStatus

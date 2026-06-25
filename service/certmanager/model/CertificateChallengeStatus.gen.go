@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Текущий статус проверки. Возможные значения: PENDING, VALID, INVALID, CANCELED, SUBMITTED.
 type CertificateChallengeStatus string
 
@@ -11,8 +17,34 @@ const (
 	CertificateChallengeStatus_SUBMITTED CertificateChallengeStatus = "SUBMITTED"
 	CertificateChallengeStatus_CANCELED  CertificateChallengeStatus = "CANCELED"
 	CertificateChallengeStatus_INVALID   CertificateChallengeStatus = "INVALID"
+
+	ErrUnknownCertificateChallengeStatus = consterr.Error(`unknown kind, want one of "PENDING", "VALID", "SUBMITTED", "CANCELED", "INVALID"`)
 )
+
+func NewCertificateChallengeStatus(s string) (CertificateChallengeStatus, error) {
+	v := CertificateChallengeStatus(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownCertificateChallengeStatus, s)
+	}
+	return v, nil
+}
 
 func (m CertificateChallengeStatus) String() string {
 	return string(m)
+}
+
+func (m CertificateChallengeStatus) IsValid() bool {
+	switch m {
+	case CertificateChallengeStatus_PENDING:
+		return true
+	case CertificateChallengeStatus_VALID:
+		return true
+	case CertificateChallengeStatus_SUBMITTED:
+		return true
+	case CertificateChallengeStatus_CANCELED:
+		return true
+	case CertificateChallengeStatus_INVALID:
+		return true
+	}
+	return false
 }

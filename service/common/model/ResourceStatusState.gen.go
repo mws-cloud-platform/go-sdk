@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Состояние ресурса
 type ResourceStatusState string
 
@@ -9,8 +15,30 @@ const (
 	ResourceStatusState_OK         ResourceStatusState = "OK"
 	ResourceStatusState_FAILED     ResourceStatusState = "FAILED"
 	ResourceStatusState_PROCESSING ResourceStatusState = "PROCESSING"
+
+	ErrUnknownResourceStatusState = consterr.Error(`unknown kind, want one of "OK", "FAILED", "PROCESSING"`)
 )
+
+func NewResourceStatusState(s string) (ResourceStatusState, error) {
+	v := ResourceStatusState(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownResourceStatusState, s)
+	}
+	return v, nil
+}
 
 func (m ResourceStatusState) String() string {
 	return string(m)
+}
+
+func (m ResourceStatusState) IsValid() bool {
+	switch m {
+	case ResourceStatusState_OK:
+		return true
+	case ResourceStatusState_FAILED:
+		return true
+	case ResourceStatusState_PROCESSING:
+		return true
+	}
+	return false
 }

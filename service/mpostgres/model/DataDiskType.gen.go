@@ -2,14 +2,40 @@
 
 package model
 
+import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+)
+
 // Тип диска.
 type DataDiskType string
 
 const (
 	DataDiskType_NETWORK_STANDARD_SSD DataDiskType = "NETWORK_STANDARD_SSD"
 	DataDiskType_LOCAL                DataDiskType = "LOCAL"
+
+	ErrUnknownDataDiskType = consterr.Error(`unknown kind, want one of "NETWORK_STANDARD_SSD", "LOCAL"`)
 )
+
+func NewDataDiskType(s string) (DataDiskType, error) {
+	v := DataDiskType(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownDataDiskType, s)
+	}
+	return v, nil
+}
 
 func (m DataDiskType) String() string {
 	return string(m)
+}
+
+func (m DataDiskType) IsValid() bool {
+	switch m {
+	case DataDiskType_NETWORK_STANDARD_SSD:
+		return true
+	case DataDiskType_LOCAL:
+		return true
+	}
+	return false
 }

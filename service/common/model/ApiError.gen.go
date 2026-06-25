@@ -4,8 +4,11 @@ package model
 
 import (
 	"encoding/json"
+	"fmt"
+	"slices"
 
 	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	mwserrors "go.mws.cloud/go-sdk/mws/errors"
@@ -131,12 +134,7 @@ func (m *ApiError) Clone() *ApiError {
 	if m.Details != nil {
 		clone.Details = make(map[string]json.RawMessage, len(m.Details))
 		for k, v := range m.Details {
-			if v == nil {
-				clone.Details[k] = nil
-				continue
-			}
-			clone.Details[k] = make(json.RawMessage, len(v))
-			copy(clone.Details[k], v)
+			clone.Details[k] = slices.Clone(v)
 		}
 	}
 	return &clone
@@ -213,8 +211,54 @@ const (
 	ApiErrorCode_UNAVAILABLE                  ApiErrorCode = "UNAVAILABLE"
 	ApiErrorCode_METHOD_NOT_ALLOWED           ApiErrorCode = "METHOD_NOT_ALLOWED"
 	ApiErrorCode_TOO_MANY_REQUESTS            ApiErrorCode = "TOO_MANY_REQUESTS"
+
+	ErrUnknownApiErrorCode = consterr.Error(`unknown kind, want one of "ALREADY_EXISTS", "CANCELLED", "DEADLINE_EXCEEDED", "FAILED_PRECONDITION", "INTERNAL", "INVALID_ARGUMENT", "NOT_FOUND", "PERMISSION_DENIED", "QUOTA_EXCEEDED", "IDEMPOTENCY_KEY_ALREADY_USED", "INVALID_ETAG_KEY", "UNAUTHENTICATED", "UNAVAILABLE", "METHOD_NOT_ALLOWED", "TOO_MANY_REQUESTS"`)
 )
+
+func NewApiErrorCode(s string) (ApiErrorCode, error) {
+	v := ApiErrorCode(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownApiErrorCode, s)
+	}
+	return v, nil
+}
 
 func (m ApiErrorCode) String() string {
 	return string(m)
+}
+
+func (m ApiErrorCode) IsValid() bool {
+	switch m {
+	case ApiErrorCode_ALREADY_EXISTS:
+		return true
+	case ApiErrorCode_CANCELLED:
+		return true
+	case ApiErrorCode_DEADLINE_EXCEEDED:
+		return true
+	case ApiErrorCode_FAILED_PRECONDITION:
+		return true
+	case ApiErrorCode_INTERNAL:
+		return true
+	case ApiErrorCode_INVALID_ARGUMENT:
+		return true
+	case ApiErrorCode_NOT_FOUND:
+		return true
+	case ApiErrorCode_PERMISSION_DENIED:
+		return true
+	case ApiErrorCode_QUOTA_EXCEEDED:
+		return true
+	case ApiErrorCode_IDEMPOTENCY_KEY_ALREADY_USED:
+		return true
+	case ApiErrorCode_INVALID_ETAG_KEY:
+		return true
+	case ApiErrorCode_UNAUTHENTICATED:
+		return true
+	case ApiErrorCode_UNAVAILABLE:
+		return true
+	case ApiErrorCode_METHOD_NOT_ALLOWED:
+		return true
+	case ApiErrorCode_TOO_MANY_REQUESTS:
+		return true
+	}
+	return false
 }

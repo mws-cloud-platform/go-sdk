@@ -3,6 +3,10 @@
 package model
 
 import (
+	"fmt"
+
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -135,10 +139,30 @@ type FirewallRuleSpecActionOptionalResponse string
 const (
 	FirewallRuleSpecActionOptionalResponse_ALLOW FirewallRuleSpecActionOptionalResponse = "ALLOW"
 	FirewallRuleSpecActionOptionalResponse_DENY  FirewallRuleSpecActionOptionalResponse = "DENY"
+
+	ErrUnknownFirewallRuleSpecActionOptionalResponse = consterr.Error(`unknown kind, want one of "ALLOW", "DENY"`)
 )
+
+func NewFirewallRuleSpecActionOptionalResponse(s string) (FirewallRuleSpecActionOptionalResponse, error) {
+	v := FirewallRuleSpecActionOptionalResponse(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownFirewallRuleSpecActionOptionalResponse, s)
+	}
+	return v, nil
+}
 
 func (m FirewallRuleSpecActionOptionalResponse) String() string {
 	return string(m)
+}
+
+func (m FirewallRuleSpecActionOptionalResponse) IsValid() bool {
+	switch m {
+	case FirewallRuleSpecActionOptionalResponse_ALLOW:
+		return true
+	case FirewallRuleSpecActionOptionalResponse_DENY:
+		return true
+	}
+	return false
 }
 
 // Представление поля Direction enum типа структуры FirewallRuleSpec
@@ -148,8 +172,28 @@ type FirewallRuleSpecDirectionOptionalResponse string
 const (
 	FirewallRuleSpecDirectionOptionalResponse_INGRESS FirewallRuleSpecDirectionOptionalResponse = "INGRESS"
 	FirewallRuleSpecDirectionOptionalResponse_EGRESS  FirewallRuleSpecDirectionOptionalResponse = "EGRESS"
+
+	ErrUnknownFirewallRuleSpecDirectionOptionalResponse = consterr.Error(`unknown kind, want one of "INGRESS", "EGRESS"`)
 )
+
+func NewFirewallRuleSpecDirectionOptionalResponse(s string) (FirewallRuleSpecDirectionOptionalResponse, error) {
+	v := FirewallRuleSpecDirectionOptionalResponse(s)
+	if !v.IsValid() {
+		return "", fmt.Errorf("%w, got %q", ErrUnknownFirewallRuleSpecDirectionOptionalResponse, s)
+	}
+	return v, nil
+}
 
 func (m FirewallRuleSpecDirectionOptionalResponse) String() string {
 	return string(m)
+}
+
+func (m FirewallRuleSpecDirectionOptionalResponse) IsValid() bool {
+	switch m {
+	case FirewallRuleSpecDirectionOptionalResponse_INGRESS:
+		return true
+	case FirewallRuleSpecDirectionOptionalResponse_EGRESS:
+		return true
+	}
+	return false
 }

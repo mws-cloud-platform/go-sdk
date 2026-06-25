@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/mws"
+	"go.mws.cloud/go-sdk/pkg/optional"
 	certclient "go.mws.cloud/go-sdk/service/certmanager/client"
 	certmodel "go.mws.cloud/go-sdk/service/certmanager/model"
 	certsdk "go.mws.cloud/go-sdk/service/certmanager/sdk"
@@ -62,8 +62,8 @@ func Example_certMWSManaged() {
 	cert, err = certClient.UpdateCertificate(ctx, certclient.UpdateCertificateRequest{
 		Name: certName,
 		Body: certmodel.UpdateCertificateRequest{
-			Metadata: client.NewOptionalNil(common.UpdateCommonTypedResourceMetadataRequest{
-				Description: client.NewOptional("managed certificate"),
+			Metadata: optional.NewOptionalNil(common.UpdateCommonTypedResourceMetadataRequest{
+				Description: optional.NewOptional("managed certificate"),
 			}),
 		},
 	}, certclient.WithWait())
