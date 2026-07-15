@@ -46,7 +46,7 @@ type Certificate interface {
 type ListCertificatesRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -123,7 +123,7 @@ func (m *ListCertificatesResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type GetCertificateContentRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата, содержимое которого нужно получить
 	Name string // path: "name"
@@ -186,7 +186,7 @@ func (m *GetCertificateContentResponse) SetErrorWrapper(f func(err error) error)
 }
 
 type DeleteCertificateRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"
@@ -259,7 +259,7 @@ func (m *DeleteCertificateResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type GetCertificateRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"
@@ -322,7 +322,7 @@ func (m *GetCertificateResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type UpsertCertificateRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"
@@ -354,7 +354,7 @@ func (m *UpsertCertificateRequest) getCertificateRequest() GetCertificateRequest
 }
 
 type UpdateCertificateRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"

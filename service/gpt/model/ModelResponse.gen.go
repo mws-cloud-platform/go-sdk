@@ -116,7 +116,7 @@ func (m *ModelResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: ModelMetadata
 type ModelMetadataResponse struct {
 	common.TypedResourceMetadataResponse `yaml:"-,inline"`
-	// ссылка на типизированный референс
+	// Ссылка на типизированный референс.
 	Id *gpt.ModelID `json:"id,omitempty" yaml:"id,omitempty"`
 }
 

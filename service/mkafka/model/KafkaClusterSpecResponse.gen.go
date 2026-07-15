@@ -13,7 +13,7 @@ import (
 // Параметры кластера.
 // Real OAPI model name: KafkaClusterSpec
 type KafkaClusterSpecResponse struct {
-	// Значение включен/выключен кластер.
+	// Состояние кластера — включен или выключен.
 	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 	// Версия продукта.
 	Version string `json:"version" yaml:"version"`
@@ -21,13 +21,13 @@ type KafkaClusterSpecResponse struct {
 	Endpoints []KafkaEndpointResponse `json:"endpoints" yaml:"endpoints"`
 	// Описание ресурсов хостов брокеров и контроллеров.
 	Instances KafkaInstanceResponse `json:"instances" yaml:"instances"`
-	// Настройки Kafka. Если не указаны, будут использованы настройки по-умолчанию.
+	// Настройки Kafka. Если не указаны, будут использованы настройки по умолчанию
 	ProductConfig     *string                           `json:"productConfig,omitempty" yaml:"productConfig,omitempty"`
 	MaintenanceWindow *common.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry *KafkaSchemaRegistrySpecResponse `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`
-	// Настройка автоматической ребалансировки для кластера.
-	AutoRebalance *KafkaAutoRebalanceSpecResponse `json:"autoRebalance,omitempty" yaml:"autoRebalance,omitempty"`
+	// Настройка балансировщика кластера.
+	Balancer *KafkaBalancerSpecResponse `json:"balancer,omitempty" yaml:"balancer,omitempty"`
 }
 
 func (m *KafkaClusterSpecResponse) GetActive() *bool {
@@ -135,20 +135,20 @@ func (m *KafkaClusterSpecResponse) GetSchemaRegistryOr(val KafkaSchemaRegistrySp
 	return val
 }
 
-func (m *KafkaClusterSpecResponse) GetAutoRebalance() *KafkaAutoRebalanceSpecResponse {
+func (m *KafkaClusterSpecResponse) GetBalancer() *KafkaBalancerSpecResponse {
 	if m != nil {
-		return m.AutoRebalance
+		return m.Balancer
 	}
 	return nil
 }
 
-func (m *KafkaClusterSpecResponse) SetAutoRebalance(val *KafkaAutoRebalanceSpecResponse) {
-	m.AutoRebalance = val
+func (m *KafkaClusterSpecResponse) SetBalancer(val *KafkaBalancerSpecResponse) {
+	m.Balancer = val
 }
 
-func (m *KafkaClusterSpecResponse) GetAutoRebalanceOr(val KafkaAutoRebalanceSpecResponse) KafkaAutoRebalanceSpecResponse {
-	if m != nil && m.AutoRebalance != nil {
-		return *m.AutoRebalance
+func (m *KafkaClusterSpecResponse) GetBalancerOr(val KafkaBalancerSpecResponse) KafkaBalancerSpecResponse {
+	if m != nil && m.Balancer != nil {
+		return *m.Balancer
 	}
 	return val
 }
@@ -176,7 +176,7 @@ func (m *KafkaClusterSpecResponse) Clone() *KafkaClusterSpecResponse {
 	}
 	clone.MaintenanceWindow = m.MaintenanceWindow.Clone()
 	clone.SchemaRegistry = m.SchemaRegistry.Clone()
-	clone.AutoRebalance = m.AutoRebalance.Clone()
+	clone.Balancer = m.Balancer.Clone()
 	return &clone
 }
 

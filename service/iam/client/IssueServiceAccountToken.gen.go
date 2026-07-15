@@ -35,7 +35,7 @@ func (m *IssueServiceAccountTokenV2Request) SetAuthorization(authorization strin
 type IssueServiceAccountTokenV2Response struct {
 	Code        int
 	Response200 *model.SuccessTokenV2Response
-	Response400 *common.InvalidRequestError
+	Response400 *common.ApiError
 	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response500 *common.ApiError
@@ -87,7 +87,7 @@ func (m *IssueServiceAccountTokenRequest) SetAuthorization(authorization string)
 type IssueServiceAccountTokenResponse struct {
 	Code        int
 	Response200 *model.SuccessTokenResponse
-	Response400 *common.InvalidRequestError
+	Response400 *common.ApiError
 	Response401 *common.ApiError
 	Response403 *common.ApiError
 	Response500 *common.ApiError

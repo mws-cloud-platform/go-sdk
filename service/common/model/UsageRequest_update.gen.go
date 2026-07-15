@@ -8,9 +8,9 @@ import (
 )
 
 type UpdateUsageRequest struct {
-	// Тип связи. Помимо стандартных own и use могут быть добавлены специализированные типы для конкретных сервисов
+	// Тип связи. Помимо стандартных `own` и `use` могут быть добавлены специализированные типы для конкретных сервисов.
 	UsageType optional.Optional[string] `json:"usageType" yaml:"usageType"`
-	// Имя связи, требуется для модификации коллекции
+	// Имя связи. Требуется для модификации коллекции.
 	Name optional.Optional[string] `json:"name" yaml:"name"`
 	// Ссылка на ресурс
 	Resource optional.Optional[string] `json:"resource" yaml:"resource"`

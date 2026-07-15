@@ -6,12 +6,12 @@ import (
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
-// Информация о статусе реконсиляции
+// Информация о статусе реконсиляции.
 // Real OAPI model name: ResourceStatusReady
 type ResourceStatusReadyOptionalResponse struct {
-	// Состояние ресурса
+	// Состояние ресурса.
 	State ResourceStatusState `json:"state" yaml:"state"`
-	// Описание статуса
+	// Описание статуса.
 	Message optional.Optional[string] `json:"message,omitempty" yaml:"message,omitempty"`
 }
 

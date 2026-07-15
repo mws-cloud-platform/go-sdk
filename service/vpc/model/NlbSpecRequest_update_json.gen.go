@@ -31,6 +31,10 @@ func (m *UpdateNlbSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateNlbSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Listener.IsSet() {
+		e.FieldStart("listener")
+		m.Listener.Value.Encode(e)
+	}
 
 	if m.Rules.IsSet() {
 		e.FieldStart("rules")
@@ -54,6 +58,14 @@ func (m *UpdateNlbSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "listener":
+			var v UpdateNlbListenerRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Listener.SetTo(v)
+			return nil
 		case "rules":
 			c := make([]UpdateNlbRuleRequest, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {

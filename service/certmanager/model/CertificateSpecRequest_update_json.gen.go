@@ -39,6 +39,15 @@ func (m *UpdateCertificateSpecRequest) encodeFields(e *jx.Encoder) error {
 			m.SelfManaged.Value.Encode(e)
 		}
 	}
+
+	if m.Managed.IsSet() {
+		e.FieldStart("managed")
+		if m.Managed.IsNull() {
+			e.Null()
+		} else {
+			m.Managed.Value.Encode(e)
+		}
+	}
 	return nil
 }
 
@@ -65,6 +74,19 @@ func (m *UpdateCertificateSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.SelfManaged.SetTo(v)
+			return nil
+		case "managed":
+			if d.Next() == jx.Null {
+				m.Managed.SetToNull()
+				return d.Null()
+			}
+
+			var v UpdateCertificateManagedSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Managed.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

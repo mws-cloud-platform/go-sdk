@@ -10,9 +10,9 @@ import (
 )
 
 type UpdatePostgresClusterBackupRequest struct {
-	// Спецификация ежедневного автоматического бэкапирования
+	// Спецификация ежедневного автоматического бэкапирования.
 	Daily optional.OptionalNil[UpdatePostgresClusterBackupDailyRequest] `json:"daily" yaml:"daily"`
-	// Количество дней хранения бэкапа
+	// Количество дней хранения бэкапа.
 	RetainPeriodDays optional.Optional[int] `json:"retainPeriodDays" yaml:"retainPeriodDays"`
 }
 

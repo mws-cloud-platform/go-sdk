@@ -6,6 +6,8 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 func (m UpdateApiKeySpecRequest) MarshalJSON() ([]byte, error) {
@@ -30,6 +32,10 @@ func (m *UpdateApiKeySpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateApiKeySpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.ExpireTime.IsSet() {
+		e.FieldStart("expireTime")
+		conv.EncodeDateTimeUTC(e, m.ExpireTime.Value)
+	}
 	return nil
 }
 
@@ -42,5 +48,18 @@ func (m *UpdateApiKeySpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("UpdateApiKeySpecRequest")
 	}
 
-	return d.Skip()
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "expireTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.ExpireTime.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
@@ -32,6 +33,10 @@ func (m *UpdateKafkaControllerInstanceSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateKafkaControllerInstanceSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.CombinedWithBroker.IsSet() {
+		e.FieldStart("combinedWithBroker")
+		e.Bool(m.CombinedWithBroker.Value)
+	}
 
 	if m.VmType.IsSet() {
 		e.FieldStart("vmType")
@@ -69,6 +74,14 @@ func (m *UpdateKafkaControllerInstanceSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "combinedWithBroker":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.CombinedWithBroker.SetTo(v)
+			return nil
 		case "vmType":
 			var v compute.VmTypeRef
 			if err := v.Decode(d); err != nil {

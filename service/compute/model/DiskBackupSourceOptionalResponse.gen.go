@@ -48,7 +48,7 @@ func (m *DiskBackupSourceOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Disk.IsSet() {
+	if m.Disk.IsSet() && !m.Disk.IsNull() {
 		if err := m.Disk.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Disk", err)
 		}

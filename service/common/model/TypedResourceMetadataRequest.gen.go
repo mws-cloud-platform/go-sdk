@@ -14,7 +14,7 @@ import (
 type TypedResourceMetadataRequest struct {
 	// Отображаемое имя. Необязательное поле, можно свободно задавать и изменять для удобства организации ресурсов.
 	DisplayName *string `json:"displayName,omitempty" yaml:"displayName,omitempty"`
-	// Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены.
+	// Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены.
 	Usages []TypedUsageRequest `json:"usages,omitempty" yaml:"usages,omitempty"`
 	// Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса.
 	Etag *string `json:"etag,omitempty" yaml:"etag,omitempty"`

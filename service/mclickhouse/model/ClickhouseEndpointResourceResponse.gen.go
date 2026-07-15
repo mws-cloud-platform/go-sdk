@@ -8,12 +8,12 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
-// Описание эндпойнта кластера в пользовательской сети (VPC)
+// Описание эндпойнта кластера в пользовательской сети (VPC).
 // Real OAPI model name: ClickhouseEndpointResource
 type ClickhouseEndpointResourceResponse struct {
-	// Описание эндпойнта кластера в пользовательской сети (VPC)
+	// Описание эндпойнта кластера в пользовательской сети (VPC).
 	Address ClickhouseEndpointAddressResourceResponse `json:"address" yaml:"address"`
-	// Описание внешнего доступа к кластеру
+	// Описание внешнего доступа к кластеру.
 	ExternalAddress *ClickhouseEndpointExternalAddressResourceResponse `json:"externalAddress,omitempty" yaml:"externalAddress,omitempty"`
 }
 

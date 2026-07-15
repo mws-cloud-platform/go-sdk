@@ -22,7 +22,7 @@ type RequestSwitchoverRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"

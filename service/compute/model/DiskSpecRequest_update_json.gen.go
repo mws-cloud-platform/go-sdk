@@ -7,7 +7,9 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func (m UpdateDiskSpecRequest) MarshalJSON() ([]byte, error) {
@@ -32,15 +34,38 @@ func (m *UpdateDiskSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateDiskSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Zone.IsSet() {
+		e.FieldStart("zone")
+		e.Str(m.Zone.Value)
+	}
 
 	if m.Size.IsSet() {
 		e.FieldStart("size")
 		m.Size.Value.Encode(e)
 	}
 
+	if m.Source.IsSet() {
+		e.FieldStart("source")
+		if m.Source.IsNull() {
+			e.Null()
+		} else {
+			m.Source.Value.Encode(e)
+		}
+	}
+
+	if m.DiskType.IsSet() {
+		e.FieldStart("diskType")
+		m.DiskType.Value.Encode(e)
+	}
+
 	if m.Iops.IsSet() {
 		e.FieldStart("iops")
 		m.Iops.Value.Encode(e)
+	}
+
+	if m.BlockSize.IsSet() {
+		e.FieldStart("blockSize")
+		m.BlockSize.Value.Encode(e)
 	}
 
 	if m.OsType.IsSet() {
@@ -61,6 +86,14 @@ func (m *UpdateDiskSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "zone":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Zone.SetTo(v)
+			return nil
 		case "size":
 			var v bytesize.ByteSize
 			if err := v.Decode(d); err != nil {
@@ -68,6 +101,27 @@ func (m *UpdateDiskSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Size.SetTo(v)
+			return nil
+		case "source":
+			if d.Next() == jx.Null {
+				m.Source.SetToNull()
+				return d.Null()
+			}
+
+			var v UpdateDiskSpecSourceRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Source.SetTo(v)
+			return nil
+		case "diskType":
+			var v compute.DiskTypeRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.DiskType.SetTo(v)
 			return nil
 		case "iops":
 			var v Iops
@@ -77,6 +131,14 @@ func (m *UpdateDiskSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.Iops.SetTo(v)
 			return nil
+		case "blockSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.BlockSize.SetTo(v)
+			return nil
 		case "osType":
 			var v OsType
 			if err := v.Decode(d); err != nil {
@@ -84,6 +146,86 @@ func (m *UpdateDiskSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.OsType.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m UpdateDiskSpecSourceRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *UpdateDiskSpecSourceRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *UpdateDiskSpecSourceRequest) encodeFields(e *jx.Encoder) error {
+	if m.Image.IsSet() {
+		e.FieldStart("image")
+		m.Image.Value.Encode(e)
+	}
+
+	if m.Snapshot.IsSet() {
+		e.FieldStart("snapshot")
+		m.Snapshot.Value.Encode(e)
+	}
+
+	if m.DiskBackup.IsSet() {
+		e.FieldStart("diskBackup")
+		m.DiskBackup.Value.Encode(e)
+	}
+	return nil
+}
+
+func (m *UpdateDiskSpecSourceRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *UpdateDiskSpecSourceRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("UpdateDiskSpecSourceRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "image":
+			var v compute.ImageRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Image.SetTo(v)
+			return nil
+		case "snapshot":
+			var v compute.SnapshotRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Snapshot.SetTo(v)
+			return nil
+		case "diskBackup":
+			var v compute.DiskBackupRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.DiskBackup.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

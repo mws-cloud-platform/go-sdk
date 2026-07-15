@@ -7,30 +7,33 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Real OAPI model name: ClickhouseClusterStatus
 type ClickhouseClusterStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
-	// Работоспособность кластера
-	//   - `ALIVE`    - Полностью работоспособен
-	//   - `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны)
-	//   - `FAILED`   - Неработоспособен
-	//   - `UNKNOWN`  - Не удаётся определить состояние (на этапе создания)
+	// Работоспособность кластера:
+	//   - `ALIVE`    - Полностью работоспособен;
+	//   - `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны);
+	//   - `FAILED`   - Неработоспособен;
+	//   - `UNKNOWN`  - Не удаётся определить состояние (на этапе создания).
 	Health *ClusterHealth `json:"health,omitempty" yaml:"health,omitempty"`
-	// Состояние кластера
-	//   - `CREATING`     - Создаётся
-	//   - `RUNNING`      - Работает в штатном режиме
-	//   - `STOPPING`     - Останавливается
-	//   - `STOPPED`      - Остановлен
-	//   - `STARTING`     - Запуск ранее остановленного
-	//   - `UPDATING`     - Выполняется обновление
-	//   - `ERROR`        - Произошла ошибка, требуется участие команды поддержки
-	//   - `DELETING`     - Удаляется
-	//   - `DELETED`      - Удалён
-	//   - `UNIDENTIFIED` - Не удаётся определить статус
-	//   - `RESTORING`    - Восстанавливается
+	// Состояние кластера:
+	//   - `CREATING`     - Создаётся;
+	//   - `RUNNING`      - Работает в штатном режиме;
+	//   - `STOPPING`     - Останавливается;
+	//   - `STOPPED`      - Остановлен;
+	//   - `STARTING`     - Запуск ранее остановленного;
+	//   - `UPDATING`     - Выполняется обновление;
+	//   - `ERROR`        - Произошла ошибка, требуется участие команды поддержки;
+	//   - `DELETING`     - Удаляется;
+	//   - `DELETED`      - Удалён;
+	//   - `UNIDENTIFIED` - Не удаётся определить статус;
+	//   - `RESTORING`    - Восстанавливается.
 	State *ClusterState `json:"state,omitempty" yaml:"state,omitempty"`
+	// Регион, в котором располагается кластер.
+	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 	// Параметры объекта кластера.
 	Cluster *ClickhouseClusterResourceResponse `json:"cluster,omitempty" yaml:"cluster,omitempty"`
 }
@@ -70,6 +73,20 @@ func (m *ClickhouseClusterStatusResponse) GetStateOr(val ClusterState) ClusterSt
 	return val
 }
 
+func (m *ClickhouseClusterStatusResponse) GetRegion() *rm.RegionID {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *ClickhouseClusterStatusResponse) GetRegionOr(val rm.RegionID) rm.RegionID {
+	if m != nil && m.Region != nil {
+		return *m.Region
+	}
+	return val
+}
+
 func (m *ClickhouseClusterStatusResponse) GetCluster() *ClickhouseClusterResourceResponse {
 	if m != nil {
 		return m.Cluster
@@ -99,6 +116,7 @@ func (m *ClickhouseClusterStatusResponse) Clone() *ClickhouseClusterStatusRespon
 		cloneState := *m.State
 		clone.State = &cloneState
 	}
+	clone.Region = m.Region.Clone()
 	clone.Cluster = m.Cluster.Clone()
 
 	return &clone
@@ -107,6 +125,10 @@ func (m *ClickhouseClusterStatusResponse) Clone() *ClickhouseClusterStatusRespon
 func (m *ClickhouseClusterStatusResponse) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if err := m.Region.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Region", err)
 	}
 
 	if err := m.Cluster.Parse(ctx); err != nil {

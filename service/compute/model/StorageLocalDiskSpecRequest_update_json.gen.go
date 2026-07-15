@@ -38,6 +38,11 @@ func (m *UpdateStorageLocalDiskSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.Str(m.Name.Value)
 	}
 
+	if m.DeviceName.IsSet() {
+		e.FieldStart("deviceName")
+		e.Str(m.DeviceName.Value)
+	}
+
 	if m.Size.IsSet() {
 		e.FieldStart("size")
 		m.Size.Value.Encode(e)
@@ -63,6 +68,14 @@ func (m *UpdateStorageLocalDiskSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Name.SetTo(v)
+			return nil
+		case "deviceName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DeviceName.SetTo(v)
 			return nil
 		case "size":
 			var v bytesize.ByteSize

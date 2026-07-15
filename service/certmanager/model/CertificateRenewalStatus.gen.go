@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
 
-// Managed certificate renewal status
+// Статус обновления сертификата.
 type CertificateRenewalStatus string
 
 const (

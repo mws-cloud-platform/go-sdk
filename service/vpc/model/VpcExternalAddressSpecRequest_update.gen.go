@@ -2,11 +2,30 @@
 
 package model
 
+import (
+	"context"
+
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	commonclient "go.mws.cloud/go-sdk/internal/client"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
+)
+
 type UpdateVpcExternalAddressSpecRequest struct {
+	// Шлюз, к которому относится адрес. Если шлюз не указан, для трансляции IP-адресов используется шлюз по умолчанию для выхода в интернет (ref=natGateways/internet-gateway)
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	NatGateway optional.Optional[vpc.NatGatewayRef] `json:"natGateway" yaml:"natGateway"`
 }
 
 func (m *VpcExternalAddressSpecRequest) AsUpdateModel() UpdateVpcExternalAddressSpecRequest {
 	var u UpdateVpcExternalAddressSpecRequest
+	if m.NatGateway != nil {
+		u.NatGateway = optional.NewOptional(m.GetNatGatewayOr(vpc.NatGatewayRef{}))
+	}
 	return u
 }
 
@@ -15,6 +34,7 @@ func (m *VpcExternalAddressSpecRequest) Diff(src *VpcExternalAddressSpecRequest)
 	nilDiffers := src != nil && m == nil
 	upd := UpdateVpcExternalAddressSpecRequest{}
 	if !nilDiffers {
+		upd.NatGateway = m.diffNatGateway(src)
 	}
 	return upd
 }
@@ -25,10 +45,32 @@ func (m *VpcExternalAddressSpecRequest) WithChanges(u UpdateVpcExternalAddressSp
 		out = *m
 	}
 
+	if u.NatGateway.IsSet() {
+		out.NatGateway = ptr.Get(u.NatGateway.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateVpcExternalAddressSpecRequest) HasChanges() bool {
-	return false
+	return m.NatGateway.Set
+}
+
+func (m *UpdateVpcExternalAddressSpecRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if m.NatGateway.IsSet() {
+		if err := m.NatGateway.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("NatGateway", err)
+		}
+	}
+
+	return nil
+}
+
+func (m *VpcExternalAddressSpecRequest) diffNatGateway(src *VpcExternalAddressSpecRequest) optional.Optional[vpc.NatGatewayRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetNatGateway(), m.GetNatGateway(), nilDiffers)
 }

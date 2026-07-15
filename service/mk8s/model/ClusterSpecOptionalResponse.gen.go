@@ -159,7 +159,7 @@ func (m *ClusterSpecNetworkOptionalResponse) Parse(ctx context.Context) error {
 		return reserrors.NewPathAccumulatorError("PrimaryEndpoint", err)
 	}
 
-	if m.PublicEndpoint.IsSet() {
+	if m.PublicEndpoint.IsSet() && !m.PublicEndpoint.IsNull() {
 		if err := m.PublicEndpoint.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("PublicEndpoint", err)
 		}

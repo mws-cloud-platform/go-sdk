@@ -48,7 +48,7 @@ type Disk interface {
 type ListDisksRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -256,7 +256,7 @@ func (m *ListDisksResponse200) Decode(d *jx.Decoder) error {
 type DeleteDiskRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к диску
 	Disk string // path: "disk"
@@ -331,7 +331,7 @@ func (m *DeleteDiskResponse) SetErrorWrapper(f func(err error) error) {
 type GetDiskRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к диску
 	Disk string // path: "disk"
@@ -396,7 +396,7 @@ func (m *GetDiskResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertDiskRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к диску
 	Disk string // path: "disk"
@@ -429,7 +429,7 @@ func (m *UpsertDiskRequest) getDiskRequest() GetDiskRequest {
 type UpdateDiskRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к диску
 	Disk string // path: "disk"

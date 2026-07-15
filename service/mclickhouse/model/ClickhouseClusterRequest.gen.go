@@ -9,6 +9,7 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Кластер Managed ClickHouse — это группа узлов (виртуальных машин), объединенных для высокоскоростной обработки и хранения данных с помощью СУБД ClickHouse.
 // Real OAPI model name: ClickhouseCluster
 type ClickhouseClusterRequest struct {
 	Metadata *ClickhouseClusterMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`

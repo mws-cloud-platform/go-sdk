@@ -20,7 +20,7 @@ type ClickhouseConfig interface {
 type GetAvailableConfigParametersRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Версия продукта.
 	Version string // query: "version"

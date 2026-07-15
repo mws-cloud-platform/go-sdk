@@ -112,6 +112,23 @@ func decodeRestoreClickhouseBackupResponse(resp *http.Response) (*client.Restore
 			_, _ = io.Copy(io.Discard, resp.Body)
 			return nil, clienterrors.InvalidContentType(ct)
 		}
+	case 412:
+		switch ct {
+		case "application/json":
+			result := &client.RestoreClickhouseBackupResponse{
+				Code:        resp.StatusCode,
+				Response412: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response412); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
 	case 500:
 		switch ct {
 		case "application/json":

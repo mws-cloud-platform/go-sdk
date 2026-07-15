@@ -12,9 +12,9 @@ import (
 // Описание спецификации эндпойнта кластера.
 // Real OAPI model name: ClickhouseEndpoint
 type ClickhouseEndpointOptionalResponse struct {
-	// Описание шаблона адреса/адресов, которые будут выделены. Для 'ref' будет выделен только один адрес, для 'spec', будет выделено  необходимое количество адресов, в зависимости от сущности, для которой выделяются адреса.
+	// Описание адреса эндпоинта. Если указан `ref`, будет использован существующий внутренний адрес VPC. Если указан `spec`, будут созданы внутренние адреса в указанной подсети: для эндпоинта кластера или шарда — по одному адресу на эндпоинт, для эндпоинтов инстансов — по одному адресу на каждый эндпоинт каждого созданного инстанса.
 	Address ClickhouseEndpointAddressSpecOrRefOptionalResponse `json:"address" yaml:"address"`
-	// Описание шаблона внешнего адреса/адресов, которые будут выделены. Для 'ref' будет выделен только один адрес, для 'spec', будет выделено  необходимое количество адресов, в зависимости от сущности, для которой выделяются адреса.
+	// Описание шаблона внешнего адреса/адресов, которые будут выделены. Для `ref` будет выделен только один адрес, для `spec` будет выделено необходимое количество адресов в зависимости от сущности, для которой выделяются адреса.
 	ExternalAddress optional.OptionalNil[ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse] `json:"externalAddress,omitempty" yaml:"externalAddress,omitempty"`
 }
 
@@ -65,7 +65,7 @@ func (m *ClickhouseEndpointOptionalResponse) Parse(ctx context.Context) error {
 		return reserrors.NewPathAccumulatorError("Address", err)
 	}
 
-	if m.ExternalAddress.IsSet() {
+	if m.ExternalAddress.IsSet() && !m.ExternalAddress.IsNull() {
 		if err := m.ExternalAddress.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("ExternalAddress", err)
 		}

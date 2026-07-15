@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
 
-// Исправность экземпляра postgres
+// Исправность экземпляра PostgreSQL.
 type PostgresInstanceHealth string
 
 const (

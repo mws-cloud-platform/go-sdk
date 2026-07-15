@@ -47,8 +47,8 @@ func Example_certMWSManaged() {
 		Body: certmodel.CertificateRequest{
 			Spec: certmodel.CertificateSpecRequest{
 				Managed: &certmodel.CertificateManagedSpecRequest{
-					PreferredChallengeType: certmodel.CertificateChallengeType_DNS01,
-					Provider:               certmodel.CertificateProvider_LETS_ENCRYPT,
+					PreferredChallengeType: new(certmodel.CertificateChallengeType_DNS01),
+					Provider:               new(certmodel.CertificateProvider_LETS_ENCRYPT),
 					Domains:                []string{"example.ru"}, // your domains
 				},
 			},

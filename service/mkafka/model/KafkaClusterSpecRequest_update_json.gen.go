@@ -80,12 +80,12 @@ func (m *UpdateKafkaClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		}
 	}
 
-	if m.AutoRebalance.IsSet() {
-		e.FieldStart("autoRebalance")
-		if m.AutoRebalance.IsNull() {
+	if m.Balancer.IsSet() {
+		e.FieldStart("balancer")
+		if m.Balancer.IsNull() {
 			e.Null()
 		} else {
-			m.AutoRebalance.Value.Encode(e)
+			m.Balancer.Value.Encode(e)
 		}
 	}
 	return nil
@@ -175,18 +175,18 @@ func (m *UpdateKafkaClusterSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.SchemaRegistry.SetTo(v)
 			return nil
-		case "autoRebalance":
+		case "balancer":
 			if d.Next() == jx.Null {
-				m.AutoRebalance.SetToNull()
+				m.Balancer.SetToNull()
 				return d.Null()
 			}
 
-			var v UpdateKafkaAutoRebalanceSpecRequest
+			var v UpdateKafkaBalancerSpecRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.AutoRebalance.SetTo(v)
+			m.Balancer.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

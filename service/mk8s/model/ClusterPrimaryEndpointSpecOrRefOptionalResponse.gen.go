@@ -66,13 +66,13 @@ func (m *ClusterPrimaryEndpointSpecOrRefOptionalResponse) Parse(ctx context.Cont
 		return nil
 	}
 
-	if m.Ref.IsSet() {
+	if m.Ref.IsSet() && !m.Ref.IsNull() {
 		if err := m.Ref.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Ref", err)
 		}
 	}
 
-	if m.Spec.IsSet() {
+	if m.Spec.IsSet() && !m.Spec.IsNull() {
 		if err := m.Spec.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Spec", err)
 		}

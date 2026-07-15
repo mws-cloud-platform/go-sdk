@@ -5,11 +5,11 @@ package model
 // Статус экземпляра postgres
 // Real OAPI model name: PostgresStatusInstance
 type PostgresStatusInstanceResponse struct {
-	// Имя экземпляра postgres
+	// Имя экземпляра PostgreSQL.
 	Name string `json:"name" yaml:"name"`
-	// Роль экземпляра postgres
+	// Роль экземпляра PostgreSQL.
 	Role PostgresInstanceRole `json:"role" yaml:"role"`
-	// Исправность экземпляра postgres
+	// Исправность экземпляра PostgreSQL.
 	Health PostgresInstanceHealth `json:"health" yaml:"health"`
 }
 

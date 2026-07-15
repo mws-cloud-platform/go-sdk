@@ -4,6 +4,7 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -31,6 +32,10 @@ func (m *UpdateSubnetSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateSubnetSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Cidr.IsSet() {
+		e.FieldStart("cidr")
+		m.Cidr.Value.Encode(e)
+	}
 
 	if m.DhcpOptions.IsSet() {
 		e.FieldStart("dhcpOptions")
@@ -54,6 +59,14 @@ func (m *UpdateSubnetSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "cidr":
+			var v cidraddress.CIDR4Address
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Cidr.SetTo(v)
+			return nil
 		case "dhcpOptions":
 			if d.Next() == jx.Null {
 				m.DhcpOptions.SetToNull()

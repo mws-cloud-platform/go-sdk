@@ -4,6 +4,7 @@ package model
 
 import (
 	"context"
+	"fmt"
 
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
@@ -30,14 +31,18 @@ func (m *ClickhouseClusterRequest) AsUpdateModel() UpdateClickhouseClusterReques
 }
 
 // Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *ClickhouseClusterRequest) Diff(src *ClickhouseClusterRequest) UpdateClickhouseClusterRequest {
+func (m *ClickhouseClusterRequest) Diff(src *ClickhouseClusterRequest) (UpdateClickhouseClusterRequest, error) {
+	var err error
 	nilDiffers := src != nil && m == nil
 	upd := UpdateClickhouseClusterRequest{}
 	if !nilDiffers {
 		upd.Metadata = m.diffMetadata(src)
-		upd.Spec = m.diffSpec(src)
+		upd.Spec, err = m.diffSpec(src)
+		if err != nil {
+			return UpdateClickhouseClusterRequest{}, fmt.Errorf("Spec: %w", err)
+		}
 	}
-	return upd
+	return upd, nil
 }
 
 func (m *ClickhouseClusterRequest) WithChanges(u UpdateClickhouseClusterRequest) ClickhouseClusterRequest {
@@ -68,7 +73,7 @@ func (m *UpdateClickhouseClusterRequest) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Metadata.IsSet() {
+	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		if err := m.Metadata.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Metadata", err)
 		}
@@ -93,14 +98,17 @@ func (m *ClickhouseClusterRequest) diffMetadata(src *ClickhouseClusterRequest) o
 	}
 }
 
-func (m *ClickhouseClusterRequest) diffSpec(src *ClickhouseClusterRequest) optional.Optional[UpdateClickhouseClusterSpecRequest] {
+func (m *ClickhouseClusterRequest) diffSpec(src *ClickhouseClusterRequest) (optional.Optional[UpdateClickhouseClusterSpecRequest], error) {
 	from := src.GetSpec()
 	to := m.GetSpec()
-	value := to.Diff(&from)
+	value, err := to.Diff(&from)
+	if err != nil {
+		return optional.Optional[UpdateClickhouseClusterSpecRequest]{}, err
+	}
 	return optional.Optional[UpdateClickhouseClusterSpecRequest]{
 		Value: value,
 		Set:   value.HasChanges(),
-	}
+	}, nil
 }
 
 type UpdateClickhouseClusterMetadataRequest struct {

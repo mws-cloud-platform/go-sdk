@@ -4,30 +4,33 @@ package model
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"slices"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Параметры кластера.
 // Real OAPI model name: ClickhouseClusterSpec
 type ClickhouseClusterSpecOptionalResponse struct {
-	// Значение включен/выключен кластер.
+	// Состояние кластера — включен или выключен.
 	Active optional.Optional[bool] `json:"active,omitempty" yaml:"active,omitempty"`
 	// Версия продукта.
 	Version string `json:"version" yaml:"version"`
-	// Описание эдпойнтов кластера.
+	// Регион, в котором располагается кластер.
+	Region optional.Optional[rm.RegionRef] `json:"region,omitempty" yaml:"region,omitempty"`
+	// Описание эндпоинтов кластера.
 	Endpoints optional.Optional[[]ClickhouseEndpointOptionalResponse] `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 	// Описание координатора кластера.
 	Coordinator optional.OptionalNil[ClickhouseClusterCoordinatorOptionalResponse] `json:"coordinator,omitempty" yaml:"coordinator,omitempty"`
 	// Описание шардов кластера.
 	Shards []ClickhouseClusterShardOptionalResponse `json:"shards" yaml:"shards"`
-	// Настройки Clickhouse. Если не указаны, будут использованы настройки по-умолчанию.
-	Config optional.Optional[map[string]json.RawMessage] `json:"config,omitempty" yaml:"config,omitempty"`
+	// Настройки Clickhouse. Если не указаны, будут использованы настройки по умолчанию
+	Config optional.Optional[map[string]jsonapimodels.RawMessageNotNull] `json:"config,omitempty" yaml:"config,omitempty"`
 	// Конфигурация схемы хранилищ ClickHouse.
 	Storage optional.OptionalNil[ClickhouseStorageConfigurationOptionalResponse] `json:"storage,omitempty" yaml:"storage,omitempty"`
 	// Добавление пользователей при создании кластера Clickhouse.
@@ -60,6 +63,20 @@ func (m *ClickhouseClusterSpecOptionalResponse) GetVersion() string {
 
 func (m *ClickhouseClusterSpecOptionalResponse) SetVersion(val string) {
 	m.Version = val
+}
+
+func (m *ClickhouseClusterSpecOptionalResponse) GetRegion() *rm.RegionRef {
+	if m != nil && m.Region.IsSet() {
+		return &m.Region.Value
+	}
+	return nil
+}
+
+func (m *ClickhouseClusterSpecOptionalResponse) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+	if m != nil && m.Region.IsSet() {
+		return m.Region.Value
+	}
+	return val
 }
 
 func (m *ClickhouseClusterSpecOptionalResponse) GetEndpoints() []ClickhouseEndpointOptionalResponse {
@@ -101,14 +118,14 @@ func (m *ClickhouseClusterSpecOptionalResponse) SetShards(val []ClickhouseCluste
 	m.Shards = val
 }
 
-func (m *ClickhouseClusterSpecOptionalResponse) GetConfig() map[string]json.RawMessage {
+func (m *ClickhouseClusterSpecOptionalResponse) GetConfig() map[string]jsonapimodels.RawMessageNotNull {
 	if m != nil && m.Config.IsSet() {
 		return m.Config.Value
 	}
 	return nil
 }
 
-func (m *ClickhouseClusterSpecOptionalResponse) GetConfigOr(val map[string]json.RawMessage) map[string]json.RawMessage {
+func (m *ClickhouseClusterSpecOptionalResponse) GetConfigOr(val map[string]jsonapimodels.RawMessageNotNull) map[string]jsonapimodels.RawMessageNotNull {
 	if m != nil && m.Config.IsSet() {
 		return m.Config.Value
 	}
@@ -174,6 +191,9 @@ func (m *ClickhouseClusterSpecOptionalResponse) Clone() *ClickhouseClusterSpecOp
 	}
 
 	clone := *m
+	if clone.Region.IsSet() {
+		clone.Region.Value = *m.Region.Value.Clone()
+	}
 	if m.Endpoints.Value != nil {
 		clone.Endpoints.Value = make([]ClickhouseEndpointOptionalResponse, len(m.Endpoints.Value))
 		for i, v := range m.Endpoints.Value {
@@ -190,7 +210,7 @@ func (m *ClickhouseClusterSpecOptionalResponse) Clone() *ClickhouseClusterSpecOp
 		}
 	}
 	if m.Config.Value != nil {
-		clone.Config.Value = make(map[string]json.RawMessage, len(m.Config.Value))
+		clone.Config.Value = make(map[string]jsonapimodels.RawMessageNotNull, len(m.Config.Value))
 		for k, v := range m.Config.Value {
 			clone.Config.Value[k] = slices.Clone(v)
 		}
@@ -213,6 +233,12 @@ func (m *ClickhouseClusterSpecOptionalResponse) Parse(ctx context.Context) error
 		return nil
 	}
 
+	if m.Region.IsSet() {
+		if err := m.Region.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Region", err)
+		}
+	}
+
 	if m.Endpoints.IsSet() {
 		for index := range m.Endpoints.Value {
 			if err := m.Endpoints.Value[index].Parse(ctx); err != nil {
@@ -221,7 +247,7 @@ func (m *ClickhouseClusterSpecOptionalResponse) Parse(ctx context.Context) error
 		}
 	}
 
-	if m.Coordinator.IsSet() {
+	if m.Coordinator.IsSet() && !m.Coordinator.IsNull() {
 		if err := m.Coordinator.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Coordinator", err)
 		}

@@ -32,7 +32,7 @@ type KeyEncryption interface {
 type GenerateDataKeyRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key  string                               // path: "key"
@@ -100,7 +100,7 @@ func (m *GenerateDataKeyResponse) SetErrorWrapper(f func(err error) error) {
 type EncryptRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key  string                       // path: "key"
@@ -168,7 +168,7 @@ func (m *EncryptResponse) SetErrorWrapper(f func(err error) error) {
 type DecryptRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key  string                       // path: "key"
@@ -236,7 +236,7 @@ func (m *DecryptResponse) SetErrorWrapper(f func(err error) error) {
 type ReEncryptRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project        string                         // path: "project"
 	DestinationKey string                         // path: "destinationKey"
 	Body           *model.ReEncryptRequestRequest // body

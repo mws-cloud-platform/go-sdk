@@ -10,9 +10,9 @@ import (
 )
 
 type UpdatePostgresInstanceRequest struct {
-	// Количество экземпляров в зоне доступности
+	// Количество экземпляров в зоне доступности.
 	Count optional.Optional[int] `json:"count" yaml:"count"`
-	// Зона доступности
+	// Зона доступности.
 	Zone optional.Optional[string] `json:"zone" yaml:"zone"`
 }
 

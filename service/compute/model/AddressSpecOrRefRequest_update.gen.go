@@ -84,7 +84,7 @@ func (m *UpdateAddressSpecOrRefRequest) Parse(ctx context.Context) error {
 		}
 	}
 
-	if m.Spec.IsSet() {
+	if m.Spec.IsSet() && !m.Spec.IsNull() {
 		if err := m.Spec.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Spec", err)
 		}

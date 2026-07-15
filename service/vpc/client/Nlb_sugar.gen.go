@@ -167,7 +167,7 @@ func (x *NlbSugared) waitGetNlbV2(ctx context.Context, request GetNlbV2Request, 
 	return waiter.Wait(ctx)
 }
 
-// UpsertNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки..
+// UpsertNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки.
 //
 // Путь: POST /nlb/v1/projects/{project}/networks/{network}/nlbs/{nlb}
 func (x *NlbSugared) UpsertNlbV2(ctx context.Context, request UpsertNlbV2Request, opts ...Option) (*model.NlbOptionalResponse, error) {
@@ -212,7 +212,7 @@ func (x *NlbSugared) waitUpsertNlbV2(ctx context.Context, request GetNlbV2Reques
 	return waiter.Wait(ctx)
 }
 
-// CreateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки..
+// CreateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /nlb/v1/projects/{project}/networks/{network}/nlbs/{nlb}?createOnly=true
@@ -236,7 +236,7 @@ func (x *NlbSugared) CreateNlbV2(ctx context.Context, request UpsertNlbV2Request
 	return x.waitUpsertNlbV2(ctx, request.getNlbV2Request(), config.waitOptions...)
 }
 
-// UpdateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки..
+// UpdateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /nlb/v1/projects/{project}/networks/{network}/nlbs/{nlb}?updateOnly=true

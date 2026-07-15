@@ -6,6 +6,7 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
@@ -35,6 +36,11 @@ func (m *ClickhouseClusterInstanceResourceResponse) Encode(e *jx.Encoder) error 
 func (m *ClickhouseClusterInstanceResourceResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("id")
 	m.Id.Encode(e)
+
+	if m.Index != nil {
+		e.FieldStart("index")
+		e.Int(*m.Index)
+	}
 
 	e.FieldStart("zone")
 	m.Zone.Encode(e)
@@ -73,6 +79,14 @@ func (m *ClickhouseClusterInstanceResourceResponse) Decode(d *jx.Decoder) error 
 			}
 
 			m.Id = v
+			return nil
+		case "index":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Index = &v
 			return nil
 		case "zone":
 			var v rm.ZoneRef

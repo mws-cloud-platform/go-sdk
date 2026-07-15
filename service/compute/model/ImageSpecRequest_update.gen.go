@@ -3,17 +3,32 @@
 package model
 
 import (
+	"context"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 type UpdateImageSpecRequest struct {
 	// Семейство образа
 	Family optional.Optional[string] `json:"family" yaml:"family"`
+	// Источник для создания образа
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Source optional.Optional[UpdateImageSpecSourceRequest] `json:"source" yaml:"source"`
 	// Актуальность образа
 	Activity optional.Optional[ImageActivity] `json:"activity" yaml:"activity"`
+	// Минимальный допустимый размер диска, создаваемого из образа
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	MinDiskSize optional.Optional[bytesize.ByteSize] `json:"minDiskSize" yaml:"minDiskSize"`
 	// Тип операционной системы
 	OsType optional.Optional[OsType] `json:"osType" yaml:"osType"`
 }
@@ -23,8 +38,12 @@ func (m *ImageSpecRequest) AsUpdateModel() UpdateImageSpecRequest {
 	if m.Family != nil {
 		u.Family = optional.NewOptional(m.GetFamilyOr(""))
 	}
+	u.Source = optional.NewOptional(m.Source.AsUpdateModel())
 	if m.Activity != nil {
 		u.Activity = optional.NewOptional(m.GetActivityOr(""))
+	}
+	if m.MinDiskSize != nil {
+		u.MinDiskSize = optional.NewOptional(m.GetMinDiskSizeOr(bytesize.ByteSize{}))
 	}
 	if m.OsType != nil {
 		u.OsType = optional.NewOptional(m.GetOsTypeOr(""))
@@ -38,7 +57,9 @@ func (m *ImageSpecRequest) Diff(src *ImageSpecRequest) UpdateImageSpecRequest {
 	upd := UpdateImageSpecRequest{}
 	if !nilDiffers {
 		upd.Family = m.diffFamily(src)
+		upd.Source = m.diffSource(src)
 		upd.Activity = m.diffActivity(src)
+		upd.MinDiskSize = m.diffMinDiskSize(src)
 		upd.OsType = m.diffOsType(src)
 	}
 	return upd
@@ -53,8 +74,14 @@ func (m *ImageSpecRequest) WithChanges(u UpdateImageSpecRequest) ImageSpecReques
 	if u.Family.IsSet() {
 		out.Family = ptr.Get(u.Family.Value)
 	}
+	if u.Source.IsSet() {
+		out.Source = out.Source.WithChanges(u.Source.Value)
+	}
 	if u.Activity.IsSet() {
 		out.Activity = ptr.Get(u.Activity.Value)
+	}
+	if u.MinDiskSize.IsSet() {
+		out.MinDiskSize = ptr.Get(u.MinDiskSize.Value)
 	}
 	if u.OsType.IsSet() {
 		out.OsType = ptr.Get(u.OsType.Value)
@@ -65,8 +92,24 @@ func (m *ImageSpecRequest) WithChanges(u UpdateImageSpecRequest) ImageSpecReques
 // HasChanges returns true if any field has Set == true
 func (m UpdateImageSpecRequest) HasChanges() bool {
 	return m.Family.Set ||
+		m.Source.Set ||
 		m.Activity.Set ||
+		m.MinDiskSize.Set ||
 		m.OsType.Set
+}
+
+func (m *UpdateImageSpecRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if m.Source.IsSet() {
+		if err := m.Source.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Source", err)
+		}
+	}
+
+	return nil
 }
 
 func (m *ImageSpecRequest) diffFamily(src *ImageSpecRequest) optional.Optional[string] {
@@ -74,12 +117,122 @@ func (m *ImageSpecRequest) diffFamily(src *ImageSpecRequest) optional.Optional[s
 	return commonclient.DiffPrimitiveNonRequired(src.GetFamily(), m.GetFamily(), nilDiffers)
 }
 
+func (m *ImageSpecRequest) diffSource(src *ImageSpecRequest) optional.Optional[UpdateImageSpecSourceRequest] {
+	from := src.GetSource()
+	to := m.GetSource()
+	value := to.Diff(&from)
+	return optional.Optional[UpdateImageSpecSourceRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
+}
+
 func (m *ImageSpecRequest) diffActivity(src *ImageSpecRequest) optional.Optional[ImageActivity] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetActivity(), m.GetActivity(), nilDiffers)
 }
 
+func (m *ImageSpecRequest) diffMinDiskSize(src *ImageSpecRequest) optional.Optional[bytesize.ByteSize] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffEquatableIfaceNonRequired(src.GetMinDiskSize(), m.GetMinDiskSize(), nilDiffers)
+}
+
 func (m *ImageSpecRequest) diffOsType(src *ImageSpecRequest) optional.Optional[OsType] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetOsType(), m.GetOsType(), nilDiffers)
+}
+
+type UpdateImageSpecSourceRequest struct {
+	// URL для загрузки образа
+	ExternalUrl optional.Optional[string] `json:"externalUrl" yaml:"externalUrl"`
+	// ID диска-источника
+	DiskId optional.Optional[compute.DiskRef] `json:"diskId" yaml:"diskId"`
+	// ID образа-источника
+	ImageId optional.Optional[compute.ImageRef] `json:"imageId" yaml:"imageId"`
+}
+
+func (m *ImageSpecSourceRequest) AsUpdateModel() UpdateImageSpecSourceRequest {
+	var u UpdateImageSpecSourceRequest
+	if m.ExternalUrl != nil {
+		u.ExternalUrl = optional.NewOptional(m.GetExternalUrlOr(""))
+	}
+	if m.DiskId != nil {
+		u.DiskId = optional.NewOptional(m.GetDiskIdOr(compute.DiskRef{}))
+	}
+	if m.ImageId != nil {
+		u.ImageId = optional.NewOptional(m.GetImageIdOr(compute.ImageRef{}))
+	}
+	return u
+}
+
+// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
+func (m *ImageSpecSourceRequest) Diff(src *ImageSpecSourceRequest) UpdateImageSpecSourceRequest {
+	nilDiffers := src != nil && m == nil
+	upd := UpdateImageSpecSourceRequest{}
+	if !nilDiffers {
+		upd.ExternalUrl = m.diffExternalUrl(src)
+		upd.DiskId = m.diffDiskId(src)
+		upd.ImageId = m.diffImageId(src)
+	}
+	return upd
+}
+
+func (m *ImageSpecSourceRequest) WithChanges(u UpdateImageSpecSourceRequest) ImageSpecSourceRequest {
+	var out ImageSpecSourceRequest
+	if m != nil {
+		out = *m
+	}
+
+	if u.ExternalUrl.IsSet() {
+		out.ExternalUrl = ptr.Get(u.ExternalUrl.Value)
+	}
+	if u.DiskId.IsSet() {
+		out.DiskId = ptr.Get(u.DiskId.Value)
+	}
+	if u.ImageId.IsSet() {
+		out.ImageId = ptr.Get(u.ImageId.Value)
+	}
+	return out
+}
+
+// HasChanges returns true if any field has Set == true
+func (m UpdateImageSpecSourceRequest) HasChanges() bool {
+	return m.ExternalUrl.Set ||
+		m.DiskId.Set ||
+		m.ImageId.Set
+}
+
+func (m *UpdateImageSpecSourceRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if m.DiskId.IsSet() {
+		if err := m.DiskId.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("DiskId", err)
+		}
+	}
+
+	if m.ImageId.IsSet() {
+		if err := m.ImageId.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("ImageId", err)
+		}
+	}
+
+	return nil
+}
+
+func (m *ImageSpecSourceRequest) diffExternalUrl(src *ImageSpecSourceRequest) optional.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetExternalUrl(), m.GetExternalUrl(), nilDiffers)
+}
+
+func (m *ImageSpecSourceRequest) diffDiskId(src *ImageSpecSourceRequest) optional.Optional[compute.DiskRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetDiskId(), m.GetDiskId(), nilDiffers)
+}
+
+func (m *ImageSpecSourceRequest) diffImageId(src *ImageSpecSourceRequest) optional.Optional[compute.ImageRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetImageId(), m.GetImageId(), nilDiffers)
 }

@@ -42,7 +42,7 @@ type ServiceAccountHmacKey interface {
 type ListHmacKeyRequest struct {
 	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -81,9 +81,9 @@ func (m ListHmacKeyRequest) WithPageToken(token *string) ListHmacKeyRequest {
 type ListHmacKeyResponse struct {
 	Code        int
 	Response200 *model.HmacKeyListResponse
-	Response400 *common.InvalidRequestError
-	Response403 *common.BaseError
-	Response404 *common.BaseError
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -123,7 +123,7 @@ func (m *ListHmacKeyResponse) SetErrorWrapper(f func(err error) error) {
 type DeleteHmacKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	KeyName        string // path: "keyName"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -153,9 +153,9 @@ func (m *DeleteHmacKeyRequest) getHmacKeyRequest() GetHmacKeyRequest {
 type DeleteHmacKeyResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.InvalidRequestError
-	Response403 *common.BaseError
-	Response404 *common.BaseError
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -195,7 +195,7 @@ func (m *DeleteHmacKeyResponse) SetErrorWrapper(f func(err error) error) {
 type GetHmacKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	KeyName        string // path: "keyName"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -216,9 +216,9 @@ func (m *GetHmacKeyRequest) SetProject(project string) {
 type GetHmacKeyResponse struct {
 	Code        int
 	Response200 *model.HmacKeyResponse
-	Response400 *common.InvalidRequestError
-	Response403 *common.BaseError
-	Response404 *common.BaseError
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -258,7 +258,7 @@ func (m *GetHmacKeyResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertHmacKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	KeyName        string // path: "keyName"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -282,7 +282,7 @@ func (m *UpsertHmacKeyRequest) SetProject(project string) {
 type UpdateHmacKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	KeyName        string // path: "keyName"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -307,10 +307,10 @@ type UpsertHmacKeyResponse struct {
 	Code        int
 	Response200 *model.HmacKeyResponse
 	Response201 *model.HmacKeyResponse
-	Response400 *common.InvalidRequestError
-	Response403 *common.BaseError
-	Response404 *common.BaseError
-	Response409 *common.BaseError
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
+	Response409 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error

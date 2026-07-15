@@ -12,13 +12,13 @@ import (
 // Описание спецификации шарда кластера.
 // Real OAPI model name: ClickhouseClusterShard
 type ClickhouseClusterShardRequest struct {
-	// -> Имя шарда, которому будут принадлежать инстансы. В случае count>1, имя формируется как name-{shardIndex}
+	// -> Имя шарда, которому будут принадлежать инстансы. В случае с несколькими шардами имя формируется как `name-{shardIndex}`.
 	Name string `json:"name" yaml:"name"`
-	// Количество шардов, которые будут созданы
+	// Количество шардов, которые будут созданы.
 	Count *int `json:"count,omitempty" yaml:"count,omitempty"`
 	// Ресурсы одной ноды Clickhouse.
 	Resources ClickhouseInstanceHWResourcesRequest `json:"resources" yaml:"resources"`
-	// Вес шарда
+	// Вес шарда.
 	Weight *int `json:"weight,omitempty" yaml:"weight,omitempty"`
 	// Описание эдпойнтов шардов.
 	Endpoints []ClickhouseEndpointRequest        `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`

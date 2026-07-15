@@ -160,7 +160,7 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) Parse(ctx context.Context
 		}
 	}
 
-	if m.UserFederation.IsSet() {
+	if m.UserFederation.IsSet() && !m.UserFederation.IsNull() {
 		if err := m.UserFederation.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("UserFederation", err)
 		}

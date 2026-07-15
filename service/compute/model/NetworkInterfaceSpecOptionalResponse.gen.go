@@ -12,11 +12,11 @@ import (
 
 // Real OAPI model name: NetworkInterfaceSpec
 type NetworkInterfaceSpecOptionalResponse struct {
-	// Имя сетевого интерфейса
+	// Имя сетевого интерфейса.
 	Name                string                  `json:"name" yaml:"name"`
 	Primary             optional.Optional[bool] `json:"primary,omitempty" yaml:"primary,omitempty"`
 	IpForwardingEnabled optional.Optional[bool] `json:"ipForwardingEnabled,omitempty" yaml:"ipForwardingEnabled,omitempty"`
-	// IP-адреса сетевого интерфейса
+	// IP-адреса сетевого интерфейса.
 	Addresses []AddressSpecOrRefWithAttachmentsOptionalResponse `json:"addresses" yaml:"addresses"`
 }
 

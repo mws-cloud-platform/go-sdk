@@ -13,12 +13,18 @@ import (
 )
 
 type UpdateNlbSpecRequest struct {
+	// Конфигурация IP-адреса, на котором балансировщик будет принимать запросы.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Listener optional.Optional[UpdateNlbListenerRequest] `json:"listener" yaml:"listener"`
 	// Правила балансировки нагрузки. Сочетание протокола и порта (поле protoPort) в каждом правиле должно быть уникальным в рамках одного балансировщика.
 	Rules optional.Optional[[]UpdateNlbRuleRequest] `json:"rules" yaml:"rules"`
 }
 
 func (m *NlbSpecRequest) AsUpdateModel() UpdateNlbSpecRequest {
 	var u UpdateNlbSpecRequest
+	u.Listener = optional.NewOptional(m.Listener.AsUpdateModel())
 	u.Rules = optional.NewOptional(func() []UpdateNlbRuleRequest {
 		var tmp []UpdateNlbRuleRequest
 		if m.GetRules() != nil {
@@ -37,6 +43,7 @@ func (m *NlbSpecRequest) Diff(src *NlbSpecRequest) UpdateNlbSpecRequest {
 	nilDiffers := src != nil && m == nil
 	upd := UpdateNlbSpecRequest{}
 	if !nilDiffers {
+		upd.Listener = m.diffListener(src)
 		upd.Rules = m.diffRules(src)
 	}
 	return upd
@@ -48,6 +55,9 @@ func (m *NlbSpecRequest) WithChanges(u UpdateNlbSpecRequest) NlbSpecRequest {
 		out = *m
 	}
 
+	if u.Listener.IsSet() {
+		out.Listener = out.Listener.WithChanges(u.Listener.Value)
+	}
 	if u.Rules.IsSet() {
 		out.Rules = merge.InapplicableSlice(u.Rules.Value, (*NlbRuleRequest).WithChanges)
 	}
@@ -56,12 +66,19 @@ func (m *NlbSpecRequest) WithChanges(u UpdateNlbSpecRequest) NlbSpecRequest {
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateNlbSpecRequest) HasChanges() bool {
-	return m.Rules.Set
+	return m.Listener.Set ||
+		m.Rules.Set
 }
 
 func (m *UpdateNlbSpecRequest) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if m.Listener.IsSet() {
+		if err := m.Listener.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Listener", err)
+		}
 	}
 
 	if m.Rules.IsSet() {
@@ -73,6 +90,16 @@ func (m *UpdateNlbSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (m *NlbSpecRequest) diffListener(src *NlbSpecRequest) optional.Optional[UpdateNlbListenerRequest] {
+	from := src.GetListener()
+	to := m.GetListener()
+	value := to.Diff(&from)
+	return optional.Optional[UpdateNlbListenerRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 func (m *NlbSpecRequest) diffRules(src *NlbSpecRequest) optional.Optional[[]UpdateNlbRuleRequest] {

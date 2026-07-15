@@ -54,7 +54,7 @@ type PostgresCluster interface {
 type ListPostgresClustersRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -133,7 +133,7 @@ type StopClusterRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -206,7 +206,7 @@ type StartClusterRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -279,7 +279,7 @@ type RestorePostgresClusterRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -354,7 +354,7 @@ type DeletePostgresClusterRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -429,7 +429,7 @@ func (m *DeletePostgresClusterResponse) SetErrorWrapper(f func(err error) error)
 type GetPostgresClusterRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -494,7 +494,7 @@ type UpsertPostgresClusterRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -527,7 +527,7 @@ type UpdatePostgresClusterRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"

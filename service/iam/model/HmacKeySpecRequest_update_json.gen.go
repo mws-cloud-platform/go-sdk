@@ -6,6 +6,8 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 func (m UpdateHmacKeySpecRequest) MarshalJSON() ([]byte, error) {
@@ -30,6 +32,10 @@ func (m *UpdateHmacKeySpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateHmacKeySpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.ExpirationTime.IsSet() {
+		e.FieldStart("expirationTime")
+		conv.EncodeDateTimeUTC(e, m.ExpirationTime.Value)
+	}
 	return nil
 }
 
@@ -42,5 +48,18 @@ func (m *UpdateHmacKeySpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("UpdateHmacKeySpecRequest")
 	}
 
-	return d.Skip()
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "expirationTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.ExpirationTime.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

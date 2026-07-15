@@ -14,9 +14,9 @@ import (
 )
 
 type UpdatePostgresNetworkAddressRequest struct {
-	// Идентификатор адресса, в которые будет трансляция из service-vpc.
+	// Идентификатор адреса для подключения к узлу.
 	Ref optional.Optional[vpc.AddressRef] `json:"ref" yaml:"ref"`
-	// Описание subnet пользователя, в который будет трансляция из service-vpc.
+	// Описание подсети пользователя, используемой для подключения к узлам.
 	Spec optional.OptionalNil[UpdatePostgresNetworkAddressSpecRequest] `json:"spec" yaml:"spec"`
 	// Описание адреса для внешнего подключения к кластеру.
 	ExternalAccess optional.OptionalNil[UpdatePostgresExternalAccessSpecRequest] `json:"externalAccess" yaml:"externalAccess"`
@@ -88,13 +88,13 @@ func (m *UpdatePostgresNetworkAddressRequest) Parse(ctx context.Context) error {
 		}
 	}
 
-	if m.Spec.IsSet() {
+	if m.Spec.IsSet() && !m.Spec.IsNull() {
 		if err := m.Spec.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Spec", err)
 		}
 	}
 
-	if m.ExternalAccess.IsSet() {
+	if m.ExternalAccess.IsSet() && !m.ExternalAccess.IsNull() {
 		if err := m.ExternalAccess.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("ExternalAccess", err)
 		}

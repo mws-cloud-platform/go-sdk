@@ -3,19 +3,28 @@
 package model
 
 import (
+	"context"
+
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateDiskBackupSpecRequest struct {
+	// Источник для создания резервной копии диска (На текущий момент поддерживается только диск, но в будущем будут и другие источники)
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Source optional.Optional[UpdateDiskBackupSourceRequest] `json:"source" yaml:"source"`
 	// Тип операционной системы
 	OsType optional.Optional[OsType] `json:"osType" yaml:"osType"`
 }
 
 func (m *DiskBackupSpecRequest) AsUpdateModel() UpdateDiskBackupSpecRequest {
 	var u UpdateDiskBackupSpecRequest
+	u.Source = optional.NewOptional(m.Source.AsUpdateModel())
 	if m.OsType != nil {
 		u.OsType = optional.NewOptional(m.GetOsTypeOr(""))
 	}
@@ -27,6 +36,7 @@ func (m *DiskBackupSpecRequest) Diff(src *DiskBackupSpecRequest) UpdateDiskBacku
 	nilDiffers := src != nil && m == nil
 	upd := UpdateDiskBackupSpecRequest{}
 	if !nilDiffers {
+		upd.Source = m.diffSource(src)
 		upd.OsType = m.diffOsType(src)
 	}
 	return upd
@@ -38,6 +48,9 @@ func (m *DiskBackupSpecRequest) WithChanges(u UpdateDiskBackupSpecRequest) DiskB
 		out = *m
 	}
 
+	if u.Source.IsSet() {
+		out.Source = out.Source.WithChanges(u.Source.Value)
+	}
 	if u.OsType.IsSet() {
 		out.OsType = ptr.Get(u.OsType.Value)
 	}
@@ -46,7 +59,32 @@ func (m *DiskBackupSpecRequest) WithChanges(u UpdateDiskBackupSpecRequest) DiskB
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateDiskBackupSpecRequest) HasChanges() bool {
-	return m.OsType.Set
+	return m.Source.Set ||
+		m.OsType.Set
+}
+
+func (m *UpdateDiskBackupSpecRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if m.Source.IsSet() {
+		if err := m.Source.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Source", err)
+		}
+	}
+
+	return nil
+}
+
+func (m *DiskBackupSpecRequest) diffSource(src *DiskBackupSpecRequest) optional.Optional[UpdateDiskBackupSourceRequest] {
+	from := src.GetSource()
+	to := m.GetSource()
+	value := to.Diff(&from)
+	return optional.Optional[UpdateDiskBackupSourceRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 func (m *DiskBackupSpecRequest) diffOsType(src *DiskBackupSpecRequest) optional.Optional[OsType] {

@@ -13,7 +13,7 @@ import (
 
 // Real OAPI model name: Deployment
 type DeploymentResponse struct {
-	// указание на тип этого ресурса.
+	// Указание на тип ресурса.
 	Kind     *string                     `json:"kind,omitempty" yaml:"kind,omitempty"`
 	Metadata *DeploymentMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация желаемого состояния деплоймента.
@@ -123,7 +123,7 @@ func (m *DeploymentResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: DeploymentMetadata
 type DeploymentMetadataResponse struct {
 	common.TypedResourceMetadataResponse `yaml:"-,inline"`
-	// ссылка на типизированный референс
+	// Ссылка на типизированный референс.
 	Id *gpt.DeploymentID `json:"id,omitempty" yaml:"id,omitempty"`
 }
 

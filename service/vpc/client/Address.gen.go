@@ -42,7 +42,7 @@ type Address interface {
 type ListAddressesRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -137,7 +137,7 @@ type DeleteAddressRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -223,7 +223,7 @@ func (m *DeleteAddressResponse) SetErrorWrapper(f func(err error) error) {
 type GetAddressRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -302,7 +302,7 @@ type UpsertAddressRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -338,7 +338,7 @@ type UpdateAddressRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"

@@ -5,7 +5,7 @@ package model
 // Описание DNS имени, назначенного адресу в пользовательской сети.
 // Real OAPI model name: ClickhouseEndpointAddressDnsResource
 type ClickhouseEndpointAddressDnsResourceResponse struct {
-	// DNS имя
+	// DNS-имя.
 	Name string `json:"name" yaml:"name"`
 }
 

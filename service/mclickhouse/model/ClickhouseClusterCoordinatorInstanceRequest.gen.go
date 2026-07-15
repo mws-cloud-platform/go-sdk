@@ -12,9 +12,9 @@ import (
 // Описание инстанса координатора.
 // Real OAPI model name: ClickhouseClusterCoordinatorInstance
 type ClickhouseClusterCoordinatorInstanceRequest struct {
-	// Количество инстансов в зоне доступности
+	// Количество инстансов в зоне доступности.
 	Count *int `json:"count,omitempty" yaml:"count,omitempty"`
-	// Зона доступности
+	// Зона доступности.
 	Zone rm.ZoneRef `json:"zone" yaml:"zone"`
 }
 

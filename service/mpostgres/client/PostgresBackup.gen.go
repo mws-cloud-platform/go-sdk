@@ -42,7 +42,7 @@ type PostgresBackup interface {
 type ListPostgresBackupRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -123,7 +123,7 @@ type DeletePostgresBackupRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -201,7 +201,7 @@ func (m *DeletePostgresBackupResponse) SetErrorWrapper(f func(err error) error) 
 type GetPostgresBackupRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -268,7 +268,7 @@ type UpsertPostgresBackupRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -304,7 +304,7 @@ type UpdatePostgresBackupRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"

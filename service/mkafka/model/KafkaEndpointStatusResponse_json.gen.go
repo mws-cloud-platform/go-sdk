@@ -86,7 +86,7 @@ func (m *KafkaEndpointStatusResponse) Decode(d *jx.Decoder) error {
 			m.Name = v
 			return nil
 		case "network":
-			var v vpc.NetworkRef
+			var v vpc.NetworkID
 			if err := v.Decode(d); err != nil {
 				return err
 			}

@@ -9,12 +9,12 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Описание шаблона адреса/адресов, которые будут выделены. Для 'ref' будет выделен только один адрес, для 'spec', будет выделено  необходимое количество адресов, в зависимости от сущности, для которой выделяются адреса.
+// Описание адреса эндпоинта. Если указан `ref`, будет использован существующий внутренний адрес VPC. Если указан `spec`, будут созданы внутренние адреса в указанной подсети: для эндпоинта кластера или шарда — по одному адресу на эндпоинт, для эндпоинтов инстансов — по одному адресу на каждый эндпоинт каждого созданного инстанса.
 // Real OAPI model name: ClickhouseEndpointAddressSpecOrRef
 type ClickhouseEndpointAddressSpecOrRefRequest struct {
-	// Ссылка на address в vpc
+	// Ссылка на внутренний адрес эндпоинта в VPC.
 	Ref *vpc.AddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
-	// Описание шаблона адреса, который будет использоваться при выделении адресов
+	// Описание шаблона адреса, который будет использоваться при выделении адресов.
 	Spec *ClickhouseEndpointAddressSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 

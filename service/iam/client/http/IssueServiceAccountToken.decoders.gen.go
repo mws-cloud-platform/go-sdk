@@ -45,7 +45,7 @@ func decodeIssueServiceAccountTokenV2Response(resp *http.Response) (*client.Issu
 		case "application/json":
 			result := &client.IssueServiceAccountTokenV2Response{
 				Code:        resp.StatusCode,
-				Response400: &common.InvalidRequestError{},
+				Response400: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -143,7 +143,7 @@ func decodeIssueServiceAccountTokenResponse(resp *http.Response) (*client.IssueS
 		case "application/json":
 			result := &client.IssueServiceAccountTokenResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.InvalidRequestError{},
+				Response400: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {

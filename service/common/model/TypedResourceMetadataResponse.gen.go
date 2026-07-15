@@ -22,7 +22,7 @@ type TypedResourceMetadataResponse struct {
 	// Время запроса на удаление ресурса (не фактическое время удаления).
 	DeleteTime *time.Time `json:"deleteTime,omitempty" yaml:"deleteTime,omitempty"`
 	PurgeTime  *time.Time `json:"purgeTime,omitempty" yaml:"purgeTime,omitempty"`
-	// Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены.
+	// Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены.
 	Usages []TypedUsageResponse `json:"usages,omitempty" yaml:"usages,omitempty"`
 	// Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса.
 	Etag *string `json:"etag,omitempty" yaml:"etag,omitempty"`

@@ -119,7 +119,7 @@ func (m *KafkaUserResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: KafkaUserMetadata
 type KafkaUserMetadataResponse struct {
 	common.TypedResourceMetadataResponse `yaml:"-,inline"`
-	// ссылка на типизированный референс
+	// Ссылка на типизированный референс.
 	Id *mkafka.KafkaClusterUserID `json:"id,omitempty" yaml:"id,omitempty"`
 }
 

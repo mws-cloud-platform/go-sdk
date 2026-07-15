@@ -16,11 +16,14 @@ import (
 )
 
 type UpdateClickhouseClusterInstanceRequest struct {
-	// -> Имя инстанса в шарде. В случае count>1, имя формируется как name-{replicaIndex}, где replicaIndex имеет сквозную нумерацию в шарде.
+	// -> Имя инстанса в шарде. В случае count>1, имя формируется как name{replicaIndex}, где replicaIndex имеет сквозную нумерацию в рамках имени инстанса.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Name optional.Optional[string] `json:"name" yaml:"name"`
-	// Количество инстансов в зоне доступности
+	// Количество инстансов в зоне доступности.
 	Count optional.Optional[int] `json:"count" yaml:"count"`
-	// Зона доступности
+	// Зона доступности.
 	Zone optional.Optional[rm.ZoneRef] `json:"zone" yaml:"zone"`
 	// Описание эдпойнтов инстансов.
 	Endpoints optional.Optional[[]UpdateClickhouseEndpointRequest] `json:"endpoints" yaml:"endpoints"`
@@ -28,9 +31,7 @@ type UpdateClickhouseClusterInstanceRequest struct {
 
 func (m *ClickhouseClusterInstanceRequest) AsUpdateModel() UpdateClickhouseClusterInstanceRequest {
 	var u UpdateClickhouseClusterInstanceRequest
-	if m.Name != nil {
-		u.Name = optional.NewOptional(m.GetNameOr(""))
-	}
+	u.Name = optional.NewOptional(m.GetName())
 	if m.Count != nil {
 		u.Count = optional.NewOptional(m.GetCountOr(0))
 	}
@@ -70,7 +71,7 @@ func (m *ClickhouseClusterInstanceRequest) WithChanges(u UpdateClickhouseCluster
 	}
 
 	if u.Name.IsSet() {
-		out.Name = ptr.Get(u.Name.Value)
+		out.Name = u.Name.Value
 	}
 	if u.Count.IsSet() {
 		out.Count = ptr.Get(u.Count.Value)
@@ -90,6 +91,14 @@ func (m UpdateClickhouseClusterInstanceRequest) HasChanges() bool {
 		m.Count.Set ||
 		m.Zone.Set ||
 		m.Endpoints.Set
+}
+
+// GetName is used in the merge functions
+func (m *UpdateClickhouseClusterInstanceRequest) GetName() string {
+	if m.Name.IsSet() {
+		return m.Name.Value
+	}
+	return ""
 }
 
 // SetName is used in the Diff function for NamedArray
@@ -121,7 +130,7 @@ func (m *UpdateClickhouseClusterInstanceRequest) Parse(ctx context.Context) erro
 
 func (m *ClickhouseClusterInstanceRequest) diffName(src *ClickhouseClusterInstanceRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetName(), m.GetName(), nilDiffers)
+	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
 }
 
 func (m *ClickhouseClusterInstanceRequest) diffCount(src *ClickhouseClusterInstanceRequest) optional.Optional[int] {

@@ -110,6 +110,10 @@ func (m *PostgresClusterUserResponse) Parse(ctx context.Context) error {
 		return reserrors.NewPathAccumulatorError("Metadata", err)
 	}
 
+	if err := m.Status.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Status", err)
+	}
+
 	return nil
 }
 
@@ -117,7 +121,7 @@ func (m *PostgresClusterUserResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: PostgresClusterUserMetadata
 type PostgresClusterUserMetadataResponse struct {
 	common.TypedResourceMetadataResponse `yaml:"-,inline"`
-	// ссылка на типизированный референс
+	// Ссылка на типизированный референс.
 	Id *mpostgres.PostgresClusterUserID `json:"id,omitempty" yaml:"id,omitempty"`
 }
 

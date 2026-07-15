@@ -44,6 +44,11 @@ func (m *PostgresClusterUserSpecResponse) encodeFields(e *jx.Encoder) error {
 		}
 		e.ArrEnd()
 	}
+
+	if m.AccessControlPolicy != nil {
+		e.FieldStart("accessControlPolicy")
+		m.AccessControlPolicy.Encode(e)
+	}
 	return nil
 }
 
@@ -80,6 +85,14 @@ func (m *PostgresClusterUserSpecResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.AdditionalRoles = c
+			return nil
+		case "accessControlPolicy":
+			var v PostgresUserAccessControlPolicy
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.AccessControlPolicy = &v
 			return nil
 		default:
 			return d.Skip()

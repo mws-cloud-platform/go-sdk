@@ -11,11 +11,11 @@ import (
 
 // Real OAPI model name: TypedUsage
 type TypedUsageOptionalResponse struct {
-	// Тип связи. Помимо стандартных own и use могут быть добавлены специализированные типы для конкретных сервисов
+	// Тип связи. Помимо стандартных `own` и `use` могут быть добавлены специализированные типы для конкретных сервисов.
 	UsageType string `json:"usageType" yaml:"usageType"`
-	// Имя связи, требуется для модификации коллекции
+	// Имя связи. Требуется для модификации коллекции.
 	Name string `json:"name" yaml:"name"`
-	// ссылка на ресурс
+	// Ссылка на ресурс.
 	Resource resmodels.AnyResourceID `json:"resource" yaml:"resource"`
 }
 

@@ -3,12 +3,18 @@
 package model
 
 import (
+	"context"
+	"fmt"
+
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: PostgresClusterUserStatus
 type PostgresClusterUserStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
+	// Список привязок ролей текущего пользователя
+	RoleBindings []PostgresUserRoleBindingStatusResponse `json:"roleBindings,omitempty" yaml:"roleBindings,omitempty"`
 }
 
 func (m *PostgresClusterUserStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -18,6 +24,20 @@ func (m *PostgresClusterUserStatusResponse) GetReady() common.ResourceStatusRead
 	return common.ResourceStatusReadyResponse{}
 }
 
+func (m *PostgresClusterUserStatusResponse) GetRoleBindings() []PostgresUserRoleBindingStatusResponse {
+	if m != nil {
+		return m.RoleBindings
+	}
+	return nil
+}
+
+func (m *PostgresClusterUserStatusResponse) GetRoleBindingsOr(val []PostgresUserRoleBindingStatusResponse) []PostgresUserRoleBindingStatusResponse {
+	if m != nil && m.RoleBindings != nil {
+		return m.RoleBindings
+	}
+	return val
+}
+
 func (m *PostgresClusterUserStatusResponse) Clone() *PostgresClusterUserStatusResponse {
 	if m == nil {
 		return nil
@@ -25,5 +45,26 @@ func (m *PostgresClusterUserStatusResponse) Clone() *PostgresClusterUserStatusRe
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
+	if m.RoleBindings != nil {
+		clone.RoleBindings = make([]PostgresUserRoleBindingStatusResponse, len(m.RoleBindings))
+		for i, v := range m.RoleBindings {
+			clone.RoleBindings[i] = *v.Clone()
+		}
+	}
+
 	return &clone
+}
+
+func (m *PostgresClusterUserStatusResponse) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	for index := range m.RoleBindings {
+		if err := m.RoleBindings[index].Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("RoleBindings"+fmt.Sprint("[", index, "]"), err)
+		}
+	}
+
+	return nil
 }

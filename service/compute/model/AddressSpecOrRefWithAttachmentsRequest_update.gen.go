@@ -14,7 +14,7 @@ import (
 
 type UpdateAddressSpecOrRefWithAttachmentsRequest struct {
 	Address optional.Optional[UpdateAddressSpecOrRefRequest] `json:"address" yaml:"address"`
-	// NAT правило для связи внутреннего адреса с внешним адресом
+	// NAT-правило для связи внутреннего адреса с внешним адресом.
 	OneToOneNat optional.OptionalNil[UpdateComputeOneToOneNatSpecRequest] `json:"oneToOneNat" yaml:"oneToOneNat"`
 }
 
@@ -76,7 +76,7 @@ func (m *UpdateAddressSpecOrRefWithAttachmentsRequest) Parse(ctx context.Context
 		}
 	}
 
-	if m.OneToOneNat.IsSet() {
+	if m.OneToOneNat.IsSet() && !m.OneToOneNat.IsNull() {
 		if err := m.OneToOneNat.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("OneToOneNat", err)
 		}

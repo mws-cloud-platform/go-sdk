@@ -11,9 +11,7 @@ func ClickhouseClusterInstanceRequestToOptionalResponse(request *ClickhouseClust
 		return nil, nil
 	}
 	var response ClickhouseClusterInstanceOptionalResponse
-	if request.Name != nil {
-		response.Name = optional.NewOptional(*request.Name)
-	}
+	response.Name = request.Name
 	if request.Count != nil {
 		response.Count = optional.NewOptional(*request.Count)
 	}

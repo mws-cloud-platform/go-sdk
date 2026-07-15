@@ -22,7 +22,7 @@ type RestoreClickhouseBackupRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -51,6 +51,7 @@ type RestoreClickhouseBackupResponse struct {
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response409 *common.ApiError
+	Response412 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -77,6 +78,9 @@ func (m *RestoreClickhouseBackupResponse) GetErr() (err error) {
 	}
 	if m.Response409 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response409)
+	}
+	if m.Response412 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)

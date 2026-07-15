@@ -14,28 +14,25 @@ import (
 // Описание инстанса кластера.
 // Real OAPI model name: ClickhouseClusterInstance
 type ClickhouseClusterInstanceOptionalResponse struct {
-	// -> Имя инстанса в шарде. В случае count>1, имя формируется как name-{replicaIndex}, где replicaIndex имеет сквозную нумерацию в шарде.
-	Name optional.Optional[string] `json:"name,omitempty" yaml:"name,omitempty"`
-	// Количество инстансов в зоне доступности
+	// -> Имя инстанса в шарде. В случае count>1, имя формируется как name{replicaIndex}, где replicaIndex имеет сквозную нумерацию в рамках имени инстанса.
+	Name string `json:"name" yaml:"name"`
+	// Количество инстансов в зоне доступности.
 	Count optional.Optional[int] `json:"count,omitempty" yaml:"count,omitempty"`
-	// Зона доступности
+	// Зона доступности.
 	Zone rm.ZoneRef `json:"zone" yaml:"zone"`
 	// Описание эдпойнтов инстансов.
 	Endpoints optional.Optional[[]ClickhouseEndpointOptionalResponse] `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 }
 
-func (m *ClickhouseClusterInstanceOptionalResponse) GetName() *string {
-	if m != nil && m.Name.IsSet() {
-		return &m.Name.Value
+func (m *ClickhouseClusterInstanceOptionalResponse) GetName() string {
+	if m != nil {
+		return m.Name
 	}
-	return nil
+	return ""
 }
 
-func (m *ClickhouseClusterInstanceOptionalResponse) GetNameOr(val string) string {
-	if m != nil && m.Name.IsSet() {
-		return m.Name.Value
-	}
-	return val
+func (m *ClickhouseClusterInstanceOptionalResponse) SetName(val string) {
+	m.Name = val
 }
 
 func (m *ClickhouseClusterInstanceOptionalResponse) GetCount() *int {

@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
 
@@ -24,6 +25,6 @@ func TestAvailableConfigParametersSchemaMarshalling(t *testing.T) {
 
 func initAvailableConfigParametersSchema() model.AvailableConfigParametersSchema {
 	var v model.AvailableConfigParametersSchema
-	v = make(map[string]json.RawMessage)
+	v = make(map[string]jsonapimodels.RawMessageNotNull)
 	return v
 }

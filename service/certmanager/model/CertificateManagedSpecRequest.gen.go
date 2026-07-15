@@ -6,33 +6,47 @@ package model
 type CertificateManagedSpecRequest struct {
 	// Предпочтительный тип проверки домена (challenge).
 	// Возможные значения: DNS01 или HTTP01. По умолчанию используется DNS01.
-	PreferredChallengeType CertificateChallengeType `json:"preferredChallengeType" yaml:"preferredChallengeType"`
+	PreferredChallengeType *CertificateChallengeType `json:"preferredChallengeType,omitempty" yaml:"preferredChallengeType,omitempty"`
 	// Провайдер сертификатов, например Let's Encrypt или другой центр сертификации.
-	Provider CertificateProvider `json:"provider" yaml:"provider"`
+	Provider *CertificateProvider `json:"provider,omitempty" yaml:"provider,omitempty"`
 	// Список доменов, для которых будет выдан сертификат.
 	Domains []string `json:"domains" yaml:"domains"`
 }
 
-func (m *CertificateManagedSpecRequest) GetPreferredChallengeType() CertificateChallengeType {
+func (m *CertificateManagedSpecRequest) GetPreferredChallengeType() *CertificateChallengeType {
 	if m != nil {
 		return m.PreferredChallengeType
 	}
-	return ""
+	return nil
 }
 
-func (m *CertificateManagedSpecRequest) SetPreferredChallengeType(val CertificateChallengeType) {
+func (m *CertificateManagedSpecRequest) SetPreferredChallengeType(val *CertificateChallengeType) {
 	m.PreferredChallengeType = val
 }
 
-func (m *CertificateManagedSpecRequest) GetProvider() CertificateProvider {
+func (m *CertificateManagedSpecRequest) GetPreferredChallengeTypeOr(val CertificateChallengeType) CertificateChallengeType {
+	if m != nil && m.PreferredChallengeType != nil {
+		return *m.PreferredChallengeType
+	}
+	return val
+}
+
+func (m *CertificateManagedSpecRequest) GetProvider() *CertificateProvider {
 	if m != nil {
 		return m.Provider
 	}
-	return ""
+	return nil
 }
 
-func (m *CertificateManagedSpecRequest) SetProvider(val CertificateProvider) {
+func (m *CertificateManagedSpecRequest) SetProvider(val *CertificateProvider) {
 	m.Provider = val
+}
+
+func (m *CertificateManagedSpecRequest) GetProviderOr(val CertificateProvider) CertificateProvider {
+	if m != nil && m.Provider != nil {
+		return *m.Provider
+	}
+	return val
 }
 
 func (m *CertificateManagedSpecRequest) GetDomains() []string {
@@ -52,6 +66,14 @@ func (m *CertificateManagedSpecRequest) Clone() *CertificateManagedSpecRequest {
 	}
 
 	clone := *m
+	if m.PreferredChallengeType != nil {
+		clonePreferredChallengeType := *m.PreferredChallengeType
+		clone.PreferredChallengeType = &clonePreferredChallengeType
+	}
+	if m.Provider != nil {
+		cloneProvider := *m.Provider
+		clone.Provider = &cloneProvider
+	}
 	if m.Domains != nil {
 		clone.Domains = make([]string, len(m.Domains))
 		for i, v := range m.Domains {

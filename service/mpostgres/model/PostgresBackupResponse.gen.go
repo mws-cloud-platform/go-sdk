@@ -124,7 +124,7 @@ func (m *PostgresBackupResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: PostgresBackupMetadata
 type PostgresBackupMetadataResponse struct {
 	common.TypedResourceMetadataResponse `yaml:"-,inline"`
-	// ссылка на типизированный референс
+	// Ссылка на типизированный референс.
 	Id *mpostgres.PostgresBackupID `json:"id,omitempty" yaml:"id,omitempty"`
 }
 

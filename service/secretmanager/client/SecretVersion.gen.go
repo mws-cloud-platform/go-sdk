@@ -50,7 +50,7 @@ type SecretVersion interface {
 type AddSecretVersionRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
 	Name string                        // path: "name"
@@ -138,7 +138,7 @@ func (m *AddSecretVersionResponse) SetErrorWrapper(f func(err error) error) {
 type ListSecretVersionsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -235,7 +235,7 @@ func (m *ListSecretVersionsResponse) SetErrorWrapper(f func(err error) error) {
 type GetDataRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
 	Name string // path: "name"
@@ -316,7 +316,7 @@ func (m *GetDataResponse) SetErrorWrapper(f func(err error) error) {
 type DeleteSecretVersionRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
@@ -408,7 +408,7 @@ func (m *DeleteSecretVersionResponse) SetErrorWrapper(f func(err error) error) {
 type GetSecretVersionRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
 	Name string // path: "name"
@@ -489,7 +489,7 @@ func (m *GetSecretVersionResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertSecretVersionRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
@@ -524,7 +524,7 @@ func (m *UpsertSecretVersionRequest) getSecretVersionRequest() GetSecretVersionR
 type UpdateSecretVersionRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"

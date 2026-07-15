@@ -42,7 +42,7 @@ type Topic interface {
 type ListKafkaTopicsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -123,7 +123,7 @@ type DeleteKafkaTopicRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -203,7 +203,7 @@ func (m *DeleteKafkaTopicResponse) SetErrorWrapper(f func(err error) error) {
 type GetKafkaTopicRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -270,7 +270,7 @@ type UpsertKafkaTopicRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
@@ -306,7 +306,7 @@ type UpdateKafkaTopicRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"

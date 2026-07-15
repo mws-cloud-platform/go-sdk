@@ -4,6 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -11,7 +12,15 @@ import (
 
 type UpdateStorageLocalDiskSpecRequest struct {
 	// Уникальное имя диска в рамках виртуальной машины
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Name optional.Optional[string] `json:"name" yaml:"name"`
+	// Уникальное имя устройства, которое отображается в дереве /dev/disk/by-id/mws-* Linux. Если не указано - "mws-{name}", если указано - "mws-{deviceName}"
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	DeviceName optional.Optional[string] `json:"deviceName" yaml:"deviceName"`
 	// Размер диска. Должен быть кратен 248GB
 	Size optional.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
 }
@@ -19,6 +28,9 @@ type UpdateStorageLocalDiskSpecRequest struct {
 func (m *StorageLocalDiskSpecRequest) AsUpdateModel() UpdateStorageLocalDiskSpecRequest {
 	var u UpdateStorageLocalDiskSpecRequest
 	u.Name = optional.NewOptional(m.GetName())
+	if m.DeviceName != nil {
+		u.DeviceName = optional.NewOptional(m.GetDeviceNameOr(""))
+	}
 	u.Size = optional.NewOptional(m.GetSize())
 	return u
 }
@@ -29,6 +41,7 @@ func (m *StorageLocalDiskSpecRequest) Diff(src *StorageLocalDiskSpecRequest) Upd
 	upd := UpdateStorageLocalDiskSpecRequest{}
 	if !nilDiffers {
 		upd.Name = m.diffName(src)
+		upd.DeviceName = m.diffDeviceName(src)
 		upd.Size = m.diffSize(src)
 	}
 	return upd
@@ -43,6 +56,9 @@ func (m *StorageLocalDiskSpecRequest) WithChanges(u UpdateStorageLocalDiskSpecRe
 	if u.Name.IsSet() {
 		out.Name = u.Name.Value
 	}
+	if u.DeviceName.IsSet() {
+		out.DeviceName = ptr.Get(u.DeviceName.Value)
+	}
 	if u.Size.IsSet() {
 		out.Size = u.Size.Value
 	}
@@ -52,6 +68,7 @@ func (m *StorageLocalDiskSpecRequest) WithChanges(u UpdateStorageLocalDiskSpecRe
 // HasChanges returns true if any field has Set == true
 func (m UpdateStorageLocalDiskSpecRequest) HasChanges() bool {
 	return m.Name.Set ||
+		m.DeviceName.Set ||
 		m.Size.Set
 }
 
@@ -71,6 +88,11 @@ func (m *UpdateStorageLocalDiskSpecRequest) SetName(name string) {
 func (m *StorageLocalDiskSpecRequest) diffName(src *StorageLocalDiskSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
+}
+
+func (m *StorageLocalDiskSpecRequest) diffDeviceName(src *StorageLocalDiskSpecRequest) optional.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetDeviceName(), m.GetDeviceName(), nilDiffers)
 }
 
 func (m *StorageLocalDiskSpecRequest) diffSize(src *StorageLocalDiskSpecRequest) optional.Optional[bytesize.ByteSize] {

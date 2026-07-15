@@ -42,7 +42,7 @@ type VirtualMachine interface {
 type ListVirtualMachinesRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -139,7 +139,7 @@ type DeleteVirtualMachineRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project        string // path: "project"
 	VirtualMachine string // path: "virtualMachine"
 }
@@ -230,7 +230,7 @@ func (m *DeleteVirtualMachineResponse) SetErrorWrapper(f func(err error) error) 
 type GetVirtualMachineRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project        string // path: "project"
 	VirtualMachine string // path: "virtualMachine"
 }
@@ -310,7 +310,7 @@ type UpsertVirtualMachineRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project        string // path: "project"
 	VirtualMachine string // path: "virtualMachine"
 	// Данные для создания или изменения виртуальной машины
@@ -342,7 +342,7 @@ type UpdateVirtualMachineRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project        string // path: "project"
 	VirtualMachine string // path: "virtualMachine"
 	// Данные для создания или изменения виртуальной машины

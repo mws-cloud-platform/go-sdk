@@ -44,6 +44,11 @@ func (m *ClickhouseClusterShardResourceResponse) encodeFields(e *jx.Encoder) err
 	e.FieldStart("weight")
 	e.Int(m.Weight)
 
+	if m.Index != nil {
+		e.FieldStart("index")
+		e.Int(*m.Index)
+	}
+
 	e.FieldStart("resources")
 	m.Resources.Encode(e)
 
@@ -99,6 +104,14 @@ func (m *ClickhouseClusterShardResourceResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Weight = v
+			return nil
+		case "index":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Index = &v
 			return nil
 		case "resources":
 			var v ClickhouseInstanceHWResourcesResponse

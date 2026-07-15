@@ -38,6 +38,21 @@ func (m *UpdatePostgresClusterDatabaseSpecRequest) encodeFields(e *jx.Encoder) e
 		m.Owner.Value.Encode(e)
 	}
 
+	if m.LcCollate.IsSet() {
+		e.FieldStart("lcCollate")
+		e.Str(m.LcCollate.Value)
+	}
+
+	if m.LcCtype.IsSet() {
+		e.FieldStart("lcCtype")
+		e.Str(m.LcCtype.Value)
+	}
+
+	if m.Template.IsSet() {
+		e.FieldStart("template")
+		m.Template.Value.Encode(e)
+	}
+
 	if m.DeletionProtection.IsSet() {
 		e.FieldStart("deletionProtection")
 		e.Bool(m.DeletionProtection.Value)
@@ -72,6 +87,30 @@ func (m *UpdatePostgresClusterDatabaseSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Owner.SetTo(v)
+			return nil
+		case "lcCollate":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.LcCollate.SetTo(v)
+			return nil
+		case "lcCtype":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.LcCtype.SetTo(v)
+			return nil
+		case "template":
+			var v mpostgres.PostgresClusterDatabaseRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Template.SetTo(v)
 			return nil
 		case "deletionProtection":
 			v, err := decode.Bool(d)

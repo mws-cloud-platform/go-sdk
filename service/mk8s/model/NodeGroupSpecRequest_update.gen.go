@@ -14,9 +14,16 @@ import (
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateNodeGroupSpecRequest struct {
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Zone optional.Optional[string] `json:"zone" yaml:"zone"`
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Subnet optional.Optional[UpdateNodeGroupSpecSubnetRequest] `json:"subnet" yaml:"subnet"`
 	// тип VM
 	VmType optional.Optional[UpdateNodeGroupSpecVmTypeRequest] `json:"vmType" yaml:"vmType"`
 	// размер хранилища для image-ей и контейнеров. Размер в Gb
@@ -38,6 +45,8 @@ type UpdateNodeGroupSpecRequest struct {
 
 func (m *NodeGroupSpecRequest) AsUpdateModel() UpdateNodeGroupSpecRequest {
 	var u UpdateNodeGroupSpecRequest
+	u.Zone = optional.NewOptional(m.GetZone())
+	u.Subnet = optional.NewOptional(m.Subnet.AsUpdateModel())
 	u.VmType = optional.NewOptional(m.VmType.AsUpdateModel())
 	if m.ImageStorageSize != nil {
 		u.ImageStorageSize = optional.NewOptional(m.GetImageStorageSizeOr(bytesize.ByteSize{}))
@@ -81,6 +90,8 @@ func (m *NodeGroupSpecRequest) Diff(src *NodeGroupSpecRequest) UpdateNodeGroupSp
 	nilDiffers := src != nil && m == nil
 	upd := UpdateNodeGroupSpecRequest{}
 	if !nilDiffers {
+		upd.Zone = m.diffZone(src)
+		upd.Subnet = m.diffSubnet(src)
 		upd.VmType = m.diffVmType(src)
 		upd.ImageStorageSize = m.diffImageStorageSize(src)
 		upd.ImageStorageIops = m.diffImageStorageIops(src)
@@ -100,6 +111,12 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 		out = *m
 	}
 
+	if u.Zone.IsSet() {
+		out.Zone = u.Zone.Value
+	}
+	if u.Subnet.IsSet() {
+		out.Subnet = out.Subnet.WithChanges(u.Subnet.Value)
+	}
 	if u.VmType.IsSet() {
 		out.VmType = out.VmType.WithChanges(u.VmType.Value)
 	}
@@ -136,7 +153,9 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateNodeGroupSpecRequest) HasChanges() bool {
-	return m.VmType.Set ||
+	return m.Zone.Set ||
+		m.Subnet.Set ||
+		m.VmType.Set ||
 		m.ImageStorageSize.Set ||
 		m.ImageStorageIops.Set ||
 		m.Scale.Set ||
@@ -152,6 +171,12 @@ func (m *UpdateNodeGroupSpecRequest) Parse(ctx context.Context) error {
 		return nil
 	}
 
+	if m.Subnet.IsSet() {
+		if err := m.Subnet.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Subnet", err)
+		}
+	}
+
 	if m.VmType.IsSet() {
 		if err := m.VmType.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("VmType", err)
@@ -165,6 +190,21 @@ func (m *UpdateNodeGroupSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (m *NodeGroupSpecRequest) diffZone(src *NodeGroupSpecRequest) optional.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveRequired(src.GetZone(), m.GetZone(), nilDiffers)
+}
+
+func (m *NodeGroupSpecRequest) diffSubnet(src *NodeGroupSpecRequest) optional.Optional[UpdateNodeGroupSpecSubnetRequest] {
+	from := src.GetSubnet()
+	to := m.GetSubnet()
+	value := to.Diff(&from)
+	return optional.Optional[UpdateNodeGroupSpecSubnetRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 func (m *NodeGroupSpecRequest) diffVmType(src *NodeGroupSpecRequest) optional.Optional[UpdateNodeGroupSpecVmTypeRequest] {
@@ -491,6 +531,62 @@ func (m *UpdateNodeGroupSpecServiceAccountRequest) Parse(ctx context.Context) er
 }
 
 func (m *NodeGroupSpecServiceAccountRequest) diffRef(src *NodeGroupSpecServiceAccountRequest) optional.Optional[iam.ServiceAccountRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveRequired(src.GetRef(), m.GetRef(), nilDiffers)
+}
+
+type UpdateNodeGroupSpecSubnetRequest struct {
+	Ref optional.Optional[vpc.SubnetRef] `json:"ref" yaml:"ref"`
+}
+
+func (m *NodeGroupSpecSubnetRequest) AsUpdateModel() UpdateNodeGroupSpecSubnetRequest {
+	var u UpdateNodeGroupSpecSubnetRequest
+	u.Ref = optional.NewOptional(m.GetRef())
+	return u
+}
+
+// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
+func (m *NodeGroupSpecSubnetRequest) Diff(src *NodeGroupSpecSubnetRequest) UpdateNodeGroupSpecSubnetRequest {
+	nilDiffers := src != nil && m == nil
+	upd := UpdateNodeGroupSpecSubnetRequest{}
+	if !nilDiffers {
+		upd.Ref = m.diffRef(src)
+	}
+	return upd
+}
+
+func (m *NodeGroupSpecSubnetRequest) WithChanges(u UpdateNodeGroupSpecSubnetRequest) NodeGroupSpecSubnetRequest {
+	var out NodeGroupSpecSubnetRequest
+	if m != nil {
+		out = *m
+	}
+
+	if u.Ref.IsSet() {
+		out.Ref = u.Ref.Value
+	}
+	return out
+}
+
+// HasChanges returns true if any field has Set == true
+func (m UpdateNodeGroupSpecSubnetRequest) HasChanges() bool {
+	return m.Ref.Set
+}
+
+func (m *UpdateNodeGroupSpecSubnetRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if m.Ref.IsSet() {
+		if err := m.Ref.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Ref", err)
+		}
+	}
+
+	return nil
+}
+
+func (m *NodeGroupSpecSubnetRequest) diffRef(src *NodeGroupSpecSubnetRequest) optional.Optional[vpc.SubnetRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }

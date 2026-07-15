@@ -15,13 +15,16 @@ import (
 )
 
 type UpdateClickhouseClusterShardRequest struct {
-	// -> Имя шарда, которому будут принадлежать инстансы. В случае count>1, имя формируется как name-{shardIndex}
+	// -> Имя шарда, которому будут принадлежать инстансы. В случае с несколькими шардами имя формируется как `name-{shardIndex}`.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Name optional.Optional[string] `json:"name" yaml:"name"`
-	// Количество шардов, которые будут созданы
+	// Количество шардов, которые будут созданы.
 	Count optional.Optional[int] `json:"count" yaml:"count"`
 	// Ресурсы одной ноды Clickhouse.
 	Resources optional.Optional[UpdateClickhouseInstanceHWResourcesRequest] `json:"resources" yaml:"resources"`
-	// Вес шарда
+	// Вес шарда.
 	Weight optional.Optional[int] `json:"weight" yaml:"weight"`
 	// Описание эдпойнтов шардов.
 	Endpoints optional.Optional[[]UpdateClickhouseEndpointRequest]        `json:"endpoints" yaml:"endpoints"`
@@ -64,7 +67,8 @@ func (m *ClickhouseClusterShardRequest) AsUpdateModel() UpdateClickhouseClusterS
 }
 
 // Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *ClickhouseClusterShardRequest) Diff(src *ClickhouseClusterShardRequest) UpdateClickhouseClusterShardRequest {
+func (m *ClickhouseClusterShardRequest) Diff(src *ClickhouseClusterShardRequest) (UpdateClickhouseClusterShardRequest, error) {
+	var err error
 	nilDiffers := src != nil && m == nil
 	upd := UpdateClickhouseClusterShardRequest{}
 	if !nilDiffers {
@@ -73,9 +77,12 @@ func (m *ClickhouseClusterShardRequest) Diff(src *ClickhouseClusterShardRequest)
 		upd.Resources = m.diffResources(src)
 		upd.Weight = m.diffWeight(src)
 		upd.Endpoints = m.diffEndpoints(src)
-		upd.Instances = m.diffInstances(src)
+		upd.Instances, err = m.diffInstances(src)
+		if err != nil {
+			return UpdateClickhouseClusterShardRequest{}, fmt.Errorf("Instances: %w", err)
+		}
 	}
-	return upd
+	return upd, nil
 }
 
 func (m *ClickhouseClusterShardRequest) WithChanges(u UpdateClickhouseClusterShardRequest) ClickhouseClusterShardRequest {
@@ -100,7 +107,7 @@ func (m *ClickhouseClusterShardRequest) WithChanges(u UpdateClickhouseClusterSha
 		out.Endpoints = merge.InapplicableSlice(u.Endpoints.Value, (*ClickhouseEndpointRequest).WithChanges)
 	}
 	if u.Instances.IsSet() {
-		out.Instances = merge.InapplicableSlice(u.Instances.Value, (*ClickhouseClusterInstanceRequest).WithChanges)
+		out.Instances = merge.Slice(out.Instances, u.Instances.Value, (*ClickhouseClusterInstanceRequest).WithChanges, (*ClickhouseClusterInstanceRequest).GetName, (*UpdateClickhouseClusterInstanceRequest).GetName)
 	}
 	return out
 }
@@ -197,16 +204,22 @@ func (m *ClickhouseClusterShardRequest) diffEndpoints(src *ClickhouseClusterShar
 	}
 }
 
-func (m *ClickhouseClusterShardRequest) diffInstances(src *ClickhouseClusterShardRequest) optional.Optional[[]UpdateClickhouseClusterInstanceRequest] {
-	diffFunc := func(fromItem, toItem ClickhouseClusterInstanceRequest, fromNil bool) UpdateClickhouseClusterInstanceRequest {
+func (m *ClickhouseClusterShardRequest) diffInstances(src *ClickhouseClusterShardRequest) (optional.Optional[[]UpdateClickhouseClusterInstanceRequest], error) {
+	diffFunc := func(fromItem, toItem *ClickhouseClusterInstanceRequest, fromNil bool) UpdateClickhouseClusterInstanceRequest {
 		if fromNil {
 			return toItem.Diff(nil)
 		}
-		return toItem.Diff(&fromItem)
+		return toItem.Diff(fromItem)
 	}
-	value, hasChanges := commonclient.GetChangesArrayObject(src.GetInstances(), m.GetInstances(), diffFunc)
+	value, hasChanges, err := commonclient.GetChangesArrayObjectNamed(
+		commonclient.ToPointerArray(src.GetInstances()),
+		commonclient.ToPointerArray(m.GetInstances()),
+		diffFunc)
+	if err != nil {
+		return optional.Optional[[]UpdateClickhouseClusterInstanceRequest]{}, err
+	}
 	return optional.Optional[[]UpdateClickhouseClusterInstanceRequest]{
 		Value: value,
 		Set:   hasChanges,
-	}
+	}, nil
 }

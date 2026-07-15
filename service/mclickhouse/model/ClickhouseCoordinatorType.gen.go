@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
 
-// Тип координатора. Если не указано, то при наличии более одного хоста, используется Clickhouse Keeper
+// Тип координатора. Если не указано, то при наличии более одного хоста, используется Clickhouse Keeper.
 type ClickhouseCoordinatorType string
 
 const (

@@ -18,6 +18,9 @@ type UpdateSecretSpecRequest struct {
 	Active optional.Optional[bool] `json:"active" yaml:"active"`
 	// Номер текущей версии секрета.
 	CurrentSecretVersion optional.Optional[secretmanager.SecretVersionRef] `json:"currentSecretVersion" yaml:"currentSecretVersion"`
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Encryption optional.OptionalNil[UpdateEncryptionSpecRequest] `json:"encryption" yaml:"encryption"`
 }
 
 func (m *SecretSpecRequest) AsUpdateModel() UpdateSecretSpecRequest {
@@ -27,6 +30,9 @@ func (m *SecretSpecRequest) AsUpdateModel() UpdateSecretSpecRequest {
 	}
 	if m.CurrentSecretVersion != nil {
 		u.CurrentSecretVersion = optional.NewOptional(m.GetCurrentSecretVersionOr(secretmanager.SecretVersionRef{}))
+	}
+	if m.Encryption != nil {
+		u.Encryption = optional.NewOptionalNil(m.Encryption.AsUpdateModel())
 	}
 	return u
 }
@@ -38,6 +44,7 @@ func (m *SecretSpecRequest) Diff(src *SecretSpecRequest) UpdateSecretSpecRequest
 	if !nilDiffers {
 		upd.Active = m.diffActive(src)
 		upd.CurrentSecretVersion = m.diffCurrentSecretVersion(src)
+		upd.Encryption = m.diffEncryption(src)
 	}
 	return upd
 }
@@ -54,13 +61,19 @@ func (m *SecretSpecRequest) WithChanges(u UpdateSecretSpecRequest) SecretSpecReq
 	if u.CurrentSecretVersion.IsSet() {
 		out.CurrentSecretVersion = ptr.Get(u.CurrentSecretVersion.Value)
 	}
+	if u.Encryption.IsSet() {
+		out.Encryption = ptr.Get(out.Encryption.WithChanges(u.Encryption.Value))
+	} else if u.Encryption.IsNull() {
+		out.Encryption = nil
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateSecretSpecRequest) HasChanges() bool {
 	return m.Active.Set ||
-		m.CurrentSecretVersion.Set
+		m.CurrentSecretVersion.Set ||
+		m.Encryption.Set
 }
 
 func (m *UpdateSecretSpecRequest) Parse(ctx context.Context) error {
@@ -71,6 +84,12 @@ func (m *UpdateSecretSpecRequest) Parse(ctx context.Context) error {
 	if m.CurrentSecretVersion.IsSet() {
 		if err := m.CurrentSecretVersion.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("CurrentSecretVersion", err)
+		}
+	}
+
+	if m.Encryption.IsSet() && !m.Encryption.IsNull() {
+		if err := m.Encryption.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Encryption", err)
 		}
 	}
 
@@ -85,4 +104,14 @@ func (m *SecretSpecRequest) diffActive(src *SecretSpecRequest) optional.Optional
 func (m *SecretSpecRequest) diffCurrentSecretVersion(src *SecretSpecRequest) optional.Optional[secretmanager.SecretVersionRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetCurrentSecretVersion(), m.GetCurrentSecretVersion(), nilDiffers)
+}
+
+func (m *SecretSpecRequest) diffEncryption(src *SecretSpecRequest) optional.OptionalNil[UpdateEncryptionSpecRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetEncryption().Diff(src.GetEncryption())
+	return optional.OptionalNil[UpdateEncryptionSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }

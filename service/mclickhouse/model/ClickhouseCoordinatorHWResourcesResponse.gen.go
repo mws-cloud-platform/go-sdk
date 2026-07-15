@@ -9,9 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 )
 
-// Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. В случае наличия только одного хоста,
-// Zookeeper/Clickhouse Keeper не поднимаются при отсутствии параметра, в противном случае, параметр должен быть задан.
-//
+// Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. Необязательный параметр в standalone-конфигурации.
 // Real OAPI model name: ClickhouseCoordinatorHWResources
 type ClickhouseCoordinatorHWResourcesResponse struct {
 	// Тип виртуальной машины, описывающий ресурсы (vCPU, memory).
@@ -60,10 +58,6 @@ func (m *ClickhouseCoordinatorHWResourcesResponse) Parse(ctx context.Context) er
 
 	if err := m.VmType.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("VmType", err)
-	}
-
-	if err := m.Disk.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Disk", err)
 	}
 
 	return nil

@@ -15,25 +15,25 @@ import (
 // Real OAPI model name: KafkaEndpointExternalAddressStatus
 type KafkaEndpointExternalAddressStatusResponse struct {
 	// Идентификатор адреса.
-	Ref *vpc.ExternalAddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref *vpc.ExternalAddressID `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Выделенный адрес.
 	IpAddress *ipaddress.IPAddress `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
 	// False если ссылка на внешний адрес был указана в спецификации, true если адрес был создан
 	Managed *bool `json:"managed,omitempty" yaml:"managed,omitempty"`
 }
 
-func (m *KafkaEndpointExternalAddressStatusResponse) GetRef() *vpc.ExternalAddressRef {
+func (m *KafkaEndpointExternalAddressStatusResponse) GetRef() *vpc.ExternalAddressID {
 	if m != nil {
 		return m.Ref
 	}
 	return nil
 }
 
-func (m *KafkaEndpointExternalAddressStatusResponse) SetRef(val *vpc.ExternalAddressRef) {
+func (m *KafkaEndpointExternalAddressStatusResponse) SetRef(val *vpc.ExternalAddressID) {
 	m.Ref = val
 }
 
-func (m *KafkaEndpointExternalAddressStatusResponse) GetRefOr(val vpc.ExternalAddressRef) vpc.ExternalAddressRef {
+func (m *KafkaEndpointExternalAddressStatusResponse) GetRefOr(val vpc.ExternalAddressID) vpc.ExternalAddressID {
 	if m != nil && m.Ref != nil {
 		return *m.Ref
 	}

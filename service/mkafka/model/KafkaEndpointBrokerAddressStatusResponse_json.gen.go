@@ -71,7 +71,7 @@ func (m *KafkaEndpointBrokerAddressStatusResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "ref":
-			var v vpc.AddressRef
+			var v vpc.AddressID
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -79,7 +79,7 @@ func (m *KafkaEndpointBrokerAddressStatusResponse) Decode(d *jx.Decoder) error {
 			m.Ref = &v
 			return nil
 		case "subnet":
-			var v vpc.SubnetRef
+			var v vpc.SubnetID
 			if err := v.Decode(d); err != nil {
 				return err
 			}

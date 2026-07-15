@@ -9,6 +9,7 @@ import (
 // Real OAPI model name: NetworkStatus
 type NetworkStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
+
 	// Максимальная единица передачи в байтах (maximum transmission unit - MTU).
 	Mtu *int32 `json:"mtu,omitempty" yaml:"mtu,omitempty"`
 	// Доступ в интернет.
@@ -57,6 +58,7 @@ func (m *NetworkStatusResponse) Clone() *NetworkStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
+
 	if m.Mtu != nil {
 		cloneMtu := *m.Mtu
 		clone.Mtu = &cloneMtu

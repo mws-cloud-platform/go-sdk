@@ -4,9 +4,9 @@ package model
 
 // Real OAPI model name: PostgresInstance
 type PostgresInstanceResponse struct {
-	// Количество экземпляров в зоне доступности
+	// Количество экземпляров в зоне доступности.
 	Count int `json:"count" yaml:"count"`
-	// Зона доступности
+	// Зона доступности.
 	Zone *string `json:"zone,omitempty" yaml:"zone,omitempty"`
 }
 

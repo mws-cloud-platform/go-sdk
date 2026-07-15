@@ -9,12 +9,12 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Описание шаблона внешнего адреса/адресов, которые будут выделены. Для 'ref' будет выделен только один адрес, для 'spec', будет выделено  необходимое количество адресов, в зависимости от сущности, для которой выделяются адреса.
+// Описание шаблона внешнего адреса/адресов, которые будут выделены. Для `ref` будет выделен только один адрес, для `spec` будет выделено необходимое количество адресов в зависимости от сущности, для которой выделяются адреса.
 // Real OAPI model name: ClickhouseEndpointExternalAddressSpecOrRef
 type ClickhouseEndpointExternalAddressSpecOrRefRequest struct {
-	// Ссылка на external address в vpc
+	// Ссылка на внешний адрес эндпоинта в VPC.
 	Ref *vpc.ExternalAddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
-	// Описание шаблона внешнего адреса, который будет использоваться при выделении адресов
+	// Описание шаблона внешнего адреса, который будет использоваться при выделении адресов.
 	Spec *ClickhouseEndpointExternalAddressSpecOrRefSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 

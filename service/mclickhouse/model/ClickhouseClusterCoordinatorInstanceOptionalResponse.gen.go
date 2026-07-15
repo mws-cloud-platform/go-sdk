@@ -13,9 +13,9 @@ import (
 // Описание инстанса координатора.
 // Real OAPI model name: ClickhouseClusterCoordinatorInstance
 type ClickhouseClusterCoordinatorInstanceOptionalResponse struct {
-	// Количество инстансов в зоне доступности
+	// Количество инстансов в зоне доступности.
 	Count optional.Optional[int] `json:"count,omitempty" yaml:"count,omitempty"`
-	// Зона доступности
+	// Зона доступности.
 	Zone rm.ZoneRef `json:"zone" yaml:"zone"`
 }
 

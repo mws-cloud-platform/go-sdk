@@ -42,7 +42,7 @@ type CertificateRoleBinding interface {
 type ListCertificateRoleBindingsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"
@@ -123,7 +123,7 @@ func (m *ListCertificateRoleBindingsResponse) SetErrorWrapper(f func(err error) 
 type DeleteCertificateRoleBindingRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"
@@ -197,7 +197,7 @@ func (m *DeleteCertificateRoleBindingResponse) SetErrorWrapper(f func(err error)
 type GetCertificateRoleBindingRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"
@@ -264,7 +264,7 @@ type UpsertCertificateRoleBindingRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"
@@ -299,7 +299,7 @@ type UpdateCertificateRoleBindingRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"

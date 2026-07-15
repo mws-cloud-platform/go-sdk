@@ -42,7 +42,7 @@ type ApiKey interface {
 type ListApiKeyRequest struct {
 	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -81,9 +81,9 @@ func (m ListApiKeyRequest) WithPageToken(token *string) ListApiKeyRequest {
 type ListApiKeyResponse struct {
 	Code        int
 	Response200 *model.ApiKeyListResponse
-	Response400 *common.InvalidRequestError
-	Response403 *common.BaseError
-	Response404 *common.BaseError
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -125,7 +125,7 @@ type DeleteApiKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -155,9 +155,9 @@ func (m *DeleteApiKeyRequest) getApiKeyRequest() GetApiKeyRequest {
 type DeleteApiKeyResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.InvalidRequestError
-	Response403 *common.BaseError
-	Response404 *common.BaseError
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -199,7 +199,7 @@ type GetApiKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -220,9 +220,9 @@ func (m *GetApiKeyRequest) SetProject(project string) {
 type GetApiKeyResponse struct {
 	Code        int
 	Response200 *model.ApiKeyResponse
-	Response400 *common.InvalidRequestError
-	Response403 *common.BaseError
-	Response404 *common.BaseError
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -264,7 +264,7 @@ type UpsertApiKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -290,7 +290,7 @@ type UpdateApiKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -315,10 +315,10 @@ type UpsertApiKeyResponse struct {
 	Code        int
 	Response200 *model.ApiKeyResponse
 	Response201 *model.ApiKeyResponse
-	Response400 *common.InvalidRequestError
-	Response403 *common.BaseError
-	Response404 *common.BaseError
-	Response409 *common.BaseError
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
+	Response409 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error

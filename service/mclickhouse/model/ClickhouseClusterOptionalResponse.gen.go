@@ -12,6 +12,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 )
 
+// Кластер Managed ClickHouse — это группа узлов (виртуальных машин), объединенных для высокоскоростной обработки и хранения данных с помощью СУБД ClickHouse.
 // Real OAPI model name: ClickhouseCluster
 type ClickhouseClusterOptionalResponse struct {
 	Kind     *string                                                         `json:"kind,omitempty" yaml:"kind,omitempty"`
@@ -105,7 +106,7 @@ func (m *ClickhouseClusterOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Metadata.IsSet() {
+	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		if err := m.Metadata.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Metadata", err)
 		}
@@ -126,7 +127,7 @@ func (m *ClickhouseClusterOptionalResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: ClickhouseClusterMetadata
 type ClickhouseClusterMetadataOptionalResponse struct {
 	common.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
-	// ссылка на типизированный референс
+	// Ссылка на типизированный референс.
 	Id *mclickhouse.ClickhouseClusterID `json:"id,omitempty" yaml:"id,omitempty"`
 }
 

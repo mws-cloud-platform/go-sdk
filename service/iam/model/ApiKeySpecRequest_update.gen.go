@@ -2,11 +2,28 @@
 
 package model
 
+import (
+	"time"
+
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
+)
+
 type UpdateApiKeySpecRequest struct {
+	// Время истечения срока действия ключа.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	ExpireTime optional.Optional[time.Time] `json:"expireTime" yaml:"expireTime"`
 }
 
 func (m *ApiKeySpecRequest) AsUpdateModel() UpdateApiKeySpecRequest {
 	var u UpdateApiKeySpecRequest
+	if m.ExpireTime != nil {
+		u.ExpireTime = optional.NewOptional(m.GetExpireTimeOr(time.Time{}))
+	}
 	return u
 }
 
@@ -15,6 +32,7 @@ func (m *ApiKeySpecRequest) Diff(src *ApiKeySpecRequest) UpdateApiKeySpecRequest
 	nilDiffers := src != nil && m == nil
 	upd := UpdateApiKeySpecRequest{}
 	if !nilDiffers {
+		upd.ExpireTime = m.diffExpireTime(src)
 	}
 	return upd
 }
@@ -25,10 +43,18 @@ func (m *ApiKeySpecRequest) WithChanges(u UpdateApiKeySpecRequest) ApiKeySpecReq
 		out = *m
 	}
 
+	if u.ExpireTime.IsSet() {
+		out.ExpireTime = ptr.Get(u.ExpireTime.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateApiKeySpecRequest) HasChanges() bool {
-	return false
+	return m.ExpireTime.Set
+}
+
+func (m *ApiKeySpecRequest) diffExpireTime(src *ApiKeySpecRequest) optional.Optional[time.Time] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetExpireTime(), m.GetExpireTime(), nilDiffers)
 }

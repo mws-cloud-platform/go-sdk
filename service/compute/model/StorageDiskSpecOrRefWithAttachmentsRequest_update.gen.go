@@ -5,6 +5,8 @@ package model
 import (
 	"context"
 
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -12,13 +14,30 @@ import (
 
 type UpdateStorageDiskSpecOrRefWithAttachmentsRequest struct {
 	// Уникальное имя диска в рамках виртуальной машины
-	Name optional.Optional[string]                            `json:"name" yaml:"name"`
-	Disk optional.Optional[UpdateStorageDiskSpecOrRefRequest] `json:"disk" yaml:"disk"`
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Name optional.Optional[string] `json:"name" yaml:"name"`
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Boot optional.Optional[bool] `json:"boot" yaml:"boot"`
+	// Уникальное имя устройства, которое отображается в дереве /dev/disk/by-id/mws-* Linux. Если не указано - "mws-{name}", если указано - "mws-{deviceName}"
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	DeviceName optional.Optional[string]                            `json:"deviceName" yaml:"deviceName"`
+	Disk       optional.Optional[UpdateStorageDiskSpecOrRefRequest] `json:"disk" yaml:"disk"`
 }
 
 func (m *StorageDiskSpecOrRefWithAttachmentsRequest) AsUpdateModel() UpdateStorageDiskSpecOrRefWithAttachmentsRequest {
 	var u UpdateStorageDiskSpecOrRefWithAttachmentsRequest
 	u.Name = optional.NewOptional(m.GetName())
+	if m.Boot != nil {
+		u.Boot = optional.NewOptional(m.GetBootOr(false))
+	}
+	if m.DeviceName != nil {
+		u.DeviceName = optional.NewOptional(m.GetDeviceNameOr(""))
+	}
 	u.Disk = optional.NewOptional(m.Disk.AsUpdateModel())
 	return u
 }
@@ -29,6 +48,8 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) Diff(src *StorageDiskSpecOr
 	upd := UpdateStorageDiskSpecOrRefWithAttachmentsRequest{}
 	if !nilDiffers {
 		upd.Name = m.diffName(src)
+		upd.Boot = m.diffBoot(src)
+		upd.DeviceName = m.diffDeviceName(src)
 		upd.Disk = m.diffDisk(src)
 	}
 	return upd
@@ -43,6 +64,12 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) WithChanges(u UpdateStorage
 	if u.Name.IsSet() {
 		out.Name = u.Name.Value
 	}
+	if u.Boot.IsSet() {
+		out.Boot = ptr.Get(u.Boot.Value)
+	}
+	if u.DeviceName.IsSet() {
+		out.DeviceName = ptr.Get(u.DeviceName.Value)
+	}
 	if u.Disk.IsSet() {
 		out.Disk = out.Disk.WithChanges(u.Disk.Value)
 	}
@@ -52,6 +79,8 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) WithChanges(u UpdateStorage
 // HasChanges returns true if any field has Set == true
 func (m UpdateStorageDiskSpecOrRefWithAttachmentsRequest) HasChanges() bool {
 	return m.Name.Set ||
+		m.Boot.Set ||
+		m.DeviceName.Set ||
 		m.Disk.Set
 }
 
@@ -85,6 +114,16 @@ func (m *UpdateStorageDiskSpecOrRefWithAttachmentsRequest) Parse(ctx context.Con
 func (m *StorageDiskSpecOrRefWithAttachmentsRequest) diffName(src *StorageDiskSpecOrRefWithAttachmentsRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
+}
+
+func (m *StorageDiskSpecOrRefWithAttachmentsRequest) diffBoot(src *StorageDiskSpecOrRefWithAttachmentsRequest) optional.Optional[bool] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetBoot(), m.GetBoot(), nilDiffers)
+}
+
+func (m *StorageDiskSpecOrRefWithAttachmentsRequest) diffDeviceName(src *StorageDiskSpecOrRefWithAttachmentsRequest) optional.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetDeviceName(), m.GetDeviceName(), nilDiffers)
 }
 
 func (m *StorageDiskSpecOrRefWithAttachmentsRequest) diffDisk(src *StorageDiskSpecOrRefWithAttachmentsRequest) optional.Optional[UpdateStorageDiskSpecOrRefRequest] {

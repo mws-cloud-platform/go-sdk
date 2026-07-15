@@ -4,7 +4,6 @@ package model
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"maps"
 
@@ -13,23 +12,30 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 type UpdateClickhouseClusterSpecRequest struct {
-	// Значение включен/выключен кластер.
+	// Состояние кластера — включен или выключен.
 	Active optional.Optional[bool] `json:"active" yaml:"active"`
 	// Версия продукта.
 	Version optional.Optional[string] `json:"version" yaml:"version"`
-	// Описание эдпойнтов кластера.
+	// Регион, в котором располагается кластер.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Region optional.Optional[rm.RegionRef] `json:"region" yaml:"region"`
+	// Описание эндпоинтов кластера.
 	Endpoints optional.Optional[[]UpdateClickhouseEndpointRequest] `json:"endpoints" yaml:"endpoints"`
 	// Описание координатора кластера.
 	Coordinator optional.OptionalNil[UpdateClickhouseClusterCoordinatorRequest] `json:"coordinator" yaml:"coordinator"`
 	// Описание шардов кластера.
 	Shards optional.Optional[[]UpdateClickhouseClusterShardRequest] `json:"shards" yaml:"shards"`
-	// Настройки Clickhouse. Если не указаны, будут использованы настройки по-умолчанию.
-	Config optional.Optional[map[string]json.RawMessage] `json:"config" yaml:"config"`
+	// Настройки Clickhouse. Если не указаны, будут использованы настройки по умолчанию
+	Config optional.Optional[map[string]jsonapimodels.RawMessageNotNull] `json:"config" yaml:"config"`
 	// Конфигурация схемы хранилищ ClickHouse.
 	Storage optional.OptionalNil[UpdateClickhouseStorageConfigurationRequest] `json:"storage" yaml:"storage"`
 	// Добавление пользователей при создании кластера Clickhouse.
@@ -45,6 +51,9 @@ func (m *ClickhouseClusterSpecRequest) AsUpdateModel() UpdateClickhouseClusterSp
 		u.Active = optional.NewOptional(m.GetActiveOr(false))
 	}
 	u.Version = optional.NewOptional(m.GetVersion())
+	if m.Region != nil {
+		u.Region = optional.NewOptional(m.GetRegionOr(rm.RegionRef{}))
+	}
 	if m.Endpoints != nil {
 		u.Endpoints = optional.NewOptional(func() []UpdateClickhouseEndpointRequest {
 			var tmp []UpdateClickhouseEndpointRequest
@@ -87,22 +96,27 @@ func (m *ClickhouseClusterSpecRequest) AsUpdateModel() UpdateClickhouseClusterSp
 }
 
 // Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *ClickhouseClusterSpecRequest) Diff(src *ClickhouseClusterSpecRequest) UpdateClickhouseClusterSpecRequest {
+func (m *ClickhouseClusterSpecRequest) Diff(src *ClickhouseClusterSpecRequest) (UpdateClickhouseClusterSpecRequest, error) {
+	var err error
 	nilDiffers := src != nil && m == nil
 	upd := UpdateClickhouseClusterSpecRequest{}
 	if !nilDiffers {
 		upd.Active = m.diffActive(src)
 		upd.Version = m.diffVersion(src)
+		upd.Region = m.diffRegion(src)
 		upd.Endpoints = m.diffEndpoints(src)
 		upd.Coordinator = m.diffCoordinator(src)
-		upd.Shards = m.diffShards(src)
+		upd.Shards, err = m.diffShards(src)
+		if err != nil {
+			return UpdateClickhouseClusterSpecRequest{}, fmt.Errorf("Shards: %w", err)
+		}
 		upd.Config = m.diffConfig(src)
 		upd.Storage = m.diffStorage(src)
 		upd.BootstrapAdmin = m.diffBootstrapAdmin(src)
 		upd.Backup = m.diffBackup(src)
 		upd.MaintenanceWindow = m.diffMaintenanceWindow(src)
 	}
-	return upd
+	return upd, nil
 }
 
 func (m *ClickhouseClusterSpecRequest) WithChanges(u UpdateClickhouseClusterSpecRequest) ClickhouseClusterSpecRequest {
@@ -116,6 +130,9 @@ func (m *ClickhouseClusterSpecRequest) WithChanges(u UpdateClickhouseClusterSpec
 	}
 	if u.Version.IsSet() {
 		out.Version = u.Version.Value
+	}
+	if u.Region.IsSet() {
+		out.Region = ptr.Get(u.Region.Value)
 	}
 	if u.Endpoints.IsSet() {
 		out.Endpoints = merge.InapplicableSlice(u.Endpoints.Value, (*ClickhouseEndpointRequest).WithChanges)
@@ -156,6 +173,7 @@ func (m *ClickhouseClusterSpecRequest) WithChanges(u UpdateClickhouseClusterSpec
 func (m UpdateClickhouseClusterSpecRequest) HasChanges() bool {
 	return m.Active.Set ||
 		m.Version.Set ||
+		m.Region.Set ||
 		m.Endpoints.Set ||
 		m.Coordinator.Set ||
 		m.Shards.Set ||
@@ -171,6 +189,12 @@ func (m *UpdateClickhouseClusterSpecRequest) Parse(ctx context.Context) error {
 		return nil
 	}
 
+	if m.Region.IsSet() {
+		if err := m.Region.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Region", err)
+		}
+	}
+
 	if m.Endpoints.IsSet() {
 		for index := range m.Endpoints.Value {
 			if err := m.Endpoints.Value[index].Parse(ctx); err != nil {
@@ -179,7 +203,7 @@ func (m *UpdateClickhouseClusterSpecRequest) Parse(ctx context.Context) error {
 		}
 	}
 
-	if m.Coordinator.IsSet() {
+	if m.Coordinator.IsSet() && !m.Coordinator.IsNull() {
 		if err := m.Coordinator.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Coordinator", err)
 		}
@@ -206,6 +230,11 @@ func (m *ClickhouseClusterSpecRequest) diffVersion(src *ClickhouseClusterSpecReq
 	return commonclient.DiffPrimitiveRequired(src.GetVersion(), m.GetVersion(), nilDiffers)
 }
 
+func (m *ClickhouseClusterSpecRequest) diffRegion(src *ClickhouseClusterSpecRequest) optional.Optional[rm.RegionRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetRegion(), m.GetRegion(), nilDiffers)
+}
+
 func (m *ClickhouseClusterSpecRequest) diffEndpoints(src *ClickhouseClusterSpecRequest) optional.Optional[[]UpdateClickhouseEndpointRequest] {
 	diffFunc := func(fromItem, toItem ClickhouseEndpointRequest, fromNil bool) UpdateClickhouseEndpointRequest {
 		if fromNil {
@@ -230,23 +259,29 @@ func (m *ClickhouseClusterSpecRequest) diffCoordinator(src *ClickhouseClusterSpe
 	}
 }
 
-func (m *ClickhouseClusterSpecRequest) diffShards(src *ClickhouseClusterSpecRequest) optional.Optional[[]UpdateClickhouseClusterShardRequest] {
-	diffFunc := func(fromItem, toItem ClickhouseClusterShardRequest, fromNil bool) UpdateClickhouseClusterShardRequest {
+func (m *ClickhouseClusterSpecRequest) diffShards(src *ClickhouseClusterSpecRequest) (optional.Optional[[]UpdateClickhouseClusterShardRequest], error) {
+	diffFunc := func(fromItem, toItem *ClickhouseClusterShardRequest, fromNil bool) (UpdateClickhouseClusterShardRequest, error) {
 		if fromNil {
 			return toItem.Diff(nil)
 		}
-		return toItem.Diff(&fromItem)
+		return toItem.Diff(fromItem)
 	}
-	value, hasChanges := commonclient.GetChangesArrayObject(src.GetShards(), m.GetShards(), diffFunc)
+	value, hasChanges, err := commonclient.GetChangesArrayObjectNamedError(
+		commonclient.ToPointerArray(src.GetShards()),
+		commonclient.ToPointerArray(m.GetShards()),
+		diffFunc)
+	if err != nil {
+		return optional.Optional[[]UpdateClickhouseClusterShardRequest]{}, err
+	}
 	return optional.Optional[[]UpdateClickhouseClusterShardRequest]{
 		Value: value,
 		Set:   hasChanges,
-	}
+	}, nil
 }
 
-func (m *ClickhouseClusterSpecRequest) diffConfig(src *ClickhouseClusterSpecRequest) optional.Optional[map[string]json.RawMessage] {
+func (m *ClickhouseClusterSpecRequest) diffConfig(src *ClickhouseClusterSpecRequest) optional.Optional[map[string]jsonapimodels.RawMessageNotNull] {
 	value, hasChanges := commonclient.GetChangesMapRawData(src.GetConfig(), m.GetConfig())
-	return optional.Optional[map[string]json.RawMessage]{
+	return optional.Optional[map[string]jsonapimodels.RawMessageNotNull]{
 		Value: value,
 		Set:   hasChanges,
 	}

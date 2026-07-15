@@ -16,7 +16,7 @@ type CertificateStatusResponse struct {
 	Valid bool `json:"valid" yaml:"valid"`
 	// Подробная причина, по которой сертификат не может быть использован.
 	Reason CertificateStatusReason `json:"reason" yaml:"reason"`
-	// Managed certificate renewal status
+	// Статус обновления сертификата.
 	RenewalStatus *CertificateRenewalStatus `json:"renewalStatus,omitempty" yaml:"renewalStatus,omitempty"`
 	// Тип сертификата. Если указано SELF_MANAGED, тело запроса должно содержать данные сертификата.
 	// Если указано MANAGED, сертификат будет создан центром сертификации (например, Let's Encrypt).
@@ -26,7 +26,7 @@ type CertificateStatusResponse struct {
 	Challenges []CertificateChallengeResponse `json:"challenges,omitempty" yaml:"challenges,omitempty"`
 	// Время следующего обновления сертификата.
 	RenewalAt *time.Time `json:"renewalAt,omitempty" yaml:"renewalAt,omitempty"`
-	// Время, до которого необходимо настроить делегацию для прохождения проверки прав на домены.
+	// Крайний срок настройки делегации для прохождения проверки прав на домены.
 	// Присутствует только в случае, если сертификат управляемый.
 	ChallengesDeadline *time.Time `json:"challengesDeadline,omitempty" yaml:"challengesDeadline,omitempty"`
 }

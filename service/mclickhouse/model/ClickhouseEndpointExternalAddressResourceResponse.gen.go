@@ -11,10 +11,10 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Описание внешнего доступа к кластеру
+// Описание внешнего доступа к кластеру.
 // Real OAPI model name: ClickhouseEndpointExternalAddressResource
 type ClickhouseEndpointExternalAddressResourceResponse struct {
-	// Идентификатор адреса в VPC
+	// Идентификатор адреса в VPC.
 	Ref vpc.ExternalAddressRef `json:"ref" yaml:"ref"`
 	// Выделенный адрес.
 	IpAddress ipaddress.IPAddress `json:"ipAddress" yaml:"ipAddress"`

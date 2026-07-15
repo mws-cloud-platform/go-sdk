@@ -42,7 +42,7 @@ type Subnet interface {
 type ListSubnetsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -137,7 +137,7 @@ type DeleteSubnetRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -223,7 +223,7 @@ func (m *DeleteSubnetResponse) SetErrorWrapper(f func(err error) error) {
 type GetSubnetRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -302,7 +302,7 @@ type UpsertSubnetRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -338,7 +338,7 @@ type UpdateSubnetRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"

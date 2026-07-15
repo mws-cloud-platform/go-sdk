@@ -9,7 +9,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
-// Описание ip адресов для доступа к кластеру
+// Описание IP-адресов для доступа к кластеру.
 // Real OAPI model name: PostgresStatusNetwork
 type PostgresStatusNetworkResponse struct {
 	PrimaryAddresses  []PostgresStatusAddressResponse       `json:"primaryAddresses,omitempty" yaml:"primaryAddresses,omitempty"`

@@ -12,8 +12,9 @@ import (
 // Real OAPI model name: RouteStatus
 type RouteStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
-	NextHop                       *RouteStatusNextHopResponse     `json:"nextHop,omitempty" yaml:"nextHop,omitempty"`
-	Destination                   *RouteStatusDestinationResponse `json:"destination,omitempty" yaml:"destination,omitempty"`
+
+	NextHop     *RouteStatusNextHopResponse     `json:"nextHop,omitempty" yaml:"nextHop,omitempty"`
+	Destination *RouteStatusDestinationResponse `json:"destination,omitempty" yaml:"destination,omitempty"`
 }
 
 func (m *RouteStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -58,6 +59,7 @@ func (m *RouteStatusResponse) Clone() *RouteStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
+
 	clone.NextHop = m.NextHop.Clone()
 	clone.Destination = m.Destination.Clone()
 

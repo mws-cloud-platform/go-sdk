@@ -106,7 +106,7 @@ func (m *ExternalAddressOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Metadata.IsSet() {
+	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		if err := m.Metadata.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Metadata", err)
 		}

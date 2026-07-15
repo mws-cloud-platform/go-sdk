@@ -116,7 +116,7 @@ func (m *ClickhouseClusterUserResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: ClickhouseClusterUserMetadata
 type ClickhouseClusterUserMetadataResponse struct {
 	common.TypedResourceMetadataResponse `yaml:"-,inline"`
-	// ссылка на типизированный референс
+	// Ссылка на типизированный референс.
 	Id *mclickhouse.ClickhouseClusterUserID `json:"id,omitempty" yaml:"id,omitempty"`
 }
 

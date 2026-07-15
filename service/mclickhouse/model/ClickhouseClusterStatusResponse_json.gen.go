@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m ClickhouseClusterStatusResponse) MarshalJSON() ([]byte, error) {
@@ -42,6 +43,11 @@ func (m *ClickhouseClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.State != nil {
 		e.FieldStart("state")
 		m.State.Encode(e)
+	}
+
+	if m.Region != nil {
+		e.FieldStart("region")
+		m.Region.Encode(e)
 	}
 
 	if m.Cluster != nil {
@@ -85,6 +91,14 @@ func (m *ClickhouseClusterStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.State = &v
+			return nil
+		case "region":
+			var v rm.RegionID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
 			return nil
 		case "cluster":
 			if d.Next() == jx.Null {

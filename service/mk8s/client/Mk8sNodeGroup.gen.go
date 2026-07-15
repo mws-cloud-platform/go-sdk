@@ -42,7 +42,7 @@ type Mk8sNodeGroup interface {
 type ListMk8sNodeGroupsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя Cluster
 	ClusterName string // path: "clusterName"
@@ -123,7 +123,7 @@ func (m *ListMk8sNodeGroupsResponse) SetErrorWrapper(f func(err error) error) {
 type DeleteMk8sNodeGroupRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя Cluster
 	ClusterName string // path: "clusterName"
@@ -199,7 +199,7 @@ func (m *DeleteMk8sNodeGroupResponse) SetErrorWrapper(f func(err error) error) {
 type GetMk8sNodeGroupRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя Cluster
 	ClusterName string // path: "clusterName"
@@ -264,7 +264,7 @@ func (m *GetMk8sNodeGroupResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertMk8sNodeGroupRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя Cluster
 	ClusterName string // path: "clusterName"
@@ -300,7 +300,7 @@ func (m *UpsertMk8sNodeGroupRequest) getMk8sNodeGroupRequest() GetMk8sNodeGroupR
 type UpdateMk8sNodeGroupRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя Cluster
 	ClusterName string // path: "clusterName"

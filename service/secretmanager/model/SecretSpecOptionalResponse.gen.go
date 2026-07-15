@@ -87,7 +87,7 @@ func (m *SecretSpecOptionalResponse) Parse(ctx context.Context) error {
 		}
 	}
 
-	if m.Encryption.IsSet() {
+	if m.Encryption.IsSet() && !m.Encryption.IsNull() {
 		if err := m.Encryption.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Encryption", err)
 		}

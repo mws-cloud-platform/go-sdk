@@ -17,6 +17,21 @@ import (
 type UpdatePostgresClusterDatabaseSpecRequest struct {
 	// Имя владельца
 	Owner optional.Optional[mpostgres.PostgresClusterUserRef] `json:"owner" yaml:"owner"`
+	// Порядок сортировки строк
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	LcCollate optional.Optional[string] `json:"lcCollate" yaml:"lcCollate"`
+	// Классификация символов
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	LcCtype optional.Optional[string] `json:"lcCtype" yaml:"lcCtype"`
+	// Шаблон для создания базы данных
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Template optional.Optional[mpostgres.PostgresClusterDatabaseRef] `json:"template" yaml:"template"`
 	// Защита от удаления
 	DeletionProtection optional.Optional[bool] `json:"deletionProtection" yaml:"deletionProtection"`
 	// Список расширений
@@ -26,6 +41,15 @@ type UpdatePostgresClusterDatabaseSpecRequest struct {
 func (m *PostgresClusterDatabaseSpecRequest) AsUpdateModel() UpdatePostgresClusterDatabaseSpecRequest {
 	var u UpdatePostgresClusterDatabaseSpecRequest
 	u.Owner = optional.NewOptional(m.GetOwner())
+	if m.LcCollate != nil {
+		u.LcCollate = optional.NewOptional(m.GetLcCollateOr(""))
+	}
+	if m.LcCtype != nil {
+		u.LcCtype = optional.NewOptional(m.GetLcCtypeOr(""))
+	}
+	if m.Template != nil {
+		u.Template = optional.NewOptional(m.GetTemplateOr(mpostgres.PostgresClusterDatabaseRef{}))
+	}
 	if m.DeletionProtection != nil {
 		u.DeletionProtection = optional.NewOptional(m.GetDeletionProtectionOr(false))
 	}
@@ -50,6 +74,9 @@ func (m *PostgresClusterDatabaseSpecRequest) Diff(src *PostgresClusterDatabaseSp
 	upd := UpdatePostgresClusterDatabaseSpecRequest{}
 	if !nilDiffers {
 		upd.Owner = m.diffOwner(src)
+		upd.LcCollate = m.diffLcCollate(src)
+		upd.LcCtype = m.diffLcCtype(src)
+		upd.Template = m.diffTemplate(src)
 		upd.DeletionProtection = m.diffDeletionProtection(src)
 		upd.Extensions = m.diffExtensions(src)
 	}
@@ -65,6 +92,15 @@ func (m *PostgresClusterDatabaseSpecRequest) WithChanges(u UpdatePostgresCluster
 	if u.Owner.IsSet() {
 		out.Owner = u.Owner.Value
 	}
+	if u.LcCollate.IsSet() {
+		out.LcCollate = ptr.Get(u.LcCollate.Value)
+	}
+	if u.LcCtype.IsSet() {
+		out.LcCtype = ptr.Get(u.LcCtype.Value)
+	}
+	if u.Template.IsSet() {
+		out.Template = ptr.Get(u.Template.Value)
+	}
 	if u.DeletionProtection.IsSet() {
 		out.DeletionProtection = ptr.Get(u.DeletionProtection.Value)
 	}
@@ -77,6 +113,9 @@ func (m *PostgresClusterDatabaseSpecRequest) WithChanges(u UpdatePostgresCluster
 // HasChanges returns true if any field has Set == true
 func (m UpdatePostgresClusterDatabaseSpecRequest) HasChanges() bool {
 	return m.Owner.Set ||
+		m.LcCollate.Set ||
+		m.LcCtype.Set ||
+		m.Template.Set ||
 		m.DeletionProtection.Set ||
 		m.Extensions.Set
 }
@@ -92,12 +131,33 @@ func (m *UpdatePostgresClusterDatabaseSpecRequest) Parse(ctx context.Context) er
 		}
 	}
 
+	if m.Template.IsSet() {
+		if err := m.Template.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Template", err)
+		}
+	}
+
 	return nil
 }
 
 func (m *PostgresClusterDatabaseSpecRequest) diffOwner(src *PostgresClusterDatabaseSpecRequest) optional.Optional[mpostgres.PostgresClusterUserRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetOwner(), m.GetOwner(), nilDiffers)
+}
+
+func (m *PostgresClusterDatabaseSpecRequest) diffLcCollate(src *PostgresClusterDatabaseSpecRequest) optional.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetLcCollate(), m.GetLcCollate(), nilDiffers)
+}
+
+func (m *PostgresClusterDatabaseSpecRequest) diffLcCtype(src *PostgresClusterDatabaseSpecRequest) optional.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetLcCtype(), m.GetLcCtype(), nilDiffers)
+}
+
+func (m *PostgresClusterDatabaseSpecRequest) diffTemplate(src *PostgresClusterDatabaseSpecRequest) optional.Optional[mpostgres.PostgresClusterDatabaseRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetTemplate(), m.GetTemplate(), nilDiffers)
 }
 
 func (m *PostgresClusterDatabaseSpecRequest) diffDeletionProtection(src *PostgresClusterDatabaseSpecRequest) optional.Optional[bool] {

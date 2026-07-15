@@ -66,13 +66,13 @@ func (m *NlbListenerOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Internal.IsSet() {
+	if m.Internal.IsSet() && !m.Internal.IsNull() {
 		if err := m.Internal.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Internal", err)
 		}
 	}
 
-	if m.External.IsSet() {
+	if m.External.IsSet() && !m.External.IsNull() {
 		if err := m.External.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("External", err)
 		}

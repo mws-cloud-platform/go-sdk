@@ -42,7 +42,7 @@ type ExternalAddress interface {
 type ListExternalAddressesRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -135,7 +135,7 @@ type DeleteExternalAddressRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя внешнего IP-адреса
 	ExternalAddress string // path: "externalAddress"
@@ -218,7 +218,7 @@ func (m *DeleteExternalAddressResponse) SetErrorWrapper(f func(err error) error)
 type GetExternalAddressRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя внешнего IP-адреса
 	ExternalAddress string // path: "externalAddress"
@@ -295,7 +295,7 @@ type UpsertExternalAddressRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя внешнего IP-адреса
 	ExternalAddress string // path: "externalAddress"
@@ -328,7 +328,7 @@ type UpdateExternalAddressRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя внешнего IP-адреса
 	ExternalAddress string // path: "externalAddress"

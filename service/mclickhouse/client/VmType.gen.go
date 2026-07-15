@@ -20,7 +20,7 @@ type VmType interface {
 type GetClickhouseClusterVmTypesRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 }
 

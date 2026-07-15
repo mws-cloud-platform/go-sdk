@@ -3,13 +3,15 @@
 package model
 
 import (
-	"encoding/json"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
+	"go.mws.cloud/go-sdk/internal/encode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -67,9 +69,8 @@ func (m *ClickhouseClusterResourceResponse) encodeFields(e *jx.Encoder) error {
 		e.ObjStart()
 		for key, elem := range m.Config {
 			e.FieldStart(key)
-			if elem == nil {
-				e.Null()
-				continue
+			if elem == nil || string(elem) == "null" {
+				return fmt.Errorf("config: %w", encode.ErrRawDataNull)
 			}
 			e.Raw(elem)
 		}
@@ -159,14 +160,18 @@ func (m *ClickhouseClusterResourceResponse) Decode(d *jx.Decoder) error {
 			m.Shards = c
 			return nil
 		case "config":
-			c := make(map[string]json.RawMessage)
+			c := make(map[string]jsonapimodels.RawMessageNotNull)
 			if err := d.ObjBytes(reserrors.PathAccumulatorErrorAsIndexObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 				v, err := d.Raw()
 				if err != nil {
 					return err
 				}
 
-				c[string(k)] = json.RawMessage(v)
+				if string(v) == "null" {
+					return decode.ErrRawDataNull
+				}
+
+				c[string(k)] = jsonapimodels.RawMessageNotNull(v)
 				return nil
 			})); err != nil {
 				return err

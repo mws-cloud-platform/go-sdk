@@ -24,7 +24,7 @@ type Mk8sVersion interface {
 type ListMk8sVersionsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя Release Channel
 	ReleaseChannelName string // path: "releaseChannelName"

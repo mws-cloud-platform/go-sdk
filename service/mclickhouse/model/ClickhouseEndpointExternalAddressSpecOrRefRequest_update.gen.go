@@ -14,9 +14,9 @@ import (
 )
 
 type UpdateClickhouseEndpointExternalAddressSpecOrRefRequest struct {
-	// Ссылка на external address в vpc
+	// Ссылка на внешний адрес эндпоинта в VPC.
 	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
-	// Описание шаблона внешнего адреса, который будет использоваться при выделении адресов
+	// Описание шаблона внешнего адреса, который будет использоваться при выделении адресов.
 	Spec optional.OptionalNil[UpdateClickhouseEndpointExternalAddressSpecOrRefSpecRequest] `json:"spec" yaml:"spec"`
 }
 

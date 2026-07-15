@@ -11,7 +11,7 @@ import (
 // Real OAPI model name: AddressSpecOrRefWithAttachments
 type AddressSpecOrRefWithAttachmentsRequest struct {
 	Address AddressSpecOrRefRequest `json:"address" yaml:"address"`
-	// NAT правило для связи внутреннего адреса с внешним адресом
+	// NAT-правило для связи внутреннего адреса с внешним адресом.
 	OneToOneNat *ComputeOneToOneNatSpecRequest `json:"oneToOneNat,omitempty" yaml:"oneToOneNat,omitempty"`
 }
 

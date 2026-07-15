@@ -12,9 +12,9 @@ import (
 )
 
 type UpdateClickhouseEndpointRequest struct {
-	// Описание шаблона адреса/адресов, которые будут выделены. Для 'ref' будет выделен только один адрес, для 'spec', будет выделено  необходимое количество адресов, в зависимости от сущности, для которой выделяются адреса.
+	// Описание адреса эндпоинта. Если указан `ref`, будет использован существующий внутренний адрес VPC. Если указан `spec`, будут созданы внутренние адреса в указанной подсети: для эндпоинта кластера или шарда — по одному адресу на эндпоинт, для эндпоинтов инстансов — по одному адресу на каждый эндпоинт каждого созданного инстанса.
 	Address optional.Optional[UpdateClickhouseEndpointAddressSpecOrRefRequest] `json:"address" yaml:"address"`
-	// Описание шаблона внешнего адреса/адресов, которые будут выделены. Для 'ref' будет выделен только один адрес, для 'spec', будет выделено  необходимое количество адресов, в зависимости от сущности, для которой выделяются адреса.
+	// Описание шаблона внешнего адреса/адресов, которые будут выделены. Для `ref` будет выделен только один адрес, для `spec` будет выделено необходимое количество адресов в зависимости от сущности, для которой выделяются адреса.
 	ExternalAddress optional.OptionalNil[UpdateClickhouseEndpointExternalAddressSpecOrRefRequest] `json:"externalAddress" yaml:"externalAddress"`
 }
 
@@ -72,7 +72,7 @@ func (m *UpdateClickhouseEndpointRequest) Parse(ctx context.Context) error {
 		}
 	}
 
-	if m.ExternalAddress.IsSet() {
+	if m.ExternalAddress.IsSet() && !m.ExternalAddress.IsNull() {
 		if err := m.ExternalAddress.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("ExternalAddress", err)
 		}

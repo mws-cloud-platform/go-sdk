@@ -17,7 +17,7 @@ type PostgresStatusAddressResponse struct {
 	Address *vpc.AddressRef      `json:"address,omitempty" yaml:"address,omitempty"`
 	Subnet  *vpc.SubnetRef       `json:"subnet,omitempty" yaml:"subnet,omitempty"`
 	Ip      *ipaddress.IPAddress `json:"ip,omitempty" yaml:"ip,omitempty"`
-	// Описание внешнего ip адреса для доступа к кластеру
+	// Описание внешнего IP-адреса для доступа к кластеру.
 	External *PostgresStatusExternalAddressResponse `json:"external,omitempty" yaml:"external,omitempty"`
 }
 

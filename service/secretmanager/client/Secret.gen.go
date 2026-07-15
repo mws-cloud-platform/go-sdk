@@ -46,7 +46,7 @@ type Secret interface {
 type ListSecretsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -141,7 +141,7 @@ func (m *ListSecretsResponse) SetErrorWrapper(f func(err error) error) {
 type CreateSecretWithSecretVersionRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета
 	Name string                                     // path: "name"
@@ -229,7 +229,7 @@ func (m *CreateSecretWithSecretVersionResponse) SetErrorWrapper(f func(err error
 type DeleteSecretRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
@@ -318,7 +318,7 @@ func (m *DeleteSecretResponse) SetErrorWrapper(f func(err error) error) {
 type GetSecretRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
 	Name string // path: "name"
@@ -397,7 +397,7 @@ func (m *GetSecretResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertSecretRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
@@ -429,7 +429,7 @@ func (m *UpsertSecretRequest) getSecretRequest() GetSecretRequest {
 type UpdateSecretRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"

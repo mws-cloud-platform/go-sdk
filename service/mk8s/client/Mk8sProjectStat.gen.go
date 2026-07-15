@@ -20,7 +20,7 @@ type Mk8sProjectStat interface {
 type GetProjectStatsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 }
 

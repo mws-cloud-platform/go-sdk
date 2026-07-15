@@ -49,7 +49,7 @@ func decodeListApiKeyResponse(resp *http.Response) (*client.ListApiKeyResponse, 
 		case "application/json":
 			result := &client.ListApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.InvalidRequestError{},
+				Response400: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -66,7 +66,7 @@ func decodeListApiKeyResponse(resp *http.Response) (*client.ListApiKeyResponse, 
 		case "application/json":
 			result := &client.ListApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.BaseError{},
+				Response403: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -83,7 +83,7 @@ func decodeListApiKeyResponse(resp *http.Response) (*client.ListApiKeyResponse, 
 		case "application/json":
 			result := &client.ListApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.BaseError{},
+				Response404: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -137,7 +137,7 @@ func decodeDeleteApiKeyResponse(resp *http.Response) (*client.DeleteApiKeyRespon
 		case "application/json":
 			result := &client.DeleteApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.InvalidRequestError{},
+				Response400: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -154,7 +154,7 @@ func decodeDeleteApiKeyResponse(resp *http.Response) (*client.DeleteApiKeyRespon
 		case "application/json":
 			result := &client.DeleteApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.BaseError{},
+				Response403: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -171,7 +171,7 @@ func decodeDeleteApiKeyResponse(resp *http.Response) (*client.DeleteApiKeyRespon
 		case "application/json":
 			result := &client.DeleteApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.BaseError{},
+				Response404: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -239,7 +239,7 @@ func decodeGetApiKeyResponse(resp *http.Response) (*client.GetApiKeyResponse, er
 		case "application/json":
 			result := &client.GetApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.InvalidRequestError{},
+				Response400: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -256,7 +256,7 @@ func decodeGetApiKeyResponse(resp *http.Response) (*client.GetApiKeyResponse, er
 		case "application/json":
 			result := &client.GetApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.BaseError{},
+				Response403: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -273,7 +273,7 @@ func decodeGetApiKeyResponse(resp *http.Response) (*client.GetApiKeyResponse, er
 		case "application/json":
 			result := &client.GetApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.BaseError{},
+				Response404: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -362,7 +362,7 @@ func decodeUpsertApiKeyResponse(resp *http.Response) (*client.UpsertApiKeyRespon
 		case "application/json":
 			result := &client.UpsertApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.InvalidRequestError{},
+				Response400: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -379,7 +379,7 @@ func decodeUpsertApiKeyResponse(resp *http.Response) (*client.UpsertApiKeyRespon
 		case "application/json":
 			result := &client.UpsertApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.BaseError{},
+				Response403: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -396,7 +396,7 @@ func decodeUpsertApiKeyResponse(resp *http.Response) (*client.UpsertApiKeyRespon
 		case "application/json":
 			result := &client.UpsertApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.BaseError{},
+				Response404: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -413,7 +413,7 @@ func decodeUpsertApiKeyResponse(resp *http.Response) (*client.UpsertApiKeyRespon
 		case "application/json":
 			result := &client.UpsertApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response409: &common.BaseError{},
+				Response409: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response409); err != nil {

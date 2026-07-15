@@ -36,6 +36,11 @@ func (m *UpdateSecretVersionSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("active")
 		e.Bool(m.Active.Value)
 	}
+
+	if m.Data.IsSet() {
+		e.FieldStart("data")
+		m.Data.Value.Encode(e)
+	}
 	return nil
 }
 
@@ -57,6 +62,14 @@ func (m *UpdateSecretVersionSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Active.SetTo(v)
+			return nil
+		case "data":
+			var v UpdateSecretVersionDataSpec
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Data.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

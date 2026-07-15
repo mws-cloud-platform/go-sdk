@@ -2,13 +2,21 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/optional"
+)
+
 func CertificateManagedSpecRequestToOptionalResponse(request *CertificateManagedSpecRequest) (*CertificateManagedSpecOptionalResponse, error) {
 	if request == nil {
 		return nil, nil
 	}
 	var response CertificateManagedSpecOptionalResponse
-	response.PreferredChallengeType = request.PreferredChallengeType
-	response.Provider = request.Provider
+	if request.PreferredChallengeType != nil {
+		response.PreferredChallengeType = optional.NewOptional(*request.PreferredChallengeType)
+	}
+	if request.Provider != nil {
+		response.Provider = optional.NewOptional(*request.Provider)
+	}
 	response.Domains = request.Domains
 	return &response, nil
 }

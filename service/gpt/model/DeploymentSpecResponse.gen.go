@@ -12,9 +12,9 @@ import (
 // Спецификация желаемого состояния деплоймента.
 // Real OAPI model name: DeploymentSpec
 type DeploymentSpecResponse struct {
-	// Флаг, устанавливающий активность деплоймента
+	// Флаг, устанавливающий активность деплоймента.
 	IsActive *bool `json:"isActive,omitempty" yaml:"isActive,omitempty"`
-	// ссылка на типизированный референс базовой модели
+	// Ссылка на типизированный референс базовой модели.
 	Model *gpt.ModelRef `json:"model,omitempty" yaml:"model,omitempty"`
 }
 

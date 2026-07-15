@@ -16,7 +16,7 @@ import (
 )
 
 type UpdateKafkaClusterSpecRequest struct {
-	// Значение включен/выключен кластер.
+	// Состояние кластера — включен или выключен.
 	Active optional.Optional[bool] `json:"active" yaml:"active"`
 	// Версия продукта.
 	Version optional.Optional[string] `json:"version" yaml:"version"`
@@ -24,13 +24,13 @@ type UpdateKafkaClusterSpecRequest struct {
 	Endpoints optional.Optional[[]UpdateKafkaEndpointRequest] `json:"endpoints" yaml:"endpoints"`
 	// Описание ресурсов хостов брокеров и контроллеров.
 	Instances optional.Optional[UpdateKafkaInstanceRequest] `json:"instances" yaml:"instances"`
-	// Настройки Kafka. Если не указаны, будут использованы настройки по-умолчанию.
+	// Настройки Kafka. Если не указаны, будут использованы настройки по умолчанию
 	ProductConfig     optional.Optional[string]                                   `json:"productConfig" yaml:"productConfig"`
 	MaintenanceWindow optional.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry optional.OptionalNil[UpdateKafkaSchemaRegistrySpecRequest] `json:"schemaRegistry" yaml:"schemaRegistry"`
-	// Настройка автоматической ребалансировки для кластера.
-	AutoRebalance optional.OptionalNil[UpdateKafkaAutoRebalanceSpecRequest] `json:"autoRebalance" yaml:"autoRebalance"`
+	// Настройка балансировщика кластера.
+	Balancer optional.OptionalNil[UpdateKafkaBalancerSpecRequest] `json:"balancer" yaml:"balancer"`
 }
 
 func (m *KafkaClusterSpecRequest) AsUpdateModel() UpdateKafkaClusterSpecRequest {
@@ -59,8 +59,8 @@ func (m *KafkaClusterSpecRequest) AsUpdateModel() UpdateKafkaClusterSpecRequest 
 	if m.SchemaRegistry != nil {
 		u.SchemaRegistry = optional.NewOptionalNil(m.SchemaRegistry.AsUpdateModel())
 	}
-	if m.AutoRebalance != nil {
-		u.AutoRebalance = optional.NewOptionalNil(m.AutoRebalance.AsUpdateModel())
+	if m.Balancer != nil {
+		u.Balancer = optional.NewOptionalNil(m.Balancer.AsUpdateModel())
 	}
 	return u
 }
@@ -77,7 +77,7 @@ func (m *KafkaClusterSpecRequest) Diff(src *KafkaClusterSpecRequest) UpdateKafka
 		upd.ProductConfig = m.diffProductConfig(src)
 		upd.MaintenanceWindow = m.diffMaintenanceWindow(src)
 		upd.SchemaRegistry = m.diffSchemaRegistry(src)
-		upd.AutoRebalance = m.diffAutoRebalance(src)
+		upd.Balancer = m.diffBalancer(src)
 	}
 	return upd
 }
@@ -113,10 +113,10 @@ func (m *KafkaClusterSpecRequest) WithChanges(u UpdateKafkaClusterSpecRequest) K
 	} else if u.SchemaRegistry.IsNull() {
 		out.SchemaRegistry = nil
 	}
-	if u.AutoRebalance.IsSet() {
-		out.AutoRebalance = ptr.Get(out.AutoRebalance.WithChanges(u.AutoRebalance.Value))
-	} else if u.AutoRebalance.IsNull() {
-		out.AutoRebalance = nil
+	if u.Balancer.IsSet() {
+		out.Balancer = ptr.Get(out.Balancer.WithChanges(u.Balancer.Value))
+	} else if u.Balancer.IsNull() {
+		out.Balancer = nil
 	}
 	return out
 }
@@ -130,7 +130,7 @@ func (m UpdateKafkaClusterSpecRequest) HasChanges() bool {
 		m.ProductConfig.Set ||
 		m.MaintenanceWindow.Set ||
 		m.SchemaRegistry.Set ||
-		m.AutoRebalance.Set
+		m.Balancer.Set
 }
 
 func (m *UpdateKafkaClusterSpecRequest) Parse(ctx context.Context) error {
@@ -214,10 +214,10 @@ func (m *KafkaClusterSpecRequest) diffSchemaRegistry(src *KafkaClusterSpecReques
 	}
 }
 
-func (m *KafkaClusterSpecRequest) diffAutoRebalance(src *KafkaClusterSpecRequest) optional.OptionalNil[UpdateKafkaAutoRebalanceSpecRequest] {
+func (m *KafkaClusterSpecRequest) diffBalancer(src *KafkaClusterSpecRequest) optional.OptionalNil[UpdateKafkaBalancerSpecRequest] {
 	nilDiffers := src != nil && m == nil
-	value := m.GetAutoRebalance().Diff(src.GetAutoRebalance())
-	return optional.OptionalNil[UpdateKafkaAutoRebalanceSpecRequest]{
+	value := m.GetBalancer().Diff(src.GetBalancer())
+	return optional.OptionalNil[UpdateKafkaBalancerSpecRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

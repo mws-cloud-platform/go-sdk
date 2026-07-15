@@ -7,6 +7,7 @@ type OutputModalitiesResponse struct {
 	Text          bool `json:"text" yaml:"text"`
 	Embedding     bool `json:"embedding" yaml:"embedding"`
 	Audio         bool `json:"audio" yaml:"audio"`
+	Image         bool `json:"image" yaml:"image"`
 	Reranking     bool `json:"reranking" yaml:"reranking"`
 	Transcription bool `json:"transcription" yaml:"transcription"`
 }
@@ -42,6 +43,17 @@ func (m *OutputModalitiesResponse) GetAudio() bool {
 
 func (m *OutputModalitiesResponse) SetAudio(val bool) {
 	m.Audio = val
+}
+
+func (m *OutputModalitiesResponse) GetImage() bool {
+	if m != nil {
+		return m.Image
+	}
+	return false
+}
+
+func (m *OutputModalitiesResponse) SetImage(val bool) {
+	m.Image = val
 }
 
 func (m *OutputModalitiesResponse) GetReranking() bool {

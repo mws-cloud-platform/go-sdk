@@ -358,7 +358,7 @@ func (c *Nlb) headerGetNlbV2(req *http.Request, request *client.GetNlbV2Request)
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpsertNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки..
+// UpsertNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /nlb/v1/projects/{project}/networks/{network}/nlbs/{nlb}
@@ -451,7 +451,7 @@ func (c *Nlb) headerUpsertNlbV2(req *http.Request, request *client.UpsertNlbV2Re
 	}
 }
 
-// CreateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки..
+// CreateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -546,7 +546,7 @@ func (c *Nlb) headerCreateNlbV2(req *http.Request, request *client.UpsertNlbV2Re
 	}
 }
 
-// UpdateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки..
+// UpdateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

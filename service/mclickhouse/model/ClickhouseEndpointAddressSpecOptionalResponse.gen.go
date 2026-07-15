@@ -9,10 +9,10 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Описание шаблона адреса, который будет использоваться при выделении адресов
+// Описание шаблона адреса, который будет использоваться при выделении адресов.
 // Real OAPI model name: ClickhouseEndpointAddressSpec
 type ClickhouseEndpointAddressSpecOptionalResponse struct {
-	// Подсеть облачной сети, к которой принадлежит адрес
+	// Подсеть облачной сети, которой принадлежит адрес.
 	Subnet vpc.SubnetRef `json:"subnet" yaml:"subnet"`
 }
 

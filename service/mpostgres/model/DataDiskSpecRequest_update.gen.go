@@ -14,10 +14,10 @@ type UpdateDataDiskSpecRequest struct {
 	// Размер диска.
 	Size optional.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
 	// Тип используемого диска:
-	// * `NETWORK_STANDARD_SSD` — сетевой SSD
-	// * `LOCAL` — локальный диск
+	// * `NETWORK_STANDARD_SSD` — сетевой SSD;
+	// * `LOCAL` — локальный диск.
 	Type optional.Optional[DataDiskType] `json:"type" yaml:"type"`
-	// IOPS
+	// IOPS.
 	Iops optional.Optional[Iops] `json:"iops" yaml:"iops"`
 }
 

@@ -42,7 +42,7 @@ type Mk8sCluster interface {
 type ListMk8sClustersRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -121,7 +121,7 @@ func (m *ListMk8sClustersResponse) SetErrorWrapper(f func(err error) error) {
 type DeleteMk8sClusterRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя Cluster
 	ClusterName string // path: "clusterName"
@@ -194,7 +194,7 @@ func (m *DeleteMk8sClusterResponse) SetErrorWrapper(f func(err error) error) {
 type GetMk8sClusterRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя Cluster
 	ClusterName string // path: "clusterName"
@@ -257,7 +257,7 @@ func (m *GetMk8sClusterResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertMk8sClusterRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя Cluster
 	ClusterName string // path: "clusterName"
@@ -290,7 +290,7 @@ func (m *UpsertMk8sClusterRequest) getMk8sClusterRequest() GetMk8sClusterRequest
 type UpdateMk8sClusterRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя Cluster
 	ClusterName string // path: "clusterName"

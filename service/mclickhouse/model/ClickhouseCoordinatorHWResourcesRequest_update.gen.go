@@ -68,12 +68,6 @@ func (m *UpdateClickhouseCoordinatorHWResourcesRequest) Parse(ctx context.Contex
 		}
 	}
 
-	if m.Disk.IsSet() {
-		if err := m.Disk.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Disk", err)
-		}
-	}
-
 	return nil
 }
 

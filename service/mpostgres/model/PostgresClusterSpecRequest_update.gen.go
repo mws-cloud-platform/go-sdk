@@ -19,16 +19,16 @@ import (
 type UpdatePostgresClusterSpecRequest struct {
 	// Версия продукта
 	Version optional.Optional[string] `json:"version" yaml:"version"`
-	// Значение включен/выключен кластер.
+	// Состояние кластера — включен или выключен.
 	Active optional.Optional[bool] `json:"active" yaml:"active"`
 	// Описание эндпойнтов в сетях пользователя (VPC) для подключения к инстансам кластера.
 	Endpoints        optional.Optional[[]UpdatePostgresEndpointRequest]       `json:"endpoints" yaml:"endpoints"`
 	InstanceTemplate optional.Optional[UpdatePostgresInstanceTemplateRequest] `json:"instanceTemplate" yaml:"instanceTemplate"`
 	Instances        optional.Optional[[]UpdatePostgresInstanceRequest]       `json:"instances" yaml:"instances"`
-	// Спецификация автоматического бэкапирования
+	// Спецификация автоматического бэкапирования.
 	Backup            optional.OptionalNil[UpdatePostgresClusterBackupRequest]    `json:"backup" yaml:"backup"`
 	MaintenanceWindow optional.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
-	// Параметры PostgreSQL. Если не указаны, будут использованы дефолтные параметры.
+	// Параметры PostgreSQL. Если не указаны, будут использованы параметры по умолчанию.
 	PostgresParameters optional.Optional[map[string]string] `json:"postgresParameters" yaml:"postgresParameters"`
 }
 

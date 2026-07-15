@@ -3,14 +3,17 @@
 package model
 
 import (
-	"encoding/json"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
+	"go.mws.cloud/go-sdk/internal/encode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m ClickhouseClusterSpecRequest) MarshalJSON() ([]byte, error) {
@@ -43,6 +46,11 @@ func (m *ClickhouseClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("version")
 	e.Str(m.Version)
 
+	if m.Region != nil {
+		e.FieldStart("region")
+		m.Region.Encode(e)
+	}
+
 	if m.Endpoints != nil {
 		e.FieldStart("endpoints")
 		e.ArrStart()
@@ -69,9 +77,8 @@ func (m *ClickhouseClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.ObjStart()
 		for key, elem := range m.Config {
 			e.FieldStart(key)
-			if elem == nil {
-				e.Null()
-				continue
+			if elem == nil || string(elem) == "null" {
+				return fmt.Errorf("config: %w", encode.ErrRawDataNull)
 			}
 			e.Raw(elem)
 		}
@@ -131,6 +138,14 @@ func (m *ClickhouseClusterSpecRequest) Decode(d *jx.Decoder) error {
 			m.Version = v
 			requiredFilled["version"] = true
 			return nil
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
+			return nil
 		case "endpoints":
 			c := make([]ClickhouseEndpointRequest, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
@@ -175,14 +190,18 @@ func (m *ClickhouseClusterSpecRequest) Decode(d *jx.Decoder) error {
 			requiredFilled["shards"] = true
 			return nil
 		case "config":
-			c := make(map[string]json.RawMessage)
+			c := make(map[string]jsonapimodels.RawMessageNotNull)
 			if err := d.ObjBytes(reserrors.PathAccumulatorErrorAsIndexObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 				v, err := d.Raw()
 				if err != nil {
 					return err
 				}
 
-				c[string(k)] = json.RawMessage(v)
+				if string(v) == "null" {
+					return decode.ErrRawDataNull
+				}
+
+				c[string(k)] = jsonapimodels.RawMessageNotNull(v)
 				return nil
 			})); err != nil {
 				return err

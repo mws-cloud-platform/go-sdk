@@ -126,7 +126,7 @@ func (m *PostgresClusterResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: PostgresClusterMetadata
 type PostgresClusterMetadataResponse struct {
 	common.TypedResourceMetadataResponse `yaml:"-,inline"`
-	// ссылка на типизированный референс
+	// Ссылка на типизированный референс.
 	Id *mpostgres.PostgresClusterID `json:"id,omitempty" yaml:"id,omitempty"`
 }
 

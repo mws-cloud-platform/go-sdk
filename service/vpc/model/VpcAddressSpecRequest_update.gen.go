@@ -3,17 +3,38 @@
 package model
 
 import (
+	"context"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateVpcAddressSpecRequest struct {
-	Dns optional.Optional[[]UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
+	// Подсеть облачной сети к которой принадлежит адрес.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Subnet optional.Optional[vpc.SubnetRef] `json:"subnet" yaml:"subnet"`
+	// Желаемый IP адрес. Если не указан, то будет выделен из пула адресов подсети.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	IpAddress optional.Optional[ipaddress.IPAddress]              `json:"ipAddress" yaml:"ipAddress"`
+	Dns       optional.Optional[[]UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
 }
 
 func (m *VpcAddressSpecRequest) AsUpdateModel() UpdateVpcAddressSpecRequest {
 	var u UpdateVpcAddressSpecRequest
+	u.Subnet = optional.NewOptional(m.GetSubnet())
+	if m.IpAddress != nil {
+		u.IpAddress = optional.NewOptional(m.GetIpAddressOr(ipaddress.IPAddress{}))
+	}
 	if m.Dns != nil {
 		u.Dns = optional.NewOptional(func() []UpdateVpcAddressDnsSpecRequest {
 			var tmp []UpdateVpcAddressDnsSpecRequest
@@ -34,6 +55,8 @@ func (m *VpcAddressSpecRequest) Diff(src *VpcAddressSpecRequest) UpdateVpcAddres
 	nilDiffers := src != nil && m == nil
 	upd := UpdateVpcAddressSpecRequest{}
 	if !nilDiffers {
+		upd.Subnet = m.diffSubnet(src)
+		upd.IpAddress = m.diffIpAddress(src)
 		upd.Dns = m.diffDns(src)
 	}
 	return upd
@@ -45,6 +68,12 @@ func (m *VpcAddressSpecRequest) WithChanges(u UpdateVpcAddressSpecRequest) VpcAd
 		out = *m
 	}
 
+	if u.Subnet.IsSet() {
+		out.Subnet = u.Subnet.Value
+	}
+	if u.IpAddress.IsSet() {
+		out.IpAddress = ptr.Get(u.IpAddress.Value)
+	}
 	if u.Dns.IsSet() {
 		out.Dns = merge.Slice(out.Dns, u.Dns.Value, (*VpcAddressDnsSpecRequest).WithChanges, (*VpcAddressDnsSpecRequest).GetName, (*UpdateVpcAddressDnsSpecRequest).GetName)
 	}
@@ -53,7 +82,33 @@ func (m *VpcAddressSpecRequest) WithChanges(u UpdateVpcAddressSpecRequest) VpcAd
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateVpcAddressSpecRequest) HasChanges() bool {
-	return m.Dns.Set
+	return m.Subnet.Set ||
+		m.IpAddress.Set ||
+		m.Dns.Set
+}
+
+func (m *UpdateVpcAddressSpecRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if m.Subnet.IsSet() {
+		if err := m.Subnet.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Subnet", err)
+		}
+	}
+
+	return nil
+}
+
+func (m *VpcAddressSpecRequest) diffSubnet(src *VpcAddressSpecRequest) optional.Optional[vpc.SubnetRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveRequired(src.GetSubnet(), m.GetSubnet(), nilDiffers)
+}
+
+func (m *VpcAddressSpecRequest) diffIpAddress(src *VpcAddressSpecRequest) optional.Optional[ipaddress.IPAddress] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffEquatableIfaceNonRequired(src.GetIpAddress(), m.GetIpAddress(), nilDiffers)
 }
 
 func (m *VpcAddressSpecRequest) diffDns(src *VpcAddressSpecRequest) optional.Optional[[]UpdateVpcAddressDnsSpecRequest] {

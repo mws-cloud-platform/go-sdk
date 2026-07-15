@@ -48,7 +48,7 @@ type CryptoKey interface {
 }
 
 type ListCryptoKeysRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -127,7 +127,7 @@ func (m *ListCryptoKeysResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type ScheduleDestructionOfCryptoKeyRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -196,7 +196,7 @@ func (m *ScheduleDestructionOfCryptoKeyResponse) SetErrorWrapper(f func(err erro
 }
 
 type RotateCryptoKeyRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -263,7 +263,7 @@ func (m *RotateCryptoKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type CancelScheduledDestructionOfCryptoKeyRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -332,7 +332,7 @@ func (m *CancelScheduledDestructionOfCryptoKeyResponse) SetErrorWrapper(f func(e
 type GetCryptoKeyRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key string // path: "key"
@@ -397,7 +397,7 @@ type UpsertCryptoKeyRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key  string                 // path: "key"
@@ -429,7 +429,7 @@ type UpdateCryptoKeyRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key  string                       // path: "key"

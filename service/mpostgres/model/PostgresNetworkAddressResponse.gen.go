@@ -12,9 +12,9 @@ import (
 // Описание адресов, в которые будет трансляция из service-vpc.
 // Real OAPI model name: PostgresNetworkAddress
 type PostgresNetworkAddressResponse struct {
-	// Идентификатор адресса, в которые будет трансляция из service-vpc.
+	// Идентификатор адреса для подключения к узлу.
 	Ref *vpc.AddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
-	// Описание subnet пользователя, в который будет трансляция из service-vpc.
+	// Описание подсети пользователя, используемой для подключения к узлам.
 	Spec *PostgresNetworkAddressSpecResponse `json:"spec,omitempty" yaml:"spec,omitempty"`
 	// Описание адреса для внешнего подключения к кластеру.
 	ExternalAccess *PostgresExternalAccessSpecResponse `json:"externalAccess,omitempty" yaml:"externalAccess,omitempty"`

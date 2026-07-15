@@ -10,12 +10,18 @@ import (
 
 type UpdateCertificateSpecRequest struct {
 	SelfManaged optional.OptionalNil[UpdateSelfManagedSpecRequest] `json:"selfManaged" yaml:"selfManaged"`
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Managed optional.OptionalNil[UpdateCertificateManagedSpecRequest] `json:"managed" yaml:"managed"`
 }
 
 func (m *CertificateSpecRequest) AsUpdateModel() UpdateCertificateSpecRequest {
 	var u UpdateCertificateSpecRequest
 	if m.SelfManaged != nil {
 		u.SelfManaged = optional.NewOptionalNil(m.SelfManaged.AsUpdateModel())
+	}
+	if m.Managed != nil {
+		u.Managed = optional.NewOptionalNil(m.Managed.AsUpdateModel())
 	}
 	return u
 }
@@ -26,6 +32,7 @@ func (m *CertificateSpecRequest) Diff(src *CertificateSpecRequest) UpdateCertifi
 	upd := UpdateCertificateSpecRequest{}
 	if !nilDiffers {
 		upd.SelfManaged = m.diffSelfManaged(src)
+		upd.Managed = m.diffManaged(src)
 	}
 	return upd
 }
@@ -41,18 +48,34 @@ func (m *CertificateSpecRequest) WithChanges(u UpdateCertificateSpecRequest) Cer
 	} else if u.SelfManaged.IsNull() {
 		out.SelfManaged = nil
 	}
+	if u.Managed.IsSet() {
+		out.Managed = ptr.Get(out.Managed.WithChanges(u.Managed.Value))
+	} else if u.Managed.IsNull() {
+		out.Managed = nil
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateCertificateSpecRequest) HasChanges() bool {
-	return m.SelfManaged.Set
+	return m.SelfManaged.Set ||
+		m.Managed.Set
 }
 
 func (m *CertificateSpecRequest) diffSelfManaged(src *CertificateSpecRequest) optional.OptionalNil[UpdateSelfManagedSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSelfManaged().Diff(src.GetSelfManaged())
 	return optional.OptionalNil[UpdateSelfManagedSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
+}
+
+func (m *CertificateSpecRequest) diffManaged(src *CertificateSpecRequest) optional.OptionalNil[UpdateCertificateManagedSpecRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetManaged().Diff(src.GetManaged())
+	return optional.OptionalNil[UpdateCertificateManagedSpecRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

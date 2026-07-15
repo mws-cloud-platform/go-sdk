@@ -42,7 +42,7 @@ type ServiceAccount interface {
 type ListServiceAccountRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -81,8 +81,8 @@ func (m ListServiceAccountRequest) WithPageToken(token *string) ListServiceAccou
 type ListServiceAccountResponse struct {
 	Code        int
 	Response200 *model.ServiceAccountListResponse
-	Response400 *common.InvalidRequestError
-	Response403 *common.BaseError
+	Response400 *common.ApiError
+	Response403 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -119,7 +119,7 @@ func (m *ListServiceAccountResponse) SetErrorWrapper(f func(err error) error) {
 type DeleteServiceAccountRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project        string // path: "project"
 	ServiceAccount string // path: "serviceAccount"
 }
@@ -185,7 +185,7 @@ func (m *DeleteServiceAccountResponse) SetErrorWrapper(f func(err error) error) 
 type GetServiceAccountRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project        string // path: "project"
 	ServiceAccount string // path: "serviceAccount"
 }
@@ -205,8 +205,8 @@ func (m *GetServiceAccountRequest) SetProject(project string) {
 type GetServiceAccountResponse struct {
 	Code        int
 	Response200 *model.ServiceAccountResponse
-	Response400 *common.InvalidRequestError
-	Response404 *common.BaseError
+	Response400 *common.ApiError
+	Response404 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -243,7 +243,7 @@ func (m *GetServiceAccountResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertServiceAccountRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project        string                      // path: "project"
 	ServiceAccount string                      // path: "serviceAccount"
 	Body           model.ServiceAccountRequest // body
@@ -272,7 +272,7 @@ func (m *UpsertServiceAccountRequest) getServiceAccountRequest() GetServiceAccou
 type UpdateServiceAccountRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project        string                            // path: "project"
 	ServiceAccount string                            // path: "serviceAccount"
 	Body           model.UpdateServiceAccountRequest // body
@@ -302,9 +302,9 @@ type UpsertServiceAccountResponse struct {
 	Code        int
 	Response200 *model.ServiceAccountResponse
 	Response201 *model.ServiceAccountResponse
-	Response400 *common.InvalidRequestError
-	Response404 *common.BaseError
-	Response409 *common.BaseError
+	Response400 *common.ApiError
+	Response404 *common.ApiError
+	Response409 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error

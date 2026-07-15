@@ -9,7 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Описание subnet пользователя, в который будет трансляция из service-vpc.
+// Описание подсети пользователя, используемой для подключения к узлам.
 // Real OAPI model name: PostgresNetworkAddressSpec
 type PostgresNetworkAddressSpecRequest struct {
 	Subnet vpc.SubnetRef `json:"subnet" yaml:"subnet"`

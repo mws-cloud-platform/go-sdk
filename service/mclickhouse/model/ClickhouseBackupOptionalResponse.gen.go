@@ -111,7 +111,7 @@ func (m *ClickhouseBackupOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Metadata.IsSet() {
+	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		if err := m.Metadata.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Metadata", err)
 		}
@@ -124,7 +124,7 @@ func (m *ClickhouseBackupOptionalResponse) Parse(ctx context.Context) error {
 // Real OAPI model name: ClickhouseBackupMetadata
 type ClickhouseBackupMetadataOptionalResponse struct {
 	common.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
-	// ссылка на типизированный референс
+	// Ссылка на типизированный референс.
 	Id *mclickhouse.ClickhouseBackupID `json:"id,omitempty" yaml:"id,omitempty"`
 }
 

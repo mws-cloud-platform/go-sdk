@@ -33,10 +33,8 @@ func (m *ClickhouseClusterInstanceOptionalResponse) Encode(e *jx.Encoder) error 
 }
 
 func (m *ClickhouseClusterInstanceOptionalResponse) encodeFields(e *jx.Encoder) error {
-	if m.Name.IsSet() {
-		e.FieldStart("name")
-		e.Str(m.Name.Value)
-	}
+	e.FieldStart("name")
+	e.Str(m.Name)
 
 	if m.Count.IsSet() {
 		e.FieldStart("count")
@@ -74,7 +72,7 @@ func (m *ClickhouseClusterInstanceOptionalResponse) Decode(d *jx.Decoder) error 
 				return err
 			}
 
-			m.Name.SetTo(v)
+			m.Name = v
 			return nil
 		case "count":
 			v, err := decode.Int(d)

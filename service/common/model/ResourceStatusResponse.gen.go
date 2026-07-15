@@ -4,7 +4,7 @@ package model
 
 // Real OAPI model name: ResourceStatus
 type ResourceStatusResponse struct {
-	// Информация о статусе реконсиляции
+	// Информация о статусе реконсиляции.
 	Ready ResourceStatusReadyResponse `json:"ready" yaml:"ready"`
 }
 

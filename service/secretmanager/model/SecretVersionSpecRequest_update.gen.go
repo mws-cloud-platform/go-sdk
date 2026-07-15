@@ -3,6 +3,8 @@
 package model
 
 import (
+	"maps"
+
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
@@ -12,12 +14,20 @@ import (
 type UpdateSecretVersionSpecRequest struct {
 	// Версия секрета активна/неактивна
 	Active optional.Optional[bool] `json:"active" yaml:"active"`
+	// Содержимое секрета
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Data optional.Optional[UpdateSecretVersionDataSpec] `json:"data" yaml:"data"`
 }
 
 func (m *SecretVersionSpecRequest) AsUpdateModel() UpdateSecretVersionSpecRequest {
 	var u UpdateSecretVersionSpecRequest
 	if m.Active != nil {
 		u.Active = optional.NewOptional(m.GetActiveOr(false))
+	}
+	if m.Data != nil {
+		u.Data = optional.NewOptional(m.Data.AsUpdateModel())
 	}
 	return u
 }
@@ -28,6 +38,7 @@ func (m *SecretVersionSpecRequest) Diff(src *SecretVersionSpecRequest) UpdateSec
 	upd := UpdateSecretVersionSpecRequest{}
 	if !nilDiffers {
 		upd.Active = m.diffActive(src)
+		upd.Data = m.diffData(src)
 	}
 	return upd
 }
@@ -41,15 +52,27 @@ func (m *SecretVersionSpecRequest) WithChanges(u UpdateSecretVersionSpecRequest)
 	if u.Active.IsSet() {
 		out.Active = ptr.Get(u.Active.Value)
 	}
+	if u.Data.IsSet() {
+		out.Data = SecretVersionDataSpec(maps.Clone(u.Data.Value))
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateSecretVersionSpecRequest) HasChanges() bool {
-	return m.Active.Set
+	return m.Active.Set ||
+		m.Data.Set
 }
 
 func (m *SecretVersionSpecRequest) diffActive(src *SecretVersionSpecRequest) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetActive(), m.GetActive(), nilDiffers)
+}
+
+func (m *SecretVersionSpecRequest) diffData(src *SecretVersionSpecRequest) optional.Optional[UpdateSecretVersionDataSpec] {
+	value, hasChanges := commonclient.GetChangesMapPrimitive(src.GetData(), m.GetData())
+	return optional.Optional[UpdateSecretVersionDataSpec]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }

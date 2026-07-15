@@ -71,7 +71,7 @@ func (m *UpdateClusterPublicEndpointSpecOrRefRequest) Parse(ctx context.Context)
 		return nil
 	}
 
-	if m.Ref.IsSet() {
+	if m.Ref.IsSet() && !m.Ref.IsNull() {
 		if err := m.Ref.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Ref", err)
 		}

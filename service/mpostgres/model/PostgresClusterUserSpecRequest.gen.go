@@ -13,6 +13,11 @@ type PostgresClusterUserSpecRequest struct {
 	Role *PostgresUserRole `json:"role,omitempty" yaml:"role,omitempty"`
 	// Дополнительные роли пользователя
 	AdditionalRoles []PostgresUserAdditionalRoleRequest `json:"additionalRoles,omitempty" yaml:"additionalRoles,omitempty"`
+	// - `SCOPE_BASED`: Роли пользователя управляются в зависимости от области видимости роли.
+	//   - роли на конкретные базы данных управляются через API привязок роли;
+	//   - глобальные роли (роли, которые применяются во всех базах данных кластера) управляются через спецификацию пользователя.
+	//     Политика введена для обратной совместимости.
+	AccessControlPolicy *PostgresUserAccessControlPolicy `json:"accessControlPolicy,omitempty" yaml:"accessControlPolicy,omitempty"`
 }
 
 func (m *PostgresClusterUserSpecRequest) GetPassword() string {
@@ -62,6 +67,24 @@ func (m *PostgresClusterUserSpecRequest) GetAdditionalRolesOr(val []PostgresUser
 	return val
 }
 
+func (m *PostgresClusterUserSpecRequest) GetAccessControlPolicy() *PostgresUserAccessControlPolicy {
+	if m != nil {
+		return m.AccessControlPolicy
+	}
+	return nil
+}
+
+func (m *PostgresClusterUserSpecRequest) SetAccessControlPolicy(val *PostgresUserAccessControlPolicy) {
+	m.AccessControlPolicy = val
+}
+
+func (m *PostgresClusterUserSpecRequest) GetAccessControlPolicyOr(val PostgresUserAccessControlPolicy) PostgresUserAccessControlPolicy {
+	if m != nil && m.AccessControlPolicy != nil {
+		return *m.AccessControlPolicy
+	}
+	return val
+}
+
 func (m *PostgresClusterUserSpecRequest) Clone() *PostgresClusterUserSpecRequest {
 	if m == nil {
 		return nil
@@ -77,6 +100,10 @@ func (m *PostgresClusterUserSpecRequest) Clone() *PostgresClusterUserSpecRequest
 		for i, v := range m.AdditionalRoles {
 			clone.AdditionalRoles[i] = *v.Clone()
 		}
+	}
+	if m.AccessControlPolicy != nil {
+		cloneAccessControlPolicy := *m.AccessControlPolicy
+		clone.AccessControlPolicy = &cloneAccessControlPolicy
 	}
 	return &clone
 }

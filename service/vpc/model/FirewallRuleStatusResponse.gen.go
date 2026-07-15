@@ -10,6 +10,7 @@ import (
 // Real OAPI model name: FirewallRuleStatus
 type FirewallRuleStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
+
 	// Эффективный приоритет правила.
 	Priority *int32 `json:"priority,omitempty" yaml:"priority,omitempty"`
 	// Состояние правила. True - правило активно и контролирует поведение трафика. False - правило не активно.
@@ -58,6 +59,7 @@ func (m *FirewallRuleStatusResponse) Clone() *FirewallRuleStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
+
 	if m.Priority != nil {
 		clonePriority := *m.Priority
 		clone.Priority = &clonePriority

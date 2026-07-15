@@ -10,12 +10,18 @@ import (
 )
 
 type UpdateOneToOneNatSpecRequest struct {
+	// Группирующий элемент для всего, что касается внутренних ресурсов.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Internal optional.Optional[UpdateOneToOneNatSpecInternalRequest] `json:"internal" yaml:"internal"`
 	// Группирующий элемент для всего что, касается внешней части (ресурсов, доступных извне).
 	External optional.Optional[UpdateOneToOneNatSpecExternalRequest] `json:"external" yaml:"external"`
 }
 
 func (m *OneToOneNatSpecRequest) AsUpdateModel() UpdateOneToOneNatSpecRequest {
 	var u UpdateOneToOneNatSpecRequest
+	u.Internal = optional.NewOptional(m.Internal.AsUpdateModel())
 	u.External = optional.NewOptional(m.External.AsUpdateModel())
 	return u
 }
@@ -25,6 +31,7 @@ func (m *OneToOneNatSpecRequest) Diff(src *OneToOneNatSpecRequest) UpdateOneToOn
 	nilDiffers := src != nil && m == nil
 	upd := UpdateOneToOneNatSpecRequest{}
 	if !nilDiffers {
+		upd.Internal = m.diffInternal(src)
 		upd.External = m.diffExternal(src)
 	}
 	return upd
@@ -36,6 +43,9 @@ func (m *OneToOneNatSpecRequest) WithChanges(u UpdateOneToOneNatSpecRequest) One
 		out = *m
 	}
 
+	if u.Internal.IsSet() {
+		out.Internal = out.Internal.WithChanges(u.Internal.Value)
+	}
 	if u.External.IsSet() {
 		out.External = out.External.WithChanges(u.External.Value)
 	}
@@ -44,12 +54,19 @@ func (m *OneToOneNatSpecRequest) WithChanges(u UpdateOneToOneNatSpecRequest) One
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateOneToOneNatSpecRequest) HasChanges() bool {
-	return m.External.Set
+	return m.Internal.Set ||
+		m.External.Set
 }
 
 func (m *UpdateOneToOneNatSpecRequest) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if m.Internal.IsSet() {
+		if err := m.Internal.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Internal", err)
+		}
 	}
 
 	if m.External.IsSet() {
@@ -59,6 +76,16 @@ func (m *UpdateOneToOneNatSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (m *OneToOneNatSpecRequest) diffInternal(src *OneToOneNatSpecRequest) optional.Optional[UpdateOneToOneNatSpecInternalRequest] {
+	from := src.GetInternal()
+	to := m.GetInternal()
+	value := to.Diff(&from)
+	return optional.Optional[UpdateOneToOneNatSpecInternalRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 func (m *OneToOneNatSpecRequest) diffExternal(src *OneToOneNatSpecRequest) optional.Optional[UpdateOneToOneNatSpecExternalRequest] {

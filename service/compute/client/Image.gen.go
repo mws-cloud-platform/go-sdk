@@ -52,7 +52,7 @@ type Image interface {
 type LatestImageRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Семейство образа
 	Family string // query: "family"
@@ -115,7 +115,7 @@ func (m *LatestImageResponse) SetErrorWrapper(f func(err error) error) {
 type ListImagesRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -323,7 +323,7 @@ func (m *ListImagesResponse200) Decode(d *jx.Decoder) error {
 type DeleteImageRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к образу
 	Image string // path: "image"
@@ -398,7 +398,7 @@ func (m *DeleteImageResponse) SetErrorWrapper(f func(err error) error) {
 type GetImageRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к образу
 	Image string // path: "image"
@@ -463,7 +463,7 @@ func (m *GetImageResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertImageRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к образу
 	Image string // path: "image"
@@ -496,7 +496,7 @@ func (m *UpsertImageRequest) getImageRequest() GetImageRequest {
 type UpdateImageRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к образу
 	Image string // path: "image"

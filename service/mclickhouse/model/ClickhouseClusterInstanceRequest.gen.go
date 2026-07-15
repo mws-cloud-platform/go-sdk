@@ -13,32 +13,25 @@ import (
 // Описание инстанса кластера.
 // Real OAPI model name: ClickhouseClusterInstance
 type ClickhouseClusterInstanceRequest struct {
-	// -> Имя инстанса в шарде. В случае count>1, имя формируется как name-{replicaIndex}, где replicaIndex имеет сквозную нумерацию в шарде.
-	Name *string `json:"name,omitempty" yaml:"name,omitempty"`
-	// Количество инстансов в зоне доступности
+	// -> Имя инстанса в шарде. В случае count>1, имя формируется как name{replicaIndex}, где replicaIndex имеет сквозную нумерацию в рамках имени инстанса.
+	Name string `json:"name" yaml:"name"`
+	// Количество инстансов в зоне доступности.
 	Count *int `json:"count,omitempty" yaml:"count,omitempty"`
-	// Зона доступности
+	// Зона доступности.
 	Zone rm.ZoneRef `json:"zone" yaml:"zone"`
 	// Описание эдпойнтов инстансов.
 	Endpoints []ClickhouseEndpointRequest `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 }
 
-func (m *ClickhouseClusterInstanceRequest) GetName() *string {
+func (m *ClickhouseClusterInstanceRequest) GetName() string {
 	if m != nil {
 		return m.Name
 	}
-	return nil
+	return ""
 }
 
-func (m *ClickhouseClusterInstanceRequest) SetName(val *string) {
+func (m *ClickhouseClusterInstanceRequest) SetName(val string) {
 	m.Name = val
-}
-
-func (m *ClickhouseClusterInstanceRequest) GetNameOr(val string) string {
-	if m != nil && m.Name != nil {
-		return *m.Name
-	}
-	return val
 }
 
 func (m *ClickhouseClusterInstanceRequest) GetCount() *int {
@@ -94,10 +87,6 @@ func (m *ClickhouseClusterInstanceRequest) Clone() *ClickhouseClusterInstanceReq
 	}
 
 	clone := *m
-	if m.Name != nil {
-		cloneName := *m.Name
-		clone.Name = &cloneName
-	}
 	if m.Count != nil {
 		cloneCount := *m.Count
 		clone.Count = &cloneCount

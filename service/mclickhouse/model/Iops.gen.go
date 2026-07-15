@@ -2,5 +2,5 @@
 
 package model
 
-// IOPS
+// IOPS.
 type Iops int32

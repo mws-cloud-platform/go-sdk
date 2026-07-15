@@ -32,11 +32,15 @@ func (m *CertificateManagedSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *CertificateManagedSpecRequest) encodeFields(e *jx.Encoder) error {
-	e.FieldStart("preferredChallengeType")
-	m.PreferredChallengeType.Encode(e)
+	if m.PreferredChallengeType != nil {
+		e.FieldStart("preferredChallengeType")
+		m.PreferredChallengeType.Encode(e)
+	}
 
-	e.FieldStart("provider")
-	m.Provider.Encode(e)
+	if m.Provider != nil {
+		e.FieldStart("provider")
+		m.Provider.Encode(e)
+	}
 
 	e.FieldStart("domains")
 	e.ArrStart()
@@ -57,9 +61,7 @@ func (m *CertificateManagedSpecRequest) Decode(d *jx.Decoder) error {
 	}
 
 	requiredFilled := map[string]bool{
-		"preferredChallengeType": false,
-		"provider":               false,
-		"domains":                false,
+		"domains": false,
 	}
 	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -69,8 +71,7 @@ func (m *CertificateManagedSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.PreferredChallengeType = v
-			requiredFilled["preferredChallengeType"] = true
+			m.PreferredChallengeType = &v
 			return nil
 		case "provider":
 			var v CertificateProvider
@@ -78,8 +79,7 @@ func (m *CertificateManagedSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Provider = v
-			requiredFilled["provider"] = true
+			m.Provider = &v
 			return nil
 		case "domains":
 			c := make([]string, 0)

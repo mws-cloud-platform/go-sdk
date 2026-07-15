@@ -60,9 +60,5 @@ func (m *ClickhouseInstanceHWResourcesRequest) Parse(ctx context.Context) error 
 		return reserrors.NewPathAccumulatorError("VmType", err)
 	}
 
-	if err := m.Disk.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Disk", err)
-	}
-
 	return nil
 }

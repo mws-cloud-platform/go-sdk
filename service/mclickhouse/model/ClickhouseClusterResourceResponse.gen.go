@@ -4,29 +4,29 @@ package model
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"slices"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Параметры объекта кластера.
 // Real OAPI model name: ClickhouseClusterResource
 type ClickhouseClusterResourceResponse struct {
-	// Значение включен/выключен кластер.
+	// Состояние кластера — включен или выключен.
 	Active bool `json:"active" yaml:"active"`
 	// Версия продукта.
 	Version string `json:"version" yaml:"version"`
-	// Список эндпойнтов для подключения к кластеру
+	// Список эндпойнтов для подключения к кластеру.
 	Endpoints []ClickhouseEndpointResourceResponse `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 	// Описание координаторов кластера.
 	Coordinator *ClickhouseClusterCoordinatorResourceResponse `json:"coordinator,omitempty" yaml:"coordinator,omitempty"`
 	// Описание шардов кластера.
 	Shards []ClickhouseClusterShardResourceResponse `json:"shards" yaml:"shards"`
 	// Настройки Clickhouse.
-	Config map[string]json.RawMessage `json:"config,omitempty" yaml:"config,omitempty"`
+	Config map[string]jsonapimodels.RawMessageNotNull `json:"config,omitempty" yaml:"config,omitempty"`
 	// Конфигурация схемы хранилищ ClickHouse.
 	Storage           *ClickhouseStorageConfigurationResponse `json:"storage,omitempty" yaml:"storage,omitempty"`
 	MaintenanceWindow common.MaintenanceWindowResponse        `json:"maintenanceWindow" yaml:"maintenanceWindow"`
@@ -103,18 +103,18 @@ func (m *ClickhouseClusterResourceResponse) SetShards(val []ClickhouseClusterSha
 	m.Shards = val
 }
 
-func (m *ClickhouseClusterResourceResponse) GetConfig() map[string]json.RawMessage {
+func (m *ClickhouseClusterResourceResponse) GetConfig() map[string]jsonapimodels.RawMessageNotNull {
 	if m != nil {
 		return m.Config
 	}
 	return nil
 }
 
-func (m *ClickhouseClusterResourceResponse) SetConfig(val map[string]json.RawMessage) {
+func (m *ClickhouseClusterResourceResponse) SetConfig(val map[string]jsonapimodels.RawMessageNotNull) {
 	m.Config = val
 }
 
-func (m *ClickhouseClusterResourceResponse) GetConfigOr(val map[string]json.RawMessage) map[string]json.RawMessage {
+func (m *ClickhouseClusterResourceResponse) GetConfigOr(val map[string]jsonapimodels.RawMessageNotNull) map[string]jsonapimodels.RawMessageNotNull {
 	if m != nil && m.Config != nil {
 		return m.Config
 	}
@@ -181,7 +181,7 @@ func (m *ClickhouseClusterResourceResponse) Clone() *ClickhouseClusterResourceRe
 		}
 	}
 	if m.Config != nil {
-		clone.Config = make(map[string]json.RawMessage, len(m.Config))
+		clone.Config = make(map[string]jsonapimodels.RawMessageNotNull, len(m.Config))
 		for k, v := range m.Config {
 			clone.Config[k] = slices.Clone(v)
 		}

@@ -20,6 +20,11 @@ type UpdatePostgresClusterUserSpecRequest struct {
 	Role optional.Optional[PostgresUserRole] `json:"role" yaml:"role"`
 	// Дополнительные роли пользователя
 	AdditionalRoles optional.Optional[[]UpdatePostgresUserAdditionalRoleRequest] `json:"additionalRoles" yaml:"additionalRoles"`
+	// - `SCOPE_BASED`: Роли пользователя управляются в зависимости от области видимости роли.
+	//   - роли на конкретные базы данных управляются через API привязок роли;
+	//   - глобальные роли (роли, которые применяются во всех базах данных кластера) управляются через спецификацию пользователя.
+	//     Политика введена для обратной совместимости.
+	AccessControlPolicy optional.Optional[PostgresUserAccessControlPolicy] `json:"accessControlPolicy" yaml:"accessControlPolicy"`
 }
 
 func (m *PostgresClusterUserSpecRequest) AsUpdateModel() UpdatePostgresClusterUserSpecRequest {
@@ -40,6 +45,9 @@ func (m *PostgresClusterUserSpecRequest) AsUpdateModel() UpdatePostgresClusterUs
 			return tmp
 		}())
 	}
+	if m.AccessControlPolicy != nil {
+		u.AccessControlPolicy = optional.NewOptional(m.GetAccessControlPolicyOr(""))
+	}
 	return u
 }
 
@@ -51,6 +59,7 @@ func (m *PostgresClusterUserSpecRequest) Diff(src *PostgresClusterUserSpecReques
 		upd.Password = m.diffPassword(src)
 		upd.Role = m.diffRole(src)
 		upd.AdditionalRoles = m.diffAdditionalRoles(src)
+		upd.AccessControlPolicy = m.diffAccessControlPolicy(src)
 	}
 	return upd
 }
@@ -70,6 +79,9 @@ func (m *PostgresClusterUserSpecRequest) WithChanges(u UpdatePostgresClusterUser
 	if u.AdditionalRoles.IsSet() {
 		out.AdditionalRoles = merge.InapplicableSlice(u.AdditionalRoles.Value, (*PostgresUserAdditionalRoleRequest).WithChanges)
 	}
+	if u.AccessControlPolicy.IsSet() {
+		out.AccessControlPolicy = ptr.Get(u.AccessControlPolicy.Value)
+	}
 	return out
 }
 
@@ -77,7 +89,8 @@ func (m *PostgresClusterUserSpecRequest) WithChanges(u UpdatePostgresClusterUser
 func (m UpdatePostgresClusterUserSpecRequest) HasChanges() bool {
 	return m.Password.Set ||
 		m.Role.Set ||
-		m.AdditionalRoles.Set
+		m.AdditionalRoles.Set ||
+		m.AccessControlPolicy.Set
 }
 
 func (m *PostgresClusterUserSpecRequest) diffPassword(src *PostgresClusterUserSpecRequest) optional.Optional[string] {
@@ -102,4 +115,9 @@ func (m *PostgresClusterUserSpecRequest) diffAdditionalRoles(src *PostgresCluste
 		Value: value,
 		Set:   hasChanges,
 	}
+}
+
+func (m *PostgresClusterUserSpecRequest) diffAccessControlPolicy(src *PostgresClusterUserSpecRequest) optional.Optional[PostgresUserAccessControlPolicy] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetAccessControlPolicy(), m.GetAccessControlPolicy(), nilDiffers)
 }

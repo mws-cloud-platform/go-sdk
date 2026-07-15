@@ -13,15 +13,17 @@ import (
 // Шард кластера.
 // Real OAPI model name: ClickhouseClusterShardResource
 type ClickhouseClusterShardResourceResponse struct {
-	// Идентификатор шарда
+	// Идентификатор шарда.
 	Id mclickhouse.ClickhouseClusterShardID `json:"id" yaml:"id"`
 	// Имя шарда, которому будут принадлежать инстансы.
 	Name *string `json:"name,omitempty" yaml:"name,omitempty"`
-	// Вес шарда
+	// Вес шарда.
 	Weight int `json:"weight" yaml:"weight"`
+	// Индекс шарда в кластере Clickhouse, который будет указан в настройках кластера в макросе `shard`.  Влияет на очередность исполнения распределенных запросов в кластере.
+	Index *int `json:"index,omitempty" yaml:"index,omitempty"`
 	// Параметры виртуальной машины, где будут работать инстансы Clickhouse данного шарда.
 	Resources ClickhouseInstanceHWResourcesResponse `json:"resources" yaml:"resources"`
-	// Список эндпойнтов для подключения к шарду
+	// Список эндпойнтов для подключения к шарду.
 	Endpoints []ClickhouseEndpointResourceResponse `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 	// Описание инстансов шарда.
 	Instances []ClickhouseClusterInstanceResourceResponse `json:"instances" yaml:"instances"`
@@ -65,6 +67,24 @@ func (m *ClickhouseClusterShardResourceResponse) GetWeight() int {
 
 func (m *ClickhouseClusterShardResourceResponse) SetWeight(val int) {
 	m.Weight = val
+}
+
+func (m *ClickhouseClusterShardResourceResponse) GetIndex() *int {
+	if m != nil {
+		return m.Index
+	}
+	return nil
+}
+
+func (m *ClickhouseClusterShardResourceResponse) SetIndex(val *int) {
+	m.Index = val
+}
+
+func (m *ClickhouseClusterShardResourceResponse) GetIndexOr(val int) int {
+	if m != nil && m.Index != nil {
+		return *m.Index
+	}
+	return val
 }
 
 func (m *ClickhouseClusterShardResourceResponse) GetResources() ClickhouseInstanceHWResourcesResponse {
@@ -117,6 +137,10 @@ func (m *ClickhouseClusterShardResourceResponse) Clone() *ClickhouseClusterShard
 	if m.Name != nil {
 		cloneName := *m.Name
 		clone.Name = &cloneName
+	}
+	if m.Index != nil {
+		cloneIndex := *m.Index
+		clone.Index = &cloneIndex
 	}
 	clone.Resources = *m.Resources.Clone()
 	if m.Endpoints != nil {

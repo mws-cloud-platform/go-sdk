@@ -16,6 +16,9 @@ func ClickhouseClusterSpecRequestToOptionalResponse(request *ClickhouseClusterSp
 		response.Active = optional.NewOptional(*request.Active)
 	}
 	response.Version = request.Version
+	if request.Region != nil {
+		response.Region = optional.NewOptional(*request.Region)
+	}
 	for _, e := range request.Endpoints {
 		tmp, err := ClickhouseEndpointRequestToOptionalResponse(&e)
 		if err != nil {

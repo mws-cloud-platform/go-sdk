@@ -4,20 +4,45 @@ package model
 
 import (
 	"context"
+	"fmt"
 
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateClickhouseClusterCoordinatorRequest struct {
-	// Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. В случае наличия только одного хоста,
-	// Zookeeper/Clickhouse Keeper не поднимаются при отсутствии параметра, в противном случае, параметр должен быть задан.
+	// Тип координатора. Если не указано, то при наличии более одного хоста, используется Clickhouse Keeper.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Type optional.Optional[ClickhouseCoordinatorType] `json:"type" yaml:"type"`
+	// Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. Необязательный параметр в standalone-конфигурации.
 	Resources optional.Optional[UpdateClickhouseCoordinatorHWResourcesRequest] `json:"resources" yaml:"resources"`
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Instances optional.Optional[[]UpdateClickhouseClusterCoordinatorInstanceRequest] `json:"instances" yaml:"instances"`
 }
 
 func (m *ClickhouseClusterCoordinatorRequest) AsUpdateModel() UpdateClickhouseClusterCoordinatorRequest {
 	var u UpdateClickhouseClusterCoordinatorRequest
+	if m.Type != nil {
+		u.Type = optional.NewOptional(m.GetTypeOr(""))
+	}
 	u.Resources = optional.NewOptional(m.Resources.AsUpdateModel())
+	u.Instances = optional.NewOptional(func() []UpdateClickhouseClusterCoordinatorInstanceRequest {
+		var tmp []UpdateClickhouseClusterCoordinatorInstanceRequest
+		if m.GetInstances() != nil {
+			tmp = make([]UpdateClickhouseClusterCoordinatorInstanceRequest, 0, len(m.GetInstances()))
+		}
+		for _, val := range m.GetInstances() {
+			tmp = append(tmp, val.AsUpdateModel())
+		}
+		return tmp
+	}())
 	return u
 }
 
@@ -26,7 +51,9 @@ func (m *ClickhouseClusterCoordinatorRequest) Diff(src *ClickhouseClusterCoordin
 	nilDiffers := src != nil && m == nil
 	upd := UpdateClickhouseClusterCoordinatorRequest{}
 	if !nilDiffers {
+		upd.Type = m.diffType(src)
 		upd.Resources = m.diffResources(src)
+		upd.Instances = m.diffInstances(src)
 	}
 	return upd
 }
@@ -37,15 +64,23 @@ func (m *ClickhouseClusterCoordinatorRequest) WithChanges(u UpdateClickhouseClus
 		out = *m
 	}
 
+	if u.Type.IsSet() {
+		out.Type = ptr.Get(u.Type.Value)
+	}
 	if u.Resources.IsSet() {
 		out.Resources = out.Resources.WithChanges(u.Resources.Value)
+	}
+	if u.Instances.IsSet() {
+		out.Instances = merge.InapplicableSlice(u.Instances.Value, (*ClickhouseClusterCoordinatorInstanceRequest).WithChanges)
 	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateClickhouseClusterCoordinatorRequest) HasChanges() bool {
-	return m.Resources.Set
+	return m.Type.Set ||
+		m.Resources.Set ||
+		m.Instances.Set
 }
 
 func (m *UpdateClickhouseClusterCoordinatorRequest) Parse(ctx context.Context) error {
@@ -59,7 +94,20 @@ func (m *UpdateClickhouseClusterCoordinatorRequest) Parse(ctx context.Context) e
 		}
 	}
 
+	if m.Instances.IsSet() {
+		for index := range m.Instances.Value {
+			if err := m.Instances.Value[index].Parse(ctx); err != nil {
+				return reserrors.NewPathAccumulatorError("Instances"+fmt.Sprint("[", index, "]"), err)
+			}
+		}
+	}
+
 	return nil
+}
+
+func (m *ClickhouseClusterCoordinatorRequest) diffType(src *ClickhouseClusterCoordinatorRequest) optional.Optional[ClickhouseCoordinatorType] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetType(), m.GetType(), nilDiffers)
 }
 
 func (m *ClickhouseClusterCoordinatorRequest) diffResources(src *ClickhouseClusterCoordinatorRequest) optional.Optional[UpdateClickhouseCoordinatorHWResourcesRequest] {
@@ -69,5 +117,19 @@ func (m *ClickhouseClusterCoordinatorRequest) diffResources(src *ClickhouseClust
 	return optional.Optional[UpdateClickhouseCoordinatorHWResourcesRequest]{
 		Value: value,
 		Set:   value.HasChanges(),
+	}
+}
+
+func (m *ClickhouseClusterCoordinatorRequest) diffInstances(src *ClickhouseClusterCoordinatorRequest) optional.Optional[[]UpdateClickhouseClusterCoordinatorInstanceRequest] {
+	diffFunc := func(fromItem, toItem ClickhouseClusterCoordinatorInstanceRequest, fromNil bool) UpdateClickhouseClusterCoordinatorInstanceRequest {
+		if fromNil {
+			return toItem.Diff(nil)
+		}
+		return toItem.Diff(&fromItem)
+	}
+	value, hasChanges := commonclient.GetChangesArrayObject(src.GetInstances(), m.GetInstances(), diffFunc)
+	return optional.Optional[[]UpdateClickhouseClusterCoordinatorInstanceRequest]{
+		Value: value,
+		Set:   hasChanges,
 	}
 }

@@ -3,29 +3,63 @@
 package model
 
 import (
+	"context"
+
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 type UpdateDiskSpecRequest struct {
+	// Зона доступности (ЦОД)
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Zone optional.Optional[string] `json:"zone" yaml:"zone"`
 	// Размер диска
 	Size optional.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
+	// Источник для создания диска
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Source optional.OptionalNil[UpdateDiskSpecSourceRequest] `json:"source" yaml:"source"`
+	// ID типа диска
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	DiskType optional.Optional[compute.DiskTypeRef] `json:"diskType" yaml:"diskType"`
 	// Запрашиваемое пользователем количество операций ввода-вывода в секунду (IOPS)
 	Iops optional.Optional[Iops] `json:"iops" yaml:"iops"`
+	// Размер блока диска
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	BlockSize optional.Optional[bytesize.ByteSize] `json:"blockSize" yaml:"blockSize"`
 	// Тип операционной системы
 	OsType optional.Optional[OsType] `json:"osType" yaml:"osType"`
 }
 
 func (m *DiskSpecRequest) AsUpdateModel() UpdateDiskSpecRequest {
 	var u UpdateDiskSpecRequest
+	u.Zone = optional.NewOptional(m.GetZone())
 	if m.Size != nil {
 		u.Size = optional.NewOptional(m.GetSizeOr(bytesize.ByteSize{}))
 	}
+	if m.Source != nil {
+		u.Source = optional.NewOptionalNil(m.Source.AsUpdateModel())
+	}
+	if m.DiskType != nil {
+		u.DiskType = optional.NewOptional(m.GetDiskTypeOr(compute.DiskTypeRef{}))
+	}
 	if m.Iops != nil {
 		u.Iops = optional.NewOptional(m.GetIopsOr(0))
+	}
+	if m.BlockSize != nil {
+		u.BlockSize = optional.NewOptional(m.GetBlockSizeOr(bytesize.ByteSize{}))
 	}
 	if m.OsType != nil {
 		u.OsType = optional.NewOptional(m.GetOsTypeOr(""))
@@ -38,8 +72,12 @@ func (m *DiskSpecRequest) Diff(src *DiskSpecRequest) UpdateDiskSpecRequest {
 	nilDiffers := src != nil && m == nil
 	upd := UpdateDiskSpecRequest{}
 	if !nilDiffers {
+		upd.Zone = m.diffZone(src)
 		upd.Size = m.diffSize(src)
+		upd.Source = m.diffSource(src)
+		upd.DiskType = m.diffDiskType(src)
 		upd.Iops = m.diffIops(src)
+		upd.BlockSize = m.diffBlockSize(src)
 		upd.OsType = m.diffOsType(src)
 	}
 	return upd
@@ -51,11 +89,25 @@ func (m *DiskSpecRequest) WithChanges(u UpdateDiskSpecRequest) DiskSpecRequest {
 		out = *m
 	}
 
+	if u.Zone.IsSet() {
+		out.Zone = u.Zone.Value
+	}
 	if u.Size.IsSet() {
 		out.Size = ptr.Get(u.Size.Value)
 	}
+	if u.Source.IsSet() {
+		out.Source = ptr.Get(out.Source.WithChanges(u.Source.Value))
+	} else if u.Source.IsNull() {
+		out.Source = nil
+	}
+	if u.DiskType.IsSet() {
+		out.DiskType = ptr.Get(u.DiskType.Value)
+	}
 	if u.Iops.IsSet() {
 		out.Iops = ptr.Get(u.Iops.Value)
+	}
+	if u.BlockSize.IsSet() {
+		out.BlockSize = ptr.Get(u.BlockSize.Value)
 	}
 	if u.OsType.IsSet() {
 		out.OsType = ptr.Get(u.OsType.Value)
@@ -65,9 +117,38 @@ func (m *DiskSpecRequest) WithChanges(u UpdateDiskSpecRequest) DiskSpecRequest {
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateDiskSpecRequest) HasChanges() bool {
-	return m.Size.Set ||
+	return m.Zone.Set ||
+		m.Size.Set ||
+		m.Source.Set ||
+		m.DiskType.Set ||
 		m.Iops.Set ||
+		m.BlockSize.Set ||
 		m.OsType.Set
+}
+
+func (m *UpdateDiskSpecRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if m.Source.IsSet() && !m.Source.IsNull() {
+		if err := m.Source.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Source", err)
+		}
+	}
+
+	if m.DiskType.IsSet() {
+		if err := m.DiskType.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("DiskType", err)
+		}
+	}
+
+	return nil
+}
+
+func (m *DiskSpecRequest) diffZone(src *DiskSpecRequest) optional.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveRequired(src.GetZone(), m.GetZone(), nilDiffers)
 }
 
 func (m *DiskSpecRequest) diffSize(src *DiskSpecRequest) optional.Optional[bytesize.ByteSize] {
@@ -75,12 +156,135 @@ func (m *DiskSpecRequest) diffSize(src *DiskSpecRequest) optional.Optional[bytes
 	return commonclient.DiffEquatableIfaceNonRequired(src.GetSize(), m.GetSize(), nilDiffers)
 }
 
+func (m *DiskSpecRequest) diffSource(src *DiskSpecRequest) optional.OptionalNil[UpdateDiskSpecSourceRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetSource().Diff(src.GetSource())
+	return optional.OptionalNil[UpdateDiskSpecSourceRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
+}
+
+func (m *DiskSpecRequest) diffDiskType(src *DiskSpecRequest) optional.Optional[compute.DiskTypeRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetDiskType(), m.GetDiskType(), nilDiffers)
+}
+
 func (m *DiskSpecRequest) diffIops(src *DiskSpecRequest) optional.Optional[Iops] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetIops(), m.GetIops(), nilDiffers)
 }
 
+func (m *DiskSpecRequest) diffBlockSize(src *DiskSpecRequest) optional.Optional[bytesize.ByteSize] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffEquatableIfaceNonRequired(src.GetBlockSize(), m.GetBlockSize(), nilDiffers)
+}
+
 func (m *DiskSpecRequest) diffOsType(src *DiskSpecRequest) optional.Optional[OsType] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetOsType(), m.GetOsType(), nilDiffers)
+}
+
+type UpdateDiskSpecSourceRequest struct {
+	// ID образа
+	Image optional.Optional[compute.ImageRef] `json:"image" yaml:"image"`
+	// ID снимка
+	//
+	// Deprecated: Отказываемся в пользу diskBackup
+	Snapshot optional.Optional[compute.SnapshotRef] `json:"snapshot" yaml:"snapshot"`
+	// ID резервной копии диска
+	DiskBackup optional.Optional[compute.DiskBackupRef] `json:"diskBackup" yaml:"diskBackup"`
+}
+
+func (m *DiskSpecSourceRequest) AsUpdateModel() UpdateDiskSpecSourceRequest {
+	var u UpdateDiskSpecSourceRequest
+	if m.Image != nil {
+		u.Image = optional.NewOptional(m.GetImageOr(compute.ImageRef{}))
+	}
+	if m.Snapshot != nil {
+		u.Snapshot = optional.NewOptional(m.GetSnapshotOr(compute.SnapshotRef{}))
+	}
+	if m.DiskBackup != nil {
+		u.DiskBackup = optional.NewOptional(m.GetDiskBackupOr(compute.DiskBackupRef{}))
+	}
+	return u
+}
+
+// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
+func (m *DiskSpecSourceRequest) Diff(src *DiskSpecSourceRequest) UpdateDiskSpecSourceRequest {
+	nilDiffers := src != nil && m == nil
+	upd := UpdateDiskSpecSourceRequest{}
+	if !nilDiffers {
+		upd.Image = m.diffImage(src)
+		upd.Snapshot = m.diffSnapshot(src)
+		upd.DiskBackup = m.diffDiskBackup(src)
+	}
+	return upd
+}
+
+func (m *DiskSpecSourceRequest) WithChanges(u UpdateDiskSpecSourceRequest) DiskSpecSourceRequest {
+	var out DiskSpecSourceRequest
+	if m != nil {
+		out = *m
+	}
+
+	if u.Image.IsSet() {
+		out.Image = ptr.Get(u.Image.Value)
+	}
+	if u.Snapshot.IsSet() {
+		out.Snapshot = ptr.Get(u.Snapshot.Value)
+	}
+	if u.DiskBackup.IsSet() {
+		out.DiskBackup = ptr.Get(u.DiskBackup.Value)
+	}
+	return out
+}
+
+// HasChanges returns true if any field has Set == true
+func (m UpdateDiskSpecSourceRequest) HasChanges() bool {
+	return m.Image.Set ||
+		m.Snapshot.Set ||
+		m.DiskBackup.Set
+}
+
+func (m *UpdateDiskSpecSourceRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if m.Image.IsSet() {
+		if err := m.Image.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Image", err)
+		}
+	}
+
+	if m.Snapshot.IsSet() {
+		if err := m.Snapshot.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Snapshot", err)
+		}
+	}
+
+	if m.DiskBackup.IsSet() {
+		if err := m.DiskBackup.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("DiskBackup", err)
+		}
+	}
+
+	return nil
+}
+
+func (m *DiskSpecSourceRequest) diffImage(src *DiskSpecSourceRequest) optional.Optional[compute.ImageRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetImage(), m.GetImage(), nilDiffers)
+}
+
+func (m *DiskSpecSourceRequest) diffSnapshot(src *DiskSpecSourceRequest) optional.Optional[compute.SnapshotRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetSnapshot(), m.GetSnapshot(), nilDiffers)
+}
+
+func (m *DiskSpecSourceRequest) diffDiskBackup(src *DiskSpecSourceRequest) optional.Optional[compute.DiskBackupRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetDiskBackup(), m.GetDiskBackup(), nilDiffers)
 }

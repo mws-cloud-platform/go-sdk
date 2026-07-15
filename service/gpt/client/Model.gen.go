@@ -29,7 +29,7 @@ type Model interface {
 type ListModelsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -256,9 +256,9 @@ func (m *ListModelsResponse200) Decode(d *jx.Decoder) error {
 type GetModelRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
-	// Параметр пути для имени модели, уникальный в рамках проекта
+	// Параметр пути для имени модели, уникальный в рамках проекта.
 	ModelName string // path: "modelName"
 }
 

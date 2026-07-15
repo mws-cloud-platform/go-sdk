@@ -55,7 +55,7 @@ type AuthorizedKey interface {
 
 type ListAuthorizedKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -118,7 +118,7 @@ func (m *ListAuthorizedKeyResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertAuthorizedKeyV2Request struct {
 	ServiceAccount string // path: "serviceAccount"
 	AuthorizedKey  string // path: "authorizedKey"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -142,7 +142,7 @@ func (m *UpsertAuthorizedKeyV2Request) SetProject(project string) {
 type UpdateAuthorizedKeyV2Request struct {
 	ServiceAccount string // path: "serviceAccount"
 	AuthorizedKey  string // path: "authorizedKey"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -213,7 +213,7 @@ func (m *UpsertAuthorizedKeyV2Response) SetErrorWrapper(f func(err error) error)
 type DeleteAuthorizedKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	AuthorizedKey  string // path: "authorizedKey"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -285,7 +285,7 @@ func (m *DeleteAuthorizedKeyResponse) SetErrorWrapper(f func(err error) error) {
 type GetAuthorizedKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	AuthorizedKey  string // path: "authorizedKey"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -348,7 +348,7 @@ func (m *GetAuthorizedKeyResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertAuthorizedKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	AuthorizedKey  string // path: "authorizedKey"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -372,7 +372,7 @@ func (m *UpsertAuthorizedKeyRequest) SetProject(project string) {
 type UpdateAuthorizedKeyRequest struct {
 	ServiceAccount string // path: "serviceAccount"
 	AuthorizedKey  string // path: "authorizedKey"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"

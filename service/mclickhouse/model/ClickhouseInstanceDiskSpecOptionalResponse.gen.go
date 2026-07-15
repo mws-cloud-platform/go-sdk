@@ -3,13 +3,9 @@
 package model
 
 import (
-	"context"
-
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 // Параметры диска.
@@ -17,9 +13,10 @@ import (
 type ClickhouseInstanceDiskSpecOptionalResponse struct {
 	// Размер диска.
 	Size bytesize.ByteSize `json:"size" yaml:"size"`
-	// Тип диска.
-	Type compute.DiskTypeRef `json:"type" yaml:"type"`
-	// IOPS
+	// Тип используемого диска:
+	// * `NETWORK_STANDARD_SSD` — сетевой SSD
+	Type ClickhouseDataDiskType `json:"type" yaml:"type"`
+	// IOPS.
 	Iops optional.Optional[Iops] `json:"iops,omitempty" yaml:"iops,omitempty"`
 }
 
@@ -34,14 +31,14 @@ func (m *ClickhouseInstanceDiskSpecOptionalResponse) SetSize(val bytesize.ByteSi
 	m.Size = val
 }
 
-func (m *ClickhouseInstanceDiskSpecOptionalResponse) GetType() compute.DiskTypeRef {
+func (m *ClickhouseInstanceDiskSpecOptionalResponse) GetType() ClickhouseDataDiskType {
 	if m != nil {
 		return m.Type
 	}
-	return compute.DiskTypeRef{}
+	return ""
 }
 
-func (m *ClickhouseInstanceDiskSpecOptionalResponse) SetType(val compute.DiskTypeRef) {
+func (m *ClickhouseInstanceDiskSpecOptionalResponse) SetType(val ClickhouseDataDiskType) {
 	m.Type = val
 }
 
@@ -66,18 +63,5 @@ func (m *ClickhouseInstanceDiskSpecOptionalResponse) Clone() *ClickhouseInstance
 
 	clone := *m
 	clone.Size = *m.Size.Clone()
-	clone.Type = *m.Type.Clone()
 	return &clone
-}
-
-func (m *ClickhouseInstanceDiskSpecOptionalResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Type.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Type", err)
-	}
-
-	return nil
 }

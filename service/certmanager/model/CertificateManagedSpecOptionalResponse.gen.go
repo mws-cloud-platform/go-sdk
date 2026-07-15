@@ -2,37 +2,47 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/optional"
+)
+
 // Real OAPI model name: CertificateManagedSpec
 type CertificateManagedSpecOptionalResponse struct {
 	// Предпочтительный тип проверки домена (challenge).
 	// Возможные значения: DNS01 или HTTP01. По умолчанию используется DNS01.
-	PreferredChallengeType CertificateChallengeType `json:"preferredChallengeType" yaml:"preferredChallengeType"`
+	PreferredChallengeType optional.Optional[CertificateChallengeType] `json:"preferredChallengeType,omitempty" yaml:"preferredChallengeType,omitempty"`
 	// Провайдер сертификатов, например Let's Encrypt или другой центр сертификации.
-	Provider CertificateProvider `json:"provider" yaml:"provider"`
+	Provider optional.Optional[CertificateProvider] `json:"provider,omitempty" yaml:"provider,omitempty"`
 	// Список доменов, для которых будет выдан сертификат.
 	Domains []string `json:"domains" yaml:"domains"`
 }
 
-func (m *CertificateManagedSpecOptionalResponse) GetPreferredChallengeType() CertificateChallengeType {
-	if m != nil {
-		return m.PreferredChallengeType
+func (m *CertificateManagedSpecOptionalResponse) GetPreferredChallengeType() *CertificateChallengeType {
+	if m != nil && m.PreferredChallengeType.IsSet() {
+		return &m.PreferredChallengeType.Value
 	}
-	return ""
+	return nil
 }
 
-func (m *CertificateManagedSpecOptionalResponse) SetPreferredChallengeType(val CertificateChallengeType) {
-	m.PreferredChallengeType = val
-}
-
-func (m *CertificateManagedSpecOptionalResponse) GetProvider() CertificateProvider {
-	if m != nil {
-		return m.Provider
+func (m *CertificateManagedSpecOptionalResponse) GetPreferredChallengeTypeOr(val CertificateChallengeType) CertificateChallengeType {
+	if m != nil && m.PreferredChallengeType.IsSet() {
+		return m.PreferredChallengeType.Value
 	}
-	return ""
+	return val
 }
 
-func (m *CertificateManagedSpecOptionalResponse) SetProvider(val CertificateProvider) {
-	m.Provider = val
+func (m *CertificateManagedSpecOptionalResponse) GetProvider() *CertificateProvider {
+	if m != nil && m.Provider.IsSet() {
+		return &m.Provider.Value
+	}
+	return nil
+}
+
+func (m *CertificateManagedSpecOptionalResponse) GetProviderOr(val CertificateProvider) CertificateProvider {
+	if m != nil && m.Provider.IsSet() {
+		return m.Provider.Value
+	}
+	return val
 }
 
 func (m *CertificateManagedSpecOptionalResponse) GetDomains() []string {

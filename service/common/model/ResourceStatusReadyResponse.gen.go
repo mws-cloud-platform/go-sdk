@@ -2,12 +2,12 @@
 
 package model
 
-// Информация о статусе реконсиляции
+// Информация о статусе реконсиляции.
 // Real OAPI model name: ResourceStatusReady
 type ResourceStatusReadyResponse struct {
-	// Состояние ресурса
+	// Состояние ресурса.
 	State ResourceStatusState `json:"state" yaml:"state"`
-	// Описание статуса
+	// Описание статуса.
 	Message *string `json:"message,omitempty" yaml:"message,omitempty"`
 }
 

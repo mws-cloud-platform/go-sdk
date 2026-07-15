@@ -31,10 +31,23 @@ func (m *UpdateClickhouseClusterCoordinatorRequest) Encode(e *jx.Encoder) error 
 }
 
 func (m *UpdateClickhouseClusterCoordinatorRequest) encodeFields(e *jx.Encoder) error {
+	if m.Type.IsSet() {
+		e.FieldStart("type")
+		m.Type.Value.Encode(e)
+	}
 
 	if m.Resources.IsSet() {
 		e.FieldStart("resources")
 		m.Resources.Value.Encode(e)
+	}
+
+	if m.Instances.IsSet() {
+		e.FieldStart("instances")
+		e.ArrStart()
+		for _, elem := range m.Instances.Value {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
 	}
 	return nil
 }
@@ -50,6 +63,14 @@ func (m *UpdateClickhouseClusterCoordinatorRequest) Decode(d *jx.Decoder) error 
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "type":
+			var v ClickhouseCoordinatorType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Type.SetTo(v)
+			return nil
 		case "resources":
 			var v UpdateClickhouseCoordinatorHWResourcesRequest
 			if err := v.Decode(d); err != nil {
@@ -57,6 +78,21 @@ func (m *UpdateClickhouseClusterCoordinatorRequest) Decode(d *jx.Decoder) error 
 			}
 
 			m.Resources.SetTo(v)
+			return nil
+		case "instances":
+			c := make([]UpdateClickhouseClusterCoordinatorInstanceRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v UpdateClickhouseClusterCoordinatorInstanceRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Instances.SetTo(c)
 			return nil
 		default:
 			return d.Skip()

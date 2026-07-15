@@ -14,9 +14,9 @@ import (
 )
 
 type UpdateClickhouseEndpointAddressSpecOrRefRequest struct {
-	// Ссылка на address в vpc
+	// Ссылка на внутренний адрес эндпоинта в VPC.
 	Ref optional.Optional[vpc.AddressRef] `json:"ref" yaml:"ref"`
-	// Описание шаблона адреса, который будет использоваться при выделении адресов
+	// Описание шаблона адреса, который будет использоваться при выделении адресов.
 	Spec optional.OptionalNil[UpdateClickhouseEndpointAddressSpecRequest] `json:"spec" yaml:"spec"`
 }
 
@@ -76,7 +76,7 @@ func (m *UpdateClickhouseEndpointAddressSpecOrRefRequest) Parse(ctx context.Cont
 		}
 	}
 
-	if m.Spec.IsSet() {
+	if m.Spec.IsSet() && !m.Spec.IsNull() {
 		if err := m.Spec.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Spec", err)
 		}

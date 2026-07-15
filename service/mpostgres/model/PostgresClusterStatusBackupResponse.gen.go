@@ -2,12 +2,12 @@
 
 package model
 
-// Фактические параметры для автоматического бэкапирования
+// Фактические параметры для автоматического бэкапирования.
 // Real OAPI model name: PostgresClusterStatusBackup
 type PostgresClusterStatusBackupResponse struct {
-	// Фактические параметры ежедневного автоматического бэкапирования
+	// Фактические параметры ежедневного автоматического бэкапирования.
 	Daily PostgresClusterStatusBackupDailyResponse `json:"daily" yaml:"daily"`
-	// Количество дней хранения бэкапа
+	// Количество дней хранения бэкапа.
 	RetainPeriodDays int `json:"retainPeriodDays" yaml:"retainPeriodDays"`
 }
 

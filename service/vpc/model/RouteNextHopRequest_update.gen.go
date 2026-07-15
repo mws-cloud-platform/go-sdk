@@ -76,7 +76,7 @@ func (m *UpdateRouteNextHopRequest) Parse(ctx context.Context) error {
 		}
 	}
 
-	if m.Address.IsSet() {
+	if m.Address.IsSet() && !m.Address.IsNull() {
 		if err := m.Address.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Address", err)
 		}

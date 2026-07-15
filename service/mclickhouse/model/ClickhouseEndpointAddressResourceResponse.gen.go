@@ -11,12 +11,12 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Описание эндпойнта кластера в пользовательской сети (VPC)
+// Описание эндпойнта кластера в пользовательской сети (VPC).
 // Real OAPI model name: ClickhouseEndpointAddressResource
 type ClickhouseEndpointAddressResourceResponse struct {
-	// Идентификатор адреса в VPC
+	// Идентификатор адреса в VPC.
 	Ref vpc.AddressRef `json:"ref" yaml:"ref"`
-	// Идентификатор подсети облачной сети, к которой принадлежит адрес
+	// Идентификатор подсети облачной сети, к которой принадлежит адрес.
 	Subnet vpc.SubnetRef `json:"subnet" yaml:"subnet"`
 	// Выделенный адрес.
 	IpAddress ipaddress.IPAddress `json:"ipAddress" yaml:"ipAddress"`

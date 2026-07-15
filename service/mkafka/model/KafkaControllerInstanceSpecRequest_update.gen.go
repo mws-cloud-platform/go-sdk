@@ -16,6 +16,11 @@ import (
 )
 
 type UpdateKafkaControllerInstanceSpecRequest struct {
+	// Размещать контроллеры на тех же виртуальных машинах, что и брокеры
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	CombinedWithBroker optional.Optional[bool] `json:"combinedWithBroker" yaml:"combinedWithBroker"`
 	// Тип виртуальной машины, описывающий ресурсы (vCPU, memory).
 	VmType optional.Optional[compute.VmTypeRef] `json:"vmType" yaml:"vmType"`
 	// Параметры диска с данными на узле кластера.
@@ -26,6 +31,9 @@ type UpdateKafkaControllerInstanceSpecRequest struct {
 
 func (m *KafkaControllerInstanceSpecRequest) AsUpdateModel() UpdateKafkaControllerInstanceSpecRequest {
 	var u UpdateKafkaControllerInstanceSpecRequest
+	if m.CombinedWithBroker != nil {
+		u.CombinedWithBroker = optional.NewOptional(m.GetCombinedWithBrokerOr(false))
+	}
 	if m.VmType != nil {
 		u.VmType = optional.NewOptional(m.GetVmTypeOr(compute.VmTypeRef{}))
 	}
@@ -52,6 +60,7 @@ func (m *KafkaControllerInstanceSpecRequest) Diff(src *KafkaControllerInstanceSp
 	nilDiffers := src != nil && m == nil
 	upd := UpdateKafkaControllerInstanceSpecRequest{}
 	if !nilDiffers {
+		upd.CombinedWithBroker = m.diffCombinedWithBroker(src)
 		upd.VmType = m.diffVmType(src)
 		upd.Disk = m.diffDisk(src)
 		upd.Allocation = m.diffAllocation(src)
@@ -65,6 +74,9 @@ func (m *KafkaControllerInstanceSpecRequest) WithChanges(u UpdateKafkaController
 		out = *m
 	}
 
+	if u.CombinedWithBroker.IsSet() {
+		out.CombinedWithBroker = ptr.Get(u.CombinedWithBroker.Value)
+	}
 	if u.VmType.IsSet() {
 		out.VmType = ptr.Get(u.VmType.Value)
 	}
@@ -81,7 +93,8 @@ func (m *KafkaControllerInstanceSpecRequest) WithChanges(u UpdateKafkaController
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateKafkaControllerInstanceSpecRequest) HasChanges() bool {
-	return m.VmType.Set ||
+	return m.CombinedWithBroker.Set ||
+		m.VmType.Set ||
 		m.Disk.Set ||
 		m.Allocation.Set
 }
@@ -106,6 +119,11 @@ func (m *UpdateKafkaControllerInstanceSpecRequest) Parse(ctx context.Context) er
 	}
 
 	return nil
+}
+
+func (m *KafkaControllerInstanceSpecRequest) diffCombinedWithBroker(src *KafkaControllerInstanceSpecRequest) optional.Optional[bool] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetCombinedWithBroker(), m.GetCombinedWithBroker(), nilDiffers)
 }
 
 func (m *KafkaControllerInstanceSpecRequest) diffVmType(src *KafkaControllerInstanceSpecRequest) optional.Optional[compute.VmTypeRef] {

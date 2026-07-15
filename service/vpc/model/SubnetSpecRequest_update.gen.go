@@ -3,17 +3,23 @@
 package model
 
 import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
+	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateSubnetSpecRequest struct {
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Cidr        optional.Optional[cidraddress.CIDR4Address]          `json:"cidr" yaml:"cidr"`
 	DhcpOptions optional.OptionalNil[UpdateSubnetDhcpOptionsRequest] `json:"dhcpOptions" yaml:"dhcpOptions"`
 }
 
 func (m *SubnetSpecRequest) AsUpdateModel() UpdateSubnetSpecRequest {
 	var u UpdateSubnetSpecRequest
+	u.Cidr = optional.NewOptional(m.GetCidr())
 	if m.DhcpOptions != nil {
 		u.DhcpOptions = optional.NewOptionalNil(m.DhcpOptions.AsUpdateModel())
 	}
@@ -25,6 +31,7 @@ func (m *SubnetSpecRequest) Diff(src *SubnetSpecRequest) UpdateSubnetSpecRequest
 	nilDiffers := src != nil && m == nil
 	upd := UpdateSubnetSpecRequest{}
 	if !nilDiffers {
+		upd.Cidr = m.diffCidr(src)
 		upd.DhcpOptions = m.diffDhcpOptions(src)
 	}
 	return upd
@@ -36,6 +43,9 @@ func (m *SubnetSpecRequest) WithChanges(u UpdateSubnetSpecRequest) SubnetSpecReq
 		out = *m
 	}
 
+	if u.Cidr.IsSet() {
+		out.Cidr = u.Cidr.Value
+	}
 	if u.DhcpOptions.IsSet() {
 		out.DhcpOptions = ptr.Get(out.DhcpOptions.WithChanges(u.DhcpOptions.Value))
 	} else if u.DhcpOptions.IsNull() {
@@ -46,7 +56,13 @@ func (m *SubnetSpecRequest) WithChanges(u UpdateSubnetSpecRequest) SubnetSpecReq
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateSubnetSpecRequest) HasChanges() bool {
-	return m.DhcpOptions.Set
+	return m.Cidr.Set ||
+		m.DhcpOptions.Set
+}
+
+func (m *SubnetSpecRequest) diffCidr(src *SubnetSpecRequest) optional.Optional[cidraddress.CIDR4Address] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffEquatableIfaceRequired(src.GetCidr(), m.GetCidr(), nilDiffers)
 }
 
 func (m *SubnetSpecRequest) diffDhcpOptions(src *SubnetSpecRequest) optional.OptionalNil[UpdateSubnetDhcpOptionsRequest] {

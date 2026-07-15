@@ -17,7 +17,7 @@ type UpdateCommonTypedResourceMetadata struct {
 	Name optional.Optional[string] `json:"name" yaml:"name"`
 	// Отображаемое имя свойства
 	DisplayName optional.Optional[string] `json:"displayName" yaml:"displayName"`
-	// Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены
+	// Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены.
 	Usages optional.Optional[[]UpdateUsage] `json:"usages" yaml:"usages"`
 	// Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса
 	Etag optional.Optional[string] `json:"etag" yaml:"etag"`

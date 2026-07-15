@@ -13,9 +13,9 @@ import (
 // Описание инстанса координатора.
 // Real OAPI model name: ClickhouseClusterCoordinatorInstanceResource
 type ClickhouseClusterCoordinatorInstanceResourceResponse struct {
-	// Идентификатор инстанса координатора
+	// Идентификатор инстанса координатора.
 	Id mclickhouse.ClickhouseClusterCoordinatorInstanceID `json:"id" yaml:"id"`
-	// Зона доступности
+	// Зона доступности.
 	Zone   rm.ZoneRef                `json:"zone" yaml:"zone"`
 	Health *ClickhouseInstanceHealth `json:"health,omitempty" yaml:"health,omitempty"`
 }

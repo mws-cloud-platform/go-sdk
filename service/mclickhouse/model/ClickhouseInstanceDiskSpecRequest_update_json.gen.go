@@ -8,7 +8,6 @@ import (
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func (m UpdateClickhouseInstanceDiskSpecRequest) MarshalJSON() ([]byte, error) {
@@ -70,7 +69,7 @@ func (m *UpdateClickhouseInstanceDiskSpecRequest) Decode(d *jx.Decoder) error {
 			m.Size.SetTo(v)
 			return nil
 		case "type":
-			var v compute.DiskTypeRef
+			var v ClickhouseDataDiskType
 			if err := v.Decode(d); err != nil {
 				return err
 			}

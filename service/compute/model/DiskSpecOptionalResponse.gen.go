@@ -152,7 +152,7 @@ func (m *DiskSpecOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Source.IsSet() {
+	if m.Source.IsSet() && !m.Source.IsNull() {
 		if err := m.Source.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Source", err)
 		}

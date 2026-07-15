@@ -108,7 +108,7 @@ func (m *UpdateCryptoKeySpecRequest) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.PrimaryKeyVersionRef.IsSet() {
+	if m.PrimaryKeyVersionRef.IsSet() && !m.PrimaryKeyVersionRef.IsNull() {
 		if err := m.PrimaryKeyVersionRef.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("PrimaryKeyVersionRef", err)
 		}
@@ -158,10 +158,21 @@ func (m *CryptoKeySpecRequest) diffPrimaryKeyVersionRef(src *CryptoKeySpecReques
 }
 
 type UpdateCryptoKeySpecDestructionPolicyRequest struct {
+	// Указывает количество дней, по истечении которых ключ будет окончательно уничтожен,
+	// начиная с момента отправки запроса на удаление.
+	// Значение можно задать только при создании ключа, и оно не может быть изменено позже.
+	// Если значение не указано при создании ключа, используется значение по умолчанию (1 день).
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	DefaultDestructionIntervalDays optional.Optional[int32] `json:"defaultDestructionIntervalDays" yaml:"defaultDestructionIntervalDays"`
 }
 
 func (m *CryptoKeySpecDestructionPolicyRequest) AsUpdateModel() UpdateCryptoKeySpecDestructionPolicyRequest {
 	var u UpdateCryptoKeySpecDestructionPolicyRequest
+	if m.DefaultDestructionIntervalDays != nil {
+		u.DefaultDestructionIntervalDays = optional.NewOptional(m.GetDefaultDestructionIntervalDaysOr(0))
+	}
 	return u
 }
 
@@ -170,6 +181,7 @@ func (m *CryptoKeySpecDestructionPolicyRequest) Diff(src *CryptoKeySpecDestructi
 	nilDiffers := src != nil && m == nil
 	upd := UpdateCryptoKeySpecDestructionPolicyRequest{}
 	if !nilDiffers {
+		upd.DefaultDestructionIntervalDays = m.diffDefaultDestructionIntervalDays(src)
 	}
 	return upd
 }
@@ -180,12 +192,20 @@ func (m *CryptoKeySpecDestructionPolicyRequest) WithChanges(u UpdateCryptoKeySpe
 		out = *m
 	}
 
+	if u.DefaultDestructionIntervalDays.IsSet() {
+		out.DefaultDestructionIntervalDays = ptr.Get(u.DefaultDestructionIntervalDays.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateCryptoKeySpecDestructionPolicyRequest) HasChanges() bool {
-	return false
+	return m.DefaultDestructionIntervalDays.Set
+}
+
+func (m *CryptoKeySpecDestructionPolicyRequest) diffDefaultDestructionIntervalDays(src *CryptoKeySpecDestructionPolicyRequest) optional.Optional[int32] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetDefaultDestructionIntervalDays(), m.GetDefaultDestructionIntervalDays(), nilDiffers)
 }
 
 type UpdateCryptoKeySpecRotationPolicyRequest struct {

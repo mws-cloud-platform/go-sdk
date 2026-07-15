@@ -32,11 +32,15 @@ func (m *CertificateManagedSpecOptionalResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *CertificateManagedSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
-	e.FieldStart("preferredChallengeType")
-	m.PreferredChallengeType.Encode(e)
+	if m.PreferredChallengeType.IsSet() {
+		e.FieldStart("preferredChallengeType")
+		m.PreferredChallengeType.Value.Encode(e)
+	}
 
-	e.FieldStart("provider")
-	m.Provider.Encode(e)
+	if m.Provider.IsSet() {
+		e.FieldStart("provider")
+		m.Provider.Value.Encode(e)
+	}
 
 	e.FieldStart("domains")
 	e.ArrStart()
@@ -64,7 +68,7 @@ func (m *CertificateManagedSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.PreferredChallengeType = v
+			m.PreferredChallengeType.SetTo(v)
 			return nil
 		case "provider":
 			var v CertificateProvider
@@ -72,7 +76,7 @@ func (m *CertificateManagedSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Provider = v
+			m.Provider.SetTo(v)
 			return nil
 		case "domains":
 			c := make([]string, 0)

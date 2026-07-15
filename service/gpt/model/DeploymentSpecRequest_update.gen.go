@@ -14,9 +14,9 @@ import (
 )
 
 type UpdateDeploymentSpecRequest struct {
-	// Флаг, устанавливающий активность деплоймента
+	// Флаг, устанавливающий активность деплоймента.
 	IsActive optional.Optional[bool] `json:"isActive" yaml:"isActive"`
-	// ссылка на типизированный референс базовой модели
+	// Ссылка на типизированный референс базовой модели.
 	Model optional.Optional[gpt.ModelRef] `json:"model" yaml:"model"`
 }
 

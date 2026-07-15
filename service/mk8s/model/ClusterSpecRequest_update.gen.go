@@ -5,19 +5,25 @@ package model
 import (
 	"context"
 
+	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
+	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateClusterSpecRequest struct {
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Availability   optional.Optional[UpdateClusterAvailabilitySpecRequest]   `json:"availability" yaml:"availability"`
 	Network        optional.Optional[UpdateClusterSpecNetworkRequest]        `json:"network" yaml:"network"`
 	VersionControl optional.Optional[UpdateClusterVersionControlSpecRequest] `json:"versionControl" yaml:"versionControl"`
 }
 
 func (m *ClusterSpecRequest) AsUpdateModel() UpdateClusterSpecRequest {
 	var u UpdateClusterSpecRequest
+	u.Availability = optional.NewOptional(m.Availability.AsUpdateModel())
 	u.Network = optional.NewOptional(m.Network.AsUpdateModel())
 	u.VersionControl = optional.NewOptional(m.VersionControl.AsUpdateModel())
 	return u
@@ -28,6 +34,7 @@ func (m *ClusterSpecRequest) Diff(src *ClusterSpecRequest) UpdateClusterSpecRequ
 	nilDiffers := src != nil && m == nil
 	upd := UpdateClusterSpecRequest{}
 	if !nilDiffers {
+		upd.Availability = m.diffAvailability(src)
 		upd.Network = m.diffNetwork(src)
 		upd.VersionControl = m.diffVersionControl(src)
 	}
@@ -40,6 +47,9 @@ func (m *ClusterSpecRequest) WithChanges(u UpdateClusterSpecRequest) ClusterSpec
 		out = *m
 	}
 
+	if u.Availability.IsSet() {
+		out.Availability = out.Availability.WithChanges(u.Availability.Value)
+	}
 	if u.Network.IsSet() {
 		out.Network = out.Network.WithChanges(u.Network.Value)
 	}
@@ -51,7 +61,8 @@ func (m *ClusterSpecRequest) WithChanges(u UpdateClusterSpecRequest) ClusterSpec
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateClusterSpecRequest) HasChanges() bool {
-	return m.Network.Set ||
+	return m.Availability.Set ||
+		m.Network.Set ||
 		m.VersionControl.Set
 }
 
@@ -67,6 +78,16 @@ func (m *UpdateClusterSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (m *ClusterSpecRequest) diffAvailability(src *ClusterSpecRequest) optional.Optional[UpdateClusterAvailabilitySpecRequest] {
+	from := src.GetAvailability()
+	to := m.GetAvailability()
+	value := to.Diff(&from)
+	return optional.Optional[UpdateClusterAvailabilitySpecRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 func (m *ClusterSpecRequest) diffNetwork(src *ClusterSpecRequest) optional.Optional[UpdateClusterSpecNetworkRequest] {
@@ -90,15 +111,33 @@ func (m *ClusterSpecRequest) diffVersionControl(src *ClusterSpecRequest) optiona
 }
 
 type UpdateClusterSpecNetworkRequest struct {
+	// ip-адрес внутри vpc
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	PrimaryEndpoint optional.Optional[UpdateClusterPrimaryEndpointSpecOrRefRequest] `json:"primaryEndpoint" yaml:"primaryEndpoint"`
 	// внешний ip-адрес
 	PublicEndpoint optional.OptionalNil[UpdateClusterPublicEndpointSpecOrRefRequest] `json:"publicEndpoint" yaml:"publicEndpoint"`
+	// необходим ip-range v4
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	PodsCidr optional.Optional[cidraddress.CIDR4Address] `json:"podsCidr" yaml:"podsCidr"`
+	// необходим ip-range v4
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	ServicesCidr optional.Optional[cidraddress.CIDR4Address] `json:"servicesCidr" yaml:"servicesCidr"`
 }
 
 func (m *ClusterSpecNetworkRequest) AsUpdateModel() UpdateClusterSpecNetworkRequest {
 	var u UpdateClusterSpecNetworkRequest
+	u.PrimaryEndpoint = optional.NewOptional(m.PrimaryEndpoint.AsUpdateModel())
 	if m.PublicEndpoint != nil {
 		u.PublicEndpoint = optional.NewOptionalNil(m.PublicEndpoint.AsUpdateModel())
 	}
+	u.PodsCidr = optional.NewOptional(m.GetPodsCidr())
+	u.ServicesCidr = optional.NewOptional(m.GetServicesCidr())
 	return u
 }
 
@@ -107,7 +146,10 @@ func (m *ClusterSpecNetworkRequest) Diff(src *ClusterSpecNetworkRequest) UpdateC
 	nilDiffers := src != nil && m == nil
 	upd := UpdateClusterSpecNetworkRequest{}
 	if !nilDiffers {
+		upd.PrimaryEndpoint = m.diffPrimaryEndpoint(src)
 		upd.PublicEndpoint = m.diffPublicEndpoint(src)
+		upd.PodsCidr = m.diffPodsCidr(src)
+		upd.ServicesCidr = m.diffServicesCidr(src)
 	}
 	return upd
 }
@@ -118,17 +160,29 @@ func (m *ClusterSpecNetworkRequest) WithChanges(u UpdateClusterSpecNetworkReques
 		out = *m
 	}
 
+	if u.PrimaryEndpoint.IsSet() {
+		out.PrimaryEndpoint = out.PrimaryEndpoint.WithChanges(u.PrimaryEndpoint.Value)
+	}
 	if u.PublicEndpoint.IsSet() {
 		out.PublicEndpoint = ptr.Get(out.PublicEndpoint.WithChanges(u.PublicEndpoint.Value))
 	} else if u.PublicEndpoint.IsNull() {
 		out.PublicEndpoint = nil
+	}
+	if u.PodsCidr.IsSet() {
+		out.PodsCidr = u.PodsCidr.Value
+	}
+	if u.ServicesCidr.IsSet() {
+		out.ServicesCidr = u.ServicesCidr.Value
 	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateClusterSpecNetworkRequest) HasChanges() bool {
-	return m.PublicEndpoint.Set
+	return m.PrimaryEndpoint.Set ||
+		m.PublicEndpoint.Set ||
+		m.PodsCidr.Set ||
+		m.ServicesCidr.Set
 }
 
 func (m *UpdateClusterSpecNetworkRequest) Parse(ctx context.Context) error {
@@ -136,13 +190,29 @@ func (m *UpdateClusterSpecNetworkRequest) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.PublicEndpoint.IsSet() {
+	if m.PrimaryEndpoint.IsSet() {
+		if err := m.PrimaryEndpoint.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("PrimaryEndpoint", err)
+		}
+	}
+
+	if m.PublicEndpoint.IsSet() && !m.PublicEndpoint.IsNull() {
 		if err := m.PublicEndpoint.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("PublicEndpoint", err)
 		}
 	}
 
 	return nil
+}
+
+func (m *ClusterSpecNetworkRequest) diffPrimaryEndpoint(src *ClusterSpecNetworkRequest) optional.Optional[UpdateClusterPrimaryEndpointSpecOrRefRequest] {
+	from := src.GetPrimaryEndpoint()
+	to := m.GetPrimaryEndpoint()
+	value := to.Diff(&from)
+	return optional.Optional[UpdateClusterPrimaryEndpointSpecOrRefRequest]{
+		Value: value,
+		Set:   value.HasChanges(),
+	}
 }
 
 func (m *ClusterSpecNetworkRequest) diffPublicEndpoint(src *ClusterSpecNetworkRequest) optional.OptionalNil[UpdateClusterPublicEndpointSpecOrRefRequest] {
@@ -153,4 +223,14 @@ func (m *ClusterSpecNetworkRequest) diffPublicEndpoint(src *ClusterSpecNetworkRe
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,
 	}
+}
+
+func (m *ClusterSpecNetworkRequest) diffPodsCidr(src *ClusterSpecNetworkRequest) optional.Optional[cidraddress.CIDR4Address] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffEquatableIfaceRequired(src.GetPodsCidr(), m.GetPodsCidr(), nilDiffers)
+}
+
+func (m *ClusterSpecNetworkRequest) diffServicesCidr(src *ClusterSpecNetworkRequest) optional.Optional[cidraddress.CIDR4Address] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffEquatableIfaceRequired(src.GetServicesCidr(), m.GetServicesCidr(), nilDiffers)
 }

@@ -15,5 +15,6 @@ func PostgresClusterUserSpecRequestToResponse(request *PostgresClusterUserSpecRe
 		}
 		response.AdditionalRoles = append(response.AdditionalRoles, *tmp)
 	}
+	response.AccessControlPolicy = request.AccessControlPolicy
 	return &response, nil
 }

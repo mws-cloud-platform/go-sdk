@@ -10,11 +10,11 @@ import (
 
 // Real OAPI model name: WeeklyMaintenanceWindow
 type WeeklyMaintenanceWindowOptionalResponse struct {
-	// Дни недели, в который будет запущено задание на тех.обслуживание
+	// Дни недели, в которые будет запущено задание на тех. обслуживание.
 	Days []DayOfWeek `json:"days" yaml:"days"`
-	// Час, в который будет запущено задание на тех.обслуживание
+	// Час, в который будет запущено задание на тех. обслуживание.
 	Hour int `json:"hour" yaml:"hour"`
-	// Допустимая продолжительность процесса обновления. Если не указано, то не ограничено по времени. Принимается только формат в часах (h)
+	// Допустимая продолжительность процесса обновления. Если не указано, то не ограничено по времени. Принимается только формат в часах (h).
 	Duration optional.OptionalNil[duration.Duration] `json:"duration,omitempty" yaml:"duration,omitempty"`
 }
 

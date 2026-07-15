@@ -4,10 +4,12 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func (m UpdateImageSpecRequest) MarshalJSON() ([]byte, error) {
@@ -37,9 +39,19 @@ func (m *UpdateImageSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.Str(m.Family.Value)
 	}
 
+	if m.Source.IsSet() {
+		e.FieldStart("source")
+		m.Source.Value.Encode(e)
+	}
+
 	if m.Activity.IsSet() {
 		e.FieldStart("activity")
 		m.Activity.Value.Encode(e)
+	}
+
+	if m.MinDiskSize.IsSet() {
+		e.FieldStart("minDiskSize")
+		m.MinDiskSize.Value.Encode(e)
 	}
 
 	if m.OsType.IsSet() {
@@ -68,6 +80,14 @@ func (m *UpdateImageSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.Family.SetTo(v)
 			return nil
+		case "source":
+			var v UpdateImageSpecSourceRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Source.SetTo(v)
+			return nil
 		case "activity":
 			var v ImageActivity
 			if err := v.Decode(d); err != nil {
@@ -76,6 +96,14 @@ func (m *UpdateImageSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.Activity.SetTo(v)
 			return nil
+		case "minDiskSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.MinDiskSize.SetTo(v)
+			return nil
 		case "osType":
 			var v OsType
 			if err := v.Decode(d); err != nil {
@@ -83,6 +111,86 @@ func (m *UpdateImageSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.OsType.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m UpdateImageSpecSourceRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *UpdateImageSpecSourceRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *UpdateImageSpecSourceRequest) encodeFields(e *jx.Encoder) error {
+	if m.ExternalUrl.IsSet() {
+		e.FieldStart("externalUrl")
+		e.Str(m.ExternalUrl.Value)
+	}
+
+	if m.DiskId.IsSet() {
+		e.FieldStart("diskId")
+		m.DiskId.Value.Encode(e)
+	}
+
+	if m.ImageId.IsSet() {
+		e.FieldStart("imageId")
+		m.ImageId.Value.Encode(e)
+	}
+	return nil
+}
+
+func (m *UpdateImageSpecSourceRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *UpdateImageSpecSourceRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("UpdateImageSpecSourceRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "externalUrl":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.ExternalUrl.SetTo(v)
+			return nil
+		case "diskId":
+			var v compute.DiskRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.DiskId.SetTo(v)
+			return nil
+		case "imageId":
+			var v compute.ImageRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ImageId.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

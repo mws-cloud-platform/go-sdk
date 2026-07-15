@@ -3,19 +3,20 @@
 package model
 
 import (
-	"encoding/json"
 	"slices"
+
+	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 )
 
 // Доступные параметры для Clickhouse (в формате `json-schema`).
-type AvailableConfigParametersSchema map[string]json.RawMessage
+type AvailableConfigParametersSchema map[string]jsonapimodels.RawMessageNotNull
 
 func (m AvailableConfigParametersSchema) Clone() AvailableConfigParametersSchema {
 	if m == nil {
 		return nil
 	}
 
-	clone := make(map[string]json.RawMessage, len(m))
+	clone := make(map[string]jsonapimodels.RawMessageNotNull, len(m))
 	for k, v := range m {
 		clone[k] = slices.Clone(v)
 	}

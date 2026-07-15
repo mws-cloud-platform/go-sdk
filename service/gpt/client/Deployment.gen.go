@@ -47,7 +47,7 @@ type Deployment interface {
 type ListDeploymentsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -277,9 +277,9 @@ type DeleteDeploymentRequest struct {
 	// Идентификатор состояния ресурса. Позволяет предотвратить конфликты при конкурентном удалении.
 	// Если не передан, удаление выполняется без проверки версии ресурса.
 	Etag *string // query: "etag"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
-	// Параметр пути для имени деплоймента, уникальный в рамках проекта
+	// Параметр пути для имени деплоймента, уникальный в рамках проекта.
 	DeploymentName string // path: "deploymentName"
 }
 
@@ -364,9 +364,9 @@ func (m *DeleteDeploymentResponse) SetErrorWrapper(f func(err error) error) {
 type GetDeploymentRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
-	// Параметр пути для имени деплоймента, уникальный в рамках проекта
+	// Параметр пути для имени деплоймента, уникальный в рамках проекта.
 	DeploymentName string // path: "deploymentName"
 }
 
@@ -427,11 +427,11 @@ func (m *GetDeploymentResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertDeploymentRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Параметр пути для имени деплоймента, уникальный в рамках проекта
+	// Параметр пути для имени деплоймента, уникальный в рамках проекта.
 	DeploymentName string // path: "deploymentName"
 	// Тело ресурса деплоймента, содержащее желаемую спецификацию.
 	Body model.DeploymentRequest // body
@@ -460,11 +460,11 @@ func (m *UpsertDeploymentRequest) getDeploymentRequest() GetDeploymentRequest {
 type UpdateDeploymentRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Параметр пути для имени деплоймента, уникальный в рамках проекта
+	// Параметр пути для имени деплоймента, уникальный в рамках проекта.
 	DeploymentName string // path: "deploymentName"
 	// Тело ресурса деплоймента, содержащее желаемую спецификацию.
 	Body model.UpdateDeploymentRequest // body

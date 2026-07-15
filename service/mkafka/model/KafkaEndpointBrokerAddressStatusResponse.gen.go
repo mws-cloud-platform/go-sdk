@@ -15,45 +15,45 @@ import (
 // Real OAPI model name: KafkaEndpointBrokerAddressStatus
 type KafkaEndpointBrokerAddressStatusResponse struct {
 	// Идентификатор адреса.
-	Ref *vpc.AddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref *vpc.AddressID `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Подсеть, в которой выделен адрес.
-	Subnet *vpc.SubnetRef `json:"subnet,omitempty" yaml:"subnet,omitempty"`
+	Subnet *vpc.SubnetID `json:"subnet,omitempty" yaml:"subnet,omitempty"`
 	// Выделенный адрес.
 	IpAddress *ipaddress.IPAddress `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
 	// Доменные имена.
 	Dns []KafkaEndpointBrokerAddressDnsStatusResponse `json:"dns,omitempty" yaml:"dns,omitempty"`
 }
 
-func (m *KafkaEndpointBrokerAddressStatusResponse) GetRef() *vpc.AddressRef {
+func (m *KafkaEndpointBrokerAddressStatusResponse) GetRef() *vpc.AddressID {
 	if m != nil {
 		return m.Ref
 	}
 	return nil
 }
 
-func (m *KafkaEndpointBrokerAddressStatusResponse) SetRef(val *vpc.AddressRef) {
+func (m *KafkaEndpointBrokerAddressStatusResponse) SetRef(val *vpc.AddressID) {
 	m.Ref = val
 }
 
-func (m *KafkaEndpointBrokerAddressStatusResponse) GetRefOr(val vpc.AddressRef) vpc.AddressRef {
+func (m *KafkaEndpointBrokerAddressStatusResponse) GetRefOr(val vpc.AddressID) vpc.AddressID {
 	if m != nil && m.Ref != nil {
 		return *m.Ref
 	}
 	return val
 }
 
-func (m *KafkaEndpointBrokerAddressStatusResponse) GetSubnet() *vpc.SubnetRef {
+func (m *KafkaEndpointBrokerAddressStatusResponse) GetSubnet() *vpc.SubnetID {
 	if m != nil {
 		return m.Subnet
 	}
 	return nil
 }
 
-func (m *KafkaEndpointBrokerAddressStatusResponse) SetSubnet(val *vpc.SubnetRef) {
+func (m *KafkaEndpointBrokerAddressStatusResponse) SetSubnet(val *vpc.SubnetID) {
 	m.Subnet = val
 }
 
-func (m *KafkaEndpointBrokerAddressStatusResponse) GetSubnetOr(val vpc.SubnetRef) vpc.SubnetRef {
+func (m *KafkaEndpointBrokerAddressStatusResponse) GetSubnetOr(val vpc.SubnetID) vpc.SubnetID {
 	if m != nil && m.Subnet != nil {
 		return *m.Subnet
 	}

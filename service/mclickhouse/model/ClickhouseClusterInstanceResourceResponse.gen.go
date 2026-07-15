@@ -14,11 +14,13 @@ import (
 // Описание инстанса шарда.
 // Real OAPI model name: ClickhouseClusterInstanceResource
 type ClickhouseClusterInstanceResourceResponse struct {
-	// Идентификатор инстанса шарда
+	// Идентификатор инстанса шарда.
 	Id mclickhouse.ClickhouseClusterShardInstanceID `json:"id" yaml:"id"`
-	// Зона доступности
+	// Индекс реплики в шарде в кластере Clickhouse, который будет указан в настройках кластера в макросе `replica`. Влияет на очередность исполнения распределенных запросов в кластере.
+	Index *int `json:"index,omitempty" yaml:"index,omitempty"`
+	// Зона доступности.
 	Zone rm.ZoneRef `json:"zone" yaml:"zone"`
-	// Список эндпойнтов для подключения к инстансу
+	// Список эндпойнтов для подключения к инстансу.
 	Endpoints []ClickhouseEndpointResourceResponse `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 	Health    *ClickhouseInstanceHealth            `json:"health,omitempty" yaml:"health,omitempty"`
 }
@@ -32,6 +34,24 @@ func (m *ClickhouseClusterInstanceResourceResponse) GetId() mclickhouse.Clickhou
 
 func (m *ClickhouseClusterInstanceResourceResponse) SetId(val mclickhouse.ClickhouseClusterShardInstanceID) {
 	m.Id = val
+}
+
+func (m *ClickhouseClusterInstanceResourceResponse) GetIndex() *int {
+	if m != nil {
+		return m.Index
+	}
+	return nil
+}
+
+func (m *ClickhouseClusterInstanceResourceResponse) SetIndex(val *int) {
+	m.Index = val
+}
+
+func (m *ClickhouseClusterInstanceResourceResponse) GetIndexOr(val int) int {
+	if m != nil && m.Index != nil {
+		return *m.Index
+	}
+	return val
 }
 
 func (m *ClickhouseClusterInstanceResourceResponse) GetZone() rm.ZoneRef {
@@ -88,6 +108,10 @@ func (m *ClickhouseClusterInstanceResourceResponse) Clone() *ClickhouseClusterIn
 
 	clone := *m
 	clone.Id = *m.Id.Clone()
+	if m.Index != nil {
+		cloneIndex := *m.Index
+		clone.Index = &cloneIndex
+	}
 	clone.Zone = *m.Zone.Clone()
 	if m.Endpoints != nil {
 		clone.Endpoints = make([]ClickhouseEndpointResourceResponse, len(m.Endpoints))

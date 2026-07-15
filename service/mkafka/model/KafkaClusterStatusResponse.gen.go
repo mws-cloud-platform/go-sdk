@@ -13,24 +13,24 @@ import (
 // Real OAPI model name: KafkaClusterStatus
 type KafkaClusterStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
-	// Состояние кластера
-	//   - `CREATING`     - Создаётся
-	//   - `RUNNING`      - Работает в штатном режиме
-	//   - `STOPPING`     - Останавливается
-	//   - `STOPPED`      - Остановлен
-	//   - `STARTING`     - Запуск ранее остановленного
-	//   - `UPDATING`     - Выполняется обновление
-	//   - `ERROR`        - Произошла ошибка, требуется участие команды поддержки
-	//   - `DELETING`     - Удаляется
-	//   - `DELETED`      - Удалён
-	//   - `UNIDENTIFIED` - Не удаётся определить статус
-	//   - `RESTORING`    - Восстанавливается
+	// Состояние кластера:
+	//   - `CREATING`     - Создаётся;
+	//   - `RUNNING`      - Работает в штатном режиме;
+	//   - `STOPPING`     - Останавливается;
+	//   - `STOPPED`      - Остановлен;
+	//   - `STARTING`     - Запуск ранее остановленного;
+	//   - `UPDATING`     - Выполняется обновление;
+	//   - `ERROR`        - Произошла ошибка, требуется участие команды поддержки;
+	//   - `DELETING`     - Удаляется;
+	//   - `DELETED`      - Удалён;
+	//   - `UNIDENTIFIED` - Не удаётся определить статус;
+	//   - `RESTORING`    - Восстанавливается.
 	State *ClusterState `json:"state,omitempty" yaml:"state,omitempty"`
-	// Работоспособность кластера
-	//   - `ALIVE`    - Полностью работоспособен
-	//   - `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны)
-	//   - `FAILED`   - Неработоспособен
-	//   - `UNKNOWN`  - Не удаётся определить состояние (на этапе создания)
+	// Работоспособность кластера:
+	//   - `ALIVE`    - Полностью работоспособен;
+	//   - `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны);
+	//   - `FAILED`   - Неработоспособен;
+	//   - `UNKNOWN`  - Не удаётся определить состояние (на этапе создания).
 	Health  *ClusterHealth `json:"health,omitempty" yaml:"health,omitempty"`
 	Message *string        `json:"message,omitempty" yaml:"message,omitempty"`
 	// Конфигурация параметров кластера после валидации и преобразования из пользователского ввода
@@ -42,8 +42,8 @@ type KafkaClusterStatusResponse struct {
 	MaintenanceWindow *common.MaintenanceWindow2Response `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry *KafkaSchemaRegistrySpecResponse `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`
-	// Настройка автоматической ребалансировки для кластера.
-	AutoRebalance *KafkaAutoRebalanceSpecResponse `json:"autoRebalance,omitempty" yaml:"autoRebalance,omitempty"`
+	// Настройка балансировщика кластера.
+	Balancer *KafkaBalancerSpecResponse `json:"balancer,omitempty" yaml:"balancer,omitempty"`
 }
 
 func (m *KafkaClusterStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -165,16 +165,16 @@ func (m *KafkaClusterStatusResponse) GetSchemaRegistryOr(val KafkaSchemaRegistry
 	return val
 }
 
-func (m *KafkaClusterStatusResponse) GetAutoRebalance() *KafkaAutoRebalanceSpecResponse {
+func (m *KafkaClusterStatusResponse) GetBalancer() *KafkaBalancerSpecResponse {
 	if m != nil {
-		return m.AutoRebalance
+		return m.Balancer
 	}
 	return nil
 }
 
-func (m *KafkaClusterStatusResponse) GetAutoRebalanceOr(val KafkaAutoRebalanceSpecResponse) KafkaAutoRebalanceSpecResponse {
-	if m != nil && m.AutoRebalance != nil {
-		return *m.AutoRebalance
+func (m *KafkaClusterStatusResponse) GetBalancerOr(val KafkaBalancerSpecResponse) KafkaBalancerSpecResponse {
+	if m != nil && m.Balancer != nil {
+		return *m.Balancer
 	}
 	return val
 }
@@ -213,7 +213,7 @@ func (m *KafkaClusterStatusResponse) Clone() *KafkaClusterStatusResponse {
 	}
 	clone.MaintenanceWindow = m.MaintenanceWindow.Clone()
 	clone.SchemaRegistry = m.SchemaRegistry.Clone()
-	clone.AutoRebalance = m.AutoRebalance.Clone()
+	clone.Balancer = m.Balancer.Clone()
 
 	return &clone
 }

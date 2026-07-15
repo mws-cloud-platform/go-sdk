@@ -24,7 +24,7 @@ type Mk8sReleaseChannel interface {
 type ListMk8sReleaseChannelsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 }
 

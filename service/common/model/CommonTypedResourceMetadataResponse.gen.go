@@ -29,7 +29,7 @@ type CommonTypedResourceMetadataResponse struct {
 	DeleteTime *time.Time `json:"deleteTime,omitempty" yaml:"deleteTime,omitempty"`
 	// Время удаления ресурса
 	PurgeTime *time.Time `json:"purgeTime,omitempty" yaml:"purgeTime,omitempty"`
-	// Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены
+	// Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены.
 	Usages []UsageResponse `json:"usages,omitempty" yaml:"usages,omitempty"`
 	// Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса
 	Etag *string `json:"etag,omitempty" yaml:"etag,omitempty"`

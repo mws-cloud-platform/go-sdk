@@ -11,6 +11,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func (m UpdateNodeGroupSpecRequest) MarshalJSON() ([]byte, error) {
@@ -35,6 +36,15 @@ func (m *UpdateNodeGroupSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateNodeGroupSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Zone.IsSet() {
+		e.FieldStart("zone")
+		e.Str(m.Zone.Value)
+	}
+
+	if m.Subnet.IsSet() {
+		e.FieldStart("subnet")
+		m.Subnet.Value.Encode(e)
+	}
 
 	if m.VmType.IsSet() {
 		e.FieldStart("vmType")
@@ -110,6 +120,22 @@ func (m *UpdateNodeGroupSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "zone":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Zone.SetTo(v)
+			return nil
+		case "subnet":
+			var v UpdateNodeGroupSpecSubnetRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Subnet.SetTo(v)
+			return nil
 		case "vmType":
 			var v UpdateNodeGroupSpecVmTypeRequest
 			if err := v.Decode(d); err != nil {
@@ -473,6 +499,60 @@ func (m *UpdateNodeGroupSpecServiceAccountRequest) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "ref":
 			var v iam.ServiceAccountRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m UpdateNodeGroupSpecSubnetRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *UpdateNodeGroupSpecSubnetRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *UpdateNodeGroupSpecSubnetRequest) encodeFields(e *jx.Encoder) error {
+	if m.Ref.IsSet() {
+		e.FieldStart("ref")
+		m.Ref.Value.Encode(e)
+	}
+	return nil
+}
+
+func (m *UpdateNodeGroupSpecSubnetRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *UpdateNodeGroupSpecSubnetRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("UpdateNodeGroupSpecSubnetRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ref":
+			var v vpc.SubnetRef
 			if err := v.Decode(d); err != nil {
 				return err
 			}

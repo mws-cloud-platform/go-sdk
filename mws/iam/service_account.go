@@ -7,8 +7,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/fs"
 	"os"
+	"path/filepath"
 	"regexp"
+	"strings"
 	"time"
 )
 
@@ -93,20 +96,13 @@ type ServiceAccountAuthorizedKey struct {
 }
 
 // ServiceAccountAuthorizedKeyFromFile reads a service account authorized key
-// from a file.
+// from a file using the OS filesystem.
+//
+// A leading "~/" in the path is expanded to the current user's home directory
+// resolved via the provided environment, so values like "~/key.json" are
+// supported.
 func ServiceAccountAuthorizedKeyFromFile(path string) (ServiceAccountAuthorizedKey, error) {
-	var key ServiceAccountAuthorizedKey
-
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return ServiceAccountAuthorizedKey{}, fmt.Errorf("read file: %w", err)
-	}
-
-	if err = json.Unmarshal(data, &key); err != nil {
-		return ServiceAccountAuthorizedKey{}, fmt.Errorf("unmarshal: %w", err)
-	}
-
-	return key, nil
+	return serviceAccountAuthorizedKeyFromFile(path, osFS{}, os.UserHomeDir)
 }
 
 // Reference returns a reference to the service account authorized key.
@@ -166,4 +162,40 @@ func (k *ServiceAccountAuthorizedKey) UnmarshalJSON(data []byte) error {
 	}
 
 	return nil
+}
+
+type osFS struct{}
+
+func (osFS) Open(name string) (fs.File, error) {
+	return os.Open(name)
+}
+
+func serviceAccountAuthorizedKeyFromFile(path string, fsys fs.FS, getHome func() (string, error)) (ServiceAccountAuthorizedKey, error) {
+	path, err := expandHome(path, getHome)
+	if err != nil {
+		return ServiceAccountAuthorizedKey{}, err
+	}
+
+	data, err := fs.ReadFile(fsys, path)
+	if err != nil {
+		return ServiceAccountAuthorizedKey{}, fmt.Errorf("read file: %w", err)
+	}
+
+	var key ServiceAccountAuthorizedKey
+	if err = json.Unmarshal(data, &key); err != nil {
+		return ServiceAccountAuthorizedKey{}, fmt.Errorf("unmarshal: %w", err)
+	}
+	return key, nil
+}
+
+func expandHome(path string, getHome func() (string, error)) (string, error) {
+	if !strings.HasPrefix(path, "~/") && !strings.HasPrefix(path, "~\\") {
+		return path, nil
+	}
+
+	home, err := getHome()
+	if err != nil {
+		return "", fmt.Errorf("get user home directory: %w", err)
+	}
+	return filepath.Join(home, path[2:]), nil
 }

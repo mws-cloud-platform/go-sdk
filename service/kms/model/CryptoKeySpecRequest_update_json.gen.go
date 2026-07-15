@@ -175,6 +175,10 @@ func (m *UpdateCryptoKeySpecDestructionPolicyRequest) Encode(e *jx.Encoder) erro
 }
 
 func (m *UpdateCryptoKeySpecDestructionPolicyRequest) encodeFields(e *jx.Encoder) error {
+	if m.DefaultDestructionIntervalDays.IsSet() {
+		e.FieldStart("defaultDestructionIntervalDays")
+		e.Int32(m.DefaultDestructionIntervalDays.Value)
+	}
 	return nil
 }
 
@@ -187,7 +191,20 @@ func (m *UpdateCryptoKeySpecDestructionPolicyRequest) Decode(d *jx.Decoder) erro
 		return conv.NewDecodeToNilError("UpdateCryptoKeySpecDestructionPolicyRequest")
 	}
 
-	return d.Skip()
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "defaultDestructionIntervalDays":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.DefaultDestructionIntervalDays.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }
 
 func (m UpdateCryptoKeySpecRotationPolicyRequest) MarshalJSON() ([]byte, error) {

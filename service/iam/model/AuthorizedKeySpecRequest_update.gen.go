@@ -3,6 +3,8 @@
 package model
 
 import (
+	"time"
+
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
@@ -10,12 +12,34 @@ import (
 )
 
 type UpdateAuthorizedKeySpecRequest struct {
+	// Открытый ключ. Если данный параметр в запросе отсутствует, то сервис сам сгенерирует ключ для указанного алгоритма и вернет приватный ключ в поле статуса в ответе.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	PublicKey optional.Optional[string] `json:"publicKey" yaml:"publicKey"`
+	// Алгоритм шифрования.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	KeyAlgorithm optional.Optional[string] `json:"keyAlgorithm" yaml:"keyAlgorithm"`
+	// Время истечения срока действия ключа.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	ExpirationTime optional.Optional[time.Time] `json:"expirationTime" yaml:"expirationTime"`
 	// Флаг активности ключа.
 	Active optional.Optional[bool] `json:"active" yaml:"active"`
 }
 
 func (m *AuthorizedKeySpecRequest) AsUpdateModel() UpdateAuthorizedKeySpecRequest {
 	var u UpdateAuthorizedKeySpecRequest
+	if m.PublicKey != nil {
+		u.PublicKey = optional.NewOptional(m.GetPublicKeyOr(""))
+	}
+	u.KeyAlgorithm = optional.NewOptional(m.GetKeyAlgorithm())
+	if m.ExpirationTime != nil {
+		u.ExpirationTime = optional.NewOptional(m.GetExpirationTimeOr(time.Time{}))
+	}
 	if m.Active != nil {
 		u.Active = optional.NewOptional(m.GetActiveOr(false))
 	}
@@ -27,6 +51,9 @@ func (m *AuthorizedKeySpecRequest) Diff(src *AuthorizedKeySpecRequest) UpdateAut
 	nilDiffers := src != nil && m == nil
 	upd := UpdateAuthorizedKeySpecRequest{}
 	if !nilDiffers {
+		upd.PublicKey = m.diffPublicKey(src)
+		upd.KeyAlgorithm = m.diffKeyAlgorithm(src)
+		upd.ExpirationTime = m.diffExpirationTime(src)
 		upd.Active = m.diffActive(src)
 	}
 	return upd
@@ -38,6 +65,15 @@ func (m *AuthorizedKeySpecRequest) WithChanges(u UpdateAuthorizedKeySpecRequest)
 		out = *m
 	}
 
+	if u.PublicKey.IsSet() {
+		out.PublicKey = ptr.Get(u.PublicKey.Value)
+	}
+	if u.KeyAlgorithm.IsSet() {
+		out.KeyAlgorithm = u.KeyAlgorithm.Value
+	}
+	if u.ExpirationTime.IsSet() {
+		out.ExpirationTime = ptr.Get(u.ExpirationTime.Value)
+	}
 	if u.Active.IsSet() {
 		out.Active = ptr.Get(u.Active.Value)
 	}
@@ -46,7 +82,25 @@ func (m *AuthorizedKeySpecRequest) WithChanges(u UpdateAuthorizedKeySpecRequest)
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateAuthorizedKeySpecRequest) HasChanges() bool {
-	return m.Active.Set
+	return m.PublicKey.Set ||
+		m.KeyAlgorithm.Set ||
+		m.ExpirationTime.Set ||
+		m.Active.Set
+}
+
+func (m *AuthorizedKeySpecRequest) diffPublicKey(src *AuthorizedKeySpecRequest) optional.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetPublicKey(), m.GetPublicKey(), nilDiffers)
+}
+
+func (m *AuthorizedKeySpecRequest) diffKeyAlgorithm(src *AuthorizedKeySpecRequest) optional.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveRequired(src.GetKeyAlgorithm(), m.GetKeyAlgorithm(), nilDiffers)
+}
+
+func (m *AuthorizedKeySpecRequest) diffExpirationTime(src *AuthorizedKeySpecRequest) optional.Optional[time.Time] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetExpirationTime(), m.GetExpirationTime(), nilDiffers)
 }
 
 func (m *AuthorizedKeySpecRequest) diffActive(src *AuthorizedKeySpecRequest) optional.Optional[bool] {

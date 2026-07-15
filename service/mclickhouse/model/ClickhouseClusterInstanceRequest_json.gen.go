@@ -33,10 +33,8 @@ func (m *ClickhouseClusterInstanceRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *ClickhouseClusterInstanceRequest) encodeFields(e *jx.Encoder) error {
-	if m.Name != nil {
-		e.FieldStart("name")
-		e.Str(*m.Name)
-	}
+	e.FieldStart("name")
+	e.Str(m.Name)
 
 	if m.Count != nil {
 		e.FieldStart("count")
@@ -67,6 +65,7 @@ func (m *ClickhouseClusterInstanceRequest) Decode(d *jx.Decoder) error {
 	}
 
 	requiredFilled := map[string]bool{
+		"name": false,
 		"zone": false,
 	}
 	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
@@ -77,7 +76,8 @@ func (m *ClickhouseClusterInstanceRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Name = &v
+			m.Name = v
+			requiredFilled["name"] = true
 			return nil
 		case "count":
 			v, err := decode.Int(d)

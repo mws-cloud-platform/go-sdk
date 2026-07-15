@@ -147,7 +147,7 @@ func (m *VirtualMachineSpecOptionalResponse) Parse(ctx context.Context) error {
 		return reserrors.NewPathAccumulatorError("Network", err)
 	}
 
-	if m.ServiceAccount.IsSet() {
+	if m.ServiceAccount.IsSet() && !m.ServiceAccount.IsNull() {
 		if err := m.ServiceAccount.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("ServiceAccount", err)
 		}

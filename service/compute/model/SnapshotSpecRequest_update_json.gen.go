@@ -31,6 +31,10 @@ func (m *UpdateSnapshotSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateSnapshotSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Source.IsSet() {
+		e.FieldStart("source")
+		m.Source.Value.Encode(e)
+	}
 
 	if m.OsType.IsSet() {
 		e.FieldStart("osType")
@@ -50,6 +54,14 @@ func (m *UpdateSnapshotSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "source":
+			var v UpdateSnapshotSourceRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Source.SetTo(v)
+			return nil
 		case "osType":
 			var v OsType
 			if err := v.Decode(d); err != nil {

@@ -3,23 +3,20 @@
 package model
 
 import (
-	"context"
-
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 type UpdateClickhouseInstanceDiskSpecRequest struct {
 	// Размер диска.
 	Size optional.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
-	// Тип диска.
-	Type optional.Optional[compute.DiskTypeRef] `json:"type" yaml:"type"`
-	// IOPS
+	// Тип используемого диска:
+	// * `NETWORK_STANDARD_SSD` — сетевой SSD
+	Type optional.Optional[ClickhouseDataDiskType] `json:"type" yaml:"type"`
+	// IOPS.
 	Iops optional.Optional[Iops] `json:"iops" yaml:"iops"`
 }
 
@@ -70,26 +67,12 @@ func (m UpdateClickhouseInstanceDiskSpecRequest) HasChanges() bool {
 		m.Iops.Set
 }
 
-func (m *UpdateClickhouseInstanceDiskSpecRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Type.IsSet() {
-		if err := m.Type.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Type", err)
-		}
-	}
-
-	return nil
-}
-
 func (m *ClickhouseInstanceDiskSpecRequest) diffSize(src *ClickhouseInstanceDiskSpecRequest) optional.Optional[bytesize.ByteSize] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffEquatableIfaceRequired(src.GetSize(), m.GetSize(), nilDiffers)
 }
 
-func (m *ClickhouseInstanceDiskSpecRequest) diffType(src *ClickhouseInstanceDiskSpecRequest) optional.Optional[compute.DiskTypeRef] {
+func (m *ClickhouseInstanceDiskSpecRequest) diffType(src *ClickhouseInstanceDiskSpecRequest) optional.Optional[ClickhouseDataDiskType] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetType(), m.GetType(), nilDiffers)
 }

@@ -15,16 +15,16 @@ import (
 type PostgresClusterSpecResponse struct {
 	// Версия продукта
 	Version string `json:"version" yaml:"version"`
-	// Значение включен/выключен кластер.
+	// Состояние кластера — включен или выключен.
 	Active bool `json:"active" yaml:"active"`
 	// Описание эндпойнтов в сетях пользователя (VPC) для подключения к инстансам кластера.
 	Endpoints        []PostgresEndpointResponse       `json:"endpoints" yaml:"endpoints"`
 	InstanceTemplate PostgresInstanceTemplateResponse `json:"instanceTemplate" yaml:"instanceTemplate"`
 	Instances        []PostgresInstanceResponse       `json:"instances" yaml:"instances"`
-	// Спецификация автоматического бэкапирования
+	// Спецификация автоматического бэкапирования.
 	Backup            *PostgresClusterBackupResponse    `json:"backup,omitempty" yaml:"backup,omitempty"`
 	MaintenanceWindow *common.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
-	// Параметры PostgreSQL. Если не указаны, будут использованы дефолтные параметры.
+	// Параметры PostgreSQL. Если не указаны, будут использованы параметры по умолчанию.
 	PostgresParameters map[string]string `json:"postgresParameters,omitempty" yaml:"postgresParameters,omitempty"`
 }
 

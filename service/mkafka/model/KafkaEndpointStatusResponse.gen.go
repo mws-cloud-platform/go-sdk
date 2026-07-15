@@ -16,7 +16,7 @@ type KafkaEndpointStatusResponse struct {
 	// Имя эндпойнта.
 	Name string `json:"name" yaml:"name"`
 	// Идентификатор пользовательской сети (VPC).
-	Network vpc.NetworkRef `json:"network" yaml:"network"`
+	Network vpc.NetworkID `json:"network" yaml:"network"`
 	// Список адресов для первоначального подключения к кластеру внутри пользовательской (VPC).
 	BootstrapServers *string `json:"bootstrapServers,omitempty" yaml:"bootstrapServers,omitempty"`
 	// Адреса Schema Registry во внутренней сети (VPC).
@@ -40,14 +40,14 @@ func (m *KafkaEndpointStatusResponse) SetName(val string) {
 	m.Name = val
 }
 
-func (m *KafkaEndpointStatusResponse) GetNetwork() vpc.NetworkRef {
+func (m *KafkaEndpointStatusResponse) GetNetwork() vpc.NetworkID {
 	if m != nil {
 		return m.Network
 	}
-	return vpc.NetworkRef{}
+	return vpc.NetworkID{}
 }
 
-func (m *KafkaEndpointStatusResponse) SetNetwork(val vpc.NetworkRef) {
+func (m *KafkaEndpointStatusResponse) SetNetwork(val vpc.NetworkID) {
 	m.Network = val
 }
 

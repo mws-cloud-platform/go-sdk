@@ -2,11 +2,28 @@
 
 package model
 
+import (
+	"time"
+
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/optional"
+)
+
 type UpdateHmacKeySpecRequest struct {
+	// Время истечения срока действия ключа.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	ExpirationTime optional.Optional[time.Time] `json:"expirationTime" yaml:"expirationTime"`
 }
 
 func (m *HmacKeySpecRequest) AsUpdateModel() UpdateHmacKeySpecRequest {
 	var u UpdateHmacKeySpecRequest
+	if m.ExpirationTime != nil {
+		u.ExpirationTime = optional.NewOptional(m.GetExpirationTimeOr(time.Time{}))
+	}
 	return u
 }
 
@@ -15,6 +32,7 @@ func (m *HmacKeySpecRequest) Diff(src *HmacKeySpecRequest) UpdateHmacKeySpecRequ
 	nilDiffers := src != nil && m == nil
 	upd := UpdateHmacKeySpecRequest{}
 	if !nilDiffers {
+		upd.ExpirationTime = m.diffExpirationTime(src)
 	}
 	return upd
 }
@@ -25,10 +43,18 @@ func (m *HmacKeySpecRequest) WithChanges(u UpdateHmacKeySpecRequest) HmacKeySpec
 		out = *m
 	}
 
+	if u.ExpirationTime.IsSet() {
+		out.ExpirationTime = ptr.Get(u.ExpirationTime.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateHmacKeySpecRequest) HasChanges() bool {
-	return false
+	return m.ExpirationTime.Set
+}
+
+func (m *HmacKeySpecRequest) diffExpirationTime(src *HmacKeySpecRequest) optional.Optional[time.Time] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetExpirationTime(), m.GetExpirationTime(), nilDiffers)
 }

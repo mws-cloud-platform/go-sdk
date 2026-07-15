@@ -44,7 +44,7 @@ type CryptoKeyVersion interface {
 }
 
 type ListCryptoKeyVersionsRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -125,7 +125,7 @@ func (m *ListCryptoKeyVersionsResponse) SetErrorWrapper(f func(err error) error)
 }
 
 type ScheduleDestructionOfCryptoKeyVersionRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -196,7 +196,7 @@ func (m *ScheduleDestructionOfCryptoKeyVersionResponse) SetErrorWrapper(f func(e
 }
 
 type CancelScheduledDestructionOfCryptoKeyVersionRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -265,7 +265,7 @@ func (m *CancelScheduledDestructionOfCryptoKeyVersionResponse) SetErrorWrapper(f
 }
 
 type GetCryptoKeyVersionRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -330,7 +330,7 @@ func (m *GetCryptoKeyVersionResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type UpsertCryptoKeyVersionRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
@@ -365,7 +365,7 @@ func (m *UpsertCryptoKeyVersionRequest) getCryptoKeyVersionRequest() GetCryptoKe
 }
 
 type UpdateCryptoKeyVersionRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"

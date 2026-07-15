@@ -42,7 +42,7 @@ type CryptoKeyRoleBinding interface {
 type ListCryptoKeyRoleBindingsRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key string // path: "key"
@@ -118,7 +118,7 @@ func (m *ListCryptoKeyRoleBindingsResponse) SetErrorWrapper(f func(err error) er
 type DeleteCryptoKeyRoleBindingRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key string // path: "key"
@@ -192,7 +192,7 @@ func (m *DeleteCryptoKeyRoleBindingResponse) SetErrorWrapper(f func(err error) e
 type GetCryptoKeyRoleBindingRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key string // path: "key"
@@ -259,7 +259,7 @@ type UpsertCryptoKeyRoleBindingRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key string // path: "key"
@@ -294,7 +294,7 @@ type UpdateCryptoKeyRoleBindingRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key string // path: "key"

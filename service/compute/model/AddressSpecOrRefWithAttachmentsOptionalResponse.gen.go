@@ -12,7 +12,7 @@ import (
 // Real OAPI model name: AddressSpecOrRefWithAttachments
 type AddressSpecOrRefWithAttachmentsOptionalResponse struct {
 	Address AddressSpecOrRefOptionalResponse `json:"address" yaml:"address"`
-	// NAT правило для связи внутреннего адреса с внешним адресом
+	// NAT-правило для связи внутреннего адреса с внешним адресом.
 	OneToOneNat optional.OptionalNil[ComputeOneToOneNatSpecOptionalResponse] `json:"oneToOneNat,omitempty" yaml:"oneToOneNat,omitempty"`
 }
 
@@ -63,7 +63,7 @@ func (m *AddressSpecOrRefWithAttachmentsOptionalResponse) Parse(ctx context.Cont
 		return reserrors.NewPathAccumulatorError("Address", err)
 	}
 
-	if m.OneToOneNat.IsSet() {
+	if m.OneToOneNat.IsSet() && !m.OneToOneNat.IsNull() {
 		if err := m.OneToOneNat.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("OneToOneNat", err)
 		}

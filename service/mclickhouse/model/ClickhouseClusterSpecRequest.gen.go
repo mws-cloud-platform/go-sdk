@@ -4,29 +4,32 @@ package model
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"slices"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Параметры кластера.
 // Real OAPI model name: ClickhouseClusterSpec
 type ClickhouseClusterSpecRequest struct {
-	// Значение включен/выключен кластер.
+	// Состояние кластера — включен или выключен.
 	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 	// Версия продукта.
 	Version string `json:"version" yaml:"version"`
-	// Описание эдпойнтов кластера.
+	// Регион, в котором располагается кластер.
+	Region *rm.RegionRef `json:"region,omitempty" yaml:"region,omitempty"`
+	// Описание эндпоинтов кластера.
 	Endpoints []ClickhouseEndpointRequest `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 	// Описание координатора кластера.
 	Coordinator *ClickhouseClusterCoordinatorRequest `json:"coordinator,omitempty" yaml:"coordinator,omitempty"`
 	// Описание шардов кластера.
 	Shards []ClickhouseClusterShardRequest `json:"shards" yaml:"shards"`
-	// Настройки Clickhouse. Если не указаны, будут использованы настройки по-умолчанию.
-	Config map[string]json.RawMessage `json:"config,omitempty" yaml:"config,omitempty"`
+	// Настройки Clickhouse. Если не указаны, будут использованы настройки по умолчанию
+	Config map[string]jsonapimodels.RawMessageNotNull `json:"config,omitempty" yaml:"config,omitempty"`
 	// Конфигурация схемы хранилищ ClickHouse.
 	Storage *ClickhouseStorageConfigurationRequest `json:"storage,omitempty" yaml:"storage,omitempty"`
 	// Добавление пользователей при создании кластера Clickhouse.
@@ -63,6 +66,24 @@ func (m *ClickhouseClusterSpecRequest) GetVersion() string {
 
 func (m *ClickhouseClusterSpecRequest) SetVersion(val string) {
 	m.Version = val
+}
+
+func (m *ClickhouseClusterSpecRequest) GetRegion() *rm.RegionRef {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *ClickhouseClusterSpecRequest) SetRegion(val *rm.RegionRef) {
+	m.Region = val
+}
+
+func (m *ClickhouseClusterSpecRequest) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+	if m != nil && m.Region != nil {
+		return *m.Region
+	}
+	return val
 }
 
 func (m *ClickhouseClusterSpecRequest) GetEndpoints() []ClickhouseEndpointRequest {
@@ -112,18 +133,18 @@ func (m *ClickhouseClusterSpecRequest) SetShards(val []ClickhouseClusterShardReq
 	m.Shards = val
 }
 
-func (m *ClickhouseClusterSpecRequest) GetConfig() map[string]json.RawMessage {
+func (m *ClickhouseClusterSpecRequest) GetConfig() map[string]jsonapimodels.RawMessageNotNull {
 	if m != nil {
 		return m.Config
 	}
 	return nil
 }
 
-func (m *ClickhouseClusterSpecRequest) SetConfig(val map[string]json.RawMessage) {
+func (m *ClickhouseClusterSpecRequest) SetConfig(val map[string]jsonapimodels.RawMessageNotNull) {
 	m.Config = val
 }
 
-func (m *ClickhouseClusterSpecRequest) GetConfigOr(val map[string]json.RawMessage) map[string]json.RawMessage {
+func (m *ClickhouseClusterSpecRequest) GetConfigOr(val map[string]jsonapimodels.RawMessageNotNull) map[string]jsonapimodels.RawMessageNotNull {
 	if m != nil && m.Config != nil {
 		return m.Config
 	}
@@ -205,6 +226,7 @@ func (m *ClickhouseClusterSpecRequest) Clone() *ClickhouseClusterSpecRequest {
 		cloneActive := *m.Active
 		clone.Active = &cloneActive
 	}
+	clone.Region = m.Region.Clone()
 	if m.Endpoints != nil {
 		clone.Endpoints = make([]ClickhouseEndpointRequest, len(m.Endpoints))
 		for i, v := range m.Endpoints {
@@ -219,7 +241,7 @@ func (m *ClickhouseClusterSpecRequest) Clone() *ClickhouseClusterSpecRequest {
 		}
 	}
 	if m.Config != nil {
-		clone.Config = make(map[string]json.RawMessage, len(m.Config))
+		clone.Config = make(map[string]jsonapimodels.RawMessageNotNull, len(m.Config))
 		for k, v := range m.Config {
 			clone.Config[k] = slices.Clone(v)
 		}
@@ -234,6 +256,10 @@ func (m *ClickhouseClusterSpecRequest) Clone() *ClickhouseClusterSpecRequest {
 func (m *ClickhouseClusterSpecRequest) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if err := m.Region.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Region", err)
 	}
 
 	for index := range m.Endpoints {

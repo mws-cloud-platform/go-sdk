@@ -12,32 +12,32 @@ import (
 // Real OAPI model name: PostgresClusterStatus
 type PostgresClusterStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
-	// Состояние кластера
-	//   - `CREATING`     - Создается
-	//   - `RUNNING`      - Работает в штатном режиме
-	//   - `STOPPING`     - Останавливается
-	//   - `STOPPED`      - Остановлен
-	//   - `STARTING`     - Запуск ранее остановленного
-	//   - `UPDATING`     - Выполняется обновление
-	//   - `ERROR`        - Произошла ошибка, требуется участие команды поддержки
-	//   - `DELETING`     - Удаляется
-	//   - `DELETED`      - Удален
-	//   - `UNIDENTIFIED` - Не удается определить статус
-	//   - `RESTORING`    - Восстанавливается
-	//   - `MAINTENANCE`  - Ведутся работы по тех.обслуживанию
+	// Состояние кластера:
+	//   - `CREATING`     - Создается;
+	//   - `RUNNING`      - Работает в штатном режиме;
+	//   - `STOPPING`     - Останавливается;
+	//   - `STOPPED`      - Остановлен;
+	//   - `STARTING`     - Запуск ранее остановленного;
+	//   - `UPDATING`     - Выполняется обновление;
+	//   - `ERROR`        - Произошла ошибка, требуется участие команды поддержки;
+	//   - `DELETING`     - Удаляется;
+	//   - `DELETED`      - Удален;
+	//   - `UNIDENTIFIED` - Не удается определить статус;
+	//   - `RESTORING`    - Восстанавливается;
+	//   - `MAINTENANCE`  - Ведутся работы по тех.обслуживанию.
 	State *ClusterState `json:"state,omitempty" yaml:"state,omitempty"`
-	// Работоспособность кластера
-	//   - `ALIVE`    - Полностью работоспособен
-	//   - `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны)
-	//   - `FAILED`   - Неработоспособен
-	//   - `UNKNOWN`  - Не удается определить состояние (на этапе создания)
+	// Работоспособность кластера:
+	//   - `ALIVE`    - Полностью работоспособен;
+	//   - `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны);
+	//   - `FAILED`   - Неработоспособен;
+	//   - `UNKNOWN`  - Не удается определить состояние (на этапе создания).
 	Health  *ClusterHealth `json:"health,omitempty" yaml:"health,omitempty"`
 	Message *string        `json:"message,omitempty" yaml:"message,omitempty"`
-	// Описание ip адресов для доступа к кластеру
+	// Описание IP-адресов для доступа к кластеру.
 	Network           *PostgresStatusNetworkResponse     `json:"network,omitempty" yaml:"network,omitempty"`
 	Instances         []PostgresStatusInstanceResponse   `json:"instances,omitempty" yaml:"instances,omitempty"`
 	MaintenanceWindow *common.MaintenanceWindow2Response `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
-	// Фактические параметры для автоматического бэкапирования
+	// Фактические параметры для автоматического бэкапирования.
 	Backup           *PostgresClusterStatusBackupResponse           `json:"backup,omitempty" yaml:"backup,omitempty"`
 	InstanceTemplate *PostgresClusterStatusInstanceTemplateResponse `json:"instanceTemplate,omitempty" yaml:"instanceTemplate,omitempty"`
 }

@@ -12,7 +12,7 @@ import (
 )
 
 type UpdateClickhouseEndpointAddressSpecRequest struct {
-	// Подсеть облачной сети, к которой принадлежит адрес
+	// Подсеть облачной сети, которой принадлежит адрес.
 	Subnet optional.Optional[vpc.SubnetRef] `json:"subnet" yaml:"subnet"`
 }
 

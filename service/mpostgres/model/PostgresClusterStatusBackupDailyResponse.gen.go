@@ -2,10 +2,10 @@
 
 package model
 
-// Фактические параметры ежедневного автоматического бэкапирования
+// Фактические параметры ежедневного автоматического бэкапирования.
 // Real OAPI model name: PostgresClusterStatusBackupDaily
 type PostgresClusterStatusBackupDailyResponse struct {
-	// Час начала автоматического бэкапирования
+	// Час начала автоматического бэкапирования.
 	Hour int `json:"hour" yaml:"hour"`
 }
 

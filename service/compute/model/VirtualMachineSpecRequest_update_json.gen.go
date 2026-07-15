@@ -6,6 +6,7 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
@@ -33,6 +34,10 @@ func (m *UpdateVirtualMachineSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateVirtualMachineSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Zone.IsSet() {
+		e.FieldStart("zone")
+		e.Str(m.Zone.Value)
+	}
 
 	if m.VmType.IsSet() {
 		e.FieldStart("vmType")
@@ -89,6 +94,14 @@ func (m *UpdateVirtualMachineSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "zone":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Zone.SetTo(v)
+			return nil
 		case "vmType":
 			var v compute.VmTypeRef
 			if err := v.Decode(d); err != nil {

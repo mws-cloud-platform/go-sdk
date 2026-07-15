@@ -26,5 +26,6 @@ func (m *NatGatewayStatusResponse) Clone() *NatGatewayStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
+
 	return &clone
 }

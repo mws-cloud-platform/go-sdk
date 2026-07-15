@@ -41,6 +41,9 @@ func (m *OutputModalitiesResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("audio")
 	e.Bool(m.Audio)
 
+	e.FieldStart("image")
+	e.Bool(m.Image)
+
 	e.FieldStart("reranking")
 	e.Bool(m.Reranking)
 
@@ -83,6 +86,14 @@ func (m *OutputModalitiesResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Audio = v
+			return nil
+		case "image":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Image = v
 			return nil
 		case "reranking":
 			v, err := decode.Bool(d)

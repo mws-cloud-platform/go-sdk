@@ -123,7 +123,7 @@ func (m *CryptoKeySpecOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.PrimaryKeyVersionRef.IsSet() {
+	if m.PrimaryKeyVersionRef.IsSet() && !m.PrimaryKeyVersionRef.IsNull() {
 		if err := m.PrimaryKeyVersionRef.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("PrimaryKeyVersionRef", err)
 		}

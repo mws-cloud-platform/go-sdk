@@ -13,7 +13,7 @@ type PostgresClusterStatusInstanceTemplateDataDiskResponse struct {
 	Size bytesize.ByteSize `json:"size" yaml:"size"`
 	// Тип диска.
 	Type DataDiskType `json:"type" yaml:"type"`
-	// IOPS
+	// IOPS.
 	Iops *int32 `json:"iops,omitempty" yaml:"iops,omitempty"`
 }
 

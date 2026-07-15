@@ -122,7 +122,7 @@ func (m *UpdateKafkaEndpointRequest) Parse(ctx context.Context) error {
 		}
 	}
 
-	if m.ExternalAccess.IsSet() {
+	if m.ExternalAccess.IsSet() && !m.ExternalAccess.IsNull() {
 		if err := m.ExternalAccess.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("ExternalAccess", err)
 		}

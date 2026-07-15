@@ -34,6 +34,14 @@ func (m *PostgresClusterUserStatusResponse) Encode(e *jx.Encoder) error {
 func (m *PostgresClusterUserStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
 	m.Ready.Encode(e)
+	if m.RoleBindings != nil {
+		e.FieldStart("roleBindings")
+		e.ArrStart()
+		for _, elem := range m.RoleBindings {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
 	return nil
 }
 
@@ -55,6 +63,21 @@ func (m *PostgresClusterUserStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Ready = v
+			return nil
+		case "roleBindings":
+			c := make([]PostgresUserRoleBindingStatusResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v PostgresUserRoleBindingStatusResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.RoleBindings = c
 			return nil
 		default:
 			return d.Skip()

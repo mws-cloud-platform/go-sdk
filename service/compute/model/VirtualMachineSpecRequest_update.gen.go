@@ -16,6 +16,9 @@ import (
 )
 
 type UpdateVirtualMachineSpecRequest struct {
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Zone     optional.Optional[string]                       `json:"zone" yaml:"zone"`
 	VmType   optional.Optional[compute.VmTypeRef]            `json:"vmType" yaml:"vmType"`
 	Hardware optional.OptionalNil[UpdateHardwareSpecRequest] `json:"hardware" yaml:"hardware"`
 	Os       optional.OptionalNil[UpdateOsSpecRequest]       `json:"os" yaml:"os"`
@@ -27,6 +30,7 @@ type UpdateVirtualMachineSpecRequest struct {
 
 func (m *VirtualMachineSpecRequest) AsUpdateModel() UpdateVirtualMachineSpecRequest {
 	var u UpdateVirtualMachineSpecRequest
+	u.Zone = optional.NewOptional(m.GetZone())
 	u.VmType = optional.NewOptional(m.GetVmType())
 	if m.Hardware != nil {
 		u.Hardware = optional.NewOptionalNil(m.Hardware.AsUpdateModel())
@@ -48,6 +52,7 @@ func (m *VirtualMachineSpecRequest) Diff(src *VirtualMachineSpecRequest) (Update
 	nilDiffers := src != nil && m == nil
 	upd := UpdateVirtualMachineSpecRequest{}
 	if !nilDiffers {
+		upd.Zone = m.diffZone(src)
 		upd.VmType = m.diffVmType(src)
 		upd.Hardware = m.diffHardware(src)
 		upd.Os = m.diffOs(src)
@@ -70,6 +75,9 @@ func (m *VirtualMachineSpecRequest) WithChanges(u UpdateVirtualMachineSpecReques
 		out = *m
 	}
 
+	if u.Zone.IsSet() {
+		out.Zone = u.Zone.Value
+	}
 	if u.VmType.IsSet() {
 		out.VmType = u.VmType.Value
 	}
@@ -99,7 +107,8 @@ func (m *VirtualMachineSpecRequest) WithChanges(u UpdateVirtualMachineSpecReques
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateVirtualMachineSpecRequest) HasChanges() bool {
-	return m.VmType.Set ||
+	return m.Zone.Set ||
+		m.VmType.Set ||
 		m.Hardware.Set ||
 		m.Os.Set ||
 		m.Storage.Set ||
@@ -130,13 +139,18 @@ func (m *UpdateVirtualMachineSpecRequest) Parse(ctx context.Context) error {
 		}
 	}
 
-	if m.ServiceAccount.IsSet() {
+	if m.ServiceAccount.IsSet() && !m.ServiceAccount.IsNull() {
 		if err := m.ServiceAccount.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("ServiceAccount", err)
 		}
 	}
 
 	return nil
+}
+
+func (m *VirtualMachineSpecRequest) diffZone(src *VirtualMachineSpecRequest) optional.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveRequired(src.GetZone(), m.GetZone(), nilDiffers)
 }
 
 func (m *VirtualMachineSpecRequest) diffVmType(src *VirtualMachineSpecRequest) optional.Optional[compute.VmTypeRef] {

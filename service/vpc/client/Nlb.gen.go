@@ -27,16 +27,16 @@ type Nlb interface {
 	//
 	// Путь: GET /nlb/v1/projects/{project}/networks/{network}/nlbs/{nlb}
 	GetNlbV2(context.Context, GetNlbV2Request) (*GetNlbV2Response, error)
-	// UpsertNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки..
+	// UpsertNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки.
 	//
 	// Путь: POST /nlb/v1/projects/{project}/networks/{network}/nlbs/{nlb}
 	UpsertNlbV2(context.Context, UpsertNlbV2Request) (*UpsertNlbV2Response, error)
-	// CreateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки..
+	// CreateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /nlb/v1/projects/{project}/networks/{network}/nlbs/{nlb}?createOnly=true
 	CreateNlbV2(context.Context, UpsertNlbV2Request) (*UpsertNlbV2Response, error)
-	// UpdateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки..
+	// UpdateNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /nlb/v1/projects/{project}/networks/{network}/nlbs/{nlb}?updateOnly=true
@@ -46,7 +46,7 @@ type Nlb interface {
 type ListNlbsByProjectIdRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -137,7 +137,7 @@ func (m *ListNlbsByProjectIdResponse) SetErrorWrapper(f func(err error) error) {
 type ListNlbsV2Request struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -232,7 +232,7 @@ type DeleteNlbV2Request struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -318,7 +318,7 @@ func (m *DeleteNlbV2Response) SetErrorWrapper(f func(err error) error) {
 type GetNlbV2Request struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -397,7 +397,7 @@ type UpsertNlbV2Request struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
@@ -433,7 +433,7 @@ type UpdateNlbV2Request struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"

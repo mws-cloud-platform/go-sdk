@@ -15,16 +15,25 @@ import (
 )
 
 type UpdateNetworkInterfaceSpecRequest struct {
-	// Имя сетевого интерфейса
-	Name                optional.Optional[string] `json:"name" yaml:"name"`
-	IpForwardingEnabled optional.Optional[bool]   `json:"ipForwardingEnabled" yaml:"ipForwardingEnabled"`
-	// IP-адреса сетевого интерфейса
+	// Имя сетевого интерфейса.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Name optional.Optional[string] `json:"name" yaml:"name"`
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Primary             optional.Optional[bool] `json:"primary" yaml:"primary"`
+	IpForwardingEnabled optional.Optional[bool] `json:"ipForwardingEnabled" yaml:"ipForwardingEnabled"`
+	// IP-адреса сетевого интерфейса.
 	Addresses optional.Optional[[]UpdateAddressSpecOrRefWithAttachmentsRequest] `json:"addresses" yaml:"addresses"`
 }
 
 func (m *NetworkInterfaceSpecRequest) AsUpdateModel() UpdateNetworkInterfaceSpecRequest {
 	var u UpdateNetworkInterfaceSpecRequest
 	u.Name = optional.NewOptional(m.GetName())
+	if m.Primary != nil {
+		u.Primary = optional.NewOptional(m.GetPrimaryOr(false))
+	}
 	if m.IpForwardingEnabled != nil {
 		u.IpForwardingEnabled = optional.NewOptional(m.GetIpForwardingEnabledOr(false))
 	}
@@ -48,6 +57,7 @@ func (m *NetworkInterfaceSpecRequest) Diff(src *NetworkInterfaceSpecRequest) (Up
 	upd := UpdateNetworkInterfaceSpecRequest{}
 	if !nilDiffers {
 		upd.Name = m.diffName(src)
+		upd.Primary = m.diffPrimary(src)
 		upd.IpForwardingEnabled = m.diffIpForwardingEnabled(src)
 		upd.Addresses, err = m.diffAddresses(src)
 		if err != nil {
@@ -66,6 +76,9 @@ func (m *NetworkInterfaceSpecRequest) WithChanges(u UpdateNetworkInterfaceSpecRe
 	if u.Name.IsSet() {
 		out.Name = u.Name.Value
 	}
+	if u.Primary.IsSet() {
+		out.Primary = ptr.Get(u.Primary.Value)
+	}
 	if u.IpForwardingEnabled.IsSet() {
 		out.IpForwardingEnabled = ptr.Get(u.IpForwardingEnabled.Value)
 	}
@@ -78,6 +91,7 @@ func (m *NetworkInterfaceSpecRequest) WithChanges(u UpdateNetworkInterfaceSpecRe
 // HasChanges returns true if any field has Set == true
 func (m UpdateNetworkInterfaceSpecRequest) HasChanges() bool {
 	return m.Name.Set ||
+		m.Primary.Set ||
 		m.IpForwardingEnabled.Set ||
 		m.Addresses.Set
 }
@@ -114,6 +128,11 @@ func (m *UpdateNetworkInterfaceSpecRequest) Parse(ctx context.Context) error {
 func (m *NetworkInterfaceSpecRequest) diffName(src *NetworkInterfaceSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
+}
+
+func (m *NetworkInterfaceSpecRequest) diffPrimary(src *NetworkInterfaceSpecRequest) optional.Optional[bool] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetPrimary(), m.GetPrimary(), nilDiffers)
 }
 
 func (m *NetworkInterfaceSpecRequest) diffIpForwardingEnabled(src *NetworkInterfaceSpecRequest) optional.Optional[bool] {

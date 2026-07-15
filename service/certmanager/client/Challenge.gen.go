@@ -17,7 +17,7 @@ type Challenge interface {
 }
 
 type GetChallengeTokenRequest struct {
-	// Путь к проекту
+	// Путь к проекту.
 	Project string // path: "project"
 	// Certificate name.
 	Name string // path: "name"

@@ -10,7 +10,7 @@ import (
 )
 
 type UpdatePostgresClusterBackupDailyRequest struct {
-	// Час начала автоматического бэкапирования
+	// Час начала автоматического бэкапирования.
 	Hour optional.Optional[int] `json:"hour" yaml:"hour"`
 }
 

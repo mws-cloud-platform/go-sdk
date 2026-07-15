@@ -4,16 +4,16 @@ package model
 
 // Real OAPI model name: ModelSpec
 type ModelSpecResponse struct {
-	// Размер контекстного окна модели в токенах
+	// Размер контекстного окна модели в токенах.
 	ContextWindowSize *uint                    `json:"contextWindowSize,omitempty" yaml:"contextWindowSize,omitempty"`
 	InputModalities   InputModalitiesResponse  `json:"inputModalities" yaml:"inputModalities"`
 	OutputModalities  OutputModalitiesResponse `json:"outputModalities" yaml:"outputModalities"`
 	Modalities        ModalitiesResponse       `json:"modalities" yaml:"modalities"`
 	Capabilities      CapabilitiesResponse     `json:"capabilities" yaml:"capabilities"`
 	Deprecation       DeprecationResponse      `json:"deprecation" yaml:"deprecation"`
-	// Размер модели в миллиардах параметров
+	// Размер модели в миллиардах параметров.
 	Size *float32 `json:"size,omitempty" yaml:"size,omitempty"`
-	// Разработчик модели
+	// Разработчик модели.
 	Developer *string `json:"developer,omitempty" yaml:"developer,omitempty"`
 }
 

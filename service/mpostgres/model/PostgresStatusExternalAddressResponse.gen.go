@@ -11,7 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Описание внешнего ip адреса для доступа к кластеру
+// Описание внешнего IP-адреса для доступа к кластеру.
 // Real OAPI model name: PostgresStatusExternalAddress
 type PostgresStatusExternalAddressResponse struct {
 	Address *vpc.ExternalAddressRef `json:"address,omitempty" yaml:"address,omitempty"`

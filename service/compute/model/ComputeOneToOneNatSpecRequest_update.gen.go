@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateComputeOneToOneNatSpecRequest struct {
-	// Информация о внешнем адресе
+	// Информация о внешнем адресе.
 	External optional.Optional[UpdateComputeOneToOneNatSpecExternalRequest] `json:"external" yaml:"external"`
 }
 

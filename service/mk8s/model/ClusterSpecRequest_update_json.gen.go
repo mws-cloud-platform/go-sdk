@@ -4,6 +4,7 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -31,6 +32,10 @@ func (m *UpdateClusterSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateClusterSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Availability.IsSet() {
+		e.FieldStart("availability")
+		m.Availability.Value.Encode(e)
+	}
 
 	if m.Network.IsSet() {
 		e.FieldStart("network")
@@ -55,6 +60,14 @@ func (m *UpdateClusterSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "availability":
+			var v UpdateClusterAvailabilitySpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Availability.SetTo(v)
+			return nil
 		case "network":
 			var v UpdateClusterSpecNetworkRequest
 			if err := v.Decode(d); err != nil {
@@ -99,6 +112,10 @@ func (m *UpdateClusterSpecNetworkRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdateClusterSpecNetworkRequest) encodeFields(e *jx.Encoder) error {
+	if m.PrimaryEndpoint.IsSet() {
+		e.FieldStart("primaryEndpoint")
+		m.PrimaryEndpoint.Value.Encode(e)
+	}
 
 	if m.PublicEndpoint.IsSet() {
 		e.FieldStart("publicEndpoint")
@@ -107,6 +124,16 @@ func (m *UpdateClusterSpecNetworkRequest) encodeFields(e *jx.Encoder) error {
 		} else {
 			m.PublicEndpoint.Value.Encode(e)
 		}
+	}
+
+	if m.PodsCidr.IsSet() {
+		e.FieldStart("podsCidr")
+		m.PodsCidr.Value.Encode(e)
+	}
+
+	if m.ServicesCidr.IsSet() {
+		e.FieldStart("servicesCidr")
+		m.ServicesCidr.Value.Encode(e)
 	}
 	return nil
 }
@@ -122,6 +149,14 @@ func (m *UpdateClusterSpecNetworkRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "primaryEndpoint":
+			var v UpdateClusterPrimaryEndpointSpecOrRefRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.PrimaryEndpoint.SetTo(v)
+			return nil
 		case "publicEndpoint":
 			if d.Next() == jx.Null {
 				m.PublicEndpoint.SetToNull()
@@ -134,6 +169,22 @@ func (m *UpdateClusterSpecNetworkRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.PublicEndpoint.SetTo(v)
+			return nil
+		case "podsCidr":
+			var v cidraddress.CIDR4Address
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.PodsCidr.SetTo(v)
+			return nil
+		case "servicesCidr":
+			var v cidraddress.CIDR4Address
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ServicesCidr.SetTo(v)
 			return nil
 		default:
 			return d.Skip()
