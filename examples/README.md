@@ -15,6 +15,7 @@ Available examples:
 * [CRUD Self-Hosted Certificate](./cert_self_hosted_test.go): Demonstrates how to perform Create, Read, Update, and Delete operations on self-managed certificate resources.
 * [CRUD Secret](./secret_test.go): Demonstrates how to perform Create, Read, Update, Activate, Deactivate, and Delete operations on secret resources.
 * [Secret Version](./secret_versions_test.go): Demonstrates how to perform Create, Read, Update, Activate, Deactivate, and Delete operations on secret version resources.
+* [Enable Service](./enable_service_test.go): Demonstrates how to enable a service in a project.
 
 ## Environment Setup
 
