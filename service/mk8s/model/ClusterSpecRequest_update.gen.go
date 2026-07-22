@@ -19,6 +19,7 @@ type UpdateClusterSpecRequest struct {
 	Availability   optional.Optional[UpdateClusterAvailabilitySpecRequest]   `json:"availability" yaml:"availability"`
 	Network        optional.Optional[UpdateClusterSpecNetworkRequest]        `json:"network" yaml:"network"`
 	VersionControl optional.Optional[UpdateClusterVersionControlSpecRequest] `json:"versionControl" yaml:"versionControl"`
+	Plugins        optional.OptionalNil[UpdatePluginsSpecRequest]            `json:"plugins" yaml:"plugins"`
 }
 
 func (m *ClusterSpecRequest) AsUpdateModel() UpdateClusterSpecRequest {
@@ -26,6 +27,9 @@ func (m *ClusterSpecRequest) AsUpdateModel() UpdateClusterSpecRequest {
 	u.Availability = optional.NewOptional(m.Availability.AsUpdateModel())
 	u.Network = optional.NewOptional(m.Network.AsUpdateModel())
 	u.VersionControl = optional.NewOptional(m.VersionControl.AsUpdateModel())
+	if m.Plugins != nil {
+		u.Plugins = optional.NewOptionalNil(m.Plugins.AsUpdateModel())
+	}
 	return u
 }
 
@@ -37,6 +41,7 @@ func (m *ClusterSpecRequest) Diff(src *ClusterSpecRequest) UpdateClusterSpecRequ
 		upd.Availability = m.diffAvailability(src)
 		upd.Network = m.diffNetwork(src)
 		upd.VersionControl = m.diffVersionControl(src)
+		upd.Plugins = m.diffPlugins(src)
 	}
 	return upd
 }
@@ -56,6 +61,11 @@ func (m *ClusterSpecRequest) WithChanges(u UpdateClusterSpecRequest) ClusterSpec
 	if u.VersionControl.IsSet() {
 		out.VersionControl = out.VersionControl.WithChanges(u.VersionControl.Value)
 	}
+	if u.Plugins.IsSet() {
+		out.Plugins = ptr.Get(out.Plugins.WithChanges(u.Plugins.Value))
+	} else if u.Plugins.IsNull() {
+		out.Plugins = nil
+	}
 	return out
 }
 
@@ -63,7 +73,8 @@ func (m *ClusterSpecRequest) WithChanges(u UpdateClusterSpecRequest) ClusterSpec
 func (m UpdateClusterSpecRequest) HasChanges() bool {
 	return m.Availability.Set ||
 		m.Network.Set ||
-		m.VersionControl.Set
+		m.VersionControl.Set ||
+		m.Plugins.Set
 }
 
 func (m *UpdateClusterSpecRequest) Parse(ctx context.Context) error {
@@ -107,6 +118,16 @@ func (m *ClusterSpecRequest) diffVersionControl(src *ClusterSpecRequest) optiona
 	return optional.Optional[UpdateClusterVersionControlSpecRequest]{
 		Value: value,
 		Set:   value.HasChanges(),
+	}
+}
+
+func (m *ClusterSpecRequest) diffPlugins(src *ClusterSpecRequest) optional.OptionalNil[UpdatePluginsSpecRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetPlugins().Diff(src.GetPlugins())
+	return optional.OptionalNil[UpdatePluginsSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
 	}
 }
 

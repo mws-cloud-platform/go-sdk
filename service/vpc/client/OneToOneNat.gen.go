@@ -143,6 +143,8 @@ type DeleteOneToOneNatRequest struct {
 	Network string // path: "network"
 	// Имя One-to-One NAT
 	OneToOneNat string // path: "oneToOneNat"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteOneToOneNatRequest) SetAuthorization(authorization string) {
@@ -308,6 +310,8 @@ type UpsertOneToOneNatRequest struct {
 	Network string // path: "network"
 	// Имя One-to-One NAT
 	OneToOneNat string // path: "oneToOneNat"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения One-to-One NAT
 	Body model.OneToOneNatRequest // body
 }
@@ -344,6 +348,8 @@ type UpdateOneToOneNatRequest struct {
 	Network string // path: "network"
 	// Имя One-to-One NAT
 	OneToOneNat string // path: "oneToOneNat"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения One-to-One NAT
 	Body model.UpdateOneToOneNatRequest // body
 }

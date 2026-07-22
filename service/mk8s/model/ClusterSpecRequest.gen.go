@@ -15,6 +15,7 @@ type ClusterSpecRequest struct {
 	Availability   ClusterAvailabilitySpecRequest   `json:"availability" yaml:"availability"`
 	Network        ClusterSpecNetworkRequest        `json:"network" yaml:"network"`
 	VersionControl ClusterVersionControlSpecRequest `json:"versionControl" yaml:"versionControl"`
+	Plugins        *PluginsSpecRequest              `json:"plugins,omitempty" yaml:"plugins,omitempty"`
 }
 
 func (m *ClusterSpecRequest) GetAvailability() ClusterAvailabilitySpecRequest {
@@ -50,6 +51,24 @@ func (m *ClusterSpecRequest) SetVersionControl(val ClusterVersionControlSpecRequ
 	m.VersionControl = val
 }
 
+func (m *ClusterSpecRequest) GetPlugins() *PluginsSpecRequest {
+	if m != nil {
+		return m.Plugins
+	}
+	return nil
+}
+
+func (m *ClusterSpecRequest) SetPlugins(val *PluginsSpecRequest) {
+	m.Plugins = val
+}
+
+func (m *ClusterSpecRequest) GetPluginsOr(val PluginsSpecRequest) PluginsSpecRequest {
+	if m != nil && m.Plugins != nil {
+		return *m.Plugins
+	}
+	return val
+}
+
 func (m *ClusterSpecRequest) Clone() *ClusterSpecRequest {
 	if m == nil {
 		return nil
@@ -59,6 +78,7 @@ func (m *ClusterSpecRequest) Clone() *ClusterSpecRequest {
 	clone.Availability = *m.Availability.Clone()
 	clone.Network = *m.Network.Clone()
 	clone.VersionControl = *m.VersionControl.Clone()
+	clone.Plugins = m.Plugins.Clone()
 	return &clone
 }
 

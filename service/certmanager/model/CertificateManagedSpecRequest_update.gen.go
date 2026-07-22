@@ -23,6 +23,8 @@ type UpdateCertificateManagedSpecRequest struct {
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Provider optional.Optional[CertificateProvider] `json:"provider" yaml:"provider"`
+	// Конфигурация провайдера выпуска сертификата.
+	Issuer optional.OptionalNil[UpdateCertificateManagedSpecIssuerRequest] `json:"issuer" yaml:"issuer"`
 	// Список доменов, для которых будет выдан сертификат.
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
@@ -38,6 +40,9 @@ func (m *CertificateManagedSpecRequest) AsUpdateModel() UpdateCertificateManaged
 	if m.Provider != nil {
 		u.Provider = optional.NewOptional(m.GetProviderOr(""))
 	}
+	if m.Issuer != nil {
+		u.Issuer = optional.NewOptionalNil(m.Issuer.AsUpdateModel())
+	}
 	u.Domains = optional.NewOptional(m.GetDomains())
 	return u
 }
@@ -49,6 +54,7 @@ func (m *CertificateManagedSpecRequest) Diff(src *CertificateManagedSpecRequest)
 	if !nilDiffers {
 		upd.PreferredChallengeType = m.diffPreferredChallengeType(src)
 		upd.Provider = m.diffProvider(src)
+		upd.Issuer = m.diffIssuer(src)
 		upd.Domains = m.diffDomains(src)
 	}
 	return upd
@@ -66,6 +72,11 @@ func (m *CertificateManagedSpecRequest) WithChanges(u UpdateCertificateManagedSp
 	if u.Provider.IsSet() {
 		out.Provider = ptr.Get(u.Provider.Value)
 	}
+	if u.Issuer.IsSet() {
+		out.Issuer = ptr.Get(out.Issuer.WithChanges(u.Issuer.Value))
+	} else if u.Issuer.IsNull() {
+		out.Issuer = nil
+	}
 	if u.Domains.IsSet() {
 		out.Domains = slices.Clone(u.Domains.Value)
 	}
@@ -76,6 +87,7 @@ func (m *CertificateManagedSpecRequest) WithChanges(u UpdateCertificateManagedSp
 func (m UpdateCertificateManagedSpecRequest) HasChanges() bool {
 	return m.PreferredChallengeType.Set ||
 		m.Provider.Set ||
+		m.Issuer.Set ||
 		m.Domains.Set
 }
 
@@ -87,6 +99,16 @@ func (m *CertificateManagedSpecRequest) diffPreferredChallengeType(src *Certific
 func (m *CertificateManagedSpecRequest) diffProvider(src *CertificateManagedSpecRequest) optional.Optional[CertificateProvider] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetProvider(), m.GetProvider(), nilDiffers)
+}
+
+func (m *CertificateManagedSpecRequest) diffIssuer(src *CertificateManagedSpecRequest) optional.OptionalNil[UpdateCertificateManagedSpecIssuerRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetIssuer().Diff(src.GetIssuer())
+	return optional.OptionalNil[UpdateCertificateManagedSpecIssuerRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
 func (m *CertificateManagedSpecRequest) diffDomains(src *CertificateManagedSpecRequest) optional.Optional[[]string] {

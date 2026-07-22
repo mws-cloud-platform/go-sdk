@@ -143,6 +143,8 @@ type DeleteEgressNatRequest struct {
 	Network string // path: "network"
 	// Имя Egress NAT
 	EgressNat string // path: "egressNat"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteEgressNatRequest) SetAuthorization(authorization string) {
@@ -308,6 +310,8 @@ type UpsertEgressNatRequest struct {
 	Network string // path: "network"
 	// Имя Egress NAT
 	EgressNat string // path: "egressNat"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения Egress NAT
 	Body model.EgressNatRequest // body
 }
@@ -344,6 +348,8 @@ type UpdateEgressNatRequest struct {
 	Network string // path: "network"
 	// Имя Egress NAT
 	EgressNat string // path: "egressNat"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения Egress NAT
 	Body model.UpdateEgressNatRequest // body
 }

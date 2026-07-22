@@ -13,7 +13,7 @@ func (m *NodeGroupSpecRequest) WithDefaults() NodeGroupSpecRequest {
 	}
 
 	if out.ImageStorageIops == nil {
-		out.ImageStorageIops = ptr.Get(int64(10000))
+		out.ImageStorageIops = ptr.Get(int64(1000))
 	}
 	out.VersionControl = out.VersionControl.WithDefaults()
 	out.RolloutStrategy = out.RolloutStrategy.WithDefaults()

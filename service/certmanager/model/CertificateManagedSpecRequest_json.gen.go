@@ -42,6 +42,11 @@ func (m *CertificateManagedSpecRequest) encodeFields(e *jx.Encoder) error {
 		m.Provider.Encode(e)
 	}
 
+	if m.Issuer != nil {
+		e.FieldStart("issuer")
+		m.Issuer.Encode(e)
+	}
+
 	e.FieldStart("domains")
 	e.ArrStart()
 	for _, elem := range m.Domains {
@@ -80,6 +85,18 @@ func (m *CertificateManagedSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Provider = &v
+			return nil
+		case "issuer":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CertificateManagedSpecIssuerRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Issuer = &v
 			return nil
 		case "domains":
 			c := make([]string, 0)

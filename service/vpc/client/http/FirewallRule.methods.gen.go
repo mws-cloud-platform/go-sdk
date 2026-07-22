@@ -155,6 +155,8 @@ func (c *FirewallRule) deleteFirewallRuleInvoker(ctx context.Context, anyReq any
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteFirewallRule(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteFirewallRule(httpReq, request)
 
@@ -179,6 +181,14 @@ func (c *FirewallRule) deleteFirewallRuleInvoker(ctx context.Context, anyReq any
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *FirewallRule) queryDeleteFirewallRule(request *client.DeleteFirewallRuleRequest) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *FirewallRule) headerDeleteFirewallRule(req *http.Request, request *client.DeleteFirewallRuleRequest) {
@@ -349,6 +359,9 @@ func (c *FirewallRule) upsertFirewallRuleInvoker(ctx context.Context, anyReq any
 
 func (c *FirewallRule) queryUpsertFirewallRule(request *client.UpsertFirewallRuleRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -444,6 +457,9 @@ func (c *FirewallRule) createFirewallRuleInvoker(ctx context.Context, anyReq any
 func (c *FirewallRule) queryCreateFirewallRule(request *client.UpsertFirewallRuleRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -539,6 +555,9 @@ func (c *FirewallRule) updateFirewallRuleInvoker(ctx context.Context, anyReq any
 func (c *FirewallRule) queryUpdateFirewallRule(request *client.UpdateFirewallRuleRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

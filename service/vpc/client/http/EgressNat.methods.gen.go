@@ -155,6 +155,8 @@ func (c *EgressNat) deleteEgressNatInvoker(ctx context.Context, anyReq any, resp
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteEgressNat(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteEgressNat(httpReq, request)
 
@@ -179,6 +181,14 @@ func (c *EgressNat) deleteEgressNatInvoker(ctx context.Context, anyReq any, resp
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *EgressNat) queryDeleteEgressNat(request *client.DeleteEgressNatRequest) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *EgressNat) headerDeleteEgressNat(req *http.Request, request *client.DeleteEgressNatRequest) {
@@ -349,6 +359,9 @@ func (c *EgressNat) upsertEgressNatInvoker(ctx context.Context, anyReq any, resp
 
 func (c *EgressNat) queryUpsertEgressNat(request *client.UpsertEgressNatRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -444,6 +457,9 @@ func (c *EgressNat) createEgressNatInvoker(ctx context.Context, anyReq any, resp
 func (c *EgressNat) queryCreateEgressNat(request *client.UpsertEgressNatRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -539,6 +555,9 @@ func (c *EgressNat) updateEgressNatInvoker(ctx context.Context, anyReq any, resp
 func (c *EgressNat) queryUpdateEgressNat(request *client.UpdateEgressNatRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

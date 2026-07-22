@@ -143,6 +143,8 @@ type DeleteRouteRequest struct {
 	Network string // path: "network"
 	// Имя маршрута
 	Route string // path: "route"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteRouteRequest) SetAuthorization(authorization string) {
@@ -308,6 +310,8 @@ type UpsertRouteRequest struct {
 	Network string // path: "network"
 	// Имя маршрута
 	Route string // path: "route"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения маршрута
 	Body model.RouteRequest // body
 }
@@ -344,6 +348,8 @@ type UpdateRouteRequest struct {
 	Network string // path: "network"
 	// Имя маршрута
 	Route string // path: "route"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения маршрута
 	Body model.UpdateRouteRequest // body
 }

@@ -247,6 +247,8 @@ func (c *Nlb) deleteNlbV2Invoker(ctx context.Context, anyReq any, response commo
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteNlbV2(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteNlbV2(httpReq, request)
 
@@ -271,6 +273,14 @@ func (c *Nlb) deleteNlbV2Invoker(ctx context.Context, anyReq any, response commo
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *Nlb) queryDeleteNlbV2(request *client.DeleteNlbV2Request) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *Nlb) headerDeleteNlbV2(req *http.Request, request *client.DeleteNlbV2Request) {
@@ -441,6 +451,9 @@ func (c *Nlb) upsertNlbV2Invoker(ctx context.Context, anyReq any, response commo
 
 func (c *Nlb) queryUpsertNlbV2(request *client.UpsertNlbV2Request) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -536,6 +549,9 @@ func (c *Nlb) createNlbV2Invoker(ctx context.Context, anyReq any, response commo
 func (c *Nlb) queryCreateNlbV2(request *client.UpsertNlbV2Request) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -631,6 +647,9 @@ func (c *Nlb) updateNlbV2Invoker(ctx context.Context, anyReq any, response commo
 func (c *Nlb) queryUpdateNlbV2(request *client.UpdateNlbV2Request) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

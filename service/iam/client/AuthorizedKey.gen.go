@@ -37,15 +37,18 @@ type AuthorizedKey interface {
 	//
 	// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
 	GetAuthorizedKey(context.Context, GetAuthorizedKeyRequest) (*GetAuthorizedKeyResponse, error)
+	// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 	// UpsertAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
 	UpsertAuthorizedKey(context.Context, UpsertAuthorizedKeyRequest) (*UpsertAuthorizedKeyResponse, error)
+	// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 	// CreateAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?createOnly=true
 	CreateAuthorizedKey(context.Context, UpsertAuthorizedKeyRequest) (*UpsertAuthorizedKeyResponse, error)
+	// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 	// UpdateAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
@@ -123,8 +126,8 @@ type UpsertAuthorizedKeyV2Request struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
-	IdempotencyKey *string                      // header: "Idempotency-Key"
-	Body           model.AuthorizedKeyV2Request // body
+	IdempotencyKey *string                    // header: "Idempotency-Key"
+	Body           model.AuthorizedKeyRequest // body
 }
 
 func (m *UpsertAuthorizedKeyV2Request) SetAuthorization(authorization string) {
@@ -147,8 +150,8 @@ type UpdateAuthorizedKeyV2Request struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
-	IdempotencyKey *string                            // header: "Idempotency-Key"
-	Body           model.UpdateAuthorizedKeyV2Request // body
+	IdempotencyKey *string                          // header: "Idempotency-Key"
+	Body           model.UpdateAuthorizedKeyRequest // body
 }
 
 func (m *UpdateAuthorizedKeyV2Request) SetAuthorization(authorization string) {
@@ -165,8 +168,8 @@ func (m *UpdateAuthorizedKeyV2Request) SetProject(project string) {
 
 type UpsertAuthorizedKeyV2Response struct {
 	Code        int
-	Response200 *model.AuthorizedKeyV2OptionalResponse
-	Response201 *model.AuthorizedKeyV2OptionalResponse
+	Response200 *model.AuthorizedKeyOptionalResponse
+	Response201 *model.AuthorizedKeyOptionalResponse
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError

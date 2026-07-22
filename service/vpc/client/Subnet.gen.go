@@ -143,6 +143,8 @@ type DeleteSubnetRequest struct {
 	Network string // path: "network"
 	// Имя подсети
 	Subnet string // path: "subnet"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteSubnetRequest) SetAuthorization(authorization string) {
@@ -308,6 +310,8 @@ type UpsertSubnetRequest struct {
 	Network string // path: "network"
 	// Имя подсети
 	Subnet string // path: "subnet"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения подсети
 	Body model.SubnetRequest // body
 }
@@ -344,6 +348,8 @@ type UpdateSubnetRequest struct {
 	Network string // path: "network"
 	// Имя подсети
 	Subnet string // path: "subnet"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения подсети
 	Body model.UpdateSubnetRequest // body
 }

@@ -12,6 +12,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
+// Регион — это географическая область, которая объединяет несколько зон доступности, связанных между собой высокоскоростными сетями
 // Real OAPI model name: Region
 type RegionResponse struct {
 	Kind     *string                 `json:"kind,omitempty" yaml:"kind,omitempty"`

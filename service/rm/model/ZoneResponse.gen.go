@@ -11,6 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
+// Зона доступности — это изолированный сегмент облачной инфраструктуры в пределах региона
 // Real OAPI model name: Zone
 type ZoneResponse struct {
 	Kind     *string               `json:"kind,omitempty" yaml:"kind,omitempty"`

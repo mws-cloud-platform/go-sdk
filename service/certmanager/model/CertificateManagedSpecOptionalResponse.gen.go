@@ -13,6 +13,8 @@ type CertificateManagedSpecOptionalResponse struct {
 	PreferredChallengeType optional.Optional[CertificateChallengeType] `json:"preferredChallengeType,omitempty" yaml:"preferredChallengeType,omitempty"`
 	// Провайдер сертификатов, например Let's Encrypt или другой центр сертификации.
 	Provider optional.Optional[CertificateProvider] `json:"provider,omitempty" yaml:"provider,omitempty"`
+	// Конфигурация провайдера выпуска сертификата.
+	Issuer optional.OptionalNil[CertificateManagedSpecIssuerOptionalResponse] `json:"issuer,omitempty" yaml:"issuer,omitempty"`
 	// Список доменов, для которых будет выдан сертификат.
 	Domains []string `json:"domains" yaml:"domains"`
 }
@@ -45,6 +47,20 @@ func (m *CertificateManagedSpecOptionalResponse) GetProviderOr(val CertificatePr
 	return val
 }
 
+func (m *CertificateManagedSpecOptionalResponse) GetIssuer() *CertificateManagedSpecIssuerOptionalResponse {
+	if m != nil && m.Issuer.IsSet() && !m.Issuer.IsNull() {
+		return &m.Issuer.Value
+	}
+	return nil
+}
+
+func (m *CertificateManagedSpecOptionalResponse) GetIssuerOr(val CertificateManagedSpecIssuerOptionalResponse) CertificateManagedSpecIssuerOptionalResponse {
+	if m != nil && m.Issuer.IsSet() && !m.Issuer.IsNull() {
+		return m.Issuer.Value
+	}
+	return val
+}
+
 func (m *CertificateManagedSpecOptionalResponse) GetDomains() []string {
 	if m != nil {
 		return m.Domains
@@ -62,6 +78,9 @@ func (m *CertificateManagedSpecOptionalResponse) Clone() *CertificateManagedSpec
 	}
 
 	clone := *m
+	if clone.Issuer.IsSet() {
+		clone.Issuer.Value = *m.Issuer.Value.Clone()
+	}
 	if m.Domains != nil {
 		clone.Domains = make([]string, len(m.Domains))
 		for i, v := range m.Domains {

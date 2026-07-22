@@ -23,6 +23,7 @@ type ClusterStatusResponse struct {
 	Network              *ClusterStatusNetworkResponse        `json:"network,omitempty" yaml:"network,omitempty"`
 	VersionControl       *ClusterVersionControlStatusResponse `json:"versionControl,omitempty" yaml:"versionControl,omitempty"`
 	ClusterStatus        *ClusterStatusClusterStatusResponse  `json:"clusterStatus,omitempty" yaml:"clusterStatus,omitempty"`
+	Plugins              *PluginsStatusResponse               `json:"plugins,omitempty" yaml:"plugins,omitempty"`
 }
 
 func (m *ClusterStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -88,6 +89,20 @@ func (m *ClusterStatusResponse) GetClusterStatusOr(val ClusterStatusClusterStatu
 	return val
 }
 
+func (m *ClusterStatusResponse) GetPlugins() *PluginsStatusResponse {
+	if m != nil {
+		return m.Plugins
+	}
+	return nil
+}
+
+func (m *ClusterStatusResponse) GetPluginsOr(val PluginsStatusResponse) PluginsStatusResponse {
+	if m != nil && m.Plugins != nil {
+		return *m.Plugins
+	}
+	return val
+}
+
 func (m *ClusterStatusResponse) Clone() *ClusterStatusResponse {
 	if m == nil {
 		return nil
@@ -104,6 +119,7 @@ func (m *ClusterStatusResponse) Clone() *ClusterStatusResponse {
 	clone.Network = m.Network.Clone()
 	clone.VersionControl = m.VersionControl.Clone()
 	clone.ClusterStatus = m.ClusterStatus.Clone()
+	clone.Plugins = m.Plugins.Clone()
 
 	return &clone
 }

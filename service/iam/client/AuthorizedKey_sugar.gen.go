@@ -53,7 +53,7 @@ func (x *AuthorizedKeySugared) respHandlerListAuthorizedKey(resp *ListAuthorized
 // UpsertAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 //
 // Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
-func (x *AuthorizedKeySugared) UpsertAuthorizedKeyV2(ctx context.Context, request UpsertAuthorizedKeyV2Request) (*model.AuthorizedKeyV2OptionalResponse, error) {
+func (x *AuthorizedKeySugared) UpsertAuthorizedKeyV2(ctx context.Context, request UpsertAuthorizedKeyV2Request) (*model.AuthorizedKeyOptionalResponse, error) {
 	resp, err := x.impl.UpsertAuthorizedKeyV2(ctx, request)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (x *AuthorizedKeySugared) UpsertAuthorizedKeyV2(ctx context.Context, reques
 	return x.respHandlerUpsertAuthorizedKeyV2(resp)
 }
 
-func (x *AuthorizedKeySugared) respHandlerUpsertAuthorizedKeyV2(resp *UpsertAuthorizedKeyV2Response) (*model.AuthorizedKeyV2OptionalResponse, error) {
+func (x *AuthorizedKeySugared) respHandlerUpsertAuthorizedKeyV2(resp *UpsertAuthorizedKeyV2Response) (*model.AuthorizedKeyOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ func (x *AuthorizedKeySugared) respHandlerUpsertAuthorizedKeyV2(resp *UpsertAuth
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?createOnly=true
-func (x *AuthorizedKeySugared) CreateAuthorizedKeyV2(ctx context.Context, request UpsertAuthorizedKeyV2Request) (*model.AuthorizedKeyV2OptionalResponse, error) {
+func (x *AuthorizedKeySugared) CreateAuthorizedKeyV2(ctx context.Context, request UpsertAuthorizedKeyV2Request) (*model.AuthorizedKeyOptionalResponse, error) {
 	resp, err := x.impl.CreateAuthorizedKeyV2(ctx, request)
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func (x *AuthorizedKeySugared) CreateAuthorizedKeyV2(ctx context.Context, reques
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?updateOnly=true
-func (x *AuthorizedKeySugared) UpdateAuthorizedKeyV2(ctx context.Context, request UpdateAuthorizedKeyV2Request) (*model.AuthorizedKeyV2OptionalResponse, error) {
+func (x *AuthorizedKeySugared) UpdateAuthorizedKeyV2(ctx context.Context, request UpdateAuthorizedKeyV2Request) (*model.AuthorizedKeyOptionalResponse, error) {
 	resp, err := x.impl.UpdateAuthorizedKeyV2(ctx, request)
 	if err != nil {
 		return nil, err
@@ -197,6 +197,7 @@ func (x *AuthorizedKeySugared) waitGetAuthorizedKey(ctx context.Context, request
 	return waiter.Wait(ctx)
 }
 
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 // UpsertAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
@@ -225,6 +226,7 @@ func (x *AuthorizedKeySugared) respHandlerUpsertAuthorizedKey(resp *UpsertAuthor
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 // CreateAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
@@ -238,6 +240,7 @@ func (x *AuthorizedKeySugared) CreateAuthorizedKey(ctx context.Context, request 
 	return x.respHandlerUpsertAuthorizedKey(resp)
 }
 
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 // UpdateAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //

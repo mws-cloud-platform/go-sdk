@@ -223,6 +223,13 @@ func decodeDeleteCertificateResponse(resp *http.Response) (*client.DeleteCertifi
 	}
 
 	switch resp.StatusCode {
+	case 202:
+		result := &client.DeleteCertificateResponse{
+			Code:        resp.StatusCode,
+			Response202: true,
+		}
+
+		return result, nil
 	case 204:
 		result := &client.DeleteCertificateResponse{
 			Code:        resp.StatusCode,
@@ -273,6 +280,23 @@ func decodeDeleteCertificateResponse(resp *http.Response) (*client.DeleteCertifi
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 412:
+		switch ct {
+		case "application/json":
+			result := &client.DeleteCertificateResponse{
+				Code:        resp.StatusCode,
+				Response412: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response412); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
@@ -515,6 +539,23 @@ func decodeUpsertCertificateResponse(resp *http.Response) (*client.UpsertCertifi
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response409); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 412:
+		switch ct {
+		case "application/json":
+			result := &client.UpsertCertificateResponse{
+				Code:        resp.StatusCode,
+				Response412: &common.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response412); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

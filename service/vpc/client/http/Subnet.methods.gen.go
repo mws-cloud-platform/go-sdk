@@ -155,6 +155,8 @@ func (c *Subnet) deleteSubnetInvoker(ctx context.Context, anyReq any, response c
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteSubnet(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteSubnet(httpReq, request)
 
@@ -179,6 +181,14 @@ func (c *Subnet) deleteSubnetInvoker(ctx context.Context, anyReq any, response c
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *Subnet) queryDeleteSubnet(request *client.DeleteSubnetRequest) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *Subnet) headerDeleteSubnet(req *http.Request, request *client.DeleteSubnetRequest) {
@@ -349,6 +359,9 @@ func (c *Subnet) upsertSubnetInvoker(ctx context.Context, anyReq any, response c
 
 func (c *Subnet) queryUpsertSubnet(request *client.UpsertSubnetRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -444,6 +457,9 @@ func (c *Subnet) createSubnetInvoker(ctx context.Context, anyReq any, response c
 func (c *Subnet) queryCreateSubnet(request *client.UpsertSubnetRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -539,6 +555,9 @@ func (c *Subnet) updateSubnetInvoker(ctx context.Context, anyReq any, response c
 func (c *Subnet) queryUpdateSubnet(request *client.UpdateSubnetRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

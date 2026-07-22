@@ -155,6 +155,8 @@ func (c *Route) deleteRouteInvoker(ctx context.Context, anyReq any, response com
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteRoute(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteRoute(httpReq, request)
 
@@ -179,6 +181,14 @@ func (c *Route) deleteRouteInvoker(ctx context.Context, anyReq any, response com
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *Route) queryDeleteRoute(request *client.DeleteRouteRequest) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *Route) headerDeleteRoute(req *http.Request, request *client.DeleteRouteRequest) {
@@ -349,6 +359,9 @@ func (c *Route) upsertRouteInvoker(ctx context.Context, anyReq any, response com
 
 func (c *Route) queryUpsertRoute(request *client.UpsertRouteRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -444,6 +457,9 @@ func (c *Route) createRouteInvoker(ctx context.Context, anyReq any, response com
 func (c *Route) queryCreateRoute(request *client.UpsertRouteRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -539,6 +555,9 @@ func (c *Route) updateRouteInvoker(ctx context.Context, anyReq any, response com
 func (c *Route) queryUpdateRoute(request *client.UpdateRouteRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

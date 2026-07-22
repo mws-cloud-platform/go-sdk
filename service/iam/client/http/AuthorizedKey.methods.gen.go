@@ -527,6 +527,7 @@ func (c *AuthorizedKey) headerGetAuthorizedKey(req *http.Request, request *clien
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 // UpsertAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -620,6 +621,7 @@ func (c *AuthorizedKey) headerUpsertAuthorizedKey(req *http.Request, request *cl
 	}
 }
 
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 // CreateAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
@@ -715,6 +717,7 @@ func (c *AuthorizedKey) headerCreateAuthorizedKey(req *http.Request, request *cl
 	}
 }
 
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 // UpdateAuthorizedKey самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.

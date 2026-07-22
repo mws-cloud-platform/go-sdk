@@ -155,6 +155,8 @@ func (c *AddressGroup) deleteAddressGroupInvoker(ctx context.Context, anyReq any
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteAddressGroup(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteAddressGroup(httpReq, request)
 
@@ -179,6 +181,14 @@ func (c *AddressGroup) deleteAddressGroupInvoker(ctx context.Context, anyReq any
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *AddressGroup) queryDeleteAddressGroup(request *client.DeleteAddressGroupRequest) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *AddressGroup) headerDeleteAddressGroup(req *http.Request, request *client.DeleteAddressGroupRequest) {
@@ -351,6 +361,9 @@ func (c *AddressGroup) upsertAddressGroupInvoker(ctx context.Context, anyReq any
 
 func (c *AddressGroup) queryUpsertAddressGroup(request *client.UpsertAddressGroupRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -448,6 +461,9 @@ func (c *AddressGroup) createAddressGroupInvoker(ctx context.Context, anyReq any
 func (c *AddressGroup) queryCreateAddressGroup(request *client.UpsertAddressGroupRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -545,6 +561,9 @@ func (c *AddressGroup) updateAddressGroupInvoker(ctx context.Context, anyReq any
 func (c *AddressGroup) queryUpdateAddressGroup(request *client.UpdateAddressGroupRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

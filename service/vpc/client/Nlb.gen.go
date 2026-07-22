@@ -238,6 +238,8 @@ type DeleteNlbV2Request struct {
 	Network string // path: "network"
 	// Имя сетевого балансировщика нагрузки
 	Nlb string // path: "nlb"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteNlbV2Request) SetAuthorization(authorization string) {
@@ -403,6 +405,8 @@ type UpsertNlbV2Request struct {
 	Network string // path: "network"
 	// Имя сетевого балансировщика нагрузки
 	Nlb string // path: "nlb"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения сетевого балансировщика нагрузки.
 	Body model.NlbRequest // body
 }
@@ -439,6 +443,8 @@ type UpdateNlbV2Request struct {
 	Network string // path: "network"
 	// Имя сетевого балансировщика нагрузки
 	Nlb string // path: "nlb"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения сетевого балансировщика нагрузки.
 	Body model.UpdateNlbRequest // body
 }

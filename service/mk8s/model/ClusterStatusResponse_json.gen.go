@@ -56,6 +56,11 @@ func (m *ClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("clusterStatus")
 		m.ClusterStatus.Encode(e)
 	}
+
+	if m.Plugins != nil {
+		e.FieldStart("plugins")
+		m.Plugins.Encode(e)
+	}
 	return nil
 }
 
@@ -125,6 +130,18 @@ func (m *ClusterStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.ClusterStatus = &v
+			return nil
+		case "plugins":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v PluginsStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Plugins = &v
 			return nil
 		default:
 			return d.Skip()

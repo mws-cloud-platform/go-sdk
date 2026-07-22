@@ -49,6 +49,7 @@ func (m *BatchEnableServicesV2Request) SetProject(project string) {
 
 type BatchEnableServicesV2Response struct {
 	Code        int
+	Response200 *model.BatchEnabledServicesResponseResponse
 	Response201 *model.BatchEnabledServicesResponseResponse
 	Response400 *common.ApiError
 	Response403 *common.ApiError

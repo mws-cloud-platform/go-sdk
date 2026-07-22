@@ -102,6 +102,10 @@ func (x *CertificateSugared) respHandlerDeleteCertificate(resp *DeleteCertificat
 		return err
 	}
 
+	if resp.Response202 {
+		return nil
+	}
+
 	if resp.Response204 {
 		return nil
 	}

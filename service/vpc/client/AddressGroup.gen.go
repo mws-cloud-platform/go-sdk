@@ -143,6 +143,8 @@ type DeleteAddressGroupRequest struct {
 	Network string // path: "network"
 	// Имя группы адресов
 	AddressGroup string // path: "addressGroup"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteAddressGroupRequest) SetAuthorization(authorization string) {
@@ -308,6 +310,8 @@ type UpsertAddressGroupRequest struct {
 	Network string // path: "network"
 	// Имя группы адресов
 	AddressGroup string // path: "addressGroup"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения группы адресов
 	Body *model.VpcAddressGroupRequest // body
 }
@@ -344,6 +348,8 @@ type UpdateAddressGroupRequest struct {
 	Network string // path: "network"
 	// Имя группы адресов
 	AddressGroup string // path: "addressGroup"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения группы адресов
 	Body *model.UpdateVpcAddressGroupRequest // body
 }

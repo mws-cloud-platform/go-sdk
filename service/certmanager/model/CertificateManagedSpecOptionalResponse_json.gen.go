@@ -42,6 +42,15 @@ func (m *CertificateManagedSpecOptionalResponse) encodeFields(e *jx.Encoder) err
 		m.Provider.Value.Encode(e)
 	}
 
+	if m.Issuer.IsSet() {
+		e.FieldStart("issuer")
+		if m.Issuer.IsNull() {
+			e.Null()
+		} else {
+			m.Issuer.Value.Encode(e)
+		}
+	}
+
 	e.FieldStart("domains")
 	e.ArrStart()
 	for _, elem := range m.Domains {
@@ -77,6 +86,19 @@ func (m *CertificateManagedSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Provider.SetTo(v)
+			return nil
+		case "issuer":
+			if d.Next() == jx.Null {
+				m.Issuer.SetToNull()
+				return d.Null()
+			}
+
+			var v CertificateManagedSpecIssuerOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Issuer.SetTo(v)
 			return nil
 		case "domains":
 			c := make([]string, 0)

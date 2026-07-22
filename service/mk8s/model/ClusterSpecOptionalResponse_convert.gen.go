@@ -26,6 +26,13 @@ func ClusterSpecRequestToOptionalResponse(request *ClusterSpecRequest) (*Cluster
 		return nil, err
 	}
 	response.VersionControl = *tmpVersionControl
+	if request.Plugins != nil {
+		tmpPlugins, err := PluginsSpecRequestToOptionalResponse(request.Plugins)
+		if err != nil {
+			return nil, err
+		}
+		response.Plugins = optional.NewOptionalNil(*tmpPlugins)
+	}
 	return &response, nil
 }
 

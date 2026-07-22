@@ -40,6 +40,15 @@ func (m *ClusterSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 
 	e.FieldStart("versionControl")
 	m.VersionControl.Encode(e)
+
+	if m.Plugins.IsSet() {
+		e.FieldStart("plugins")
+		if m.Plugins.IsNull() {
+			e.Null()
+		} else {
+			m.Plugins.Value.Encode(e)
+		}
+	}
 	return nil
 }
 
@@ -77,6 +86,19 @@ func (m *ClusterSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.VersionControl = v
+			return nil
+		case "plugins":
+			if d.Next() == jx.Null {
+				m.Plugins.SetToNull()
+				return d.Null()
+			}
+
+			var v PluginsSpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Plugins.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

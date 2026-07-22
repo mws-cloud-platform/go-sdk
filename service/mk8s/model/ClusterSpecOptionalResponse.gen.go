@@ -13,9 +13,10 @@ import (
 
 // Real OAPI model name: ClusterSpec
 type ClusterSpecOptionalResponse struct {
-	Availability   ClusterAvailabilitySpecOptionalResponse   `json:"availability" yaml:"availability"`
-	Network        ClusterSpecNetworkOptionalResponse        `json:"network" yaml:"network"`
-	VersionControl ClusterVersionControlSpecOptionalResponse `json:"versionControl" yaml:"versionControl"`
+	Availability   ClusterAvailabilitySpecOptionalResponse           `json:"availability" yaml:"availability"`
+	Network        ClusterSpecNetworkOptionalResponse                `json:"network" yaml:"network"`
+	VersionControl ClusterVersionControlSpecOptionalResponse         `json:"versionControl" yaml:"versionControl"`
+	Plugins        optional.OptionalNil[PluginsSpecOptionalResponse] `json:"plugins,omitempty" yaml:"plugins,omitempty"`
 }
 
 func (m *ClusterSpecOptionalResponse) GetAvailability() ClusterAvailabilitySpecOptionalResponse {
@@ -51,6 +52,20 @@ func (m *ClusterSpecOptionalResponse) SetVersionControl(val ClusterVersionContro
 	m.VersionControl = val
 }
 
+func (m *ClusterSpecOptionalResponse) GetPlugins() *PluginsSpecOptionalResponse {
+	if m != nil && m.Plugins.IsSet() && !m.Plugins.IsNull() {
+		return &m.Plugins.Value
+	}
+	return nil
+}
+
+func (m *ClusterSpecOptionalResponse) GetPluginsOr(val PluginsSpecOptionalResponse) PluginsSpecOptionalResponse {
+	if m != nil && m.Plugins.IsSet() && !m.Plugins.IsNull() {
+		return m.Plugins.Value
+	}
+	return val
+}
+
 func (m *ClusterSpecOptionalResponse) Clone() *ClusterSpecOptionalResponse {
 	if m == nil {
 		return nil
@@ -60,6 +75,9 @@ func (m *ClusterSpecOptionalResponse) Clone() *ClusterSpecOptionalResponse {
 	clone.Availability = *m.Availability.Clone()
 	clone.Network = *m.Network.Clone()
 	clone.VersionControl = *m.VersionControl.Clone()
+	if clone.Plugins.IsSet() {
+		clone.Plugins.Value = *m.Plugins.Value.Clone()
+	}
 	return &clone
 }
 

@@ -218,10 +218,12 @@ func (m *DeleteCertificateRequest) getCertificateRequest() GetCertificateRequest
 
 type DeleteCertificateResponse struct {
 	Code        int
+	Response202 bool // empty response
 	Response204 bool // empty response
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
+	Response412 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -245,6 +247,9 @@ func (m *DeleteCertificateResponse) GetErr() (err error) {
 	}
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response412 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
@@ -393,6 +398,7 @@ type UpsertCertificateResponse struct {
 	Response403 *common.ApiError
 	Response404 *common.ApiError
 	Response409 *common.ApiError
+	Response412 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -419,6 +425,9 @@ func (m *UpsertCertificateResponse) GetErr() (err error) {
 	}
 	if m.Response409 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response409)
+	}
+	if m.Response412 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)

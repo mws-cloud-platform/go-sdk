@@ -130,7 +130,7 @@ func decodeUpsertAuthorizedKeyV2Response(resp *http.Response) (*client.UpsertAut
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response200: &model.AuthorizedKeyV2OptionalResponse{},
+				Response200: &model.AuthorizedKeyOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -151,7 +151,7 @@ func decodeUpsertAuthorizedKeyV2Response(resp *http.Response) (*client.UpsertAut
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response201: &model.AuthorizedKeyV2OptionalResponse{},
+				Response201: &model.AuthorizedKeyOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {

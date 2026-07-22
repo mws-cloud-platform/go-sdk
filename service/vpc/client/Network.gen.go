@@ -139,6 +139,8 @@ type DeleteNetworkRequest struct {
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteNetworkRequest) SetAuthorization(authorization string) {
@@ -299,6 +301,8 @@ type UpsertNetworkRequest struct {
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения сети
 	Body model.NetworkRequest // body
 }
@@ -332,6 +336,8 @@ type UpdateNetworkRequest struct {
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения сети
 	Body model.UpdateNetworkRequest // body
 }

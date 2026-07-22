@@ -40,6 +40,11 @@ func (m *ClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	e.FieldStart("versionControl")
 	m.VersionControl.Encode(e)
+
+	if m.Plugins != nil {
+		e.FieldStart("plugins")
+		m.Plugins.Encode(e)
+	}
 	return nil
 }
 
@@ -85,6 +90,18 @@ func (m *ClusterSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.VersionControl = v
 			requiredFilled["versionControl"] = true
+			return nil
+		case "plugins":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v PluginsSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Plugins = &v
 			return nil
 		default:
 			return d.Skip()

@@ -143,6 +143,8 @@ type DeleteFirewallRuleRequest struct {
 	Network string // path: "network"
 	// Имя правила файрвола
 	FirewallRule string // path: "firewallRule"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteFirewallRuleRequest) SetAuthorization(authorization string) {
@@ -308,6 +310,8 @@ type UpsertFirewallRuleRequest struct {
 	Network string // path: "network"
 	// Имя правила файрвола
 	FirewallRule string // path: "firewallRule"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения правила файрвола
 	Body model.FirewallRuleRequest // body
 }
@@ -344,6 +348,8 @@ type UpdateFirewallRuleRequest struct {
 	Network string // path: "network"
 	// Имя правила файрвола
 	FirewallRule string // path: "firewallRule"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения правила файрвола
 	Body model.UpdateFirewallRuleRequest // body
 }

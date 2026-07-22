@@ -155,6 +155,8 @@ func (c *OneToOneNat) deleteOneToOneNatInvoker(ctx context.Context, anyReq any, 
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteOneToOneNat(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteOneToOneNat(httpReq, request)
 
@@ -179,6 +181,14 @@ func (c *OneToOneNat) deleteOneToOneNatInvoker(ctx context.Context, anyReq any, 
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *OneToOneNat) queryDeleteOneToOneNat(request *client.DeleteOneToOneNatRequest) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *OneToOneNat) headerDeleteOneToOneNat(req *http.Request, request *client.DeleteOneToOneNatRequest) {
@@ -349,6 +359,9 @@ func (c *OneToOneNat) upsertOneToOneNatInvoker(ctx context.Context, anyReq any, 
 
 func (c *OneToOneNat) queryUpsertOneToOneNat(request *client.UpsertOneToOneNatRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -444,6 +457,9 @@ func (c *OneToOneNat) createOneToOneNatInvoker(ctx context.Context, anyReq any, 
 func (c *OneToOneNat) queryCreateOneToOneNat(request *client.UpsertOneToOneNatRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -539,6 +555,9 @@ func (c *OneToOneNat) updateOneToOneNatInvoker(ctx context.Context, anyReq any, 
 func (c *OneToOneNat) queryUpdateOneToOneNat(request *client.UpdateOneToOneNatRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

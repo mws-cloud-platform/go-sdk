@@ -143,6 +143,8 @@ type DeleteAddressRequest struct {
 	Network string // path: "network"
 	// IP-адрес
 	Address string // path: "address"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteAddressRequest) SetAuthorization(authorization string) {
@@ -308,6 +310,8 @@ type UpsertAddressRequest struct {
 	Network string // path: "network"
 	// IP-адрес
 	Address string // path: "address"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения IP-адреса
 	Body *model.AddressRequest // body
 }
@@ -344,6 +348,8 @@ type UpdateAddressRequest struct {
 	Network string // path: "network"
 	// IP-адрес
 	Address string // path: "address"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения IP-адреса
 	Body *model.UpdateAddressRequest // body
 }

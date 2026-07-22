@@ -150,6 +150,8 @@ func (c *Network) deleteNetworkInvoker(ctx context.Context, anyReq any, response
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteNetwork(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteNetwork(httpReq, request)
 
@@ -174,6 +176,14 @@ func (c *Network) deleteNetworkInvoker(ctx context.Context, anyReq any, response
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *Network) queryDeleteNetwork(request *client.DeleteNetworkRequest) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *Network) headerDeleteNetwork(req *http.Request, request *client.DeleteNetworkRequest) {
@@ -338,6 +348,9 @@ func (c *Network) upsertNetworkInvoker(ctx context.Context, anyReq any, response
 
 func (c *Network) queryUpsertNetwork(request *client.UpsertNetworkRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -430,6 +443,9 @@ func (c *Network) createNetworkInvoker(ctx context.Context, anyReq any, response
 func (c *Network) queryCreateNetwork(request *client.UpsertNetworkRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -522,6 +538,9 @@ func (c *Network) updateNetworkInvoker(ctx context.Context, anyReq any, response
 func (c *Network) queryUpdateNetwork(request *client.UpdateNetworkRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

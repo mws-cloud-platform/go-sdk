@@ -40,6 +40,10 @@ func (x *EnableServiceSugared) respHandlerBatchEnableServicesV2(resp *BatchEnabl
 		return nil, err
 	}
 
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
 	if resp.Response201 != nil {
 		return resp.Response201, nil
 	}

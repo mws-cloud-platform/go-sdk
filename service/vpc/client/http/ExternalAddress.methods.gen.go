@@ -150,6 +150,8 @@ func (c *ExternalAddress) deleteExternalAddressInvoker(ctx context.Context, anyR
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteExternalAddress(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteExternalAddress(httpReq, request)
 
@@ -174,6 +176,14 @@ func (c *ExternalAddress) deleteExternalAddressInvoker(ctx context.Context, anyR
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *ExternalAddress) queryDeleteExternalAddress(request *client.DeleteExternalAddressRequest) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *ExternalAddress) headerDeleteExternalAddress(req *http.Request, request *client.DeleteExternalAddressRequest) {
@@ -340,6 +350,9 @@ func (c *ExternalAddress) upsertExternalAddressInvoker(ctx context.Context, anyR
 
 func (c *ExternalAddress) queryUpsertExternalAddress(request *client.UpsertExternalAddressRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -434,6 +447,9 @@ func (c *ExternalAddress) createExternalAddressInvoker(ctx context.Context, anyR
 func (c *ExternalAddress) queryCreateExternalAddress(request *client.UpsertExternalAddressRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -528,6 +544,9 @@ func (c *ExternalAddress) updateExternalAddressInvoker(ctx context.Context, anyR
 func (c *ExternalAddress) queryUpdateExternalAddress(request *client.UpdateExternalAddressRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

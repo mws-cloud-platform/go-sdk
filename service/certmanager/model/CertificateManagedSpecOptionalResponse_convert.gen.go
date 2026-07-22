@@ -17,6 +17,13 @@ func CertificateManagedSpecRequestToOptionalResponse(request *CertificateManaged
 	if request.Provider != nil {
 		response.Provider = optional.NewOptional(*request.Provider)
 	}
+	if request.Issuer != nil {
+		tmpIssuer, err := CertificateManagedSpecIssuerRequestToOptionalResponse(request.Issuer)
+		if err != nil {
+			return nil, err
+		}
+		response.Issuer = optional.NewOptionalNil(*tmpIssuer)
+	}
 	response.Domains = request.Domains
 	return &response, nil
 }

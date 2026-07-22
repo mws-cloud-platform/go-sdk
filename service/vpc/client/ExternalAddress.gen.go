@@ -139,6 +139,8 @@ type DeleteExternalAddressRequest struct {
 	Project string // path: "project"
 	// Имя внешнего IP-адреса
 	ExternalAddress string // path: "externalAddress"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteExternalAddressRequest) SetAuthorization(authorization string) {
@@ -299,6 +301,8 @@ type UpsertExternalAddressRequest struct {
 	Project string // path: "project"
 	// Имя внешнего IP-адреса
 	ExternalAddress string // path: "externalAddress"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения внешнего IP-адреса
 	Body *model.ExternalAddressRequest // body
 }
@@ -332,6 +336,8 @@ type UpdateExternalAddressRequest struct {
 	Project string // path: "project"
 	// Имя внешнего IP-адреса
 	ExternalAddress string // path: "externalAddress"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения внешнего IP-адреса
 	Body *model.UpdateExternalAddressRequest // body
 }

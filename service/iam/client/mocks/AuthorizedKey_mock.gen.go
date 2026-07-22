@@ -35,6 +35,8 @@ func (m *MockAuthorizedKey) EXPECT() *MockAuthorizedKeyMockRecorder {
 }
 
 // CreateAuthorizedKey mocks base method.
+//
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design
 func (m *MockAuthorizedKey) CreateAuthorizedKey(arg0 context.Context, arg1 client.UpsertAuthorizedKeyRequest) (*client.UpsertAuthorizedKeyResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAuthorizedKey", arg0, arg1)
@@ -44,6 +46,8 @@ func (m *MockAuthorizedKey) CreateAuthorizedKey(arg0 context.Context, arg1 clien
 }
 
 // CreateAuthorizedKey indicates an expected call of CreateAuthorizedKey.
+//
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design
 func (mr *MockAuthorizedKeyMockRecorder) CreateAuthorizedKey(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).CreateAuthorizedKey), arg0, arg1)
@@ -110,6 +114,8 @@ func (mr *MockAuthorizedKeyMockRecorder) ListAuthorizedKey(arg0, arg1 any) *gomo
 }
 
 // UpdateAuthorizedKey mocks base method.
+//
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design
 func (m *MockAuthorizedKey) UpdateAuthorizedKey(arg0 context.Context, arg1 client.UpdateAuthorizedKeyRequest) (*client.UpsertAuthorizedKeyResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAuthorizedKey", arg0, arg1)
@@ -119,6 +125,8 @@ func (m *MockAuthorizedKey) UpdateAuthorizedKey(arg0 context.Context, arg1 clien
 }
 
 // UpdateAuthorizedKey indicates an expected call of UpdateAuthorizedKey.
+//
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design
 func (mr *MockAuthorizedKeyMockRecorder) UpdateAuthorizedKey(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).UpdateAuthorizedKey), arg0, arg1)
@@ -140,6 +148,8 @@ func (mr *MockAuthorizedKeyMockRecorder) UpdateAuthorizedKeyV2(arg0, arg1 any) *
 }
 
 // UpsertAuthorizedKey mocks base method.
+//
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design
 func (m *MockAuthorizedKey) UpsertAuthorizedKey(arg0 context.Context, arg1 client.UpsertAuthorizedKeyRequest) (*client.UpsertAuthorizedKeyResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpsertAuthorizedKey", arg0, arg1)
@@ -149,6 +159,8 @@ func (m *MockAuthorizedKey) UpsertAuthorizedKey(arg0 context.Context, arg1 clien
 }
 
 // UpsertAuthorizedKey indicates an expected call of UpsertAuthorizedKey.
+//
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design
 func (mr *MockAuthorizedKeyMockRecorder) UpsertAuthorizedKey(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).UpsertAuthorizedKey), arg0, arg1)
