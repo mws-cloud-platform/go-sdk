@@ -54,7 +54,7 @@ func Example_secret() {
 	if err != nil {
 		log.Panicln("create secret:", err)
 	}
-	fmt.Println("secret created:", secret.GetMetadata().GetId().ResourceName())
+	fmt.Println("secret created:", secret.GetMetadata().Id.ResourceName())
 
 	// Update display name and description of secret.
 	secret, err = secretClient.UpdateSecret(ctx, secretmanagerclient.UpdateSecretRequest{
@@ -69,7 +69,7 @@ func Example_secret() {
 	if err != nil {
 		log.Panicln("update secret:", err)
 	}
-	fmt.Println("secret updated:", secret.GetMetadata().GetId().ResourceName())
+	fmt.Println("secret updated:", secret.GetMetadata().Id.ResourceName())
 
 	// Activate secret.
 	secret, err = secretClient.UpdateSecret(ctx, secretmanagerclient.UpdateSecretRequest{
@@ -83,7 +83,7 @@ func Example_secret() {
 	if err != nil {
 		log.Panicln("activate secret:", err)
 	}
-	fmt.Println("secret activated:", secret.GetMetadata().GetId().ResourceName())
+	fmt.Println("secret activated:", secret.GetMetadata().Id.ResourceName())
 
 	// Deactivate secret.
 	secret, err = secretClient.UpdateSecret(ctx, secretmanagerclient.UpdateSecretRequest{
@@ -97,7 +97,7 @@ func Example_secret() {
 	if err != nil {
 		log.Panicln("deactivate secret:", err)
 	}
-	fmt.Println("secret deactivated:", secret.GetMetadata().GetId().ResourceName())
+	fmt.Println("secret deactivated:", secret.GetMetadata().Id.ResourceName())
 
 	// List secrets.
 	resourceNames := make([]string, 0)
@@ -108,7 +108,7 @@ func Example_secret() {
 		if err != nil {
 			log.Panicln("list secrets:", err)
 		}
-		resourceNames = append(resourceNames, string(resource.GetMetadata().GetId().ResourceName()))
+		resourceNames = append(resourceNames, string(resource.GetMetadata().Id.ResourceName()))
 	}
 	fmt.Println("secrets listed:", strings.Join(resourceNames, ", "))
 
@@ -119,7 +119,7 @@ func Example_secret() {
 	if err != nil {
 		log.Panicln("get secret:", err)
 	}
-	fmt.Println("secret received:", secret.GetMetadata().GetId().ResourceName())
+	fmt.Println("secret received:", secret.GetMetadata().Id.ResourceName())
 
 	// And finally, delete secret to clean up after the example run.
 	err = secretClient.DeleteSecret(ctx, secretmanagerclient.DeleteSecretRequest{

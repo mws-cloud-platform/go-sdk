@@ -17,12 +17,17 @@ type UpdateApiKeySpecRequest struct {
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	ExpireTime optional.Optional[time.Time] `json:"expireTime" yaml:"expireTime"`
+	// Флаг, указывающий на текущее состояние API‑ключа. Активный ключ может использоваться для аутентификации, деактивированный — нет.
+	Active optional.Optional[bool] `json:"active" yaml:"active"`
 }
 
 func (m *ApiKeySpecRequest) AsUpdateModel() UpdateApiKeySpecRequest {
 	var u UpdateApiKeySpecRequest
 	if m.ExpireTime != nil {
 		u.ExpireTime = optional.NewOptional(m.GetExpireTimeOr(time.Time{}))
+	}
+	if m.Active != nil {
+		u.Active = optional.NewOptional(m.GetActiveOr(false))
 	}
 	return u
 }
@@ -33,6 +38,7 @@ func (m *ApiKeySpecRequest) Diff(src *ApiKeySpecRequest) UpdateApiKeySpecRequest
 	upd := UpdateApiKeySpecRequest{}
 	if !nilDiffers {
 		upd.ExpireTime = m.diffExpireTime(src)
+		upd.Active = m.diffActive(src)
 	}
 	return upd
 }
@@ -46,15 +52,24 @@ func (m *ApiKeySpecRequest) WithChanges(u UpdateApiKeySpecRequest) ApiKeySpecReq
 	if u.ExpireTime.IsSet() {
 		out.ExpireTime = ptr.Get(u.ExpireTime.Value)
 	}
+	if u.Active.IsSet() {
+		out.Active = ptr.Get(u.Active.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateApiKeySpecRequest) HasChanges() bool {
-	return m.ExpireTime.Set
+	return m.ExpireTime.Set ||
+		m.Active.Set
 }
 
 func (m *ApiKeySpecRequest) diffExpireTime(src *ApiKeySpecRequest) optional.Optional[time.Time] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetExpireTime(), m.GetExpireTime(), nilDiffers)
+}
+
+func (m *ApiKeySpecRequest) diffActive(src *ApiKeySpecRequest) optional.Optional[bool] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetActive(), m.GetActive(), nilDiffers)
 }

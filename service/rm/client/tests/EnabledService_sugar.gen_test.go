@@ -14,6 +14,48 @@ import (
 	clientmocks "go.mws.cloud/go-sdk/service/rm/client/mocks"
 )
 
+func TestEnabledServiceSugared_BatchEnableServicesV2(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockEnabledService(ctrl)
+	mockClient.EXPECT().BatchEnableServicesV2(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewEnabledServiceSugared(mockClient)
+
+	_, err := sugared.BatchEnableServicesV2(context.Background(), client.BatchEnableServicesV2Request{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
+func TestEnabledServiceSugared_ListEnabledServices(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockEnabledService(ctrl)
+	mockClient.EXPECT().ListEnabledServices(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewEnabledServiceSugared(mockClient)
+
+	_, err := sugared.ListEnabledServices(context.Background(), client.ListEnabledServicesRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
+func TestEnabledServiceSugared_EnableService(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockEnabledService(ctrl)
+	mockClient.EXPECT().EnableService(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewEnabledServiceSugared(mockClient)
+
+	_, err := sugared.EnableService(context.Background(), client.EnableServiceRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
 func TestEnabledServiceSugared_GetEnabledService(t *testing.T) {
 	t.Parallel()
 	ctrl := gomock.NewController(t)

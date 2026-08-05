@@ -15,6 +15,14 @@ type AuthorizedKey interface {
 	//
 	// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys
 	ListAuthorizedKey(context.Context, ListAuthorizedKeyRequest) (*ListAuthorizedKeyResponse, error)
+	// DeleteAuthorizedKeyV2 позволяет удалить авторизованный ключ.
+	//
+	// Путь: DELETE /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+	DeleteAuthorizedKeyV2(context.Context, DeleteAuthorizedKeyV2Request) (*DeleteAuthorizedKeyV2Response, error)
+	// GetAuthorizedKeyV2 позволяет получить авторизованный ключ.
+	//
+	// Путь: GET /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+	GetAuthorizedKeyV2(context.Context, GetAuthorizedKeyV2Request) (*GetAuthorizedKeyV2Response, error)
 	// UpsertAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 	//
 	// Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
@@ -29,10 +37,12 @@ type AuthorizedKey interface {
 	//
 	// Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}?updateOnly=true
 	UpdateAuthorizedKeyV2(context.Context, UpdateAuthorizedKeyV2Request) (*UpsertAuthorizedKeyV2Response, error)
+	// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 	// DeleteAuthorizedKey позволяет удалить авторизованный ключ.
 	//
 	// Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
 	DeleteAuthorizedKey(context.Context, DeleteAuthorizedKeyRequest) (*DeleteAuthorizedKeyResponse, error)
+	// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 	// GetAuthorizedKey позволяет получить авторизованный ключ.
 	//
 	// Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
@@ -113,6 +123,141 @@ func (m *ListAuthorizedKeyResponse) GetErr() (err error) {
 }
 
 func (m *ListAuthorizedKeyResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
+}
+
+type DeleteAuthorizedKeyV2Request struct {
+	ServiceAccount string // path: "serviceAccount"
+	AuthorizedKey  string // path: "authorizedKey"
+	// Путь к проекту.
+	Project string // path: "project"
+	// Токен авторизации IAM
+	Authorization string // header: "Authorization"
+}
+
+func (m *DeleteAuthorizedKeyV2Request) SetAuthorization(authorization string) {
+	m.Authorization = authorization
+}
+
+func (m DeleteAuthorizedKeyV2Request) GetProject() string {
+	return m.Project
+}
+
+func (m *DeleteAuthorizedKeyV2Request) SetProject(project string) {
+	m.Project = project
+}
+
+func (m *DeleteAuthorizedKeyV2Request) getAuthorizedKeyV2Request() GetAuthorizedKeyV2Request {
+	return GetAuthorizedKeyV2Request{
+		ServiceAccount: m.ServiceAccount,
+		AuthorizedKey:  m.AuthorizedKey,
+		Project:        m.Project,
+		Authorization:  m.Authorization,
+	}
+}
+
+type DeleteAuthorizedKeyV2Response struct {
+	Code        int
+	Response204 bool // empty response
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
+	Response500 *common.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *DeleteAuthorizedKeyV2Response) GetCode() int {
+	return m.Code
+}
+
+func (m *DeleteAuthorizedKeyV2Response) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *DeleteAuthorizedKeyV2Response) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
+}
+
+type GetAuthorizedKeyV2Request struct {
+	ServiceAccount string // path: "serviceAccount"
+	AuthorizedKey  string // path: "authorizedKey"
+	// Путь к проекту.
+	Project string // path: "project"
+	// Токен авторизации IAM
+	Authorization string // header: "Authorization"
+}
+
+func (m *GetAuthorizedKeyV2Request) SetAuthorization(authorization string) {
+	m.Authorization = authorization
+}
+
+func (m GetAuthorizedKeyV2Request) GetProject() string {
+	return m.Project
+}
+
+func (m *GetAuthorizedKeyV2Request) SetProject(project string) {
+	m.Project = project
+}
+
+type GetAuthorizedKeyV2Response struct {
+	Code        int
+	Response200 *model.AuthorizedKeyOptionalResponse
+	Response400 *common.ApiError
+	Response403 *common.ApiError
+	Response404 *common.ApiError
+	Response500 *common.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *GetAuthorizedKeyV2Response) GetCode() int {
+	return m.Code
+}
+
+func (m *GetAuthorizedKeyV2Response) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *GetAuthorizedKeyV2Response) SetErrorWrapper(f func(err error) error) {
 	if m != nil {
 		m.errorWrapper = f
 	}

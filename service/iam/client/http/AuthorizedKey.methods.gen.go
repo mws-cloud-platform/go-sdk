@@ -92,6 +92,158 @@ func (c *AuthorizedKey) headerListAuthorizedKey(req *http.Request, request *clie
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
+// DeleteAuthorizedKeyV2 позволяет удалить авторизованный ключ.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: DELETE /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+func (c *AuthorizedKey) DeleteAuthorizedKeyV2(ctx context.Context, request client.DeleteAuthorizedKeyV2Request) (r *client.DeleteAuthorizedKeyV2Response, err error) {
+	ctx = c.setDeleteAuthorizedKeyV2Attributes(ctx)
+	r = &client.DeleteAuthorizedKeyV2Response{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.deleteAuthorizedKeyV2Invoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *AuthorizedKey) setDeleteAuthorizedKeyV2Attributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "DeleteAuthorizedKeyV2"),
+		commonattribute.String(commonattribute.PathTemplate, "/iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}"),
+		commonattribute.String(commonattribute.ProjectName, "iam"),
+		commonattribute.String(commonattribute.ServiceName, "authorizedKey"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *AuthorizedKey) deleteAuthorizedKeyV2Invoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.DeleteAuthorizedKeyV2Request)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"iam",
+		"v2",
+		"projects",
+		url.PathEscape(request.Project),
+		"serviceAccounts",
+		url.PathEscape(request.ServiceAccount),
+		"authorizedKeys",
+		url.PathEscape(request.AuthorizedKey))
+
+	httpReq, err := http.NewRequestWithContext(ctx, "DELETE", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerDeleteAuthorizedKeyV2(httpReq, request)
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeDeleteAuthorizedKeyV2Response(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.DeleteAuthorizedKeyV2Response)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *AuthorizedKey) headerDeleteAuthorizedKeyV2(req *http.Request, request *client.DeleteAuthorizedKeyV2Request) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+}
+
+// GetAuthorizedKeyV2 позволяет получить авторизованный ключ.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: GET /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+func (c *AuthorizedKey) GetAuthorizedKeyV2(ctx context.Context, request client.GetAuthorizedKeyV2Request) (r *client.GetAuthorizedKeyV2Response, err error) {
+	ctx = c.setGetAuthorizedKeyV2Attributes(ctx)
+	r = &client.GetAuthorizedKeyV2Response{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.getAuthorizedKeyV2Invoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *AuthorizedKey) setGetAuthorizedKeyV2Attributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "GetAuthorizedKeyV2"),
+		commonattribute.String(commonattribute.PathTemplate, "/iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}"),
+		commonattribute.String(commonattribute.ProjectName, "iam"),
+		commonattribute.String(commonattribute.ServiceName, "authorizedKey"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *AuthorizedKey) getAuthorizedKeyV2Invoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.GetAuthorizedKeyV2Request)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"iam",
+		"v2",
+		"projects",
+		url.PathEscape(request.Project),
+		"serviceAccounts",
+		url.PathEscape(request.ServiceAccount),
+		"authorizedKeys",
+		url.PathEscape(request.AuthorizedKey))
+
+	ctx = valuesctx.With(ctx, "serviceAccount", request.ServiceAccount)
+	ctx = valuesctx.With(ctx, "authorizedKey", request.AuthorizedKey)
+	ctx = valuesctx.With(ctx, "project", request.Project)
+
+	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerGetAuthorizedKeyV2(httpReq, request)
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeGetAuthorizedKeyV2Response(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.GetAuthorizedKeyV2Response)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *AuthorizedKey) headerGetAuthorizedKeyV2(req *http.Request, request *client.GetAuthorizedKeyV2Request) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+}
+
 // UpsertAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -375,6 +527,7 @@ func (c *AuthorizedKey) headerUpdateAuthorizedKeyV2(req *http.Request, request *
 	}
 }
 
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 // DeleteAuthorizedKey позволяет удалить авторизованный ключ.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -449,6 +602,7 @@ func (c *AuthorizedKey) headerDeleteAuthorizedKey(req *http.Request, request *cl
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 // GetAuthorizedKey позволяет получить авторизованный ключ.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

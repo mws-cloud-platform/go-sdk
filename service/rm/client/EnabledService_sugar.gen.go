@@ -26,6 +26,86 @@ func (x *EnabledServiceSugared) Impl() EnabledService {
 	return x.impl
 }
 
+// BatchEnableServicesV2 массовое подключение сервиса в проекте с возможностью указать альфа флаг.
+//
+// Путь: POST /rm/v2/projects/{project}/enabledServices:batchEnable
+func (x *EnabledServiceSugared) BatchEnableServicesV2(ctx context.Context, request BatchEnableServicesV2Request) (*model.BatchEnabledServicesResponseResponse, error) {
+	resp, err := x.impl.BatchEnableServicesV2(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return x.respHandlerBatchEnableServicesV2(resp)
+}
+
+func (x *EnabledServiceSugared) respHandlerBatchEnableServicesV2(resp *BatchEnableServicesV2Response) (*model.BatchEnabledServicesResponseResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	if resp.Response201 != nil {
+		return resp.Response201, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+// ListEnabledServices получение списка включенных на проекте сервисов.
+//
+// Путь: GET /rm/v1/projects/{project}/enabledServices
+func (x *EnabledServiceSugared) ListEnabledServices(ctx context.Context, request ListEnabledServicesRequest) (*model.EnabledServiceListOptionalResponse, error) {
+	resp, err := x.impl.ListEnabledServices(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return x.respHandlerListEnabledServices(resp)
+}
+
+func (x *EnabledServiceSugared) respHandlerListEnabledServices(resp *ListEnabledServicesResponse) (*model.EnabledServiceListOptionalResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+// EnableService подключение сервиса в проекте.
+//
+// Путь: POST /rm/v1/projects/{project}/enabledServices/{service}:enable
+func (x *EnabledServiceSugared) EnableService(ctx context.Context, request EnableServiceRequest) (*model.EnabledServiceOptionalResponse, error) {
+	resp, err := x.impl.EnableService(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return x.respHandlerEnableService(resp)
+}
+
+func (x *EnabledServiceSugared) respHandlerEnableService(resp *EnableServiceResponse) (*model.EnabledServiceOptionalResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	if resp.Response201 != nil {
+		return resp.Response201, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
 // GetEnabledService retrieve an enabled service object for specified project.
 //
 // Путь: GET /rm/v1/projects/{project}/enabledServices/{service}

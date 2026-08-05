@@ -25,8 +25,8 @@ func Example_enableService() {
 	}
 	defer sdk.Close(ctx)
 
-	// Create a new EnableServices client using the provided SDK.
-	client, err := resourcemanagersdk.NewEnableService(ctx, sdk)
+	// Create a new EnabledService client using the provided SDK.
+	client, err := resourcemanagersdk.NewEnabledService(ctx, sdk)
 	if err != nil {
 		log.Panicln("init client:", err)
 	}

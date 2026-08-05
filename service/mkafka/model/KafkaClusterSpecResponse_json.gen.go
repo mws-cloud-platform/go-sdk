@@ -9,6 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m KafkaClusterSpecResponse) MarshalJSON() ([]byte, error) {
@@ -40,6 +41,11 @@ func (m *KafkaClusterSpecResponse) encodeFields(e *jx.Encoder) error {
 
 	e.FieldStart("version")
 	e.Str(m.Version)
+
+	if m.Region != nil {
+		e.FieldStart("region")
+		m.Region.Encode(e)
+	}
 
 	e.FieldStart("endpoints")
 	e.ArrStart()
@@ -99,6 +105,14 @@ func (m *KafkaClusterSpecResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Version = v
+			return nil
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
 			return nil
 		case "endpoints":
 			c := make([]KafkaEndpointResponse, 0)

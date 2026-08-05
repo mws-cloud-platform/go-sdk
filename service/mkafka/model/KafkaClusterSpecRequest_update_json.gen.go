@@ -9,6 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m UpdateKafkaClusterSpecRequest) MarshalJSON() ([]byte, error) {
@@ -41,6 +42,11 @@ func (m *UpdateKafkaClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Version.IsSet() {
 		e.FieldStart("version")
 		e.Str(m.Version.Value)
+	}
+
+	if m.Region.IsSet() {
+		e.FieldStart("region")
+		m.Region.Value.Encode(e)
 	}
 
 	if m.Endpoints.IsSet() {
@@ -117,6 +123,14 @@ func (m *UpdateKafkaClusterSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Version.SetTo(v)
+			return nil
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region.SetTo(v)
 			return nil
 		case "endpoints":
 			c := make([]UpdateKafkaEndpointRequest, 0)

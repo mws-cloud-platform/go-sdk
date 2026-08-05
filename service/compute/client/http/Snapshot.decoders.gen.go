@@ -66,7 +66,7 @@ func decodeListSnapshotsResponse(resp *http.Response) (*client.ListSnapshotsResp
 		case "application/json":
 			result := &client.ListSnapshotsResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.BaseError{},
+				Response500: &common.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

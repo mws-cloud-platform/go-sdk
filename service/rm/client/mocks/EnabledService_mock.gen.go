@@ -34,6 +34,36 @@ func (m *MockEnabledService) EXPECT() *MockEnabledServiceMockRecorder {
 	return m.recorder
 }
 
+// BatchEnableServicesV2 mocks base method.
+func (m *MockEnabledService) BatchEnableServicesV2(arg0 context.Context, arg1 client.BatchEnableServicesV2Request) (*client.BatchEnableServicesV2Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BatchEnableServicesV2", arg0, arg1)
+	ret0, _ := ret[0].(*client.BatchEnableServicesV2Response)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BatchEnableServicesV2 indicates an expected call of BatchEnableServicesV2.
+func (mr *MockEnabledServiceMockRecorder) BatchEnableServicesV2(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BatchEnableServicesV2", reflect.TypeOf((*MockEnabledService)(nil).BatchEnableServicesV2), arg0, arg1)
+}
+
+// EnableService mocks base method.
+func (m *MockEnabledService) EnableService(arg0 context.Context, arg1 client.EnableServiceRequest) (*client.EnableServiceResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnableService", arg0, arg1)
+	ret0, _ := ret[0].(*client.EnableServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// EnableService indicates an expected call of EnableService.
+func (mr *MockEnabledServiceMockRecorder) EnableService(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnableService", reflect.TypeOf((*MockEnabledService)(nil).EnableService), arg0, arg1)
+}
+
 // GetEnabledService mocks base method.
 func (m *MockEnabledService) GetEnabledService(arg0 context.Context, arg1 client.GetEnabledServiceRequest) (*client.GetEnabledServiceResponse, error) {
 	m.ctrl.T.Helper()
@@ -47,4 +77,19 @@ func (m *MockEnabledService) GetEnabledService(arg0 context.Context, arg1 client
 func (mr *MockEnabledServiceMockRecorder) GetEnabledService(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEnabledService", reflect.TypeOf((*MockEnabledService)(nil).GetEnabledService), arg0, arg1)
+}
+
+// ListEnabledServices mocks base method.
+func (m *MockEnabledService) ListEnabledServices(arg0 context.Context, arg1 client.ListEnabledServicesRequest) (*client.ListEnabledServicesResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListEnabledServices", arg0, arg1)
+	ret0, _ := ret[0].(*client.ListEnabledServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListEnabledServices indicates an expected call of ListEnabledServices.
+func (mr *MockEnabledServiceMockRecorder) ListEnabledServices(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListEnabledServices", reflect.TypeOf((*MockEnabledService)(nil).ListEnabledServices), arg0, arg1)
 }

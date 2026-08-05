@@ -10,7 +10,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
-func (m ApiKeySpecRequest) MarshalJSON() ([]byte, error) {
+func (m ClickhouseVmTypeStatusZoneResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -18,7 +18,7 @@ func (m ApiKeySpecRequest) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *ApiKeySpecRequest) Encode(e *jx.Encoder) error {
+func (m *ClickhouseVmTypeStatusZoneResponse) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -31,45 +31,43 @@ func (m *ApiKeySpecRequest) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *ApiKeySpecRequest) encodeFields(e *jx.Encoder) error {
-	if m.ExpireTime != nil {
-		e.FieldStart("expireTime")
-		conv.EncodeDateTimeUTC(e, *m.ExpireTime)
-	}
+func (m *ClickhouseVmTypeStatusZoneResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
 
-	if m.Active != nil {
-		e.FieldStart("active")
-		e.Bool(*m.Active)
+	if m.Region != nil {
+		e.FieldStart("region")
+		e.Str(*m.Region)
 	}
 	return nil
 }
 
-func (m *ApiKeySpecRequest) UnmarshalJSON(b []byte) error {
+func (m *ClickhouseVmTypeStatusZoneResponse) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *ApiKeySpecRequest) Decode(d *jx.Decoder) error {
+func (m *ClickhouseVmTypeStatusZoneResponse) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("ApiKeySpecRequest")
+		return conv.NewDecodeToNilError("ClickhouseVmTypeStatusZoneResponse")
 	}
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "expireTime":
-			v, err := decode.DateTime(d)
+		case "name":
+			v, err := decode.Str(d)
 			if err != nil {
 				return err
 			}
 
-			m.ExpireTime = &v
+			m.Name = v
 			return nil
-		case "active":
-			v, err := decode.Bool(d)
+		case "region":
+			v, err := decode.Str(d)
 			if err != nil {
 				return err
 			}
 
-			m.Active = &v
+			m.Region = &v
 			return nil
 		default:
 			return d.Skip()

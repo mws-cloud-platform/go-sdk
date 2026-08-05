@@ -8,6 +8,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Параметры кластера.
@@ -17,6 +18,8 @@ type KafkaClusterSpecResponse struct {
 	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 	// Версия продукта.
 	Version string `json:"version" yaml:"version"`
+	// Регион, которому принадлежит кластер.
+	Region *rm.RegionRef `json:"region,omitempty" yaml:"region,omitempty"`
 	// Описание эндпойнтов в сетях пользователя (VPC) для подключения к брокерам кластера.
 	Endpoints []KafkaEndpointResponse `json:"endpoints" yaml:"endpoints"`
 	// Описание ресурсов хостов брокеров и контроллеров.
@@ -57,6 +60,24 @@ func (m *KafkaClusterSpecResponse) GetVersion() string {
 
 func (m *KafkaClusterSpecResponse) SetVersion(val string) {
 	m.Version = val
+}
+
+func (m *KafkaClusterSpecResponse) GetRegion() *rm.RegionRef {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *KafkaClusterSpecResponse) SetRegion(val *rm.RegionRef) {
+	m.Region = val
+}
+
+func (m *KafkaClusterSpecResponse) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+	if m != nil && m.Region != nil {
+		return *m.Region
+	}
+	return val
 }
 
 func (m *KafkaClusterSpecResponse) GetEndpoints() []KafkaEndpointResponse {
@@ -163,6 +184,7 @@ func (m *KafkaClusterSpecResponse) Clone() *KafkaClusterSpecResponse {
 		cloneActive := *m.Active
 		clone.Active = &cloneActive
 	}
+	clone.Region = m.Region.Clone()
 	if m.Endpoints != nil {
 		clone.Endpoints = make([]KafkaEndpointResponse, len(m.Endpoints))
 		for i, v := range m.Endpoints {
@@ -183,6 +205,10 @@ func (m *KafkaClusterSpecResponse) Clone() *KafkaClusterSpecResponse {
 func (m *KafkaClusterSpecResponse) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if err := m.Region.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Region", err)
 	}
 
 	for index := range m.Endpoints {

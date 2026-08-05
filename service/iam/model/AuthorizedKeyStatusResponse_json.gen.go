@@ -54,6 +54,11 @@ func (m *AuthorizedKeyStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("lastAuthTime")
 		conv.EncodeDateTimeUTC(e, *m.LastAuthTime)
 	}
+
+	if m.Active != nil {
+		e.FieldStart("active")
+		e.Bool(*m.Active)
+	}
 	return nil
 }
 
@@ -107,6 +112,14 @@ func (m *AuthorizedKeyStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.LastAuthTime = &v
+			return nil
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = &v
 			return nil
 		default:
 			return d.Skip()

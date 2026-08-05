@@ -6,7 +6,6 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -14,9 +13,9 @@ import (
 type SecretVersionOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     SecretVersionSpecOptionalResponse                                        `json:"spec" yaml:"spec"`
-	Status   SecretVersionStatusResponse                                              `json:"status" yaml:"status"`
+	Metadata common.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
+	Spec     SecretVersionSpecOptionalResponse                  `json:"spec" yaml:"spec"`
+	Status   SecretVersionStatusResponse                        `json:"status" yaml:"status"`
 }
 
 func (m *SecretVersionOptionalResponse) GetKind() string {
@@ -30,18 +29,15 @@ func (m *SecretVersionOptionalResponse) SetKind(val string) {
 	m.Kind = val
 }
 
-func (m *SecretVersionOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		return &m.Metadata.Value
+func (m *SecretVersionOptionalResponse) GetMetadata() common.CommonTypedResourceMetadataOptionalResponse {
+	if m != nil {
+		return m.Metadata
 	}
-	return nil
+	return common.CommonTypedResourceMetadataOptionalResponse{}
 }
 
-func (m *SecretVersionOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		return m.Metadata.Value
-	}
-	return val
+func (m *SecretVersionOptionalResponse) SetMetadata(val common.CommonTypedResourceMetadataOptionalResponse) {
+	m.Metadata = val
 }
 
 func (m *SecretVersionOptionalResponse) GetSpec() SecretVersionSpecOptionalResponse {
@@ -72,9 +68,7 @@ func (m *SecretVersionOptionalResponse) Clone() *SecretVersionOptionalResponse {
 	}
 
 	clone := *m
-	if clone.Metadata.IsSet() {
-		clone.Metadata.Value = *m.Metadata.Value.Clone()
-	}
+	clone.Metadata = *m.Metadata.Clone()
 	clone.Spec = *m.Spec.Clone()
 	clone.Status = *m.Status.Clone()
 	return &clone
@@ -85,10 +79,8 @@ func (m *SecretVersionOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		if err := m.Metadata.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Metadata", err)
-		}
+	if err := m.Metadata.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Metadata", err)
 	}
 
 	return nil

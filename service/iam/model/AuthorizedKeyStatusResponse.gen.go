@@ -19,6 +19,8 @@ type AuthorizedKeyStatusResponse struct {
 	PublicKey *string `json:"publicKey,omitempty" yaml:"publicKey,omitempty"`
 	// Время последней аутентификации.
 	LastAuthTime *time.Time `json:"lastAuthTime,omitempty" yaml:"lastAuthTime,omitempty"`
+	// Флаг активности ключа.
+	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
 func (m *AuthorizedKeyStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -84,6 +86,20 @@ func (m *AuthorizedKeyStatusResponse) GetLastAuthTimeOr(val time.Time) time.Time
 	return val
 }
 
+func (m *AuthorizedKeyStatusResponse) GetActive() *bool {
+	if m != nil {
+		return m.Active
+	}
+	return nil
+}
+
+func (m *AuthorizedKeyStatusResponse) GetActiveOr(val bool) bool {
+	if m != nil && m.Active != nil {
+		return *m.Active
+	}
+	return val
+}
+
 func (m *AuthorizedKeyStatusResponse) Clone() *AuthorizedKeyStatusResponse {
 	if m == nil {
 		return nil
@@ -102,6 +118,10 @@ func (m *AuthorizedKeyStatusResponse) Clone() *AuthorizedKeyStatusResponse {
 	if m.PublicKey != nil {
 		clonePublicKey := *m.PublicKey
 		clone.PublicKey = &clonePublicKey
+	}
+	if m.Active != nil {
+		cloneActive := *m.Active
+		clone.Active = &cloneActive
 	}
 
 	return &clone

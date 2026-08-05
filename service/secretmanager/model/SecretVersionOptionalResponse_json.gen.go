@@ -36,14 +36,8 @@ func (m *SecretVersionOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("kind")
 	e.Str(m.Kind)
 
-	if m.Metadata.IsSet() {
-		e.FieldStart("metadata")
-		if m.Metadata.IsNull() {
-			e.Null()
-		} else {
-			m.Metadata.Value.Encode(e)
-		}
-	}
+	e.FieldStart("metadata")
+	m.Metadata.Encode(e)
 
 	e.FieldStart("spec")
 	m.Spec.Encode(e)
@@ -73,17 +67,12 @@ func (m *SecretVersionOptionalResponse) Decode(d *jx.Decoder) error {
 			m.Kind = v
 			return nil
 		case "metadata":
-			if d.Next() == jx.Null {
-				m.Metadata.SetToNull()
-				return d.Null()
-			}
-
 			var v common.CommonTypedResourceMetadataOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Metadata.SetTo(v)
+			m.Metadata = v
 			return nil
 		case "spec":
 			var v SecretVersionSpecOptionalResponse

@@ -58,7 +58,7 @@ func Example_secret_version() {
 	if err != nil {
 		log.Panicln("create secret with version:", err)
 	}
-	fmt.Printf("secret %s with version %s created\n", secret.GetMetadata().GetId().ResourceName(), secret.Status.CurrentSecretVersion.GetVersion())
+	fmt.Printf("secret %s with version %s created\n", secret.GetMetadata().Id.ResourceName(), secret.Status.CurrentSecretVersion.GetVersion())
 
 	firstVersionRef := secret.Status.CurrentSecretVersion
 
@@ -74,24 +74,24 @@ func Example_secret_version() {
 	if err != nil {
 		log.Panicln("add version to secret:", err)
 	}
-	fmt.Println("version added:", version.GetMetadata().GetId().ResourceName())
+	fmt.Println("version added:", version.GetMetadata().Id.ResourceName())
 
-	secondVersionName := string(version.GetMetadata().GetId().ResourceName())
+	secondVersionName := string(version.GetMetadata().Id.ResourceName())
 
 	// Get version info.
 	optVersion, err := secretVersionClient.GetSecretVersion(ctx, secretmanagerclient.GetSecretVersionRequest{
 		Name:    secretName,
-		Version: string(version.GetMetadata().GetId().ResourceName()),
+		Version: string(version.GetMetadata().Id.ResourceName()),
 	})
 	if err != nil {
 		log.Panicln("get secret version:", err)
 	}
-	fmt.Println("version info received:", optVersion.GetMetadata().GetId().ResourceName())
+	fmt.Println("version info received:", optVersion.GetMetadata().Id.ResourceName())
 
 	// Get version data.
 	data, err := secretVersionClient.GetData(ctx, secretmanagerclient.GetDataRequest{
 		Name:    secretName,
-		Version: string(version.GetMetadata().GetId().ResourceName()),
+		Version: string(version.GetMetadata().Id.ResourceName()),
 	})
 	if err != nil {
 		log.Panicln("get secret version data:", err)
@@ -108,7 +108,7 @@ func Example_secret_version() {
 		if err != nil {
 			log.Panicln("list secret versions:", err)
 		}
-		resourceNames = append(resourceNames, string(resource.GetMetadata().GetId().ResourceName()))
+		resourceNames = append(resourceNames, string(resource.GetMetadata().Id.ResourceName()))
 	}
 	fmt.Println("secret versions listed:", strings.Join(resourceNames, ", "))
 

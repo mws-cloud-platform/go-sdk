@@ -13,6 +13,7 @@ func KafkaClusterSpecRequestToResponse(request *KafkaClusterSpecRequest) (*Kafka
 	var response KafkaClusterSpecResponse
 	response.Active = request.Active
 	response.Version = request.Version
+	response.Region = request.Region
 	for _, e := range request.Endpoints {
 		tmp, err := KafkaEndpointRequestToResponse(&e)
 		if err != nil {

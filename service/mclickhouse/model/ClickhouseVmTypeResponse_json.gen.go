@@ -41,6 +41,9 @@ func (m *ClickhouseVmTypeResponse) encodeFields(e *jx.Encoder) error {
 
 	e.FieldStart("spec")
 	m.Spec.Encode(e)
+
+	e.FieldStart("status")
+	m.Status.Encode(e)
 	return nil
 }
 
@@ -74,6 +77,14 @@ func (m *ClickhouseVmTypeResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Spec = v
+			return nil
+		case "status":
+			var v ClickhouseVmTypeStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Status = v
 			return nil
 		default:
 			return d.Skip()

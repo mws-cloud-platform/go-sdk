@@ -18,6 +18,8 @@ type ClickhouseVmTypeResponse struct {
 	Metadata *ClickhouseVmTypeMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация типа ВМ.
 	Spec ClickhouseVmTypeSpecResponse `json:"spec" yaml:"spec"`
+	// Статус типа ВМ.
+	Status ClickhouseVmTypeStatusResponse `json:"status" yaml:"status"`
 }
 
 func (m *ClickhouseVmTypeResponse) GetMetadata() *ClickhouseVmTypeMetadataResponse {
@@ -49,6 +51,17 @@ func (m *ClickhouseVmTypeResponse) SetSpec(val ClickhouseVmTypeSpecResponse) {
 	m.Spec = val
 }
 
+func (m *ClickhouseVmTypeResponse) GetStatus() ClickhouseVmTypeStatusResponse {
+	if m != nil {
+		return m.Status
+	}
+	return ClickhouseVmTypeStatusResponse{}
+}
+
+func (m *ClickhouseVmTypeResponse) SetStatus(val ClickhouseVmTypeStatusResponse) {
+	m.Status = val
+}
+
 func (m *ClickhouseVmTypeResponse) Clone() *ClickhouseVmTypeResponse {
 	if m == nil {
 		return nil
@@ -57,6 +70,7 @@ func (m *ClickhouseVmTypeResponse) Clone() *ClickhouseVmTypeResponse {
 	clone := *m
 	clone.Metadata = m.Metadata.Clone()
 	clone.Spec = *m.Spec.Clone()
+	clone.Status = *m.Status.Clone()
 	return &clone
 }
 

@@ -19,7 +19,7 @@ type StorageDiskSpecOptionalResponse struct {
 	Source optional.OptionalNil[StorageDiskSpecSourceOptionalResponse] `json:"source,omitempty" yaml:"source,omitempty"`
 	// Ссылка на тип диска
 	DiskType optional.Optional[compute.DiskTypeRef] `json:"diskType,omitempty" yaml:"diskType,omitempty"`
-	// Запрашиваемая пользователем IOPS
+	// Запрашиваемое пользователем значение IOPS
 	Iops optional.Optional[Iops] `json:"iops,omitempty" yaml:"iops,omitempty"`
 }
 
@@ -122,6 +122,8 @@ func (m *StorageDiskSpecOptionalResponse) Parse(ctx context.Context) error {
 type StorageDiskSpecSourceOptionalResponse struct {
 	// Ссылка на образ
 	Image optional.Optional[compute.ImageRef] `json:"image,omitempty" yaml:"image,omitempty"`
+	// Ссылка на резервную копию диска
+	DiskBackup optional.Optional[compute.DiskBackupRef] `json:"diskBackup,omitempty" yaml:"diskBackup,omitempty"`
 }
 
 func (m *StorageDiskSpecSourceOptionalResponse) GetImage() *compute.ImageRef {
@@ -138,6 +140,20 @@ func (m *StorageDiskSpecSourceOptionalResponse) GetImageOr(val compute.ImageRef)
 	return val
 }
 
+func (m *StorageDiskSpecSourceOptionalResponse) GetDiskBackup() *compute.DiskBackupRef {
+	if m != nil && m.DiskBackup.IsSet() {
+		return &m.DiskBackup.Value
+	}
+	return nil
+}
+
+func (m *StorageDiskSpecSourceOptionalResponse) GetDiskBackupOr(val compute.DiskBackupRef) compute.DiskBackupRef {
+	if m != nil && m.DiskBackup.IsSet() {
+		return m.DiskBackup.Value
+	}
+	return val
+}
+
 func (m *StorageDiskSpecSourceOptionalResponse) Clone() *StorageDiskSpecSourceOptionalResponse {
 	if m == nil {
 		return nil
@@ -146,6 +162,9 @@ func (m *StorageDiskSpecSourceOptionalResponse) Clone() *StorageDiskSpecSourceOp
 	clone := *m
 	if clone.Image.IsSet() {
 		clone.Image.Value = *m.Image.Value.Clone()
+	}
+	if clone.DiskBackup.IsSet() {
+		clone.DiskBackup.Value = *m.DiskBackup.Value.Clone()
 	}
 	return &clone
 }
@@ -158,6 +177,12 @@ func (m *StorageDiskSpecSourceOptionalResponse) Parse(ctx context.Context) error
 	if m.Image.IsSet() {
 		if err := m.Image.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Image", err)
+		}
+	}
+
+	if m.DiskBackup.IsSet() {
+		if err := m.DiskBackup.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("DiskBackup", err)
 		}
 	}
 

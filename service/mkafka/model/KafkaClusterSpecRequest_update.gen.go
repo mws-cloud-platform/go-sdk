@@ -13,6 +13,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 type UpdateKafkaClusterSpecRequest struct {
@@ -20,6 +21,11 @@ type UpdateKafkaClusterSpecRequest struct {
 	Active optional.Optional[bool] `json:"active" yaml:"active"`
 	// Версия продукта.
 	Version optional.Optional[string] `json:"version" yaml:"version"`
+	// Регион, которому принадлежит кластер.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Region optional.Optional[rm.RegionRef] `json:"region" yaml:"region"`
 	// Описание эндпойнтов в сетях пользователя (VPC) для подключения к брокерам кластера.
 	Endpoints optional.Optional[[]UpdateKafkaEndpointRequest] `json:"endpoints" yaml:"endpoints"`
 	// Описание ресурсов хостов брокеров и контроллеров.
@@ -39,6 +45,9 @@ func (m *KafkaClusterSpecRequest) AsUpdateModel() UpdateKafkaClusterSpecRequest 
 		u.Active = optional.NewOptional(m.GetActiveOr(false))
 	}
 	u.Version = optional.NewOptional(m.GetVersion())
+	if m.Region != nil {
+		u.Region = optional.NewOptional(m.GetRegionOr(rm.RegionRef{}))
+	}
 	u.Endpoints = optional.NewOptional(func() []UpdateKafkaEndpointRequest {
 		var tmp []UpdateKafkaEndpointRequest
 		if m.GetEndpoints() != nil {
@@ -72,6 +81,7 @@ func (m *KafkaClusterSpecRequest) Diff(src *KafkaClusterSpecRequest) UpdateKafka
 	if !nilDiffers {
 		upd.Active = m.diffActive(src)
 		upd.Version = m.diffVersion(src)
+		upd.Region = m.diffRegion(src)
 		upd.Endpoints = m.diffEndpoints(src)
 		upd.Instances = m.diffInstances(src)
 		upd.ProductConfig = m.diffProductConfig(src)
@@ -93,6 +103,9 @@ func (m *KafkaClusterSpecRequest) WithChanges(u UpdateKafkaClusterSpecRequest) K
 	}
 	if u.Version.IsSet() {
 		out.Version = u.Version.Value
+	}
+	if u.Region.IsSet() {
+		out.Region = ptr.Get(u.Region.Value)
 	}
 	if u.Endpoints.IsSet() {
 		out.Endpoints = merge.Slice(out.Endpoints, u.Endpoints.Value, (*KafkaEndpointRequest).WithChanges, (*KafkaEndpointRequest).GetName, (*UpdateKafkaEndpointRequest).GetName)
@@ -125,6 +138,7 @@ func (m *KafkaClusterSpecRequest) WithChanges(u UpdateKafkaClusterSpecRequest) K
 func (m UpdateKafkaClusterSpecRequest) HasChanges() bool {
 	return m.Active.Set ||
 		m.Version.Set ||
+		m.Region.Set ||
 		m.Endpoints.Set ||
 		m.Instances.Set ||
 		m.ProductConfig.Set ||
@@ -136,6 +150,12 @@ func (m UpdateKafkaClusterSpecRequest) HasChanges() bool {
 func (m *UpdateKafkaClusterSpecRequest) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if m.Region.IsSet() {
+		if err := m.Region.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Region", err)
+		}
 	}
 
 	if m.Endpoints.IsSet() {
@@ -163,6 +183,11 @@ func (m *KafkaClusterSpecRequest) diffActive(src *KafkaClusterSpecRequest) optio
 func (m *KafkaClusterSpecRequest) diffVersion(src *KafkaClusterSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetVersion(), m.GetVersion(), nilDiffers)
+}
+
+func (m *KafkaClusterSpecRequest) diffRegion(src *KafkaClusterSpecRequest) optional.Optional[rm.RegionRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetRegion(), m.GetRegion(), nilDiffers)
 }
 
 func (m *KafkaClusterSpecRequest) diffEndpoints(src *KafkaClusterSpecRequest) optional.Optional[[]UpdateKafkaEndpointRequest] {

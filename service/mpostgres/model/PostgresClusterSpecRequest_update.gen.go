@@ -30,6 +30,11 @@ type UpdatePostgresClusterSpecRequest struct {
 	MaintenanceWindow optional.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
 	// Параметры PostgreSQL. Если не указаны, будут использованы параметры по умолчанию.
 	PostgresParameters optional.Optional[map[string]string] `json:"postgresParameters" yaml:"postgresParameters"`
+	// Выгрузка пользовательских логов кластера — включена или выключена.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	LoggingEnabled optional.Optional[bool] `json:"loggingEnabled" yaml:"loggingEnabled"`
 }
 
 func (m *PostgresClusterSpecRequest) AsUpdateModel() UpdatePostgresClusterSpecRequest {
@@ -66,6 +71,9 @@ func (m *PostgresClusterSpecRequest) AsUpdateModel() UpdatePostgresClusterSpecRe
 	if m.PostgresParameters != nil {
 		u.PostgresParameters = optional.NewOptional(m.GetPostgresParameters())
 	}
+	if m.LoggingEnabled != nil {
+		u.LoggingEnabled = optional.NewOptional(m.GetLoggingEnabledOr(false))
+	}
 	return u
 }
 
@@ -82,6 +90,7 @@ func (m *PostgresClusterSpecRequest) Diff(src *PostgresClusterSpecRequest) Updat
 		upd.Backup = m.diffBackup(src)
 		upd.MaintenanceWindow = m.diffMaintenanceWindow(src)
 		upd.PostgresParameters = m.diffPostgresParameters(src)
+		upd.LoggingEnabled = m.diffLoggingEnabled(src)
 	}
 	return upd
 }
@@ -120,6 +129,9 @@ func (m *PostgresClusterSpecRequest) WithChanges(u UpdatePostgresClusterSpecRequ
 	if u.PostgresParameters.IsSet() {
 		out.PostgresParameters = maps.Clone(u.PostgresParameters.Value)
 	}
+	if u.LoggingEnabled.IsSet() {
+		out.LoggingEnabled = ptr.Get(u.LoggingEnabled.Value)
+	}
 	return out
 }
 
@@ -132,7 +144,8 @@ func (m UpdatePostgresClusterSpecRequest) HasChanges() bool {
 		m.Instances.Set ||
 		m.Backup.Set ||
 		m.MaintenanceWindow.Set ||
-		m.PostgresParameters.Set
+		m.PostgresParameters.Set ||
+		m.LoggingEnabled.Set
 }
 
 func (m *UpdatePostgresClusterSpecRequest) Parse(ctx context.Context) error {
@@ -231,4 +244,9 @@ func (m *PostgresClusterSpecRequest) diffPostgresParameters(src *PostgresCluster
 		Value: value,
 		Set:   hasChanges,
 	}
+}
+
+func (m *PostgresClusterSpecRequest) diffLoggingEnabled(src *PostgresClusterSpecRequest) optional.Optional[bool] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetLoggingEnabled(), m.GetLoggingEnabled(), nilDiffers)
 }

@@ -50,6 +50,99 @@ func (x *AuthorizedKeySugared) respHandlerListAuthorizedKey(resp *ListAuthorized
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+// DeleteAuthorizedKeyV2 позволяет удалить авторизованный ключ.
+//
+// Путь: DELETE /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+func (x *AuthorizedKeySugared) DeleteAuthorizedKeyV2(ctx context.Context, request DeleteAuthorizedKeyV2Request, opts ...Option) error {
+	config := newConfig(opts...)
+
+	resp, err := x.impl.DeleteAuthorizedKeyV2(ctx, request)
+	if err != nil {
+		return err
+	}
+
+	err = x.respHandlerDeleteAuthorizedKeyV2(resp)
+	if err != nil {
+		return err
+	}
+
+	if !config.wait {
+		return nil
+	}
+
+	return x.waitDeleteAuthorizedKeyV2(ctx, request.getAuthorizedKeyV2Request(), config.waitOptions...)
+}
+
+func (x *AuthorizedKeySugared) respHandlerDeleteAuthorizedKeyV2(resp *DeleteAuthorizedKeyV2Response) error {
+	if err := resp.GetErr(); err != nil {
+		return err
+	}
+
+	if resp.Response204 {
+		return nil
+	}
+
+	return mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *AuthorizedKeySugared) waitDeleteAuthorizedKeyV2(ctx context.Context, request GetAuthorizedKeyV2Request, opts ...wait.WaiterOption) error {
+	callback := func(ctx context.Context) (*model.AuthorizedKeyOptionalResponse, bool, error) {
+		_, err := x.GetAuthorizedKeyV2(ctx, request)
+		if mwserrors.IsAPIErrorNotFoundStatus(err) {
+			return nil, true, nil
+		}
+		return nil, false, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	_, err := waiter.Wait(ctx)
+	return err
+}
+
+// GetAuthorizedKeyV2 позволяет получить авторизованный ключ.
+//
+// Путь: GET /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
+func (x *AuthorizedKeySugared) GetAuthorizedKeyV2(ctx context.Context, request GetAuthorizedKeyV2Request, opts ...Option) (*model.AuthorizedKeyOptionalResponse, error) {
+	config := newConfig(opts...)
+
+	resp, err := x.impl.GetAuthorizedKeyV2(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	sugaredResponse, err := x.respHandlerGetAuthorizedKeyV2(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitGetAuthorizedKeyV2(ctx, request, config.waitOptions...)
+}
+
+func (x *AuthorizedKeySugared) respHandlerGetAuthorizedKeyV2(resp *GetAuthorizedKeyV2Response) (*model.AuthorizedKeyOptionalResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *AuthorizedKeySugared) waitGetAuthorizedKeyV2(ctx context.Context, request GetAuthorizedKeyV2Request, opts ...wait.WaiterOption) (*model.AuthorizedKeyOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.AuthorizedKeyOptionalResponse, bool, error) {
+		response, err := x.GetAuthorizedKeyV2(ctx, request)
+		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
+		return response, stop, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	return waiter.Wait(ctx)
+}
+
 // UpsertAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
 //
 // Путь: POST /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
@@ -104,6 +197,7 @@ func (x *AuthorizedKeySugared) UpdateAuthorizedKeyV2(ctx context.Context, reques
 	return x.respHandlerUpsertAuthorizedKeyV2(resp)
 }
 
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 // DeleteAuthorizedKey позволяет удалить авторизованный ключ.
 //
 // Путь: DELETE /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}
@@ -152,6 +246,7 @@ func (x *AuthorizedKeySugared) waitDeleteAuthorizedKey(ctx context.Context, requ
 	return err
 }
 
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
 // GetAuthorizedKey позволяет получить авторизованный ключ.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}

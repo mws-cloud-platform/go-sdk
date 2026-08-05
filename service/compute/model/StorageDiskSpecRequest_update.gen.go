@@ -26,7 +26,7 @@ type UpdateStorageDiskSpecRequest struct {
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	DiskType optional.Optional[compute.DiskTypeRef] `json:"diskType" yaml:"diskType"`
-	// Запрашиваемая пользователем IOPS
+	// Запрашиваемое пользователем значение IOPS
 	Iops optional.Optional[Iops] `json:"iops" yaml:"iops"`
 }
 
@@ -142,12 +142,20 @@ type UpdateStorageDiskSpecSourceRequest struct {
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Image optional.Optional[compute.ImageRef] `json:"image" yaml:"image"`
+	// Ссылка на резервную копию диска
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	DiskBackup optional.Optional[compute.DiskBackupRef] `json:"diskBackup" yaml:"diskBackup"`
 }
 
 func (m *StorageDiskSpecSourceRequest) AsUpdateModel() UpdateStorageDiskSpecSourceRequest {
 	var u UpdateStorageDiskSpecSourceRequest
 	if m.Image != nil {
 		u.Image = optional.NewOptional(m.GetImageOr(compute.ImageRef{}))
+	}
+	if m.DiskBackup != nil {
+		u.DiskBackup = optional.NewOptional(m.GetDiskBackupOr(compute.DiskBackupRef{}))
 	}
 	return u
 }
@@ -158,6 +166,7 @@ func (m *StorageDiskSpecSourceRequest) Diff(src *StorageDiskSpecSourceRequest) U
 	upd := UpdateStorageDiskSpecSourceRequest{}
 	if !nilDiffers {
 		upd.Image = m.diffImage(src)
+		upd.DiskBackup = m.diffDiskBackup(src)
 	}
 	return upd
 }
@@ -171,12 +180,16 @@ func (m *StorageDiskSpecSourceRequest) WithChanges(u UpdateStorageDiskSpecSource
 	if u.Image.IsSet() {
 		out.Image = ptr.Get(u.Image.Value)
 	}
+	if u.DiskBackup.IsSet() {
+		out.DiskBackup = ptr.Get(u.DiskBackup.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateStorageDiskSpecSourceRequest) HasChanges() bool {
-	return m.Image.Set
+	return m.Image.Set ||
+		m.DiskBackup.Set
 }
 
 func (m *UpdateStorageDiskSpecSourceRequest) Parse(ctx context.Context) error {
@@ -190,10 +203,21 @@ func (m *UpdateStorageDiskSpecSourceRequest) Parse(ctx context.Context) error {
 		}
 	}
 
+	if m.DiskBackup.IsSet() {
+		if err := m.DiskBackup.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("DiskBackup", err)
+		}
+	}
+
 	return nil
 }
 
 func (m *StorageDiskSpecSourceRequest) diffImage(src *StorageDiskSpecSourceRequest) optional.Optional[compute.ImageRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetImage(), m.GetImage(), nilDiffers)
+}
+
+func (m *StorageDiskSpecSourceRequest) diffDiskBackup(src *StorageDiskSpecSourceRequest) optional.Optional[compute.DiskBackupRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetDiskBackup(), m.GetDiskBackup(), nilDiffers)
 }

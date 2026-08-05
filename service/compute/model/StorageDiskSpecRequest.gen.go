@@ -18,7 +18,7 @@ type StorageDiskSpecRequest struct {
 	Source *StorageDiskSpecSourceRequest `json:"source,omitempty" yaml:"source,omitempty"`
 	// Ссылка на тип диска
 	DiskType *compute.DiskTypeRef `json:"diskType,omitempty" yaml:"diskType,omitempty"`
-	// Запрашиваемая пользователем IOPS
+	// Запрашиваемое пользователем значение IOPS
 	Iops *Iops `json:"iops,omitempty" yaml:"iops,omitempty"`
 }
 
@@ -131,6 +131,8 @@ func (m *StorageDiskSpecRequest) Parse(ctx context.Context) error {
 type StorageDiskSpecSourceRequest struct {
 	// Ссылка на образ
 	Image *compute.ImageRef `json:"image,omitempty" yaml:"image,omitempty"`
+	// Ссылка на резервную копию диска
+	DiskBackup *compute.DiskBackupRef `json:"diskBackup,omitempty" yaml:"diskBackup,omitempty"`
 }
 
 func (m *StorageDiskSpecSourceRequest) GetImage() *compute.ImageRef {
@@ -151,6 +153,24 @@ func (m *StorageDiskSpecSourceRequest) GetImageOr(val compute.ImageRef) compute.
 	return val
 }
 
+func (m *StorageDiskSpecSourceRequest) GetDiskBackup() *compute.DiskBackupRef {
+	if m != nil {
+		return m.DiskBackup
+	}
+	return nil
+}
+
+func (m *StorageDiskSpecSourceRequest) SetDiskBackup(val *compute.DiskBackupRef) {
+	m.DiskBackup = val
+}
+
+func (m *StorageDiskSpecSourceRequest) GetDiskBackupOr(val compute.DiskBackupRef) compute.DiskBackupRef {
+	if m != nil && m.DiskBackup != nil {
+		return *m.DiskBackup
+	}
+	return val
+}
+
 func (m *StorageDiskSpecSourceRequest) Clone() *StorageDiskSpecSourceRequest {
 	if m == nil {
 		return nil
@@ -158,6 +178,7 @@ func (m *StorageDiskSpecSourceRequest) Clone() *StorageDiskSpecSourceRequest {
 
 	clone := *m
 	clone.Image = m.Image.Clone()
+	clone.DiskBackup = m.DiskBackup.Clone()
 	return &clone
 }
 
@@ -168,6 +189,10 @@ func (m *StorageDiskSpecSourceRequest) Parse(ctx context.Context) error {
 
 	if err := m.Image.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Image", err)
+	}
+
+	if err := m.DiskBackup.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("DiskBackup", err)
 	}
 
 	return nil

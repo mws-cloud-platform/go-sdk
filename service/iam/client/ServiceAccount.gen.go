@@ -305,6 +305,7 @@ type UpsertServiceAccountResponse struct {
 	Response400 *common.ApiError
 	Response404 *common.ApiError
 	Response409 *common.ApiError
+	Response412 *common.ApiError
 	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
@@ -328,6 +329,9 @@ func (m *UpsertServiceAccountResponse) GetErr() (err error) {
 	}
 	if m.Response409 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response409)
+	}
+	if m.Response412 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)

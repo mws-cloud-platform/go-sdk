@@ -11,19 +11,19 @@ import (
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
 
-func TestClickhouseVmTypeResponseMarshalling(t *testing.T) {
+func TestClickhouseVmTypeStatusResponseMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := initClickhouseVmTypeResponse()
+	expected := initClickhouseVmTypeStatusResponse()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual model.ClickhouseVmTypeResponse
+	var actual model.ClickhouseVmTypeStatusResponse
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initClickhouseVmTypeResponse() model.ClickhouseVmTypeResponse {
-	var v model.ClickhouseVmTypeResponse
-	v.Status.Zones = make([]model.ClickhouseVmTypeStatusZoneResponse, 0)
+func initClickhouseVmTypeStatusResponse() model.ClickhouseVmTypeStatusResponse {
+	var v model.ClickhouseVmTypeStatusResponse
+	v.Zones = make([]model.ClickhouseVmTypeStatusZoneResponse, 0)
 	return v
 }

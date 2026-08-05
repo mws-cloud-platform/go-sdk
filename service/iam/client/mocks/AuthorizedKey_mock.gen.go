@@ -69,6 +69,8 @@ func (mr *MockAuthorizedKeyMockRecorder) CreateAuthorizedKeyV2(arg0, arg1 any) *
 }
 
 // DeleteAuthorizedKey mocks base method.
+//
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design
 func (m *MockAuthorizedKey) DeleteAuthorizedKey(arg0 context.Context, arg1 client.DeleteAuthorizedKeyRequest) (*client.DeleteAuthorizedKeyResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteAuthorizedKey", arg0, arg1)
@@ -78,12 +80,31 @@ func (m *MockAuthorizedKey) DeleteAuthorizedKey(arg0 context.Context, arg1 clien
 }
 
 // DeleteAuthorizedKey indicates an expected call of DeleteAuthorizedKey.
+//
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design
 func (mr *MockAuthorizedKeyMockRecorder) DeleteAuthorizedKey(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).DeleteAuthorizedKey), arg0, arg1)
 }
 
+// DeleteAuthorizedKeyV2 mocks base method.
+func (m *MockAuthorizedKey) DeleteAuthorizedKeyV2(arg0 context.Context, arg1 client.DeleteAuthorizedKeyV2Request) (*client.DeleteAuthorizedKeyV2Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAuthorizedKeyV2", arg0, arg1)
+	ret0, _ := ret[0].(*client.DeleteAuthorizedKeyV2Response)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteAuthorizedKeyV2 indicates an expected call of DeleteAuthorizedKeyV2.
+func (mr *MockAuthorizedKeyMockRecorder) DeleteAuthorizedKeyV2(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAuthorizedKeyV2", reflect.TypeOf((*MockAuthorizedKey)(nil).DeleteAuthorizedKeyV2), arg0, arg1)
+}
+
 // GetAuthorizedKey mocks base method.
+//
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design
 func (m *MockAuthorizedKey) GetAuthorizedKey(arg0 context.Context, arg1 client.GetAuthorizedKeyRequest) (*client.GetAuthorizedKeyResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAuthorizedKey", arg0, arg1)
@@ -93,9 +114,26 @@ func (m *MockAuthorizedKey) GetAuthorizedKey(arg0 context.Context, arg1 client.G
 }
 
 // GetAuthorizedKey indicates an expected call of GetAuthorizedKey.
+//
+// Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design
 func (mr *MockAuthorizedKeyMockRecorder) GetAuthorizedKey(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthorizedKey", reflect.TypeOf((*MockAuthorizedKey)(nil).GetAuthorizedKey), arg0, arg1)
+}
+
+// GetAuthorizedKeyV2 mocks base method.
+func (m *MockAuthorizedKey) GetAuthorizedKeyV2(arg0 context.Context, arg1 client.GetAuthorizedKeyV2Request) (*client.GetAuthorizedKeyV2Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAuthorizedKeyV2", arg0, arg1)
+	ret0, _ := ret[0].(*client.GetAuthorizedKeyV2Response)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAuthorizedKeyV2 indicates an expected call of GetAuthorizedKeyV2.
+func (mr *MockAuthorizedKeyMockRecorder) GetAuthorizedKeyV2(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthorizedKeyV2", reflect.TypeOf((*MockAuthorizedKey)(nil).GetAuthorizedKeyV2), arg0, arg1)
 }
 
 // ListAuthorizedKey mocks base method.

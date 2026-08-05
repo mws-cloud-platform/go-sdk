@@ -13,10 +13,10 @@ import (
 	computeref "go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
-// This example demonstrates how to create a disk, a snapshot of it, and how to
-// create a copy of the disk from that snapshot inside the `$MWS_PROJECT`
+// This example demonstrates how to create a disk, a disk backup of it, and how
+// to create a copy of the disk from that disk backup inside the `$MWS_PROJECT`
 // project.
-func Example_snapshot() {
+func Example_diskBackup() {
 	ctx := context.Background()
 
 	// Use the default SDK loader. It will load configuration from the
@@ -31,9 +31,9 @@ func Example_snapshot() {
 
 	// Use example names for demonstration purposes.
 	const (
-		diskName     = "example-disk"
-		snapshotName = diskName + "-snapshot"
-		diskCopyName = diskName + "-copy"
+		diskName       = "example-disk"
+		diskBackupName = diskName + "-backup"
+		diskCopyName   = diskName + "-copy"
 	)
 
 	// Create a new disk with 1 GB size, 4096 B block size, nbs-pl2 type, and
@@ -41,31 +41,36 @@ func Example_snapshot() {
 	diskID, deleteDisk := createDisk(ctx, sdk, diskName)
 	defer deleteDisk()
 
-	// Create snapshot from the disk. Clean it up after the example run.
-	snapshotID, deleteSnapshot := createSnapshot(ctx, sdk, snapshotName, diskID)
-	defer deleteSnapshot()
+	// Create disk backup from the disk. Clean it up after the example run.
+	diskBackupID, deleteDiskBackup := createDiskBackup(ctx, sdk, diskBackupName, diskID)
+	defer deleteDiskBackup()
 
-	// Create a disk copy from the snapshot. Clean it up after the example run.
-	_, deleteDiskCopy := createDiskFromSnapshot(ctx, sdk, diskCopyName, &snapshotID)
+	// Create a disk copy from the disk backup. Clean it up after the example run.
+	_, deleteDiskCopy := createDiskFromDiskBackup(ctx, sdk, diskCopyName, &diskBackupID)
 	defer deleteDiskCopy()
 }
 
 func createDisk(ctx context.Context, sdk *mws.SDK, diskName string) (computeref.DiskID, func()) {
-	return createDiskFromSnapshot(ctx, sdk, diskName, nil)
+	return createDiskFromDiskBackup(ctx, sdk, diskName, nil)
 }
 
-func createDiskFromSnapshot(ctx context.Context, sdk *mws.SDK, diskName string, snapshotID *computeref.SnapshotID) (computeref.DiskID, func()) {
+func createDiskFromDiskBackup(
+	ctx context.Context,
+	sdk *mws.SDK,
+	diskName string,
+	diskBackupID *computeref.DiskBackupID,
+) (computeref.DiskID, func()) {
 	// Create disk client.
 	diskClient, err := computesdk.NewDisk(ctx, sdk)
 	if err != nil {
 		log.Panicln("create disk client:", err)
 	}
 
-	// If snapshot provided use it as a disk source.
+	// If disk backup provided use it as a disk source.
 	var source *computemodel.DiskSpecSourceRequest
-	if snapshotID != nil {
+	if diskBackupID != nil {
 		source = &computemodel.DiskSpecSourceRequest{
-			Snapshot: new(computeref.NewSnapshotRef(snapshotID.GetProject(), snapshotID.GetSnapshot())),
+			DiskBackup: new(computeref.NewDiskBackupRef(diskBackupID.GetProject(), diskBackupID.GetDiskBackup())),
 		}
 	}
 
@@ -106,20 +111,20 @@ func createDiskFromSnapshot(ctx context.Context, sdk *mws.SDK, diskName string, 
 	return diskID, deleteDisk
 }
 
-func createSnapshot(ctx context.Context, sdk *mws.SDK, snapshotName string, diskID computeref.DiskID) (computeref.SnapshotID, func()) {
-	// Create snapshot client.
-	snapshotClient, err := computesdk.NewSnapshot(ctx, sdk)
+func createDiskBackup(ctx context.Context, sdk *mws.SDK, diskBackupName string, diskID computeref.DiskID) (computeref.DiskBackupID, func()) {
+	// Create disk backup client.
+	diskBackupClient, err := computesdk.NewDiskBackup(ctx, sdk)
 	if err != nil {
-		log.Panicln("create snapshot client:", err)
+		log.Panicln("create disk backup client:", err)
 	}
 
-	// Create snapshot for the specified disk.
-	snapshot, err := snapshotClient.CreateSnapshot(ctx, computeclient.UpsertSnapshotRequest{
-		Snapshot: snapshotName,
-		Body: computemodel.SnapshotRequest{
-			Spec: computemodel.SnapshotSpecRequest{
-				Source: computemodel.SnapshotSourceRequest{
-					Disk: &computemodel.SnapshotSourceDiskRequest{
+	// Create disk backup for the specified disk.
+	diskBackup, err := diskBackupClient.UpsertDiskBackup(ctx, computeclient.UpsertDiskBackupRequest{
+		DiskBackup: diskBackupName,
+		Body: computemodel.DiskBackupRequest{
+			Spec: computemodel.DiskBackupSpecRequest{
+				Source: computemodel.DiskBackupSourceRequest{
+					Disk: &computemodel.DiskBackupSourceDiskRequest{
 						Id: computeref.NewDiskRef(diskID.GetProject(), diskID.GetDisk()),
 					},
 				},
@@ -127,24 +132,24 @@ func createSnapshot(ctx context.Context, sdk *mws.SDK, snapshotName string, disk
 		},
 	}, computeclient.WithWait())
 	if err != nil {
-		log.Panicln("create snapshot:", err)
+		log.Panicln("create disk backup:", err)
 	}
-	fmt.Println("snapshot created:", snapshot.GetMetadata().GetId().ResourceName())
+	fmt.Println("disk backup created:", diskBackup.GetMetadata().GetId().ResourceName())
 
-	deleteSnapshot := func() {
-		err = snapshotClient.DeleteSnapshot(ctx, computeclient.DeleteSnapshotRequest{
-			Snapshot: snapshotName,
+	deleteDiskBackup := func() {
+		err = diskBackupClient.DeleteDiskBackup(ctx, computeclient.DeleteDiskBackupRequest{
+			DiskBackup: diskBackupName,
 		}, computeclient.WithWait())
 		if err != nil {
-			log.Panicln("delete snapshot:", err)
+			log.Panicln("delete disk backup:", err)
 		}
-		fmt.Println("snapshot deleted:", snapshot.GetMetadata().GetId().ResourceName())
+		fmt.Println("disk backup deleted:", diskBackup.GetMetadata().GetId().ResourceName())
 	}
 
-	snapshotID, err := computeref.NewSnapshotIDFromAnyID(*snapshot.GetMetadata().GetId())
+	diskBackupID, err := computeref.NewDiskBackupIDFromAnyID(*diskBackup.GetMetadata().GetId())
 	if err != nil {
-		log.Panicln("get snapshot id:", err)
+		log.Panicln("get disk backup id:", err)
 	}
 
-	return snapshotID, deleteSnapshot
+	return diskBackupID, deleteDiskBackup
 }

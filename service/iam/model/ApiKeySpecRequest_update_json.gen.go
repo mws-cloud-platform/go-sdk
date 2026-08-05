@@ -36,6 +36,11 @@ func (m *UpdateApiKeySpecRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("expireTime")
 		conv.EncodeDateTimeUTC(e, m.ExpireTime.Value)
 	}
+
+	if m.Active.IsSet() {
+		e.FieldStart("active")
+		e.Bool(m.Active.Value)
+	}
 	return nil
 }
 
@@ -57,6 +62,14 @@ func (m *UpdateApiKeySpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.ExpireTime.SetTo(v)
+			return nil
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

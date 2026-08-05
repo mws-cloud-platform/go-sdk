@@ -38,5 +38,8 @@ func StorageDiskSpecSourceRequestToOptionalResponse(request *StorageDiskSpecSour
 	if request.Image != nil {
 		response.Image = optional.NewOptional(*request.Image)
 	}
+	if request.DiskBackup != nil {
+		response.DiskBackup = optional.NewOptional(*request.DiskBackup)
+	}
 	return &response, nil
 }

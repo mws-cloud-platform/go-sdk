@@ -26,6 +26,8 @@ type PostgresClusterSpecResponse struct {
 	MaintenanceWindow *common.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Параметры PostgreSQL. Если не указаны, будут использованы параметры по умолчанию.
 	PostgresParameters map[string]string `json:"postgresParameters,omitempty" yaml:"postgresParameters,omitempty"`
+	// Выгрузка пользовательских логов кластера — включена или выключена.
+	LoggingEnabled *bool `json:"loggingEnabled,omitempty" yaml:"loggingEnabled,omitempty"`
 }
 
 func (m *PostgresClusterSpecResponse) GetVersion() string {
@@ -137,6 +139,24 @@ func (m *PostgresClusterSpecResponse) GetPostgresParametersOr(val map[string]str
 	return val
 }
 
+func (m *PostgresClusterSpecResponse) GetLoggingEnabled() *bool {
+	if m != nil {
+		return m.LoggingEnabled
+	}
+	return nil
+}
+
+func (m *PostgresClusterSpecResponse) SetLoggingEnabled(val *bool) {
+	m.LoggingEnabled = val
+}
+
+func (m *PostgresClusterSpecResponse) GetLoggingEnabledOr(val bool) bool {
+	if m != nil && m.LoggingEnabled != nil {
+		return *m.LoggingEnabled
+	}
+	return val
+}
+
 func (m *PostgresClusterSpecResponse) Clone() *PostgresClusterSpecResponse {
 	if m == nil {
 		return nil
@@ -163,6 +183,10 @@ func (m *PostgresClusterSpecResponse) Clone() *PostgresClusterSpecResponse {
 		for k, v := range m.PostgresParameters {
 			clone.PostgresParameters[k] = v
 		}
+	}
+	if m.LoggingEnabled != nil {
+		cloneLoggingEnabled := *m.LoggingEnabled
+		clone.LoggingEnabled = &cloneLoggingEnabled
 	}
 	return &clone
 }

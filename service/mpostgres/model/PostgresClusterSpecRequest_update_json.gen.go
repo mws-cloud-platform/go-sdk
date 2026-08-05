@@ -93,6 +93,11 @@ func (m *UpdatePostgresClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		}
 		e.ObjEnd()
 	}
+
+	if m.LoggingEnabled.IsSet() {
+		e.FieldStart("loggingEnabled")
+		e.Bool(m.LoggingEnabled.Value)
+	}
 	return nil
 }
 
@@ -202,6 +207,14 @@ func (m *UpdatePostgresClusterSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.PostgresParameters.SetTo(c)
+			return nil
+		case "loggingEnabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.LoggingEnabled.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

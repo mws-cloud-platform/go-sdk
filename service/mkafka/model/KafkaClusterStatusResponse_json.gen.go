@@ -9,6 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m KafkaClusterStatusResponse) MarshalJSON() ([]byte, error) {
@@ -48,6 +49,11 @@ func (m *KafkaClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.Message != nil {
 		e.FieldStart("message")
 		e.Str(*m.Message)
+	}
+
+	if m.Region != nil {
+		e.FieldStart("region")
+		m.Region.Encode(e)
 	}
 
 	if m.EffectiveKafkaConfig != nil {
@@ -133,6 +139,14 @@ func (m *KafkaClusterStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Message = &v
+			return nil
+		case "region":
+			var v rm.RegionID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
 			return nil
 		case "effectiveKafkaConfig":
 			c := make(map[string]string)

@@ -8,5 +8,6 @@ func ApiKeySpecRequestToResponse(request *ApiKeySpecRequest) (*ApiKeySpecRespons
 	}
 	var response ApiKeySpecResponse
 	response.ExpireTime = request.ExpireTime
+	response.Active = request.Active
 	return &response, nil
 }

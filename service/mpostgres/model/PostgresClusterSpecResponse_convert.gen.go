@@ -43,5 +43,6 @@ func PostgresClusterSpecRequestToResponse(request *PostgresClusterSpecRequest) (
 	}
 	response.MaintenanceWindow = tmpMaintenanceWindow
 	response.PostgresParameters = request.PostgresParameters
+	response.LoggingEnabled = request.LoggingEnabled
 	return &response, nil
 }

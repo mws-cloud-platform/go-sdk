@@ -22,6 +22,8 @@ type GetClickhouseClusterVmTypesRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
+	// Регион, для которого вернуть доступные типы ВМ.
+	Region *string // query: "region"
 }
 
 func (m *GetClickhouseClusterVmTypesRequest) SetAuthorization(authorization string) {

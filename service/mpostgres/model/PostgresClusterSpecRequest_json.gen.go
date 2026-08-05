@@ -75,6 +75,11 @@ func (m *PostgresClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		}
 		e.ObjEnd()
 	}
+
+	if m.LoggingEnabled != nil {
+		e.FieldStart("loggingEnabled")
+		e.Bool(*m.LoggingEnabled)
+	}
 	return nil
 }
 
@@ -194,6 +199,14 @@ func (m *PostgresClusterSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.PostgresParameters = c
+			return nil
+		case "loggingEnabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.LoggingEnabled = &v
 			return nil
 		default:
 			return d.Skip()

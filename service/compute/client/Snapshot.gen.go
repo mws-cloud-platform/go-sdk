@@ -92,7 +92,7 @@ type ListSnapshotsResponse struct {
 	Code        int
 	Response200 *ListSnapshotsResponse200
 	Response403 *common.ApiError
-	Response500 *common.BaseError
+	Response500 *common.ApiError
 
 	errorWrapper func(err error) error
 }

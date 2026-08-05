@@ -8,6 +8,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Real OAPI model name: KafkaClusterStatus
@@ -33,6 +34,8 @@ type KafkaClusterStatusResponse struct {
 	//   - `UNKNOWN`  - Не удаётся определить состояние (на этапе создания).
 	Health  *ClusterHealth `json:"health,omitempty" yaml:"health,omitempty"`
 	Message *string        `json:"message,omitempty" yaml:"message,omitempty"`
+	// Регион, которому принадлежит кластер.
+	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 	// Конфигурация параметров кластера после валидации и преобразования из пользователского ввода
 	EffectiveKafkaConfig map[string]string `json:"effectiveKafkaConfig,omitempty" yaml:"effectiveKafkaConfig,omitempty"`
 	// Описание ресурсов хостов брокеров и контроллеров.
@@ -91,6 +94,20 @@ func (m *KafkaClusterStatusResponse) GetMessage() *string {
 func (m *KafkaClusterStatusResponse) GetMessageOr(val string) string {
 	if m != nil && m.Message != nil {
 		return *m.Message
+	}
+	return val
+}
+
+func (m *KafkaClusterStatusResponse) GetRegion() *rm.RegionID {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *KafkaClusterStatusResponse) GetRegionOr(val rm.RegionID) rm.RegionID {
+	if m != nil && m.Region != nil {
+		return *m.Region
 	}
 	return val
 }
@@ -198,6 +215,7 @@ func (m *KafkaClusterStatusResponse) Clone() *KafkaClusterStatusResponse {
 		cloneMessage := *m.Message
 		clone.Message = &cloneMessage
 	}
+	clone.Region = m.Region.Clone()
 	if m.EffectiveKafkaConfig != nil {
 		clone.EffectiveKafkaConfig = make(map[string]string, len(m.EffectiveKafkaConfig))
 		for k, v := range m.EffectiveKafkaConfig {
@@ -221,6 +239,10 @@ func (m *KafkaClusterStatusResponse) Clone() *KafkaClusterStatusResponse {
 func (m *KafkaClusterStatusResponse) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if err := m.Region.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Region", err)
 	}
 
 	for index := range m.Endpoints {

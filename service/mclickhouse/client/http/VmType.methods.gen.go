@@ -59,6 +59,8 @@ func (c *VmType) getClickhouseClusterVmTypesInvoker(ctx context.Context, anyReq 
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryGetClickhouseClusterVmTypes(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerGetClickhouseClusterVmTypes(httpReq, request)
 
@@ -83,6 +85,14 @@ func (c *VmType) getClickhouseClusterVmTypesInvoker(ctx context.Context, anyReq 
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *VmType) queryGetClickhouseClusterVmTypes(request *client.GetClickhouseClusterVmTypesRequest) string {
+	q := make(url.Values)
+	if request.Region != nil {
+		q.Add("region", conv.StringToString(*request.Region))
+	}
+	return q.Encode()
 }
 
 func (c *VmType) headerGetClickhouseClusterVmTypes(req *http.Request, request *client.GetClickhouseClusterVmTypesRequest) {

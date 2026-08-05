@@ -28,6 +28,34 @@ func TestAuthorizedKeySugared_ListAuthorizedKey(t *testing.T) {
 	require.True(t, mwserrors.IsDecodeBodyError(err))
 }
 
+func TestAuthorizedKeySugared_DeleteAuthorizedKeyV2(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockAuthorizedKey(ctrl)
+	mockClient.EXPECT().DeleteAuthorizedKeyV2(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewAuthorizedKeySugared(mockClient)
+
+	err := sugared.DeleteAuthorizedKeyV2(context.Background(), client.DeleteAuthorizedKeyV2Request{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
+func TestAuthorizedKeySugared_GetAuthorizedKeyV2(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockAuthorizedKey(ctrl)
+	mockClient.EXPECT().GetAuthorizedKeyV2(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewAuthorizedKeySugared(mockClient)
+
+	_, err := sugared.GetAuthorizedKeyV2(context.Background(), client.GetAuthorizedKeyV2Request{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
 func TestAuthorizedKeySugared_UpsertAuthorizedKeyV2(t *testing.T) {
 	t.Parallel()
 	ctrl := gomock.NewController(t)

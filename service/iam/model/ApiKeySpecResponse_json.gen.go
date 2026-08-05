@@ -36,6 +36,11 @@ func (m *ApiKeySpecResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("expireTime")
 		conv.EncodeDateTimeUTC(e, *m.ExpireTime)
 	}
+
+	if m.Active != nil {
+		e.FieldStart("active")
+		e.Bool(*m.Active)
+	}
 	return nil
 }
 
@@ -57,6 +62,14 @@ func (m *ApiKeySpecResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.ExpireTime = &v
+			return nil
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = &v
 			return nil
 		default:
 			return d.Skip()

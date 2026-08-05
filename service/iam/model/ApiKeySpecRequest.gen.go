@@ -11,6 +11,8 @@ import (
 type ApiKeySpecRequest struct {
 	// Время истечения срока действия ключа.
 	ExpireTime *time.Time `json:"expireTime,omitempty" yaml:"expireTime,omitempty"`
+	// Флаг, указывающий на текущее состояние API‑ключа. Активный ключ может использоваться для аутентификации, деактивированный — нет.
+	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
 func (m *ApiKeySpecRequest) GetExpireTime() *time.Time {
@@ -31,11 +33,33 @@ func (m *ApiKeySpecRequest) GetExpireTimeOr(val time.Time) time.Time {
 	return val
 }
 
+func (m *ApiKeySpecRequest) GetActive() *bool {
+	if m != nil {
+		return m.Active
+	}
+	return nil
+}
+
+func (m *ApiKeySpecRequest) SetActive(val *bool) {
+	m.Active = val
+}
+
+func (m *ApiKeySpecRequest) GetActiveOr(val bool) bool {
+	if m != nil && m.Active != nil {
+		return *m.Active
+	}
+	return val
+}
+
 func (m *ApiKeySpecRequest) Clone() *ApiKeySpecRequest {
 	if m == nil {
 		return nil
 	}
 
 	clone := *m
+	if m.Active != nil {
+		cloneActive := *m.Active
+		clone.Active = &cloneActive
+	}
 	return &clone
 }
