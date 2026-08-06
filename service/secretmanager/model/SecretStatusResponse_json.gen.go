@@ -36,10 +36,8 @@ func (m *SecretStatusResponse) Encode(e *jx.Encoder) error {
 func (m *SecretStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
 	m.Ready.Encode(e)
-	if m.Active != nil {
-		e.FieldStart("active")
-		e.Bool(*m.Active)
-	}
+	e.FieldStart("active")
+	e.Bool(m.Active)
 
 	if m.CurrentSecretVersion != nil {
 		e.FieldStart("currentSecretVersion")
@@ -73,7 +71,7 @@ func (m *SecretStatusResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Active = &v
+			m.Active = v
 			return nil
 		case "currentSecretVersion":
 			var v secretmanager.SecretVersionRef

@@ -46,6 +46,7 @@ var (
 	}
 )
 
+// Deprecated: Отказываемся в пользу DiskBackupId
 func NewSnapshotID(project, snapshot string) SnapshotID {
 	m := SnapshotID{
 		snapshot: snapshot,
@@ -55,6 +56,7 @@ func NewSnapshotID(project, snapshot string) SnapshotID {
 	return m
 }
 
+// Deprecated: Отказываемся в пользу DiskBackupId
 func ParseSnapshotID(path string) (SnapshotID, error) {
 	m := SnapshotID{
 		path: path,
@@ -65,10 +67,12 @@ func ParseSnapshotID(path string) (SnapshotID, error) {
 	return m, nil
 }
 
+// Deprecated: Отказываемся в пользу DiskBackupId
 func NewSnapshotIDFromAnyID(resource resmodels.AnyResourceID) (SnapshotID, error) {
 	return ParseSnapshotID(resource.ID())
 }
 
+// Deprecated: Отказываемся в пользу DiskBackupId
 type SnapshotID struct {
 	snapshot string
 	project  string
@@ -175,6 +179,7 @@ func (m *SnapshotID) Decode(d *jx.Decoder) error {
 	return nil
 }
 
+// Deprecated: Отказываемся в пользу DiskBackupId
 func NewSnapshotRef(project, snapshot string) SnapshotRef {
 	m := SnapshotRef{
 		id: SnapshotID{
@@ -186,6 +191,7 @@ func NewSnapshotRef(project, snapshot string) SnapshotRef {
 	return m
 }
 
+// Deprecated: Отказываемся в пользу DiskBackupId
 func ParseSnapshotRef(ctx context.Context, path string) (SnapshotRef, error) {
 	m := SnapshotRef{
 		id: SnapshotID{
@@ -198,11 +204,13 @@ func ParseSnapshotRef(ctx context.Context, path string) (SnapshotRef, error) {
 	return m, nil
 }
 
+// Deprecated: Отказываемся в пользу DiskBackupId
 func NewSnapshotRefFromAnyRef(ref resmodels.AnyResourceRef) (SnapshotRef, error) {
 	ctx := valuesctx.WithValuesStore(context.Background(), ref.GetPathValues())
 	return ParseSnapshotRef(ctx, ref.Path())
 }
 
+// Deprecated: Отказываемся в пользу DiskBackupId
 type SnapshotRef struct {
 	id SnapshotID
 }

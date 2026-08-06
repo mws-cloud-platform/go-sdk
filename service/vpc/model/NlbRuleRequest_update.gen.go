@@ -18,7 +18,7 @@ type UpdateNlbRuleRequest struct {
 	// Порт балансировщика и протокол по который клиенты отправляют запросы в рамках этого правила. Поддерживаются протоколы TCP и UDP. В рамках одного балансировщика это поле должно быть уникальным среди всех его правил.
 	ProtoPort optional.Optional[string] `json:"protoPort" yaml:"protoPort"`
 	// Целевой порт бэкенд-серверов, на которые балансировщик перенаправляет запросы. Если не указан, то считается равным порту балансировщика.
-	TargetPort optional.Optional[int32] `json:"targetPort" yaml:"targetPort"`
+	TargetPort optional.OptionalNil[int32] `json:"targetPort" yaml:"targetPort"`
 	// Адреса бэкенд-серверов, на которые балансировщик направляет запросы.
 	TargetAddressGroups optional.Optional[[]UpdateVpcAddressGroupSpecOrRefRequest] `json:"targetAddressGroups" yaml:"targetAddressGroups"`
 	// Настройка проверки работоспособности виртуальных машин.
@@ -29,7 +29,7 @@ func (m *NlbRuleRequest) AsUpdateModel() UpdateNlbRuleRequest {
 	var u UpdateNlbRuleRequest
 	u.ProtoPort = optional.NewOptional(m.GetProtoPort())
 	if m.TargetPort != nil {
-		u.TargetPort = optional.NewOptional(m.GetTargetPortOr(0))
+		u.TargetPort = optional.NewOptionalNil(m.GetTargetPortOr(0))
 	}
 	u.TargetAddressGroups = optional.NewOptional(func() []UpdateVpcAddressGroupSpecOrRefRequest {
 		var tmp []UpdateVpcAddressGroupSpecOrRefRequest
@@ -71,6 +71,8 @@ func (m *NlbRuleRequest) WithChanges(u UpdateNlbRuleRequest) NlbRuleRequest {
 	}
 	if u.TargetPort.IsSet() {
 		out.TargetPort = ptr.Get(u.TargetPort.Value)
+	} else if u.TargetPort.IsNull() {
+		out.TargetPort = nil
 	}
 	if u.TargetAddressGroups.IsSet() {
 		out.TargetAddressGroups = merge.InapplicableSlice(u.TargetAddressGroups.Value, (*VpcAddressGroupSpecOrRefRequest).WithChanges)
@@ -112,9 +114,9 @@ func (m *NlbRuleRequest) diffProtoPort(src *NlbRuleRequest) optional.Optional[st
 	return commonclient.DiffPrimitiveRequired(src.GetProtoPort(), m.GetProtoPort(), nilDiffers)
 }
 
-func (m *NlbRuleRequest) diffTargetPort(src *NlbRuleRequest) optional.Optional[int32] {
+func (m *NlbRuleRequest) diffTargetPort(src *NlbRuleRequest) optional.OptionalNil[int32] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetTargetPort(), m.GetTargetPort(), nilDiffers)
+	return commonclient.DiffPrimitiveNullable(src.GetTargetPort(), m.GetTargetPort(), nilDiffers)
 }
 
 func (m *NlbRuleRequest) diffTargetAddressGroups(src *NlbRuleRequest) optional.Optional[[]UpdateVpcAddressGroupSpecOrRefRequest] {

@@ -13,10 +13,11 @@ import (
 
 // Real OAPI model name: Model
 type ModelResponse struct {
-	Kind     *string                        `json:"kind,omitempty" yaml:"kind,omitempty"`
-	Metadata *ModelMetadataResponse         `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     ModelSpecResponse              `json:"spec" yaml:"spec"`
-	Status   *common.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
+	Kind     *string                `json:"kind,omitempty" yaml:"kind,omitempty"`
+	Metadata *ModelMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     ModelSpecResponse      `json:"spec" yaml:"spec"`
+	// Текущее состояние ресурса, вычисляемое системой.
+	Status *common.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *ModelResponse) GetKind() *string {

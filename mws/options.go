@@ -57,6 +57,13 @@ func WithDefaultBaseEndpoint(endpoint string) LoadSDKOption {
 	}
 }
 
+// WithTraceEnabled enables tracing logs.
+func WithTraceEnabled() LoadSDKOption {
+	return func(c *loadSDKOptions) {
+		c.traceEnabled = true
+	}
+}
+
 // WithUserAgent sets user agent.
 func WithUserAgent(userAgent string) LoadSDKOption {
 	return func(c *loadSDKOptions) {
@@ -142,6 +149,7 @@ type loadSDKOptions struct {
 	defaultProject              string
 	defaultZone                 string
 	defaultBaseEndpoint         string
+	traceEnabled                bool
 	userAgent                   string
 	timeout                     time.Duration
 	logger                      *zap.Logger
@@ -173,6 +181,7 @@ func (o *loadSDKOptions) build(ctx context.Context) (*SDK, error) {
 func (o *loadSDKOptions) setOpts(sdk *SDK) {
 	sdk.defaultProject = o.defaultProject
 	sdk.defaultZone = o.defaultZone
+	sdk.traceEnabled = o.traceEnabled
 	if o.logger != nil {
 		sdk.logger = o.logger
 	}
@@ -204,6 +213,9 @@ func (o *loadSDKOptions) setDefaults(ctx context.Context, sdk *SDK) (err error) 
 	}
 	if sdk.defaultZone == "" {
 		sdk.defaultZone = o.config.Zone
+	}
+	if !sdk.traceEnabled {
+		sdk.traceEnabled = o.config.TraceEnabled
 	}
 	if sdk.logger == nil {
 		sdk.logger, err = o.buildLogger(o.config.LogLevel)

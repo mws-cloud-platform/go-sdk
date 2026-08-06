@@ -15,24 +15,26 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
-// Описывает статусную модель k8s нод групп.
+// Описывает статусную модель групп узлов Kubernetes.
 // Real OAPI model name: NodeGroupStatus
 type NodeGroupStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
 	VmType                        *NodeGroupStatusVmTypeResponse `json:"vmType,omitempty" yaml:"vmType,omitempty"`
-	// Количество виртуальных ядер на ноде
+	// Количество ядер vCPU на узле.
 	Cpu *string `json:"cpu,omitempty" yaml:"cpu,omitempty"`
-	// Количество оперативной памяти на ноде
+	// Объем оперативной памяти на узле.
 	Memory           *bytesize.ByteSize `json:"memory,omitempty" yaml:"memory,omitempty"`
 	ImageStorageSize *bytesize.ByteSize `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
-	// Количество операций ввода-вывода в секунду (IOPS) для хранилища image-ей и контейнеров
-	ImageStorageIops *int64                        `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
-	Scale            *NodeGroupStatusScaleResponse `json:"scale,omitempty" yaml:"scale,omitempty"`
-	// Текущее количество нод готовых для работы
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров.
+	ImageStorageIops *int64 `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
+	// Параметры локальных дисков для каждого узла в группе узлов.
+	LocalDisks []LocalDiskStatusResponse     `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
+	Scale      *NodeGroupStatusScaleResponse `json:"scale,omitempty" yaml:"scale,omitempty"`
+	// Текущее количество узлов, готовых для работы.
 	NodesReady *int                    `json:"nodesReady,omitempty" yaml:"nodesReady,omitempty"`
 	Labels     []NodeLabelSpecResponse `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Taints     []NodeTaintSpecResponse `json:"taints,omitempty" yaml:"taints,omitempty"`
-	// Стратегия перекатки (rollout) worker нод в нод группе
+	// Стратегия обновления (rollout) узлов в группе узлов.
 	RolloutStrategy *NodeGroupStatusRolloutStrategyResponse `json:"rolloutStrategy,omitempty" yaml:"rolloutStrategy,omitempty"`
 	VersionControl  *NodeGroupVersionControlStatusResponse  `json:"versionControl,omitempty" yaml:"versionControl,omitempty"`
 	ServiceAccount  *NodeGroupStatusServiceAccountResponse  `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
@@ -112,6 +114,20 @@ func (m *NodeGroupStatusResponse) GetImageStorageIops() *int64 {
 func (m *NodeGroupStatusResponse) GetImageStorageIopsOr(val int64) int64 {
 	if m != nil && m.ImageStorageIops != nil {
 		return *m.ImageStorageIops
+	}
+	return val
+}
+
+func (m *NodeGroupStatusResponse) GetLocalDisks() []LocalDiskStatusResponse {
+	if m != nil {
+		return m.LocalDisks
+	}
+	return nil
+}
+
+func (m *NodeGroupStatusResponse) GetLocalDisksOr(val []LocalDiskStatusResponse) []LocalDiskStatusResponse {
+	if m != nil && m.LocalDisks != nil {
+		return m.LocalDisks
 	}
 	return val
 }
@@ -246,6 +262,12 @@ func (m *NodeGroupStatusResponse) Clone() *NodeGroupStatusResponse {
 		cloneImageStorageIops := *m.ImageStorageIops
 		clone.ImageStorageIops = &cloneImageStorageIops
 	}
+	if m.LocalDisks != nil {
+		clone.LocalDisks = make([]LocalDiskStatusResponse, len(m.LocalDisks))
+		for i, v := range m.LocalDisks {
+			clone.LocalDisks[i] = *v.Clone()
+		}
+	}
 	clone.Scale = m.Scale.Clone()
 	if m.NodesReady != nil {
 		cloneNodesReady := *m.NodesReady
@@ -290,7 +312,7 @@ func (m *NodeGroupStatusResponse) Parse(ctx context.Context) error {
 // Представление поля NodeGroupStatus анонимного типа структуры NodeGroupStatus
 // Real OAPI model name: NodeGroupStatusNodeGroupStatus
 type NodeGroupStatusNodeGroupStatusResponse struct {
-	// текущий статус node group.
+	// Текущий статус группы узлов.
 	State   *NodeGroupStatusNodeGroupStatusStateResponse `json:"state,omitempty" yaml:"state,omitempty"`
 	Message *string                                      `json:"message,omitempty" yaml:"message,omitempty"`
 }
@@ -500,9 +522,9 @@ func (m *NodeGroupStatusScaleResponse) Clone() *NodeGroupStatusScaleResponse {
 // Представление поля Autoscaling анонимного типа структуры NodeGroupStatusScale
 // Real OAPI model name: NodeGroupStatusScaleAutoscaling
 type NodeGroupStatusScaleAutoscalingResponse struct {
-	// Минимально количество нод в Node group.
+	// Минимальное количество узлов в группе узлов.
 	Min int `json:"min" yaml:"min"`
-	// Максимальное количество нод в Node group.
+	// Максимальное количество узлов в группе узлов.
 	Max int `json:"max" yaml:"max"`
 }
 

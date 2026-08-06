@@ -3,13 +3,19 @@
 package model
 
 import (
+	"context"
+
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Real OAPI model name: SubnetStatus
 type SubnetStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
-	DhcpOptions                   *SubnetDhcpOptionsResponse `json:"dhcpOptions,omitempty" yaml:"dhcpOptions,omitempty"`
+	DhcpOptions                   *SubnetDhcpOptions2Response `json:"dhcpOptions,omitempty" yaml:"dhcpOptions,omitempty"`
+	// Регион, которому принадлежит подсеть.
+	Region *rm.RegionRef `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
 func (m *SubnetStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -19,16 +25,30 @@ func (m *SubnetStatusResponse) GetReady() common.ResourceStatusReadyResponse {
 	return common.ResourceStatusReadyResponse{}
 }
 
-func (m *SubnetStatusResponse) GetDhcpOptions() *SubnetDhcpOptionsResponse {
+func (m *SubnetStatusResponse) GetDhcpOptions() *SubnetDhcpOptions2Response {
 	if m != nil {
 		return m.DhcpOptions
 	}
 	return nil
 }
 
-func (m *SubnetStatusResponse) GetDhcpOptionsOr(val SubnetDhcpOptionsResponse) SubnetDhcpOptionsResponse {
+func (m *SubnetStatusResponse) GetDhcpOptionsOr(val SubnetDhcpOptions2Response) SubnetDhcpOptions2Response {
 	if m != nil && m.DhcpOptions != nil {
 		return *m.DhcpOptions
+	}
+	return val
+}
+
+func (m *SubnetStatusResponse) GetRegion() *rm.RegionRef {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *SubnetStatusResponse) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+	if m != nil && m.Region != nil {
+		return *m.Region
 	}
 	return val
 }
@@ -41,6 +61,19 @@ func (m *SubnetStatusResponse) Clone() *SubnetStatusResponse {
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
 	clone.DhcpOptions = m.DhcpOptions.Clone()
+	clone.Region = m.Region.Clone()
 
 	return &clone
+}
+
+func (m *SubnetStatusResponse) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if err := m.Region.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Region", err)
+	}
+
+	return nil
 }

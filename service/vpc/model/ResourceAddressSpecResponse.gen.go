@@ -17,8 +17,9 @@ type ResourceAddressSpecResponse struct {
 	// Подсеть облачной сети к которой принадлежит адрес. В случае приватного адреса, он всегда принадлежит к некоторой подсети внутри облачной сети.
 	Subnet vpc.SubnetRef `json:"subnet" yaml:"subnet"`
 	// Значение IP адреса.
-	IpAddress *ipaddress.IPAddress        `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
-	Dns       []VpcAddressDnsSpecResponse `json:"dns,omitempty" yaml:"dns,omitempty"`
+	IpAddress *ipaddress.IPAddress `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
+	// Спецификация DNS для IP-адреса.
+	Dns []VpcAddressDnsSpecResponse `json:"dns,omitempty" yaml:"dns,omitempty"`
 }
 
 func (m *ResourceAddressSpecResponse) GetSubnet() vpc.SubnetRef {

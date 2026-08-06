@@ -14,16 +14,16 @@ import (
 )
 
 type UpdateResourceExternalAddressSpecOrRefRequest struct {
-	// Относительная ссылка на статический внешний адрес.
-	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
-	// Спецификация внешнего адреса.
+	// Относительная ссылка на статический внешний IP-адрес.
+	Ref optional.OptionalNil[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
+	// Спецификация внешнего IP-адреса.
 	Spec optional.OptionalNil[UpdateResourceExternalAddressSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *ResourceExternalAddressSpecOrRefRequest) AsUpdateModel() UpdateResourceExternalAddressSpecOrRefRequest {
 	var u UpdateResourceExternalAddressSpecOrRefRequest
 	if m.Ref != nil {
-		u.Ref = optional.NewOptional(m.GetRefOr(vpc.ExternalAddressRef{}))
+		u.Ref = optional.NewOptionalNil(m.GetRefOr(vpc.ExternalAddressRef{}))
 	}
 	if m.Spec != nil {
 		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
@@ -50,6 +50,8 @@ func (m *ResourceExternalAddressSpecOrRefRequest) WithChanges(u UpdateResourceEx
 
 	if u.Ref.IsSet() {
 		out.Ref = ptr.Get(u.Ref.Value)
+	} else if u.Ref.IsNull() {
+		out.Ref = nil
 	}
 	if u.Spec.IsSet() {
 		out.Spec = ptr.Get(out.Spec.WithChanges(u.Spec.Value))
@@ -70,7 +72,7 @@ func (m *UpdateResourceExternalAddressSpecOrRefRequest) Parse(ctx context.Contex
 		return nil
 	}
 
-	if m.Ref.IsSet() {
+	if m.Ref.IsSet() && !m.Ref.IsNull() {
 		if err := m.Ref.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Ref", err)
 		}
@@ -85,9 +87,9 @@ func (m *UpdateResourceExternalAddressSpecOrRefRequest) Parse(ctx context.Contex
 	return nil
 }
 
-func (m *ResourceExternalAddressSpecOrRefRequest) diffRef(src *ResourceExternalAddressSpecOrRefRequest) optional.Optional[vpc.ExternalAddressRef] {
+func (m *ResourceExternalAddressSpecOrRefRequest) diffRef(src *ResourceExternalAddressSpecOrRefRequest) optional.OptionalNil[vpc.ExternalAddressRef] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
+	return commonclient.DiffPrimitiveNullable(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
 func (m *ResourceExternalAddressSpecOrRefRequest) diffSpec(src *ResourceExternalAddressSpecOrRefRequest) optional.OptionalNil[UpdateResourceExternalAddressSpecRequest] {

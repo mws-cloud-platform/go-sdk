@@ -9,10 +9,12 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
+// Субъект федерации пользователей — идентификатор федерации и, опционально, контекст, уточняющий, на каких пользователей федерации распространяется привязка роли.
 // Real OAPI model name: CommonRoleBindingFederation
 type CommonRoleBindingFederationRequest struct {
 	// Идентификатор федерации.
-	Id      iam.UserFederationRef                      `json:"id" yaml:"id"`
+	Id iam.UserFederationRef `json:"id" yaml:"id"`
+	// Контекст федерации, уточняющий субъекта: конкретный пользователь федерации или атрибут, которым он должен обладать. Должно быть заполнено ровно одно из полей
 	Context *CommonRoleBindingFederationContextRequest `json:"context,omitempty" yaml:"context,omitempty"`
 }
 

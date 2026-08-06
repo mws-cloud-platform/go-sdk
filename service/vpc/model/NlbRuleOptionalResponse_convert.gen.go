@@ -13,7 +13,7 @@ func NlbRuleRequestToOptionalResponse(request *NlbRuleRequest) (*NlbRuleOptional
 	var response NlbRuleOptionalResponse
 	response.ProtoPort = request.ProtoPort
 	if request.TargetPort != nil {
-		response.TargetPort = optional.NewOptional(*request.TargetPort)
+		response.TargetPort = optional.NewOptionalNil(*request.TargetPort)
 	}
 	for _, e := range request.TargetAddressGroups {
 		tmp, err := VpcAddressGroupSpecOrRefRequestToOptionalResponse(&e)

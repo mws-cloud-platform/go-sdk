@@ -3,15 +3,21 @@
 package model
 
 import (
+	"context"
+
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Статус адреса.
 // Real OAPI model name: AddressStatus
 type AddressStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
+	// Регион, которому принадлежит адрес; берется из подсети.
+	Region *rm.RegionRef `json:"region,omitempty" yaml:"region,omitempty"`
 	// Присвоенный адрес. Совпадает с запрошенным ipAddress из спецификации, если последний указан при создании адреса.
 	IpAddress *ipaddress.IPAddress `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
 }
@@ -21,6 +27,20 @@ func (m *AddressStatusResponse) GetReady() common.ResourceStatusReadyResponse {
 		return m.ResourceStatusResponse.GetReady()
 	}
 	return common.ResourceStatusReadyResponse{}
+}
+
+func (m *AddressStatusResponse) GetRegion() *rm.RegionRef {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *AddressStatusResponse) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+	if m != nil && m.Region != nil {
+		return *m.Region
+	}
+	return val
 }
 
 func (m *AddressStatusResponse) GetIpAddress() *ipaddress.IPAddress {
@@ -44,7 +64,20 @@ func (m *AddressStatusResponse) Clone() *AddressStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
+	clone.Region = m.Region.Clone()
 	clone.IpAddress = m.IpAddress.Clone()
 
 	return &clone
+}
+
+func (m *AddressStatusResponse) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if err := m.Region.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Region", err)
+	}
+
+	return nil
 }

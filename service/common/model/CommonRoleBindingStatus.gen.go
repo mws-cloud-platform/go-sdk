@@ -2,6 +2,7 @@
 
 package model
 
+// Текущее состояние привязки роли, вычисляемое системой.
 type CommonRoleBindingStatus struct {
 	ResourceStatus `yaml:"-,inline"`
 }

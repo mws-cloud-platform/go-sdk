@@ -19,20 +19,22 @@ type NodeGroupSpecRequest struct {
 	Subnet NodeGroupSpecSubnetRequest `json:"subnet" yaml:"subnet"`
 	// тип VM
 	VmType NodeGroupSpecVmTypeRequest `json:"vmType" yaml:"vmType"`
-	// размер хранилища для image-ей и контейнеров. Размер в Gb
+	// Размер хранилища для образов и контейнеров, в Gb.
 	ImageStorageSize *bytesize.ByteSize `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
-	// Количество операций ввода-вывода в секунду (IOPS) для хранилища image-ей и контейнеров
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров.
 	ImageStorageIops *int64 `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
-	// Необходимо заполнить одно из полей fixed или auto scale
+	// Параметры локальных дисков для каждого узла в группе узлов
+	LocalDisks []LocalDiskSpecRequest `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
+	// Необходимо заполнить одно из полей — "fixed" или "autoscaling".
 	Scale          NodeGroupSpecScaleRequest          `json:"scale" yaml:"scale"`
 	Labels         []NodeLabelSpecRequest             `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Taints         []NodeTaintSpecRequest             `json:"taints,omitempty" yaml:"taints,omitempty"`
 	VersionControl NodeGroupVersionControlSpecRequest `json:"versionControl" yaml:"versionControl"`
-	// Стратегия перекатки (rollout) worker нод в нод группе
+	// Стратегия обновления (rollout) узлов в группе узлов.
 	RolloutStrategy NodeGroupSpecRolloutStrategyRequest `json:"rolloutStrategy" yaml:"rolloutStrategy"`
-	// serviceAccount необходим для поддержки функций:
-	// - скачивания образов из облачного registry (права на чтение образов)
-	// - сбор системных метрик с worker нод (права на чтение статусов worker нод)
+	// Сервисный аккаунт для выполнения функций:
+	// - скачивание образов из Artifact Registry (требуются права на чтение образов);
+	// - сбор системных метрик с узлов (требуются права на чтение статусов узлов).
 	ServiceAccount NodeGroupSpecServiceAccountRequest `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
@@ -101,6 +103,24 @@ func (m *NodeGroupSpecRequest) SetImageStorageIops(val *int64) {
 func (m *NodeGroupSpecRequest) GetImageStorageIopsOr(val int64) int64 {
 	if m != nil && m.ImageStorageIops != nil {
 		return *m.ImageStorageIops
+	}
+	return val
+}
+
+func (m *NodeGroupSpecRequest) GetLocalDisks() []LocalDiskSpecRequest {
+	if m != nil {
+		return m.LocalDisks
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecRequest) SetLocalDisks(val []LocalDiskSpecRequest) {
+	m.LocalDisks = val
+}
+
+func (m *NodeGroupSpecRequest) GetLocalDisksOr(val []LocalDiskSpecRequest) []LocalDiskSpecRequest {
+	if m != nil && m.LocalDisks != nil {
+		return m.LocalDisks
 	}
 	return val
 }
@@ -197,6 +217,12 @@ func (m *NodeGroupSpecRequest) Clone() *NodeGroupSpecRequest {
 	if m.ImageStorageIops != nil {
 		cloneImageStorageIops := *m.ImageStorageIops
 		clone.ImageStorageIops = &cloneImageStorageIops
+	}
+	if m.LocalDisks != nil {
+		clone.LocalDisks = make([]LocalDiskSpecRequest, len(m.LocalDisks))
+		for i, v := range m.LocalDisks {
+			clone.LocalDisks[i] = *v.Clone()
+		}
 	}
 	clone.Scale = *m.Scale.Clone()
 	if m.Labels != nil {
@@ -300,7 +326,7 @@ func (m *NodeGroupSpecRolloutStrategyRequest) Clone() *NodeGroupSpecRolloutStrat
 // Представление поля Scale анонимного типа структуры NodeGroupSpec
 // Real OAPI model name: NodeGroupSpecScale
 type NodeGroupSpecScaleRequest struct {
-	// Количество узлов в node group
+	// Количество узлов в группе узлов.
 	Fixed       *int                                  `json:"fixed,omitempty" yaml:"fixed,omitempty"`
 	Autoscaling *NodeGroupSpecScaleAutoscalingRequest `json:"autoscaling,omitempty" yaml:"autoscaling,omitempty"`
 }
@@ -358,9 +384,9 @@ func (m *NodeGroupSpecScaleRequest) Clone() *NodeGroupSpecScaleRequest {
 // Представление поля Autoscaling анонимного типа структуры NodeGroupSpecScale
 // Real OAPI model name: NodeGroupSpecScaleAutoscaling
 type NodeGroupSpecScaleAutoscalingRequest struct {
-	// Минимально количество нод в Node group.
+	// Минимально количество узлов в группе узлов.
 	Min int `json:"min" yaml:"min"`
-	// Максимальное количество нод в Node group.
+	// Максимальное количество узлов в группе узлов.
 	Max int `json:"max" yaml:"max"`
 }
 

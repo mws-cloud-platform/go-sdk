@@ -26,20 +26,22 @@ type UpdateNodeGroupSpecRequest struct {
 	Subnet optional.Optional[UpdateNodeGroupSpecSubnetRequest] `json:"subnet" yaml:"subnet"`
 	// тип VM
 	VmType optional.Optional[UpdateNodeGroupSpecVmTypeRequest] `json:"vmType" yaml:"vmType"`
-	// размер хранилища для image-ей и контейнеров. Размер в Gb
+	// Размер хранилища для образов и контейнеров, в Gb.
 	ImageStorageSize optional.Optional[bytesize.ByteSize] `json:"imageStorageSize" yaml:"imageStorageSize"`
-	// Количество операций ввода-вывода в секунду (IOPS) для хранилища image-ей и контейнеров
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров.
 	ImageStorageIops optional.Optional[int64] `json:"imageStorageIops" yaml:"imageStorageIops"`
-	// Необходимо заполнить одно из полей fixed или auto scale
+	// Параметры локальных дисков для каждого узла в группе узлов
+	LocalDisks optional.OptionalNil[[]UpdateLocalDiskSpecRequest] `json:"localDisks" yaml:"localDisks"`
+	// Необходимо заполнить одно из полей — "fixed" или "autoscaling".
 	Scale          optional.Optional[UpdateNodeGroupSpecScaleRequest]          `json:"scale" yaml:"scale"`
 	Labels         optional.OptionalNil[[]UpdateNodeLabelSpecRequest]          `json:"labels" yaml:"labels"`
 	Taints         optional.OptionalNil[[]UpdateNodeTaintSpecRequest]          `json:"taints" yaml:"taints"`
 	VersionControl optional.Optional[UpdateNodeGroupVersionControlSpecRequest] `json:"versionControl" yaml:"versionControl"`
-	// Стратегия перекатки (rollout) worker нод в нод группе
+	// Стратегия обновления (rollout) узлов в группе узлов.
 	RolloutStrategy optional.Optional[UpdateNodeGroupSpecRolloutStrategyRequest] `json:"rolloutStrategy" yaml:"rolloutStrategy"`
-	// serviceAccount необходим для поддержки функций:
-	// - скачивания образов из облачного registry (права на чтение образов)
-	// - сбор системных метрик с worker нод (права на чтение статусов worker нод)
+	// Сервисный аккаунт для выполнения функций:
+	// - скачивание образов из Artifact Registry (требуются права на чтение образов);
+	// - сбор системных метрик с узлов (требуются права на чтение статусов узлов).
 	ServiceAccount optional.Optional[UpdateNodeGroupSpecServiceAccountRequest] `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
@@ -53,6 +55,18 @@ func (m *NodeGroupSpecRequest) AsUpdateModel() UpdateNodeGroupSpecRequest {
 	}
 	if m.ImageStorageIops != nil {
 		u.ImageStorageIops = optional.NewOptional(m.GetImageStorageIopsOr(0))
+	}
+	if m.LocalDisks != nil {
+		u.LocalDisks = optional.NewOptionalNil(func() []UpdateLocalDiskSpecRequest {
+			var tmp []UpdateLocalDiskSpecRequest
+			if m.GetLocalDisks() != nil {
+				tmp = make([]UpdateLocalDiskSpecRequest, 0, len(m.GetLocalDisks()))
+			}
+			for _, val := range m.GetLocalDisks() {
+				tmp = append(tmp, val.AsUpdateModel())
+			}
+			return tmp
+		}())
 	}
 	u.Scale = optional.NewOptional(m.Scale.AsUpdateModel())
 	if m.Labels != nil {
@@ -95,6 +109,7 @@ func (m *NodeGroupSpecRequest) Diff(src *NodeGroupSpecRequest) UpdateNodeGroupSp
 		upd.VmType = m.diffVmType(src)
 		upd.ImageStorageSize = m.diffImageStorageSize(src)
 		upd.ImageStorageIops = m.diffImageStorageIops(src)
+		upd.LocalDisks = m.diffLocalDisks(src)
 		upd.Scale = m.diffScale(src)
 		upd.Labels = m.diffLabels(src)
 		upd.Taints = m.diffTaints(src)
@@ -125,6 +140,11 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 	}
 	if u.ImageStorageIops.IsSet() {
 		out.ImageStorageIops = ptr.Get(u.ImageStorageIops.Value)
+	}
+	if u.LocalDisks.IsSet() {
+		out.LocalDisks = merge.Slice(out.LocalDisks, u.LocalDisks.Value, (*LocalDiskSpecRequest).WithChanges, (*LocalDiskSpecRequest).GetName, (*UpdateLocalDiskSpecRequest).GetName)
+	} else if u.LocalDisks.IsNull() {
+		out.LocalDisks = nil
 	}
 	if u.Scale.IsSet() {
 		out.Scale = out.Scale.WithChanges(u.Scale.Value)
@@ -158,6 +178,7 @@ func (m UpdateNodeGroupSpecRequest) HasChanges() bool {
 		m.VmType.Set ||
 		m.ImageStorageSize.Set ||
 		m.ImageStorageIops.Set ||
+		m.LocalDisks.Set ||
 		m.Scale.Set ||
 		m.Labels.Set ||
 		m.Taints.Set ||
@@ -225,6 +246,21 @@ func (m *NodeGroupSpecRequest) diffImageStorageSize(src *NodeGroupSpecRequest) o
 func (m *NodeGroupSpecRequest) diffImageStorageIops(src *NodeGroupSpecRequest) optional.Optional[int64] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetImageStorageIops(), m.GetImageStorageIops(), nilDiffers)
+}
+
+func (m *NodeGroupSpecRequest) diffLocalDisks(src *NodeGroupSpecRequest) optional.OptionalNil[[]UpdateLocalDiskSpecRequest] {
+	diffFunc := func(fromItem, toItem LocalDiskSpecRequest, fromNil bool) UpdateLocalDiskSpecRequest {
+		if fromNil {
+			return toItem.Diff(nil)
+		}
+		return toItem.Diff(&fromItem)
+	}
+	value, hasChanges := commonclient.GetChangesArrayObject(src.GetLocalDisks(), m.GetLocalDisks(), diffFunc)
+	return optional.OptionalNil[[]UpdateLocalDiskSpecRequest]{
+		Value: value,
+		Set:   hasChanges,
+		Null:  value == nil,
+	}
 }
 
 func (m *NodeGroupSpecRequest) diffScale(src *NodeGroupSpecRequest) optional.Optional[UpdateNodeGroupSpecScaleRequest] {
@@ -356,7 +392,7 @@ func (m *NodeGroupSpecRolloutStrategyRequest) diffMaxUnavailable(src *NodeGroupS
 }
 
 type UpdateNodeGroupSpecScaleRequest struct {
-	// Количество узлов в node group
+	// Количество узлов в группе узлов.
 	Fixed       optional.OptionalNil[int]                                        `json:"fixed" yaml:"fixed"`
 	Autoscaling optional.OptionalNil[UpdateNodeGroupSpecScaleAutoscalingRequest] `json:"autoscaling" yaml:"autoscaling"`
 }
@@ -424,9 +460,9 @@ func (m *NodeGroupSpecScaleRequest) diffAutoscaling(src *NodeGroupSpecScaleReque
 }
 
 type UpdateNodeGroupSpecScaleAutoscalingRequest struct {
-	// Минимально количество нод в Node group.
+	// Минимально количество узлов в группе узлов.
 	Min optional.Optional[int] `json:"min" yaml:"min"`
-	// Максимальное количество нод в Node group.
+	// Максимальное количество узлов в группе узлов.
 	Max optional.Optional[int] `json:"max" yaml:"max"`
 }
 

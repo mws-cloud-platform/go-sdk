@@ -13,7 +13,8 @@ import (
 type CertificateRoleBindingRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     common.CommonRoleBindingSpecRequest        `json:"spec" yaml:"spec"`
+	// Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав.
+	Spec common.CommonRoleBindingSpecRequest `json:"spec" yaml:"spec"`
 }
 
 func (m *CertificateRoleBindingRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {

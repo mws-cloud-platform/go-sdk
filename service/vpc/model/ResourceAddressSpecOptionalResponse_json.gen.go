@@ -43,11 +43,15 @@ func (m *ResourceAddressSpecOptionalResponse) encodeFields(e *jx.Encoder) error 
 
 	if m.Dns.IsSet() {
 		e.FieldStart("dns")
-		e.ArrStart()
-		for _, elem := range m.Dns.Value {
-			elem.Encode(e)
+		if m.Dns.IsNull() {
+			e.Null()
+		} else {
+			e.ArrStart()
+			for _, elem := range m.Dns.Value {
+				elem.Encode(e)
+			}
+			e.ArrEnd()
 		}
-		e.ArrEnd()
 	}
 	return nil
 }
@@ -80,6 +84,11 @@ func (m *ResourceAddressSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			m.IpAddress.SetTo(v)
 			return nil
 		case "dns":
+			if d.Next() == jx.Null {
+				m.Dns.SetToNull()
+				return d.Null()
+			}
+
 			c := make([]VpcAddressDnsSpecOptionalResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
 				var v VpcAddressDnsSpecOptionalResponse

@@ -3,6 +3,7 @@ package mws
 import (
 	"cmp"
 	"fmt"
+	"strconv"
 	"time"
 
 	"go.mws.cloud/util-toolset/pkg/os/env"
@@ -23,6 +24,7 @@ const (
 	ServiceAccountAuthorizedKeyPathEnv = "MWS_SERVICE_ACCOUNT_AUTHORIZED_KEY_PATH"
 	TimeoutEnv                         = "MWS_TIMEOUT"
 	LogLevelEnv                        = "MWS_LOG_LEVEL"
+	TraceEnabledEnv                    = "MWS_TRACE_ENABLED"
 )
 
 // Config is an SDK configuration.
@@ -51,6 +53,9 @@ type Config struct {
 	// Log level for the SDK. Can be specified using the `MWS_LOG_LEVEL`
 	// environment variable.
 	LogLevel string `yaml:"log_level,omitempty"`
+	// Tracing logs enabled. Can be specified using the `MWS_TRACE_ENABLED`
+	// environment variable.
+	TraceEnabled bool `yaml:"trace_enabled,omitempty"`
 }
 
 // LoadConfig loads SDK configuration from environment variables and sensible
@@ -71,6 +76,14 @@ func LoadConfig(opts ...LoadConfigOption) (config *Config, err error) {
 		}
 	}
 
+	traceEnabled := false
+	if v, ok := o.env.LookupEnv(TraceEnabledEnv); ok {
+		traceEnabled, err = strconv.ParseBool(v)
+		if err != nil {
+			return nil, fmt.Errorf("parse %q: %w", TraceEnabledEnv, err)
+		}
+	}
+
 	return &Config{
 		BaseEndpoint:                    cmp.Or(o.env.Getenv(BaseEndpointEnv), DefaultBaseEndpoint),
 		Project:                         o.env.Getenv(ProjectEnv),
@@ -79,6 +92,7 @@ func LoadConfig(opts ...LoadConfigOption) (config *Config, err error) {
 		ServiceAccountAuthorizedKeyPath: o.env.Getenv(ServiceAccountAuthorizedKeyPathEnv),
 		Timeout:                         timeout,
 		LogLevel:                        o.env.Getenv(LogLevelEnv),
+		TraceEnabled:                    traceEnabled,
 	}, nil
 }
 

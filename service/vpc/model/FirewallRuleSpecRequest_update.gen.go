@@ -25,7 +25,7 @@ type UpdateFirewallRuleSpecRequest struct {
 	// Критерий применимости правила, описывает пункт назначения пакета.
 	Destination optional.Optional[UpdateFirewallRuleDestinationRequest] `json:"destination" yaml:"destination"`
 	// Критерий применимости правила. Определяет список протоколов и соответствующих портов (если применимо) назначения пакета. Значение по умолчанию - пустое значение. Означает любой протокол и порт.
-	ProtoPorts optional.Optional[[]string] `json:"protoPorts" yaml:"protoPorts"`
+	ProtoPorts optional.OptionalNil[[]string] `json:"protoPorts" yaml:"protoPorts"`
 }
 
 func (m *FirewallRuleSpecRequest) AsUpdateModel() UpdateFirewallRuleSpecRequest {
@@ -41,7 +41,7 @@ func (m *FirewallRuleSpecRequest) AsUpdateModel() UpdateFirewallRuleSpecRequest 
 	u.Source = optional.NewOptional(m.Source.AsUpdateModel())
 	u.Destination = optional.NewOptional(m.Destination.AsUpdateModel())
 	if m.ProtoPorts != nil {
-		u.ProtoPorts = optional.NewOptional(m.GetProtoPorts())
+		u.ProtoPorts = optional.NewOptionalNil(m.GetProtoPorts())
 	}
 	return u
 }
@@ -88,6 +88,8 @@ func (m *FirewallRuleSpecRequest) WithChanges(u UpdateFirewallRuleSpecRequest) F
 	}
 	if u.ProtoPorts.IsSet() {
 		out.ProtoPorts = slices.Clone(u.ProtoPorts.Value)
+	} else if u.ProtoPorts.IsNull() {
+		out.ProtoPorts = nil
 	}
 	return out
 }
@@ -143,10 +145,11 @@ func (m *FirewallRuleSpecRequest) diffDestination(src *FirewallRuleSpecRequest) 
 	}
 }
 
-func (m *FirewallRuleSpecRequest) diffProtoPorts(src *FirewallRuleSpecRequest) optional.Optional[[]string] {
+func (m *FirewallRuleSpecRequest) diffProtoPorts(src *FirewallRuleSpecRequest) optional.OptionalNil[[]string] {
 	value, hasChanges := commonclient.GetChangesArrayPrimitive(src.GetProtoPorts(), m.GetProtoPorts())
-	return optional.Optional[[]string]{
+	return optional.OptionalNil[[]string]{
 		Value: value,
 		Set:   hasChanges,
+		Null:  value == nil,
 	}
 }

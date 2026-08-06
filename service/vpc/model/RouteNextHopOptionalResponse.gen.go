@@ -17,7 +17,7 @@ type RouteNextHopOptionalResponse struct {
 	// Локальная сеть.
 	NetworkLocal json.RawMessage `json:"networkLocal,omitempty" yaml:"networkLocal,omitempty"`
 	// NAT шлюз.
-	NatGateway optional.Optional[vpc.NatGatewayRef] `json:"natGateway,omitempty" yaml:"natGateway,omitempty"`
+	NatGateway optional.OptionalNil[vpc.NatGatewayRef] `json:"natGateway,omitempty" yaml:"natGateway,omitempty"`
 	// Адрес.
 	Address optional.OptionalNil[RouteNextHopAddressOptionalResponse] `json:"address,omitempty" yaml:"address,omitempty"`
 }
@@ -41,14 +41,14 @@ func (m *RouteNextHopOptionalResponse) GetNetworkLocalOr(val json.RawMessage) js
 }
 
 func (m *RouteNextHopOptionalResponse) GetNatGateway() *vpc.NatGatewayRef {
-	if m != nil && m.NatGateway.IsSet() {
+	if m != nil && m.NatGateway.IsSet() && !m.NatGateway.IsNull() {
 		return &m.NatGateway.Value
 	}
 	return nil
 }
 
 func (m *RouteNextHopOptionalResponse) GetNatGatewayOr(val vpc.NatGatewayRef) vpc.NatGatewayRef {
-	if m != nil && m.NatGateway.IsSet() {
+	if m != nil && m.NatGateway.IsSet() && !m.NatGateway.IsNull() {
 		return m.NatGateway.Value
 	}
 	return val
@@ -91,7 +91,7 @@ func (m *RouteNextHopOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.NatGateway.IsSet() {
+	if m.NatGateway.IsSet() && !m.NatGateway.IsNull() {
 		if err := m.NatGateway.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("NatGateway", err)
 		}

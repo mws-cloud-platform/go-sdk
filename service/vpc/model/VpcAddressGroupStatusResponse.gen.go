@@ -8,6 +8,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -19,6 +20,8 @@ type VpcAddressGroupStatusResponse struct {
 	Addresses []ResourceAddressStatusResponse `json:"addresses,omitempty" yaml:"addresses,omitempty"`
 	// Список ссылок на внутренние IP-адреса, которые были удалены, но остались в спецификации группы.
 	OrphanAddresses []vpc.AddressRef `json:"orphanAddresses,omitempty" yaml:"orphanAddresses,omitempty"`
+	// Регион, которому принадлежит группа IP-адресов.
+	Region *rm.RegionRef `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
 func (m *VpcAddressGroupStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -56,6 +59,20 @@ func (m *VpcAddressGroupStatusResponse) GetOrphanAddressesOr(val []vpc.AddressRe
 	return val
 }
 
+func (m *VpcAddressGroupStatusResponse) GetRegion() *rm.RegionRef {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *VpcAddressGroupStatusResponse) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+	if m != nil && m.Region != nil {
+		return *m.Region
+	}
+	return val
+}
+
 func (m *VpcAddressGroupStatusResponse) Clone() *VpcAddressGroupStatusResponse {
 	if m == nil {
 		return nil
@@ -75,6 +92,7 @@ func (m *VpcAddressGroupStatusResponse) Clone() *VpcAddressGroupStatusResponse {
 			clone.OrphanAddresses[i] = *v.Clone()
 		}
 	}
+	clone.Region = m.Region.Clone()
 
 	return &clone
 }
@@ -94,6 +112,10 @@ func (m *VpcAddressGroupStatusResponse) Parse(ctx context.Context) error {
 		if err := m.OrphanAddresses[index].Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("OrphanAddresses"+fmt.Sprint("[", index, "]"), err)
 		}
+	}
+
+	if err := m.Region.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Region", err)
 	}
 
 	return nil

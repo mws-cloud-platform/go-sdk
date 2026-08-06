@@ -15,7 +15,7 @@ import (
 
 type UpdateRouteNextHopRequest struct {
 	// NAT шлюз.
-	NatGateway optional.Optional[vpc.NatGatewayRef] `json:"natGateway" yaml:"natGateway"`
+	NatGateway optional.OptionalNil[vpc.NatGatewayRef] `json:"natGateway" yaml:"natGateway"`
 	// Адрес.
 	Address optional.OptionalNil[UpdateRouteNextHopAddressRequest] `json:"address" yaml:"address"`
 }
@@ -23,7 +23,7 @@ type UpdateRouteNextHopRequest struct {
 func (m *RouteNextHopRequest) AsUpdateModel() UpdateRouteNextHopRequest {
 	var u UpdateRouteNextHopRequest
 	if m.NatGateway != nil {
-		u.NatGateway = optional.NewOptional(m.GetNatGatewayOr(vpc.NatGatewayRef{}))
+		u.NatGateway = optional.NewOptionalNil(m.GetNatGatewayOr(vpc.NatGatewayRef{}))
 	}
 	if m.Address != nil {
 		u.Address = optional.NewOptionalNil(m.Address.AsUpdateModel())
@@ -50,6 +50,8 @@ func (m *RouteNextHopRequest) WithChanges(u UpdateRouteNextHopRequest) RouteNext
 
 	if u.NatGateway.IsSet() {
 		out.NatGateway = ptr.Get(u.NatGateway.Value)
+	} else if u.NatGateway.IsNull() {
+		out.NatGateway = nil
 	}
 	if u.Address.IsSet() {
 		out.Address = ptr.Get(out.Address.WithChanges(u.Address.Value))
@@ -70,7 +72,7 @@ func (m *UpdateRouteNextHopRequest) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.NatGateway.IsSet() {
+	if m.NatGateway.IsSet() && !m.NatGateway.IsNull() {
 		if err := m.NatGateway.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("NatGateway", err)
 		}
@@ -85,9 +87,9 @@ func (m *UpdateRouteNextHopRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *RouteNextHopRequest) diffNatGateway(src *RouteNextHopRequest) optional.Optional[vpc.NatGatewayRef] {
+func (m *RouteNextHopRequest) diffNatGateway(src *RouteNextHopRequest) optional.OptionalNil[vpc.NatGatewayRef] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetNatGateway(), m.GetNatGateway(), nilDiffers)
+	return commonclient.DiffPrimitiveNullable(src.GetNatGateway(), m.GetNatGateway(), nilDiffers)
 }
 
 func (m *RouteNextHopRequest) diffAddress(src *RouteNextHopRequest) optional.OptionalNil[UpdateRouteNextHopAddressRequest] {

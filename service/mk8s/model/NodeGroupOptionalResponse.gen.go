@@ -19,7 +19,7 @@ type NodeGroupOptionalResponse struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Spec     NodeGroupSpecOptionalResponse                                            `json:"spec" yaml:"spec"`
-	// Описывает статусную модель k8s нод групп.
+	// Описывает статусную модель групп узлов Kubernetes.
 	Status *NodeGroupStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 

@@ -11,7 +11,8 @@ import (
 
 type UpdateCommonRoleBindingFederationContext struct {
 	// Идентификатор субъекта федерации.
-	Subject   optional.Optional[string]                                               `json:"subject" yaml:"subject"`
+	Subject optional.Optional[string] `json:"subject" yaml:"subject"`
+	// Атрибут пользователя федерации в виде пары «имя — значение».
 	Attribute optional.OptionalNil[UpdateCommonRoleBindingFederationContextAttribute] `json:"attribute" yaml:"attribute"`
 }
 

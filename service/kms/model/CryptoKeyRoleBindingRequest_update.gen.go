@@ -15,7 +15,8 @@ import (
 type UpdateCryptoKeyRoleBindingRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
-	Spec     optional.Optional[common.UpdateCommonRoleBindingSpecRequest]          `json:"spec" yaml:"spec"`
+	// Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав.
+	Spec optional.Optional[common.UpdateCommonRoleBindingSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *CryptoKeyRoleBindingRequest) AsUpdateModel() UpdateCryptoKeyRoleBindingRequest {

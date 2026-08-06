@@ -14,23 +14,23 @@ import (
 
 type UpdateSubnetDhcpOptionsRequest struct {
 	// Базовое доменное имя для разрешения имен.
-	DomainName optional.Optional[string] `json:"domainName" yaml:"domainName"`
-	// Список адресов DNS серверов.
-	DomainNameServers optional.Optional[[]ipaddress.IP4Address] `json:"domainNameServers" yaml:"domainNameServers"`
+	DomainName optional.OptionalNil[string] `json:"domainName" yaml:"domainName"`
+	// Список адресов DNS-серверов.
+	DomainNameServers optional.OptionalNil[[]ipaddress.IP4Address] `json:"domainNameServers" yaml:"domainNameServers"`
 	// Список адресов NTP серверов.
-	NtpServers optional.Optional[[]ipaddress.IP4Address] `json:"ntpServers" yaml:"ntpServers"`
+	NtpServers optional.OptionalNil[[]ipaddress.IP4Address] `json:"ntpServers" yaml:"ntpServers"`
 }
 
 func (m *SubnetDhcpOptionsRequest) AsUpdateModel() UpdateSubnetDhcpOptionsRequest {
 	var u UpdateSubnetDhcpOptionsRequest
 	if m.DomainName != nil {
-		u.DomainName = optional.NewOptional(m.GetDomainNameOr(""))
+		u.DomainName = optional.NewOptionalNil(m.GetDomainNameOr(""))
 	}
 	if m.DomainNameServers != nil {
-		u.DomainNameServers = optional.NewOptional(m.GetDomainNameServers())
+		u.DomainNameServers = optional.NewOptionalNil(m.GetDomainNameServers())
 	}
 	if m.NtpServers != nil {
-		u.NtpServers = optional.NewOptional(m.GetNtpServers())
+		u.NtpServers = optional.NewOptionalNil(m.GetNtpServers())
 	}
 	return u
 }
@@ -55,12 +55,18 @@ func (m *SubnetDhcpOptionsRequest) WithChanges(u UpdateSubnetDhcpOptionsRequest)
 
 	if u.DomainName.IsSet() {
 		out.DomainName = ptr.Get(u.DomainName.Value)
+	} else if u.DomainName.IsNull() {
+		out.DomainName = nil
 	}
 	if u.DomainNameServers.IsSet() {
 		out.DomainNameServers = slices.Clone(u.DomainNameServers.Value)
+	} else if u.DomainNameServers.IsNull() {
+		out.DomainNameServers = nil
 	}
 	if u.NtpServers.IsSet() {
 		out.NtpServers = slices.Clone(u.NtpServers.Value)
+	} else if u.NtpServers.IsNull() {
+		out.NtpServers = nil
 	}
 	return out
 }
@@ -72,23 +78,25 @@ func (m UpdateSubnetDhcpOptionsRequest) HasChanges() bool {
 		m.NtpServers.Set
 }
 
-func (m *SubnetDhcpOptionsRequest) diffDomainName(src *SubnetDhcpOptionsRequest) optional.Optional[string] {
+func (m *SubnetDhcpOptionsRequest) diffDomainName(src *SubnetDhcpOptionsRequest) optional.OptionalNil[string] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetDomainName(), m.GetDomainName(), nilDiffers)
+	return commonclient.DiffPrimitiveNullable(src.GetDomainName(), m.GetDomainName(), nilDiffers)
 }
 
-func (m *SubnetDhcpOptionsRequest) diffDomainNameServers(src *SubnetDhcpOptionsRequest) optional.Optional[[]ipaddress.IP4Address] {
+func (m *SubnetDhcpOptionsRequest) diffDomainNameServers(src *SubnetDhcpOptionsRequest) optional.OptionalNil[[]ipaddress.IP4Address] {
 	value, hasChanges := commonclient.GetChangesArrayEquatableIface(src.GetDomainNameServers(), m.GetDomainNameServers())
-	return optional.Optional[[]ipaddress.IP4Address]{
+	return optional.OptionalNil[[]ipaddress.IP4Address]{
 		Value: value,
 		Set:   hasChanges,
+		Null:  value == nil,
 	}
 }
 
-func (m *SubnetDhcpOptionsRequest) diffNtpServers(src *SubnetDhcpOptionsRequest) optional.Optional[[]ipaddress.IP4Address] {
+func (m *SubnetDhcpOptionsRequest) diffNtpServers(src *SubnetDhcpOptionsRequest) optional.OptionalNil[[]ipaddress.IP4Address] {
 	value, hasChanges := commonclient.GetChangesArrayEquatableIface(src.GetNtpServers(), m.GetNtpServers())
-	return optional.Optional[[]ipaddress.IP4Address]{
+	return optional.OptionalNil[[]ipaddress.IP4Address]{
 		Value: value,
 		Set:   hasChanges,
+		Null:  value == nil,
 	}
 }

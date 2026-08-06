@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m SubnetStatusResponse) MarshalJSON() ([]byte, error) {
@@ -38,6 +39,11 @@ func (m *SubnetStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("dhcpOptions")
 		m.DhcpOptions.Encode(e)
 	}
+
+	if m.Region != nil {
+		e.FieldStart("region")
+		m.Region.Encode(e)
+	}
 	return nil
 }
 
@@ -65,12 +71,20 @@ func (m *SubnetStatusResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v SubnetDhcpOptionsResponse
+			var v SubnetDhcpOptions2Response
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
 			m.DhcpOptions = &v
+			return nil
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
 			return nil
 		default:
 			return d.Skip()

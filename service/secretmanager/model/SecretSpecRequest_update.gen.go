@@ -17,7 +17,7 @@ type UpdateSecretSpecRequest struct {
 	// Секрет активен/неактивен
 	Active optional.Optional[bool] `json:"active" yaml:"active"`
 	// Номер текущей версии секрета.
-	CurrentSecretVersion optional.Optional[secretmanager.SecretVersionRef] `json:"currentSecretVersion" yaml:"currentSecretVersion"`
+	CurrentSecretVersion optional.OptionalNil[secretmanager.SecretVersionRef] `json:"currentSecretVersion" yaml:"currentSecretVersion"`
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Encryption optional.OptionalNil[UpdateEncryptionSpecRequest] `json:"encryption" yaml:"encryption"`
@@ -29,7 +29,7 @@ func (m *SecretSpecRequest) AsUpdateModel() UpdateSecretSpecRequest {
 		u.Active = optional.NewOptional(m.GetActiveOr(false))
 	}
 	if m.CurrentSecretVersion != nil {
-		u.CurrentSecretVersion = optional.NewOptional(m.GetCurrentSecretVersionOr(secretmanager.SecretVersionRef{}))
+		u.CurrentSecretVersion = optional.NewOptionalNil(m.GetCurrentSecretVersionOr(secretmanager.SecretVersionRef{}))
 	}
 	if m.Encryption != nil {
 		u.Encryption = optional.NewOptionalNil(m.Encryption.AsUpdateModel())
@@ -60,6 +60,8 @@ func (m *SecretSpecRequest) WithChanges(u UpdateSecretSpecRequest) SecretSpecReq
 	}
 	if u.CurrentSecretVersion.IsSet() {
 		out.CurrentSecretVersion = ptr.Get(u.CurrentSecretVersion.Value)
+	} else if u.CurrentSecretVersion.IsNull() {
+		out.CurrentSecretVersion = nil
 	}
 	if u.Encryption.IsSet() {
 		out.Encryption = ptr.Get(out.Encryption.WithChanges(u.Encryption.Value))
@@ -81,7 +83,7 @@ func (m *UpdateSecretSpecRequest) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.CurrentSecretVersion.IsSet() {
+	if m.CurrentSecretVersion.IsSet() && !m.CurrentSecretVersion.IsNull() {
 		if err := m.CurrentSecretVersion.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("CurrentSecretVersion", err)
 		}
@@ -101,9 +103,9 @@ func (m *SecretSpecRequest) diffActive(src *SecretSpecRequest) optional.Optional
 	return commonclient.DiffPrimitiveNonRequired(src.GetActive(), m.GetActive(), nilDiffers)
 }
 
-func (m *SecretSpecRequest) diffCurrentSecretVersion(src *SecretSpecRequest) optional.Optional[secretmanager.SecretVersionRef] {
+func (m *SecretSpecRequest) diffCurrentSecretVersion(src *SecretSpecRequest) optional.OptionalNil[secretmanager.SecretVersionRef] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetCurrentSecretVersion(), m.GetCurrentSecretVersion(), nilDiffers)
+	return commonclient.DiffPrimitiveNullable(src.GetCurrentSecretVersion(), m.GetCurrentSecretVersion(), nilDiffers)
 }
 
 func (m *SecretSpecRequest) diffEncryption(src *SecretSpecRequest) optional.OptionalNil[UpdateEncryptionSpecRequest] {

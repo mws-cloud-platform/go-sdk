@@ -41,6 +41,11 @@ type UpdateDiskSpecRequest struct {
 	BlockSize optional.Optional[bytesize.ByteSize] `json:"blockSize" yaml:"blockSize"`
 	// Тип операционной системы
 	OsType optional.Optional[OsType] `json:"osType" yaml:"osType"`
+	// Способ шифрования ресурса
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Encryption optional.OptionalNil[UpdateEncryptionSpecRequest] `json:"encryption" yaml:"encryption"`
 }
 
 func (m *DiskSpecRequest) AsUpdateModel() UpdateDiskSpecRequest {
@@ -64,6 +69,9 @@ func (m *DiskSpecRequest) AsUpdateModel() UpdateDiskSpecRequest {
 	if m.OsType != nil {
 		u.OsType = optional.NewOptional(m.GetOsTypeOr(""))
 	}
+	if m.Encryption != nil {
+		u.Encryption = optional.NewOptionalNil(m.Encryption.AsUpdateModel())
+	}
 	return u
 }
 
@@ -79,6 +87,7 @@ func (m *DiskSpecRequest) Diff(src *DiskSpecRequest) UpdateDiskSpecRequest {
 		upd.Iops = m.diffIops(src)
 		upd.BlockSize = m.diffBlockSize(src)
 		upd.OsType = m.diffOsType(src)
+		upd.Encryption = m.diffEncryption(src)
 	}
 	return upd
 }
@@ -112,6 +121,11 @@ func (m *DiskSpecRequest) WithChanges(u UpdateDiskSpecRequest) DiskSpecRequest {
 	if u.OsType.IsSet() {
 		out.OsType = ptr.Get(u.OsType.Value)
 	}
+	if u.Encryption.IsSet() {
+		out.Encryption = ptr.Get(out.Encryption.WithChanges(u.Encryption.Value))
+	} else if u.Encryption.IsNull() {
+		out.Encryption = nil
+	}
 	return out
 }
 
@@ -123,7 +137,8 @@ func (m UpdateDiskSpecRequest) HasChanges() bool {
 		m.DiskType.Set ||
 		m.Iops.Set ||
 		m.BlockSize.Set ||
-		m.OsType.Set
+		m.OsType.Set ||
+		m.Encryption.Set
 }
 
 func (m *UpdateDiskSpecRequest) Parse(ctx context.Context) error {
@@ -140,6 +155,12 @@ func (m *UpdateDiskSpecRequest) Parse(ctx context.Context) error {
 	if m.DiskType.IsSet() {
 		if err := m.DiskType.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("DiskType", err)
+		}
+	}
+
+	if m.Encryption.IsSet() && !m.Encryption.IsNull() {
+		if err := m.Encryption.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Encryption", err)
 		}
 	}
 
@@ -184,6 +205,16 @@ func (m *DiskSpecRequest) diffBlockSize(src *DiskSpecRequest) optional.Optional[
 func (m *DiskSpecRequest) diffOsType(src *DiskSpecRequest) optional.Optional[OsType] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetOsType(), m.GetOsType(), nilDiffers)
+}
+
+func (m *DiskSpecRequest) diffEncryption(src *DiskSpecRequest) optional.OptionalNil[UpdateEncryptionSpecRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetEncryption().Diff(src.GetEncryption())
+	return optional.OptionalNil[UpdateEncryptionSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
 type UpdateDiskSpecSourceRequest struct {

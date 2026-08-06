@@ -143,6 +143,7 @@ can provide this information using environment variables and functional options.
 - `MWS_SERVICE_ACCOUNT_AUTHORIZED_KEY_PATH` - Path to the service account authorized key file used for authentication. Has no effect if `MWS_TOKEN` is not empty.
 - `MWS_TIMEOUT` - Timeout for all client requests (default: `5s`).
 - `MWS_LOG_LEVEL` - If set, enables SDK operations logging at the specified level. Available levels: `debug`, `info`, `warn`, `error`, `fatal`.
+- `MWS_TRACE_ENABLED` - Enables recording of additional trace data during logging. Trace output may contain sensitive data and is intended for debugging use only.
 
 ### Functional Options
 

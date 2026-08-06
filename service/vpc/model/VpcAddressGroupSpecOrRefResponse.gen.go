@@ -15,7 +15,7 @@ type VpcAddressGroupSpecOrRefResponse struct {
 	// Ссылка на группу адресов.
 	Ref *vpc.AddressGroupRef `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Спецификация группы адресов.
-	Spec *VpcAddressGroupSpecResponse `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec *VpcAddressGroupSpec2Response `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *VpcAddressGroupSpecOrRefResponse) GetRef() *vpc.AddressGroupRef {
@@ -36,18 +36,18 @@ func (m *VpcAddressGroupSpecOrRefResponse) GetRefOr(val vpc.AddressGroupRef) vpc
 	return val
 }
 
-func (m *VpcAddressGroupSpecOrRefResponse) GetSpec() *VpcAddressGroupSpecResponse {
+func (m *VpcAddressGroupSpecOrRefResponse) GetSpec() *VpcAddressGroupSpec2Response {
 	if m != nil {
 		return m.Spec
 	}
 	return nil
 }
 
-func (m *VpcAddressGroupSpecOrRefResponse) SetSpec(val *VpcAddressGroupSpecResponse) {
+func (m *VpcAddressGroupSpecOrRefResponse) SetSpec(val *VpcAddressGroupSpec2Response) {
 	m.Spec = val
 }
 
-func (m *VpcAddressGroupSpecOrRefResponse) GetSpecOr(val VpcAddressGroupSpecResponse) VpcAddressGroupSpecResponse {
+func (m *VpcAddressGroupSpecOrRefResponse) GetSpecOr(val VpcAddressGroupSpec2Response) VpcAddressGroupSpec2Response {
 	if m != nil && m.Spec != nil {
 		return *m.Spec
 	}

@@ -110,5 +110,9 @@ func (m *SubnetOptionalResponse) Parse(ctx context.Context) error {
 		}
 	}
 
+	if err := m.Status.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Status", err)
+	}
+
 	return nil
 }

@@ -9,6 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m AddressStatusResponse) MarshalJSON() ([]byte, error) {
@@ -35,6 +36,11 @@ func (m *AddressStatusResponse) Encode(e *jx.Encoder) error {
 func (m *AddressStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
 	m.Ready.Encode(e)
+	if m.Region != nil {
+		e.FieldStart("region")
+		m.Region.Encode(e)
+	}
+
 	if m.IpAddress != nil {
 		e.FieldStart("ipAddress")
 		m.IpAddress.Encode(e)
@@ -60,6 +66,14 @@ func (m *AddressStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Ready = v
+			return nil
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
 			return nil
 		case "ipAddress":
 			var v ipaddress.IPAddress

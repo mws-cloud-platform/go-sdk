@@ -66,6 +66,11 @@ func (m *DiskBackupStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("osType")
 		m.OsType.Encode(e)
 	}
+
+	if m.Encryption != nil {
+		e.FieldStart("encryption")
+		m.Encryption.Encode(e)
+	}
 	return nil
 }
 
@@ -135,6 +140,18 @@ func (m *DiskBackupStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.OsType = &v
+			return nil
+		case "encryption":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v EncryptionStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Encryption = &v
 			return nil
 		default:
 			return d.Skip()

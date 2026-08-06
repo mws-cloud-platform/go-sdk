@@ -12,7 +12,7 @@ func ResourceExternalAddressSpecOrRefRequestToOptionalResponse(request *Resource
 	}
 	var response ResourceExternalAddressSpecOrRefOptionalResponse
 	if request.Ref != nil {
-		response.Ref = optional.NewOptional(*request.Ref)
+		response.Ref = optional.NewOptionalNil(*request.Ref)
 	}
 	if request.Spec != nil {
 		tmpSpec, err := ResourceExternalAddressSpecRequestToOptionalResponse(request.Spec)

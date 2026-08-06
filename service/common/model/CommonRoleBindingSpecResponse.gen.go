@@ -10,8 +10,10 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/support"
 )
 
+// Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав.
 // Real OAPI model name: CommonRoleBindingSpec
 type CommonRoleBindingSpecResponse struct {
+	// Субъект привязки роли — пользователь, сервисный аккаунт, группа пользователей или другая сущность, которой выдаются права. Должно быть заполнено ровно одно из полей.
 	Subject CommonRoleBindingSpecSubjectResponse `json:"subject" yaml:"subject"`
 	// Роль, определяющая права субъекта на ресурс
 	Role iam.RoleRef `json:"role" yaml:"role"`

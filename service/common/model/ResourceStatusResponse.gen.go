@@ -2,6 +2,7 @@
 
 package model
 
+// Текущее состояние ресурса, вычисляемое системой.
 // Real OAPI model name: ResourceStatus
 type ResourceStatusResponse struct {
 	// Информация о статусе реконсиляции.

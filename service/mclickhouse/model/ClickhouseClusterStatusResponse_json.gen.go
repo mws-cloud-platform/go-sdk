@@ -6,9 +6,9 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
-	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m ClickhouseClusterStatusResponse) MarshalJSON() ([]byte, error) {
@@ -45,10 +45,8 @@ func (m *ClickhouseClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 		m.State.Encode(e)
 	}
 
-	if m.Region != nil {
-		e.FieldStart("region")
-		m.Region.Encode(e)
-	}
+	e.FieldStart("region")
+	e.Str(m.Region)
 
 	if m.Cluster != nil {
 		e.FieldStart("cluster")
@@ -93,12 +91,12 @@ func (m *ClickhouseClusterStatusResponse) Decode(d *jx.Decoder) error {
 			m.State = &v
 			return nil
 		case "region":
-			var v rm.RegionID
-			if err := v.Decode(d); err != nil {
+			v, err := decode.Str(d)
+			if err != nil {
 				return err
 			}
 
-			m.Region = &v
+			m.Region = v
 			return nil
 		case "cluster":
 			if d.Next() == jx.Null {

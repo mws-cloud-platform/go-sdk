@@ -10,9 +10,9 @@ import (
 )
 
 type UpdateFirewallRuleRequest struct {
-	// Метаданные правила Firewall'а.
+	// Метаданные правила файрвола.
 	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
-	// Спецификация правила Firewall'а.
+	// Спецификация правила файрвола.
 	Spec optional.Optional[UpdateFirewallRuleSpecRequest] `json:"spec" yaml:"spec"`
 }
 

@@ -15,7 +15,7 @@ import (
 
 type UpdateResourceAddressSpecOrRefRequest struct {
 	// Относительная ссылка на статический внутренний адрес.
-	Ref optional.Optional[vpc.AddressRef] `json:"ref" yaml:"ref"`
+	Ref optional.OptionalNil[vpc.AddressRef] `json:"ref" yaml:"ref"`
 	// Спецификация внутреннего адреса.
 	Spec optional.OptionalNil[UpdateResourceAddressSpecRequest] `json:"spec" yaml:"spec"`
 }
@@ -23,7 +23,7 @@ type UpdateResourceAddressSpecOrRefRequest struct {
 func (m *ResourceAddressSpecOrRefRequest) AsUpdateModel() UpdateResourceAddressSpecOrRefRequest {
 	var u UpdateResourceAddressSpecOrRefRequest
 	if m.Ref != nil {
-		u.Ref = optional.NewOptional(m.GetRefOr(vpc.AddressRef{}))
+		u.Ref = optional.NewOptionalNil(m.GetRefOr(vpc.AddressRef{}))
 	}
 	if m.Spec != nil {
 		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
@@ -50,6 +50,8 @@ func (m *ResourceAddressSpecOrRefRequest) WithChanges(u UpdateResourceAddressSpe
 
 	if u.Ref.IsSet() {
 		out.Ref = ptr.Get(u.Ref.Value)
+	} else if u.Ref.IsNull() {
+		out.Ref = nil
 	}
 	if u.Spec.IsSet() {
 		out.Spec = ptr.Get(out.Spec.WithChanges(u.Spec.Value))
@@ -70,7 +72,7 @@ func (m *UpdateResourceAddressSpecOrRefRequest) Parse(ctx context.Context) error
 		return nil
 	}
 
-	if m.Ref.IsSet() {
+	if m.Ref.IsSet() && !m.Ref.IsNull() {
 		if err := m.Ref.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Ref", err)
 		}
@@ -85,9 +87,9 @@ func (m *UpdateResourceAddressSpecOrRefRequest) Parse(ctx context.Context) error
 	return nil
 }
 
-func (m *ResourceAddressSpecOrRefRequest) diffRef(src *ResourceAddressSpecOrRefRequest) optional.Optional[vpc.AddressRef] {
+func (m *ResourceAddressSpecOrRefRequest) diffRef(src *ResourceAddressSpecOrRefRequest) optional.OptionalNil[vpc.AddressRef] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
+	return commonclient.DiffPrimitiveNullable(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
 func (m *ResourceAddressSpecOrRefRequest) diffSpec(src *ResourceAddressSpecOrRefRequest) optional.OptionalNil[UpdateResourceAddressSpecRequest] {

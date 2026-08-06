@@ -12,10 +12,10 @@ func VpcAddressGroupSpecOrRefRequestToOptionalResponse(request *VpcAddressGroupS
 	}
 	var response VpcAddressGroupSpecOrRefOptionalResponse
 	if request.Ref != nil {
-		response.Ref = optional.NewOptional(*request.Ref)
+		response.Ref = optional.NewOptionalNil(*request.Ref)
 	}
 	if request.Spec != nil {
-		tmpSpec, err := VpcAddressGroupSpecRequestToOptionalResponse(request.Spec)
+		tmpSpec, err := VpcAddressGroupSpec2RequestToOptionalResponse(request.Spec)
 		if err != nil {
 			return nil, err
 		}

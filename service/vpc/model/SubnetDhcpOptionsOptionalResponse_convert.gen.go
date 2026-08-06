@@ -12,13 +12,13 @@ func SubnetDhcpOptionsRequestToOptionalResponse(request *SubnetDhcpOptionsReques
 	}
 	var response SubnetDhcpOptionsOptionalResponse
 	if request.DomainName != nil {
-		response.DomainName = optional.NewOptional(*request.DomainName)
+		response.DomainName = optional.NewOptionalNil(*request.DomainName)
 	}
 	if request.DomainNameServers != nil {
-		response.DomainNameServers = optional.NewOptional(request.DomainNameServers)
+		response.DomainNameServers = optional.NewOptionalNil(request.DomainNameServers)
 	}
 	if request.NtpServers != nil {
-		response.NtpServers = optional.NewOptional(request.NtpServers)
+		response.NtpServers = optional.NewOptionalNil(request.NtpServers)
 	}
 	return &response, nil
 }

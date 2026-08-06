@@ -28,6 +28,13 @@ func NodeGroupSpecRequestToOptionalResponse(request *NodeGroupSpecRequest) (*Nod
 	if request.ImageStorageIops != nil {
 		response.ImageStorageIops = optional.NewOptional(*request.ImageStorageIops)
 	}
+	for _, e := range request.LocalDisks {
+		tmp, err := LocalDiskSpecRequestToOptionalResponse(&e)
+		if err != nil {
+			return nil, err
+		}
+		response.LocalDisks.SetTo(append(response.LocalDisks.Value, *tmp))
+	}
 	tmpScale, err := NodeGroupSpecScaleRequestToOptionalResponse(&request.Scale)
 	if err != nil {
 		return nil, err

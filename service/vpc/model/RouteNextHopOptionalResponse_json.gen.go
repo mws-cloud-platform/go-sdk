@@ -41,7 +41,11 @@ func (m *RouteNextHopOptionalResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.NatGateway.IsSet() {
 		e.FieldStart("natGateway")
-		m.NatGateway.Value.Encode(e)
+		if m.NatGateway.IsNull() {
+			e.Null()
+		} else {
+			m.NatGateway.Value.Encode(e)
+		}
 	}
 
 	if m.Address.IsSet() {
@@ -75,6 +79,11 @@ func (m *RouteNextHopOptionalResponse) Decode(d *jx.Decoder) error {
 			m.NetworkLocal = json.RawMessage(v)
 			return nil
 		case "natGateway":
+			if d.Next() == jx.Null {
+				m.NatGateway.SetToNull()
+				return d.Null()
+			}
+
 			var v vpc.NatGatewayRef
 			if err := v.Decode(d); err != nil {
 				return err

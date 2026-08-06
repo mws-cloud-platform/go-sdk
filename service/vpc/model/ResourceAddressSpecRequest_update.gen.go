@@ -19,8 +19,9 @@ type UpdateResourceAddressSpecRequest struct {
 	// Подсеть облачной сети к которой принадлежит адрес. В случае приватного адреса, он всегда принадлежит к некоторой подсети внутри облачной сети.
 	Subnet optional.Optional[vpc.SubnetRef] `json:"subnet" yaml:"subnet"`
 	// Значение IP адреса.
-	IpAddress optional.Optional[ipaddress.IPAddress]              `json:"ipAddress" yaml:"ipAddress"`
-	Dns       optional.Optional[[]UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
+	IpAddress optional.Optional[ipaddress.IPAddress] `json:"ipAddress" yaml:"ipAddress"`
+	// Спецификация DNS для IP-адреса.
+	Dns optional.OptionalNil[[]UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
 }
 
 func (m *ResourceAddressSpecRequest) AsUpdateModel() UpdateResourceAddressSpecRequest {
@@ -30,7 +31,7 @@ func (m *ResourceAddressSpecRequest) AsUpdateModel() UpdateResourceAddressSpecRe
 		u.IpAddress = optional.NewOptional(m.GetIpAddressOr(ipaddress.IPAddress{}))
 	}
 	if m.Dns != nil {
-		u.Dns = optional.NewOptional(func() []UpdateVpcAddressDnsSpecRequest {
+		u.Dns = optional.NewOptionalNil(func() []UpdateVpcAddressDnsSpecRequest {
 			var tmp []UpdateVpcAddressDnsSpecRequest
 			if m.GetDns() != nil {
 				tmp = make([]UpdateVpcAddressDnsSpecRequest, 0, len(m.GetDns()))
@@ -70,6 +71,8 @@ func (m *ResourceAddressSpecRequest) WithChanges(u UpdateResourceAddressSpecRequ
 	}
 	if u.Dns.IsSet() {
 		out.Dns = merge.Slice(out.Dns, u.Dns.Value, (*VpcAddressDnsSpecRequest).WithChanges, (*VpcAddressDnsSpecRequest).GetName, (*UpdateVpcAddressDnsSpecRequest).GetName)
+	} else if u.Dns.IsNull() {
+		out.Dns = nil
 	}
 	return out
 }
@@ -105,7 +108,7 @@ func (m *ResourceAddressSpecRequest) diffIpAddress(src *ResourceAddressSpecReque
 	return commonclient.DiffEquatableIfaceNonRequired(src.GetIpAddress(), m.GetIpAddress(), nilDiffers)
 }
 
-func (m *ResourceAddressSpecRequest) diffDns(src *ResourceAddressSpecRequest) optional.Optional[[]UpdateVpcAddressDnsSpecRequest] {
+func (m *ResourceAddressSpecRequest) diffDns(src *ResourceAddressSpecRequest) optional.OptionalNil[[]UpdateVpcAddressDnsSpecRequest] {
 	diffFunc := func(fromItem, toItem VpcAddressDnsSpecRequest, fromNil bool) UpdateVpcAddressDnsSpecRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -113,8 +116,9 @@ func (m *ResourceAddressSpecRequest) diffDns(src *ResourceAddressSpecRequest) op
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetDns(), m.GetDns(), diffFunc)
-	return optional.Optional[[]UpdateVpcAddressDnsSpecRequest]{
+	return optional.OptionalNil[[]UpdateVpcAddressDnsSpecRequest]{
 		Value: value,
 		Set:   hasChanges,
+		Null:  value == nil,
 	}
 }

@@ -15,6 +15,7 @@ import (
 )
 
 type UpdateCommonRoleBindingSpec struct {
+	// Субъект привязки роли — пользователь, сервисный аккаунт, группа пользователей или другая сущность, которой выдаются права. Должно быть заполнено ровно одно из полей.
 	Subject optional.Optional[UpdateCommonRoleBindingSpecSubject] `json:"subject" yaml:"subject"`
 	// Роль, определяющая права субъекта на ресурс
 	Role optional.Optional[iam.RoleRef] `json:"role" yaml:"role"`

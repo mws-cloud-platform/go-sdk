@@ -70,6 +70,10 @@ func (m *SecretSpecRequest) Decode(d *jx.Decoder) error {
 			m.Active = &v
 			return nil
 		case "currentSecretVersion":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			var v secretmanager.SecretVersionRef
 			if err := v.Decode(d); err != nil {
 				return err

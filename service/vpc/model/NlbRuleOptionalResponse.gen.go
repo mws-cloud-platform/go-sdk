@@ -16,7 +16,7 @@ type NlbRuleOptionalResponse struct {
 	// Порт балансировщика и протокол по который клиенты отправляют запросы в рамках этого правила. Поддерживаются протоколы TCP и UDP. В рамках одного балансировщика это поле должно быть уникальным среди всех его правил.
 	ProtoPort string `json:"protoPort" yaml:"protoPort"`
 	// Целевой порт бэкенд-серверов, на которые балансировщик перенаправляет запросы. Если не указан, то считается равным порту балансировщика.
-	TargetPort optional.Optional[int32] `json:"targetPort,omitempty" yaml:"targetPort,omitempty"`
+	TargetPort optional.OptionalNil[int32] `json:"targetPort,omitempty" yaml:"targetPort,omitempty"`
 	// Адреса бэкенд-серверов, на которые балансировщик направляет запросы.
 	TargetAddressGroups []VpcAddressGroupSpecOrRefOptionalResponse `json:"targetAddressGroups" yaml:"targetAddressGroups"`
 	// Настройка проверки работоспособности виртуальных машин.
@@ -35,14 +35,14 @@ func (m *NlbRuleOptionalResponse) SetProtoPort(val string) {
 }
 
 func (m *NlbRuleOptionalResponse) GetTargetPort() *int32 {
-	if m != nil && m.TargetPort.IsSet() {
+	if m != nil && m.TargetPort.IsSet() && !m.TargetPort.IsNull() {
 		return &m.TargetPort.Value
 	}
 	return nil
 }
 
 func (m *NlbRuleOptionalResponse) GetTargetPortOr(val int32) int32 {
-	if m != nil && m.TargetPort.IsSet() {
+	if m != nil && m.TargetPort.IsSet() && !m.TargetPort.IsNull() {
 		return m.TargetPort.Value
 	}
 	return val

@@ -15,7 +15,7 @@ func SecretSpecRequestToOptionalResponse(request *SecretSpecRequest) (*SecretSpe
 		response.Active = optional.NewOptional(*request.Active)
 	}
 	if request.CurrentSecretVersion != nil {
-		response.CurrentSecretVersion = optional.NewOptional(*request.CurrentSecretVersion)
+		response.CurrentSecretVersion = optional.NewOptionalNil(*request.CurrentSecretVersion)
 	}
 	if request.Encryption != nil {
 		tmpEncryption, err := EncryptionSpecRequestToOptionalResponse(request.Encryption)

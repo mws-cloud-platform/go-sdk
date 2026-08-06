@@ -39,7 +39,11 @@ func (m *UpdateNlbRuleRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.TargetPort.IsSet() {
 		e.FieldStart("targetPort")
-		e.Int32(m.TargetPort.Value)
+		if m.TargetPort.IsNull() {
+			e.Null()
+		} else {
+			e.Int32(m.TargetPort.Value)
+		}
 	}
 
 	if m.TargetAddressGroups.IsSet() {
@@ -82,6 +86,11 @@ func (m *UpdateNlbRuleRequest) Decode(d *jx.Decoder) error {
 			m.ProtoPort.SetTo(v)
 			return nil
 		case "targetPort":
+			if d.Next() == jx.Null {
+				m.TargetPort.SetToNull()
+				return d.Null()
+			}
+
 			v, err := decode.Int32(d)
 			if err != nil {
 				return err

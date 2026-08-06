@@ -70,6 +70,15 @@ func (m *DiskSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("osType")
 		m.OsType.Value.Encode(e)
 	}
+
+	if m.Encryption.IsSet() {
+		e.FieldStart("encryption")
+		if m.Encryption.IsNull() {
+			e.Null()
+		} else {
+			m.Encryption.Value.Encode(e)
+		}
+	}
 	return nil
 }
 
@@ -144,6 +153,19 @@ func (m *DiskSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.OsType.SetTo(v)
+			return nil
+		case "encryption":
+			if d.Next() == jx.Null {
+				m.Encryption.SetToNull()
+				return d.Null()
+			}
+
+			var v EncryptionSpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Encryption.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

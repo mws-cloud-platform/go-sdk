@@ -135,6 +135,10 @@ func (m *FirewallRuleSpecRequest) Decode(d *jx.Decoder) error {
 			requiredFilled["destination"] = true
 			return nil
 		case "protoPorts":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			c := make([]string, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
 				v, err := decode.Str(d)

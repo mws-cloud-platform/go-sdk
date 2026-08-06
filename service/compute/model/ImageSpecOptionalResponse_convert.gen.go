@@ -28,6 +28,13 @@ func ImageSpecRequestToOptionalResponse(request *ImageSpecRequest) (*ImageSpecOp
 	if request.OsType != nil {
 		response.OsType = optional.NewOptional(*request.OsType)
 	}
+	if request.Encryption != nil {
+		tmpEncryption, err := EncryptionSpecRequestToOptionalResponse(request.Encryption)
+		if err != nil {
+			return nil, err
+		}
+		response.Encryption = optional.NewOptionalNil(*tmpEncryption)
+	}
 	return &response, nil
 }
 

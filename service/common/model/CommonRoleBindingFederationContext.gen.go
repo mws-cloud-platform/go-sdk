@@ -2,9 +2,11 @@
 
 package model
 
+// Контекст федерации, уточняющий субъекта: конкретный пользователь федерации или атрибут, которым он должен обладать. Должно быть заполнено ровно одно из полей
 type CommonRoleBindingFederationContext struct {
 	// Идентификатор субъекта федерации.
-	Subject   *string                                      `json:"subject,omitempty" yaml:"subject,omitempty"`
+	Subject *string `json:"subject,omitempty" yaml:"subject,omitempty"`
+	// Атрибут пользователя федерации в виде пары «имя — значение».
 	Attribute *CommonRoleBindingFederationContextAttribute `json:"attribute,omitempty" yaml:"attribute,omitempty"`
 }
 

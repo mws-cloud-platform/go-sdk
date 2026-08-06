@@ -14,33 +14,33 @@ import (
 // Real OAPI model name: VpcAddressGroupSpecOrRef
 type VpcAddressGroupSpecOrRefOptionalResponse struct {
 	// Ссылка на группу адресов.
-	Ref optional.Optional[vpc.AddressGroupRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref optional.OptionalNil[vpc.AddressGroupRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Спецификация группы адресов.
-	Spec optional.OptionalNil[VpcAddressGroupSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec optional.OptionalNil[VpcAddressGroupSpec2OptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *VpcAddressGroupSpecOrRefOptionalResponse) GetRef() *vpc.AddressGroupRef {
-	if m != nil && m.Ref.IsSet() {
+	if m != nil && m.Ref.IsSet() && !m.Ref.IsNull() {
 		return &m.Ref.Value
 	}
 	return nil
 }
 
 func (m *VpcAddressGroupSpecOrRefOptionalResponse) GetRefOr(val vpc.AddressGroupRef) vpc.AddressGroupRef {
-	if m != nil && m.Ref.IsSet() {
+	if m != nil && m.Ref.IsSet() && !m.Ref.IsNull() {
 		return m.Ref.Value
 	}
 	return val
 }
 
-func (m *VpcAddressGroupSpecOrRefOptionalResponse) GetSpec() *VpcAddressGroupSpecOptionalResponse {
+func (m *VpcAddressGroupSpecOrRefOptionalResponse) GetSpec() *VpcAddressGroupSpec2OptionalResponse {
 	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
-func (m *VpcAddressGroupSpecOrRefOptionalResponse) GetSpecOr(val VpcAddressGroupSpecOptionalResponse) VpcAddressGroupSpecOptionalResponse {
+func (m *VpcAddressGroupSpecOrRefOptionalResponse) GetSpecOr(val VpcAddressGroupSpec2OptionalResponse) VpcAddressGroupSpec2OptionalResponse {
 	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
@@ -67,7 +67,7 @@ func (m *VpcAddressGroupSpecOrRefOptionalResponse) Parse(ctx context.Context) er
 		return nil
 	}
 
-	if m.Ref.IsSet() {
+	if m.Ref.IsSet() && !m.Ref.IsNull() {
 		if err := m.Ref.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Ref", err)
 		}

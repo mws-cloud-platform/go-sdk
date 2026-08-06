@@ -15,7 +15,7 @@ type SecretSpecOptionalResponse struct {
 	// Секрет активен/неактивен
 	Active optional.Optional[bool] `json:"active,omitempty" yaml:"active,omitempty"`
 	// Номер текущей версии секрета.
-	CurrentSecretVersion optional.Optional[secretmanager.SecretVersionRef]    `json:"currentSecretVersion,omitempty" yaml:"currentSecretVersion,omitempty"`
+	CurrentSecretVersion optional.OptionalNil[secretmanager.SecretVersionRef] `json:"currentSecretVersion,omitempty" yaml:"currentSecretVersion,omitempty"`
 	Encryption           optional.OptionalNil[EncryptionSpecOptionalResponse] `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
@@ -34,14 +34,14 @@ func (m *SecretSpecOptionalResponse) GetActiveOr(val bool) bool {
 }
 
 func (m *SecretSpecOptionalResponse) GetCurrentSecretVersion() *secretmanager.SecretVersionRef {
-	if m != nil && m.CurrentSecretVersion.IsSet() {
+	if m != nil && m.CurrentSecretVersion.IsSet() && !m.CurrentSecretVersion.IsNull() {
 		return &m.CurrentSecretVersion.Value
 	}
 	return nil
 }
 
 func (m *SecretSpecOptionalResponse) GetCurrentSecretVersionOr(val secretmanager.SecretVersionRef) secretmanager.SecretVersionRef {
-	if m != nil && m.CurrentSecretVersion.IsSet() {
+	if m != nil && m.CurrentSecretVersion.IsSet() && !m.CurrentSecretVersion.IsNull() {
 		return m.CurrentSecretVersion.Value
 	}
 	return val
@@ -81,7 +81,7 @@ func (m *SecretSpecOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.CurrentSecretVersion.IsSet() {
+	if m.CurrentSecretVersion.IsSet() && !m.CurrentSecretVersion.IsNull() {
 		if err := m.CurrentSecretVersion.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("CurrentSecretVersion", err)
 		}

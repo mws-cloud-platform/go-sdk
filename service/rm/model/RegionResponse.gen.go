@@ -18,7 +18,8 @@ type RegionResponse struct {
 	Kind     *string                 `json:"kind,omitempty" yaml:"kind,omitempty"`
 	Metadata *RegionMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация региона
-	Spec   json.RawMessage                `json:"spec" yaml:"spec"`
+	Spec json.RawMessage `json:"spec" yaml:"spec"`
+	// Текущее состояние ресурса, вычисляемое системой.
 	Status *common.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 

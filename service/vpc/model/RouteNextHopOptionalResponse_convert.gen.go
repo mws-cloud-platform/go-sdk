@@ -12,7 +12,7 @@ func RouteNextHopRequestToOptionalResponse(request *RouteNextHopRequest) (*Route
 	}
 	var response RouteNextHopOptionalResponse
 	if request.NatGateway != nil {
-		response.NatGateway = optional.NewOptional(*request.NatGateway)
+		response.NatGateway = optional.NewOptionalNil(*request.NatGateway)
 	}
 	if request.Address != nil {
 		tmpAddress, err := RouteNextHopAddressRequestToOptionalResponse(request.Address)

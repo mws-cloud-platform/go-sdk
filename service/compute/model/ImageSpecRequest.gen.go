@@ -24,6 +24,8 @@ type ImageSpecRequest struct {
 	MinDiskSize *bytesize.ByteSize `json:"minDiskSize,omitempty" yaml:"minDiskSize,omitempty"`
 	// Тип операционной системы
 	OsType *OsType `json:"osType,omitempty" yaml:"osType,omitempty"`
+	// Способ шифрования ресурса
+	Encryption *EncryptionSpecRequest `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
 func (m *ImageSpecRequest) GetFamily() *string {
@@ -109,6 +111,24 @@ func (m *ImageSpecRequest) GetOsTypeOr(val OsType) OsType {
 	return val
 }
 
+func (m *ImageSpecRequest) GetEncryption() *EncryptionSpecRequest {
+	if m != nil {
+		return m.Encryption
+	}
+	return nil
+}
+
+func (m *ImageSpecRequest) SetEncryption(val *EncryptionSpecRequest) {
+	m.Encryption = val
+}
+
+func (m *ImageSpecRequest) GetEncryptionOr(val EncryptionSpecRequest) EncryptionSpecRequest {
+	if m != nil && m.Encryption != nil {
+		return *m.Encryption
+	}
+	return val
+}
+
 func (m *ImageSpecRequest) Clone() *ImageSpecRequest {
 	if m == nil {
 		return nil
@@ -129,6 +149,7 @@ func (m *ImageSpecRequest) Clone() *ImageSpecRequest {
 		cloneOsType := *m.OsType
 		clone.OsType = &cloneOsType
 	}
+	clone.Encryption = m.Encryption.Clone()
 	return &clone
 }
 
@@ -139,6 +160,10 @@ func (m *ImageSpecRequest) Parse(ctx context.Context) error {
 
 	if err := m.Source.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Source", err)
+	}
+
+	if err := m.Encryption.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Encryption", err)
 	}
 
 	return nil

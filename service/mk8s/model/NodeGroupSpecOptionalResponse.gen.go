@@ -20,20 +20,22 @@ type NodeGroupSpecOptionalResponse struct {
 	Subnet NodeGroupSpecSubnetOptionalResponse `json:"subnet" yaml:"subnet"`
 	// тип VM
 	VmType NodeGroupSpecVmTypeOptionalResponse `json:"vmType" yaml:"vmType"`
-	// размер хранилища для image-ей и контейнеров. Размер в Gb
+	// Размер хранилища для образов и контейнеров, в Gb.
 	ImageStorageSize optional.Optional[bytesize.ByteSize] `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
-	// Количество операций ввода-вывода в секунду (IOPS) для хранилища image-ей и контейнеров
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров.
 	ImageStorageIops optional.Optional[int64] `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
-	// Необходимо заполнить одно из полей fixed или auto scale
+	// Параметры локальных дисков для каждого узла в группе узлов
+	LocalDisks optional.OptionalNil[[]LocalDiskSpecOptionalResponse] `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
+	// Необходимо заполнить одно из полей — "fixed" или "autoscaling".
 	Scale          NodeGroupSpecScaleOptionalResponse                    `json:"scale" yaml:"scale"`
 	Labels         optional.OptionalNil[[]NodeLabelSpecOptionalResponse] `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Taints         optional.OptionalNil[[]NodeTaintSpecOptionalResponse] `json:"taints,omitempty" yaml:"taints,omitempty"`
 	VersionControl NodeGroupVersionControlSpecOptionalResponse           `json:"versionControl" yaml:"versionControl"`
-	// Стратегия перекатки (rollout) worker нод в нод группе
+	// Стратегия обновления (rollout) узлов в группе узлов.
 	RolloutStrategy NodeGroupSpecRolloutStrategyOptionalResponse `json:"rolloutStrategy" yaml:"rolloutStrategy"`
-	// serviceAccount необходим для поддержки функций:
-	// - скачивания образов из облачного registry (права на чтение образов)
-	// - сбор системных метрик с worker нод (права на чтение статусов worker нод)
+	// Сервисный аккаунт для выполнения функций:
+	// - скачивание образов из Artifact Registry (требуются права на чтение образов);
+	// - сбор системных метрик с узлов (требуются права на чтение статусов узлов).
 	ServiceAccount NodeGroupSpecServiceAccountOptionalResponse `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
@@ -94,6 +96,20 @@ func (m *NodeGroupSpecOptionalResponse) GetImageStorageIops() *int64 {
 func (m *NodeGroupSpecOptionalResponse) GetImageStorageIopsOr(val int64) int64 {
 	if m != nil && m.ImageStorageIops.IsSet() {
 		return m.ImageStorageIops.Value
+	}
+	return val
+}
+
+func (m *NodeGroupSpecOptionalResponse) GetLocalDisks() []LocalDiskSpecOptionalResponse {
+	if m != nil && m.LocalDisks.IsSet() && !m.LocalDisks.IsNull() {
+		return m.LocalDisks.Value
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecOptionalResponse) GetLocalDisksOr(val []LocalDiskSpecOptionalResponse) []LocalDiskSpecOptionalResponse {
+	if m != nil && m.LocalDisks.IsSet() && !m.LocalDisks.IsNull() {
+		return m.LocalDisks.Value
 	}
 	return val
 }
@@ -181,6 +197,12 @@ func (m *NodeGroupSpecOptionalResponse) Clone() *NodeGroupSpecOptionalResponse {
 	if clone.ImageStorageSize.IsSet() {
 		clone.ImageStorageSize.Value = *m.ImageStorageSize.Value.Clone()
 	}
+	if m.LocalDisks.Value != nil {
+		clone.LocalDisks.Value = make([]LocalDiskSpecOptionalResponse, len(m.LocalDisks.Value))
+		for i, v := range m.LocalDisks.Value {
+			clone.LocalDisks.Value[i] = *v.Clone()
+		}
+	}
 	clone.Scale = *m.Scale.Clone()
 	if m.Labels.Value != nil {
 		clone.Labels.Value = make([]NodeLabelSpecOptionalResponse, len(m.Labels.Value))
@@ -267,7 +289,7 @@ func (m *NodeGroupSpecRolloutStrategyOptionalResponse) Clone() *NodeGroupSpecRol
 // Представление поля Scale анонимного типа структуры NodeGroupSpec
 // Real OAPI model name: NodeGroupSpecScale
 type NodeGroupSpecScaleOptionalResponse struct {
-	// Количество узлов в node group
+	// Количество узлов в группе узлов.
 	Fixed       optional.OptionalNil[int]                                           `json:"fixed,omitempty" yaml:"fixed,omitempty"`
 	Autoscaling optional.OptionalNil[NodeGroupSpecScaleAutoscalingOptionalResponse] `json:"autoscaling,omitempty" yaml:"autoscaling,omitempty"`
 }
@@ -315,9 +337,9 @@ func (m *NodeGroupSpecScaleOptionalResponse) Clone() *NodeGroupSpecScaleOptional
 // Представление поля Autoscaling анонимного типа структуры NodeGroupSpecScale
 // Real OAPI model name: NodeGroupSpecScaleAutoscaling
 type NodeGroupSpecScaleAutoscalingOptionalResponse struct {
-	// Минимально количество нод в Node group.
+	// Минимально количество узлов в группе узлов.
 	Min int `json:"min" yaml:"min"`
-	// Максимальное количество нод в Node group.
+	// Максимальное количество узлов в группе узлов.
 	Max int `json:"max" yaml:"max"`
 }
 

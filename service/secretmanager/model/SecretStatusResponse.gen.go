@@ -14,7 +14,7 @@ import (
 type SecretStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
 	// Секрет активен/неактивен
-	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
+	Active bool `json:"active" yaml:"active"`
 	// Номер текущей версии секрета.
 	CurrentSecretVersion *secretmanager.SecretVersionRef `json:"currentSecretVersion,omitempty" yaml:"currentSecretVersion,omitempty"`
 }
@@ -26,18 +26,11 @@ func (m *SecretStatusResponse) GetReady() common.ResourceStatusReadyResponse {
 	return common.ResourceStatusReadyResponse{}
 }
 
-func (m *SecretStatusResponse) GetActive() *bool {
+func (m *SecretStatusResponse) GetActive() bool {
 	if m != nil {
 		return m.Active
 	}
-	return nil
-}
-
-func (m *SecretStatusResponse) GetActiveOr(val bool) bool {
-	if m != nil && m.Active != nil {
-		return *m.Active
-	}
-	return val
+	return false
 }
 
 func (m *SecretStatusResponse) GetCurrentSecretVersion() *secretmanager.SecretVersionRef {
@@ -61,10 +54,6 @@ func (m *SecretStatusResponse) Clone() *SecretStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
-	if m.Active != nil {
-		cloneActive := *m.Active
-		clone.Active = &cloneActive
-	}
 	clone.CurrentSecretVersion = m.CurrentSecretVersion.Clone()
 
 	return &clone

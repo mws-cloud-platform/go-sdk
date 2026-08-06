@@ -40,7 +40,11 @@ func (m *SecretSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.CurrentSecretVersion.IsSet() {
 		e.FieldStart("currentSecretVersion")
-		m.CurrentSecretVersion.Value.Encode(e)
+		if m.CurrentSecretVersion.IsNull() {
+			e.Null()
+		} else {
+			m.CurrentSecretVersion.Value.Encode(e)
+		}
 	}
 
 	if m.Encryption.IsSet() {
@@ -74,6 +78,11 @@ func (m *SecretSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			m.Active.SetTo(v)
 			return nil
 		case "currentSecretVersion":
+			if d.Next() == jx.Null {
+				m.CurrentSecretVersion.SetToNull()
+				return d.Null()
+			}
+
 			var v secretmanager.SecretVersionRef
 			if err := v.Decode(d); err != nil {
 				return err

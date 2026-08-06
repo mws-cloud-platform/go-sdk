@@ -34,7 +34,11 @@ func (m *UpdateResourceAddressSpecOrRefRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateResourceAddressSpecOrRefRequest) encodeFields(e *jx.Encoder) error {
 	if m.Ref.IsSet() {
 		e.FieldStart("ref")
-		m.Ref.Value.Encode(e)
+		if m.Ref.IsNull() {
+			e.Null()
+		} else {
+			m.Ref.Value.Encode(e)
+		}
 	}
 
 	if m.Spec.IsSet() {
@@ -60,6 +64,11 @@ func (m *UpdateResourceAddressSpecOrRefRequest) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "ref":
+			if d.Next() == jx.Null {
+				m.Ref.SetToNull()
+				return d.Null()
+			}
+
 			var v vpc.AddressRef
 			if err := v.Decode(d); err != nil {
 				return err

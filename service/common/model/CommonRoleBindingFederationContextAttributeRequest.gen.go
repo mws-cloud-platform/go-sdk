@@ -2,6 +2,7 @@
 
 package model
 
+// Атрибут пользователя федерации в виде пары «имя — значение».
 // Real OAPI model name: CommonRoleBindingFederationContextAttribute
 type CommonRoleBindingFederationContextAttributeRequest struct {
 	// Имя атрибута

@@ -15,15 +15,15 @@ import (
 
 type UpdateVpcAddressGroupSpecOrRefRequest struct {
 	// Ссылка на группу адресов.
-	Ref optional.Optional[vpc.AddressGroupRef] `json:"ref" yaml:"ref"`
+	Ref optional.OptionalNil[vpc.AddressGroupRef] `json:"ref" yaml:"ref"`
 	// Спецификация группы адресов.
-	Spec optional.OptionalNil[UpdateVpcAddressGroupSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateVpcAddressGroupSpec2Request] `json:"spec" yaml:"spec"`
 }
 
 func (m *VpcAddressGroupSpecOrRefRequest) AsUpdateModel() UpdateVpcAddressGroupSpecOrRefRequest {
 	var u UpdateVpcAddressGroupSpecOrRefRequest
 	if m.Ref != nil {
-		u.Ref = optional.NewOptional(m.GetRefOr(vpc.AddressGroupRef{}))
+		u.Ref = optional.NewOptionalNil(m.GetRefOr(vpc.AddressGroupRef{}))
 	}
 	if m.Spec != nil {
 		u.Spec = optional.NewOptionalNil(m.Spec.AsUpdateModel())
@@ -50,6 +50,8 @@ func (m *VpcAddressGroupSpecOrRefRequest) WithChanges(u UpdateVpcAddressGroupSpe
 
 	if u.Ref.IsSet() {
 		out.Ref = ptr.Get(u.Ref.Value)
+	} else if u.Ref.IsNull() {
+		out.Ref = nil
 	}
 	if u.Spec.IsSet() {
 		out.Spec = ptr.Get(out.Spec.WithChanges(u.Spec.Value))
@@ -70,7 +72,7 @@ func (m *UpdateVpcAddressGroupSpecOrRefRequest) Parse(ctx context.Context) error
 		return nil
 	}
 
-	if m.Ref.IsSet() {
+	if m.Ref.IsSet() && !m.Ref.IsNull() {
 		if err := m.Ref.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Ref", err)
 		}
@@ -85,15 +87,15 @@ func (m *UpdateVpcAddressGroupSpecOrRefRequest) Parse(ctx context.Context) error
 	return nil
 }
 
-func (m *VpcAddressGroupSpecOrRefRequest) diffRef(src *VpcAddressGroupSpecOrRefRequest) optional.Optional[vpc.AddressGroupRef] {
+func (m *VpcAddressGroupSpecOrRefRequest) diffRef(src *VpcAddressGroupSpecOrRefRequest) optional.OptionalNil[vpc.AddressGroupRef] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
+	return commonclient.DiffPrimitiveNullable(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *VpcAddressGroupSpecOrRefRequest) diffSpec(src *VpcAddressGroupSpecOrRefRequest) optional.OptionalNil[UpdateVpcAddressGroupSpecRequest] {
+func (m *VpcAddressGroupSpecOrRefRequest) diffSpec(src *VpcAddressGroupSpecOrRefRequest) optional.OptionalNil[UpdateVpcAddressGroupSpec2Request] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return optional.OptionalNil[UpdateVpcAddressGroupSpecRequest]{
+	return optional.OptionalNil[UpdateVpcAddressGroupSpec2Request]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

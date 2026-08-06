@@ -56,11 +56,15 @@ func (m *FirewallRuleSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.ProtoPorts.IsSet() {
 		e.FieldStart("protoPorts")
-		e.ArrStart()
-		for _, elem := range m.ProtoPorts.Value {
-			e.Str(elem)
+		if m.ProtoPorts.IsNull() {
+			e.Null()
+		} else {
+			e.ArrStart()
+			for _, elem := range m.ProtoPorts.Value {
+				e.Str(elem)
+			}
+			e.ArrEnd()
 		}
-		e.ArrEnd()
 	}
 	return nil
 }
@@ -125,6 +129,11 @@ func (m *FirewallRuleSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			m.Destination = v
 			return nil
 		case "protoPorts":
+			if d.Next() == jx.Null {
+				m.ProtoPorts.SetToNull()
+				return d.Null()
+			}
+
 			c := make([]string, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
 				v, err := decode.Str(d)

@@ -13,21 +13,21 @@ import (
 // Описывает ссылку на внешний адрес или спецификацию внешнего адреса как дополнительный ресурс.
 // Real OAPI model name: ResourceExternalAddressSpecOrRef
 type ResourceExternalAddressSpecOrRefOptionalResponse struct {
-	// Относительная ссылка на статический внешний адрес.
-	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
-	// Спецификация внешнего адреса.
+	// Относительная ссылка на статический внешний IP-адрес.
+	Ref optional.OptionalNil[vpc.ExternalAddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	// Спецификация внешнего IP-адреса.
 	Spec optional.OptionalNil[ResourceExternalAddressSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *ResourceExternalAddressSpecOrRefOptionalResponse) GetRef() *vpc.ExternalAddressRef {
-	if m != nil && m.Ref.IsSet() {
+	if m != nil && m.Ref.IsSet() && !m.Ref.IsNull() {
 		return &m.Ref.Value
 	}
 	return nil
 }
 
 func (m *ResourceExternalAddressSpecOrRefOptionalResponse) GetRefOr(val vpc.ExternalAddressRef) vpc.ExternalAddressRef {
-	if m != nil && m.Ref.IsSet() {
+	if m != nil && m.Ref.IsSet() && !m.Ref.IsNull() {
 		return m.Ref.Value
 	}
 	return val
@@ -67,7 +67,7 @@ func (m *ResourceExternalAddressSpecOrRefOptionalResponse) Parse(ctx context.Con
 		return nil
 	}
 
-	if m.Ref.IsSet() {
+	if m.Ref.IsSet() && !m.Ref.IsNull() {
 		if err := m.Ref.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Ref", err)
 		}

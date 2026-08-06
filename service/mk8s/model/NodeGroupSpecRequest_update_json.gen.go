@@ -61,6 +61,19 @@ func (m *UpdateNodeGroupSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.Int64(m.ImageStorageIops.Value)
 	}
 
+	if m.LocalDisks.IsSet() {
+		e.FieldStart("localDisks")
+		if m.LocalDisks.IsNull() {
+			e.Null()
+		} else {
+			e.ArrStart()
+			for _, elem := range m.LocalDisks.Value {
+				elem.Encode(e)
+			}
+			e.ArrEnd()
+		}
+	}
+
 	if m.Scale.IsSet() {
 		e.FieldStart("scale")
 		m.Scale.Value.Encode(e)
@@ -159,6 +172,26 @@ func (m *UpdateNodeGroupSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.ImageStorageIops.SetTo(v)
+			return nil
+		case "localDisks":
+			if d.Next() == jx.Null {
+				m.LocalDisks.SetToNull()
+				return d.Null()
+			}
+
+			c := make([]UpdateLocalDiskSpecRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v UpdateLocalDiskSpecRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.LocalDisks.SetTo(c)
 			return nil
 		case "scale":
 			var v UpdateNodeGroupSpecScaleRequest

@@ -9,6 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
+// Субъект привязки роли — пользователь, сервисный аккаунт, группа пользователей или другая сущность, которой выдаются права. Должно быть заполнено ровно одно из полей.
 type CommonRoleBindingSpecSubject struct {
 	// Идентификатор пользователя.
 	User *iam.UserRef `json:"user,omitempty" yaml:"user,omitempty"`
@@ -16,7 +17,7 @@ type CommonRoleBindingSpecSubject struct {
 	ServiceAccount *iam.ServiceAccountRef `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
 	// Идентификатор сервисного агента, связанного с проектом.
 	ServiceAgent *iam.ServiceAgentRef `json:"serviceAgent,omitempty" yaml:"serviceAgent,omitempty"`
-	// Субъект федерации пользователей.
+	// Субъект федерации пользователей — идентификатор федерации и, опционально, контекст, уточняющий, на каких пользователей федерации распространяется привязка роли.
 	UserFederation *CommonRoleBindingFederation `json:"userFederation,omitempty" yaml:"userFederation,omitempty"`
 	// Идентификатор группы пользователей.
 	UserGroup *iam.UserGroupRef `json:"userGroup,omitempty" yaml:"userGroup,omitempty"`

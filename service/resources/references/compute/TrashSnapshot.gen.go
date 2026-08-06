@@ -36,6 +36,7 @@ var (
 	}
 )
 
+// Deprecated: Отказываемся в пользу TrashDiskBackupId
 func NewTrashSnapshotID(id string) TrashSnapshotID {
 	m := TrashSnapshotID{
 		id: id,
@@ -44,6 +45,7 @@ func NewTrashSnapshotID(id string) TrashSnapshotID {
 	return m
 }
 
+// Deprecated: Отказываемся в пользу TrashDiskBackupId
 func ParseTrashSnapshotID(path string) (TrashSnapshotID, error) {
 	m := TrashSnapshotID{
 		path: path,
@@ -54,10 +56,12 @@ func ParseTrashSnapshotID(path string) (TrashSnapshotID, error) {
 	return m, nil
 }
 
+// Deprecated: Отказываемся в пользу TrashDiskBackupId
 func NewTrashSnapshotIDFromAnyID(resource resmodels.AnyResourceID) (TrashSnapshotID, error) {
 	return ParseTrashSnapshotID(resource.ID())
 }
 
+// Deprecated: Отказываемся в пользу TrashDiskBackupId
 type TrashSnapshotID struct {
 	id   string
 	path string
@@ -155,6 +159,7 @@ func (m *TrashSnapshotID) Decode(d *jx.Decoder) error {
 	return nil
 }
 
+// Deprecated: Отказываемся в пользу TrashDiskBackupId
 func NewTrashSnapshotRef(id string) TrashSnapshotRef {
 	m := TrashSnapshotRef{
 		id: TrashSnapshotID{
@@ -165,6 +170,7 @@ func NewTrashSnapshotRef(id string) TrashSnapshotRef {
 	return m
 }
 
+// Deprecated: Отказываемся в пользу TrashDiskBackupId
 func ParseTrashSnapshotRef(ctx context.Context, path string) (TrashSnapshotRef, error) {
 	m := TrashSnapshotRef{
 		id: TrashSnapshotID{
@@ -177,11 +183,13 @@ func ParseTrashSnapshotRef(ctx context.Context, path string) (TrashSnapshotRef, 
 	return m, nil
 }
 
+// Deprecated: Отказываемся в пользу TrashDiskBackupId
 func NewTrashSnapshotRefFromAnyRef(ref resmodels.AnyResourceRef) (TrashSnapshotRef, error) {
 	ctx := valuesctx.WithValuesStore(context.Background(), ref.GetPathValues())
 	return ParseTrashSnapshotRef(ctx, ref.Path())
 }
 
+// Deprecated: Отказываемся в пользу TrashDiskBackupId
 type TrashSnapshotRef struct {
 	id TrashSnapshotID
 }

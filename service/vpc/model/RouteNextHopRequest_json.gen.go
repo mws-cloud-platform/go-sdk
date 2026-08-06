@@ -56,6 +56,10 @@ func (m *RouteNextHopRequest) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "natGateway":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			var v vpc.NatGatewayRef
 			if err := v.Decode(d); err != nil {
 				return err

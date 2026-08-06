@@ -2,6 +2,7 @@
 
 package model
 
+// Атрибут пользователя федерации в виде пары «имя — значение».
 type CommonRoleBindingFederationContextAttribute struct {
 	// Имя атрибута
 	Name string `json:"name" yaml:"name"`

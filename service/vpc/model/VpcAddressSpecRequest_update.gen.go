@@ -25,8 +25,8 @@ type UpdateVpcAddressSpecRequest struct {
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
-	IpAddress optional.Optional[ipaddress.IPAddress]              `json:"ipAddress" yaml:"ipAddress"`
-	Dns       optional.Optional[[]UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
+	IpAddress optional.Optional[ipaddress.IPAddress]                 `json:"ipAddress" yaml:"ipAddress"`
+	Dns       optional.OptionalNil[[]UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
 }
 
 func (m *VpcAddressSpecRequest) AsUpdateModel() UpdateVpcAddressSpecRequest {
@@ -36,7 +36,7 @@ func (m *VpcAddressSpecRequest) AsUpdateModel() UpdateVpcAddressSpecRequest {
 		u.IpAddress = optional.NewOptional(m.GetIpAddressOr(ipaddress.IPAddress{}))
 	}
 	if m.Dns != nil {
-		u.Dns = optional.NewOptional(func() []UpdateVpcAddressDnsSpecRequest {
+		u.Dns = optional.NewOptionalNil(func() []UpdateVpcAddressDnsSpecRequest {
 			var tmp []UpdateVpcAddressDnsSpecRequest
 			if m.GetDns() != nil {
 				tmp = make([]UpdateVpcAddressDnsSpecRequest, 0, len(m.GetDns()))
@@ -76,6 +76,8 @@ func (m *VpcAddressSpecRequest) WithChanges(u UpdateVpcAddressSpecRequest) VpcAd
 	}
 	if u.Dns.IsSet() {
 		out.Dns = merge.Slice(out.Dns, u.Dns.Value, (*VpcAddressDnsSpecRequest).WithChanges, (*VpcAddressDnsSpecRequest).GetName, (*UpdateVpcAddressDnsSpecRequest).GetName)
+	} else if u.Dns.IsNull() {
+		out.Dns = nil
 	}
 	return out
 }
@@ -111,7 +113,7 @@ func (m *VpcAddressSpecRequest) diffIpAddress(src *VpcAddressSpecRequest) option
 	return commonclient.DiffEquatableIfaceNonRequired(src.GetIpAddress(), m.GetIpAddress(), nilDiffers)
 }
 
-func (m *VpcAddressSpecRequest) diffDns(src *VpcAddressSpecRequest) optional.Optional[[]UpdateVpcAddressDnsSpecRequest] {
+func (m *VpcAddressSpecRequest) diffDns(src *VpcAddressSpecRequest) optional.OptionalNil[[]UpdateVpcAddressDnsSpecRequest] {
 	diffFunc := func(fromItem, toItem VpcAddressDnsSpecRequest, fromNil bool) UpdateVpcAddressDnsSpecRequest {
 		if fromNil {
 			return toItem.Diff(nil)
@@ -119,8 +121,9 @@ func (m *VpcAddressSpecRequest) diffDns(src *VpcAddressSpecRequest) optional.Opt
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetDns(), m.GetDns(), diffFunc)
-	return optional.Optional[[]UpdateVpcAddressDnsSpecRequest]{
+	return optional.OptionalNil[[]UpdateVpcAddressDnsSpecRequest]{
 		Value: value,
 		Set:   hasChanges,
+		Null:  value == nil,
 	}
 }

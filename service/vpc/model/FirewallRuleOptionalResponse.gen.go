@@ -10,15 +10,15 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Правило файрвола — набор параметров, который разрешает или запрещает определенный тип трафика
+// Правило файрвола — набор параметров, который разрешает или запрещает определенный тип трафика.
 // Real OAPI model name: FirewallRule
 type FirewallRuleOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
-	// Метаданные правила Firewall'а.
+	// Метаданные правила файрвола.
 	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	// Спецификация правила Firewall'а.
+	// Спецификация правила файрвола.
 	Spec FirewallRuleSpecOptionalResponse `json:"spec" yaml:"spec"`
-	// Статус правила Firewall'а.
+	// Статус правила файрвола.
 	Status *FirewallRuleStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 

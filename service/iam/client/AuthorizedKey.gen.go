@@ -72,6 +72,10 @@ type ListAuthorizedKeyRequest struct {
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
+	PageSize *int // query: "pageSize"
+	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
+	PageToken *string // query: "pageToken"
 }
 
 func (m *ListAuthorizedKeyRequest) SetAuthorization(authorization string) {
@@ -84,6 +88,11 @@ func (m ListAuthorizedKeyRequest) GetProject() string {
 
 func (m *ListAuthorizedKeyRequest) SetProject(project string) {
 	m.Project = project
+}
+
+func (m ListAuthorizedKeyRequest) WithPageToken(token *string) ListAuthorizedKeyRequest {
+	m.PageToken = token
+	return m
 }
 
 type ListAuthorizedKeyResponse struct {

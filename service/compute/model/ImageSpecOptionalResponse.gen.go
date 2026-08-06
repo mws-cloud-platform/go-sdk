@@ -25,6 +25,8 @@ type ImageSpecOptionalResponse struct {
 	MinDiskSize optional.Optional[bytesize.ByteSize] `json:"minDiskSize,omitempty" yaml:"minDiskSize,omitempty"`
 	// Тип операционной системы
 	OsType optional.Optional[OsType] `json:"osType,omitempty" yaml:"osType,omitempty"`
+	// Способ шифрования ресурса
+	Encryption optional.OptionalNil[EncryptionSpecOptionalResponse] `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
 func (m *ImageSpecOptionalResponse) GetFamily() *string {
@@ -94,6 +96,20 @@ func (m *ImageSpecOptionalResponse) GetOsTypeOr(val OsType) OsType {
 	return val
 }
 
+func (m *ImageSpecOptionalResponse) GetEncryption() *EncryptionSpecOptionalResponse {
+	if m != nil && m.Encryption.IsSet() && !m.Encryption.IsNull() {
+		return &m.Encryption.Value
+	}
+	return nil
+}
+
+func (m *ImageSpecOptionalResponse) GetEncryptionOr(val EncryptionSpecOptionalResponse) EncryptionSpecOptionalResponse {
+	if m != nil && m.Encryption.IsSet() && !m.Encryption.IsNull() {
+		return m.Encryption.Value
+	}
+	return val
+}
+
 func (m *ImageSpecOptionalResponse) Clone() *ImageSpecOptionalResponse {
 	if m == nil {
 		return nil
@@ -103,6 +119,9 @@ func (m *ImageSpecOptionalResponse) Clone() *ImageSpecOptionalResponse {
 	clone.Source = *m.Source.Clone()
 	if clone.MinDiskSize.IsSet() {
 		clone.MinDiskSize.Value = *m.MinDiskSize.Value.Clone()
+	}
+	if clone.Encryption.IsSet() {
+		clone.Encryption.Value = *m.Encryption.Value.Clone()
 	}
 	return &clone
 }
@@ -114,6 +133,12 @@ func (m *ImageSpecOptionalResponse) Parse(ctx context.Context) error {
 
 	if err := m.Source.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Source", err)
+	}
+
+	if m.Encryption.IsSet() && !m.Encryption.IsNull() {
+		if err := m.Encryption.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Encryption", err)
+		}
 	}
 
 	return nil

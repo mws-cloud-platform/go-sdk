@@ -2,6 +2,7 @@
 
 package model
 
+// Текущее состояние ресурса, вычисляемое системой.
 type ResourceStatus struct {
 	// Информация о статусе реконсиляции.
 	Ready ResourceStatusReady `json:"ready" yaml:"ready"`

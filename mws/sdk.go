@@ -36,6 +36,7 @@ type SDK struct {
 	tracerProvider          trace.TracerProvider
 	defaultZone             string
 	defaultProject          string
+	traceEnabled            bool
 	client                  HTTPClient
 	clientCancel            func()
 	retryer                 retry.Retryer
@@ -93,7 +94,7 @@ func (s *SDK) ClientOptions() []commonclient.Option {
 			commonclient.DefaultsInjector(s.defaultProject, s.defaultZone),
 			authinterceptor.New(s.credentials),
 			retryinterceptor.New(retryinterceptor.WithRetryer(s.retryer)),
-			loginterceptor.New(s.logger.Named("client")),
+			loginterceptor.New(s.logger.Named("client"), s.logInterceptorOpts()...),
 			traceinterceptor.New(traceinterceptor.WithTracer(s.tracerProvider.Tracer(traceinterceptor.DefaultName))),
 			commonclient.ErrorWrapper,
 		),
@@ -122,4 +123,11 @@ func (s *SDK) Close(ctx context.Context) error {
 		return nil
 	}
 	return c.Close(ctx)
+}
+
+func (s *SDK) logInterceptorOpts() []loginterceptor.Option {
+	if !s.traceEnabled {
+		return nil
+	}
+	return []loginterceptor.Option{loginterceptor.WithTrace()}
 }

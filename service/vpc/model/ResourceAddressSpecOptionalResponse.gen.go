@@ -18,8 +18,9 @@ type ResourceAddressSpecOptionalResponse struct {
 	// Подсеть облачной сети к которой принадлежит адрес. В случае приватного адреса, он всегда принадлежит к некоторой подсети внутри облачной сети.
 	Subnet vpc.SubnetRef `json:"subnet" yaml:"subnet"`
 	// Значение IP адреса.
-	IpAddress optional.Optional[ipaddress.IPAddress]                 `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
-	Dns       optional.Optional[[]VpcAddressDnsSpecOptionalResponse] `json:"dns,omitempty" yaml:"dns,omitempty"`
+	IpAddress optional.Optional[ipaddress.IPAddress] `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
+	// Спецификация DNS для IP-адреса.
+	Dns optional.OptionalNil[[]VpcAddressDnsSpecOptionalResponse] `json:"dns,omitempty" yaml:"dns,omitempty"`
 }
 
 func (m *ResourceAddressSpecOptionalResponse) GetSubnet() vpc.SubnetRef {
@@ -48,14 +49,14 @@ func (m *ResourceAddressSpecOptionalResponse) GetIpAddressOr(val ipaddress.IPAdd
 }
 
 func (m *ResourceAddressSpecOptionalResponse) GetDns() []VpcAddressDnsSpecOptionalResponse {
-	if m != nil && m.Dns.IsSet() {
+	if m != nil && m.Dns.IsSet() && !m.Dns.IsNull() {
 		return m.Dns.Value
 	}
 	return nil
 }
 
 func (m *ResourceAddressSpecOptionalResponse) GetDnsOr(val []VpcAddressDnsSpecOptionalResponse) []VpcAddressDnsSpecOptionalResponse {
-	if m != nil && m.Dns.IsSet() {
+	if m != nil && m.Dns.IsSet() && !m.Dns.IsNull() {
 		return m.Dns.Value
 	}
 	return val

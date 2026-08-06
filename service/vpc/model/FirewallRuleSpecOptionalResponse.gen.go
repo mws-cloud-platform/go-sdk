@@ -10,7 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
-// Спецификация правила Firewall'а.
+// Спецификация правила файрвола.
 // Real OAPI model name: FirewallRuleSpec
 type FirewallRuleSpecOptionalResponse struct {
 	// Направление трафика, к которому применяется правило.
@@ -26,7 +26,7 @@ type FirewallRuleSpecOptionalResponse struct {
 	// Критерий применимости правила, описывает пункт назначения пакета.
 	Destination FirewallRuleDestinationOptionalResponse `json:"destination" yaml:"destination"`
 	// Критерий применимости правила. Определяет список протоколов и соответствующих портов (если применимо) назначения пакета. Значение по умолчанию - пустое значение. Означает любой протокол и порт.
-	ProtoPorts optional.Optional[[]string] `json:"protoPorts,omitempty" yaml:"protoPorts,omitempty"`
+	ProtoPorts optional.OptionalNil[[]string] `json:"protoPorts,omitempty" yaml:"protoPorts,omitempty"`
 }
 
 func (m *FirewallRuleSpecOptionalResponse) GetDirection() FirewallRuleSpecDirectionOptionalResponse {
@@ -102,14 +102,14 @@ func (m *FirewallRuleSpecOptionalResponse) SetDestination(val FirewallRuleDestin
 }
 
 func (m *FirewallRuleSpecOptionalResponse) GetProtoPorts() []string {
-	if m != nil && m.ProtoPorts.IsSet() {
+	if m != nil && m.ProtoPorts.IsSet() && !m.ProtoPorts.IsNull() {
 		return m.ProtoPorts.Value
 	}
 	return nil
 }
 
 func (m *FirewallRuleSpecOptionalResponse) GetProtoPortsOr(val []string) []string {
-	if m != nil && m.ProtoPorts.IsSet() {
+	if m != nil && m.ProtoPorts.IsSet() && !m.ProtoPorts.IsNull() {
 		return m.ProtoPorts.Value
 	}
 	return val

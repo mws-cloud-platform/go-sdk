@@ -14,20 +14,20 @@ import (
 // Real OAPI model name: ResourceAddressSpecOrRef
 type ResourceAddressSpecOrRefOptionalResponse struct {
 	// Относительная ссылка на статический внутренний адрес.
-	Ref optional.Optional[vpc.AddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
+	Ref optional.OptionalNil[vpc.AddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Спецификация внутреннего адреса.
 	Spec optional.OptionalNil[ResourceAddressSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *ResourceAddressSpecOrRefOptionalResponse) GetRef() *vpc.AddressRef {
-	if m != nil && m.Ref.IsSet() {
+	if m != nil && m.Ref.IsSet() && !m.Ref.IsNull() {
 		return &m.Ref.Value
 	}
 	return nil
 }
 
 func (m *ResourceAddressSpecOrRefOptionalResponse) GetRefOr(val vpc.AddressRef) vpc.AddressRef {
-	if m != nil && m.Ref.IsSet() {
+	if m != nil && m.Ref.IsSet() && !m.Ref.IsNull() {
 		return m.Ref.Value
 	}
 	return val
@@ -67,7 +67,7 @@ func (m *ResourceAddressSpecOrRefOptionalResponse) Parse(ctx context.Context) er
 		return nil
 	}
 
-	if m.Ref.IsSet() {
+	if m.Ref.IsSet() && !m.Ref.IsNull() {
 		if err := m.Ref.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Ref", err)
 		}

@@ -29,6 +29,8 @@ type DiskSpecOptionalResponse struct {
 	BlockSize optional.Optional[bytesize.ByteSize] `json:"blockSize,omitempty" yaml:"blockSize,omitempty"`
 	// Тип операционной системы
 	OsType optional.Optional[OsType] `json:"osType,omitempty" yaml:"osType,omitempty"`
+	// Способ шифрования ресурса
+	Encryption optional.OptionalNil[EncryptionSpecOptionalResponse] `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
 func (m *DiskSpecOptionalResponse) GetZone() string {
@@ -126,6 +128,20 @@ func (m *DiskSpecOptionalResponse) GetOsTypeOr(val OsType) OsType {
 	return val
 }
 
+func (m *DiskSpecOptionalResponse) GetEncryption() *EncryptionSpecOptionalResponse {
+	if m != nil && m.Encryption.IsSet() && !m.Encryption.IsNull() {
+		return &m.Encryption.Value
+	}
+	return nil
+}
+
+func (m *DiskSpecOptionalResponse) GetEncryptionOr(val EncryptionSpecOptionalResponse) EncryptionSpecOptionalResponse {
+	if m != nil && m.Encryption.IsSet() && !m.Encryption.IsNull() {
+		return m.Encryption.Value
+	}
+	return val
+}
+
 func (m *DiskSpecOptionalResponse) Clone() *DiskSpecOptionalResponse {
 	if m == nil {
 		return nil
@@ -144,6 +160,9 @@ func (m *DiskSpecOptionalResponse) Clone() *DiskSpecOptionalResponse {
 	if clone.BlockSize.IsSet() {
 		clone.BlockSize.Value = *m.BlockSize.Value.Clone()
 	}
+	if clone.Encryption.IsSet() {
+		clone.Encryption.Value = *m.Encryption.Value.Clone()
+	}
 	return &clone
 }
 
@@ -161,6 +180,12 @@ func (m *DiskSpecOptionalResponse) Parse(ctx context.Context) error {
 	if m.DiskType.IsSet() {
 		if err := m.DiskType.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("DiskType", err)
+		}
+	}
+
+	if m.Encryption.IsSet() && !m.Encryption.IsNull() {
+		if err := m.Encryption.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Encryption", err)
 		}
 	}
 

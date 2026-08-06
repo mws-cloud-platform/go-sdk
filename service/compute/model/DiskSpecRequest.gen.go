@@ -28,6 +28,8 @@ type DiskSpecRequest struct {
 	BlockSize *bytesize.ByteSize `json:"blockSize,omitempty" yaml:"blockSize,omitempty"`
 	// Тип операционной системы
 	OsType *OsType `json:"osType,omitempty" yaml:"osType,omitempty"`
+	// Способ шифрования ресурса
+	Encryption *EncryptionSpecRequest `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
 func (m *DiskSpecRequest) GetZone() string {
@@ -149,6 +151,24 @@ func (m *DiskSpecRequest) GetOsTypeOr(val OsType) OsType {
 	return val
 }
 
+func (m *DiskSpecRequest) GetEncryption() *EncryptionSpecRequest {
+	if m != nil {
+		return m.Encryption
+	}
+	return nil
+}
+
+func (m *DiskSpecRequest) SetEncryption(val *EncryptionSpecRequest) {
+	m.Encryption = val
+}
+
+func (m *DiskSpecRequest) GetEncryptionOr(val EncryptionSpecRequest) EncryptionSpecRequest {
+	if m != nil && m.Encryption != nil {
+		return *m.Encryption
+	}
+	return val
+}
+
 func (m *DiskSpecRequest) Clone() *DiskSpecRequest {
 	if m == nil {
 		return nil
@@ -167,6 +187,7 @@ func (m *DiskSpecRequest) Clone() *DiskSpecRequest {
 		cloneOsType := *m.OsType
 		clone.OsType = &cloneOsType
 	}
+	clone.Encryption = m.Encryption.Clone()
 	return &clone
 }
 
@@ -181,6 +202,10 @@ func (m *DiskSpecRequest) Parse(ctx context.Context) error {
 
 	if err := m.DiskType.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("DiskType", err)
+	}
+
+	if err := m.Encryption.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Encryption", err)
 	}
 
 	return nil

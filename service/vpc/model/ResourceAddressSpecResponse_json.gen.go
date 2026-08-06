@@ -80,6 +80,10 @@ func (m *ResourceAddressSpecResponse) Decode(d *jx.Decoder) error {
 			m.IpAddress = &v
 			return nil
 		case "dns":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			c := make([]VpcAddressDnsSpecResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
 				var v VpcAddressDnsSpecResponse

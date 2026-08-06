@@ -6,7 +6,7 @@ import (
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Статус правила Firewall'а.
+// Статус правила файрвола.
 // Real OAPI model name: FirewallRuleStatus
 type FirewallRuleStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`

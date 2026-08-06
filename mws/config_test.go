@@ -34,8 +34,9 @@ func TestLoadConfig(t *testing.T) {
 					"MWS_ZONE":          "ru-central1-b",
 					"MWS_TOKEN":         "my-token",
 					"MWS_SERVICE_ACCOUNT_AUTHORIZED_KEY_PATH": "/path/to/key.json",
-					"MWS_TIMEOUT":   "1m",
-					"MWS_LOG_LEVEL": "debug",
+					"MWS_TIMEOUT":       "1m",
+					"MWS_LOG_LEVEL":     "debug",
+					"MWS_TRACE_ENABLED": "true",
 				}),
 			},
 			expected: &mws.Config{
@@ -46,6 +47,7 @@ func TestLoadConfig(t *testing.T) {
 				ServiceAccountAuthorizedKeyPath: "/path/to/key.json",
 				Timeout:                         time.Minute,
 				LogLevel:                        "debug",
+				TraceEnabled:                    true,
 			},
 		},
 		{
@@ -56,6 +58,15 @@ func TestLoadConfig(t *testing.T) {
 				}),
 			},
 			err: `parse "MWS_TIMEOUT": time: invalid duration "invalid"`,
+		},
+		{
+			name: "invalid_trace_enabled",
+			opts: []mws.LoadConfigOption{
+				mws.LoadConfigWithEnv(env.MapEnv{
+					"MWS_TRACE_ENABLED": "invalid",
+				}),
+			},
+			err: `parse "MWS_TRACE_ENABLED": strconv.ParseBool: parsing "invalid": invalid syntax`,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

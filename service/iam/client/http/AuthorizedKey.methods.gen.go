@@ -62,6 +62,8 @@ func (c *AuthorizedKey) listAuthorizedKeyInvoker(ctx context.Context, anyReq any
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryListAuthorizedKey(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerListAuthorizedKey(httpReq, request)
 
@@ -86,6 +88,17 @@ func (c *AuthorizedKey) listAuthorizedKeyInvoker(ctx context.Context, anyReq any
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *AuthorizedKey) queryListAuthorizedKey(request *client.ListAuthorizedKeyRequest) string {
+	q := make(url.Values)
+	if request.PageSize != nil {
+		q.Add("pageSize", conv.IntToString(*request.PageSize))
+	}
+	if request.PageToken != nil {
+		q.Add("pageToken", conv.StringToString(*request.PageToken))
+	}
+	return q.Encode()
 }
 
 func (c *AuthorizedKey) headerListAuthorizedKey(req *http.Request, request *client.ListAuthorizedKeyRequest) {

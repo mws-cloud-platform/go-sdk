@@ -15,8 +15,10 @@ type CertificateRoleBindingOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     common.CommonRoleBindingSpecOptionalResponse                             `json:"spec" yaml:"spec"`
-	Status   *common.CommonRoleBindingStatusResponse                                  `json:"status,omitempty" yaml:"status,omitempty"`
+	// Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав.
+	Spec common.CommonRoleBindingSpecOptionalResponse `json:"spec" yaml:"spec"`
+	// Текущее состояние привязки роли, вычисляемое системой.
+	Status *common.CommonRoleBindingStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *CertificateRoleBindingOptionalResponse) GetKind() string {

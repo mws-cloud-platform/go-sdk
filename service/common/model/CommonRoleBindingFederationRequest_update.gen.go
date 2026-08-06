@@ -15,7 +15,8 @@ import (
 
 type UpdateCommonRoleBindingFederationRequest struct {
 	// Идентификатор федерации.
-	Id      optional.Optional[iam.UserFederationRef]                              `json:"id" yaml:"id"`
+	Id optional.Optional[iam.UserFederationRef] `json:"id" yaml:"id"`
+	// Контекст федерации, уточняющий субъекта: конкретный пользователь федерации или атрибут, которым он должен обладать. Должно быть заполнено ровно одно из полей
 	Context optional.OptionalNil[UpdateCommonRoleBindingFederationContextRequest] `json:"context" yaml:"context"`
 }
 

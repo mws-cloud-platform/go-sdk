@@ -63,6 +63,15 @@ func (m *NodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.Int64(*m.ImageStorageIops)
 	}
 
+	if m.LocalDisks != nil {
+		e.FieldStart("localDisks")
+		e.ArrStart()
+		for _, elem := range m.LocalDisks {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+
 	if m.Scale != nil {
 		e.FieldStart("scale")
 		m.Scale.Encode(e)
@@ -191,6 +200,25 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.ImageStorageIops = &v
+			return nil
+		case "localDisks":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			c := make([]LocalDiskStatusResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v LocalDiskStatusResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.LocalDisks = c
 			return nil
 		case "scale":
 			if d.Next() == jx.Null {

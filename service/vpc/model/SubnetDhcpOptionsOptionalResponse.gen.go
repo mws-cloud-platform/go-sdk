@@ -11,50 +11,50 @@ import (
 // Real OAPI model name: SubnetDhcpOptions
 type SubnetDhcpOptionsOptionalResponse struct {
 	// Базовое доменное имя для разрешения имен.
-	DomainName optional.Optional[string] `json:"domainName,omitempty" yaml:"domainName,omitempty"`
-	// Список адресов DNS серверов.
-	DomainNameServers optional.Optional[[]ipaddress.IP4Address] `json:"domainNameServers,omitempty" yaml:"domainNameServers,omitempty"`
+	DomainName optional.OptionalNil[string] `json:"domainName,omitempty" yaml:"domainName,omitempty"`
+	// Список адресов DNS-серверов.
+	DomainNameServers optional.OptionalNil[[]ipaddress.IP4Address] `json:"domainNameServers,omitempty" yaml:"domainNameServers,omitempty"`
 	// Список адресов NTP серверов.
-	NtpServers optional.Optional[[]ipaddress.IP4Address] `json:"ntpServers,omitempty" yaml:"ntpServers,omitempty"`
+	NtpServers optional.OptionalNil[[]ipaddress.IP4Address] `json:"ntpServers,omitempty" yaml:"ntpServers,omitempty"`
 }
 
 func (m *SubnetDhcpOptionsOptionalResponse) GetDomainName() *string {
-	if m != nil && m.DomainName.IsSet() {
+	if m != nil && m.DomainName.IsSet() && !m.DomainName.IsNull() {
 		return &m.DomainName.Value
 	}
 	return nil
 }
 
 func (m *SubnetDhcpOptionsOptionalResponse) GetDomainNameOr(val string) string {
-	if m != nil && m.DomainName.IsSet() {
+	if m != nil && m.DomainName.IsSet() && !m.DomainName.IsNull() {
 		return m.DomainName.Value
 	}
 	return val
 }
 
 func (m *SubnetDhcpOptionsOptionalResponse) GetDomainNameServers() []ipaddress.IP4Address {
-	if m != nil && m.DomainNameServers.IsSet() {
+	if m != nil && m.DomainNameServers.IsSet() && !m.DomainNameServers.IsNull() {
 		return m.DomainNameServers.Value
 	}
 	return nil
 }
 
 func (m *SubnetDhcpOptionsOptionalResponse) GetDomainNameServersOr(val []ipaddress.IP4Address) []ipaddress.IP4Address {
-	if m != nil && m.DomainNameServers.IsSet() {
+	if m != nil && m.DomainNameServers.IsSet() && !m.DomainNameServers.IsNull() {
 		return m.DomainNameServers.Value
 	}
 	return val
 }
 
 func (m *SubnetDhcpOptionsOptionalResponse) GetNtpServers() []ipaddress.IP4Address {
-	if m != nil && m.NtpServers.IsSet() {
+	if m != nil && m.NtpServers.IsSet() && !m.NtpServers.IsNull() {
 		return m.NtpServers.Value
 	}
 	return nil
 }
 
 func (m *SubnetDhcpOptionsOptionalResponse) GetNtpServersOr(val []ipaddress.IP4Address) []ipaddress.IP4Address {
-	if m != nil && m.NtpServers.IsSet() {
+	if m != nil && m.NtpServers.IsSet() && !m.NtpServers.IsNull() {
 		return m.NtpServers.Value
 	}
 	return val

@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
 
-// Спецификация правила Firewall'а.
+// Спецификация правила файрвола.
 // Real OAPI model name: FirewallRuleSpec
 type FirewallRuleSpecRequest struct {
 	// Направление трафика, к которому применяется правило.

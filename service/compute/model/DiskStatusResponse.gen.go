@@ -35,6 +35,8 @@ type DiskStatusResponse struct {
 	InitialSourceImage *compute.ImageID `json:"initialSourceImage,omitempty" yaml:"initialSourceImage,omitempty"`
 	// Тип операционной системы
 	OsType *OsType2 `json:"osType,omitempty" yaml:"osType,omitempty"`
+	// Способ шифрования ресурса
+	Encryption *EncryptionStatusResponse `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
 func (m *DiskStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -163,6 +165,20 @@ func (m *DiskStatusResponse) GetOsTypeOr(val OsType2) OsType2 {
 	return val
 }
 
+func (m *DiskStatusResponse) GetEncryption() *EncryptionStatusResponse {
+	if m != nil {
+		return m.Encryption
+	}
+	return nil
+}
+
+func (m *DiskStatusResponse) GetEncryptionOr(val EncryptionStatusResponse) EncryptionStatusResponse {
+	if m != nil && m.Encryption != nil {
+		return *m.Encryption
+	}
+	return val
+}
+
 func (m *DiskStatusResponse) Clone() *DiskStatusResponse {
 	if m == nil {
 		return nil
@@ -190,6 +206,7 @@ func (m *DiskStatusResponse) Clone() *DiskStatusResponse {
 		cloneOsType := *m.OsType
 		clone.OsType = &cloneOsType
 	}
+	clone.Encryption = m.Encryption.Clone()
 
 	return &clone
 }
@@ -211,6 +228,10 @@ func (m *DiskStatusResponse) Parse(ctx context.Context) error {
 
 	if err := m.InitialSourceImage.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("InitialSourceImage", err)
+	}
+
+	if err := m.Encryption.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Encryption", err)
 	}
 
 	return nil

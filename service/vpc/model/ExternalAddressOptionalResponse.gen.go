@@ -116,5 +116,9 @@ func (m *ExternalAddressOptionalResponse) Parse(ctx context.Context) error {
 		return reserrors.NewPathAccumulatorError("Spec", err)
 	}
 
+	if err := m.Status.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Status", err)
+	}
+
 	return nil
 }

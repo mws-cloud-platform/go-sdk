@@ -38,7 +38,7 @@ func FirewallRuleSpecRequestToOptionalResponse(request *FirewallRuleSpecRequest)
 	}
 	response.Destination = *tmpDestination
 	if request.ProtoPorts != nil {
-		response.ProtoPorts = optional.NewOptional(request.ProtoPorts)
+		response.ProtoPorts = optional.NewOptionalNil(request.ProtoPorts)
 	}
 	return &response, nil
 }

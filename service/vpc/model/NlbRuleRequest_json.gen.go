@@ -79,6 +79,10 @@ func (m *NlbRuleRequest) Decode(d *jx.Decoder) error {
 			requiredFilled["protoPort"] = true
 			return nil
 		case "targetPort":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Int32(d)
 			if err != nil {
 				return err

@@ -35,25 +35,37 @@ func (m *UpdateSubnetDhcpOptionsRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateSubnetDhcpOptionsRequest) encodeFields(e *jx.Encoder) error {
 	if m.DomainName.IsSet() {
 		e.FieldStart("domainName")
-		e.Str(m.DomainName.Value)
+		if m.DomainName.IsNull() {
+			e.Null()
+		} else {
+			e.Str(m.DomainName.Value)
+		}
 	}
 
 	if m.DomainNameServers.IsSet() {
 		e.FieldStart("domainNameServers")
-		e.ArrStart()
-		for _, elem := range m.DomainNameServers.Value {
-			elem.Encode(e)
+		if m.DomainNameServers.IsNull() {
+			e.Null()
+		} else {
+			e.ArrStart()
+			for _, elem := range m.DomainNameServers.Value {
+				elem.Encode(e)
+			}
+			e.ArrEnd()
 		}
-		e.ArrEnd()
 	}
 
 	if m.NtpServers.IsSet() {
 		e.FieldStart("ntpServers")
-		e.ArrStart()
-		for _, elem := range m.NtpServers.Value {
-			elem.Encode(e)
+		if m.NtpServers.IsNull() {
+			e.Null()
+		} else {
+			e.ArrStart()
+			for _, elem := range m.NtpServers.Value {
+				elem.Encode(e)
+			}
+			e.ArrEnd()
 		}
-		e.ArrEnd()
 	}
 	return nil
 }
@@ -70,6 +82,11 @@ func (m *UpdateSubnetDhcpOptionsRequest) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "domainName":
+			if d.Next() == jx.Null {
+				m.DomainName.SetToNull()
+				return d.Null()
+			}
+
 			v, err := decode.Str(d)
 			if err != nil {
 				return err
@@ -78,6 +95,11 @@ func (m *UpdateSubnetDhcpOptionsRequest) Decode(d *jx.Decoder) error {
 			m.DomainName.SetTo(v)
 			return nil
 		case "domainNameServers":
+			if d.Next() == jx.Null {
+				m.DomainNameServers.SetToNull()
+				return d.Null()
+			}
+
 			c := make([]ipaddress.IP4Address, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
 				var v ipaddress.IP4Address
@@ -93,6 +115,11 @@ func (m *UpdateSubnetDhcpOptionsRequest) Decode(d *jx.Decoder) error {
 			m.DomainNameServers.SetTo(c)
 			return nil
 		case "ntpServers":
+			if d.Next() == jx.Null {
+				m.NtpServers.SetToNull()
+				return d.Null()
+			}
+
 			c := make([]ipaddress.IP4Address, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
 				var v ipaddress.IP4Address

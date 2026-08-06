@@ -8,7 +8,7 @@ func VpcAddressGroupSpecOrRefRequestToResponse(request *VpcAddressGroupSpecOrRef
 	}
 	var response VpcAddressGroupSpecOrRefResponse
 	response.Ref = request.Ref
-	tmpSpec, err := VpcAddressGroupSpecRequestToResponse(request.Spec)
+	tmpSpec, err := VpcAddressGroupSpec2RequestToResponse(request.Spec)
 	if err != nil {
 		return nil, err
 	}

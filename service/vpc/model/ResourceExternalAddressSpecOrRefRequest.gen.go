@@ -12,9 +12,9 @@ import (
 // Описывает ссылку на внешний адрес или спецификацию внешнего адреса как дополнительный ресурс.
 // Real OAPI model name: ResourceExternalAddressSpecOrRef
 type ResourceExternalAddressSpecOrRefRequest struct {
-	// Относительная ссылка на статический внешний адрес.
+	// Относительная ссылка на статический внешний IP-адрес.
 	Ref *vpc.ExternalAddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
-	// Спецификация внешнего адреса.
+	// Спецификация внешнего IP-адреса.
 	Spec *ResourceExternalAddressSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 

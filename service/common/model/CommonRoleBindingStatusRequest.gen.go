@@ -2,6 +2,7 @@
 
 package model
 
+// Текущее состояние привязки роли, вычисляемое системой.
 // Real OAPI model name: CommonRoleBindingStatus
 type CommonRoleBindingStatusRequest struct {
 	ResourceStatusRequest `yaml:"-,inline"`

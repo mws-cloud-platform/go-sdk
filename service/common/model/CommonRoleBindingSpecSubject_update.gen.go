@@ -20,7 +20,7 @@ type UpdateCommonRoleBindingSpecSubject struct {
 	ServiceAccount optional.Optional[iam.ServiceAccountRef] `json:"serviceAccount" yaml:"serviceAccount"`
 	// Идентификатор сервисного агента, связанного с проектом.
 	ServiceAgent optional.Optional[iam.ServiceAgentRef] `json:"serviceAgent" yaml:"serviceAgent"`
-	// Субъект федерации пользователей.
+	// Субъект федерации пользователей — идентификатор федерации и, опционально, контекст, уточняющий, на каких пользователей федерации распространяется привязка роли.
 	UserFederation optional.OptionalNil[UpdateCommonRoleBindingFederation] `json:"userFederation" yaml:"userFederation"`
 	// Идентификатор группы пользователей.
 	UserGroup optional.Optional[iam.UserGroupRef] `json:"userGroup" yaml:"userGroup"`

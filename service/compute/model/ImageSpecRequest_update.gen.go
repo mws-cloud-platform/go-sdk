@@ -31,6 +31,11 @@ type UpdateImageSpecRequest struct {
 	MinDiskSize optional.Optional[bytesize.ByteSize] `json:"minDiskSize" yaml:"minDiskSize"`
 	// Тип операционной системы
 	OsType optional.Optional[OsType] `json:"osType" yaml:"osType"`
+	// Способ шифрования ресурса
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Encryption optional.OptionalNil[UpdateEncryptionSpecRequest] `json:"encryption" yaml:"encryption"`
 }
 
 func (m *ImageSpecRequest) AsUpdateModel() UpdateImageSpecRequest {
@@ -48,6 +53,9 @@ func (m *ImageSpecRequest) AsUpdateModel() UpdateImageSpecRequest {
 	if m.OsType != nil {
 		u.OsType = optional.NewOptional(m.GetOsTypeOr(""))
 	}
+	if m.Encryption != nil {
+		u.Encryption = optional.NewOptionalNil(m.Encryption.AsUpdateModel())
+	}
 	return u
 }
 
@@ -61,6 +69,7 @@ func (m *ImageSpecRequest) Diff(src *ImageSpecRequest) UpdateImageSpecRequest {
 		upd.Activity = m.diffActivity(src)
 		upd.MinDiskSize = m.diffMinDiskSize(src)
 		upd.OsType = m.diffOsType(src)
+		upd.Encryption = m.diffEncryption(src)
 	}
 	return upd
 }
@@ -86,6 +95,11 @@ func (m *ImageSpecRequest) WithChanges(u UpdateImageSpecRequest) ImageSpecReques
 	if u.OsType.IsSet() {
 		out.OsType = ptr.Get(u.OsType.Value)
 	}
+	if u.Encryption.IsSet() {
+		out.Encryption = ptr.Get(out.Encryption.WithChanges(u.Encryption.Value))
+	} else if u.Encryption.IsNull() {
+		out.Encryption = nil
+	}
 	return out
 }
 
@@ -95,7 +109,8 @@ func (m UpdateImageSpecRequest) HasChanges() bool {
 		m.Source.Set ||
 		m.Activity.Set ||
 		m.MinDiskSize.Set ||
-		m.OsType.Set
+		m.OsType.Set ||
+		m.Encryption.Set
 }
 
 func (m *UpdateImageSpecRequest) Parse(ctx context.Context) error {
@@ -106,6 +121,12 @@ func (m *UpdateImageSpecRequest) Parse(ctx context.Context) error {
 	if m.Source.IsSet() {
 		if err := m.Source.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Source", err)
+		}
+	}
+
+	if m.Encryption.IsSet() && !m.Encryption.IsNull() {
+		if err := m.Encryption.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Encryption", err)
 		}
 	}
 
@@ -140,6 +161,16 @@ func (m *ImageSpecRequest) diffMinDiskSize(src *ImageSpecRequest) optional.Optio
 func (m *ImageSpecRequest) diffOsType(src *ImageSpecRequest) optional.Optional[OsType] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetOsType(), m.GetOsType(), nilDiffers)
+}
+
+func (m *ImageSpecRequest) diffEncryption(src *ImageSpecRequest) optional.OptionalNil[UpdateEncryptionSpecRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetEncryption().Diff(src.GetEncryption())
+	return optional.OptionalNil[UpdateEncryptionSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
 }
 
 type UpdateImageSpecSourceRequest struct {

@@ -17,7 +17,8 @@ type ZoneResponse struct {
 	Kind     *string               `json:"kind,omitempty" yaml:"kind,omitempty"`
 	Metadata *ZoneMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация зоны доступности
-	Spec   ZoneSpecResponse               `json:"spec" yaml:"spec"`
+	Spec ZoneSpecResponse `json:"spec" yaml:"spec"`
+	// Текущее состояние ресурса, вычисляемое системой.
 	Status *common.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
