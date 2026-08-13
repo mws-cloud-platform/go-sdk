@@ -27,6 +27,13 @@ func CommonRoleBindingSpecSubjectRequestToOptionalResponse(request *CommonRoleBi
 		}
 		response.UserFederation = optional.NewOptionalNil(*tmpUserFederation)
 	}
+	if request.WorkloadFederation != nil {
+		tmpWorkloadFederation, err := CommonRoleBindingWorkloadFederationRequestToOptionalResponse(request.WorkloadFederation)
+		if err != nil {
+			return nil, err
+		}
+		response.WorkloadFederation = optional.NewOptionalNil(*tmpWorkloadFederation)
+	}
 	if request.UserGroup != nil {
 		response.UserGroup = optional.NewOptional(*request.UserGroup)
 	}

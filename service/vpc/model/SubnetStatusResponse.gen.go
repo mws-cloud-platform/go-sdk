@@ -13,7 +13,7 @@ import (
 // Real OAPI model name: SubnetStatus
 type SubnetStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
-	DhcpOptions                   *SubnetDhcpOptions2Response `json:"dhcpOptions,omitempty" yaml:"dhcpOptions,omitempty"`
+	DhcpOptions                   *SubnetDhcpOptionsResponse `json:"dhcpOptions,omitempty" yaml:"dhcpOptions,omitempty"`
 	// Регион, которому принадлежит подсеть.
 	Region *rm.RegionRef `json:"region,omitempty" yaml:"region,omitempty"`
 }
@@ -25,14 +25,14 @@ func (m *SubnetStatusResponse) GetReady() common.ResourceStatusReadyResponse {
 	return common.ResourceStatusReadyResponse{}
 }
 
-func (m *SubnetStatusResponse) GetDhcpOptions() *SubnetDhcpOptions2Response {
+func (m *SubnetStatusResponse) GetDhcpOptions() *SubnetDhcpOptionsResponse {
 	if m != nil {
 		return m.DhcpOptions
 	}
 	return nil
 }
 
-func (m *SubnetStatusResponse) GetDhcpOptionsOr(val SubnetDhcpOptions2Response) SubnetDhcpOptions2Response {
+func (m *SubnetStatusResponse) GetDhcpOptionsOr(val SubnetDhcpOptionsResponse) SubnetDhcpOptionsResponse {
 	if m != nil && m.DhcpOptions != nil {
 		return *m.DhcpOptions
 	}

@@ -35,8 +35,8 @@ type GenerateDataKeyRequest struct {
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
-	Key  string                               // path: "key"
-	Body *model.GenerateDataKeyRequestRequest // body
+	Key  string                        // path: "key"
+	Body *model.GenerateDataKeyRequest // body
 }
 
 func (m *GenerateDataKeyRequest) SetAuthorization(authorization string) {
@@ -53,7 +53,7 @@ func (m *GenerateDataKeyRequest) SetProject(project string) {
 
 type GenerateDataKeyResponse struct {
 	Code        int
-	Response200 *model.GenerateDataKeyResponseResponse
+	Response200 *model.GenerateDataKeyResponse
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
@@ -103,8 +103,8 @@ type EncryptRequest struct {
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
-	Key  string                       // path: "key"
-	Body *model.EncryptRequestRequest // body
+	Key  string                // path: "key"
+	Body *model.EncryptRequest // body
 }
 
 func (m *EncryptRequest) SetAuthorization(authorization string) {
@@ -121,7 +121,7 @@ func (m *EncryptRequest) SetProject(project string) {
 
 type EncryptResponse struct {
 	Code        int
-	Response200 *model.EncryptResponseResponse
+	Response200 *model.EncryptResponse
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
@@ -171,8 +171,8 @@ type DecryptRequest struct {
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
-	Key  string                       // path: "key"
-	Body *model.DecryptRequestRequest // body
+	Key  string                // path: "key"
+	Body *model.DecryptRequest // body
 }
 
 func (m *DecryptRequest) SetAuthorization(authorization string) {
@@ -189,7 +189,7 @@ func (m *DecryptRequest) SetProject(project string) {
 
 type DecryptResponse struct {
 	Code        int
-	Response200 *model.DecryptResponseResponse
+	Response200 *model.DecryptResponse
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError
@@ -237,9 +237,9 @@ type ReEncryptRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
-	Project        string                         // path: "project"
-	DestinationKey string                         // path: "destinationKey"
-	Body           *model.ReEncryptRequestRequest // body
+	Project        string                  // path: "project"
+	DestinationKey string                  // path: "destinationKey"
+	Body           *model.ReEncryptRequest // body
 }
 
 func (m *ReEncryptRequest) SetAuthorization(authorization string) {
@@ -256,7 +256,7 @@ func (m *ReEncryptRequest) SetProject(project string) {
 
 type ReEncryptResponse struct {
 	Code        int
-	Response200 *model.ReEncryptResponseResponse
+	Response200 *model.ReEncryptResponse
 	Response400 *common.ApiError
 	Response403 *common.ApiError
 	Response404 *common.ApiError

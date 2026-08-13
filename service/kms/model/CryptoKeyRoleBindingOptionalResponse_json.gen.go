@@ -33,10 +33,8 @@ func (m *CryptoKeyRoleBindingOptionalResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *CryptoKeyRoleBindingOptionalResponse) encodeFields(e *jx.Encoder) error {
-	if m.Kind != nil {
-		e.FieldStart("kind")
-		e.Str(*m.Kind)
-	}
+	e.FieldStart("kind")
+	e.Str(m.Kind)
 
 	if m.Metadata.IsSet() {
 		e.FieldStart("metadata")
@@ -74,7 +72,7 @@ func (m *CryptoKeyRoleBindingOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Kind = &v
+			m.Kind = v
 			return nil
 		case "metadata":
 			if d.Next() == jx.Null {

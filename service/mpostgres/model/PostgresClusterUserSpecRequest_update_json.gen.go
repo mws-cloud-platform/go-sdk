@@ -39,7 +39,11 @@ func (m *UpdatePostgresClusterUserSpecRequest) encodeFields(e *jx.Encoder) error
 
 	if m.Role.IsSet() {
 		e.FieldStart("role")
-		m.Role.Value.Encode(e)
+		if m.Role.IsNull() {
+			e.Null()
+		} else {
+			m.Role.Value.Encode(e)
+		}
 	}
 
 	if m.AdditionalRoles.IsSet() {
@@ -78,6 +82,11 @@ func (m *UpdatePostgresClusterUserSpecRequest) Decode(d *jx.Decoder) error {
 			m.Password.SetTo(v)
 			return nil
 		case "role":
+			if d.Next() == jx.Null {
+				m.Role.SetToNull()
+				return d.Null()
+			}
+
 			var v PostgresUserRole
 			if err := v.Decode(d); err != nil {
 				return err

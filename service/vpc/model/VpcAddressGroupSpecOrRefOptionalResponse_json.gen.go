@@ -82,7 +82,7 @@ func (m *VpcAddressGroupSpecOrRefOptionalResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v VpcAddressGroupSpec2OptionalResponse
+			var v VpcAddressGroupSpecOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

@@ -10,7 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Спецификация внешнего IP-адреса.
+// Описывает спецификацию внешнего адреса как дополнительный ресурс.
 // Real OAPI model name: ResourceExternalAddressSpec
 type ResourceExternalAddressSpecOptionalResponse struct {
 	// Шлюз, к которому относится адрес. Если шлюз не указан, для трансляции IP-адресов используется шлюз по умолчанию для выхода в интернет (ref=natGateways/internet-gateway).

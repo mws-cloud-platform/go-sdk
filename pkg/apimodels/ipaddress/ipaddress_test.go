@@ -8,7 +8,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/util-toolset/pkg/testing/golden"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 )
 
 const (
@@ -38,7 +37,7 @@ func TestIPAddress_RawValue(t *testing.T) {
 	ipAddr, err := NewIPAddress(testIP4Address)
 	require.NoError(t, err)
 
-	ipAddr.rawValue = ptr.Get(ipv4Raw)
+	ipAddr.rawValue = new(ipv4Raw)
 	require.Equal(t, ipv4Raw, *ipAddr.RawValue())
 }
 
@@ -71,19 +70,19 @@ func TestIPAddress_Equal(t *testing.T) {
 		{
 			name:    "different rawValue 1",
 			ipAddr1: IPAddress{},
-			ipAddr2: IPAddress{rawValue: ptr.Get("")},
+			ipAddr2: IPAddress{rawValue: new("")},
 			equal:   false,
 		},
 		{
 			name:    "different rawValue 2",
-			ipAddr1: IPAddress{rawValue: ptr.Get("")},
+			ipAddr1: IPAddress{rawValue: new("")},
 			ipAddr2: IPAddress{},
 			equal:   false,
 		},
 		{
 			name:    "different rawValue 3",
-			ipAddr1: IPAddress{rawValue: ptr.Get("hello")},
-			ipAddr2: IPAddress{rawValue: ptr.Get("world")},
+			ipAddr1: IPAddress{rawValue: new("hello")},
+			ipAddr2: IPAddress{rawValue: new("world")},
 			equal:   false,
 		},
 		{
@@ -132,7 +131,7 @@ func TestIPAddress_MarshalJSON(t *testing.T) {
 			name: "WithRawValue",
 			ipAddr: IPAddress{
 				ip:       testIP4Address,
-				rawValue: ptr.Get(ipv4Raw),
+				rawValue: new(ipv4Raw),
 			},
 		},
 		{

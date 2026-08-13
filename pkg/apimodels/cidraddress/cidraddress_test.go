@@ -8,7 +8,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/util-toolset/pkg/testing/golden"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 )
 
 const (
@@ -42,7 +41,7 @@ func TestCIDRAddress_RawValue(t *testing.T) {
 	cidrAddr, err := NewCIDRAddress(testIP4Address, testIP4Net)
 	require.NoError(t, err)
 
-	cidrAddr.rawValue = ptr.Get(cidrV4Raw)
+	cidrAddr.rawValue = new(cidrV4Raw)
 	require.Equal(t, cidrV4Raw, *cidrAddr.RawValue())
 }
 
@@ -79,19 +78,19 @@ func TestCIDRAddress_Equal(t *testing.T) {
 		{
 			name:      "different rawValue 1",
 			cidrAddr1: CIDRAddress{},
-			cidrAddr2: CIDRAddress{rawValue: ptr.Get("")},
+			cidrAddr2: CIDRAddress{rawValue: new("")},
 			equal:     false,
 		},
 		{
 			name:      "different rawValue 2",
-			cidrAddr1: CIDRAddress{rawValue: ptr.Get("")},
+			cidrAddr1: CIDRAddress{rawValue: new("")},
 			cidrAddr2: CIDRAddress{},
 			equal:     false,
 		},
 		{
 			name:      "different rawValue 3",
-			cidrAddr1: CIDRAddress{rawValue: ptr.Get("hello")},
-			cidrAddr2: CIDRAddress{rawValue: ptr.Get("world")},
+			cidrAddr1: CIDRAddress{rawValue: new("hello")},
+			cidrAddr2: CIDRAddress{rawValue: new("world")},
 			equal:     false,
 		},
 		{
@@ -109,25 +108,25 @@ func TestCIDRAddress_Equal(t *testing.T) {
 		{
 			name:      "different ip net 1",
 			cidrAddr1: CIDRAddress{},
-			cidrAddr2: CIDRAddress{ipNet: ptr.Get(net.IPNet{})},
+			cidrAddr2: CIDRAddress{ipNet: new(net.IPNet{})},
 			equal:     false,
 		},
 		{
 			name:      "different ip net 2",
-			cidrAddr1: CIDRAddress{ipNet: ptr.Get(net.IPNet{})},
+			cidrAddr1: CIDRAddress{ipNet: new(net.IPNet{})},
 			cidrAddr2: CIDRAddress{},
 			equal:     false,
 		},
 		{
 			name:      "different ip net 3",
-			cidrAddr1: CIDRAddress{ipNet: ptr.Get(net.IPNet{IP: net.ParseIP("192.168.1.1")})},
-			cidrAddr2: CIDRAddress{ipNet: ptr.Get(net.IPNet{})},
+			cidrAddr1: CIDRAddress{ipNet: new(net.IPNet{IP: net.ParseIP("192.168.1.1")})},
+			cidrAddr2: CIDRAddress{ipNet: new(net.IPNet{})},
 			equal:     false,
 		},
 		{
 			name:      "different ip net 4",
-			cidrAddr1: CIDRAddress{ipNet: ptr.Get(net.IPNet{Mask: []byte{0, 1, 2, 3}})},
-			cidrAddr2: CIDRAddress{ipNet: ptr.Get(net.IPNet{Mask: []byte{0, 1, 2}})},
+			cidrAddr1: CIDRAddress{ipNet: new(net.IPNet{Mask: []byte{0, 1, 2, 3}})},
+			cidrAddr2: CIDRAddress{ipNet: new(net.IPNet{Mask: []byte{0, 1, 2}})},
 			equal:     false,
 		},
 		{
@@ -165,7 +164,7 @@ func TestCIDRAddress_MarshalJSON(t *testing.T) {
 			cidrAddr: CIDRAddress{
 				ip:       testIP4Address,
 				ipNet:    testIP4Net,
-				rawValue: ptr.Get(cidrV4Raw),
+				rawValue: new(cidrV4Raw),
 			},
 		},
 		{

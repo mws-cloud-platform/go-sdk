@@ -80,6 +80,10 @@ func (m *PostgresClusterUserSpecRequest) Decode(d *jx.Decoder) error {
 			requiredFilled["password"] = true
 			return nil
 		case "role":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			var v PostgresUserRole
 			if err := v.Decode(d); err != nil {
 				return err

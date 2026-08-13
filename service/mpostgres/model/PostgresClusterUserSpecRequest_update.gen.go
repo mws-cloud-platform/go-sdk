@@ -17,7 +17,7 @@ type UpdatePostgresClusterUserSpecRequest struct {
 	//     не имеет права создавать бд или роли, наследует разрешения db_owner.
 	//   - `DB_WRITER_USER`: Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
 	//   - `DB_READER_USER`: Пользовательская роль, наследует разрешения групповой роли db_reader.
-	Role optional.Optional[PostgresUserRole] `json:"role" yaml:"role"`
+	Role optional.OptionalNil[PostgresUserRole] `json:"role" yaml:"role"`
 	// Дополнительные роли пользователя
 	AdditionalRoles optional.Optional[[]UpdatePostgresUserAdditionalRoleRequest] `json:"additionalRoles" yaml:"additionalRoles"`
 	// - `SCOPE_BASED`: Роли пользователя управляются в зависимости от области видимости роли.
@@ -31,7 +31,7 @@ func (m *PostgresClusterUserSpecRequest) AsUpdateModel() UpdatePostgresClusterUs
 	var u UpdatePostgresClusterUserSpecRequest
 	u.Password = optional.NewOptional(m.GetPassword())
 	if m.Role != nil {
-		u.Role = optional.NewOptional(m.GetRoleOr(""))
+		u.Role = optional.NewOptionalNil(m.GetRoleOr(""))
 	}
 	if m.AdditionalRoles != nil {
 		u.AdditionalRoles = optional.NewOptional(func() []UpdatePostgresUserAdditionalRoleRequest {
@@ -75,6 +75,8 @@ func (m *PostgresClusterUserSpecRequest) WithChanges(u UpdatePostgresClusterUser
 	}
 	if u.Role.IsSet() {
 		out.Role = ptr.Get(u.Role.Value)
+	} else if u.Role.IsNull() {
+		out.Role = nil
 	}
 	if u.AdditionalRoles.IsSet() {
 		out.AdditionalRoles = merge.InapplicableSlice(u.AdditionalRoles.Value, (*PostgresUserAdditionalRoleRequest).WithChanges)
@@ -98,9 +100,9 @@ func (m *PostgresClusterUserSpecRequest) diffPassword(src *PostgresClusterUserSp
 	return commonclient.DiffPrimitiveRequired(src.GetPassword(), m.GetPassword(), nilDiffers)
 }
 
-func (m *PostgresClusterUserSpecRequest) diffRole(src *PostgresClusterUserSpecRequest) optional.Optional[PostgresUserRole] {
+func (m *PostgresClusterUserSpecRequest) diffRole(src *PostgresClusterUserSpecRequest) optional.OptionalNil[PostgresUserRole] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetRole(), m.GetRole(), nilDiffers)
+	return commonclient.DiffPrimitiveNullable(src.GetRole(), m.GetRole(), nilDiffers)
 }
 
 func (m *PostgresClusterUserSpecRequest) diffAdditionalRoles(src *PostgresClusterUserSpecRequest) optional.Optional[[]UpdatePostgresUserAdditionalRoleRequest] {

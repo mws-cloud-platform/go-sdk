@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 )
 
 func TestDiffPrimitive(t *testing.T) {
@@ -61,12 +60,12 @@ func TestDiffPrimitiveNulls(t *testing.T) {
 		{
 			name:     "from",
 			from:     nil,
-			to:       ptr.Get("world"),
-			expected: ptr.Get("world"),
+			to:       new("world"),
+			expected: new("world"),
 		},
 		{
 			name:     "to",
-			from:     ptr.Get("hello"),
+			from:     new("hello"),
 			to:       nil,
 			expected: nil,
 		},

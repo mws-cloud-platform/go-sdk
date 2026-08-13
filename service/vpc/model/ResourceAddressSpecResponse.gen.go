@@ -11,7 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Спецификация внутреннего адреса.
+// Описывает спецификацию внутреннего адреса как дополнительный ресурс.
 // Real OAPI model name: ResourceAddressSpec
 type ResourceAddressSpecResponse struct {
 	// Подсеть облачной сети к которой принадлежит адрес. В случае приватного адреса, он всегда принадлежит к некоторой подсети внутри облачной сети.

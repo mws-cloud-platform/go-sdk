@@ -20,8 +20,10 @@ type UpdateCommonRoleBindingSpecSubjectRequest struct {
 	ServiceAccount optional.Optional[iam.ServiceAccountRef] `json:"serviceAccount" yaml:"serviceAccount"`
 	// Идентификатор сервисного агента, связанного с проектом.
 	ServiceAgent optional.Optional[iam.ServiceAgentRef] `json:"serviceAgent" yaml:"serviceAgent"`
-	// Субъект федерации пользователей — идентификатор федерации и, опционально, контекст, уточняющий, на каких пользователей федерации распространяется привязка роли.
+	// Субъект федерации пользователей.
 	UserFederation optional.OptionalNil[UpdateCommonRoleBindingFederationRequest] `json:"userFederation" yaml:"userFederation"`
+	// Субъект федерации удостоверений рабочей нагрузки (workload).
+	WorkloadFederation optional.OptionalNil[UpdateCommonRoleBindingWorkloadFederationRequest] `json:"workloadFederation" yaml:"workloadFederation"`
 	// Идентификатор группы пользователей.
 	UserGroup optional.Optional[iam.UserGroupRef] `json:"userGroup" yaml:"userGroup"`
 	// Идентификатор пользователя backoffice.
@@ -42,6 +44,9 @@ func (m *CommonRoleBindingSpecSubjectRequest) AsUpdateModel() UpdateCommonRoleBi
 	if m.UserFederation != nil {
 		u.UserFederation = optional.NewOptionalNil(m.UserFederation.AsUpdateModel())
 	}
+	if m.WorkloadFederation != nil {
+		u.WorkloadFederation = optional.NewOptionalNil(m.WorkloadFederation.AsUpdateModel())
+	}
 	if m.UserGroup != nil {
 		u.UserGroup = optional.NewOptional(m.GetUserGroupOr(iam.UserGroupRef{}))
 	}
@@ -60,6 +65,7 @@ func (m *CommonRoleBindingSpecSubjectRequest) Diff(src *CommonRoleBindingSpecSub
 		upd.ServiceAccount = m.diffServiceAccount(src)
 		upd.ServiceAgent = m.diffServiceAgent(src)
 		upd.UserFederation = m.diffUserFederation(src)
+		upd.WorkloadFederation = m.diffWorkloadFederation(src)
 		upd.UserGroup = m.diffUserGroup(src)
 		upd.Employee = m.diffEmployee(src)
 	}
@@ -86,6 +92,11 @@ func (m *CommonRoleBindingSpecSubjectRequest) WithChanges(u UpdateCommonRoleBind
 	} else if u.UserFederation.IsNull() {
 		out.UserFederation = nil
 	}
+	if u.WorkloadFederation.IsSet() {
+		out.WorkloadFederation = ptr.Get(out.WorkloadFederation.WithChanges(u.WorkloadFederation.Value))
+	} else if u.WorkloadFederation.IsNull() {
+		out.WorkloadFederation = nil
+	}
 	if u.UserGroup.IsSet() {
 		out.UserGroup = ptr.Get(u.UserGroup.Value)
 	}
@@ -101,6 +112,7 @@ func (m UpdateCommonRoleBindingSpecSubjectRequest) HasChanges() bool {
 		m.ServiceAccount.Set ||
 		m.ServiceAgent.Set ||
 		m.UserFederation.Set ||
+		m.WorkloadFederation.Set ||
 		m.UserGroup.Set ||
 		m.Employee.Set
 }
@@ -131,6 +143,12 @@ func (m *UpdateCommonRoleBindingSpecSubjectRequest) Parse(ctx context.Context) e
 	if m.UserFederation.IsSet() && !m.UserFederation.IsNull() {
 		if err := m.UserFederation.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("UserFederation", err)
+		}
+	}
+
+	if m.WorkloadFederation.IsSet() && !m.WorkloadFederation.IsNull() {
+		if err := m.WorkloadFederation.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("WorkloadFederation", err)
 		}
 	}
 
@@ -168,6 +186,16 @@ func (m *CommonRoleBindingSpecSubjectRequest) diffUserFederation(src *CommonRole
 	nilDiffers := src != nil && m == nil
 	value := m.GetUserFederation().Diff(src.GetUserFederation())
 	return optional.OptionalNil[UpdateCommonRoleBindingFederationRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
+}
+
+func (m *CommonRoleBindingSpecSubjectRequest) diffWorkloadFederation(src *CommonRoleBindingSpecSubjectRequest) optional.OptionalNil[UpdateCommonRoleBindingWorkloadFederationRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetWorkloadFederation().Diff(src.GetWorkloadFederation())
+	return optional.OptionalNil[UpdateCommonRoleBindingWorkloadFederationRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

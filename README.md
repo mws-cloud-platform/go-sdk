@@ -64,7 +64,6 @@ import (
 	"fmt"
 	"log"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	computeclient "go.mws.cloud/go-sdk/service/compute/client"
 	computesdk "go.mws.cloud/go-sdk/service/compute/sdk"
@@ -92,7 +91,7 @@ func main() {
 
 	// List virtual machines with the page size limit.
 	virtualMachines, err := client.ListVirtualMachines(ctx, computeclient.ListVirtualMachinesRequest{
-		PageSize: ptr.Get(10),
+		PageSize: new(10),
 	})
 	if err != nil {
 		log.Panicln("listing virtual machines error:", err)

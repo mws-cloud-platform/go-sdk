@@ -15,7 +15,7 @@ func VpcAddressGroupSpecOrRefRequestToOptionalResponse(request *VpcAddressGroupS
 		response.Ref = optional.NewOptionalNil(*request.Ref)
 	}
 	if request.Spec != nil {
-		tmpSpec, err := VpcAddressGroupSpec2RequestToOptionalResponse(request.Spec)
+		tmpSpec, err := VpcAddressGroupSpecRequestToOptionalResponse(request.Spec)
 		if err != nil {
 			return nil, err
 		}

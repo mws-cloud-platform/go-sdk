@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/mws/errors"
 )
@@ -22,8 +21,8 @@ func TestWrapAPIGenError(t *testing.T) {
 			name: "wrap_base_error_with_existing_status",
 			code: http.StatusInternalServerError,
 			apiGenError: &testGenBaseError{
-				code:        ptr.Get("INTERNAL"),
-				description: ptr.Get("base error existing status"),
+				code:        new("INTERNAL"),
+				description: new("base error existing status"),
 			},
 			expected: errors.APIError{
 				Code:        http.StatusInternalServerError,
@@ -35,8 +34,8 @@ func TestWrapAPIGenError(t *testing.T) {
 			name: "wrap_base_error_with_unexpected_status",
 			code: http.StatusConflict,
 			apiGenError: &testGenBaseError{
-				code:        ptr.Get("foobar"),
-				description: ptr.Get("base error unexpected status"),
+				code:        new("foobar"),
+				description: new("base error unexpected status"),
 			},
 			expected: errors.APIError{
 				Code:        http.StatusConflict,
@@ -48,8 +47,8 @@ func TestWrapAPIGenError(t *testing.T) {
 			name: "wrap_base_error_with_http_code_into_status",
 			code: http.StatusConflict,
 			apiGenError: &testGenBaseError{
-				code:        ptr.Get("400"),
-				description: ptr.Get("base error with http code into status"),
+				code:        new("400"),
+				description: new("base error with http code into status"),
 			},
 			expected: errors.APIError{
 				Code:        http.StatusConflict,
@@ -62,7 +61,7 @@ func TestWrapAPIGenError(t *testing.T) {
 			code: 505,
 			apiGenError: &testGenBaseError{
 				code:        nil,
-				description: ptr.Get("base error with unexpected http code"),
+				description: new("base error with unexpected http code"),
 			},
 			expected: errors.APIError{
 				Code:        505,
@@ -74,8 +73,8 @@ func TestWrapAPIGenError(t *testing.T) {
 			name: "wrap_api_error_with_existing_status",
 			code: http.StatusBadRequest,
 			apiGenError: &testGenAPIError{
-				code:        ptr.Get("INVALID_ARGUMENT"),
-				description: ptr.Get("api error with existing status"),
+				code:        new("INVALID_ARGUMENT"),
+				description: new("api error with existing status"),
 			},
 			expected: errors.APIError{
 				Code:        http.StatusBadRequest,
@@ -87,8 +86,8 @@ func TestWrapAPIGenError(t *testing.T) {
 			name: "wrap_api_error_with_details_and_retry_policy",
 			code: http.StatusBadRequest,
 			apiGenError: &testGenAPIError{
-				code:        ptr.Get("IDEMPOTENCY_KEY_ALREADY_USED"),
-				description: ptr.Get("api error with details and retry policy"),
+				code:        new("IDEMPOTENCY_KEY_ALREADY_USED"),
+				description: new("api error with details and retry policy"),
 				rawDetails: map[string]json.RawMessage{
 					"hello": json.RawMessage(`"details"`),
 				},

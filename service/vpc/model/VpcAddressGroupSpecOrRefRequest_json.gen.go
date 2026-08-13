@@ -72,7 +72,7 @@ func (m *VpcAddressGroupSpecOrRefRequest) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v VpcAddressGroupSpec2Request
+			var v VpcAddressGroupSpecRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}

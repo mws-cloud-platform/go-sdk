@@ -7,7 +7,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/page"
 )
@@ -28,34 +27,34 @@ func TestPage(t *testing.T) {
 		},
 		{
 			Name:     "single no error",
-			Pager:    ptr.Get(staticPager{total: 1}).clone,
+			Pager:    new(staticPager{total: 1}).clone,
 			Expected: []any{24, 42},
 		},
 		{
 			Name:     "multiple no error",
-			Pager:    ptr.Get(staticPager{total: 3}).clone,
+			Pager:    new(staticPager{total: 3}).clone,
 			Expected: []any{24, 42, 24, 42, 24, 42},
 		},
 		{
 			Name:  "error",
-			Pager: ptr.Get(staticPager{err: errPager}).clone,
+			Pager: new(staticPager{err: errPager}).clone,
 			Error: errPager,
 		},
 		{
 			Name:     "single error",
-			Pager:    ptr.Get(staticPager{err: errPager, errFrom: 1, total: 3}).clone,
+			Pager:    new(staticPager{err: errPager, errFrom: 1, total: 3}).clone,
 			Error:    errPager,
 			Expected: []any{24, 42},
 		},
 		{
 			Name:     "multiple error",
-			Pager:    ptr.Get(staticPager{err: errPager, errFrom: 3, total: 5}).clone,
+			Pager:    new(staticPager{err: errPager, errFrom: 3, total: 5}).clone,
 			Error:    errPager,
 			Expected: []any{24, 42, 24, 42, 24, 42},
 		},
 		{
 			Name:     "break on limit",
-			Pager:    ptr.Get(staticPager{total: 3}).clone,
+			Pager:    new(staticPager{total: 3}).clone,
 			Expected: []any{24, 42, 24, 42},
 			Limit:    2,
 		},

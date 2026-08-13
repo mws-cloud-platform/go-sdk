@@ -5,8 +5,6 @@ import (
 	"context"
 	"iter"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/internal/page"
 )
 
@@ -57,7 +55,7 @@ func (p *Pager[Token, T, Req, Resp]) Next(ctx context.Context) (data []T, err er
 	if nextToken := resp.GetNextPageToken(); nextToken == nil || *nextToken == "" {
 		p.stop = true
 	} else {
-		token = ptr.Get(string(*nextToken))
+		token = new(string(*nextToken))
 	}
 
 	p.req = p.req.WithPageToken(token)

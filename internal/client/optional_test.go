@@ -9,7 +9,6 @@ import (
 
 	"github.com/go-faster/jx"
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/conv"
@@ -27,7 +26,7 @@ func TestOptionalUnmarshalJSON(t *testing.T) {
 			Name: "int",
 			Raw:  "5",
 			Empty: func() any {
-				return ptr.Get(client.NewOptional(0))
+				return new(client.NewOptional(0))
 			},
 			Compare: func(a any) bool {
 				return a.(*client.Optional[int]).Value == 5
@@ -37,7 +36,7 @@ func TestOptionalUnmarshalJSON(t *testing.T) {
 			Name: "string",
 			Raw:  `"hello"`,
 			Empty: func() any {
-				return ptr.Get(client.NewOptional(""))
+				return new(client.NewOptional(""))
 			},
 			Compare: func(a any) bool {
 				return a.(*client.Optional[string]).Value == "hello"
@@ -47,7 +46,7 @@ func TestOptionalUnmarshalJSON(t *testing.T) {
 			Name: "bool",
 			Raw:  `true`,
 			Empty: func() any {
-				return ptr.Get(client.NewOptional(false))
+				return new(client.NewOptional(false))
 			},
 			Compare: func(a any) bool {
 				return a.(*client.Optional[bool]).Value
@@ -57,7 +56,7 @@ func TestOptionalUnmarshalJSON(t *testing.T) {
 			Name: "object",
 			Raw:  `{ "int": 42 }`,
 			Empty: func() any {
-				return ptr.Get(client.NewOptional(plainObject{}))
+				return new(client.NewOptional(plainObject{}))
 			},
 			Compare: func(a any) bool {
 				return a.(*client.Optional[plainObject]).Value == plainObject{Int: 42}
@@ -115,7 +114,7 @@ func TestOptionalUnmarshalYAML(t *testing.T) {
 			Name: "int",
 			Raw:  "5",
 			Empty: func() any {
-				return ptr.Get(client.NewOptional(0))
+				return new(client.NewOptional(0))
 			},
 			Compare: func(a any) bool {
 				return a.(*client.Optional[int]).Value == 5
@@ -125,7 +124,7 @@ func TestOptionalUnmarshalYAML(t *testing.T) {
 			Name: "string",
 			Raw:  `"hello"`,
 			Empty: func() any {
-				return ptr.Get(client.NewOptional(""))
+				return new(client.NewOptional(""))
 			},
 			Compare: func(a any) bool {
 				return a.(*client.Optional[string]).Value == "hello"
@@ -135,7 +134,7 @@ func TestOptionalUnmarshalYAML(t *testing.T) {
 			Name: "bool",
 			Raw:  `true`,
 			Empty: func() any {
-				return ptr.Get(client.NewOptional(false))
+				return new(client.NewOptional(false))
 			},
 			Compare: func(a any) bool {
 				return a.(*client.Optional[bool]).Value
@@ -145,7 +144,7 @@ func TestOptionalUnmarshalYAML(t *testing.T) {
 			Name: "object",
 			Raw:  `int: 42`,
 			Empty: func() any {
-				return ptr.Get(client.NewOptional(plainObject{}))
+				return new(client.NewOptional(plainObject{}))
 			},
 			Compare: func(a any) bool {
 				return a.(*client.Optional[plainObject]).Value == plainObject{Int: 42}

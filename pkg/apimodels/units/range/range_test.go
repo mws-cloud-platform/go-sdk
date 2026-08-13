@@ -123,12 +123,12 @@ func TestRange_Equal(t *testing.T) {
 			input1: Range[bitrate.Bitrate]{
 				minValue: bitrate5bps,
 				maxValue: bitrate10bps,
-				rawValue: ptr.Get("5-10bit/s"),
+				rawValue: new("5-10bit/s"),
 			},
 			input2: Range[bitrate.Bitrate]{
 				minValue: bitrate5bps,
 				maxValue: bitrate10bps,
-				rawValue: ptr.Get("5-10bit/s"),
+				rawValue: new("5-10bit/s"),
 			},
 			equal: true,
 		},
@@ -137,12 +137,12 @@ func TestRange_Equal(t *testing.T) {
 			input1: Range[bitrate.Bitrate]{
 				minValue: bitrate5bps,
 				maxValue: bitrate10bps,
-				rawValue: ptr.Get("5-10bit/s"),
+				rawValue: new("5-10bit/s"),
 			},
 			input2: Range[bitrate.Bitrate]{
 				minValue: bitrate10bps,
 				maxValue: bitrate10bps,
-				rawValue: ptr.Get("5-10bit/s"),
+				rawValue: new("5-10bit/s"),
 			},
 			equal: false,
 		},
@@ -151,12 +151,12 @@ func TestRange_Equal(t *testing.T) {
 			input1: Range[bitrate.Bitrate]{
 				minValue: bitrate5bps,
 				maxValue: bitrate10bps,
-				rawValue: ptr.Get("5-10bit/s"),
+				rawValue: new("5-10bit/s"),
 			},
 			input2: Range[bitrate.Bitrate]{
 				minValue: bitrate5bps,
 				maxValue: bitrate5bps,
-				rawValue: ptr.Get("5-10bit/s"),
+				rawValue: new("5-10bit/s"),
 			},
 			equal: false,
 		},
@@ -165,12 +165,12 @@ func TestRange_Equal(t *testing.T) {
 			input1: Range[bitrate.Bitrate]{
 				minValue: bitrate5bps,
 				maxValue: bitrate10bps,
-				rawValue: ptr.Get("5-10bit/s"),
+				rawValue: new("5-10bit/s"),
 			},
 			input2: Range[bitrate.Bitrate]{
 				minValue: bitrate5bps,
 				maxValue: bitrate10bps,
-				rawValue: ptr.Get("5-10 bit/s"),
+				rawValue: new("5-10 bit/s"),
 			},
 			equal: false,
 		},
@@ -206,7 +206,7 @@ func TestRange_MarshalJSONWithRawValue(t *testing.T) {
 	r, err := NewRange(bytesize.MustParseString("5b"), bytesize.MustParseString("10b"))
 	require.NoError(t, err)
 
-	r.rawValue = ptr.Get(rawValue)
+	r.rawValue = new(rawValue)
 
 	result, err := json.Marshal(r)
 	require.NoError(t, err)

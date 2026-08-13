@@ -33,27 +33,17 @@ func (m *CryptoKeyOptionalResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *CryptoKeyOptionalResponse) encodeFields(e *jx.Encoder) error {
-	if m.Kind != nil {
-		e.FieldStart("kind")
-		e.Str(*m.Kind)
-	}
+	e.FieldStart("kind")
+	e.Str(m.Kind)
 
-	if m.Metadata.IsSet() {
-		e.FieldStart("metadata")
-		if m.Metadata.IsNull() {
-			e.Null()
-		} else {
-			m.Metadata.Value.Encode(e)
-		}
-	}
+	e.FieldStart("metadata")
+	m.Metadata.Encode(e)
 
 	e.FieldStart("spec")
 	m.Spec.Encode(e)
 
-	if m.Status != nil {
-		e.FieldStart("status")
-		m.Status.Encode(e)
-	}
+	e.FieldStart("status")
+	m.Status.Encode(e)
 	return nil
 }
 
@@ -74,20 +64,15 @@ func (m *CryptoKeyOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Kind = &v
+			m.Kind = v
 			return nil
 		case "metadata":
-			if d.Next() == jx.Null {
-				m.Metadata.SetToNull()
-				return d.Null()
-			}
-
 			var v common.CommonTypedResourceMetadataOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Metadata.SetTo(v)
+			m.Metadata = v
 			return nil
 		case "spec":
 			var v CryptoKeySpecOptionalResponse
@@ -98,16 +83,12 @@ func (m *CryptoKeyOptionalResponse) Decode(d *jx.Decoder) error {
 			m.Spec = v
 			return nil
 		case "status":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			var v CryptoKeyStatusResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Status = &v
+			m.Status = v
 			return nil
 		default:
 			return d.Skip()

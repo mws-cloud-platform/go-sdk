@@ -7,6 +7,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Real OAPI model name: PostgresClusterStatus
@@ -33,6 +34,8 @@ type PostgresClusterStatusResponse struct {
 	//   - `UNKNOWN`  - Не удается определить состояние (на этапе создания).
 	Health  *ClusterHealth `json:"health,omitempty" yaml:"health,omitempty"`
 	Message *string        `json:"message,omitempty" yaml:"message,omitempty"`
+	// Регион, которому принадлежит кластер.
+	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 	// Описание IP-адресов для доступа к кластеру.
 	Network           *PostgresStatusNetworkResponse     `json:"network,omitempty" yaml:"network,omitempty"`
 	Instances         []PostgresStatusInstanceResponse   `json:"instances,omitempty" yaml:"instances,omitempty"`
@@ -87,6 +90,20 @@ func (m *PostgresClusterStatusResponse) GetMessage() *string {
 func (m *PostgresClusterStatusResponse) GetMessageOr(val string) string {
 	if m != nil && m.Message != nil {
 		return *m.Message
+	}
+	return val
+}
+
+func (m *PostgresClusterStatusResponse) GetRegion() *rm.RegionID {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *PostgresClusterStatusResponse) GetRegionOr(val rm.RegionID) rm.RegionID {
+	if m != nil && m.Region != nil {
+		return *m.Region
 	}
 	return val
 }
@@ -180,6 +197,7 @@ func (m *PostgresClusterStatusResponse) Clone() *PostgresClusterStatusResponse {
 		cloneMessage := *m.Message
 		clone.Message = &cloneMessage
 	}
+	clone.Region = m.Region.Clone()
 	clone.Network = m.Network.Clone()
 	if m.Instances != nil {
 		clone.Instances = make([]PostgresStatusInstanceResponse, len(m.Instances))
@@ -197,6 +215,10 @@ func (m *PostgresClusterStatusResponse) Clone() *PostgresClusterStatusResponse {
 func (m *PostgresClusterStatusResponse) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if err := m.Region.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Region", err)
 	}
 
 	if err := m.Network.Parse(ctx); err != nil {

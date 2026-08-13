@@ -19,8 +19,10 @@ type CommonRoleBindingSpecSubjectOptionalResponse struct {
 	ServiceAccount optional.Optional[iam.ServiceAccountRef] `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
 	// Идентификатор сервисного агента, связанного с проектом.
 	ServiceAgent optional.Optional[iam.ServiceAgentRef] `json:"serviceAgent,omitempty" yaml:"serviceAgent,omitempty"`
-	// Субъект федерации пользователей — идентификатор федерации и, опционально, контекст, уточняющий, на каких пользователей федерации распространяется привязка роли.
+	// Субъект федерации пользователей.
 	UserFederation optional.OptionalNil[CommonRoleBindingFederationOptionalResponse] `json:"userFederation,omitempty" yaml:"userFederation,omitempty"`
+	// Субъект федерации удостоверений рабочей нагрузки (workload).
+	WorkloadFederation optional.OptionalNil[CommonRoleBindingWorkloadFederationOptionalResponse] `json:"workloadFederation,omitempty" yaml:"workloadFederation,omitempty"`
 	// Идентификатор группы пользователей.
 	UserGroup optional.Optional[iam.UserGroupRef] `json:"userGroup,omitempty" yaml:"userGroup,omitempty"`
 	// Идентификатор пользователя backoffice.
@@ -83,6 +85,20 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetUserFederationOr(val C
 	return val
 }
 
+func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetWorkloadFederation() *CommonRoleBindingWorkloadFederationOptionalResponse {
+	if m != nil && m.WorkloadFederation.IsSet() && !m.WorkloadFederation.IsNull() {
+		return &m.WorkloadFederation.Value
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetWorkloadFederationOr(val CommonRoleBindingWorkloadFederationOptionalResponse) CommonRoleBindingWorkloadFederationOptionalResponse {
+	if m != nil && m.WorkloadFederation.IsSet() && !m.WorkloadFederation.IsNull() {
+		return m.WorkloadFederation.Value
+	}
+	return val
+}
+
 func (m *CommonRoleBindingSpecSubjectOptionalResponse) GetUserGroup() *iam.UserGroupRef {
 	if m != nil && m.UserGroup.IsSet() {
 		return &m.UserGroup.Value
@@ -129,6 +145,9 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) Clone() *CommonRoleBindin
 	if clone.UserFederation.IsSet() {
 		clone.UserFederation.Value = *m.UserFederation.Value.Clone()
 	}
+	if clone.WorkloadFederation.IsSet() {
+		clone.WorkloadFederation.Value = *m.WorkloadFederation.Value.Clone()
+	}
 	if clone.UserGroup.IsSet() {
 		clone.UserGroup.Value = *m.UserGroup.Value.Clone()
 	}
@@ -164,6 +183,12 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) Parse(ctx context.Context
 	if m.UserFederation.IsSet() && !m.UserFederation.IsNull() {
 		if err := m.UserFederation.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("UserFederation", err)
+		}
+	}
+
+	if m.WorkloadFederation.IsSet() && !m.WorkloadFederation.IsNull() {
+		if err := m.WorkloadFederation.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("WorkloadFederation", err)
 		}
 	}
 

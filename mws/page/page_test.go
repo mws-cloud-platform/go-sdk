@@ -121,7 +121,7 @@ func (c *client) do(_ context.Context, req request) (response, error) {
 		items []any
 	)
 	if c.cur < len(c.items) {
-		token = ptr.Get(strconv.Itoa(c.cur + 1))
+		token = new(strconv.Itoa(c.cur + 1))
 		items = c.items[c.cur]
 	}
 	c.cur++

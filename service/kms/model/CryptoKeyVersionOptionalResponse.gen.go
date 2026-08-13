@@ -6,49 +6,38 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: CryptoKeyVersion
 type CryptoKeyVersionOptionalResponse struct {
-	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
+	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     CryptoKeyVersionSpecOptionalResponse                                     `json:"spec" yaml:"spec"`
-	Status   *CryptoKeyVersionStatusResponse                                          `json:"status,omitempty" yaml:"status,omitempty"`
+	Metadata common.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
+	Spec     CryptoKeyVersionSpecOptionalResponse               `json:"spec" yaml:"spec"`
+	Status   CryptoKeyVersionStatusResponse                     `json:"status" yaml:"status"`
 }
 
-func (m *CryptoKeyVersionOptionalResponse) GetKind() *string {
+func (m *CryptoKeyVersionOptionalResponse) GetKind() string {
 	if m != nil {
 		return m.Kind
 	}
-	return nil
+	return ""
 }
 
-func (m *CryptoKeyVersionOptionalResponse) SetKind(val *string) {
+func (m *CryptoKeyVersionOptionalResponse) SetKind(val string) {
 	m.Kind = val
 }
 
-func (m *CryptoKeyVersionOptionalResponse) GetKindOr(val string) string {
-	if m != nil && m.Kind != nil {
-		return *m.Kind
+func (m *CryptoKeyVersionOptionalResponse) GetMetadata() common.CommonTypedResourceMetadataOptionalResponse {
+	if m != nil {
+		return m.Metadata
 	}
-	return val
+	return common.CommonTypedResourceMetadataOptionalResponse{}
 }
 
-func (m *CryptoKeyVersionOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		return &m.Metadata.Value
-	}
-	return nil
-}
-
-func (m *CryptoKeyVersionOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
-	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		return m.Metadata.Value
-	}
-	return val
+func (m *CryptoKeyVersionOptionalResponse) SetMetadata(val common.CommonTypedResourceMetadataOptionalResponse) {
+	m.Metadata = val
 }
 
 func (m *CryptoKeyVersionOptionalResponse) GetSpec() CryptoKeyVersionSpecOptionalResponse {
@@ -62,22 +51,15 @@ func (m *CryptoKeyVersionOptionalResponse) SetSpec(val CryptoKeyVersionSpecOptio
 	m.Spec = val
 }
 
-func (m *CryptoKeyVersionOptionalResponse) GetStatus() *CryptoKeyVersionStatusResponse {
+func (m *CryptoKeyVersionOptionalResponse) GetStatus() CryptoKeyVersionStatusResponse {
 	if m != nil {
 		return m.Status
 	}
-	return nil
+	return CryptoKeyVersionStatusResponse{}
 }
 
-func (m *CryptoKeyVersionOptionalResponse) SetStatus(val *CryptoKeyVersionStatusResponse) {
+func (m *CryptoKeyVersionOptionalResponse) SetStatus(val CryptoKeyVersionStatusResponse) {
 	m.Status = val
-}
-
-func (m *CryptoKeyVersionOptionalResponse) GetStatusOr(val CryptoKeyVersionStatusResponse) CryptoKeyVersionStatusResponse {
-	if m != nil && m.Status != nil {
-		return *m.Status
-	}
-	return val
 }
 
 func (m *CryptoKeyVersionOptionalResponse) Clone() *CryptoKeyVersionOptionalResponse {
@@ -86,15 +68,9 @@ func (m *CryptoKeyVersionOptionalResponse) Clone() *CryptoKeyVersionOptionalResp
 	}
 
 	clone := *m
-	if m.Kind != nil {
-		cloneKind := *m.Kind
-		clone.Kind = &cloneKind
-	}
-	if clone.Metadata.IsSet() {
-		clone.Metadata.Value = *m.Metadata.Value.Clone()
-	}
+	clone.Metadata = *m.Metadata.Clone()
 	clone.Spec = *m.Spec.Clone()
-	clone.Status = m.Status.Clone()
+	clone.Status = *m.Status.Clone()
 	return &clone
 }
 
@@ -103,10 +79,8 @@ func (m *CryptoKeyVersionOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		if err := m.Metadata.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Metadata", err)
-		}
+	if err := m.Metadata.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Metadata", err)
 	}
 
 	return nil

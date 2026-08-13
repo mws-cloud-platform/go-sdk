@@ -136,7 +136,7 @@ func (x *CryptoKeyVersionSugared) respHandlerGetCryptoKeyVersion(resp *GetCrypto
 func (x *CryptoKeyVersionSugared) waitGetCryptoKeyVersion(ctx context.Context, request GetCryptoKeyVersionRequest, opts ...wait.WaiterOption) (*model.CryptoKeyVersionOptionalResponse, error) {
 	callback := func(ctx context.Context) (*model.CryptoKeyVersionOptionalResponse, bool, error) {
 		response, err := x.GetCryptoKeyVersion(ctx, request)
-		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
+		stop := string(ptr.Get(ptr.Get(response.GetStatus()).GetReady()).GetState()) != "PROCESSING"
 		return response, stop, err
 	}
 	waiter := wait.NewWaiter(callback, opts...)
@@ -181,7 +181,7 @@ func (x *CryptoKeyVersionSugared) respHandlerUpsertCryptoKeyVersion(resp *Upsert
 func (x *CryptoKeyVersionSugared) waitUpsertCryptoKeyVersion(ctx context.Context, request GetCryptoKeyVersionRequest, opts ...wait.WaiterOption) (*model.CryptoKeyVersionOptionalResponse, error) {
 	callback := func(ctx context.Context) (*model.CryptoKeyVersionOptionalResponse, bool, error) {
 		response, err := x.GetCryptoKeyVersion(ctx, request)
-		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
+		stop := string(ptr.Get(ptr.Get(response.GetStatus()).GetReady()).GetState()) != "PROCESSING"
 		return response, stop, err
 	}
 	waiter := wait.NewWaiter(callback, opts...)

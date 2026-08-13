@@ -12,7 +12,7 @@ import (
 
 // Real OAPI model name: CryptoKeyRoleBinding
 type CryptoKeyRoleBindingOptionalResponse struct {
-	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
+	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав.
@@ -21,22 +21,15 @@ type CryptoKeyRoleBindingOptionalResponse struct {
 	Status *common.CommonRoleBindingStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
-func (m *CryptoKeyRoleBindingOptionalResponse) GetKind() *string {
+func (m *CryptoKeyRoleBindingOptionalResponse) GetKind() string {
 	if m != nil {
 		return m.Kind
 	}
-	return nil
+	return ""
 }
 
-func (m *CryptoKeyRoleBindingOptionalResponse) SetKind(val *string) {
+func (m *CryptoKeyRoleBindingOptionalResponse) SetKind(val string) {
 	m.Kind = val
-}
-
-func (m *CryptoKeyRoleBindingOptionalResponse) GetKindOr(val string) string {
-	if m != nil && m.Kind != nil {
-		return *m.Kind
-	}
-	return val
 }
 
 func (m *CryptoKeyRoleBindingOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
@@ -88,10 +81,6 @@ func (m *CryptoKeyRoleBindingOptionalResponse) Clone() *CryptoKeyRoleBindingOpti
 	}
 
 	clone := *m
-	if m.Kind != nil {
-		cloneKind := *m.Kind
-		clone.Kind = &cloneKind
-	}
 	if clone.Metadata.IsSet() {
 		clone.Metadata.Value = *m.Metadata.Value.Clone()
 	}

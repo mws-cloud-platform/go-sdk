@@ -8,7 +8,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/util-toolset/pkg/testing/golden"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 )
 
 const (
@@ -38,7 +37,7 @@ func TestMACAddress_RawValue(t *testing.T) {
 	macAddr, err := NewMACAddress(testMacEui48Address)
 	require.NoError(t, err)
 
-	macAddr.rawValue = ptr.Get(macEui48Raw)
+	macAddr.rawValue = new(macEui48Raw)
 	require.Equal(t, macEui48Raw, *macAddr.RawValue())
 }
 
@@ -71,19 +70,19 @@ func TestMACAddress_Equal(t *testing.T) {
 		{
 			name:     "different rawValue 1",
 			macAddr1: MACAddress{},
-			macAddr2: MACAddress{rawValue: ptr.Get("")},
+			macAddr2: MACAddress{rawValue: new("")},
 			equal:    false,
 		},
 		{
 			name:     "different rawValue 2",
-			macAddr1: MACAddress{rawValue: ptr.Get("")},
+			macAddr1: MACAddress{rawValue: new("")},
 			macAddr2: MACAddress{},
 			equal:    false,
 		},
 		{
 			name:     "different rawValue 3",
-			macAddr1: MACAddress{rawValue: ptr.Get("hello")},
-			macAddr2: MACAddress{rawValue: ptr.Get("world")},
+			macAddr1: MACAddress{rawValue: new("hello")},
+			macAddr2: MACAddress{rawValue: new("world")},
 			equal:    false,
 		},
 		{
@@ -132,7 +131,7 @@ func TestMACAddress_MarshalJSON(t *testing.T) {
 			name: "WithRawValue",
 			macAddr: MACAddress{
 				mac:      testMacEui48Address,
-				rawValue: ptr.Get(macEui48Raw),
+				rawValue: new(macEui48Raw),
 			},
 		},
 		{

@@ -10,6 +10,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Параметры объекта кластера.
@@ -19,6 +20,8 @@ type ClickhouseClusterResourceResponse struct {
 	Active bool `json:"active" yaml:"active"`
 	// Версия продукта.
 	Version string `json:"version" yaml:"version"`
+	// Регион, в котором располагается кластер.
+	Region rm.RegionID `json:"region" yaml:"region"`
 	// Список эндпойнтов для подключения к кластеру.
 	Endpoints []ClickhouseEndpointResourceResponse `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 	// Описание координаторов кластера.
@@ -54,6 +57,17 @@ func (m *ClickhouseClusterResourceResponse) GetVersion() string {
 
 func (m *ClickhouseClusterResourceResponse) SetVersion(val string) {
 	m.Version = val
+}
+
+func (m *ClickhouseClusterResourceResponse) GetRegion() rm.RegionID {
+	if m != nil {
+		return m.Region
+	}
+	return rm.RegionID{}
+}
+
+func (m *ClickhouseClusterResourceResponse) SetRegion(val rm.RegionID) {
+	m.Region = val
 }
 
 func (m *ClickhouseClusterResourceResponse) GetEndpoints() []ClickhouseEndpointResourceResponse {
@@ -167,6 +181,7 @@ func (m *ClickhouseClusterResourceResponse) Clone() *ClickhouseClusterResourceRe
 	}
 
 	clone := *m
+	clone.Region = *m.Region.Clone()
 	if m.Endpoints != nil {
 		clone.Endpoints = make([]ClickhouseEndpointResourceResponse, len(m.Endpoints))
 		for i, v := range m.Endpoints {
@@ -195,6 +210,10 @@ func (m *ClickhouseClusterResourceResponse) Clone() *ClickhouseClusterResourceRe
 func (m *ClickhouseClusterResourceResponse) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if err := m.Region.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Region", err)
 	}
 
 	for index := range m.Endpoints {

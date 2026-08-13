@@ -17,8 +17,10 @@ type CommonRoleBindingSpecSubject struct {
 	ServiceAccount *iam.ServiceAccountRef `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
 	// Идентификатор сервисного агента, связанного с проектом.
 	ServiceAgent *iam.ServiceAgentRef `json:"serviceAgent,omitempty" yaml:"serviceAgent,omitempty"`
-	// Субъект федерации пользователей — идентификатор федерации и, опционально, контекст, уточняющий, на каких пользователей федерации распространяется привязка роли.
+	// Субъект федерации пользователей.
 	UserFederation *CommonRoleBindingFederation `json:"userFederation,omitempty" yaml:"userFederation,omitempty"`
+	// Субъект федерации удостоверений рабочей нагрузки (workload).
+	WorkloadFederation *CommonRoleBindingWorkloadFederation `json:"workloadFederation,omitempty" yaml:"workloadFederation,omitempty"`
 	// Идентификатор группы пользователей.
 	UserGroup *iam.UserGroupRef `json:"userGroup,omitempty" yaml:"userGroup,omitempty"`
 	// Идентификатор пользователя backoffice.
@@ -97,6 +99,24 @@ func (m *CommonRoleBindingSpecSubject) GetUserFederationOr(val CommonRoleBinding
 	return val
 }
 
+func (m *CommonRoleBindingSpecSubject) GetWorkloadFederation() *CommonRoleBindingWorkloadFederation {
+	if m != nil {
+		return m.WorkloadFederation
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpecSubject) SetWorkloadFederation(val *CommonRoleBindingWorkloadFederation) {
+	m.WorkloadFederation = val
+}
+
+func (m *CommonRoleBindingSpecSubject) GetWorkloadFederationOr(val CommonRoleBindingWorkloadFederation) CommonRoleBindingWorkloadFederation {
+	if m != nil && m.WorkloadFederation != nil {
+		return *m.WorkloadFederation
+	}
+	return val
+}
+
 func (m *CommonRoleBindingSpecSubject) GetUserGroup() *iam.UserGroupRef {
 	if m != nil {
 		return m.UserGroup
@@ -143,6 +163,7 @@ func (m *CommonRoleBindingSpecSubject) Clone() *CommonRoleBindingSpecSubject {
 	clone.ServiceAccount = m.ServiceAccount.Clone()
 	clone.ServiceAgent = m.ServiceAgent.Clone()
 	clone.UserFederation = m.UserFederation.Clone()
+	clone.WorkloadFederation = m.WorkloadFederation.Clone()
 	clone.UserGroup = m.UserGroup.Clone()
 	clone.Employee = m.Employee.Clone()
 	return &clone
@@ -167,6 +188,10 @@ func (m *CommonRoleBindingSpecSubject) Parse(ctx context.Context) error {
 
 	if err := m.UserFederation.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("UserFederation", err)
+	}
+
+	if err := m.WorkloadFederation.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("WorkloadFederation", err)
 	}
 
 	if err := m.UserGroup.Parse(ctx); err != nil {

@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
-// Настройка проверки работоспособности виртуальных машин.
+// Конфигурация проверки работоспособности виртуальных машин.
 // Real OAPI model name: NlbHealthCheck
 type NlbHealthCheckOptionalResponse struct {
 	// Конфигурация протокола проверки работоспособности.

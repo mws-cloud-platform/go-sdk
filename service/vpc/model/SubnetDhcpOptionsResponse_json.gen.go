@@ -70,6 +70,10 @@ func (m *SubnetDhcpOptionsResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "domainName":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			v, err := decode.Str(d)
 			if err != nil {
 				return err
@@ -78,6 +82,10 @@ func (m *SubnetDhcpOptionsResponse) Decode(d *jx.Decoder) error {
 			m.DomainName = &v
 			return nil
 		case "domainNameServers":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			c := make([]ipaddress.IP4Address, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
 				var v ipaddress.IP4Address
@@ -93,6 +101,10 @@ func (m *SubnetDhcpOptionsResponse) Decode(d *jx.Decoder) error {
 			m.DomainNameServers = c
 			return nil
 		case "ntpServers":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
 			c := make([]ipaddress.IP4Address, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
 				var v ipaddress.IP4Address

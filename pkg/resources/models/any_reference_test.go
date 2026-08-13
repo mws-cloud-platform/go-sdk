@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/pkg/resources/interfaces"
 )
@@ -16,14 +15,14 @@ func TestAnyResourceRefMethods(t *testing.T) {
 		expectedResourceName interfaces.ResourceName
 	}{
 		{nil, anyServiceSlug, ""},
-		{ptr.Get(NewAnyResourceRef("")), anyServiceSlug, ""},
-		{ptr.Get(NewAnyResourceRef("hello")), anyServiceSlug, "hello"},
-		{ptr.Get(NewAnyResourceRef("/projects")), anyServiceSlug, "projects"},
-		{ptr.Get(NewAnyResourceRef("/projects/project")), anyServiceSlug, "project"},
-		{ptr.Get(NewAnyResourceRef("/projects/project/object")), anyServiceSlug, "object"},
-		{ptr.Get(NewAnyResourceRef("some/projects/project")), anyServiceSlug, "project"},
-		{ptr.Get(NewAnyResourceRef("some/projects/project/object")), anyServiceSlug, "object"},
-		{ptr.Get(NewAnyResourceRef("some/projects/project/objects/object")), anyServiceSlug, "object"},
+		{new(NewAnyResourceRef("")), anyServiceSlug, ""},
+		{new(NewAnyResourceRef("hello")), anyServiceSlug, "hello"},
+		{new(NewAnyResourceRef("/projects")), anyServiceSlug, "projects"},
+		{new(NewAnyResourceRef("/projects/project")), anyServiceSlug, "project"},
+		{new(NewAnyResourceRef("/projects/project/object")), anyServiceSlug, "object"},
+		{new(NewAnyResourceRef("some/projects/project")), anyServiceSlug, "project"},
+		{new(NewAnyResourceRef("some/projects/project/object")), anyServiceSlug, "object"},
+		{new(NewAnyResourceRef("some/projects/project/objects/object")), anyServiceSlug, "object"},
 	} {
 		require.Equal(t, v.expectedSlug, v.id.ServiceSlug())
 		require.Equal(t, v.expectedResourceName, v.id.ResourceName())

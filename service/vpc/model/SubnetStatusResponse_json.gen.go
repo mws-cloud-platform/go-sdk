@@ -71,7 +71,7 @@ func (m *SubnetStatusResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v SubnetDhcpOptions2Response
+			var v SubnetDhcpOptionsResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

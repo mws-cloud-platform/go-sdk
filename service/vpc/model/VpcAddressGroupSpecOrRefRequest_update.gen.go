@@ -17,7 +17,7 @@ type UpdateVpcAddressGroupSpecOrRefRequest struct {
 	// Ссылка на группу адресов.
 	Ref optional.OptionalNil[vpc.AddressGroupRef] `json:"ref" yaml:"ref"`
 	// Спецификация группы адресов.
-	Spec optional.OptionalNil[UpdateVpcAddressGroupSpec2Request] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateVpcAddressGroupSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *VpcAddressGroupSpecOrRefRequest) AsUpdateModel() UpdateVpcAddressGroupSpecOrRefRequest {
@@ -92,10 +92,10 @@ func (m *VpcAddressGroupSpecOrRefRequest) diffRef(src *VpcAddressGroupSpecOrRefR
 	return commonclient.DiffPrimitiveNullable(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *VpcAddressGroupSpecOrRefRequest) diffSpec(src *VpcAddressGroupSpecOrRefRequest) optional.OptionalNil[UpdateVpcAddressGroupSpec2Request] {
+func (m *VpcAddressGroupSpecOrRefRequest) diffSpec(src *VpcAddressGroupSpecOrRefRequest) optional.OptionalNil[UpdateVpcAddressGroupSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return optional.OptionalNil[UpdateVpcAddressGroupSpec2Request]{
+	return optional.OptionalNil[UpdateVpcAddressGroupSpecRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

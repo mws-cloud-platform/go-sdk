@@ -10,7 +10,7 @@ import (
 type SubnetDhcpOptionsResponse struct {
 	// Базовое доменное имя для разрешения имен.
 	DomainName *string `json:"domainName,omitempty" yaml:"domainName,omitempty"`
-	// Список адресов DNS серверов.
+	// Список адресов DNS-серверов.
 	DomainNameServers []ipaddress.IP4Address `json:"domainNameServers,omitempty" yaml:"domainNameServers,omitempty"`
 	// Список адресов NTP серверов.
 	NtpServers []ipaddress.IP4Address `json:"ntpServers,omitempty" yaml:"ntpServers,omitempty"`

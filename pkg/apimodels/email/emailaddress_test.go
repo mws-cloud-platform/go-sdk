@@ -7,7 +7,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/util-toolset/pkg/testing/golden"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 )
 
 const (
@@ -41,19 +40,19 @@ func TestEmail_Equal(t *testing.T) {
 		{
 			name:   "different rawValue 1",
 			email1: Email{},
-			email2: Email{rawValue: ptr.Get("")},
+			email2: Email{rawValue: new("")},
 			equal:  false,
 		},
 		{
 			name:   "different rawValue 2",
-			email1: Email{rawValue: ptr.Get("")},
+			email1: Email{rawValue: new("")},
 			email2: Email{},
 			equal:  false,
 		},
 		{
 			name:   "different rawValue 3",
-			email1: Email{rawValue: ptr.Get("hello")},
-			email2: Email{rawValue: ptr.Get("world")},
+			email1: Email{rawValue: new("hello")},
+			email2: Email{rawValue: new("world")},
 			equal:  false,
 		},
 		{
@@ -103,7 +102,7 @@ func TestEmail_MarshalJSON(t *testing.T) {
 			email: Email{
 				username: "foo",
 				domain:   "bar",
-				rawValue: ptr.Get("raw@value"),
+				rawValue: new("raw@value"),
 			},
 		},
 		{

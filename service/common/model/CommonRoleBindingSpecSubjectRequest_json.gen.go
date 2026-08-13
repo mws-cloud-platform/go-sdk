@@ -52,6 +52,11 @@ func (m *CommonRoleBindingSpecSubjectRequest) encodeFields(e *jx.Encoder) error 
 		m.UserFederation.Encode(e)
 	}
 
+	if m.WorkloadFederation != nil {
+		e.FieldStart("workloadFederation")
+		m.WorkloadFederation.Encode(e)
+	}
+
 	if m.UserGroup != nil {
 		e.FieldStart("userGroup")
 		m.UserGroup.Encode(e)
@@ -110,6 +115,18 @@ func (m *CommonRoleBindingSpecSubjectRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.UserFederation = &v
+			return nil
+		case "workloadFederation":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CommonRoleBindingWorkloadFederationRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.WorkloadFederation = &v
 			return nil
 		case "userGroup":
 			var v iam.UserGroupRef

@@ -28,7 +28,7 @@ func decodeGenerateDataKeyResponse(resp *http.Response) (*client.GenerateDataKey
 		case "application/json":
 			result := &client.GenerateDataKeyResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.GenerateDataKeyResponseResponse{},
+				Response200: &model.GenerateDataKeyResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -143,7 +143,7 @@ func decodeEncryptResponse(resp *http.Response) (*client.EncryptResponse, error)
 		case "application/json":
 			result := &client.EncryptResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.EncryptResponseResponse{},
+				Response200: &model.EncryptResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -258,7 +258,7 @@ func decodeDecryptResponse(resp *http.Response) (*client.DecryptResponse, error)
 		case "application/json":
 			result := &client.DecryptResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.DecryptResponseResponse{},
+				Response200: &model.DecryptResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -373,7 +373,7 @@ func decodeReEncryptResponse(resp *http.Response) (*client.ReEncryptResponse, er
 		case "application/json":
 			result := &client.ReEncryptResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.ReEncryptResponseResponse{},
+				Response200: &model.ReEncryptResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {

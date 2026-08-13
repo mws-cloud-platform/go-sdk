@@ -5,7 +5,6 @@ import (
 	"slices"
 
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 )
 
 func DiffPrimitiveRequired[T comparable](from, to T, nilDiffers bool) Optional[T] {
@@ -184,7 +183,7 @@ func ToPointerArray[T any](arr []T) []*T {
 
 	res := make([]*T, 0, len(arr))
 	for _, v := range arr {
-		res = append(res, ptr.Get(v))
+		res = append(res, new(v))
 	}
 	return res
 }
@@ -202,14 +201,14 @@ func GetChangesArrayObjectNamed[T namedChild, Tu updateObject, Tns nameSetter[Tu
 		for _, fromItem := range from {
 			if toItem.GetName() == fromItem.GetName() {
 				fromItemFound = true
-				tmp := Tns(ptr.Get(getDiff(fromItem, toItem, false)))
+				tmp := Tns(new(getDiff(fromItem, toItem, false)))
 				tmp.SetName(toItem.GetName())
 				value = append(value, *tmp)
 				break
 			}
 		}
 		if !fromItemFound {
-			tmp := Tns(ptr.Get(getDiff(toItem, toItem, true)))
+			tmp := Tns(new(getDiff(toItem, toItem, true)))
 			tmp.SetName(toItem.GetName())
 			value = append(value, *tmp)
 		}

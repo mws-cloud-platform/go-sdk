@@ -13,6 +13,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m ClickhouseClusterResourceResponse) MarshalJSON() ([]byte, error) {
@@ -42,6 +43,9 @@ func (m *ClickhouseClusterResourceResponse) encodeFields(e *jx.Encoder) error {
 
 	e.FieldStart("version")
 	e.Str(m.Version)
+
+	e.FieldStart("region")
+	m.Region.Encode(e)
 
 	if m.Endpoints != nil {
 		e.FieldStart("endpoints")
@@ -116,6 +120,14 @@ func (m *ClickhouseClusterResourceResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Version = v
+			return nil
+		case "region":
+			var v rm.RegionID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = v
 			return nil
 		case "endpoints":
 			c := make([]ClickhouseEndpointResourceResponse, 0)

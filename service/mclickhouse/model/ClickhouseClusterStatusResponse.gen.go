@@ -31,8 +31,6 @@ type ClickhouseClusterStatusResponse struct {
 	//   - `UNIDENTIFIED` - Не удаётся определить статус;
 	//   - `RESTORING`    - Восстанавливается.
 	State *ClusterState `json:"state,omitempty" yaml:"state,omitempty"`
-	// Регион, в котором располагается кластер.
-	Region string `json:"region" yaml:"region"`
 	// Параметры объекта кластера.
 	Cluster *ClickhouseClusterResourceResponse `json:"cluster,omitempty" yaml:"cluster,omitempty"`
 }
@@ -70,13 +68,6 @@ func (m *ClickhouseClusterStatusResponse) GetStateOr(val ClusterState) ClusterSt
 		return *m.State
 	}
 	return val
-}
-
-func (m *ClickhouseClusterStatusResponse) GetRegion() string {
-	if m != nil {
-		return m.Region
-	}
-	return ""
 }
 
 func (m *ClickhouseClusterStatusResponse) GetCluster() *ClickhouseClusterResourceResponse {

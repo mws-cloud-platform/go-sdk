@@ -26,7 +26,7 @@ func (x *KeyEncryptionSugared) Impl() KeyEncryption {
 // GenerateDataKey позволяет сгенерировать ключ шифрования данных.
 //
 // Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:generateDataKey
-func (x *KeyEncryptionSugared) GenerateDataKey(ctx context.Context, request GenerateDataKeyRequest) (*model.GenerateDataKeyResponseResponse, error) {
+func (x *KeyEncryptionSugared) GenerateDataKey(ctx context.Context, request GenerateDataKeyRequest) (*model.GenerateDataKeyResponse, error) {
 	resp, err := x.impl.GenerateDataKey(ctx, request)
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func (x *KeyEncryptionSugared) GenerateDataKey(ctx context.Context, request Gene
 	return x.respHandlerGenerateDataKey(resp)
 }
 
-func (x *KeyEncryptionSugared) respHandlerGenerateDataKey(resp *GenerateDataKeyResponse) (*model.GenerateDataKeyResponseResponse, error) {
+func (x *KeyEncryptionSugared) respHandlerGenerateDataKey(resp *GenerateDataKeyResponse) (*model.GenerateDataKeyResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (x *KeyEncryptionSugared) respHandlerGenerateDataKey(resp *GenerateDataKeyR
 // Encrypt позволяет зашифровать данные с использованием указанного KMS ключа.
 //
 // Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:encrypt
-func (x *KeyEncryptionSugared) Encrypt(ctx context.Context, request EncryptRequest) (*model.EncryptResponseResponse, error) {
+func (x *KeyEncryptionSugared) Encrypt(ctx context.Context, request EncryptRequest) (*model.EncryptResponse, error) {
 	resp, err := x.impl.Encrypt(ctx, request)
 	if err != nil {
 		return nil, err
@@ -59,7 +59,7 @@ func (x *KeyEncryptionSugared) Encrypt(ctx context.Context, request EncryptReque
 	return x.respHandlerEncrypt(resp)
 }
 
-func (x *KeyEncryptionSugared) respHandlerEncrypt(resp *EncryptResponse) (*model.EncryptResponseResponse, error) {
+func (x *KeyEncryptionSugared) respHandlerEncrypt(resp *EncryptResponse) (*model.EncryptResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (x *KeyEncryptionSugared) respHandlerEncrypt(resp *EncryptResponse) (*model
 // Decrypt позволяет расшифровать заданный шифротекст с использованием указанного KMS ключа.
 //
 // Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:decrypt
-func (x *KeyEncryptionSugared) Decrypt(ctx context.Context, request DecryptRequest) (*model.DecryptResponseResponse, error) {
+func (x *KeyEncryptionSugared) Decrypt(ctx context.Context, request DecryptRequest) (*model.DecryptResponse, error) {
 	resp, err := x.impl.Decrypt(ctx, request)
 	if err != nil {
 		return nil, err
@@ -83,7 +83,7 @@ func (x *KeyEncryptionSugared) Decrypt(ctx context.Context, request DecryptReque
 	return x.respHandlerDecrypt(resp)
 }
 
-func (x *KeyEncryptionSugared) respHandlerDecrypt(resp *DecryptResponse) (*model.DecryptResponseResponse, error) {
+func (x *KeyEncryptionSugared) respHandlerDecrypt(resp *DecryptResponse) (*model.DecryptResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func (x *KeyEncryptionSugared) respHandlerDecrypt(resp *DecryptResponse) (*model
 // ReEncrypt позволяет расшифровать заданный шифротекст и повторно зашифровать его с помощью ключа KMS.
 //
 // Путь: POST /kms/v1/projects/{project}/cryptoKeys/{destinationKey}:reEncrypt
-func (x *KeyEncryptionSugared) ReEncrypt(ctx context.Context, request ReEncryptRequest) (*model.ReEncryptResponseResponse, error) {
+func (x *KeyEncryptionSugared) ReEncrypt(ctx context.Context, request ReEncryptRequest) (*model.ReEncryptResponse, error) {
 	resp, err := x.impl.ReEncrypt(ctx, request)
 	if err != nil {
 		return nil, err
@@ -107,7 +107,7 @@ func (x *KeyEncryptionSugared) ReEncrypt(ctx context.Context, request ReEncryptR
 	return x.respHandlerReEncrypt(resp)
 }
 
-func (x *KeyEncryptionSugared) respHandlerReEncrypt(resp *ReEncryptResponse) (*model.ReEncryptResponseResponse, error) {
+func (x *KeyEncryptionSugared) respHandlerReEncrypt(resp *ReEncryptResponse) (*model.ReEncryptResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}

@@ -6,7 +6,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 )
 
-// Настройка проверки работоспособности виртуальных машин.
+// Конфигурация проверки работоспособности виртуальных машин.
 // Real OAPI model name: NlbHealthCheck
 type NlbHealthCheckRequest struct {
 	// Конфигурация протокола проверки работоспособности.

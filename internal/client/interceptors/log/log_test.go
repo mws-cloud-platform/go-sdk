@@ -10,7 +10,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/util-toolset/pkg/testing/golden"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -115,8 +114,8 @@ func TestLog(t *testing.T) {
 				respPtr := resp.(*helloResponse)
 				*respPtr = helloResponse{
 					Code: 111,
-					ResponseBaseError: &commonmodel.BaseError{
-						Code: ptr.Get("invalid_code"),
+					ResponseBaseError: &commonmodel.ApiError{
+						Code: commonmodel.ApiErrorCode_INTERNAL,
 					},
 				}
 				return nil
@@ -199,7 +198,7 @@ type helloResponse struct {
 	Response404       *commonmodel.ApiError
 	Response409       *commonmodel.ApiError
 	Response500       *commonmodel.ApiError
-	ResponseBaseError *commonmodel.BaseError
+	ResponseBaseError *commonmodel.ApiError
 }
 
 func (r *helloResponse) GetCode() int {
