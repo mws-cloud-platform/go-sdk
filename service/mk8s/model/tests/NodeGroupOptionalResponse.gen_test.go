@@ -9,6 +9,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/mk8s/model"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
+	"go.mws.cloud/go-sdk/service/resources/references/iam"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestNodeGroupOptionalResponseMarshalling(t *testing.T) {
@@ -24,5 +27,8 @@ func TestNodeGroupOptionalResponseMarshalling(t *testing.T) {
 
 func initNodeGroupOptionalResponse() model.NodeGroupOptionalResponse {
 	var v model.NodeGroupOptionalResponse
+	v.Spec.Subnet.Ref = vpc.NewMustSubnetRef("projectID", "networkID", "subnetID")
+	v.Spec.VmType.Ref = compute.NewMustVmTypeRef("vmTypeID")
+	v.Spec.ServiceAccount.Ref = iam.NewMustServiceAccountRef("projectID", "serviceAccountID")
 	return v
 }

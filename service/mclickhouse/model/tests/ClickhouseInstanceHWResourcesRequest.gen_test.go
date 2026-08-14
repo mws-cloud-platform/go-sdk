@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
+	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 )
 
 func TestClickhouseInstanceHWResourcesRequestMarshalling(t *testing.T) {
@@ -25,6 +26,7 @@ func TestClickhouseInstanceHWResourcesRequestMarshalling(t *testing.T) {
 
 func initClickhouseInstanceHWResourcesRequest() model.ClickhouseInstanceHWResourcesRequest {
 	var v model.ClickhouseInstanceHWResourcesRequest
+	v.VmType = mclickhouse.NewMustClickhouseVmTypeRef("vmTypeID")
 	v.Disk.Size = bytesize.MustParseString("0 B")
 	return v
 }

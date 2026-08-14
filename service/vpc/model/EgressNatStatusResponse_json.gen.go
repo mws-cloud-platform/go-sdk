@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m EgressNatStatusResponse) MarshalJSON() ([]byte, error) {
@@ -33,20 +34,35 @@ func (m *EgressNatStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *EgressNatStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.Internal != nil {
 		e.FieldStart("internal")
-		m.Internal.Encode(e)
+		if err := m.Internal.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.External != nil {
 		e.FieldStart("external")
-		m.External.Encode(e)
+		if err := m.External.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.PortAllocation != nil {
 		e.FieldStart("portAllocation")
-		m.PortAllocation.Encode(e)
+		if err := m.PortAllocation.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Region != nil {
+		e.FieldStart("region")
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -105,6 +121,14 @@ func (m *EgressNatStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.PortAllocation = &v
+			return nil
+		case "region":
+			var v rm.RegionID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
 			return nil
 		default:
 			return d.Skip()

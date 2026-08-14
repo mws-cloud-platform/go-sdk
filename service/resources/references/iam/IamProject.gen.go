@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewIamProjectID(project string) IamProjectID {
+func NewIamProjectID(project string) (IamProjectID, error) {
+	if project == "" {
+		return IamProjectID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := IamProjectID{
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustIamProjectID(project string) IamProjectID {
+	m, err := NewIamProjectID(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseIamProjectID(path string) (IamProjectID, error) {
 	m := IamProjectID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return IamProjectID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *IamProjectID) String() string {
 	return m.ID()
 }
 
-func (m *IamProjectID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, IamProjectRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *IamProjectID) Clone() *IamProjectID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *IamProjectID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *IamProjectID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *IamProjectID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewIamProjectRef(project string) IamProjectRef {
+func (m *IamProjectID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, IamProjectRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewIamProjectRef(project string) (IamProjectRef, error) {
+	if project == "" {
+		return IamProjectRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := IamProjectRef{
 		id: IamProjectID{
 			project: project,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustIamProjectRef(project string) IamProjectRef {
+	m, err := NewIamProjectRef(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *IamProjectRef) String() string {
 }
 
 func (m *IamProjectRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, IamProjectRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *IamProjectRef) Clone() *IamProjectRef {
@@ -261,7 +284,11 @@ func (m *IamProjectRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *IamProjectRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *IamProjectRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, IamProjectRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *IamProjectRef) isParsed() bool {
+	return m != nil && m.id.project != ""
 }
 
 func (m *IamProjectRef) absolutePath() string {

@@ -35,10 +35,6 @@ func decodeListPostgresBackupResponse(resp *http.Response) (*client.ListPostgres
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -225,10 +221,6 @@ func decodeGetPostgresBackupResponse(resp *http.Response) (*client.GetPostgresBa
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -324,10 +316,6 @@ func decodeUpsertPostgresBackupResponse(resp *http.Response) (*client.UpsertPost
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

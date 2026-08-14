@@ -34,17 +34,23 @@ func (m *UpdateCommonRoleBindingSpecSubject) Encode(e *jx.Encoder) error {
 func (m *UpdateCommonRoleBindingSpecSubject) encodeFields(e *jx.Encoder) error {
 	if m.User.IsSet() {
 		e.FieldStart("user")
-		m.User.Value.Encode(e)
+		if err := m.User.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ServiceAccount.IsSet() {
 		e.FieldStart("serviceAccount")
-		m.ServiceAccount.Value.Encode(e)
+		if err := m.ServiceAccount.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ServiceAgent.IsSet() {
 		e.FieldStart("serviceAgent")
-		m.ServiceAgent.Value.Encode(e)
+		if err := m.ServiceAgent.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.UserFederation.IsSet() {
@@ -52,7 +58,9 @@ func (m *UpdateCommonRoleBindingSpecSubject) encodeFields(e *jx.Encoder) error {
 		if m.UserFederation.IsNull() {
 			e.Null()
 		} else {
-			m.UserFederation.Value.Encode(e)
+			if err := m.UserFederation.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -61,18 +69,24 @@ func (m *UpdateCommonRoleBindingSpecSubject) encodeFields(e *jx.Encoder) error {
 		if m.WorkloadFederation.IsNull() {
 			e.Null()
 		} else {
-			m.WorkloadFederation.Value.Encode(e)
+			if err := m.WorkloadFederation.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
 	if m.UserGroup.IsSet() {
 		e.FieldStart("userGroup")
-		m.UserGroup.Value.Encode(e)
+		if err := m.UserGroup.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Employee.IsSet() {
 		e.FieldStart("employee")
-		m.Employee.Value.Encode(e)
+		if err := m.Employee.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

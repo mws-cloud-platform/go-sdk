@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewSrv6RouteID(srv6Route string) Srv6RouteID {
+func NewSrv6RouteID(srv6Route string) (Srv6RouteID, error) {
+	if srv6Route == "" {
+		return Srv6RouteID{}, reserrors.NewFieldIsEmptyError("srv6Route")
+	}
 	m := Srv6RouteID{
 		srv6Route: srv6Route,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustSrv6RouteID(srv6Route string) Srv6RouteID {
+	m, err := NewSrv6RouteID(srv6Route)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseSrv6RouteID(path string) (Srv6RouteID, error) {
 	m := Srv6RouteID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return Srv6RouteID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *Srv6RouteID) String() string {
 	return m.ID()
 }
 
-func (m *Srv6RouteID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, Srv6RouteRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.srv6Route = result["srv6Route"]
-
-	return nil
-}
-
 func (m *Srv6RouteID) Clone() *Srv6RouteID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *Srv6RouteID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *Srv6RouteID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *Srv6RouteID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewSrv6RouteRef(srv6Route string) Srv6RouteRef {
+func (m *Srv6RouteID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, Srv6RouteRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.srv6Route = result["srv6Route"]
+
+	return nil
+}
+
+func NewSrv6RouteRef(srv6Route string) (Srv6RouteRef, error) {
+	if srv6Route == "" {
+		return Srv6RouteRef{}, reserrors.NewFieldIsEmptyError("srv6Route")
+	}
 	m := Srv6RouteRef{
 		id: Srv6RouteID{
 			srv6Route: srv6Route,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustSrv6RouteRef(srv6Route string) Srv6RouteRef {
+	m, err := NewSrv6RouteRef(srv6Route)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *Srv6RouteRef) String() string {
 }
 
 func (m *Srv6RouteRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, Srv6RouteRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.srv6Route = result["srv6Route"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *Srv6RouteRef) Clone() *Srv6RouteRef {
@@ -261,7 +284,11 @@ func (m *Srv6RouteRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *Srv6RouteRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *Srv6RouteRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, Srv6RouteRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.srv6Route = result["srv6Route"]
+
 	return nil
+}
+
+func (m *Srv6RouteRef) isParsed() bool {
+	return m != nil && m.id.srv6Route != ""
 }
 
 func (m *Srv6RouteRef) absolutePath() string {

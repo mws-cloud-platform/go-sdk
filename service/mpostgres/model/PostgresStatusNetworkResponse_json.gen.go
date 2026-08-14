@@ -35,7 +35,9 @@ func (m *PostgresStatusNetworkResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("primaryAddresses")
 		e.ArrStart()
 		for _, elem := range m.PrimaryAddresses {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -44,7 +46,9 @@ func (m *PostgresStatusNetworkResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("readOnlyAddresses")
 		e.ArrStart()
 		for _, elem := range m.ReadOnlyAddresses {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -53,7 +57,9 @@ func (m *PostgresStatusNetworkResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("directAddresses")
 		e.ArrStart()
 		for _, elem := range m.DirectAddresses {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

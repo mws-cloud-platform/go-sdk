@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,11 +57,22 @@ var (
 	}
 )
 
-func NewOrganizationCountID(user string) OrganizationCountID {
+func NewOrganizationCountID(user string) (OrganizationCountID, error) {
+	if user == "" {
+		return OrganizationCountID{}, reserrors.NewFieldIsEmptyError("user")
+	}
 	m := OrganizationCountID{
 		user: user,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustOrganizationCountID(user string) OrganizationCountID {
+	m, err := NewOrganizationCountID(user)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -68,7 +80,7 @@ func ParseOrganizationCountID(path string) (OrganizationCountID, error) {
 	m := OrganizationCountID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return OrganizationCountID{}, err
 	}
 	return m, nil
@@ -113,21 +125,6 @@ func (m *OrganizationCountID) String() string {
 	return m.ID()
 }
 
-func (m *OrganizationCountID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, OrganizationCountRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.user = result["user"]
-
-	return nil
-}
-
 func (m *OrganizationCountID) Clone() *OrganizationCountID {
 	if m == nil {
 		return nil
@@ -151,7 +148,7 @@ func (m *OrganizationCountID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,16 +169,53 @@ func (m *OrganizationCountID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *OrganizationCountID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewOrganizationCountRef(user string) OrganizationCountRef {
+func (m *OrganizationCountID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, OrganizationCountRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.user = result["user"]
+
+	return nil
+}
+
+func NewOrganizationCountRef(user string) (OrganizationCountRef, error) {
+	if user == "" {
+		return OrganizationCountRef{}, reserrors.NewFieldIsEmptyError("user")
+	}
 	m := OrganizationCountRef{
 		id: OrganizationCountID{
 			user: user,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustOrganizationCountRef(user string) OrganizationCountRef {
+	m, err := NewOrganizationCountRef(user)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -246,18 +280,7 @@ func (m *OrganizationCountRef) String() string {
 }
 
 func (m *OrganizationCountRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, OrganizationCountRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.user = result["user"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *OrganizationCountRef) Clone() *OrganizationCountRef {
@@ -281,7 +304,11 @@ func (m *OrganizationCountRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -300,7 +327,35 @@ func (m *OrganizationCountRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *OrganizationCountRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, OrganizationCountRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.user = result["user"]
+
 	return nil
+}
+
+func (m *OrganizationCountRef) isParsed() bool {
+	return m != nil && m.id.user != ""
 }
 
 func (m *OrganizationCountRef) absolutePath() string {

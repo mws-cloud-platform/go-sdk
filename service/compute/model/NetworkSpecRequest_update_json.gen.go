@@ -35,7 +35,9 @@ func (m *UpdateNetworkSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("networkInterfaces")
 		e.ArrStart()
 		for _, elem := range m.NetworkInterfaces.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

@@ -34,12 +34,16 @@ func (m *KafkaEndpointExternalAddressSpecOrRefRequest) Encode(e *jx.Encoder) err
 func (m *KafkaEndpointExternalAddressSpecOrRefRequest) encodeFields(e *jx.Encoder) error {
 	if m.Ref != nil {
 		e.FieldStart("ref")
-		m.Ref.Encode(e)
+		if err := m.Ref.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Spec != nil {
 		e.FieldStart("spec")
-		m.Spec.Encode(e)
+		if err := m.Spec.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

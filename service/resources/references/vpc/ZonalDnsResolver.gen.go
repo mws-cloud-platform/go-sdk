@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewZonalDnsResolverID(zone, zonalDnsResourceGroup, zonalDnsResolver string) ZonalDnsResolverID {
+func NewZonalDnsResolverID(zone, zonalDnsResourceGroup, zonalDnsResolver string) (ZonalDnsResolverID, error) {
+	if zonalDnsResolver == "" {
+		return ZonalDnsResolverID{}, reserrors.NewFieldIsEmptyError("zonalDnsResolver")
+	}
+	if zonalDnsResourceGroup == "" {
+		return ZonalDnsResolverID{}, reserrors.NewFieldIsEmptyError("zonalDnsResourceGroup")
+	}
+	if zone == "" {
+		return ZonalDnsResolverID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalDnsResolverID{
 		zonalDnsResolver:      zonalDnsResolver,
 		zonalDnsResourceGroup: zonalDnsResourceGroup,
 		zone:                  zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalDnsResolverID(zone, zonalDnsResourceGroup, zonalDnsResolver string) ZonalDnsResolverID {
+	m, err := NewZonalDnsResolverID(zone, zonalDnsResourceGroup, zonalDnsResolver)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseZonalDnsResolverID(path string) (ZonalDnsResolverID, error) {
 	m := ZonalDnsResolverID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalDnsResolverID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ZonalDnsResolverID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalDnsResolverID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalDnsResolverRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalDnsResolver = result["zonalDnsResolver"]
-	m.zonalDnsResourceGroup = result["zonalDnsResourceGroup"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalDnsResolverID) Clone() *ZonalDnsResolverID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ZonalDnsResolverID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ZonalDnsResolverID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalDnsResolverID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalDnsResolverRef(zone, zonalDnsResourceGroup, zonalDnsResolver string) ZonalDnsResolverRef {
+func (m *ZonalDnsResolverID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalDnsResolverRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalDnsResolver = result["zonalDnsResolver"]
+	m.zonalDnsResourceGroup = result["zonalDnsResourceGroup"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalDnsResolverRef(zone, zonalDnsResourceGroup, zonalDnsResolver string) (ZonalDnsResolverRef, error) {
+	if zonalDnsResolver == "" {
+		return ZonalDnsResolverRef{}, reserrors.NewFieldIsEmptyError("zonalDnsResolver")
+	}
+	if zonalDnsResourceGroup == "" {
+		return ZonalDnsResolverRef{}, reserrors.NewFieldIsEmptyError("zonalDnsResourceGroup")
+	}
+	if zone == "" {
+		return ZonalDnsResolverRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalDnsResolverRef{
 		id: ZonalDnsResolverID{
 			zonalDnsResolver:      zonalDnsResolver,
@@ -204,6 +242,14 @@ func NewZonalDnsResolverRef(zone, zonalDnsResourceGroup, zonalDnsResolver string
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalDnsResolverRef(zone, zonalDnsResourceGroup, zonalDnsResolver string) ZonalDnsResolverRef {
+	m, err := NewZonalDnsResolverRef(zone, zonalDnsResourceGroup, zonalDnsResolver)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ZonalDnsResolverRef) String() string {
 }
 
 func (m *ZonalDnsResolverRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalDnsResolverRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalDnsResolver = result["zonalDnsResolver"]
-	m.id.zonalDnsResourceGroup = result["zonalDnsResourceGroup"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalDnsResolverRef) Clone() *ZonalDnsResolverRef {
@@ -319,7 +352,11 @@ func (m *ZonalDnsResolverRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ZonalDnsResolverRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalDnsResolverRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalDnsResolverRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalDnsResolver = result["zonalDnsResolver"]
+	m.id.zonalDnsResourceGroup = result["zonalDnsResourceGroup"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalDnsResolverRef) isParsed() bool {
+	return m != nil && m.id.zonalDnsResolver != "" && m.id.zonalDnsResourceGroup != "" && m.id.zone != ""
 }
 
 func (m *ZonalDnsResolverRef) absolutePath() string {

@@ -33,7 +33,9 @@ func (m *UpdateAddressSpecOrRefWithAttachmentsRequest) Encode(e *jx.Encoder) err
 func (m *UpdateAddressSpecOrRefWithAttachmentsRequest) encodeFields(e *jx.Encoder) error {
 	if m.Address.IsSet() {
 		e.FieldStart("address")
-		m.Address.Value.Encode(e)
+		if err := m.Address.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.OneToOneNat.IsSet() {
@@ -41,7 +43,9 @@ func (m *UpdateAddressSpecOrRefWithAttachmentsRequest) encodeFields(e *jx.Encode
 		if m.OneToOneNat.IsNull() {
 			e.Null()
 		} else {
-			m.OneToOneNat.Value.Encode(e)
+			if err := m.OneToOneNat.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

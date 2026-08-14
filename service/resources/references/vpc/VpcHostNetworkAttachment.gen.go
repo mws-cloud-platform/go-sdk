@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewVpcHostNetworkAttachmentID(zone, vpcHost, project, networkAttachment string) VpcHostNetworkAttachmentID {
+func NewVpcHostNetworkAttachmentID(zone, vpcHost, project, networkAttachment string) (VpcHostNetworkAttachmentID, error) {
+	if networkAttachment == "" {
+		return VpcHostNetworkAttachmentID{}, reserrors.NewFieldIsEmptyError("networkAttachment")
+	}
+	if project == "" {
+		return VpcHostNetworkAttachmentID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if vpcHost == "" {
+		return VpcHostNetworkAttachmentID{}, reserrors.NewFieldIsEmptyError("vpcHost")
+	}
+	if zone == "" {
+		return VpcHostNetworkAttachmentID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := VpcHostNetworkAttachmentID{
 		networkAttachment: networkAttachment,
 		project:           project,
@@ -74,6 +87,14 @@ func NewVpcHostNetworkAttachmentID(zone, vpcHost, project, networkAttachment str
 		zone:              zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustVpcHostNetworkAttachmentID(zone, vpcHost, project, networkAttachment string) VpcHostNetworkAttachmentID {
+	m, err := NewVpcHostNetworkAttachmentID(zone, vpcHost, project, networkAttachment)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseVpcHostNetworkAttachmentID(path string) (VpcHostNetworkAttachmentID, e
 	m := VpcHostNetworkAttachmentID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return VpcHostNetworkAttachmentID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *VpcHostNetworkAttachmentID) String() string {
 	return m.ID()
 }
 
-func (m *VpcHostNetworkAttachmentID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, VpcHostNetworkAttachmentRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.networkAttachment = result["networkAttachment"]
-	m.project = result["project"]
-	m.vpcHost = result["vpcHost"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *VpcHostNetworkAttachmentID) Clone() *VpcHostNetworkAttachmentID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *VpcHostNetworkAttachmentID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *VpcHostNetworkAttachmentID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *VpcHostNetworkAttachmentID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewVpcHostNetworkAttachmentRef(zone, vpcHost, project, networkAttachment string) VpcHostNetworkAttachmentRef {
+func (m *VpcHostNetworkAttachmentID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, VpcHostNetworkAttachmentRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.networkAttachment = result["networkAttachment"]
+	m.project = result["project"]
+	m.vpcHost = result["vpcHost"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewVpcHostNetworkAttachmentRef(zone, vpcHost, project, networkAttachment string) (VpcHostNetworkAttachmentRef, error) {
+	if networkAttachment == "" {
+		return VpcHostNetworkAttachmentRef{}, reserrors.NewFieldIsEmptyError("networkAttachment")
+	}
+	if project == "" {
+		return VpcHostNetworkAttachmentRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if vpcHost == "" {
+		return VpcHostNetworkAttachmentRef{}, reserrors.NewFieldIsEmptyError("vpcHost")
+	}
+	if zone == "" {
+		return VpcHostNetworkAttachmentRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := VpcHostNetworkAttachmentRef{
 		id: VpcHostNetworkAttachmentID{
 			networkAttachment: networkAttachment,
@@ -225,6 +269,14 @@ func NewVpcHostNetworkAttachmentRef(zone, vpcHost, project, networkAttachment st
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustVpcHostNetworkAttachmentRef(zone, vpcHost, project, networkAttachment string) VpcHostNetworkAttachmentRef {
+	m, err := NewVpcHostNetworkAttachmentRef(zone, vpcHost, project, networkAttachment)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *VpcHostNetworkAttachmentRef) String() string {
 }
 
 func (m *VpcHostNetworkAttachmentRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, VpcHostNetworkAttachmentRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.networkAttachment = result["networkAttachment"]
-	m.id.project = result["project"]
-	m.id.vpcHost = result["vpcHost"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *VpcHostNetworkAttachmentRef) Clone() *VpcHostNetworkAttachmentRef {
@@ -348,7 +386,11 @@ func (m *VpcHostNetworkAttachmentRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *VpcHostNetworkAttachmentRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *VpcHostNetworkAttachmentRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, VpcHostNetworkAttachmentRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.networkAttachment = result["networkAttachment"]
+	m.id.project = result["project"]
+	m.id.vpcHost = result["vpcHost"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *VpcHostNetworkAttachmentRef) isParsed() bool {
+	return m != nil && m.id.networkAttachment != "" && m.id.project != "" && m.id.vpcHost != "" && m.id.zone != ""
 }
 
 func (m *VpcHostNetworkAttachmentRef) absolutePath() string {

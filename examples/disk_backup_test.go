@@ -70,7 +70,7 @@ func createDiskFromDiskBackup(
 	var source *computemodel.DiskSpecSourceRequest
 	if diskBackupID != nil {
 		source = &computemodel.DiskSpecSourceRequest{
-			DiskBackup: new(computeref.NewDiskBackupRef(diskBackupID.GetProject(), diskBackupID.GetDiskBackup())),
+			DiskBackup: new(computeref.NewMustDiskBackupRef(diskBackupID.GetProject(), diskBackupID.GetDiskBackup())),
 		}
 	}
 
@@ -80,7 +80,7 @@ func createDiskFromDiskBackup(
 		Body: computemodel.DiskRequest{
 			Spec: computemodel.DiskSpecRequest{
 				BlockSize: new(bytesize.MustParseString("4096 B")),
-				DiskType:  new(computeref.NewDiskTypeRef("nbs-pl2")),
+				DiskType:  new(computeref.NewMustDiskTypeRef("nbs-pl2")),
 				Iops:      new(computemodel.Iops(1000)),
 				Size:      new(bytesize.MustParseString("1 GB")),
 				Zone:      "ru-central1-a",
@@ -125,7 +125,7 @@ func createDiskBackup(ctx context.Context, sdk *mws.SDK, diskBackupName string, 
 			Spec: computemodel.DiskBackupSpecRequest{
 				Source: computemodel.DiskBackupSourceRequest{
 					Disk: &computemodel.DiskBackupSourceDiskRequest{
-						Id: computeref.NewDiskRef(diskID.GetProject(), diskID.GetDisk()),
+						Id: computeref.NewMustDiskRef(diskID.GetProject(), diskID.GetDisk()),
 					},
 				},
 			},

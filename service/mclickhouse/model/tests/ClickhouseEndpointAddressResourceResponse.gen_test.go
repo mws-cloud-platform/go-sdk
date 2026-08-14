@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestClickhouseEndpointAddressResourceResponseMarshalling(t *testing.T) {
@@ -25,6 +26,8 @@ func TestClickhouseEndpointAddressResourceResponseMarshalling(t *testing.T) {
 
 func initClickhouseEndpointAddressResourceResponse() model.ClickhouseEndpointAddressResourceResponse {
 	var v model.ClickhouseEndpointAddressResourceResponse
+	v.Ref = vpc.NewMustAddressRef("projectID", "networkID", "addressID")
+	v.Subnet = vpc.NewMustSubnetRef("projectID", "networkID", "subnetID")
 	v.IpAddress = ipaddress.MustParseIPAddressString("192.168.1.1")
 	v.Dns = make([]model.ClickhouseEndpointAddressDnsResourceResponse, 0)
 	return v

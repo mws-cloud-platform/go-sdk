@@ -35,7 +35,9 @@ func (m *EgressNatStatusInternalResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("subnets")
 		e.ArrStart()
 		for _, elem := range m.Subnets {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

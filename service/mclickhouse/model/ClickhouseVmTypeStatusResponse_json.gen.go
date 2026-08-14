@@ -34,7 +34,9 @@ func (m *ClickhouseVmTypeStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("zones")
 	e.ArrStart()
 	for _, elem := range m.Zones {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 	return nil

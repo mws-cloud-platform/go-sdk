@@ -3,9 +3,6 @@
 package model
 
 import (
-	"context"
-
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
@@ -15,7 +12,7 @@ type SubnetStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
 	DhcpOptions                   *SubnetDhcpOptionsResponse `json:"dhcpOptions,omitempty" yaml:"dhcpOptions,omitempty"`
 	// Регион, которому принадлежит подсеть.
-	Region *rm.RegionRef `json:"region,omitempty" yaml:"region,omitempty"`
+	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
 func (m *SubnetStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -39,14 +36,14 @@ func (m *SubnetStatusResponse) GetDhcpOptionsOr(val SubnetDhcpOptionsResponse) S
 	return val
 }
 
-func (m *SubnetStatusResponse) GetRegion() *rm.RegionRef {
+func (m *SubnetStatusResponse) GetRegion() *rm.RegionID {
 	if m != nil {
 		return m.Region
 	}
 	return nil
 }
 
-func (m *SubnetStatusResponse) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+func (m *SubnetStatusResponse) GetRegionOr(val rm.RegionID) rm.RegionID {
 	if m != nil && m.Region != nil {
 		return *m.Region
 	}
@@ -64,16 +61,4 @@ func (m *SubnetStatusResponse) Clone() *SubnetStatusResponse {
 	clone.Region = m.Region.Clone()
 
 	return &clone
-}
-
-func (m *SubnetStatusResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Region.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Region", err)
-	}
-
-	return nil
 }

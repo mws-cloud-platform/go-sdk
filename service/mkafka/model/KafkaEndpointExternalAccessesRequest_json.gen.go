@@ -39,7 +39,9 @@ func (m *KafkaEndpointExternalAccessesRequest) encodeFields(e *jx.Encoder) error
 		e.FieldStart("brokerAddresses")
 		e.ArrStart()
 		for _, elem := range m.BrokerAddresses {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

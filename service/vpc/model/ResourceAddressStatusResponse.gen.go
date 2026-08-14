@@ -11,7 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Статус IP-адреса внутреннего балансировщика.
+// Описывает статус внутреннего адреса как дополнительный ресурс.
 // Real OAPI model name: ResourceAddressStatus
 type ResourceAddressStatusResponse struct {
 	// Относительная ссылка на статический адрес.

@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewSubnetID(project, network, subnet string) SubnetID {
+func NewSubnetID(project, network, subnet string) (SubnetID, error) {
+	if subnet == "" {
+		return SubnetID{}, reserrors.NewFieldIsEmptyError("subnet")
+	}
+	if network == "" {
+		return SubnetID{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return SubnetID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := SubnetID{
 		subnet:  subnet,
 		network: network,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustSubnetID(project, network, subnet string) SubnetID {
+	m, err := NewSubnetID(project, network, subnet)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseSubnetID(path string) (SubnetID, error) {
 	m := SubnetID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return SubnetID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *SubnetID) String() string {
 	return m.ID()
 }
 
-func (m *SubnetID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, SubnetRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.subnet = result["subnet"]
-	m.network = result["network"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *SubnetID) Clone() *SubnetID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *SubnetID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *SubnetID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *SubnetID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewSubnetRef(project, network, subnet string) SubnetRef {
+func (m *SubnetID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, SubnetRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.subnet = result["subnet"]
+	m.network = result["network"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewSubnetRef(project, network, subnet string) (SubnetRef, error) {
+	if subnet == "" {
+		return SubnetRef{}, reserrors.NewFieldIsEmptyError("subnet")
+	}
+	if network == "" {
+		return SubnetRef{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return SubnetRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := SubnetRef{
 		id: SubnetID{
 			subnet:  subnet,
@@ -204,6 +242,14 @@ func NewSubnetRef(project, network, subnet string) SubnetRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustSubnetRef(project, network, subnet string) SubnetRef {
+	m, err := NewSubnetRef(project, network, subnet)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *SubnetRef) String() string {
 }
 
 func (m *SubnetRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, SubnetRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.subnet = result["subnet"]
-	m.id.network = result["network"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *SubnetRef) Clone() *SubnetRef {
@@ -319,7 +352,11 @@ func (m *SubnetRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *SubnetRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *SubnetRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, SubnetRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.subnet = result["subnet"]
+	m.id.network = result["network"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *SubnetRef) isParsed() bool {
+	return m != nil && m.id.subnet != "" && m.id.network != "" && m.id.project != ""
 }
 
 func (m *SubnetRef) absolutePath() string {

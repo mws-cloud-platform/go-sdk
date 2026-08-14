@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewZonalDiskID(zone, project, disk string) ZonalDiskID {
+func NewZonalDiskID(zone, project, disk string) (ZonalDiskID, error) {
+	if disk == "" {
+		return ZonalDiskID{}, reserrors.NewFieldIsEmptyError("disk")
+	}
+	if project == "" {
+		return ZonalDiskID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalDiskID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalDiskID{
 		disk:    disk,
 		project: project,
 		zone:    zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalDiskID(zone, project, disk string) ZonalDiskID {
+	m, err := NewZonalDiskID(zone, project, disk)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseZonalDiskID(path string) (ZonalDiskID, error) {
 	m := ZonalDiskID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalDiskID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ZonalDiskID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalDiskID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalDiskRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.disk = result["disk"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalDiskID) Clone() *ZonalDiskID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ZonalDiskID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ZonalDiskID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalDiskID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalDiskRef(zone, project, disk string) ZonalDiskRef {
+func (m *ZonalDiskID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalDiskRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.disk = result["disk"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalDiskRef(zone, project, disk string) (ZonalDiskRef, error) {
+	if disk == "" {
+		return ZonalDiskRef{}, reserrors.NewFieldIsEmptyError("disk")
+	}
+	if project == "" {
+		return ZonalDiskRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalDiskRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalDiskRef{
 		id: ZonalDiskID{
 			disk:    disk,
@@ -204,6 +242,14 @@ func NewZonalDiskRef(zone, project, disk string) ZonalDiskRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalDiskRef(zone, project, disk string) ZonalDiskRef {
+	m, err := NewZonalDiskRef(zone, project, disk)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ZonalDiskRef) String() string {
 }
 
 func (m *ZonalDiskRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalDiskRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.disk = result["disk"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalDiskRef) Clone() *ZonalDiskRef {
@@ -319,7 +352,11 @@ func (m *ZonalDiskRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ZonalDiskRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalDiskRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalDiskRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.disk = result["disk"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalDiskRef) isParsed() bool {
+	return m != nil && m.id.disk != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalDiskRef) absolutePath() string {

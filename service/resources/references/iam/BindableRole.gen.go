@@ -41,6 +41,9 @@ var (
 )
 
 func NewBindableRoleID(bindableRole string) (BindableRoleID, error) {
+	if bindableRole == "" {
+		return BindableRoleID{}, reserrors.NewFieldIsEmptyError("bindableRole")
+	}
 	if match := BindableRoleBindableRoleValidatePattern.Match([]byte(bindableRole)); !match {
 		return BindableRoleID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "bindableRole", bindableRole)
 	}
@@ -56,8 +59,6 @@ func NewMustBindableRoleID(bindableRole string) BindableRoleID {
 	if err != nil {
 		panic(err)
 	}
-
-	m.path = m.ID()
 	return m
 }
 
@@ -65,7 +66,7 @@ func ParseBindableRoleID(path string) (BindableRoleID, error) {
 	m := BindableRoleID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return BindableRoleID{}, err
 	}
 	return m, nil
@@ -110,21 +111,6 @@ func (m *BindableRoleID) String() string {
 	return m.ID()
 }
 
-func (m *BindableRoleID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, BindableRoleRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.bindableRole = result["bindableRole"]
-
-	return nil
-}
-
 func (m *BindableRoleID) Clone() *BindableRoleID {
 	if m == nil {
 		return nil
@@ -148,7 +134,7 @@ func (m *BindableRoleID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -169,6 +155,32 @@ func (m *BindableRoleID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *BindableRoleID) Parse(ctx context.Context) error {
+	return nil
+}
+
+func (m *BindableRoleID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, BindableRoleRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.bindableRole = result["bindableRole"]
+
 	return nil
 }
 
@@ -186,10 +198,10 @@ func NewBindableRoleRef(bindableRole string) (BindableRoleRef, error) {
 }
 
 func NewMustBindableRoleRef(bindableRole string) BindableRoleRef {
-	m := BindableRoleRef{
-		id: NewMustBindableRoleID(bindableRole),
+	m, err := NewBindableRoleRef(bindableRole)
+	if err != nil {
+		panic(err)
 	}
-	m.id.path = m.absolutePath()
 	return m
 }
 
@@ -254,18 +266,7 @@ func (m *BindableRoleRef) String() string {
 }
 
 func (m *BindableRoleRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, BindableRoleRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.bindableRole = result["bindableRole"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *BindableRoleRef) Clone() *BindableRoleRef {
@@ -289,7 +290,11 @@ func (m *BindableRoleRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -308,7 +313,35 @@ func (m *BindableRoleRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *BindableRoleRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, BindableRoleRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.bindableRole = result["bindableRole"]
+
 	return nil
+}
+
+func (m *BindableRoleRef) isParsed() bool {
+	return m != nil && m.id.bindableRole != ""
 }
 
 func (m *BindableRoleRef) absolutePath() string {

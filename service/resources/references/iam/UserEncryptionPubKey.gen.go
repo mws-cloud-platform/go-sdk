@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewUserEncryptionPubKeyID(userId, keyName string) UserEncryptionPubKeyID {
+func NewUserEncryptionPubKeyID(userId, keyName string) (UserEncryptionPubKeyID, error) {
+	if keyName == "" {
+		return UserEncryptionPubKeyID{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if userId == "" {
+		return UserEncryptionPubKeyID{}, reserrors.NewFieldIsEmptyError("userId")
+	}
 	m := UserEncryptionPubKeyID{
 		keyName: keyName,
 		userId:  userId,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustUserEncryptionPubKeyID(userId, keyName string) UserEncryptionPubKeyID {
+	m, err := NewUserEncryptionPubKeyID(userId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseUserEncryptionPubKeyID(path string) (UserEncryptionPubKeyID, error) {
 	m := UserEncryptionPubKeyID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return UserEncryptionPubKeyID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *UserEncryptionPubKeyID) String() string {
 	return m.ID()
 }
 
-func (m *UserEncryptionPubKeyID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, UserEncryptionPubKeyRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.keyName = result["keyName"]
-	m.userId = result["userId"]
-
-	return nil
-}
-
 func (m *UserEncryptionPubKeyID) Clone() *UserEncryptionPubKeyID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *UserEncryptionPubKeyID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *UserEncryptionPubKeyID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *UserEncryptionPubKeyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewUserEncryptionPubKeyRef(userId, keyName string) UserEncryptionPubKeyRef {
+func (m *UserEncryptionPubKeyID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, UserEncryptionPubKeyRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.keyName = result["keyName"]
+	m.userId = result["userId"]
+
+	return nil
+}
+
+func NewUserEncryptionPubKeyRef(userId, keyName string) (UserEncryptionPubKeyRef, error) {
+	if keyName == "" {
+		return UserEncryptionPubKeyRef{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if userId == "" {
+		return UserEncryptionPubKeyRef{}, reserrors.NewFieldIsEmptyError("userId")
+	}
 	m := UserEncryptionPubKeyRef{
 		id: UserEncryptionPubKeyID{
 			keyName: keyName,
@@ -183,6 +215,14 @@ func NewUserEncryptionPubKeyRef(userId, keyName string) UserEncryptionPubKeyRef 
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustUserEncryptionPubKeyRef(userId, keyName string) UserEncryptionPubKeyRef {
+	m, err := NewUserEncryptionPubKeyRef(userId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *UserEncryptionPubKeyRef) String() string {
 }
 
 func (m *UserEncryptionPubKeyRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, UserEncryptionPubKeyRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.keyName = result["keyName"]
-	m.id.userId = result["userId"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *UserEncryptionPubKeyRef) Clone() *UserEncryptionPubKeyRef {
@@ -290,7 +318,11 @@ func (m *UserEncryptionPubKeyRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *UserEncryptionPubKeyRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *UserEncryptionPubKeyRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, UserEncryptionPubKeyRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.keyName = result["keyName"]
+	m.id.userId = result["userId"]
+
 	return nil
+}
+
+func (m *UserEncryptionPubKeyRef) isParsed() bool {
+	return m != nil && m.id.keyName != "" && m.id.userId != ""
 }
 
 func (m *UserEncryptionPubKeyRef) absolutePath() string {

@@ -33,9 +33,13 @@ func (m *RoleStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *RoleStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	e.FieldStart("stage")
-	m.Stage.Encode(e)
+	if err := m.Stage.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

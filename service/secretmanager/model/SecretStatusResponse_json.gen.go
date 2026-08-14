@@ -35,13 +35,17 @@ func (m *SecretStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *SecretStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	e.FieldStart("active")
 	e.Bool(m.Active)
 
 	if m.CurrentSecretVersion != nil {
 		e.FieldStart("currentSecretVersion")
-		m.CurrentSecretVersion.Encode(e)
+		if err := m.CurrentSecretVersion.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

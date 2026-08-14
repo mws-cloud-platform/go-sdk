@@ -35,13 +35,17 @@ func (m *CryptoKeyListOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("items")
 	e.ArrStart()
 	for _, elem := range m.Items {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
 	if m.NextPageToken != nil {
 		e.FieldStart("nextPageToken")
-		m.NextPageToken.Encode(e)
+		if err := m.NextPageToken.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

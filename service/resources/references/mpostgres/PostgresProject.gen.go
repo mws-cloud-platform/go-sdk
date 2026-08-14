@@ -4,6 +4,7 @@ package mpostgres
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewPostgresProjectID(project string) PostgresProjectID {
+func NewPostgresProjectID(project string) (PostgresProjectID, error) {
+	if project == "" {
+		return PostgresProjectID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := PostgresProjectID{
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustPostgresProjectID(project string) PostgresProjectID {
+	m, err := NewPostgresProjectID(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParsePostgresProjectID(path string) (PostgresProjectID, error) {
 	m := PostgresProjectID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return PostgresProjectID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *PostgresProjectID) String() string {
 	return m.ID()
 }
 
-func (m *PostgresProjectID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, PostgresProjectRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *PostgresProjectID) Clone() *PostgresProjectID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *PostgresProjectID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *PostgresProjectID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *PostgresProjectID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewPostgresProjectRef(project string) PostgresProjectRef {
+func (m *PostgresProjectID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, PostgresProjectRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewPostgresProjectRef(project string) (PostgresProjectRef, error) {
+	if project == "" {
+		return PostgresProjectRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := PostgresProjectRef{
 		id: PostgresProjectID{
 			project: project,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustPostgresProjectRef(project string) PostgresProjectRef {
+	m, err := NewPostgresProjectRef(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *PostgresProjectRef) String() string {
 }
 
 func (m *PostgresProjectRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, PostgresProjectRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *PostgresProjectRef) Clone() *PostgresProjectRef {
@@ -261,7 +284,11 @@ func (m *PostgresProjectRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *PostgresProjectRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *PostgresProjectRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, PostgresProjectRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *PostgresProjectRef) isParsed() bool {
+	return m != nil && m.id.project != ""
 }
 
 func (m *PostgresProjectRef) absolutePath() string {

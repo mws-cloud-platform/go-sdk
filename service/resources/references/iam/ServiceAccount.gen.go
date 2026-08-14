@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewServiceAccountID(project, serviceAccount string) ServiceAccountID {
+func NewServiceAccountID(project, serviceAccount string) (ServiceAccountID, error) {
+	if serviceAccount == "" {
+		return ServiceAccountID{}, reserrors.NewFieldIsEmptyError("serviceAccount")
+	}
+	if project == "" {
+		return ServiceAccountID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAccountID{
 		serviceAccount: serviceAccount,
 		project:        project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustServiceAccountID(project, serviceAccount string) ServiceAccountID {
+	m, err := NewServiceAccountID(project, serviceAccount)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseServiceAccountID(path string) (ServiceAccountID, error) {
 	m := ServiceAccountID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ServiceAccountID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ServiceAccountID) String() string {
 	return m.ID()
 }
 
-func (m *ServiceAccountID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ServiceAccountRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.serviceAccount = result["serviceAccount"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ServiceAccountID) Clone() *ServiceAccountID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ServiceAccountID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ServiceAccountID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ServiceAccountID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewServiceAccountRef(project, serviceAccount string) ServiceAccountRef {
+func (m *ServiceAccountID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ServiceAccountRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.serviceAccount = result["serviceAccount"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewServiceAccountRef(project, serviceAccount string) (ServiceAccountRef, error) {
+	if serviceAccount == "" {
+		return ServiceAccountRef{}, reserrors.NewFieldIsEmptyError("serviceAccount")
+	}
+	if project == "" {
+		return ServiceAccountRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAccountRef{
 		id: ServiceAccountID{
 			serviceAccount: serviceAccount,
@@ -183,6 +215,14 @@ func NewServiceAccountRef(project, serviceAccount string) ServiceAccountRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustServiceAccountRef(project, serviceAccount string) ServiceAccountRef {
+	m, err := NewServiceAccountRef(project, serviceAccount)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ServiceAccountRef) String() string {
 }
 
 func (m *ServiceAccountRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ServiceAccountRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.serviceAccount = result["serviceAccount"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ServiceAccountRef) Clone() *ServiceAccountRef {
@@ -290,7 +318,11 @@ func (m *ServiceAccountRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ServiceAccountRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ServiceAccountRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ServiceAccountRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.serviceAccount = result["serviceAccount"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ServiceAccountRef) isParsed() bool {
+	return m != nil && m.id.serviceAccount != "" && m.id.project != ""
 }
 
 func (m *ServiceAccountRef) absolutePath() string {

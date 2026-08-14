@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewZonalBulkReconciliationID(zone, resourceType string) ZonalBulkReconciliationID {
+func NewZonalBulkReconciliationID(zone, resourceType string) (ZonalBulkReconciliationID, error) {
+	if resourceType == "" {
+		return ZonalBulkReconciliationID{}, reserrors.NewFieldIsEmptyError("resourceType")
+	}
+	if zone == "" {
+		return ZonalBulkReconciliationID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalBulkReconciliationID{
 		resourceType: resourceType,
 		zone:         zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalBulkReconciliationID(zone, resourceType string) ZonalBulkReconciliationID {
+	m, err := NewZonalBulkReconciliationID(zone, resourceType)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseZonalBulkReconciliationID(path string) (ZonalBulkReconciliationID, err
 	m := ZonalBulkReconciliationID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalBulkReconciliationID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ZonalBulkReconciliationID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalBulkReconciliationID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalBulkReconciliationRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.resourceType = result["resourceType"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalBulkReconciliationID) Clone() *ZonalBulkReconciliationID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ZonalBulkReconciliationID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ZonalBulkReconciliationID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalBulkReconciliationID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalBulkReconciliationRef(zone, resourceType string) ZonalBulkReconciliationRef {
+func (m *ZonalBulkReconciliationID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalBulkReconciliationRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.resourceType = result["resourceType"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalBulkReconciliationRef(zone, resourceType string) (ZonalBulkReconciliationRef, error) {
+	if resourceType == "" {
+		return ZonalBulkReconciliationRef{}, reserrors.NewFieldIsEmptyError("resourceType")
+	}
+	if zone == "" {
+		return ZonalBulkReconciliationRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalBulkReconciliationRef{
 		id: ZonalBulkReconciliationID{
 			resourceType: resourceType,
@@ -183,6 +215,14 @@ func NewZonalBulkReconciliationRef(zone, resourceType string) ZonalBulkReconcili
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalBulkReconciliationRef(zone, resourceType string) ZonalBulkReconciliationRef {
+	m, err := NewZonalBulkReconciliationRef(zone, resourceType)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ZonalBulkReconciliationRef) String() string {
 }
 
 func (m *ZonalBulkReconciliationRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalBulkReconciliationRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.resourceType = result["resourceType"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalBulkReconciliationRef) Clone() *ZonalBulkReconciliationRef {
@@ -290,7 +318,11 @@ func (m *ZonalBulkReconciliationRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ZonalBulkReconciliationRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalBulkReconciliationRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalBulkReconciliationRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.resourceType = result["resourceType"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalBulkReconciliationRef) isParsed() bool {
+	return m != nil && m.id.resourceType != "" && m.id.zone != ""
 }
 
 func (m *ZonalBulkReconciliationRef) absolutePath() string {

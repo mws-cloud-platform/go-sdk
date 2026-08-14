@@ -32,13 +32,19 @@ func (m *DiskStatusIopsResponse) Encode(e *jx.Encoder) error {
 
 func (m *DiskStatusIopsResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("base")
-	m.Base.Encode(e)
+	if err := m.Base.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("extra")
-	m.Extra.Encode(e)
+	if err := m.Extra.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("total")
-	m.Total.Encode(e)
+	if err := m.Total.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

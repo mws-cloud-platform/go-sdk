@@ -4,6 +4,7 @@ package rm
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewResourceGroupID(resourceGroup string) ResourceGroupID {
+func NewResourceGroupID(resourceGroup string) (ResourceGroupID, error) {
+	if resourceGroup == "" {
+		return ResourceGroupID{}, reserrors.NewFieldIsEmptyError("resourceGroup")
+	}
 	m := ResourceGroupID{
 		resourceGroup: resourceGroup,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustResourceGroupID(resourceGroup string) ResourceGroupID {
+	m, err := NewResourceGroupID(resourceGroup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseResourceGroupID(path string) (ResourceGroupID, error) {
 	m := ResourceGroupID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ResourceGroupID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *ResourceGroupID) String() string {
 	return m.ID()
 }
 
-func (m *ResourceGroupID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ResourceGroupRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.resourceGroup = result["resourceGroup"]
-
-	return nil
-}
-
 func (m *ResourceGroupID) Clone() *ResourceGroupID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *ResourceGroupID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *ResourceGroupID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ResourceGroupID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewResourceGroupRef(resourceGroup string) ResourceGroupRef {
+func (m *ResourceGroupID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ResourceGroupRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.resourceGroup = result["resourceGroup"]
+
+	return nil
+}
+
+func NewResourceGroupRef(resourceGroup string) (ResourceGroupRef, error) {
+	if resourceGroup == "" {
+		return ResourceGroupRef{}, reserrors.NewFieldIsEmptyError("resourceGroup")
+	}
 	m := ResourceGroupRef{
 		id: ResourceGroupID{
 			resourceGroup: resourceGroup,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustResourceGroupRef(resourceGroup string) ResourceGroupRef {
+	m, err := NewResourceGroupRef(resourceGroup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *ResourceGroupRef) String() string {
 }
 
 func (m *ResourceGroupRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ResourceGroupRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.resourceGroup = result["resourceGroup"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ResourceGroupRef) Clone() *ResourceGroupRef {
@@ -261,7 +284,11 @@ func (m *ResourceGroupRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *ResourceGroupRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ResourceGroupRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ResourceGroupRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.resourceGroup = result["resourceGroup"]
+
 	return nil
+}
+
+func (m *ResourceGroupRef) isParsed() bool {
+	return m != nil && m.id.resourceGroup != ""
 }
 
 func (m *ResourceGroupRef) absolutePath() string {

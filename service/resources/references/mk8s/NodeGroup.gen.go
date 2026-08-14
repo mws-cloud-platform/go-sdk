@@ -4,6 +4,7 @@ package mk8s
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewNodeGroupID(project, clusterName, nodeGroupName string) NodeGroupID {
+func NewNodeGroupID(project, clusterName, nodeGroupName string) (NodeGroupID, error) {
+	if nodeGroupName == "" {
+		return NodeGroupID{}, reserrors.NewFieldIsEmptyError("nodeGroupName")
+	}
+	if clusterName == "" {
+		return NodeGroupID{}, reserrors.NewFieldIsEmptyError("clusterName")
+	}
+	if project == "" {
+		return NodeGroupID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := NodeGroupID{
 		nodeGroupName: nodeGroupName,
 		clusterName:   clusterName,
 		project:       project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustNodeGroupID(project, clusterName, nodeGroupName string) NodeGroupID {
+	m, err := NewNodeGroupID(project, clusterName, nodeGroupName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseNodeGroupID(path string) (NodeGroupID, error) {
 	m := NodeGroupID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return NodeGroupID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *NodeGroupID) String() string {
 	return m.ID()
 }
 
-func (m *NodeGroupID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, NodeGroupRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.nodeGroupName = result["nodeGroupName"]
-	m.clusterName = result["clusterName"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *NodeGroupID) Clone() *NodeGroupID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *NodeGroupID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *NodeGroupID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *NodeGroupID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewNodeGroupRef(project, clusterName, nodeGroupName string) NodeGroupRef {
+func (m *NodeGroupID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, NodeGroupRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.nodeGroupName = result["nodeGroupName"]
+	m.clusterName = result["clusterName"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewNodeGroupRef(project, clusterName, nodeGroupName string) (NodeGroupRef, error) {
+	if nodeGroupName == "" {
+		return NodeGroupRef{}, reserrors.NewFieldIsEmptyError("nodeGroupName")
+	}
+	if clusterName == "" {
+		return NodeGroupRef{}, reserrors.NewFieldIsEmptyError("clusterName")
+	}
+	if project == "" {
+		return NodeGroupRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := NodeGroupRef{
 		id: NodeGroupID{
 			nodeGroupName: nodeGroupName,
@@ -204,6 +242,14 @@ func NewNodeGroupRef(project, clusterName, nodeGroupName string) NodeGroupRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustNodeGroupRef(project, clusterName, nodeGroupName string) NodeGroupRef {
+	m, err := NewNodeGroupRef(project, clusterName, nodeGroupName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *NodeGroupRef) String() string {
 }
 
 func (m *NodeGroupRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, NodeGroupRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.nodeGroupName = result["nodeGroupName"]
-	m.id.clusterName = result["clusterName"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *NodeGroupRef) Clone() *NodeGroupRef {
@@ -319,7 +352,11 @@ func (m *NodeGroupRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *NodeGroupRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *NodeGroupRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, NodeGroupRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.nodeGroupName = result["nodeGroupName"]
+	m.id.clusterName = result["clusterName"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *NodeGroupRef) isParsed() bool {
+	return m != nil && m.id.nodeGroupName != "" && m.id.clusterName != "" && m.id.project != ""
 }
 
 func (m *NodeGroupRef) absolutePath() string {

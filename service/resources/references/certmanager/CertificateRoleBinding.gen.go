@@ -4,6 +4,7 @@ package certmanager
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewCertificateRoleBindingID(project, name, roleBinding string) CertificateRoleBindingID {
+func NewCertificateRoleBindingID(project, name, roleBinding string) (CertificateRoleBindingID, error) {
+	if roleBinding == "" {
+		return CertificateRoleBindingID{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if name == "" {
+		return CertificateRoleBindingID{}, reserrors.NewFieldIsEmptyError("name")
+	}
+	if project == "" {
+		return CertificateRoleBindingID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := CertificateRoleBindingID{
 		roleBinding: roleBinding,
 		name:        name,
 		project:     project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustCertificateRoleBindingID(project, name, roleBinding string) CertificateRoleBindingID {
+	m, err := NewCertificateRoleBindingID(project, name, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseCertificateRoleBindingID(path string) (CertificateRoleBindingID, error
 	m := CertificateRoleBindingID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return CertificateRoleBindingID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *CertificateRoleBindingID) String() string {
 	return m.ID()
 }
 
-func (m *CertificateRoleBindingID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, CertificateRoleBindingRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.roleBinding = result["roleBinding"]
-	m.name = result["name"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *CertificateRoleBindingID) Clone() *CertificateRoleBindingID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *CertificateRoleBindingID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *CertificateRoleBindingID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *CertificateRoleBindingID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewCertificateRoleBindingRef(project, name, roleBinding string) CertificateRoleBindingRef {
+func (m *CertificateRoleBindingID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, CertificateRoleBindingRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.roleBinding = result["roleBinding"]
+	m.name = result["name"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewCertificateRoleBindingRef(project, name, roleBinding string) (CertificateRoleBindingRef, error) {
+	if roleBinding == "" {
+		return CertificateRoleBindingRef{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if name == "" {
+		return CertificateRoleBindingRef{}, reserrors.NewFieldIsEmptyError("name")
+	}
+	if project == "" {
+		return CertificateRoleBindingRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := CertificateRoleBindingRef{
 		id: CertificateRoleBindingID{
 			roleBinding: roleBinding,
@@ -204,6 +242,14 @@ func NewCertificateRoleBindingRef(project, name, roleBinding string) Certificate
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustCertificateRoleBindingRef(project, name, roleBinding string) CertificateRoleBindingRef {
+	m, err := NewCertificateRoleBindingRef(project, name, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *CertificateRoleBindingRef) String() string {
 }
 
 func (m *CertificateRoleBindingRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, CertificateRoleBindingRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.roleBinding = result["roleBinding"]
-	m.id.name = result["name"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *CertificateRoleBindingRef) Clone() *CertificateRoleBindingRef {
@@ -319,7 +352,11 @@ func (m *CertificateRoleBindingRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *CertificateRoleBindingRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *CertificateRoleBindingRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, CertificateRoleBindingRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.roleBinding = result["roleBinding"]
+	m.id.name = result["name"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *CertificateRoleBindingRef) isParsed() bool {
+	return m != nil && m.id.roleBinding != "" && m.id.name != "" && m.id.project != ""
 }
 
 func (m *CertificateRoleBindingRef) absolutePath() string {

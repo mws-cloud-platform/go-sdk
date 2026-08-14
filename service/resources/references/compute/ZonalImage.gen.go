@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewZonalImageID(zone, project, image string) ZonalImageID {
+func NewZonalImageID(zone, project, image string) (ZonalImageID, error) {
+	if image == "" {
+		return ZonalImageID{}, reserrors.NewFieldIsEmptyError("image")
+	}
+	if project == "" {
+		return ZonalImageID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalImageID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalImageID{
 		image:   image,
 		project: project,
 		zone:    zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalImageID(zone, project, image string) ZonalImageID {
+	m, err := NewZonalImageID(zone, project, image)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseZonalImageID(path string) (ZonalImageID, error) {
 	m := ZonalImageID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalImageID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ZonalImageID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalImageID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalImageRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.image = result["image"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalImageID) Clone() *ZonalImageID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ZonalImageID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ZonalImageID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalImageID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalImageRef(zone, project, image string) ZonalImageRef {
+func (m *ZonalImageID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalImageRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.image = result["image"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalImageRef(zone, project, image string) (ZonalImageRef, error) {
+	if image == "" {
+		return ZonalImageRef{}, reserrors.NewFieldIsEmptyError("image")
+	}
+	if project == "" {
+		return ZonalImageRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalImageRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalImageRef{
 		id: ZonalImageID{
 			image:   image,
@@ -204,6 +242,14 @@ func NewZonalImageRef(zone, project, image string) ZonalImageRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalImageRef(zone, project, image string) ZonalImageRef {
+	m, err := NewZonalImageRef(zone, project, image)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ZonalImageRef) String() string {
 }
 
 func (m *ZonalImageRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalImageRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.image = result["image"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalImageRef) Clone() *ZonalImageRef {
@@ -319,7 +352,11 @@ func (m *ZonalImageRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ZonalImageRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalImageRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalImageRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.image = result["image"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalImageRef) isParsed() bool {
+	return m != nil && m.id.image != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalImageRef) absolutePath() string {

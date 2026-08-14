@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewUserEncryptionKeyID(userId, keyName string) UserEncryptionKeyID {
+func NewUserEncryptionKeyID(userId, keyName string) (UserEncryptionKeyID, error) {
+	if keyName == "" {
+		return UserEncryptionKeyID{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if userId == "" {
+		return UserEncryptionKeyID{}, reserrors.NewFieldIsEmptyError("userId")
+	}
 	m := UserEncryptionKeyID{
 		keyName: keyName,
 		userId:  userId,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustUserEncryptionKeyID(userId, keyName string) UserEncryptionKeyID {
+	m, err := NewUserEncryptionKeyID(userId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseUserEncryptionKeyID(path string) (UserEncryptionKeyID, error) {
 	m := UserEncryptionKeyID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return UserEncryptionKeyID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *UserEncryptionKeyID) String() string {
 	return m.ID()
 }
 
-func (m *UserEncryptionKeyID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, UserEncryptionKeyRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.keyName = result["keyName"]
-	m.userId = result["userId"]
-
-	return nil
-}
-
 func (m *UserEncryptionKeyID) Clone() *UserEncryptionKeyID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *UserEncryptionKeyID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *UserEncryptionKeyID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *UserEncryptionKeyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewUserEncryptionKeyRef(userId, keyName string) UserEncryptionKeyRef {
+func (m *UserEncryptionKeyID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, UserEncryptionKeyRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.keyName = result["keyName"]
+	m.userId = result["userId"]
+
+	return nil
+}
+
+func NewUserEncryptionKeyRef(userId, keyName string) (UserEncryptionKeyRef, error) {
+	if keyName == "" {
+		return UserEncryptionKeyRef{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if userId == "" {
+		return UserEncryptionKeyRef{}, reserrors.NewFieldIsEmptyError("userId")
+	}
 	m := UserEncryptionKeyRef{
 		id: UserEncryptionKeyID{
 			keyName: keyName,
@@ -183,6 +215,14 @@ func NewUserEncryptionKeyRef(userId, keyName string) UserEncryptionKeyRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustUserEncryptionKeyRef(userId, keyName string) UserEncryptionKeyRef {
+	m, err := NewUserEncryptionKeyRef(userId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *UserEncryptionKeyRef) String() string {
 }
 
 func (m *UserEncryptionKeyRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, UserEncryptionKeyRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.keyName = result["keyName"]
-	m.id.userId = result["userId"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *UserEncryptionKeyRef) Clone() *UserEncryptionKeyRef {
@@ -290,7 +318,11 @@ func (m *UserEncryptionKeyRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *UserEncryptionKeyRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *UserEncryptionKeyRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, UserEncryptionKeyRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.keyName = result["keyName"]
+	m.id.userId = result["userId"]
+
 	return nil
+}
+
+func (m *UserEncryptionKeyRef) isParsed() bool {
+	return m != nil && m.id.keyName != "" && m.id.userId != ""
 }
 
 func (m *UserEncryptionKeyRef) absolutePath() string {

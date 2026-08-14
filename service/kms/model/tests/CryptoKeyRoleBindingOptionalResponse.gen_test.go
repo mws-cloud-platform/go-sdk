@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/kms/model"
+	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 func TestCryptoKeyRoleBindingOptionalResponseMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestCryptoKeyRoleBindingOptionalResponseMarshalling(t *testing.T) {
 
 func initCryptoKeyRoleBindingOptionalResponse() model.CryptoKeyRoleBindingOptionalResponse {
 	var v model.CryptoKeyRoleBindingOptionalResponse
+	v.Spec.Role = iam.NewMustRoleRef("roleID")
 	return v
 }

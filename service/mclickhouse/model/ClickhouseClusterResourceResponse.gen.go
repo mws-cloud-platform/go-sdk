@@ -212,10 +212,6 @@ func (m *ClickhouseClusterResourceResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if err := m.Region.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Region", err)
-	}
-
 	for index := range m.Endpoints {
 		if err := m.Endpoints[index].Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Endpoints"+fmt.Sprint("[", index, "]"), err)

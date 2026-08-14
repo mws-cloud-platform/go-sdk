@@ -2,13 +2,6 @@
 
 package model
 
-import (
-	"context"
-	"fmt"
-
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-)
-
 // Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 // Real OAPI model name: TypedResourceMetadata
 type TypedResourceMetadataRequest struct {
@@ -119,18 +112,4 @@ func (m *TypedResourceMetadataRequest) Clone() *TypedResourceMetadataRequest {
 		clone.Description = &cloneDescription
 	}
 	return &clone
-}
-
-func (m *TypedResourceMetadataRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	for index := range m.Usages {
-		if err := m.Usages[index].Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Usages"+fmt.Sprint("[", index, "]"), err)
-		}
-	}
-
-	return nil
 }

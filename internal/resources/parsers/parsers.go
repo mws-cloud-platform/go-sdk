@@ -56,12 +56,38 @@ func (p PathElement) RealValue() string {
 	return "{" + p.Value + "}"
 }
 
+// Option configures the Reference parsing behavior.
+type Option func(*referenceConfig)
+
+type referenceConfig struct {
+	allowPartial bool
+}
+
+// AllowPartial enables a simplified parsing mode for Reference.
+//
+// When the reference is shorter than the template and a missing key field cannot be
+// found in the context, parsing stops without an error and returns the fields that
+// were successfully extracted. This is useful when unmarshaling a partial reference
+// (e.g. during JSON Decode) where the parent context is not yet available: the ref is
+// filled with whatever data is present in the path, and the remaining fields can be
+// resolved later via a Parse(ctx) call.
+//
+// Structural errors are still returned even in this mode.
+//
+// Only the context search error is suppressed.
+func AllowPartial() Option {
+	return func(c *referenceConfig) {
+		c.allowPartial = true
+	}
+}
+
 // Reference compares the reference string with the template and extracts the key fields.
 // Key fields in the context are taken into account if the reference is smaller than the template.
 // Input: ref - "service/foo1/foo2/barName/hello/worldName", template.String() - "foo1/foo2/{bar}/hello/{world}",
 // serviceName - service.
 // Result: map[string]string{"bar":"barName", "world":"worldName"}
-func Reference(ctx context.Context, ref string, template Template) (map[string]string, error) {
+func Reference(ctx context.Context, ref string, template Template, opts ...Option) (map[string]string, error) {
+	cfg := applyOpts(opts)
 	splitRef := strings.Split(ref, "/")
 	slices.Reverse(splitRef)
 
@@ -112,6 +138,9 @@ func Reference(ctx context.Context, ref string, template Template) (map[string]s
 
 		val, ok := valuesctx.From(ctx, templateValue.Value)
 		if !ok {
+			if cfg.allowPartial {
+				break
+			}
 			return nil, fmt.Errorf("%w: value '%s' was not found in the context", ErrReferenceParsing, templateValue.Value)
 		}
 		if !templateValue.Matches(val) {
@@ -121,6 +150,14 @@ func Reference(ctx context.Context, ref string, template Template) (map[string]s
 	}
 
 	return result, nil
+}
+
+func applyOpts(opts []Option) referenceConfig {
+	cfg := referenceConfig{}
+	for _, o := range opts {
+		o(&cfg)
+	}
+	return cfg
 }
 
 func CheckOneOfReference(ref string) error {

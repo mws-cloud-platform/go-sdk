@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	"go.mws.cloud/go-sdk/service/mkafka/model"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func TestKafkaClusterRequestMarshalling(t *testing.T) {
@@ -26,6 +27,7 @@ func TestKafkaClusterRequestMarshalling(t *testing.T) {
 func initKafkaClusterRequest() model.KafkaClusterRequest {
 	var v model.KafkaClusterRequest
 	v.Spec.Endpoints = make([]model.KafkaEndpointRequest, 0)
+	v.Spec.Instances.Broker.VmType = compute.NewMustVmTypeRef("vmTypeID")
 	v.Spec.Instances.Broker.Disk.Size = bytesize.MustParseString("0 B")
 	return v
 }

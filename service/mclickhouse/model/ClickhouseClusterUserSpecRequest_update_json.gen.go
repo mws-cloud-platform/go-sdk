@@ -34,7 +34,9 @@ func (m *UpdateClickhouseClusterUserSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateClickhouseClusterUserSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Role.IsSet() {
 		e.FieldStart("role")
-		m.Role.Value.Encode(e)
+		if err := m.Role.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Password.IsSet() {

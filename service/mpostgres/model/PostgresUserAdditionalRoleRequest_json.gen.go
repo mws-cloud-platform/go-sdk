@@ -34,7 +34,9 @@ func (m *PostgresUserAdditionalRoleRequest) Encode(e *jx.Encoder) error {
 func (m *PostgresUserAdditionalRoleRequest) encodeFields(e *jx.Encoder) error {
 	if m.Name != nil {
 		e.FieldStart("name")
-		m.Name.Encode(e)
+		if err := m.Name.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ExpiresAt != nil {

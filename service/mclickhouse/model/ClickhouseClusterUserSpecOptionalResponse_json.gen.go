@@ -33,7 +33,9 @@ func (m *ClickhouseClusterUserSpecOptionalResponse) Encode(e *jx.Encoder) error 
 func (m *ClickhouseClusterUserSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Role.IsSet() {
 		e.FieldStart("role")
-		m.Role.Value.Encode(e)
+		if err := m.Role.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

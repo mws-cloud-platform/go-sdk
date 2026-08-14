@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewServiceEndpointID(project, network, serviceEndpoint string) ServiceEndpointID {
+func NewServiceEndpointID(project, network, serviceEndpoint string) (ServiceEndpointID, error) {
+	if serviceEndpoint == "" {
+		return ServiceEndpointID{}, reserrors.NewFieldIsEmptyError("serviceEndpoint")
+	}
+	if network == "" {
+		return ServiceEndpointID{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return ServiceEndpointID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceEndpointID{
 		serviceEndpoint: serviceEndpoint,
 		network:         network,
 		project:         project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustServiceEndpointID(project, network, serviceEndpoint string) ServiceEndpointID {
+	m, err := NewServiceEndpointID(project, network, serviceEndpoint)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseServiceEndpointID(path string) (ServiceEndpointID, error) {
 	m := ServiceEndpointID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ServiceEndpointID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ServiceEndpointID) String() string {
 	return m.ID()
 }
 
-func (m *ServiceEndpointID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ServiceEndpointRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.serviceEndpoint = result["serviceEndpoint"]
-	m.network = result["network"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ServiceEndpointID) Clone() *ServiceEndpointID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ServiceEndpointID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ServiceEndpointID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ServiceEndpointID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewServiceEndpointRef(project, network, serviceEndpoint string) ServiceEndpointRef {
+func (m *ServiceEndpointID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ServiceEndpointRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.serviceEndpoint = result["serviceEndpoint"]
+	m.network = result["network"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewServiceEndpointRef(project, network, serviceEndpoint string) (ServiceEndpointRef, error) {
+	if serviceEndpoint == "" {
+		return ServiceEndpointRef{}, reserrors.NewFieldIsEmptyError("serviceEndpoint")
+	}
+	if network == "" {
+		return ServiceEndpointRef{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return ServiceEndpointRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceEndpointRef{
 		id: ServiceEndpointID{
 			serviceEndpoint: serviceEndpoint,
@@ -204,6 +242,14 @@ func NewServiceEndpointRef(project, network, serviceEndpoint string) ServiceEndp
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustServiceEndpointRef(project, network, serviceEndpoint string) ServiceEndpointRef {
+	m, err := NewServiceEndpointRef(project, network, serviceEndpoint)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ServiceEndpointRef) String() string {
 }
 
 func (m *ServiceEndpointRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ServiceEndpointRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.serviceEndpoint = result["serviceEndpoint"]
-	m.id.network = result["network"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ServiceEndpointRef) Clone() *ServiceEndpointRef {
@@ -319,7 +352,11 @@ func (m *ServiceEndpointRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ServiceEndpointRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ServiceEndpointRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ServiceEndpointRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.serviceEndpoint = result["serviceEndpoint"]
+	m.id.network = result["network"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ServiceEndpointRef) isParsed() bool {
+	return m != nil && m.id.serviceEndpoint != "" && m.id.network != "" && m.id.project != ""
 }
 
 func (m *ServiceEndpointRef) absolutePath() string {

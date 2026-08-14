@@ -35,10 +35,6 @@ func decodeListAuthorizedKeyResponse(resp *http.Response) (*client.ListAuthorize
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -225,10 +221,6 @@ func decodeGetAuthorizedKeyV2Response(resp *http.Response) (*client.GetAuthorize
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -327,10 +319,6 @@ func decodeUpsertAuthorizedKeyV2Response(resp *http.Response) (*client.UpsertAut
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -345,10 +333,6 @@ func decodeUpsertAuthorizedKeyV2Response(resp *http.Response) (*client.UpsertAut
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			if err = result.Response201.Parse(resp.Request.Context()); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
@@ -555,10 +539,6 @@ func decodeGetAuthorizedKeyResponse(resp *http.Response) (*client.GetAuthorizedK
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -657,10 +637,6 @@ func decodeUpsertAuthorizedKeyResponse(resp *http.Response) (*client.UpsertAutho
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -675,10 +651,6 @@ func decodeUpsertAuthorizedKeyResponse(resp *http.Response) (*client.UpsertAutho
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			if err = result.Response201.Parse(resp.Request.Context()); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

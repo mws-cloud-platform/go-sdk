@@ -34,17 +34,23 @@ func (m *PostgresNetworkAddressResponse) Encode(e *jx.Encoder) error {
 func (m *PostgresNetworkAddressResponse) encodeFields(e *jx.Encoder) error {
 	if m.Ref != nil {
 		e.FieldStart("ref")
-		m.Ref.Encode(e)
+		if err := m.Ref.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Spec != nil {
 		e.FieldStart("spec")
-		m.Spec.Encode(e)
+		if err := m.Spec.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ExternalAccess != nil {
 		e.FieldStart("externalAccess")
-		m.ExternalAccess.Encode(e)
+		if err := m.ExternalAccess.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

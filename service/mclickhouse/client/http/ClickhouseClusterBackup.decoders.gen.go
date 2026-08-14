@@ -35,10 +35,6 @@ func decodeListClickhouseClusterBackupsResponse(resp *http.Response) (*client.Li
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -225,10 +221,6 @@ func decodeGetClickhouseClusterBackupResponse(resp *http.Response) (*client.GetC
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -324,10 +316,6 @@ func decodeUpsertClickhouseClusterBackupResponse(resp *http.Response) (*client.U
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

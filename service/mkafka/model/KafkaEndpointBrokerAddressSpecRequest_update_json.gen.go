@@ -34,7 +34,9 @@ func (m *UpdateKafkaEndpointBrokerAddressSpecRequest) Encode(e *jx.Encoder) erro
 func (m *UpdateKafkaEndpointBrokerAddressSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Subnet.IsSet() {
 		e.FieldStart("subnet")
-		m.Subnet.Value.Encode(e)
+		if err := m.Subnet.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

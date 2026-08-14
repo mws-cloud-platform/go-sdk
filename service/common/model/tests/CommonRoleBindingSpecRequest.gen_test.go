@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 func TestCommonRoleBindingSpecRequestMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestCommonRoleBindingSpecRequestMarshalling(t *testing.T) {
 
 func initCommonRoleBindingSpecRequest() common.CommonRoleBindingSpecRequest {
 	var v common.CommonRoleBindingSpecRequest
+	v.Role = iam.NewMustRoleRef("roleID")
 	return v
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 	"go.mws.cloud/go-sdk/service/rm/model"
 )
 
@@ -24,5 +25,6 @@ func TestZoneResponseMarshalling(t *testing.T) {
 
 func initZoneResponse() model.ZoneResponse {
 	var v model.ZoneResponse
+	v.Spec.Region = rm.NewMustRegionRef("regionID")
 	return v
 }

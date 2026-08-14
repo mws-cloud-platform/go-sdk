@@ -34,26 +34,38 @@ func (m *DeploymentStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *DeploymentStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.ContextWindowSize != nil {
 		e.FieldStart("contextWindowSize")
 		e.UInt(*m.ContextWindowSize)
 	}
 
 	e.FieldStart("inputModalities")
-	m.InputModalities.Encode(e)
+	if err := m.InputModalities.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("outputModalities")
-	m.OutputModalities.Encode(e)
+	if err := m.OutputModalities.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("modalities")
-	m.Modalities.Encode(e)
+	if err := m.Modalities.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("capabilities")
-	m.Capabilities.Encode(e)
+	if err := m.Capabilities.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("deprecation")
-	m.Deprecation.Encode(e)
+	if err := m.Deprecation.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Size != nil {
 		e.FieldStart("size")

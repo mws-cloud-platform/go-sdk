@@ -40,7 +40,9 @@ func (m *PostgresClusterRestoreRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.BackupId != nil {
 		e.FieldStart("backupId")
-		m.BackupId.Encode(e)
+		if err := m.BackupId.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

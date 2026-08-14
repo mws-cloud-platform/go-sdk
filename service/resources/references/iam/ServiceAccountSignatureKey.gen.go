@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewServiceAccountSignatureKeyID(project, serviceAccountId, keyName string) ServiceAccountSignatureKeyID {
+func NewServiceAccountSignatureKeyID(project, serviceAccountId, keyName string) (ServiceAccountSignatureKeyID, error) {
+	if keyName == "" {
+		return ServiceAccountSignatureKeyID{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if serviceAccountId == "" {
+		return ServiceAccountSignatureKeyID{}, reserrors.NewFieldIsEmptyError("serviceAccountId")
+	}
+	if project == "" {
+		return ServiceAccountSignatureKeyID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAccountSignatureKeyID{
 		keyName:          keyName,
 		serviceAccountId: serviceAccountId,
 		project:          project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustServiceAccountSignatureKeyID(project, serviceAccountId, keyName string) ServiceAccountSignatureKeyID {
+	m, err := NewServiceAccountSignatureKeyID(project, serviceAccountId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseServiceAccountSignatureKeyID(path string) (ServiceAccountSignatureKeyI
 	m := ServiceAccountSignatureKeyID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ServiceAccountSignatureKeyID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ServiceAccountSignatureKeyID) String() string {
 	return m.ID()
 }
 
-func (m *ServiceAccountSignatureKeyID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ServiceAccountSignatureKeyRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.keyName = result["keyName"]
-	m.serviceAccountId = result["serviceAccountId"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ServiceAccountSignatureKeyID) Clone() *ServiceAccountSignatureKeyID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ServiceAccountSignatureKeyID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ServiceAccountSignatureKeyID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ServiceAccountSignatureKeyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewServiceAccountSignatureKeyRef(project, serviceAccountId, keyName string) ServiceAccountSignatureKeyRef {
+func (m *ServiceAccountSignatureKeyID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ServiceAccountSignatureKeyRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.keyName = result["keyName"]
+	m.serviceAccountId = result["serviceAccountId"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewServiceAccountSignatureKeyRef(project, serviceAccountId, keyName string) (ServiceAccountSignatureKeyRef, error) {
+	if keyName == "" {
+		return ServiceAccountSignatureKeyRef{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if serviceAccountId == "" {
+		return ServiceAccountSignatureKeyRef{}, reserrors.NewFieldIsEmptyError("serviceAccountId")
+	}
+	if project == "" {
+		return ServiceAccountSignatureKeyRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAccountSignatureKeyRef{
 		id: ServiceAccountSignatureKeyID{
 			keyName:          keyName,
@@ -204,6 +242,14 @@ func NewServiceAccountSignatureKeyRef(project, serviceAccountId, keyName string)
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustServiceAccountSignatureKeyRef(project, serviceAccountId, keyName string) ServiceAccountSignatureKeyRef {
+	m, err := NewServiceAccountSignatureKeyRef(project, serviceAccountId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ServiceAccountSignatureKeyRef) String() string {
 }
 
 func (m *ServiceAccountSignatureKeyRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ServiceAccountSignatureKeyRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.keyName = result["keyName"]
-	m.id.serviceAccountId = result["serviceAccountId"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ServiceAccountSignatureKeyRef) Clone() *ServiceAccountSignatureKeyRef {
@@ -319,7 +352,11 @@ func (m *ServiceAccountSignatureKeyRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ServiceAccountSignatureKeyRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ServiceAccountSignatureKeyRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ServiceAccountSignatureKeyRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.keyName = result["keyName"]
+	m.id.serviceAccountId = result["serviceAccountId"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ServiceAccountSignatureKeyRef) isParsed() bool {
+	return m != nil && m.id.keyName != "" && m.id.serviceAccountId != "" && m.id.project != ""
 }
 
 func (m *ServiceAccountSignatureKeyRef) absolutePath() string {

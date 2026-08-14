@@ -40,7 +40,9 @@ func (m *UpdateKafkaControllerInstanceSpecRequest) encodeFields(e *jx.Encoder) e
 
 	if m.VmType.IsSet() {
 		e.FieldStart("vmType")
-		m.VmType.Value.Encode(e)
+		if err := m.VmType.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Disk.IsSet() {
@@ -48,7 +50,9 @@ func (m *UpdateKafkaControllerInstanceSpecRequest) encodeFields(e *jx.Encoder) e
 		if m.Disk.IsNull() {
 			e.Null()
 		} else {
-			m.Disk.Value.Encode(e)
+			if err := m.Disk.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -56,7 +60,9 @@ func (m *UpdateKafkaControllerInstanceSpecRequest) encodeFields(e *jx.Encoder) e
 		e.FieldStart("allocation")
 		e.ArrStart()
 		for _, elem := range m.Allocation.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

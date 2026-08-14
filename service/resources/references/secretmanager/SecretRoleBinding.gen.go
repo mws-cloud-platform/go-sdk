@@ -4,6 +4,7 @@ package secretmanager
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewSecretRoleBindingID(project, secretName, roleBinding string) SecretRoleBindingID {
+func NewSecretRoleBindingID(project, secretName, roleBinding string) (SecretRoleBindingID, error) {
+	if roleBinding == "" {
+		return SecretRoleBindingID{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if secretName == "" {
+		return SecretRoleBindingID{}, reserrors.NewFieldIsEmptyError("secretName")
+	}
+	if project == "" {
+		return SecretRoleBindingID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := SecretRoleBindingID{
 		roleBinding: roleBinding,
 		secretName:  secretName,
 		project:     project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustSecretRoleBindingID(project, secretName, roleBinding string) SecretRoleBindingID {
+	m, err := NewSecretRoleBindingID(project, secretName, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseSecretRoleBindingID(path string) (SecretRoleBindingID, error) {
 	m := SecretRoleBindingID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return SecretRoleBindingID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *SecretRoleBindingID) String() string {
 	return m.ID()
 }
 
-func (m *SecretRoleBindingID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, SecretRoleBindingRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.roleBinding = result["roleBinding"]
-	m.secretName = result["secretName"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *SecretRoleBindingID) Clone() *SecretRoleBindingID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *SecretRoleBindingID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *SecretRoleBindingID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *SecretRoleBindingID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewSecretRoleBindingRef(project, secretName, roleBinding string) SecretRoleBindingRef {
+func (m *SecretRoleBindingID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, SecretRoleBindingRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.roleBinding = result["roleBinding"]
+	m.secretName = result["secretName"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewSecretRoleBindingRef(project, secretName, roleBinding string) (SecretRoleBindingRef, error) {
+	if roleBinding == "" {
+		return SecretRoleBindingRef{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if secretName == "" {
+		return SecretRoleBindingRef{}, reserrors.NewFieldIsEmptyError("secretName")
+	}
+	if project == "" {
+		return SecretRoleBindingRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := SecretRoleBindingRef{
 		id: SecretRoleBindingID{
 			roleBinding: roleBinding,
@@ -204,6 +242,14 @@ func NewSecretRoleBindingRef(project, secretName, roleBinding string) SecretRole
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustSecretRoleBindingRef(project, secretName, roleBinding string) SecretRoleBindingRef {
+	m, err := NewSecretRoleBindingRef(project, secretName, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *SecretRoleBindingRef) String() string {
 }
 
 func (m *SecretRoleBindingRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, SecretRoleBindingRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.roleBinding = result["roleBinding"]
-	m.id.secretName = result["secretName"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *SecretRoleBindingRef) Clone() *SecretRoleBindingRef {
@@ -319,7 +352,11 @@ func (m *SecretRoleBindingRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *SecretRoleBindingRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *SecretRoleBindingRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, SecretRoleBindingRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.roleBinding = result["roleBinding"]
+	m.id.secretName = result["secretName"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *SecretRoleBindingRef) isParsed() bool {
+	return m != nil && m.id.roleBinding != "" && m.id.secretName != "" && m.id.project != ""
 }
 
 func (m *SecretRoleBindingRef) absolutePath() string {

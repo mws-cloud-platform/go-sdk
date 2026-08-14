@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
 
 type ParseReferenceError struct {
@@ -190,3 +191,29 @@ func PathAccumulatorErrorAsIndexArrFuncWrap(f func(*jx.Decoder) error) func(*jx.
 		return nil
 	}
 }
+
+type FieldIsEmptyError struct {
+	FieldName string
+}
+
+func (e *FieldIsEmptyError) Error() string {
+	return fmt.Sprintf("field %q is empty", e.FieldName)
+}
+
+func (e *FieldIsEmptyError) Is(err error) bool {
+	return IsFieldIsEmptyError(err)
+}
+
+func IsFieldIsEmptyError(err error) bool {
+	var target *FieldIsEmptyError
+	return errors.As(err, &target)
+}
+
+func NewFieldIsEmptyError(fieldName string) *FieldIsEmptyError {
+	return &FieldIsEmptyError{FieldName: fieldName}
+}
+
+const (
+	ErrPathIsEmpty = consterr.Error("path is empty")
+	ErrIDIsEmpty   = consterr.Error("id is empty")
+)

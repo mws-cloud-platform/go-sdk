@@ -43,7 +43,9 @@ func (m *SecretSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.CurrentSecretVersion.IsNull() {
 			e.Null()
 		} else {
-			m.CurrentSecretVersion.Value.Encode(e)
+			if err := m.CurrentSecretVersion.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -52,7 +54,9 @@ func (m *SecretSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Encryption.IsNull() {
 			e.Null()
 		} else {
-			m.Encryption.Value.Encode(e)
+			if err := m.Encryption.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

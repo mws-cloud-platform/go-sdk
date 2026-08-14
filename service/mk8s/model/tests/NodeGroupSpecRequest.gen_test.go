@@ -9,6 +9,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/mk8s/model"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
+	"go.mws.cloud/go-sdk/service/resources/references/iam"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestNodeGroupSpecRequestMarshalling(t *testing.T) {
@@ -24,5 +27,8 @@ func TestNodeGroupSpecRequestMarshalling(t *testing.T) {
 
 func initNodeGroupSpecRequest() model.NodeGroupSpecRequest {
 	var v model.NodeGroupSpecRequest
+	v.Subnet.Ref = vpc.NewMustSubnetRef("projectID", "networkID", "subnetID")
+	v.VmType.Ref = compute.NewMustVmTypeRef("vmTypeID")
+	v.ServiceAccount.Ref = iam.NewMustServiceAccountRef("projectID", "serviceAccountID")
 	return v
 }

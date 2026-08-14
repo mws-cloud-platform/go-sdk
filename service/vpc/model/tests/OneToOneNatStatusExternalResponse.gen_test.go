@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
 
@@ -25,6 +26,7 @@ func TestOneToOneNatStatusExternalResponseMarshalling(t *testing.T) {
 
 func initOneToOneNatStatusExternalResponse() model.OneToOneNatStatusExternalResponse {
 	var v model.OneToOneNatStatusExternalResponse
+	v.Address.Ref = vpc.NewMustExternalAddressRef("projectID", "externalAddressID")
 	v.Address.IpAddress = ipaddress.MustParseIPAddressString("192.168.1.1")
 	return v
 }

@@ -4,6 +4,7 @@ package rm
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewProjectRoleBindingID(project, roleBinding string) ProjectRoleBindingID {
+func NewProjectRoleBindingID(project, roleBinding string) (ProjectRoleBindingID, error) {
+	if roleBinding == "" {
+		return ProjectRoleBindingID{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if project == "" {
+		return ProjectRoleBindingID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ProjectRoleBindingID{
 		roleBinding: roleBinding,
 		project:     project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustProjectRoleBindingID(project, roleBinding string) ProjectRoleBindingID {
+	m, err := NewProjectRoleBindingID(project, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseProjectRoleBindingID(path string) (ProjectRoleBindingID, error) {
 	m := ProjectRoleBindingID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ProjectRoleBindingID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ProjectRoleBindingID) String() string {
 	return m.ID()
 }
 
-func (m *ProjectRoleBindingID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ProjectRoleBindingRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.roleBinding = result["roleBinding"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ProjectRoleBindingID) Clone() *ProjectRoleBindingID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ProjectRoleBindingID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ProjectRoleBindingID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ProjectRoleBindingID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewProjectRoleBindingRef(project, roleBinding string) ProjectRoleBindingRef {
+func (m *ProjectRoleBindingID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ProjectRoleBindingRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.roleBinding = result["roleBinding"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewProjectRoleBindingRef(project, roleBinding string) (ProjectRoleBindingRef, error) {
+	if roleBinding == "" {
+		return ProjectRoleBindingRef{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if project == "" {
+		return ProjectRoleBindingRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ProjectRoleBindingRef{
 		id: ProjectRoleBindingID{
 			roleBinding: roleBinding,
@@ -183,6 +215,14 @@ func NewProjectRoleBindingRef(project, roleBinding string) ProjectRoleBindingRef
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustProjectRoleBindingRef(project, roleBinding string) ProjectRoleBindingRef {
+	m, err := NewProjectRoleBindingRef(project, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ProjectRoleBindingRef) String() string {
 }
 
 func (m *ProjectRoleBindingRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ProjectRoleBindingRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.roleBinding = result["roleBinding"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ProjectRoleBindingRef) Clone() *ProjectRoleBindingRef {
@@ -290,7 +318,11 @@ func (m *ProjectRoleBindingRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ProjectRoleBindingRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ProjectRoleBindingRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ProjectRoleBindingRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.roleBinding = result["roleBinding"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ProjectRoleBindingRef) isParsed() bool {
+	return m != nil && m.id.roleBinding != "" && m.id.project != ""
 }
 
 func (m *ProjectRoleBindingRef) absolutePath() string {

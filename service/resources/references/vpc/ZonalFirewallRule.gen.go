@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewZonalFirewallRuleID(zone, project, zonalNetwork, zonalFirewallRule string) ZonalFirewallRuleID {
+func NewZonalFirewallRuleID(zone, project, zonalNetwork, zonalFirewallRule string) (ZonalFirewallRuleID, error) {
+	if zonalFirewallRule == "" {
+		return ZonalFirewallRuleID{}, reserrors.NewFieldIsEmptyError("zonalFirewallRule")
+	}
+	if zonalNetwork == "" {
+		return ZonalFirewallRuleID{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalFirewallRuleID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalFirewallRuleID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalFirewallRuleID{
 		zonalFirewallRule: zonalFirewallRule,
 		zonalNetwork:      zonalNetwork,
@@ -74,6 +87,14 @@ func NewZonalFirewallRuleID(zone, project, zonalNetwork, zonalFirewallRule strin
 		zone:              zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalFirewallRuleID(zone, project, zonalNetwork, zonalFirewallRule string) ZonalFirewallRuleID {
+	m, err := NewZonalFirewallRuleID(zone, project, zonalNetwork, zonalFirewallRule)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseZonalFirewallRuleID(path string) (ZonalFirewallRuleID, error) {
 	m := ZonalFirewallRuleID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalFirewallRuleID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *ZonalFirewallRuleID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalFirewallRuleID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalFirewallRuleRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalFirewallRule = result["zonalFirewallRule"]
-	m.zonalNetwork = result["zonalNetwork"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalFirewallRuleID) Clone() *ZonalFirewallRuleID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *ZonalFirewallRuleID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *ZonalFirewallRuleID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalFirewallRuleID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalFirewallRuleRef(zone, project, zonalNetwork, zonalFirewallRule string) ZonalFirewallRuleRef {
+func (m *ZonalFirewallRuleID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalFirewallRuleRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalFirewallRule = result["zonalFirewallRule"]
+	m.zonalNetwork = result["zonalNetwork"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalFirewallRuleRef(zone, project, zonalNetwork, zonalFirewallRule string) (ZonalFirewallRuleRef, error) {
+	if zonalFirewallRule == "" {
+		return ZonalFirewallRuleRef{}, reserrors.NewFieldIsEmptyError("zonalFirewallRule")
+	}
+	if zonalNetwork == "" {
+		return ZonalFirewallRuleRef{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalFirewallRuleRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalFirewallRuleRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalFirewallRuleRef{
 		id: ZonalFirewallRuleID{
 			zonalFirewallRule: zonalFirewallRule,
@@ -225,6 +269,14 @@ func NewZonalFirewallRuleRef(zone, project, zonalNetwork, zonalFirewallRule stri
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalFirewallRuleRef(zone, project, zonalNetwork, zonalFirewallRule string) ZonalFirewallRuleRef {
+	m, err := NewZonalFirewallRuleRef(zone, project, zonalNetwork, zonalFirewallRule)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *ZonalFirewallRuleRef) String() string {
 }
 
 func (m *ZonalFirewallRuleRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalFirewallRuleRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalFirewallRule = result["zonalFirewallRule"]
-	m.id.zonalNetwork = result["zonalNetwork"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalFirewallRuleRef) Clone() *ZonalFirewallRuleRef {
@@ -348,7 +386,11 @@ func (m *ZonalFirewallRuleRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *ZonalFirewallRuleRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalFirewallRuleRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalFirewallRuleRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalFirewallRule = result["zonalFirewallRule"]
+	m.id.zonalNetwork = result["zonalNetwork"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalFirewallRuleRef) isParsed() bool {
+	return m != nil && m.id.zonalFirewallRule != "" && m.id.zonalNetwork != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalFirewallRuleRef) absolutePath() string {

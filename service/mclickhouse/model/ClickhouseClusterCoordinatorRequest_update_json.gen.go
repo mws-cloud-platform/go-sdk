@@ -33,19 +33,25 @@ func (m *UpdateClickhouseClusterCoordinatorRequest) Encode(e *jx.Encoder) error 
 func (m *UpdateClickhouseClusterCoordinatorRequest) encodeFields(e *jx.Encoder) error {
 	if m.Type.IsSet() {
 		e.FieldStart("type")
-		m.Type.Value.Encode(e)
+		if err := m.Type.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Resources.IsSet() {
 		e.FieldStart("resources")
-		m.Resources.Value.Encode(e)
+		if err := m.Resources.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Instances.IsSet() {
 		e.FieldStart("instances")
 		e.ArrStart()
 		for _, elem := range m.Instances.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

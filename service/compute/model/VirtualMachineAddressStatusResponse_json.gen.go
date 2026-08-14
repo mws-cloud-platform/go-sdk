@@ -36,16 +36,22 @@ func (m *VirtualMachineAddressStatusResponse) Encode(e *jx.Encoder) error {
 func (m *VirtualMachineAddressStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.Subnet != nil {
 		e.FieldStart("subnet")
-		m.Subnet.Encode(e)
+		if err := m.Subnet.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Network != nil {
 		e.FieldStart("network")
-		m.Network.Encode(e)
+		if err := m.Network.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 
 	if m.IpAddress != nil {
 		e.FieldStart("ipAddress")
@@ -54,26 +60,34 @@ func (m *VirtualMachineAddressStatusResponse) encodeFields(e *jx.Encoder) error 
 
 	if m.StandardDns != nil {
 		e.FieldStart("standardDns")
-		m.StandardDns.Encode(e)
+		if err := m.StandardDns.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Dns != nil {
 		e.FieldStart("dns")
 		e.ArrStart()
 		for _, elem := range m.Dns {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.Ready != nil {
 		e.FieldStart("ready")
-		m.Ready.Encode(e)
+		if err := m.Ready.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.OneToOneNat != nil {
 		e.FieldStart("oneToOneNat")
-		m.OneToOneNat.Encode(e)
+		if err := m.OneToOneNat.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

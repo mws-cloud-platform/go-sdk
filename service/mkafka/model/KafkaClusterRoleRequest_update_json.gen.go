@@ -33,7 +33,9 @@ func (m *UpdateKafkaClusterRoleRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateKafkaClusterRoleRequest) encodeFields(e *jx.Encoder) error {
 	if m.Name.IsSet() {
 		e.FieldStart("name")
-		m.Name.Value.Encode(e)
+		if err := m.Name.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

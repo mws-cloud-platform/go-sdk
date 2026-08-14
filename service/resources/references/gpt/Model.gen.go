@@ -4,6 +4,7 @@ package gpt
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewModelID(project, modelName string) ModelID {
+func NewModelID(project, modelName string) (ModelID, error) {
+	if modelName == "" {
+		return ModelID{}, reserrors.NewFieldIsEmptyError("modelName")
+	}
+	if project == "" {
+		return ModelID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ModelID{
 		modelName: modelName,
 		project:   project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustModelID(project, modelName string) ModelID {
+	m, err := NewModelID(project, modelName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseModelID(path string) (ModelID, error) {
 	m := ModelID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ModelID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ModelID) String() string {
 	return m.ID()
 }
 
-func (m *ModelID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ModelRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.modelName = result["modelName"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ModelID) Clone() *ModelID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ModelID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ModelID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ModelID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewModelRef(project, modelName string) ModelRef {
+func (m *ModelID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ModelRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.modelName = result["modelName"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewModelRef(project, modelName string) (ModelRef, error) {
+	if modelName == "" {
+		return ModelRef{}, reserrors.NewFieldIsEmptyError("modelName")
+	}
+	if project == "" {
+		return ModelRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ModelRef{
 		id: ModelID{
 			modelName: modelName,
@@ -183,6 +215,14 @@ func NewModelRef(project, modelName string) ModelRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustModelRef(project, modelName string) ModelRef {
+	m, err := NewModelRef(project, modelName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ModelRef) String() string {
 }
 
 func (m *ModelRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ModelRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.modelName = result["modelName"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ModelRef) Clone() *ModelRef {
@@ -290,7 +318,11 @@ func (m *ModelRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ModelRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ModelRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ModelRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.modelName = result["modelName"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ModelRef) isParsed() bool {
+	return m != nil && m.id.modelName != "" && m.id.project != ""
 }
 
 func (m *ModelRef) absolutePath() string {

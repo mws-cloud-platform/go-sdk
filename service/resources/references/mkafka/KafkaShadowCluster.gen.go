@@ -4,6 +4,7 @@ package mkafka
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewKafkaShadowClusterID(shadowProject, cluster string) KafkaShadowClusterID {
+func NewKafkaShadowClusterID(shadowProject, cluster string) (KafkaShadowClusterID, error) {
+	if cluster == "" {
+		return KafkaShadowClusterID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if shadowProject == "" {
+		return KafkaShadowClusterID{}, reserrors.NewFieldIsEmptyError("shadowProject")
+	}
 	m := KafkaShadowClusterID{
 		cluster:       cluster,
 		shadowProject: shadowProject,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustKafkaShadowClusterID(shadowProject, cluster string) KafkaShadowClusterID {
+	m, err := NewKafkaShadowClusterID(shadowProject, cluster)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseKafkaShadowClusterID(path string) (KafkaShadowClusterID, error) {
 	m := KafkaShadowClusterID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return KafkaShadowClusterID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *KafkaShadowClusterID) String() string {
 	return m.ID()
 }
 
-func (m *KafkaShadowClusterID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, KafkaShadowClusterRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.cluster = result["cluster"]
-	m.shadowProject = result["shadowProject"]
-
-	return nil
-}
-
 func (m *KafkaShadowClusterID) Clone() *KafkaShadowClusterID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *KafkaShadowClusterID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *KafkaShadowClusterID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *KafkaShadowClusterID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewKafkaShadowClusterRef(shadowProject, cluster string) KafkaShadowClusterRef {
+func (m *KafkaShadowClusterID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, KafkaShadowClusterRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.cluster = result["cluster"]
+	m.shadowProject = result["shadowProject"]
+
+	return nil
+}
+
+func NewKafkaShadowClusterRef(shadowProject, cluster string) (KafkaShadowClusterRef, error) {
+	if cluster == "" {
+		return KafkaShadowClusterRef{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if shadowProject == "" {
+		return KafkaShadowClusterRef{}, reserrors.NewFieldIsEmptyError("shadowProject")
+	}
 	m := KafkaShadowClusterRef{
 		id: KafkaShadowClusterID{
 			cluster:       cluster,
@@ -183,6 +215,14 @@ func NewKafkaShadowClusterRef(shadowProject, cluster string) KafkaShadowClusterR
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustKafkaShadowClusterRef(shadowProject, cluster string) KafkaShadowClusterRef {
+	m, err := NewKafkaShadowClusterRef(shadowProject, cluster)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *KafkaShadowClusterRef) String() string {
 }
 
 func (m *KafkaShadowClusterRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, KafkaShadowClusterRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.cluster = result["cluster"]
-	m.id.shadowProject = result["shadowProject"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *KafkaShadowClusterRef) Clone() *KafkaShadowClusterRef {
@@ -290,7 +318,11 @@ func (m *KafkaShadowClusterRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *KafkaShadowClusterRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *KafkaShadowClusterRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, KafkaShadowClusterRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.cluster = result["cluster"]
+	m.id.shadowProject = result["shadowProject"]
+
 	return nil
+}
+
+func (m *KafkaShadowClusterRef) isParsed() bool {
+	return m != nil && m.id.cluster != "" && m.id.shadowProject != ""
 }
 
 func (m *KafkaShadowClusterRef) absolutePath() string {

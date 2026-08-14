@@ -4,6 +4,7 @@ package mclickhouse
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewClickhouseVmTypeID(vmType string) ClickhouseVmTypeID {
+func NewClickhouseVmTypeID(vmType string) (ClickhouseVmTypeID, error) {
+	if vmType == "" {
+		return ClickhouseVmTypeID{}, reserrors.NewFieldIsEmptyError("vmType")
+	}
 	m := ClickhouseVmTypeID{
 		vmType: vmType,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustClickhouseVmTypeID(vmType string) ClickhouseVmTypeID {
+	m, err := NewClickhouseVmTypeID(vmType)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseClickhouseVmTypeID(path string) (ClickhouseVmTypeID, error) {
 	m := ClickhouseVmTypeID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ClickhouseVmTypeID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *ClickhouseVmTypeID) String() string {
 	return m.ID()
 }
 
-func (m *ClickhouseVmTypeID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ClickhouseVmTypeRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.vmType = result["vmType"]
-
-	return nil
-}
-
 func (m *ClickhouseVmTypeID) Clone() *ClickhouseVmTypeID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *ClickhouseVmTypeID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *ClickhouseVmTypeID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ClickhouseVmTypeID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewClickhouseVmTypeRef(vmType string) ClickhouseVmTypeRef {
+func (m *ClickhouseVmTypeID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ClickhouseVmTypeRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.vmType = result["vmType"]
+
+	return nil
+}
+
+func NewClickhouseVmTypeRef(vmType string) (ClickhouseVmTypeRef, error) {
+	if vmType == "" {
+		return ClickhouseVmTypeRef{}, reserrors.NewFieldIsEmptyError("vmType")
+	}
 	m := ClickhouseVmTypeRef{
 		id: ClickhouseVmTypeID{
 			vmType: vmType,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustClickhouseVmTypeRef(vmType string) ClickhouseVmTypeRef {
+	m, err := NewClickhouseVmTypeRef(vmType)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *ClickhouseVmTypeRef) String() string {
 }
 
 func (m *ClickhouseVmTypeRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ClickhouseVmTypeRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.vmType = result["vmType"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ClickhouseVmTypeRef) Clone() *ClickhouseVmTypeRef {
@@ -261,7 +284,11 @@ func (m *ClickhouseVmTypeRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *ClickhouseVmTypeRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ClickhouseVmTypeRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ClickhouseVmTypeRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.vmType = result["vmType"]
+
 	return nil
+}
+
+func (m *ClickhouseVmTypeRef) isParsed() bool {
+	return m != nil && m.id.vmType != ""
 }
 
 func (m *ClickhouseVmTypeRef) absolutePath() string {

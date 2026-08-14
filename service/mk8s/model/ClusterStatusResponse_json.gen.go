@@ -36,7 +36,9 @@ func (m *ClusterStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *ClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.ClusterCaCertificate != nil {
 		e.FieldStart("clusterCaCertificate")
 		e.Base64(m.ClusterCaCertificate)
@@ -44,22 +46,30 @@ func (m *ClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.Network != nil {
 		e.FieldStart("network")
-		m.Network.Encode(e)
+		if err := m.Network.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.VersionControl != nil {
 		e.FieldStart("versionControl")
-		m.VersionControl.Encode(e)
+		if err := m.VersionControl.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ClusterStatus != nil {
 		e.FieldStart("clusterStatus")
-		m.ClusterStatus.Encode(e)
+		if err := m.ClusterStatus.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Plugins != nil {
 		e.FieldStart("plugins")
-		m.Plugins.Encode(e)
+		if err := m.Plugins.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -173,7 +183,9 @@ func (m *ClusterStatusClusterStatusResponse) Encode(e *jx.Encoder) error {
 func (m *ClusterStatusClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.State != nil {
 		e.FieldStart("state")
-		m.State.Encode(e)
+		if err := m.State.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Message != nil {
@@ -283,17 +295,23 @@ func (m *ClusterStatusNetworkResponse) Encode(e *jx.Encoder) error {
 func (m *ClusterStatusNetworkResponse) encodeFields(e *jx.Encoder) error {
 	if m.VpcNetwork != nil {
 		e.FieldStart("vpcNetwork")
-		m.VpcNetwork.Encode(e)
+		if err := m.VpcNetwork.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Subnet != nil {
 		e.FieldStart("subnet")
-		m.Subnet.Encode(e)
+		if err := m.Subnet.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.PrimaryEndpoint != nil {
 		e.FieldStart("primaryEndpoint")
-		m.PrimaryEndpoint.Encode(e)
+		if err := m.PrimaryEndpoint.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.PrimaryAddress != nil {
@@ -303,7 +321,9 @@ func (m *ClusterStatusNetworkResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.PublicEndpoint != nil {
 		e.FieldStart("publicEndpoint")
-		m.PublicEndpoint.Encode(e)
+		if err := m.PublicEndpoint.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.PublicAddress != nil {
@@ -425,7 +445,9 @@ func (m *ClusterStatusNetworkPrimaryEndpointResponse) Encode(e *jx.Encoder) erro
 
 func (m *ClusterStatusNetworkPrimaryEndpointResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -477,7 +499,9 @@ func (m *ClusterStatusNetworkPublicEndpointResponse) Encode(e *jx.Encoder) error
 
 func (m *ClusterStatusNetworkPublicEndpointResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -529,7 +553,9 @@ func (m *ClusterStatusNetworkSubnetResponse) Encode(e *jx.Encoder) error {
 
 func (m *ClusterStatusNetworkSubnetResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -581,7 +607,9 @@ func (m *ClusterStatusNetworkVpcNetworkResponse) Encode(e *jx.Encoder) error {
 
 func (m *ClusterStatusNetworkVpcNetworkResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

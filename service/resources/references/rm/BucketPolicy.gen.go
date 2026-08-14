@@ -4,6 +4,7 @@ package rm
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewBucketPolicyID(project, bucket, name string) BucketPolicyID {
+func NewBucketPolicyID(project, bucket, name string) (BucketPolicyID, error) {
+	if name == "" {
+		return BucketPolicyID{}, reserrors.NewFieldIsEmptyError("name")
+	}
+	if bucket == "" {
+		return BucketPolicyID{}, reserrors.NewFieldIsEmptyError("bucket")
+	}
+	if project == "" {
+		return BucketPolicyID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := BucketPolicyID{
 		name:    name,
 		bucket:  bucket,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustBucketPolicyID(project, bucket, name string) BucketPolicyID {
+	m, err := NewBucketPolicyID(project, bucket, name)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseBucketPolicyID(path string) (BucketPolicyID, error) {
 	m := BucketPolicyID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return BucketPolicyID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *BucketPolicyID) String() string {
 	return m.ID()
 }
 
-func (m *BucketPolicyID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, BucketPolicyRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.name = result["name"]
-	m.bucket = result["bucket"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *BucketPolicyID) Clone() *BucketPolicyID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *BucketPolicyID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *BucketPolicyID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *BucketPolicyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewBucketPolicyRef(project, bucket, name string) BucketPolicyRef {
+func (m *BucketPolicyID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, BucketPolicyRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.name = result["name"]
+	m.bucket = result["bucket"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewBucketPolicyRef(project, bucket, name string) (BucketPolicyRef, error) {
+	if name == "" {
+		return BucketPolicyRef{}, reserrors.NewFieldIsEmptyError("name")
+	}
+	if bucket == "" {
+		return BucketPolicyRef{}, reserrors.NewFieldIsEmptyError("bucket")
+	}
+	if project == "" {
+		return BucketPolicyRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := BucketPolicyRef{
 		id: BucketPolicyID{
 			name:    name,
@@ -204,6 +242,14 @@ func NewBucketPolicyRef(project, bucket, name string) BucketPolicyRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustBucketPolicyRef(project, bucket, name string) BucketPolicyRef {
+	m, err := NewBucketPolicyRef(project, bucket, name)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *BucketPolicyRef) String() string {
 }
 
 func (m *BucketPolicyRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, BucketPolicyRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.name = result["name"]
-	m.id.bucket = result["bucket"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *BucketPolicyRef) Clone() *BucketPolicyRef {
@@ -319,7 +352,11 @@ func (m *BucketPolicyRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *BucketPolicyRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *BucketPolicyRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, BucketPolicyRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.name = result["name"]
+	m.id.bucket = result["bucket"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *BucketPolicyRef) isParsed() bool {
+	return m != nil && m.id.name != "" && m.id.bucket != "" && m.id.project != ""
 }
 
 func (m *BucketPolicyRef) absolutePath() string {

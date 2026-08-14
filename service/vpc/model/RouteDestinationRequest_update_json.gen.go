@@ -34,7 +34,9 @@ func (m *UpdateRouteDestinationRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateRouteDestinationRequest) encodeFields(e *jx.Encoder) error {
 	if m.Spec.IsSet() {
 		e.FieldStart("spec")
-		m.Spec.Value.Encode(e)
+		if err := m.Spec.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

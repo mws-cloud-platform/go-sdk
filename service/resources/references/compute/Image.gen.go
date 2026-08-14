@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewImageID(project, image string) ImageID {
+func NewImageID(project, image string) (ImageID, error) {
+	if image == "" {
+		return ImageID{}, reserrors.NewFieldIsEmptyError("image")
+	}
+	if project == "" {
+		return ImageID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ImageID{
 		image:   image,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustImageID(project, image string) ImageID {
+	m, err := NewImageID(project, image)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseImageID(path string) (ImageID, error) {
 	m := ImageID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ImageID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ImageID) String() string {
 	return m.ID()
 }
 
-func (m *ImageID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ImageRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.image = result["image"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ImageID) Clone() *ImageID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ImageID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ImageID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ImageID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewImageRef(project, image string) ImageRef {
+func (m *ImageID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ImageRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.image = result["image"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewImageRef(project, image string) (ImageRef, error) {
+	if image == "" {
+		return ImageRef{}, reserrors.NewFieldIsEmptyError("image")
+	}
+	if project == "" {
+		return ImageRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ImageRef{
 		id: ImageID{
 			image:   image,
@@ -183,6 +215,14 @@ func NewImageRef(project, image string) ImageRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustImageRef(project, image string) ImageRef {
+	m, err := NewImageRef(project, image)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ImageRef) String() string {
 }
 
 func (m *ImageRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ImageRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.image = result["image"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ImageRef) Clone() *ImageRef {
@@ -290,7 +318,11 @@ func (m *ImageRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ImageRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ImageRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ImageRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.image = result["image"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ImageRef) isParsed() bool {
+	return m != nil && m.id.image != "" && m.id.project != ""
 }
 
 func (m *ImageRef) absolutePath() string {

@@ -33,7 +33,9 @@ func (m *ProjectSpecResponse) Encode(e *jx.Encoder) error {
 
 func (m *ProjectSpecResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("folder")
-	m.Folder.Encode(e)
+	if err := m.Folder.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -41,16 +41,22 @@ func (m *CertificateRoleBindingOptionalResponse) encodeFields(e *jx.Encoder) err
 		if m.Metadata.IsNull() {
 			e.Null()
 		} else {
-			m.Metadata.Value.Encode(e)
+			if err := m.Metadata.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
 	e.FieldStart("spec")
-	m.Spec.Encode(e)
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Status != nil {
 		e.FieldStart("status")
-		m.Status.Encode(e)
+		if err := m.Status.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

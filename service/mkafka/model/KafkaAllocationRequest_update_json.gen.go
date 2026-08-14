@@ -35,7 +35,9 @@ func (m *UpdateKafkaAllocationRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateKafkaAllocationRequest) encodeFields(e *jx.Encoder) error {
 	if m.Zone.IsSet() {
 		e.FieldStart("zone")
-		m.Zone.Value.Encode(e)
+		if err := m.Zone.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Count.IsSet() {

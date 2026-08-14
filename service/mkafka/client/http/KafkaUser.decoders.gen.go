@@ -35,10 +35,6 @@ func decodeListKafkaUsersResponse(resp *http.Response) (*client.ListKafkaUsersRe
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -225,10 +221,6 @@ func decodeGetKafkaUserResponse(resp *http.Response) (*client.GetKafkaUserRespon
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -324,10 +316,6 @@ func decodeUpsertKafkaUserResponse(resp *http.Response) (*client.UpsertKafkaUser
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

@@ -39,7 +39,9 @@ func (m *ClickhouseClusterCoordinatorInstanceRequest) encodeFields(e *jx.Encoder
 	}
 
 	e.FieldStart("zone")
-	m.Zone.Encode(e)
+	if err := m.Zone.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

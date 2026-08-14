@@ -4,6 +4,7 @@ package mkafka
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewKafkaTopicID(project, cluster, topic string) KafkaTopicID {
+func NewKafkaTopicID(project, cluster, topic string) (KafkaTopicID, error) {
+	if topic == "" {
+		return KafkaTopicID{}, reserrors.NewFieldIsEmptyError("topic")
+	}
+	if cluster == "" {
+		return KafkaTopicID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return KafkaTopicID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := KafkaTopicID{
 		topic:   topic,
 		cluster: cluster,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustKafkaTopicID(project, cluster, topic string) KafkaTopicID {
+	m, err := NewKafkaTopicID(project, cluster, topic)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseKafkaTopicID(path string) (KafkaTopicID, error) {
 	m := KafkaTopicID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return KafkaTopicID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *KafkaTopicID) String() string {
 	return m.ID()
 }
 
-func (m *KafkaTopicID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, KafkaTopicRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.topic = result["topic"]
-	m.cluster = result["cluster"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *KafkaTopicID) Clone() *KafkaTopicID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *KafkaTopicID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *KafkaTopicID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *KafkaTopicID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewKafkaTopicRef(project, cluster, topic string) KafkaTopicRef {
+func (m *KafkaTopicID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, KafkaTopicRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.topic = result["topic"]
+	m.cluster = result["cluster"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewKafkaTopicRef(project, cluster, topic string) (KafkaTopicRef, error) {
+	if topic == "" {
+		return KafkaTopicRef{}, reserrors.NewFieldIsEmptyError("topic")
+	}
+	if cluster == "" {
+		return KafkaTopicRef{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return KafkaTopicRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := KafkaTopicRef{
 		id: KafkaTopicID{
 			topic:   topic,
@@ -204,6 +242,14 @@ func NewKafkaTopicRef(project, cluster, topic string) KafkaTopicRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustKafkaTopicRef(project, cluster, topic string) KafkaTopicRef {
+	m, err := NewKafkaTopicRef(project, cluster, topic)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *KafkaTopicRef) String() string {
 }
 
 func (m *KafkaTopicRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, KafkaTopicRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.topic = result["topic"]
-	m.id.cluster = result["cluster"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *KafkaTopicRef) Clone() *KafkaTopicRef {
@@ -319,7 +352,11 @@ func (m *KafkaTopicRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *KafkaTopicRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *KafkaTopicRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, KafkaTopicRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.topic = result["topic"]
+	m.id.cluster = result["cluster"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *KafkaTopicRef) isParsed() bool {
+	return m != nil && m.id.topic != "" && m.id.cluster != "" && m.id.project != ""
 }
 
 func (m *KafkaTopicRef) absolutePath() string {

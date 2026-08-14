@@ -34,7 +34,9 @@ func (m *ClickhouseEndpointAddressSpecOrRefOptionalResponse) Encode(e *jx.Encode
 func (m *ClickhouseEndpointAddressSpecOrRefOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.Ref.IsSet() {
 		e.FieldStart("ref")
-		m.Ref.Value.Encode(e)
+		if err := m.Ref.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Spec.IsSet() {
@@ -42,7 +44,9 @@ func (m *ClickhouseEndpointAddressSpecOrRefOptionalResponse) encodeFields(e *jx.
 		if m.Spec.IsNull() {
 			e.Null()
 		} else {
-			m.Spec.Value.Encode(e)
+			if err := m.Spec.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

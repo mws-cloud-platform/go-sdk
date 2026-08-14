@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewServiceAgentSignaturePubKeyID(project, serviceAgentId, keyName string) ServiceAgentSignaturePubKeyID {
+func NewServiceAgentSignaturePubKeyID(project, serviceAgentId, keyName string) (ServiceAgentSignaturePubKeyID, error) {
+	if keyName == "" {
+		return ServiceAgentSignaturePubKeyID{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if serviceAgentId == "" {
+		return ServiceAgentSignaturePubKeyID{}, reserrors.NewFieldIsEmptyError("serviceAgentId")
+	}
+	if project == "" {
+		return ServiceAgentSignaturePubKeyID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAgentSignaturePubKeyID{
 		keyName:        keyName,
 		serviceAgentId: serviceAgentId,
 		project:        project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustServiceAgentSignaturePubKeyID(project, serviceAgentId, keyName string) ServiceAgentSignaturePubKeyID {
+	m, err := NewServiceAgentSignaturePubKeyID(project, serviceAgentId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseServiceAgentSignaturePubKeyID(path string) (ServiceAgentSignaturePubKe
 	m := ServiceAgentSignaturePubKeyID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ServiceAgentSignaturePubKeyID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ServiceAgentSignaturePubKeyID) String() string {
 	return m.ID()
 }
 
-func (m *ServiceAgentSignaturePubKeyID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ServiceAgentSignaturePubKeyRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.keyName = result["keyName"]
-	m.serviceAgentId = result["serviceAgentId"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ServiceAgentSignaturePubKeyID) Clone() *ServiceAgentSignaturePubKeyID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ServiceAgentSignaturePubKeyID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ServiceAgentSignaturePubKeyID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ServiceAgentSignaturePubKeyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewServiceAgentSignaturePubKeyRef(project, serviceAgentId, keyName string) ServiceAgentSignaturePubKeyRef {
+func (m *ServiceAgentSignaturePubKeyID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ServiceAgentSignaturePubKeyRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.keyName = result["keyName"]
+	m.serviceAgentId = result["serviceAgentId"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewServiceAgentSignaturePubKeyRef(project, serviceAgentId, keyName string) (ServiceAgentSignaturePubKeyRef, error) {
+	if keyName == "" {
+		return ServiceAgentSignaturePubKeyRef{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if serviceAgentId == "" {
+		return ServiceAgentSignaturePubKeyRef{}, reserrors.NewFieldIsEmptyError("serviceAgentId")
+	}
+	if project == "" {
+		return ServiceAgentSignaturePubKeyRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAgentSignaturePubKeyRef{
 		id: ServiceAgentSignaturePubKeyID{
 			keyName:        keyName,
@@ -204,6 +242,14 @@ func NewServiceAgentSignaturePubKeyRef(project, serviceAgentId, keyName string) 
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustServiceAgentSignaturePubKeyRef(project, serviceAgentId, keyName string) ServiceAgentSignaturePubKeyRef {
+	m, err := NewServiceAgentSignaturePubKeyRef(project, serviceAgentId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ServiceAgentSignaturePubKeyRef) String() string {
 }
 
 func (m *ServiceAgentSignaturePubKeyRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ServiceAgentSignaturePubKeyRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.keyName = result["keyName"]
-	m.id.serviceAgentId = result["serviceAgentId"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ServiceAgentSignaturePubKeyRef) Clone() *ServiceAgentSignaturePubKeyRef {
@@ -319,7 +352,11 @@ func (m *ServiceAgentSignaturePubKeyRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ServiceAgentSignaturePubKeyRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ServiceAgentSignaturePubKeyRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ServiceAgentSignaturePubKeyRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.keyName = result["keyName"]
+	m.id.serviceAgentId = result["serviceAgentId"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ServiceAgentSignaturePubKeyRef) isParsed() bool {
+	return m != nil && m.id.keyName != "" && m.id.serviceAgentId != "" && m.id.project != ""
 }
 
 func (m *ServiceAgentSignaturePubKeyRef) absolutePath() string {

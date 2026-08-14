@@ -34,17 +34,23 @@ func (m *CertificateManagedSpecRequest) Encode(e *jx.Encoder) error {
 func (m *CertificateManagedSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.PreferredChallengeType != nil {
 		e.FieldStart("preferredChallengeType")
-		m.PreferredChallengeType.Encode(e)
+		if err := m.PreferredChallengeType.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Provider != nil {
 		e.FieldStart("provider")
-		m.Provider.Encode(e)
+		if err := m.Provider.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Issuer != nil {
 		e.FieldStart("issuer")
-		m.Issuer.Encode(e)
+		if err := m.Issuer.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	e.FieldStart("domains")

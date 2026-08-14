@@ -40,14 +40,18 @@ func (m *UpdateKafkaEndpointRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Network.IsSet() {
 		e.FieldStart("network")
-		m.Network.Value.Encode(e)
+		if err := m.Network.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.BrokerAddresses.IsSet() {
 		e.FieldStart("brokerAddresses")
 		e.ArrStart()
 		for _, elem := range m.BrokerAddresses.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -57,7 +61,9 @@ func (m *UpdateKafkaEndpointRequest) encodeFields(e *jx.Encoder) error {
 		if m.ExternalAccess.IsNull() {
 			e.Null()
 		} else {
-			m.ExternalAccess.Value.Encode(e)
+			if err := m.ExternalAccess.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

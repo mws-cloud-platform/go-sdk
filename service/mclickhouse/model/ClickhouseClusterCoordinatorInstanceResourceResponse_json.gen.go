@@ -34,14 +34,20 @@ func (m *ClickhouseClusterCoordinatorInstanceResourceResponse) Encode(e *jx.Enco
 
 func (m *ClickhouseClusterCoordinatorInstanceResourceResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("id")
-	m.Id.Encode(e)
+	if err := m.Id.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("zone")
-	m.Zone.Encode(e)
+	if err := m.Zone.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Health != nil {
 		e.FieldStart("health")
-		m.Health.Encode(e)
+		if err := m.Health.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

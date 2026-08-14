@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewTrashDiskBackupID(id string) TrashDiskBackupID {
+func NewTrashDiskBackupID(id string) (TrashDiskBackupID, error) {
+	if id == "" {
+		return TrashDiskBackupID{}, reserrors.NewFieldIsEmptyError("id")
+	}
 	m := TrashDiskBackupID{
 		id: id,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustTrashDiskBackupID(id string) TrashDiskBackupID {
+	m, err := NewTrashDiskBackupID(id)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseTrashDiskBackupID(path string) (TrashDiskBackupID, error) {
 	m := TrashDiskBackupID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return TrashDiskBackupID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *TrashDiskBackupID) String() string {
 	return m.ID()
 }
 
-func (m *TrashDiskBackupID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, TrashDiskBackupRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.id = result["id"]
-
-	return nil
-}
-
 func (m *TrashDiskBackupID) Clone() *TrashDiskBackupID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *TrashDiskBackupID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *TrashDiskBackupID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *TrashDiskBackupID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewTrashDiskBackupRef(id string) TrashDiskBackupRef {
+func (m *TrashDiskBackupID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, TrashDiskBackupRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.id = result["id"]
+
+	return nil
+}
+
+func NewTrashDiskBackupRef(id string) (TrashDiskBackupRef, error) {
+	if id == "" {
+		return TrashDiskBackupRef{}, reserrors.NewFieldIsEmptyError("id")
+	}
 	m := TrashDiskBackupRef{
 		id: TrashDiskBackupID{
 			id: id,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustTrashDiskBackupRef(id string) TrashDiskBackupRef {
+	m, err := NewTrashDiskBackupRef(id)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *TrashDiskBackupRef) String() string {
 }
 
 func (m *TrashDiskBackupRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, TrashDiskBackupRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.id = result["id"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *TrashDiskBackupRef) Clone() *TrashDiskBackupRef {
@@ -261,7 +284,11 @@ func (m *TrashDiskBackupRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *TrashDiskBackupRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *TrashDiskBackupRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, TrashDiskBackupRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.id = result["id"]
+
 	return nil
+}
+
+func (m *TrashDiskBackupRef) isParsed() bool {
+	return m != nil && m.id.id != ""
 }
 
 func (m *TrashDiskBackupRef) absolutePath() string {

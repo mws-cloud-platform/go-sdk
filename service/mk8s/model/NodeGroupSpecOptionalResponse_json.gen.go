@@ -40,10 +40,14 @@ func (m *NodeGroupSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.Str(m.Zone)
 
 	e.FieldStart("subnet")
-	m.Subnet.Encode(e)
+	if err := m.Subnet.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("vmType")
-	m.VmType.Encode(e)
+	if err := m.VmType.Encode(e); err != nil {
+		return err
+	}
 
 	if m.ImageStorageSize.IsSet() {
 		e.FieldStart("imageStorageSize")
@@ -62,14 +66,18 @@ func (m *NodeGroupSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		} else {
 			e.ArrStart()
 			for _, elem := range m.LocalDisks.Value {
-				elem.Encode(e)
+				if err := elem.Encode(e); err != nil {
+					return err
+				}
 			}
 			e.ArrEnd()
 		}
 	}
 
 	e.FieldStart("scale")
-	m.Scale.Encode(e)
+	if err := m.Scale.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Labels.IsSet() {
 		e.FieldStart("labels")
@@ -78,7 +86,9 @@ func (m *NodeGroupSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		} else {
 			e.ArrStart()
 			for _, elem := range m.Labels.Value {
-				elem.Encode(e)
+				if err := elem.Encode(e); err != nil {
+					return err
+				}
 			}
 			e.ArrEnd()
 		}
@@ -91,20 +101,28 @@ func (m *NodeGroupSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		} else {
 			e.ArrStart()
 			for _, elem := range m.Taints.Value {
-				elem.Encode(e)
+				if err := elem.Encode(e); err != nil {
+					return err
+				}
 			}
 			e.ArrEnd()
 		}
 	}
 
 	e.FieldStart("versionControl")
-	m.VersionControl.Encode(e)
+	if err := m.VersionControl.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("rolloutStrategy")
-	m.RolloutStrategy.Encode(e)
+	if err := m.RolloutStrategy.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("serviceAccount")
-	m.ServiceAccount.Encode(e)
+	if err := m.ServiceAccount.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -360,7 +378,9 @@ func (m *NodeGroupSpecScaleOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Autoscaling.IsNull() {
 			e.Null()
 		} else {
-			m.Autoscaling.Value.Encode(e)
+			if err := m.Autoscaling.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -495,7 +515,9 @@ func (m *NodeGroupSpecServiceAccountOptionalResponse) Encode(e *jx.Encoder) erro
 
 func (m *NodeGroupSpecServiceAccountOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -547,7 +569,9 @@ func (m *NodeGroupSpecSubnetOptionalResponse) Encode(e *jx.Encoder) error {
 
 func (m *NodeGroupSpecSubnetOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -599,7 +623,9 @@ func (m *NodeGroupSpecVmTypeOptionalResponse) Encode(e *jx.Encoder) error {
 
 func (m *NodeGroupSpecVmTypeOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

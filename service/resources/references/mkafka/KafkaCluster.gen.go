@@ -4,6 +4,7 @@ package mkafka
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewKafkaClusterID(project, cluster string) KafkaClusterID {
+func NewKafkaClusterID(project, cluster string) (KafkaClusterID, error) {
+	if cluster == "" {
+		return KafkaClusterID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return KafkaClusterID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := KafkaClusterID{
 		cluster: cluster,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustKafkaClusterID(project, cluster string) KafkaClusterID {
+	m, err := NewKafkaClusterID(project, cluster)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseKafkaClusterID(path string) (KafkaClusterID, error) {
 	m := KafkaClusterID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return KafkaClusterID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *KafkaClusterID) String() string {
 	return m.ID()
 }
 
-func (m *KafkaClusterID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, KafkaClusterRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.cluster = result["cluster"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *KafkaClusterID) Clone() *KafkaClusterID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *KafkaClusterID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *KafkaClusterID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *KafkaClusterID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewKafkaClusterRef(project, cluster string) KafkaClusterRef {
+func (m *KafkaClusterID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, KafkaClusterRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.cluster = result["cluster"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewKafkaClusterRef(project, cluster string) (KafkaClusterRef, error) {
+	if cluster == "" {
+		return KafkaClusterRef{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return KafkaClusterRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := KafkaClusterRef{
 		id: KafkaClusterID{
 			cluster: cluster,
@@ -183,6 +215,14 @@ func NewKafkaClusterRef(project, cluster string) KafkaClusterRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustKafkaClusterRef(project, cluster string) KafkaClusterRef {
+	m, err := NewKafkaClusterRef(project, cluster)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *KafkaClusterRef) String() string {
 }
 
 func (m *KafkaClusterRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, KafkaClusterRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.cluster = result["cluster"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *KafkaClusterRef) Clone() *KafkaClusterRef {
@@ -290,7 +318,11 @@ func (m *KafkaClusterRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *KafkaClusterRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *KafkaClusterRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, KafkaClusterRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.cluster = result["cluster"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *KafkaClusterRef) isParsed() bool {
+	return m != nil && m.id.cluster != "" && m.id.project != ""
 }
 
 func (m *KafkaClusterRef) absolutePath() string {

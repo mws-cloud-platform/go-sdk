@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewZonalDnsServerGroupID(zone, zonalDnsServerGroup string) ZonalDnsServerGroupID {
+func NewZonalDnsServerGroupID(zone, zonalDnsServerGroup string) (ZonalDnsServerGroupID, error) {
+	if zonalDnsServerGroup == "" {
+		return ZonalDnsServerGroupID{}, reserrors.NewFieldIsEmptyError("zonalDnsServerGroup")
+	}
+	if zone == "" {
+		return ZonalDnsServerGroupID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalDnsServerGroupID{
 		zonalDnsServerGroup: zonalDnsServerGroup,
 		zone:                zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalDnsServerGroupID(zone, zonalDnsServerGroup string) ZonalDnsServerGroupID {
+	m, err := NewZonalDnsServerGroupID(zone, zonalDnsServerGroup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseZonalDnsServerGroupID(path string) (ZonalDnsServerGroupID, error) {
 	m := ZonalDnsServerGroupID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalDnsServerGroupID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ZonalDnsServerGroupID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalDnsServerGroupID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalDnsServerGroupRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalDnsServerGroup = result["zonalDnsServerGroup"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalDnsServerGroupID) Clone() *ZonalDnsServerGroupID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ZonalDnsServerGroupID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ZonalDnsServerGroupID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalDnsServerGroupID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalDnsServerGroupRef(zone, zonalDnsServerGroup string) ZonalDnsServerGroupRef {
+func (m *ZonalDnsServerGroupID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalDnsServerGroupRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalDnsServerGroup = result["zonalDnsServerGroup"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalDnsServerGroupRef(zone, zonalDnsServerGroup string) (ZonalDnsServerGroupRef, error) {
+	if zonalDnsServerGroup == "" {
+		return ZonalDnsServerGroupRef{}, reserrors.NewFieldIsEmptyError("zonalDnsServerGroup")
+	}
+	if zone == "" {
+		return ZonalDnsServerGroupRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalDnsServerGroupRef{
 		id: ZonalDnsServerGroupID{
 			zonalDnsServerGroup: zonalDnsServerGroup,
@@ -183,6 +215,14 @@ func NewZonalDnsServerGroupRef(zone, zonalDnsServerGroup string) ZonalDnsServerG
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalDnsServerGroupRef(zone, zonalDnsServerGroup string) ZonalDnsServerGroupRef {
+	m, err := NewZonalDnsServerGroupRef(zone, zonalDnsServerGroup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ZonalDnsServerGroupRef) String() string {
 }
 
 func (m *ZonalDnsServerGroupRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalDnsServerGroupRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalDnsServerGroup = result["zonalDnsServerGroup"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalDnsServerGroupRef) Clone() *ZonalDnsServerGroupRef {
@@ -290,7 +318,11 @@ func (m *ZonalDnsServerGroupRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ZonalDnsServerGroupRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalDnsServerGroupRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalDnsServerGroupRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalDnsServerGroup = result["zonalDnsServerGroup"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalDnsServerGroupRef) isParsed() bool {
+	return m != nil && m.id.zonalDnsServerGroup != "" && m.id.zone != ""
 }
 
 func (m *ZonalDnsServerGroupRef) absolutePath() string {

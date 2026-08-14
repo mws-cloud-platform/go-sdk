@@ -34,7 +34,9 @@ func (m *UpdateFirewallRuleSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateFirewallRuleSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Direction.IsSet() {
 		e.FieldStart("direction")
-		m.Direction.Value.Encode(e)
+		if err := m.Direction.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Priority.IsSet() {
@@ -44,7 +46,9 @@ func (m *UpdateFirewallRuleSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Action.IsSet() {
 		e.FieldStart("action")
-		m.Action.Value.Encode(e)
+		if err := m.Action.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Active.IsSet() {
@@ -54,12 +58,16 @@ func (m *UpdateFirewallRuleSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Source.IsSet() {
 		e.FieldStart("source")
-		m.Source.Value.Encode(e)
+		if err := m.Source.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Destination.IsSet() {
 		e.FieldStart("destination")
-		m.Destination.Value.Encode(e)
+		if err := m.Destination.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ProtoPorts.IsSet() {

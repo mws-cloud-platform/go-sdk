@@ -32,10 +32,14 @@ func (m *RouteSpecRequest) Encode(e *jx.Encoder) error {
 
 func (m *RouteSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("destination")
-	m.Destination.Encode(e)
+	if err := m.Destination.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("nextHop")
-	m.NextHop.Encode(e)
+	if err := m.NextHop.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

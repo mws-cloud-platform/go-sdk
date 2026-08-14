@@ -41,12 +41,16 @@ func (m *UpdateImageSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Source.IsSet() {
 		e.FieldStart("source")
-		m.Source.Value.Encode(e)
+		if err := m.Source.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Activity.IsSet() {
 		e.FieldStart("activity")
-		m.Activity.Value.Encode(e)
+		if err := m.Activity.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.MinDiskSize.IsSet() {
@@ -56,7 +60,9 @@ func (m *UpdateImageSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.OsType.IsSet() {
 		e.FieldStart("osType")
-		m.OsType.Value.Encode(e)
+		if err := m.OsType.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Encryption.IsSet() {
@@ -64,7 +70,9 @@ func (m *UpdateImageSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Encryption.IsNull() {
 			e.Null()
 		} else {
-			m.Encryption.Value.Encode(e)
+			if err := m.Encryption.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -169,12 +177,16 @@ func (m *UpdateImageSpecSourceRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.DiskId.IsSet() {
 		e.FieldStart("diskId")
-		m.DiskId.Value.Encode(e)
+		if err := m.DiskId.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ImageId.IsSet() {
 		e.FieldStart("imageId")
-		m.ImageId.Value.Encode(e)
+		if err := m.ImageId.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

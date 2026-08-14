@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewZonalLocalDiskHostAttachmentID(zone, project, virtualMachine, attachment string) ZonalLocalDiskHostAttachmentID {
+func NewZonalLocalDiskHostAttachmentID(zone, project, virtualMachine, attachment string) (ZonalLocalDiskHostAttachmentID, error) {
+	if attachment == "" {
+		return ZonalLocalDiskHostAttachmentID{}, reserrors.NewFieldIsEmptyError("attachment")
+	}
+	if virtualMachine == "" {
+		return ZonalLocalDiskHostAttachmentID{}, reserrors.NewFieldIsEmptyError("virtualMachine")
+	}
+	if project == "" {
+		return ZonalLocalDiskHostAttachmentID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalLocalDiskHostAttachmentID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalLocalDiskHostAttachmentID{
 		attachment:     attachment,
 		virtualMachine: virtualMachine,
@@ -74,6 +87,14 @@ func NewZonalLocalDiskHostAttachmentID(zone, project, virtualMachine, attachment
 		zone:           zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalLocalDiskHostAttachmentID(zone, project, virtualMachine, attachment string) ZonalLocalDiskHostAttachmentID {
+	m, err := NewZonalLocalDiskHostAttachmentID(zone, project, virtualMachine, attachment)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseZonalLocalDiskHostAttachmentID(path string) (ZonalLocalDiskHostAttachm
 	m := ZonalLocalDiskHostAttachmentID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalLocalDiskHostAttachmentID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *ZonalLocalDiskHostAttachmentID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalLocalDiskHostAttachmentID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalLocalDiskHostAttachmentRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.attachment = result["attachment"]
-	m.virtualMachine = result["virtualMachine"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalLocalDiskHostAttachmentID) Clone() *ZonalLocalDiskHostAttachmentID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *ZonalLocalDiskHostAttachmentID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *ZonalLocalDiskHostAttachmentID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalLocalDiskHostAttachmentID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalLocalDiskHostAttachmentRef(zone, project, virtualMachine, attachment string) ZonalLocalDiskHostAttachmentRef {
+func (m *ZonalLocalDiskHostAttachmentID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalLocalDiskHostAttachmentRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.attachment = result["attachment"]
+	m.virtualMachine = result["virtualMachine"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalLocalDiskHostAttachmentRef(zone, project, virtualMachine, attachment string) (ZonalLocalDiskHostAttachmentRef, error) {
+	if attachment == "" {
+		return ZonalLocalDiskHostAttachmentRef{}, reserrors.NewFieldIsEmptyError("attachment")
+	}
+	if virtualMachine == "" {
+		return ZonalLocalDiskHostAttachmentRef{}, reserrors.NewFieldIsEmptyError("virtualMachine")
+	}
+	if project == "" {
+		return ZonalLocalDiskHostAttachmentRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalLocalDiskHostAttachmentRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalLocalDiskHostAttachmentRef{
 		id: ZonalLocalDiskHostAttachmentID{
 			attachment:     attachment,
@@ -225,6 +269,14 @@ func NewZonalLocalDiskHostAttachmentRef(zone, project, virtualMachine, attachmen
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalLocalDiskHostAttachmentRef(zone, project, virtualMachine, attachment string) ZonalLocalDiskHostAttachmentRef {
+	m, err := NewZonalLocalDiskHostAttachmentRef(zone, project, virtualMachine, attachment)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *ZonalLocalDiskHostAttachmentRef) String() string {
 }
 
 func (m *ZonalLocalDiskHostAttachmentRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalLocalDiskHostAttachmentRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.attachment = result["attachment"]
-	m.id.virtualMachine = result["virtualMachine"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalLocalDiskHostAttachmentRef) Clone() *ZonalLocalDiskHostAttachmentRef {
@@ -348,7 +386,11 @@ func (m *ZonalLocalDiskHostAttachmentRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *ZonalLocalDiskHostAttachmentRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalLocalDiskHostAttachmentRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalLocalDiskHostAttachmentRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.attachment = result["attachment"]
+	m.id.virtualMachine = result["virtualMachine"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalLocalDiskHostAttachmentRef) isParsed() bool {
+	return m != nil && m.id.attachment != "" && m.id.virtualMachine != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalLocalDiskHostAttachmentRef) absolutePath() string {

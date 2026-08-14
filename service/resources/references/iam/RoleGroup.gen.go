@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewRoleGroupID(roleGroup string) RoleGroupID {
+func NewRoleGroupID(roleGroup string) (RoleGroupID, error) {
+	if roleGroup == "" {
+		return RoleGroupID{}, reserrors.NewFieldIsEmptyError("roleGroup")
+	}
 	m := RoleGroupID{
 		roleGroup: roleGroup,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustRoleGroupID(roleGroup string) RoleGroupID {
+	m, err := NewRoleGroupID(roleGroup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseRoleGroupID(path string) (RoleGroupID, error) {
 	m := RoleGroupID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return RoleGroupID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *RoleGroupID) String() string {
 	return m.ID()
 }
 
-func (m *RoleGroupID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, RoleGroupRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.roleGroup = result["roleGroup"]
-
-	return nil
-}
-
 func (m *RoleGroupID) Clone() *RoleGroupID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *RoleGroupID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *RoleGroupID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *RoleGroupID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewRoleGroupRef(roleGroup string) RoleGroupRef {
+func (m *RoleGroupID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, RoleGroupRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.roleGroup = result["roleGroup"]
+
+	return nil
+}
+
+func NewRoleGroupRef(roleGroup string) (RoleGroupRef, error) {
+	if roleGroup == "" {
+		return RoleGroupRef{}, reserrors.NewFieldIsEmptyError("roleGroup")
+	}
 	m := RoleGroupRef{
 		id: RoleGroupID{
 			roleGroup: roleGroup,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustRoleGroupRef(roleGroup string) RoleGroupRef {
+	m, err := NewRoleGroupRef(roleGroup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *RoleGroupRef) String() string {
 }
 
 func (m *RoleGroupRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, RoleGroupRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.roleGroup = result["roleGroup"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *RoleGroupRef) Clone() *RoleGroupRef {
@@ -261,7 +284,11 @@ func (m *RoleGroupRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *RoleGroupRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *RoleGroupRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, RoleGroupRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.roleGroup = result["roleGroup"]
+
 	return nil
+}
+
+func (m *RoleGroupRef) isParsed() bool {
+	return m != nil && m.id.roleGroup != ""
 }
 
 func (m *RoleGroupRef) absolutePath() string {

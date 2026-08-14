@@ -53,6 +53,12 @@ var (
 )
 
 func NewZonalNlbProjectID(zone, project string) (ZonalNlbProjectID, error) {
+	if project == "" {
+		return ZonalNlbProjectID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalNlbProjectID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	if match := ZonalNlbProjectProjectValidatePattern.Match([]byte(project)); !match {
 		return ZonalNlbProjectID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "project", project)
 	}
@@ -72,8 +78,6 @@ func NewMustZonalNlbProjectID(zone, project string) ZonalNlbProjectID {
 	if err != nil {
 		panic(err)
 	}
-
-	m.path = m.ID()
 	return m
 }
 
@@ -81,7 +85,7 @@ func ParseZonalNlbProjectID(path string) (ZonalNlbProjectID, error) {
 	m := ZonalNlbProjectID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalNlbProjectID{}, err
 	}
 	return m, nil
@@ -134,22 +138,6 @@ func (m *ZonalNlbProjectID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalNlbProjectID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalNlbProjectRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalNlbProjectID) Clone() *ZonalNlbProjectID {
 	if m == nil {
 		return nil
@@ -173,7 +161,7 @@ func (m *ZonalNlbProjectID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -194,6 +182,33 @@ func (m *ZonalNlbProjectID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalNlbProjectID) Parse(ctx context.Context) error {
+	return nil
+}
+
+func (m *ZonalNlbProjectID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalNlbProjectRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+	m.zone = result["zone"]
+
 	return nil
 }
 
@@ -211,10 +226,10 @@ func NewZonalNlbProjectRef(zone, project string) (ZonalNlbProjectRef, error) {
 }
 
 func NewMustZonalNlbProjectRef(zone, project string) ZonalNlbProjectRef {
-	m := ZonalNlbProjectRef{
-		id: NewMustZonalNlbProjectID(zone, project),
+	m, err := NewZonalNlbProjectRef(zone, project)
+	if err != nil {
+		panic(err)
 	}
-	m.id.path = m.absolutePath()
 	return m
 }
 
@@ -286,19 +301,7 @@ func (m *ZonalNlbProjectRef) String() string {
 }
 
 func (m *ZonalNlbProjectRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalNlbProjectRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalNlbProjectRef) Clone() *ZonalNlbProjectRef {
@@ -322,7 +325,11 @@ func (m *ZonalNlbProjectRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -341,7 +348,36 @@ func (m *ZonalNlbProjectRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalNlbProjectRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalNlbProjectRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalNlbProjectRef) isParsed() bool {
+	return m != nil && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalNlbProjectRef) absolutePath() string {

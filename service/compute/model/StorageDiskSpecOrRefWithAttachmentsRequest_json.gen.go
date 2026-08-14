@@ -46,7 +46,9 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) encodeFields(e *jx.Encoder)
 	}
 
 	e.FieldStart("disk")
-	m.Disk.Encode(e)
+	if err := m.Disk.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

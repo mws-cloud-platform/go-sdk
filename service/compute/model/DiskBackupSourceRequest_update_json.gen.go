@@ -37,7 +37,9 @@ func (m *UpdateDiskBackupSourceRequest) encodeFields(e *jx.Encoder) error {
 		if m.Disk.IsNull() {
 			e.Null()
 		} else {
-			m.Disk.Value.Encode(e)
+			if err := m.Disk.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -97,7 +99,9 @@ func (m *UpdateDiskBackupSourceDiskRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateDiskBackupSourceDiskRequest) encodeFields(e *jx.Encoder) error {
 	if m.Id.IsSet() {
 		e.FieldStart("id")
-		m.Id.Value.Encode(e)
+		if err := m.Id.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

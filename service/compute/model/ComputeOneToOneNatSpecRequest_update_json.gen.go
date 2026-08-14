@@ -33,7 +33,9 @@ func (m *UpdateComputeOneToOneNatSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateComputeOneToOneNatSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.External.IsSet() {
 		e.FieldStart("external")
-		m.External.Value.Encode(e)
+		if err := m.External.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -87,7 +89,9 @@ func (m *UpdateComputeOneToOneNatSpecExternalRequest) Encode(e *jx.Encoder) erro
 func (m *UpdateComputeOneToOneNatSpecExternalRequest) encodeFields(e *jx.Encoder) error {
 	if m.Address.IsSet() {
 		e.FieldStart("address")
-		m.Address.Value.Encode(e)
+		if err := m.Address.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

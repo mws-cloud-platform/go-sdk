@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewZonalSrv6RouteID(zone, zonalSrv6Route string) ZonalSrv6RouteID {
+func NewZonalSrv6RouteID(zone, zonalSrv6Route string) (ZonalSrv6RouteID, error) {
+	if zonalSrv6Route == "" {
+		return ZonalSrv6RouteID{}, reserrors.NewFieldIsEmptyError("zonalSrv6Route")
+	}
+	if zone == "" {
+		return ZonalSrv6RouteID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalSrv6RouteID{
 		zonalSrv6Route: zonalSrv6Route,
 		zone:           zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalSrv6RouteID(zone, zonalSrv6Route string) ZonalSrv6RouteID {
+	m, err := NewZonalSrv6RouteID(zone, zonalSrv6Route)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseZonalSrv6RouteID(path string) (ZonalSrv6RouteID, error) {
 	m := ZonalSrv6RouteID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalSrv6RouteID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ZonalSrv6RouteID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalSrv6RouteID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalSrv6RouteRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalSrv6Route = result["zonalSrv6Route"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalSrv6RouteID) Clone() *ZonalSrv6RouteID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ZonalSrv6RouteID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ZonalSrv6RouteID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalSrv6RouteID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalSrv6RouteRef(zone, zonalSrv6Route string) ZonalSrv6RouteRef {
+func (m *ZonalSrv6RouteID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalSrv6RouteRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalSrv6Route = result["zonalSrv6Route"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalSrv6RouteRef(zone, zonalSrv6Route string) (ZonalSrv6RouteRef, error) {
+	if zonalSrv6Route == "" {
+		return ZonalSrv6RouteRef{}, reserrors.NewFieldIsEmptyError("zonalSrv6Route")
+	}
+	if zone == "" {
+		return ZonalSrv6RouteRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalSrv6RouteRef{
 		id: ZonalSrv6RouteID{
 			zonalSrv6Route: zonalSrv6Route,
@@ -183,6 +215,14 @@ func NewZonalSrv6RouteRef(zone, zonalSrv6Route string) ZonalSrv6RouteRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalSrv6RouteRef(zone, zonalSrv6Route string) ZonalSrv6RouteRef {
+	m, err := NewZonalSrv6RouteRef(zone, zonalSrv6Route)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ZonalSrv6RouteRef) String() string {
 }
 
 func (m *ZonalSrv6RouteRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalSrv6RouteRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalSrv6Route = result["zonalSrv6Route"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalSrv6RouteRef) Clone() *ZonalSrv6RouteRef {
@@ -290,7 +318,11 @@ func (m *ZonalSrv6RouteRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ZonalSrv6RouteRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalSrv6RouteRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalSrv6RouteRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalSrv6Route = result["zonalSrv6Route"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalSrv6RouteRef) isParsed() bool {
+	return m != nil && m.id.zonalSrv6Route != "" && m.id.zone != ""
 }
 
 func (m *ZonalSrv6RouteRef) absolutePath() string {

@@ -35,15 +35,21 @@ func (m *KafkaClusterStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *KafkaClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.State != nil {
 		e.FieldStart("state")
-		m.State.Encode(e)
+		if err := m.State.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Health != nil {
 		e.FieldStart("health")
-		m.Health.Encode(e)
+		if err := m.Health.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Message != nil {
@@ -53,7 +59,9 @@ func (m *KafkaClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.Region != nil {
 		e.FieldStart("region")
-		m.Region.Encode(e)
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.EffectiveKafkaConfig != nil {
@@ -68,31 +76,41 @@ func (m *KafkaClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.Instances != nil {
 		e.FieldStart("instances")
-		m.Instances.Encode(e)
+		if err := m.Instances.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Endpoints != nil {
 		e.FieldStart("endpoints")
 		e.ArrStart()
 		for _, elem := range m.Endpoints {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.MaintenanceWindow != nil {
 		e.FieldStart("maintenanceWindow")
-		m.MaintenanceWindow.Encode(e)
+		if err := m.MaintenanceWindow.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.SchemaRegistry != nil {
 		e.FieldStart("schemaRegistry")
-		m.SchemaRegistry.Encode(e)
+		if err := m.SchemaRegistry.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Balancer != nil {
 		e.FieldStart("balancer")
-		m.Balancer.Encode(e)
+		if err := m.Balancer.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

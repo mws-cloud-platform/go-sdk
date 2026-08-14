@@ -42,7 +42,9 @@ func (m *CommonRoleBindingFederationContextOptionalResponse) encodeFields(e *jx.
 		if m.Attribute.IsNull() {
 			e.Null()
 		} else {
-			m.Attribute.Value.Encode(e)
+			if err := m.Attribute.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

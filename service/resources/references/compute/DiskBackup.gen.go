@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewDiskBackupID(project, diskBackup string) DiskBackupID {
+func NewDiskBackupID(project, diskBackup string) (DiskBackupID, error) {
+	if diskBackup == "" {
+		return DiskBackupID{}, reserrors.NewFieldIsEmptyError("diskBackup")
+	}
+	if project == "" {
+		return DiskBackupID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := DiskBackupID{
 		diskBackup: diskBackup,
 		project:    project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustDiskBackupID(project, diskBackup string) DiskBackupID {
+	m, err := NewDiskBackupID(project, diskBackup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseDiskBackupID(path string) (DiskBackupID, error) {
 	m := DiskBackupID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return DiskBackupID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *DiskBackupID) String() string {
 	return m.ID()
 }
 
-func (m *DiskBackupID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, DiskBackupRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.diskBackup = result["diskBackup"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *DiskBackupID) Clone() *DiskBackupID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *DiskBackupID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *DiskBackupID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *DiskBackupID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewDiskBackupRef(project, diskBackup string) DiskBackupRef {
+func (m *DiskBackupID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, DiskBackupRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.diskBackup = result["diskBackup"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewDiskBackupRef(project, diskBackup string) (DiskBackupRef, error) {
+	if diskBackup == "" {
+		return DiskBackupRef{}, reserrors.NewFieldIsEmptyError("diskBackup")
+	}
+	if project == "" {
+		return DiskBackupRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := DiskBackupRef{
 		id: DiskBackupID{
 			diskBackup: diskBackup,
@@ -183,6 +215,14 @@ func NewDiskBackupRef(project, diskBackup string) DiskBackupRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustDiskBackupRef(project, diskBackup string) DiskBackupRef {
+	m, err := NewDiskBackupRef(project, diskBackup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *DiskBackupRef) String() string {
 }
 
 func (m *DiskBackupRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, DiskBackupRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.diskBackup = result["diskBackup"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *DiskBackupRef) Clone() *DiskBackupRef {
@@ -290,7 +318,11 @@ func (m *DiskBackupRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *DiskBackupRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *DiskBackupRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, DiskBackupRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.diskBackup = result["diskBackup"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *DiskBackupRef) isParsed() bool {
+	return m != nil && m.id.diskBackup != "" && m.id.project != ""
 }
 
 func (m *DiskBackupRef) absolutePath() string {

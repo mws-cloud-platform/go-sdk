@@ -35,15 +35,21 @@ func (m *CryptoKeyStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *CryptoKeyStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.Rotation != nil {
 		e.FieldStart("rotation")
-		m.Rotation.Encode(e)
+		if err := m.Rotation.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Destruction != nil {
 		e.FieldStart("destruction")
-		m.Destruction.Encode(e)
+		if err := m.Destruction.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -121,7 +127,9 @@ func (m *CryptoKeyStatusDestructionResponse) Encode(e *jx.Encoder) error {
 func (m *CryptoKeyStatusDestructionResponse) encodeFields(e *jx.Encoder) error {
 	if m.Status != nil {
 		e.FieldStart("status")
-		m.Status.Encode(e)
+		if err := m.Status.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ScheduledDestructionTime != nil {
@@ -259,7 +267,9 @@ func (m *CryptoKeyStatusRotationResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.PrimaryKeyVersionRef != nil {
 		e.FieldStart("primaryKeyVersionRef")
-		m.PrimaryKeyVersionRef.Encode(e)
+		if err := m.PrimaryKeyVersionRef.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

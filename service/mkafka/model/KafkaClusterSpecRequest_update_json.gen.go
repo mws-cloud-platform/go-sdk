@@ -46,21 +46,27 @@ func (m *UpdateKafkaClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Region.IsSet() {
 		e.FieldStart("region")
-		m.Region.Value.Encode(e)
+		if err := m.Region.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Endpoints.IsSet() {
 		e.FieldStart("endpoints")
 		e.ArrStart()
 		for _, elem := range m.Endpoints.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.Instances.IsSet() {
 		e.FieldStart("instances")
-		m.Instances.Value.Encode(e)
+		if err := m.Instances.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ProductConfig.IsSet() {
@@ -73,7 +79,9 @@ func (m *UpdateKafkaClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.MaintenanceWindow.IsNull() {
 			e.Null()
 		} else {
-			m.MaintenanceWindow.Value.Encode(e)
+			if err := m.MaintenanceWindow.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -82,7 +90,9 @@ func (m *UpdateKafkaClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.SchemaRegistry.IsNull() {
 			e.Null()
 		} else {
-			m.SchemaRegistry.Value.Encode(e)
+			if err := m.SchemaRegistry.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -91,7 +101,9 @@ func (m *UpdateKafkaClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Balancer.IsNull() {
 			e.Null()
 		} else {
-			m.Balancer.Value.Encode(e)
+			if err := m.Balancer.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

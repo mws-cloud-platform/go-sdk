@@ -3,10 +3,7 @@
 package model
 
 import (
-	"context"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 )
@@ -76,20 +73,6 @@ func (m *UpdateTypedUsage) GetName() string {
 // SetName is used in the Diff function for NamedArray
 func (m *UpdateTypedUsage) SetName(name string) {
 	m.Name = optional.NewOptional(name)
-}
-
-func (m *UpdateTypedUsage) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Resource.IsSet() {
-		if err := m.Resource.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Resource", err)
-		}
-	}
-
-	return nil
 }
 
 func (m *TypedUsage) diffUsageType(src *TypedUsage) optional.Optional[string] {

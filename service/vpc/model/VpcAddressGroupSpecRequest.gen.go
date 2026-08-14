@@ -7,13 +7,34 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Спецификация группы адресов.
 // Real OAPI model name: VpcAddressGroupSpec
 type VpcAddressGroupSpecRequest struct {
+	// Регион, которому принадлежит группа группа IP-адресов.
+	Region *rm.RegionRef `json:"region,omitempty" yaml:"region,omitempty"`
 	// Спецификации или ссылки на существующие внутренние адреса.
 	Addresses []ResourceAddressSpecOrRefRequest `json:"addresses" yaml:"addresses"`
+}
+
+func (m *VpcAddressGroupSpecRequest) GetRegion() *rm.RegionRef {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *VpcAddressGroupSpecRequest) SetRegion(val *rm.RegionRef) {
+	m.Region = val
+}
+
+func (m *VpcAddressGroupSpecRequest) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+	if m != nil && m.Region != nil {
+		return *m.Region
+	}
+	return val
 }
 
 func (m *VpcAddressGroupSpecRequest) GetAddresses() []ResourceAddressSpecOrRefRequest {
@@ -33,6 +54,7 @@ func (m *VpcAddressGroupSpecRequest) Clone() *VpcAddressGroupSpecRequest {
 	}
 
 	clone := *m
+	clone.Region = m.Region.Clone()
 	if m.Addresses != nil {
 		clone.Addresses = make([]ResourceAddressSpecOrRefRequest, len(m.Addresses))
 		for i, v := range m.Addresses {
@@ -45,6 +67,10 @@ func (m *VpcAddressGroupSpecRequest) Clone() *VpcAddressGroupSpecRequest {
 func (m *VpcAddressGroupSpecRequest) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if err := m.Region.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Region", err)
 	}
 
 	for index := range m.Addresses {

@@ -4,6 +4,7 @@ package mclickhouse
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewClickhouseClusterUserID(project, cluster, user string) ClickhouseClusterUserID {
+func NewClickhouseClusterUserID(project, cluster, user string) (ClickhouseClusterUserID, error) {
+	if user == "" {
+		return ClickhouseClusterUserID{}, reserrors.NewFieldIsEmptyError("user")
+	}
+	if cluster == "" {
+		return ClickhouseClusterUserID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return ClickhouseClusterUserID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ClickhouseClusterUserID{
 		user:    user,
 		cluster: cluster,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustClickhouseClusterUserID(project, cluster, user string) ClickhouseClusterUserID {
+	m, err := NewClickhouseClusterUserID(project, cluster, user)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseClickhouseClusterUserID(path string) (ClickhouseClusterUserID, error) 
 	m := ClickhouseClusterUserID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ClickhouseClusterUserID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ClickhouseClusterUserID) String() string {
 	return m.ID()
 }
 
-func (m *ClickhouseClusterUserID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ClickhouseClusterUserRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.user = result["user"]
-	m.cluster = result["cluster"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ClickhouseClusterUserID) Clone() *ClickhouseClusterUserID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ClickhouseClusterUserID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ClickhouseClusterUserID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ClickhouseClusterUserID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewClickhouseClusterUserRef(project, cluster, user string) ClickhouseClusterUserRef {
+func (m *ClickhouseClusterUserID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ClickhouseClusterUserRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.user = result["user"]
+	m.cluster = result["cluster"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewClickhouseClusterUserRef(project, cluster, user string) (ClickhouseClusterUserRef, error) {
+	if user == "" {
+		return ClickhouseClusterUserRef{}, reserrors.NewFieldIsEmptyError("user")
+	}
+	if cluster == "" {
+		return ClickhouseClusterUserRef{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return ClickhouseClusterUserRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ClickhouseClusterUserRef{
 		id: ClickhouseClusterUserID{
 			user:    user,
@@ -204,6 +242,14 @@ func NewClickhouseClusterUserRef(project, cluster, user string) ClickhouseCluste
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustClickhouseClusterUserRef(project, cluster, user string) ClickhouseClusterUserRef {
+	m, err := NewClickhouseClusterUserRef(project, cluster, user)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ClickhouseClusterUserRef) String() string {
 }
 
 func (m *ClickhouseClusterUserRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ClickhouseClusterUserRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.user = result["user"]
-	m.id.cluster = result["cluster"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ClickhouseClusterUserRef) Clone() *ClickhouseClusterUserRef {
@@ -319,7 +352,11 @@ func (m *ClickhouseClusterUserRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ClickhouseClusterUserRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ClickhouseClusterUserRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ClickhouseClusterUserRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.user = result["user"]
+	m.id.cluster = result["cluster"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ClickhouseClusterUserRef) isParsed() bool {
+	return m != nil && m.id.user != "" && m.id.cluster != "" && m.id.project != ""
 }
 
 func (m *ClickhouseClusterUserRef) absolutePath() string {

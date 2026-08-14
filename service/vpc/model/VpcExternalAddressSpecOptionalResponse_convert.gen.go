@@ -11,6 +11,9 @@ func VpcExternalAddressSpecRequestToOptionalResponse(request *VpcExternalAddress
 		return nil, nil
 	}
 	var response VpcExternalAddressSpecOptionalResponse
+	if request.Region != nil {
+		response.Region = optional.NewOptional(*request.Region)
+	}
 	if request.NatGateway != nil {
 		response.NatGateway = optional.NewOptional(*request.NatGateway)
 	}

@@ -44,7 +44,9 @@ func (m *ClickhouseBackupOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Metadata.IsNull() {
 			e.Null()
 		} else {
-			m.Metadata.Value.Encode(e)
+			if err := m.Metadata.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -53,13 +55,17 @@ func (m *ClickhouseBackupOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Spec.IsNull() {
 			e.Null()
 		} else {
-			m.Spec.Value.Encode(e)
+			if err := m.Spec.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
 	if m.Status != nil {
 		e.FieldStart("status")
-		m.Status.Encode(e)
+		if err := m.Status.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -178,7 +184,9 @@ func (m *ClickhouseBackupMetadataOptionalResponse) encodeFields(e *jx.Encoder) e
 		e.FieldStart("usages")
 		e.ArrStart()
 		for _, elem := range m.Usages.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -194,7 +202,9 @@ func (m *ClickhouseBackupMetadataOptionalResponse) encodeFields(e *jx.Encoder) e
 	}
 	if m.Id != nil {
 		e.FieldStart("id")
-		m.Id.Encode(e)
+		if err := m.Id.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

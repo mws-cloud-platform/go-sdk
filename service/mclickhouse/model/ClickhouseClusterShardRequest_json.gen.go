@@ -41,7 +41,9 @@ func (m *ClickhouseClusterShardRequest) encodeFields(e *jx.Encoder) error {
 	}
 
 	e.FieldStart("resources")
-	m.Resources.Encode(e)
+	if err := m.Resources.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Weight != nil {
 		e.FieldStart("weight")
@@ -52,7 +54,9 @@ func (m *ClickhouseClusterShardRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("endpoints")
 		e.ArrStart()
 		for _, elem := range m.Endpoints {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -60,7 +64,9 @@ func (m *ClickhouseClusterShardRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("instances")
 	e.ArrStart()
 	for _, elem := range m.Instances {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 	return nil

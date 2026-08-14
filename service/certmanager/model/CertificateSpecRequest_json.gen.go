@@ -33,12 +33,16 @@ func (m *CertificateSpecRequest) Encode(e *jx.Encoder) error {
 func (m *CertificateSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.SelfManaged != nil {
 		e.FieldStart("selfManaged")
-		m.SelfManaged.Encode(e)
+		if err := m.SelfManaged.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Managed != nil {
 		e.FieldStart("managed")
-		m.Managed.Encode(e)
+		if err := m.Managed.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

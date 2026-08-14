@@ -35,7 +35,9 @@ func (m *EncryptionStatusResponse) Encode(e *jx.Encoder) error {
 func (m *EncryptionStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.CryptoKeyId != nil {
 		e.FieldStart("cryptoKeyId")
-		m.CryptoKeyId.Encode(e)
+		if err := m.CryptoKeyId.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Version != nil {
@@ -45,7 +47,9 @@ func (m *EncryptionStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.KeyActivity != nil {
 		e.FieldStart("keyActivity")
-		m.KeyActivity.Encode(e)
+		if err := m.KeyActivity.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

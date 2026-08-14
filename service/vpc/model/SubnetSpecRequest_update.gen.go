@@ -3,14 +3,23 @@
 package model
 
 import (
+	"context"
+
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 type UpdateSubnetSpecRequest struct {
+	// Регион, которому принадлежит подсеть.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Region optional.Optional[rm.RegionRef] `json:"region" yaml:"region"`
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Cidr        optional.Optional[cidraddress.CIDR4Address]          `json:"cidr" yaml:"cidr"`
@@ -19,6 +28,9 @@ type UpdateSubnetSpecRequest struct {
 
 func (m *SubnetSpecRequest) AsUpdateModel() UpdateSubnetSpecRequest {
 	var u UpdateSubnetSpecRequest
+	if m.Region != nil {
+		u.Region = optional.NewOptional(m.GetRegionOr(rm.RegionRef{}))
+	}
 	u.Cidr = optional.NewOptional(m.GetCidr())
 	if m.DhcpOptions != nil {
 		u.DhcpOptions = optional.NewOptionalNil(m.DhcpOptions.AsUpdateModel())
@@ -31,6 +43,7 @@ func (m *SubnetSpecRequest) Diff(src *SubnetSpecRequest) UpdateSubnetSpecRequest
 	nilDiffers := src != nil && m == nil
 	upd := UpdateSubnetSpecRequest{}
 	if !nilDiffers {
+		upd.Region = m.diffRegion(src)
 		upd.Cidr = m.diffCidr(src)
 		upd.DhcpOptions = m.diffDhcpOptions(src)
 	}
@@ -43,6 +56,9 @@ func (m *SubnetSpecRequest) WithChanges(u UpdateSubnetSpecRequest) SubnetSpecReq
 		out = *m
 	}
 
+	if u.Region.IsSet() {
+		out.Region = ptr.Get(u.Region.Value)
+	}
 	if u.Cidr.IsSet() {
 		out.Cidr = u.Cidr.Value
 	}
@@ -56,8 +72,28 @@ func (m *SubnetSpecRequest) WithChanges(u UpdateSubnetSpecRequest) SubnetSpecReq
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateSubnetSpecRequest) HasChanges() bool {
-	return m.Cidr.Set ||
+	return m.Region.Set ||
+		m.Cidr.Set ||
 		m.DhcpOptions.Set
+}
+
+func (m *UpdateSubnetSpecRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if m.Region.IsSet() {
+		if err := m.Region.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Region", err)
+		}
+	}
+
+	return nil
+}
+
+func (m *SubnetSpecRequest) diffRegion(src *SubnetSpecRequest) optional.Optional[rm.RegionRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetRegion(), m.GetRegion(), nilDiffers)
 }
 
 func (m *SubnetSpecRequest) diffCidr(src *SubnetSpecRequest) optional.Optional[cidraddress.CIDR4Address] {

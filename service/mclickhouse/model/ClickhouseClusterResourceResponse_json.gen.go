@@ -45,26 +45,34 @@ func (m *ClickhouseClusterResourceResponse) encodeFields(e *jx.Encoder) error {
 	e.Str(m.Version)
 
 	e.FieldStart("region")
-	m.Region.Encode(e)
+	if err := m.Region.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Endpoints != nil {
 		e.FieldStart("endpoints")
 		e.ArrStart()
 		for _, elem := range m.Endpoints {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.Coordinator != nil {
 		e.FieldStart("coordinator")
-		m.Coordinator.Encode(e)
+		if err := m.Coordinator.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	e.FieldStart("shards")
 	e.ArrStart()
 	for _, elem := range m.Shards {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
@@ -83,14 +91,20 @@ func (m *ClickhouseClusterResourceResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.Storage != nil {
 		e.FieldStart("storage")
-		m.Storage.Encode(e)
+		if err := m.Storage.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	e.FieldStart("maintenanceWindow")
-	m.MaintenanceWindow.Encode(e)
+	if err := m.MaintenanceWindow.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("backup")
-	m.Backup.Encode(e)
+	if err := m.Backup.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

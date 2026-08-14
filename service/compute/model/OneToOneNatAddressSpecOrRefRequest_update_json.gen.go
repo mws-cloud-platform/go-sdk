@@ -34,7 +34,9 @@ func (m *UpdateOneToOneNatAddressSpecOrRefRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateOneToOneNatAddressSpecOrRefRequest) encodeFields(e *jx.Encoder) error {
 	if m.Ref.IsSet() {
 		e.FieldStart("ref")
-		m.Ref.Value.Encode(e)
+		if err := m.Ref.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Spec.IsSet() {
@@ -42,7 +44,9 @@ func (m *UpdateOneToOneNatAddressSpecOrRefRequest) encodeFields(e *jx.Encoder) e
 		if m.Spec.IsNull() {
 			e.Null()
 		} else {
-			m.Spec.Value.Encode(e)
+			if err := m.Spec.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

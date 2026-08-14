@@ -34,7 +34,9 @@ func (m *EgressNatSpecExternalOptionalResponse) encodeFields(e *jx.Encoder) erro
 	e.FieldStart("addresses")
 	e.ArrStart()
 	for _, elem := range m.Addresses {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 	return nil

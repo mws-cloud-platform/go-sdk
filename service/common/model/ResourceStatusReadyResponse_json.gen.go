@@ -33,7 +33,9 @@ func (m *ResourceStatusReadyResponse) Encode(e *jx.Encoder) error {
 
 func (m *ResourceStatusReadyResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("state")
-	m.State.Encode(e)
+	if err := m.State.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Message != nil {
 		e.FieldStart("message")

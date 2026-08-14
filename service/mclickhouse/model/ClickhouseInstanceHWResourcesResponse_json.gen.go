@@ -33,10 +33,14 @@ func (m *ClickhouseInstanceHWResourcesResponse) Encode(e *jx.Encoder) error {
 
 func (m *ClickhouseInstanceHWResourcesResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("vmType")
-	m.VmType.Encode(e)
+	if err := m.VmType.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("disk")
-	m.Disk.Encode(e)
+	if err := m.Disk.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

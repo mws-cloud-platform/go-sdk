@@ -45,7 +45,9 @@ func (m *UpdateTypedUsageRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Resource.IsSet() {
 		e.FieldStart("resource")
-		m.Resource.Value.Encode(e)
+		if err := m.Resource.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

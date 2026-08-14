@@ -3,15 +3,35 @@
 package model
 
 import (
+	"context"
+
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Real OAPI model name: SubnetSpec
 type SubnetSpecOptionalResponse struct {
+	// Регион, которому принадлежит подсеть.
+	Region      optional.Optional[rm.RegionRef]                         `json:"region,omitempty" yaml:"region,omitempty"`
 	Cidr        cidraddress.CIDR4Address                                `json:"cidr" yaml:"cidr"`
 	DhcpOptions optional.OptionalNil[SubnetDhcpOptionsOptionalResponse] `json:"dhcpOptions,omitempty" yaml:"dhcpOptions,omitempty"`
+}
+
+func (m *SubnetSpecOptionalResponse) GetRegion() *rm.RegionRef {
+	if m != nil && m.Region.IsSet() {
+		return &m.Region.Value
+	}
+	return nil
+}
+
+func (m *SubnetSpecOptionalResponse) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+	if m != nil && m.Region.IsSet() {
+		return m.Region.Value
+	}
+	return val
 }
 
 func (m *SubnetSpecOptionalResponse) GetCidr() cidraddress.CIDR4Address {
@@ -45,9 +65,26 @@ func (m *SubnetSpecOptionalResponse) Clone() *SubnetSpecOptionalResponse {
 	}
 
 	clone := *m
+	if clone.Region.IsSet() {
+		clone.Region.Value = *m.Region.Value.Clone()
+	}
 	clone.Cidr = *m.Cidr.Clone()
 	if clone.DhcpOptions.IsSet() {
 		clone.DhcpOptions.Value = *m.DhcpOptions.Value.Clone()
 	}
 	return &clone
+}
+
+func (m *SubnetSpecOptionalResponse) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if m.Region.IsSet() {
+		if err := m.Region.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Region", err)
+		}
+	}
+
+	return nil
 }

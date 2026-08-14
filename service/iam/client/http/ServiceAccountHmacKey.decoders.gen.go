@@ -35,10 +35,6 @@ func decodeListHmacKeyResponse(resp *http.Response) (*client.ListHmacKeyResponse
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -225,10 +221,6 @@ func decodeGetHmacKeyResponse(resp *http.Response) (*client.GetHmacKeyResponse, 
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -327,10 +319,6 @@ func decodeUpsertHmacKeyResponse(resp *http.Response) (*client.UpsertHmacKeyResp
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -345,10 +333,6 @@ func decodeUpsertHmacKeyResponse(resp *http.Response) (*client.UpsertHmacKeyResp
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			if err = result.Response201.Parse(resp.Request.Context()); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

@@ -41,7 +41,9 @@ func (m *TypedResourceMetadataRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("usages")
 		e.ArrStart()
 		for _, elem := range m.Usages {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

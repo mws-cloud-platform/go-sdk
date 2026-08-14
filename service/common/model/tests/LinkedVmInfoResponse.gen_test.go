@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func TestLinkedVmInfoResponseMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestLinkedVmInfoResponseMarshalling(t *testing.T) {
 
 func initLinkedVmInfoResponse() common.LinkedVmInfoResponse {
 	var v common.LinkedVmInfoResponse
+	v.Id = compute.NewMustVirtualMachineRef("projectID", "virtualMachineID")
 	return v
 }

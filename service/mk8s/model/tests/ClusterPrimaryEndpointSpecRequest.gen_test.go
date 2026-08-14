@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/mk8s/model"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestClusterPrimaryEndpointSpecRequestMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestClusterPrimaryEndpointSpecRequestMarshalling(t *testing.T) {
 
 func initClusterPrimaryEndpointSpecRequest() model.ClusterPrimaryEndpointSpecRequest {
 	var v model.ClusterPrimaryEndpointSpecRequest
+	v.Subnet = vpc.NewMustSubnetRef("projectID", "networkID", "subnetID")
 	return v
 }

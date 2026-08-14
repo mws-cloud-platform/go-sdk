@@ -167,10 +167,6 @@ func decodeListEnabledServicesResponse(resp *http.Response) (*client.ListEnabled
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -252,10 +248,6 @@ func decodeEnableServiceResponse(resp *http.Response) (*client.EnableServiceResp
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -270,10 +262,6 @@ func decodeEnableServiceResponse(resp *http.Response) (*client.EnableServiceResp
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			if err = result.Response201.Parse(resp.Request.Context()); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
@@ -389,10 +377,6 @@ func decodeGetEnabledServiceResponse(resp *http.Response) (*client.GetEnabledSer
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

@@ -40,11 +40,15 @@ func (m *ImageSpecRequest) encodeFields(e *jx.Encoder) error {
 	}
 
 	e.FieldStart("source")
-	m.Source.Encode(e)
+	if err := m.Source.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Activity != nil {
 		e.FieldStart("activity")
-		m.Activity.Encode(e)
+		if err := m.Activity.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.MinDiskSize != nil {
@@ -54,12 +58,16 @@ func (m *ImageSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.OsType != nil {
 		e.FieldStart("osType")
-		m.OsType.Encode(e)
+		if err := m.OsType.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Encryption != nil {
 		e.FieldStart("encryption")
-		m.Encryption.Encode(e)
+		if err := m.Encryption.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -171,12 +179,16 @@ func (m *ImageSpecSourceRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.DiskId != nil {
 		e.FieldStart("diskId")
-		m.DiskId.Encode(e)
+		if err := m.DiskId.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ImageId != nil {
 		e.FieldStart("imageId")
-		m.ImageId.Encode(e)
+		if err := m.ImageId.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

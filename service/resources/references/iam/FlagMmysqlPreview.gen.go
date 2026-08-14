@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,11 +57,22 @@ var (
 	}
 )
 
-func NewFlagMmysqlPreviewID(project string) FlagMmysqlPreviewID {
+func NewFlagMmysqlPreviewID(project string) (FlagMmysqlPreviewID, error) {
+	if project == "" {
+		return FlagMmysqlPreviewID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FlagMmysqlPreviewID{
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustFlagMmysqlPreviewID(project string) FlagMmysqlPreviewID {
+	m, err := NewFlagMmysqlPreviewID(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -68,7 +80,7 @@ func ParseFlagMmysqlPreviewID(path string) (FlagMmysqlPreviewID, error) {
 	m := FlagMmysqlPreviewID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return FlagMmysqlPreviewID{}, err
 	}
 	return m, nil
@@ -113,21 +125,6 @@ func (m *FlagMmysqlPreviewID) String() string {
 	return m.ID()
 }
 
-func (m *FlagMmysqlPreviewID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, FlagMmysqlPreviewRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *FlagMmysqlPreviewID) Clone() *FlagMmysqlPreviewID {
 	if m == nil {
 		return nil
@@ -151,7 +148,7 @@ func (m *FlagMmysqlPreviewID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,16 +169,53 @@ func (m *FlagMmysqlPreviewID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *FlagMmysqlPreviewID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewFlagMmysqlPreviewRef(project string) FlagMmysqlPreviewRef {
+func (m *FlagMmysqlPreviewID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, FlagMmysqlPreviewRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewFlagMmysqlPreviewRef(project string) (FlagMmysqlPreviewRef, error) {
+	if project == "" {
+		return FlagMmysqlPreviewRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FlagMmysqlPreviewRef{
 		id: FlagMmysqlPreviewID{
 			project: project,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustFlagMmysqlPreviewRef(project string) FlagMmysqlPreviewRef {
+	m, err := NewFlagMmysqlPreviewRef(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -246,18 +280,7 @@ func (m *FlagMmysqlPreviewRef) String() string {
 }
 
 func (m *FlagMmysqlPreviewRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, FlagMmysqlPreviewRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *FlagMmysqlPreviewRef) Clone() *FlagMmysqlPreviewRef {
@@ -281,7 +304,11 @@ func (m *FlagMmysqlPreviewRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -300,7 +327,35 @@ func (m *FlagMmysqlPreviewRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *FlagMmysqlPreviewRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, FlagMmysqlPreviewRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *FlagMmysqlPreviewRef) isParsed() bool {
+	return m != nil && m.id.project != ""
 }
 
 func (m *FlagMmysqlPreviewRef) absolutePath() string {

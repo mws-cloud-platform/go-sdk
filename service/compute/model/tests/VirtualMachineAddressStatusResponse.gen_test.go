@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/compute/model"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestVirtualMachineAddressStatusResponseMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestVirtualMachineAddressStatusResponseMarshalling(t *testing.T) {
 
 func initVirtualMachineAddressStatusResponse() model.VirtualMachineAddressStatusResponse {
 	var v model.VirtualMachineAddressStatusResponse
+	v.Ref = vpc.NewMustAddressRef("projectID", "networkID", "addressID")
 	return v
 }

@@ -35,20 +35,28 @@ func (m *PostgresUserRoleBindingStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *PostgresUserRoleBindingStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.RoleBindingId != nil {
 		e.FieldStart("roleBindingId")
-		m.RoleBindingId.Encode(e)
+		if err := m.RoleBindingId.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DatabaseId != nil {
 		e.FieldStart("databaseId")
-		m.DatabaseId.Encode(e)
+		if err := m.DatabaseId.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Role != nil {
 		e.FieldStart("role")
-		m.Role.Encode(e)
+		if err := m.Role.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ExpiresAt != nil {

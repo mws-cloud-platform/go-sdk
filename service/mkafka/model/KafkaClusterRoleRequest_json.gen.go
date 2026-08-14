@@ -32,7 +32,9 @@ func (m *KafkaClusterRoleRequest) Encode(e *jx.Encoder) error {
 
 func (m *KafkaClusterRoleRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("name")
-	m.Name.Encode(e)
+	if err := m.Name.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -111,12 +111,13 @@ var (
 
 func TestReference(t *testing.T) {
 	for _, testCase := range []struct {
-		name        string
-		path        string
-		template    Template
-		ctxFillFunc func(ctx context.Context) context.Context
-		result      map[string]string
-		err         error
+		name         string
+		path         string
+		template     Template
+		ctxFillFunc  func(ctx context.Context) context.Context
+		allowPartial bool
+		result       map[string]string
+		err          error
 	}{
 		{
 			name:     "full reference string without service",
@@ -322,6 +323,49 @@ func TestReference(t *testing.T) {
 			},
 			err: nil,
 		},
+		{
+			name:         "partial reference without context and allowPartial",
+			path:         "networks/networkNAME",
+			template:     template1,
+			allowPartial: true,
+			result: map[string]string{
+				"network": "networkNAME",
+			},
+			err: nil,
+		},
+		{
+			name:     "partial reference with context and allowPartial",
+			path:     "networks/networkNAME",
+			template: template1,
+			ctxFillFunc: func(ctx context.Context) context.Context {
+				ctx = values.With(ctx, "project", "projectNAME")
+				ctx = values.With(ctx, "foo", "fooNAME")
+				return ctx
+			},
+			allowPartial: true,
+			result: map[string]string{
+				"network": "networkNAME",
+				"project": "projectNAME",
+				"foo":     "fooNAME",
+			},
+			err: nil,
+		},
+		{
+			name:         "invalid reference constant with allowPartial still fails",
+			path:         "networksfff/networkNAME",
+			template:     template1,
+			allowPartial: true,
+			result:       nil,
+			err:          ErrReferenceParsing,
+		},
+		{
+			name:         "invalid reference part with allowPartial still fails",
+			path:         "projectNAME/networks/networkNAME",
+			template:     template1,
+			allowPartial: true,
+			result:       nil,
+			err:          ErrReferenceParsing,
+		},
 	} {
 		t.Run(testCase.name, func(t *testing.T) {
 			ctx := t.Context()
@@ -329,7 +373,12 @@ func TestReference(t *testing.T) {
 				ctx = testCase.ctxFillFunc(ctx)
 			}
 
-			result, err := Reference(ctx, testCase.path, testCase.template)
+			var opts []Option
+			if testCase.allowPartial {
+				opts = append(opts, AllowPartial())
+			}
+
+			result, err := Reference(ctx, testCase.path, testCase.template, opts...)
 			if testCase.err != nil {
 				require.ErrorIs(t, err, testCase.err)
 			} else {

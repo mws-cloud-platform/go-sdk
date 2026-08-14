@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/mpostgres/model"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestPostgresEndpointResponseMarshalling(t *testing.T) {
@@ -24,6 +25,7 @@ func TestPostgresEndpointResponseMarshalling(t *testing.T) {
 
 func initPostgresEndpointResponse() model.PostgresEndpointResponse {
 	var v model.PostgresEndpointResponse
+	v.Network = vpc.NewMustNetworkRef("projectID", "networkID")
 	v.PrimaryAddresses = make([]model.PostgresNetworkAddressResponse, 0)
 	return v
 }

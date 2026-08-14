@@ -42,28 +42,38 @@ func (m *PostgresClusterSpecResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("endpoints")
 	e.ArrStart()
 	for _, elem := range m.Endpoints {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
 	e.FieldStart("instanceTemplate")
-	m.InstanceTemplate.Encode(e)
+	if err := m.InstanceTemplate.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("instances")
 	e.ArrStart()
 	for _, elem := range m.Instances {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
 	if m.Backup != nil {
 		e.FieldStart("backup")
-		m.Backup.Encode(e)
+		if err := m.Backup.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.MaintenanceWindow != nil {
 		e.FieldStart("maintenanceWindow")
-		m.MaintenanceWindow.Encode(e)
+		if err := m.MaintenanceWindow.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.PostgresParameters != nil {

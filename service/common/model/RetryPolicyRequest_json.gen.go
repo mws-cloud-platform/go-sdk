@@ -41,7 +41,9 @@ func (m *RetryPolicyRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.RetryTimeoutScale != nil {
 		e.FieldStart("retryTimeoutScale")
-		m.RetryTimeoutScale.Encode(e)
+		if err := m.RetryTimeoutScale.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.MaxRetryTimeout != nil {

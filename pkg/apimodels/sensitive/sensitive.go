@@ -48,6 +48,13 @@ func (s Sensitive[T]) Value() T {
 	return s.value
 }
 
+// WithValue returns a copy of the sensitive container with the value replaced.
+// The format function is preserved from the receiver, so the redacted
+// representation of the result matches the format of the original value.
+func (s Sensitive[T]) WithValue(value T) Sensitive[T] {
+	return Sensitive[T]{value: value, format: s.format}
+}
+
 // String returns the redacted value of the sensitive container.
 func (s Sensitive[T]) String() string {
 	return s.redacted()

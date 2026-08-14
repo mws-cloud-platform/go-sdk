@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewRegionalImageID(project, region, regionalImage string) RegionalImageID {
+func NewRegionalImageID(project, region, regionalImage string) (RegionalImageID, error) {
+	if regionalImage == "" {
+		return RegionalImageID{}, reserrors.NewFieldIsEmptyError("regionalImage")
+	}
+	if region == "" {
+		return RegionalImageID{}, reserrors.NewFieldIsEmptyError("region")
+	}
+	if project == "" {
+		return RegionalImageID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := RegionalImageID{
 		regionalImage: regionalImage,
 		region:        region,
 		project:       project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustRegionalImageID(project, region, regionalImage string) RegionalImageID {
+	m, err := NewRegionalImageID(project, region, regionalImage)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseRegionalImageID(path string) (RegionalImageID, error) {
 	m := RegionalImageID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return RegionalImageID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *RegionalImageID) String() string {
 	return m.ID()
 }
 
-func (m *RegionalImageID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, RegionalImageRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.regionalImage = result["regionalImage"]
-	m.region = result["region"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *RegionalImageID) Clone() *RegionalImageID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *RegionalImageID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *RegionalImageID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *RegionalImageID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewRegionalImageRef(project, region, regionalImage string) RegionalImageRef {
+func (m *RegionalImageID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, RegionalImageRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.regionalImage = result["regionalImage"]
+	m.region = result["region"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewRegionalImageRef(project, region, regionalImage string) (RegionalImageRef, error) {
+	if regionalImage == "" {
+		return RegionalImageRef{}, reserrors.NewFieldIsEmptyError("regionalImage")
+	}
+	if region == "" {
+		return RegionalImageRef{}, reserrors.NewFieldIsEmptyError("region")
+	}
+	if project == "" {
+		return RegionalImageRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := RegionalImageRef{
 		id: RegionalImageID{
 			regionalImage: regionalImage,
@@ -204,6 +242,14 @@ func NewRegionalImageRef(project, region, regionalImage string) RegionalImageRef
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustRegionalImageRef(project, region, regionalImage string) RegionalImageRef {
+	m, err := NewRegionalImageRef(project, region, regionalImage)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *RegionalImageRef) String() string {
 }
 
 func (m *RegionalImageRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, RegionalImageRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.regionalImage = result["regionalImage"]
-	m.id.region = result["region"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *RegionalImageRef) Clone() *RegionalImageRef {
@@ -319,7 +352,11 @@ func (m *RegionalImageRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *RegionalImageRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *RegionalImageRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, RegionalImageRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.regionalImage = result["regionalImage"]
+	m.id.region = result["region"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *RegionalImageRef) isParsed() bool {
+	return m != nil && m.id.regionalImage != "" && m.id.region != "" && m.id.project != ""
 }
 
 func (m *RegionalImageRef) absolutePath() string {

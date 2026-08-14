@@ -36,7 +36,9 @@ func (m *CertificateSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Managed.IsNull() {
 			e.Null()
 		} else {
-			m.Managed.Value.Encode(e)
+			if err := m.Managed.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

@@ -37,18 +37,24 @@ func (m *KafkaEndpointRequest) encodeFields(e *jx.Encoder) error {
 	e.Str(m.Name)
 
 	e.FieldStart("network")
-	m.Network.Encode(e)
+	if err := m.Network.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("brokerAddresses")
 	e.ArrStart()
 	for _, elem := range m.BrokerAddresses {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
 	if m.ExternalAccess != nil {
 		e.FieldStart("externalAccess")
-		m.ExternalAccess.Encode(e)
+		if err := m.ExternalAccess.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -3,10 +3,6 @@
 package model
 
 import (
-	"context"
-	"fmt"
-
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -56,18 +52,4 @@ func (m *ListNetworksResponseOptionalResponse) Clone() *ListNetworksResponseOpti
 		}
 	}
 	return &clone
-}
-
-func (m *ListNetworksResponseOptionalResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	for index := range m.Items {
-		if err := m.Items[index].Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Items"+fmt.Sprint("[", index, "]"), err)
-		}
-	}
-
-	return nil
 }

@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewHmacKeyID(project, serviceAccount, hmacKey string) HmacKeyID {
+func NewHmacKeyID(project, serviceAccount, hmacKey string) (HmacKeyID, error) {
+	if hmacKey == "" {
+		return HmacKeyID{}, reserrors.NewFieldIsEmptyError("hmacKey")
+	}
+	if serviceAccount == "" {
+		return HmacKeyID{}, reserrors.NewFieldIsEmptyError("serviceAccount")
+	}
+	if project == "" {
+		return HmacKeyID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := HmacKeyID{
 		hmacKey:        hmacKey,
 		serviceAccount: serviceAccount,
 		project:        project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustHmacKeyID(project, serviceAccount, hmacKey string) HmacKeyID {
+	m, err := NewHmacKeyID(project, serviceAccount, hmacKey)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseHmacKeyID(path string) (HmacKeyID, error) {
 	m := HmacKeyID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return HmacKeyID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *HmacKeyID) String() string {
 	return m.ID()
 }
 
-func (m *HmacKeyID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, HmacKeyRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.hmacKey = result["hmacKey"]
-	m.serviceAccount = result["serviceAccount"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *HmacKeyID) Clone() *HmacKeyID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *HmacKeyID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *HmacKeyID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *HmacKeyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewHmacKeyRef(project, serviceAccount, hmacKey string) HmacKeyRef {
+func (m *HmacKeyID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, HmacKeyRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.hmacKey = result["hmacKey"]
+	m.serviceAccount = result["serviceAccount"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewHmacKeyRef(project, serviceAccount, hmacKey string) (HmacKeyRef, error) {
+	if hmacKey == "" {
+		return HmacKeyRef{}, reserrors.NewFieldIsEmptyError("hmacKey")
+	}
+	if serviceAccount == "" {
+		return HmacKeyRef{}, reserrors.NewFieldIsEmptyError("serviceAccount")
+	}
+	if project == "" {
+		return HmacKeyRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := HmacKeyRef{
 		id: HmacKeyID{
 			hmacKey:        hmacKey,
@@ -204,6 +242,14 @@ func NewHmacKeyRef(project, serviceAccount, hmacKey string) HmacKeyRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustHmacKeyRef(project, serviceAccount, hmacKey string) HmacKeyRef {
+	m, err := NewHmacKeyRef(project, serviceAccount, hmacKey)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *HmacKeyRef) String() string {
 }
 
 func (m *HmacKeyRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, HmacKeyRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.hmacKey = result["hmacKey"]
-	m.id.serviceAccount = result["serviceAccount"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *HmacKeyRef) Clone() *HmacKeyRef {
@@ -319,7 +352,11 @@ func (m *HmacKeyRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *HmacKeyRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *HmacKeyRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, HmacKeyRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.hmacKey = result["hmacKey"]
+	m.id.serviceAccount = result["serviceAccount"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *HmacKeyRef) isParsed() bool {
+	return m != nil && m.id.hmacKey != "" && m.id.serviceAccount != "" && m.id.project != ""
 }
 
 func (m *HmacKeyRef) absolutePath() string {

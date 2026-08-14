@@ -35,10 +35,6 @@ func decodeListModelsResponse(resp *http.Response) (*client.ListModelsResponse, 
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
 			return result, nil
 		default:
 			_, _ = io.Copy(io.Discard, resp.Body)
@@ -134,10 +130,6 @@ func decodeGetModelResponse(resp *http.Response) (*client.GetModelResponse, erro
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			if err = result.Response200.Parse(resp.Request.Context()); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

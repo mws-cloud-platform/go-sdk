@@ -36,7 +36,9 @@ func (m *DiskBackupStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *DiskBackupStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.StorageSize != nil {
 		e.FieldStart("storageSize")
 		m.StorageSize.Encode(e)
@@ -59,17 +61,23 @@ func (m *DiskBackupStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.InitialSourceImage != nil {
 		e.FieldStart("initialSourceImage")
-		m.InitialSourceImage.Encode(e)
+		if err := m.InitialSourceImage.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.OsType != nil {
 		e.FieldStart("osType")
-		m.OsType.Encode(e)
+		if err := m.OsType.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Encryption != nil {
 		e.FieldStart("encryption")
-		m.Encryption.Encode(e)
+		if err := m.Encryption.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

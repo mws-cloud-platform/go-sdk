@@ -33,12 +33,16 @@ func (m *VmTypeSpecResponse) Encode(e *jx.Encoder) error {
 func (m *VmTypeSpecResponse) encodeFields(e *jx.Encoder) error {
 	if m.Cpu != nil {
 		e.FieldStart("cpu")
-		m.Cpu.Encode(e)
+		if err := m.Cpu.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Memory != nil {
 		e.FieldStart("memory")
-		m.Memory.Encode(e)
+		if err := m.Memory.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

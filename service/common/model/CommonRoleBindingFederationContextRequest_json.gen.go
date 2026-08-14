@@ -39,7 +39,9 @@ func (m *CommonRoleBindingFederationContextRequest) encodeFields(e *jx.Encoder) 
 
 	if m.Attribute != nil {
 		e.FieldStart("attribute")
-		m.Attribute.Encode(e)
+		if err := m.Attribute.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

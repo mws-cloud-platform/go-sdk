@@ -226,10 +226,6 @@ func (m *DiskStatusResponse) Parse(ctx context.Context) error {
 		}
 	}
 
-	if err := m.InitialSourceImage.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("InitialSourceImage", err)
-	}
-
 	if err := m.Encryption.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Encryption", err)
 	}

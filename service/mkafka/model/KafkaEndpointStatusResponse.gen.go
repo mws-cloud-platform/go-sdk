@@ -3,10 +3,6 @@
 package model
 
 import (
-	"context"
-	"fmt"
-
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -151,26 +147,4 @@ func (m *KafkaEndpointStatusResponse) Clone() *KafkaEndpointStatusResponse {
 	}
 	clone.ExternalAccess = *m.ExternalAccess.Clone()
 	return &clone
-}
-
-func (m *KafkaEndpointStatusResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Network.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Network", err)
-	}
-
-	for index := range m.BrokerAddresses {
-		if err := m.BrokerAddresses[index].Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("BrokerAddresses"+fmt.Sprint("[", index, "]"), err)
-		}
-	}
-
-	if err := m.ExternalAccess.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("ExternalAccess", err)
-	}
-
-	return nil
 }

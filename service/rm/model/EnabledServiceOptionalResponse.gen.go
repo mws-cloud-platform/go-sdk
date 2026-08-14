@@ -3,10 +3,8 @@
 package model
 
 import (
-	"context"
 	"time"
 
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 	common "go.mws.cloud/go-sdk/service/common/model"
@@ -97,20 +95,6 @@ func (m *EnabledServiceOptionalResponse) Clone() *EnabledServiceOptionalResponse
 	clone.Spec = *m.Spec.Clone()
 	clone.Status = m.Status.Clone()
 	return &clone
-}
-
-func (m *EnabledServiceOptionalResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		if err := m.Metadata.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Metadata", err)
-		}
-	}
-
-	return nil
 }
 
 // Представление поля Metadata анонимного типа структуры EnabledService
@@ -257,19 +241,4 @@ func (m *EnabledServiceMetadataOptionalResponse) Clone() *EnabledServiceMetadata
 	clone.Id = m.Id.Clone()
 
 	return &clone
-}
-
-func (m *EnabledServiceMetadataOptionalResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.TypedResourceMetadataOptionalResponse.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("TypedResourceMetadataOptionalResponse", err)
-	}
-	if err := m.Id.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Id", err)
-	}
-
-	return nil
 }

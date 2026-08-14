@@ -2,11 +2,18 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/optional"
+)
+
 func VpcAddressGroupSpecRequestToOptionalResponse(request *VpcAddressGroupSpecRequest) (*VpcAddressGroupSpecOptionalResponse, error) {
 	if request == nil {
 		return nil, nil
 	}
 	var response VpcAddressGroupSpecOptionalResponse
+	if request.Region != nil {
+		response.Region = optional.NewOptional(*request.Region)
+	}
 	for _, e := range request.Addresses {
 		tmp, err := ResourceAddressSpecOrRefRequestToOptionalResponse(&e)
 		if err != nil {

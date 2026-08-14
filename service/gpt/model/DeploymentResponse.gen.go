@@ -108,10 +108,6 @@ func (m *DeploymentResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if err := m.Metadata.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Metadata", err)
-	}
-
 	if err := m.Spec.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Spec", err)
 	}
@@ -263,19 +259,4 @@ func (m *DeploymentMetadataResponse) Clone() *DeploymentMetadataResponse {
 	clone.Id = m.Id.Clone()
 
 	return &clone
-}
-
-func (m *DeploymentMetadataResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.TypedResourceMetadataResponse.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("TypedResourceMetadataResponse", err)
-	}
-	if err := m.Id.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Id", err)
-	}
-
-	return nil
 }

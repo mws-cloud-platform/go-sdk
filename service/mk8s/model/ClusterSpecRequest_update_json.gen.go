@@ -34,17 +34,23 @@ func (m *UpdateClusterSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Availability.IsSet() {
 		e.FieldStart("availability")
-		m.Availability.Value.Encode(e)
+		if err := m.Availability.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Network.IsSet() {
 		e.FieldStart("network")
-		m.Network.Value.Encode(e)
+		if err := m.Network.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.VersionControl.IsSet() {
 		e.FieldStart("versionControl")
-		m.VersionControl.Value.Encode(e)
+		if err := m.VersionControl.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Plugins.IsSet() {
@@ -52,7 +58,9 @@ func (m *UpdateClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Plugins.IsNull() {
 			e.Null()
 		} else {
-			m.Plugins.Value.Encode(e)
+			if err := m.Plugins.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -136,7 +144,9 @@ func (m *UpdateClusterSpecNetworkRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateClusterSpecNetworkRequest) encodeFields(e *jx.Encoder) error {
 	if m.PrimaryEndpoint.IsSet() {
 		e.FieldStart("primaryEndpoint")
-		m.PrimaryEndpoint.Value.Encode(e)
+		if err := m.PrimaryEndpoint.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.PublicEndpoint.IsSet() {
@@ -144,7 +154,9 @@ func (m *UpdateClusterSpecNetworkRequest) encodeFields(e *jx.Encoder) error {
 		if m.PublicEndpoint.IsNull() {
 			e.Null()
 		} else {
-			m.PublicEndpoint.Value.Encode(e)
+			if err := m.PublicEndpoint.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 

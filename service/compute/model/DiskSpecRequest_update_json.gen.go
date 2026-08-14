@@ -49,18 +49,24 @@ func (m *UpdateDiskSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Source.IsNull() {
 			e.Null()
 		} else {
-			m.Source.Value.Encode(e)
+			if err := m.Source.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
 	if m.DiskType.IsSet() {
 		e.FieldStart("diskType")
-		m.DiskType.Value.Encode(e)
+		if err := m.DiskType.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Iops.IsSet() {
 		e.FieldStart("iops")
-		m.Iops.Value.Encode(e)
+		if err := m.Iops.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.BlockSize.IsSet() {
@@ -70,7 +76,9 @@ func (m *UpdateDiskSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.OsType.IsSet() {
 		e.FieldStart("osType")
-		m.OsType.Value.Encode(e)
+		if err := m.OsType.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Encryption.IsSet() {
@@ -78,7 +86,9 @@ func (m *UpdateDiskSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Encryption.IsNull() {
 			e.Null()
 		} else {
-			m.Encryption.Value.Encode(e)
+			if err := m.Encryption.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -199,17 +209,23 @@ func (m *UpdateDiskSpecSourceRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateDiskSpecSourceRequest) encodeFields(e *jx.Encoder) error {
 	if m.Image.IsSet() {
 		e.FieldStart("image")
-		m.Image.Value.Encode(e)
+		if err := m.Image.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Snapshot.IsSet() {
 		e.FieldStart("snapshot")
-		m.Snapshot.Value.Encode(e)
+		if err := m.Snapshot.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DiskBackup.IsSet() {
 		e.FieldStart("diskBackup")
-		m.DiskBackup.Value.Encode(e)
+		if err := m.DiskBackup.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

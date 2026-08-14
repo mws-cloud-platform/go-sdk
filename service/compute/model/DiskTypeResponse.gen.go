@@ -87,10 +87,6 @@ func (m *DiskTypeResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if err := m.Metadata.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Metadata", err)
-	}
-
 	if err := m.Spec.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Spec", err)
 	}

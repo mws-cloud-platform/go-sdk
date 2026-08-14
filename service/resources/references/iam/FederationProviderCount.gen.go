@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,12 +67,26 @@ var (
 	}
 )
 
-func NewFederationProviderCountID(organization, userFederation string) FederationProviderCountID {
+func NewFederationProviderCountID(organization, userFederation string) (FederationProviderCountID, error) {
+	if userFederation == "" {
+		return FederationProviderCountID{}, reserrors.NewFieldIsEmptyError("userFederation")
+	}
+	if organization == "" {
+		return FederationProviderCountID{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := FederationProviderCountID{
 		userFederation: userFederation,
 		organization:   organization,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustFederationProviderCountID(organization, userFederation string) FederationProviderCountID {
+	m, err := NewFederationProviderCountID(organization, userFederation)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -79,7 +94,7 @@ func ParseFederationProviderCountID(path string) (FederationProviderCountID, err
 	m := FederationProviderCountID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return FederationProviderCountID{}, err
 	}
 	return m, nil
@@ -132,22 +147,6 @@ func (m *FederationProviderCountID) String() string {
 	return m.ID()
 }
 
-func (m *FederationProviderCountID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, FederationProviderCountRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.userFederation = result["userFederation"]
-	m.organization = result["organization"]
-
-	return nil
-}
-
 func (m *FederationProviderCountID) Clone() *FederationProviderCountID {
 	if m == nil {
 		return nil
@@ -171,7 +170,7 @@ func (m *FederationProviderCountID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +191,43 @@ func (m *FederationProviderCountID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *FederationProviderCountID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewFederationProviderCountRef(organization, userFederation string) FederationProviderCountRef {
+func (m *FederationProviderCountID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, FederationProviderCountRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.userFederation = result["userFederation"]
+	m.organization = result["organization"]
+
+	return nil
+}
+
+func NewFederationProviderCountRef(organization, userFederation string) (FederationProviderCountRef, error) {
+	if userFederation == "" {
+		return FederationProviderCountRef{}, reserrors.NewFieldIsEmptyError("userFederation")
+	}
+	if organization == "" {
+		return FederationProviderCountRef{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := FederationProviderCountRef{
 		id: FederationProviderCountID{
 			userFederation: userFederation,
@@ -203,6 +235,14 @@ func NewFederationProviderCountRef(organization, userFederation string) Federati
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustFederationProviderCountRef(organization, userFederation string) FederationProviderCountRef {
+	m, err := NewFederationProviderCountRef(organization, userFederation)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -274,19 +314,7 @@ func (m *FederationProviderCountRef) String() string {
 }
 
 func (m *FederationProviderCountRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, FederationProviderCountRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.userFederation = result["userFederation"]
-	m.id.organization = result["organization"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *FederationProviderCountRef) Clone() *FederationProviderCountRef {
@@ -310,7 +338,11 @@ func (m *FederationProviderCountRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -329,7 +361,36 @@ func (m *FederationProviderCountRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *FederationProviderCountRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, FederationProviderCountRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.userFederation = result["userFederation"]
+	m.id.organization = result["organization"]
+
 	return nil
+}
+
+func (m *FederationProviderCountRef) isParsed() bool {
+	return m != nil && m.id.userFederation != "" && m.id.organization != ""
 }
 
 func (m *FederationProviderCountRef) absolutePath() string {

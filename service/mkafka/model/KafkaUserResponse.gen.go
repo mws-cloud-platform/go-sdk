@@ -3,10 +3,8 @@
 package model
 
 import (
-	"context"
 	"time"
 
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mkafka"
 )
@@ -101,18 +99,6 @@ func (m *KafkaUserResponse) Clone() *KafkaUserResponse {
 	clone.Spec = *m.Spec.Clone()
 	clone.Status = m.Status.Clone()
 	return &clone
-}
-
-func (m *KafkaUserResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Metadata.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Metadata", err)
-	}
-
-	return nil
 }
 
 // Представление поля Metadata анонимного типа структуры KafkaUser
@@ -259,19 +245,4 @@ func (m *KafkaUserMetadataResponse) Clone() *KafkaUserMetadataResponse {
 	clone.Id = m.Id.Clone()
 
 	return &clone
-}
-
-func (m *KafkaUserMetadataResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.TypedResourceMetadataResponse.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("TypedResourceMetadataResponse", err)
-	}
-	if err := m.Id.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Id", err)
-	}
-
-	return nil
 }

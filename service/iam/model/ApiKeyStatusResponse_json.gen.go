@@ -34,7 +34,9 @@ func (m *ApiKeyStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *ApiKeyStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.ApiKey != nil {
 		e.FieldStart("apiKey")
 		e.Str(*m.ApiKey)

@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewAddressID(project, network, address string) AddressID {
+func NewAddressID(project, network, address string) (AddressID, error) {
+	if address == "" {
+		return AddressID{}, reserrors.NewFieldIsEmptyError("address")
+	}
+	if network == "" {
+		return AddressID{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return AddressID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := AddressID{
 		address: address,
 		network: network,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustAddressID(project, network, address string) AddressID {
+	m, err := NewAddressID(project, network, address)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseAddressID(path string) (AddressID, error) {
 	m := AddressID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return AddressID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *AddressID) String() string {
 	return m.ID()
 }
 
-func (m *AddressID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, AddressRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.address = result["address"]
-	m.network = result["network"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *AddressID) Clone() *AddressID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *AddressID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *AddressID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *AddressID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewAddressRef(project, network, address string) AddressRef {
+func (m *AddressID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, AddressRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.address = result["address"]
+	m.network = result["network"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewAddressRef(project, network, address string) (AddressRef, error) {
+	if address == "" {
+		return AddressRef{}, reserrors.NewFieldIsEmptyError("address")
+	}
+	if network == "" {
+		return AddressRef{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return AddressRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := AddressRef{
 		id: AddressID{
 			address: address,
@@ -204,6 +242,14 @@ func NewAddressRef(project, network, address string) AddressRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustAddressRef(project, network, address string) AddressRef {
+	m, err := NewAddressRef(project, network, address)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *AddressRef) String() string {
 }
 
 func (m *AddressRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, AddressRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.address = result["address"]
-	m.id.network = result["network"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *AddressRef) Clone() *AddressRef {
@@ -319,7 +352,11 @@ func (m *AddressRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *AddressRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *AddressRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, AddressRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.address = result["address"]
+	m.id.network = result["network"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *AddressRef) isParsed() bool {
+	return m != nil && m.id.address != "" && m.id.network != "" && m.id.project != ""
 }
 
 func (m *AddressRef) absolutePath() string {

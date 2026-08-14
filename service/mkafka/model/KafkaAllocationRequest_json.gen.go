@@ -34,7 +34,9 @@ func (m *KafkaAllocationRequest) Encode(e *jx.Encoder) error {
 
 func (m *KafkaAllocationRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("zone")
-	m.Zone.Encode(e)
+	if err := m.Zone.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("count")
 	e.Int32(m.Count)

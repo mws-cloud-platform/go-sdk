@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewDiskTypeID(diskType string) DiskTypeID {
+func NewDiskTypeID(diskType string) (DiskTypeID, error) {
+	if diskType == "" {
+		return DiskTypeID{}, reserrors.NewFieldIsEmptyError("diskType")
+	}
 	m := DiskTypeID{
 		diskType: diskType,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustDiskTypeID(diskType string) DiskTypeID {
+	m, err := NewDiskTypeID(diskType)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseDiskTypeID(path string) (DiskTypeID, error) {
 	m := DiskTypeID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return DiskTypeID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *DiskTypeID) String() string {
 	return m.ID()
 }
 
-func (m *DiskTypeID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, DiskTypeRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.diskType = result["diskType"]
-
-	return nil
-}
-
 func (m *DiskTypeID) Clone() *DiskTypeID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *DiskTypeID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *DiskTypeID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *DiskTypeID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewDiskTypeRef(diskType string) DiskTypeRef {
+func (m *DiskTypeID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, DiskTypeRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.diskType = result["diskType"]
+
+	return nil
+}
+
+func NewDiskTypeRef(diskType string) (DiskTypeRef, error) {
+	if diskType == "" {
+		return DiskTypeRef{}, reserrors.NewFieldIsEmptyError("diskType")
+	}
 	m := DiskTypeRef{
 		id: DiskTypeID{
 			diskType: diskType,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustDiskTypeRef(diskType string) DiskTypeRef {
+	m, err := NewDiskTypeRef(diskType)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *DiskTypeRef) String() string {
 }
 
 func (m *DiskTypeRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, DiskTypeRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.diskType = result["diskType"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *DiskTypeRef) Clone() *DiskTypeRef {
@@ -261,7 +284,11 @@ func (m *DiskTypeRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *DiskTypeRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *DiskTypeRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, DiskTypeRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.diskType = result["diskType"]
+
 	return nil
+}
+
+func (m *DiskTypeRef) isParsed() bool {
+	return m != nil && m.id.diskType != ""
 }
 
 func (m *DiskTypeRef) absolutePath() string {

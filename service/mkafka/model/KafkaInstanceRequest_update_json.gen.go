@@ -33,12 +33,16 @@ func (m *UpdateKafkaInstanceRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateKafkaInstanceRequest) encodeFields(e *jx.Encoder) error {
 	if m.Broker.IsSet() {
 		e.FieldStart("broker")
-		m.Broker.Value.Encode(e)
+		if err := m.Broker.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Controller.IsSet() {
 		e.FieldStart("controller")
-		m.Controller.Value.Encode(e)
+		if err := m.Controller.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

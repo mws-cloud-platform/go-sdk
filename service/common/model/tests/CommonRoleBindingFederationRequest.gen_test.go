@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 func TestCommonRoleBindingFederationRequestMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestCommonRoleBindingFederationRequestMarshalling(t *testing.T) {
 
 func initCommonRoleBindingFederationRequest() common.CommonRoleBindingFederationRequest {
 	var v common.CommonRoleBindingFederationRequest
+	v.Id = iam.NewMustUserFederationRef("organizationID", "userFederationID")
 	return v
 }

@@ -40,17 +40,23 @@ func (m *StorageDiskSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Source != nil {
 		e.FieldStart("source")
-		m.Source.Encode(e)
+		if err := m.Source.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DiskType != nil {
 		e.FieldStart("diskType")
-		m.DiskType.Encode(e)
+		if err := m.DiskType.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Iops != nil {
 		e.FieldStart("iops")
-		m.Iops.Encode(e)
+		if err := m.Iops.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -132,12 +138,16 @@ func (m *StorageDiskSpecSourceRequest) Encode(e *jx.Encoder) error {
 func (m *StorageDiskSpecSourceRequest) encodeFields(e *jx.Encoder) error {
 	if m.Image != nil {
 		e.FieldStart("image")
-		m.Image.Encode(e)
+		if err := m.Image.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DiskBackup != nil {
 		e.FieldStart("diskBackup")
-		m.DiskBackup.Encode(e)
+		if err := m.DiskBackup.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

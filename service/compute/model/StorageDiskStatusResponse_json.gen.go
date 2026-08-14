@@ -45,16 +45,22 @@ func (m *StorageDiskStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.Str(m.DeviceName)
 
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Ready != nil {
 		e.FieldStart("ready")
-		m.Ready.Encode(e)
+		if err := m.Ready.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Iops != nil {
 		e.FieldStart("iops")
-		m.Iops.Encode(e)
+		if err := m.Iops.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Size != nil {

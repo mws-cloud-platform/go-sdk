@@ -35,7 +35,9 @@ func (m *UpdateCryptoKeySpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateCryptoKeySpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.DefaultAlgorithm.IsSet() {
 		e.FieldStart("defaultAlgorithm")
-		m.DefaultAlgorithm.Value.Encode(e)
+		if err := m.DefaultAlgorithm.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DestructionPolicy.IsSet() {
@@ -43,7 +45,9 @@ func (m *UpdateCryptoKeySpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.DestructionPolicy.IsNull() {
 			e.Null()
 		} else {
-			m.DestructionPolicy.Value.Encode(e)
+			if err := m.DestructionPolicy.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -52,7 +56,9 @@ func (m *UpdateCryptoKeySpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.UsagePolicy.IsNull() {
 			e.Null()
 		} else {
-			m.UsagePolicy.Value.Encode(e)
+			if err := m.UsagePolicy.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -61,7 +67,9 @@ func (m *UpdateCryptoKeySpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.RotationPolicy.IsNull() {
 			e.Null()
 		} else {
-			m.RotationPolicy.Value.Encode(e)
+			if err := m.RotationPolicy.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -70,7 +78,9 @@ func (m *UpdateCryptoKeySpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.PrimaryKeyVersionRef.IsNull() {
 			e.Null()
 		} else {
-			m.PrimaryKeyVersionRef.Value.Encode(e)
+			if err := m.PrimaryKeyVersionRef.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

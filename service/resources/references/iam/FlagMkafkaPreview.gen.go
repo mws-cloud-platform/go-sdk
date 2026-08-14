@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,11 +57,22 @@ var (
 	}
 )
 
-func NewFlagMkafkaPreviewID(project string) FlagMkafkaPreviewID {
+func NewFlagMkafkaPreviewID(project string) (FlagMkafkaPreviewID, error) {
+	if project == "" {
+		return FlagMkafkaPreviewID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FlagMkafkaPreviewID{
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustFlagMkafkaPreviewID(project string) FlagMkafkaPreviewID {
+	m, err := NewFlagMkafkaPreviewID(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -68,7 +80,7 @@ func ParseFlagMkafkaPreviewID(path string) (FlagMkafkaPreviewID, error) {
 	m := FlagMkafkaPreviewID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return FlagMkafkaPreviewID{}, err
 	}
 	return m, nil
@@ -113,21 +125,6 @@ func (m *FlagMkafkaPreviewID) String() string {
 	return m.ID()
 }
 
-func (m *FlagMkafkaPreviewID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, FlagMkafkaPreviewRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *FlagMkafkaPreviewID) Clone() *FlagMkafkaPreviewID {
 	if m == nil {
 		return nil
@@ -151,7 +148,7 @@ func (m *FlagMkafkaPreviewID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,16 +169,53 @@ func (m *FlagMkafkaPreviewID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *FlagMkafkaPreviewID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewFlagMkafkaPreviewRef(project string) FlagMkafkaPreviewRef {
+func (m *FlagMkafkaPreviewID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, FlagMkafkaPreviewRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewFlagMkafkaPreviewRef(project string) (FlagMkafkaPreviewRef, error) {
+	if project == "" {
+		return FlagMkafkaPreviewRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FlagMkafkaPreviewRef{
 		id: FlagMkafkaPreviewID{
 			project: project,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustFlagMkafkaPreviewRef(project string) FlagMkafkaPreviewRef {
+	m, err := NewFlagMkafkaPreviewRef(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -246,18 +280,7 @@ func (m *FlagMkafkaPreviewRef) String() string {
 }
 
 func (m *FlagMkafkaPreviewRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, FlagMkafkaPreviewRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *FlagMkafkaPreviewRef) Clone() *FlagMkafkaPreviewRef {
@@ -281,7 +304,11 @@ func (m *FlagMkafkaPreviewRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -300,7 +327,35 @@ func (m *FlagMkafkaPreviewRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *FlagMkafkaPreviewRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, FlagMkafkaPreviewRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *FlagMkafkaPreviewRef) isParsed() bool {
+	return m != nil && m.id.project != ""
 }
 
 func (m *FlagMkafkaPreviewRef) absolutePath() string {

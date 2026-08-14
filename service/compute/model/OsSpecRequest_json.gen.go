@@ -49,7 +49,9 @@ func (m *OsSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Metadata != nil {
 		e.FieldStart("metadata")
-		m.Metadata.Encode(e)
+		if err := m.Metadata.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -73,12 +73,6 @@ func (m *UpdateClickhouseClusterRequest) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		if err := m.Metadata.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Metadata", err)
-		}
-	}
-
 	if m.Spec.IsSet() {
 		if err := m.Spec.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("Spec", err)
@@ -181,17 +175,6 @@ func (m UpdateClickhouseClusterMetadataRequest) HasChanges() bool {
 		m.Usages.Set ||
 		m.Etag.Set ||
 		m.Description.Set
-}
-
-func (m *UpdateClickhouseClusterMetadataRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.UpdateTypedResourceMetadataRequest.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("UpdateTypedResourceMetadataRequest", err)
-	}
-	return nil
 }
 
 func (m *ClickhouseClusterMetadataRequest) diffDisplayName(src *ClickhouseClusterMetadataRequest) optional.Optional[string] {

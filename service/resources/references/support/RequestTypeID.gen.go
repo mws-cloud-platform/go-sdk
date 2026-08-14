@@ -4,6 +4,7 @@ package support
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewRequestTypeIDID(requestTypeName string) RequestTypeIDID {
+func NewRequestTypeIDID(requestTypeName string) (RequestTypeIDID, error) {
+	if requestTypeName == "" {
+		return RequestTypeIDID{}, reserrors.NewFieldIsEmptyError("requestTypeName")
+	}
 	m := RequestTypeIDID{
 		requestTypeName: requestTypeName,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustRequestTypeIDID(requestTypeName string) RequestTypeIDID {
+	m, err := NewRequestTypeIDID(requestTypeName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseRequestTypeIDID(path string) (RequestTypeIDID, error) {
 	m := RequestTypeIDID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return RequestTypeIDID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *RequestTypeIDID) String() string {
 	return m.ID()
 }
 
-func (m *RequestTypeIDID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, RequestTypeIDRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.requestTypeName = result["requestTypeName"]
-
-	return nil
-}
-
 func (m *RequestTypeIDID) Clone() *RequestTypeIDID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *RequestTypeIDID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *RequestTypeIDID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *RequestTypeIDID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewRequestTypeIDRef(requestTypeName string) RequestTypeIDRef {
+func (m *RequestTypeIDID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, RequestTypeIDRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.requestTypeName = result["requestTypeName"]
+
+	return nil
+}
+
+func NewRequestTypeIDRef(requestTypeName string) (RequestTypeIDRef, error) {
+	if requestTypeName == "" {
+		return RequestTypeIDRef{}, reserrors.NewFieldIsEmptyError("requestTypeName")
+	}
 	m := RequestTypeIDRef{
 		id: RequestTypeIDID{
 			requestTypeName: requestTypeName,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustRequestTypeIDRef(requestTypeName string) RequestTypeIDRef {
+	m, err := NewRequestTypeIDRef(requestTypeName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *RequestTypeIDRef) String() string {
 }
 
 func (m *RequestTypeIDRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, RequestTypeIDRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.requestTypeName = result["requestTypeName"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *RequestTypeIDRef) Clone() *RequestTypeIDRef {
@@ -261,7 +284,11 @@ func (m *RequestTypeIDRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *RequestTypeIDRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *RequestTypeIDRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, RequestTypeIDRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.requestTypeName = result["requestTypeName"]
+
 	return nil
+}
+
+func (m *RequestTypeIDRef) isParsed() bool {
+	return m != nil && m.id.requestTypeName != ""
 }
 
 func (m *RequestTypeIDRef) absolutePath() string {

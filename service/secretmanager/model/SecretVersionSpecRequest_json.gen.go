@@ -39,7 +39,9 @@ func (m *SecretVersionSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Data != nil {
 		e.FieldStart("data")
-		m.Data.Encode(e)
+		if err := m.Data.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/mkafka/model"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestKafkaEndpointRequestMarshalling(t *testing.T) {
@@ -24,6 +25,7 @@ func TestKafkaEndpointRequestMarshalling(t *testing.T) {
 
 func initKafkaEndpointRequest() model.KafkaEndpointRequest {
 	var v model.KafkaEndpointRequest
+	v.Network = vpc.NewMustNetworkRef("projectID", "networkID")
 	v.BrokerAddresses = make([]model.KafkaEndpointBrokerAddressRequest, 0)
 	return v
 }

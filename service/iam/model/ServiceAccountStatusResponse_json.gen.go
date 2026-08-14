@@ -34,7 +34,9 @@ func (m *ServiceAccountStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *ServiceAccountStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.LastAuthDateTime != nil {
 		e.FieldStart("lastAuthDateTime")
 		conv.EncodeDateTimeUTC(e, *m.LastAuthDateTime)

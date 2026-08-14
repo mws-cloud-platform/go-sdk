@@ -34,25 +34,37 @@ func (m *VirtualMachineStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *VirtualMachineStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	e.FieldStart("id")
 	e.Str(m.Id)
 
 	e.FieldStart("hardware")
-	m.Hardware.Encode(e)
+	if err := m.Hardware.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("os")
-	m.Os.Encode(e)
+	if err := m.Os.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("storage")
-	m.Storage.Encode(e)
+	if err := m.Storage.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("network")
-	m.Network.Encode(e)
+	if err := m.Network.Encode(e); err != nil {
+		return err
+	}
 
 	if m.ServiceAccount != nil {
 		e.FieldStart("serviceAccount")
-		m.ServiceAccount.Encode(e)
+		if err := m.ServiceAccount.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

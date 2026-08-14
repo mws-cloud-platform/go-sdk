@@ -6,19 +6,30 @@ import (
 	"context"
 	"fmt"
 
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 type UpdateVpcAddressGroupSpecRequest struct {
+	// Регион, которому принадлежит группа группа IP-адресов.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Region optional.Optional[rm.RegionRef] `json:"region" yaml:"region"`
 	// Спецификации или ссылки на существующие внутренние адреса.
 	Addresses optional.Optional[[]UpdateResourceAddressSpecOrRefRequest] `json:"addresses" yaml:"addresses"`
 }
 
 func (m *VpcAddressGroupSpecRequest) AsUpdateModel() UpdateVpcAddressGroupSpecRequest {
 	var u UpdateVpcAddressGroupSpecRequest
+	if m.Region != nil {
+		u.Region = optional.NewOptional(m.GetRegionOr(rm.RegionRef{}))
+	}
 	u.Addresses = optional.NewOptional(func() []UpdateResourceAddressSpecOrRefRequest {
 		var tmp []UpdateResourceAddressSpecOrRefRequest
 		if m.GetAddresses() != nil {
@@ -37,6 +48,7 @@ func (m *VpcAddressGroupSpecRequest) Diff(src *VpcAddressGroupSpecRequest) Updat
 	nilDiffers := src != nil && m == nil
 	upd := UpdateVpcAddressGroupSpecRequest{}
 	if !nilDiffers {
+		upd.Region = m.diffRegion(src)
 		upd.Addresses = m.diffAddresses(src)
 	}
 	return upd
@@ -48,6 +60,9 @@ func (m *VpcAddressGroupSpecRequest) WithChanges(u UpdateVpcAddressGroupSpecRequ
 		out = *m
 	}
 
+	if u.Region.IsSet() {
+		out.Region = ptr.Get(u.Region.Value)
+	}
 	if u.Addresses.IsSet() {
 		out.Addresses = merge.InapplicableSlice(u.Addresses.Value, (*ResourceAddressSpecOrRefRequest).WithChanges)
 	}
@@ -56,12 +71,19 @@ func (m *VpcAddressGroupSpecRequest) WithChanges(u UpdateVpcAddressGroupSpecRequ
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateVpcAddressGroupSpecRequest) HasChanges() bool {
-	return m.Addresses.Set
+	return m.Region.Set ||
+		m.Addresses.Set
 }
 
 func (m *UpdateVpcAddressGroupSpecRequest) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if m.Region.IsSet() {
+		if err := m.Region.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Region", err)
+		}
 	}
 
 	if m.Addresses.IsSet() {
@@ -73,6 +95,11 @@ func (m *UpdateVpcAddressGroupSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (m *VpcAddressGroupSpecRequest) diffRegion(src *VpcAddressGroupSpecRequest) optional.Optional[rm.RegionRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetRegion(), m.GetRegion(), nilDiffers)
 }
 
 func (m *VpcAddressGroupSpecRequest) diffAddresses(src *VpcAddressGroupSpecRequest) optional.Optional[[]UpdateResourceAddressSpecOrRefRequest] {

@@ -44,18 +44,24 @@ func (m *KafkaClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Region != nil {
 		e.FieldStart("region")
-		m.Region.Encode(e)
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	e.FieldStart("endpoints")
 	e.ArrStart()
 	for _, elem := range m.Endpoints {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
 	e.FieldStart("instances")
-	m.Instances.Encode(e)
+	if err := m.Instances.Encode(e); err != nil {
+		return err
+	}
 
 	if m.ProductConfig != nil {
 		e.FieldStart("productConfig")
@@ -64,17 +70,23 @@ func (m *KafkaClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.MaintenanceWindow != nil {
 		e.FieldStart("maintenanceWindow")
-		m.MaintenanceWindow.Encode(e)
+		if err := m.MaintenanceWindow.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.SchemaRegistry != nil {
 		e.FieldStart("schemaRegistry")
-		m.SchemaRegistry.Encode(e)
+		if err := m.SchemaRegistry.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Balancer != nil {
 		e.FieldStart("balancer")
-		m.Balancer.Encode(e)
+		if err := m.Balancer.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

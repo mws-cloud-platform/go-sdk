@@ -4,6 +4,7 @@ package kms
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewCryptoKeyVersionID(project, key, version string) CryptoKeyVersionID {
+func NewCryptoKeyVersionID(project, key, version string) (CryptoKeyVersionID, error) {
+	if version == "" {
+		return CryptoKeyVersionID{}, reserrors.NewFieldIsEmptyError("version")
+	}
+	if key == "" {
+		return CryptoKeyVersionID{}, reserrors.NewFieldIsEmptyError("key")
+	}
+	if project == "" {
+		return CryptoKeyVersionID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := CryptoKeyVersionID{
 		version: version,
 		key:     key,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustCryptoKeyVersionID(project, key, version string) CryptoKeyVersionID {
+	m, err := NewCryptoKeyVersionID(project, key, version)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseCryptoKeyVersionID(path string) (CryptoKeyVersionID, error) {
 	m := CryptoKeyVersionID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return CryptoKeyVersionID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *CryptoKeyVersionID) String() string {
 	return m.ID()
 }
 
-func (m *CryptoKeyVersionID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, CryptoKeyVersionRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.version = result["version"]
-	m.key = result["key"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *CryptoKeyVersionID) Clone() *CryptoKeyVersionID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *CryptoKeyVersionID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *CryptoKeyVersionID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *CryptoKeyVersionID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewCryptoKeyVersionRef(project, key, version string) CryptoKeyVersionRef {
+func (m *CryptoKeyVersionID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, CryptoKeyVersionRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.version = result["version"]
+	m.key = result["key"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewCryptoKeyVersionRef(project, key, version string) (CryptoKeyVersionRef, error) {
+	if version == "" {
+		return CryptoKeyVersionRef{}, reserrors.NewFieldIsEmptyError("version")
+	}
+	if key == "" {
+		return CryptoKeyVersionRef{}, reserrors.NewFieldIsEmptyError("key")
+	}
+	if project == "" {
+		return CryptoKeyVersionRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := CryptoKeyVersionRef{
 		id: CryptoKeyVersionID{
 			version: version,
@@ -204,6 +242,14 @@ func NewCryptoKeyVersionRef(project, key, version string) CryptoKeyVersionRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustCryptoKeyVersionRef(project, key, version string) CryptoKeyVersionRef {
+	m, err := NewCryptoKeyVersionRef(project, key, version)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *CryptoKeyVersionRef) String() string {
 }
 
 func (m *CryptoKeyVersionRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, CryptoKeyVersionRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.version = result["version"]
-	m.id.key = result["key"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *CryptoKeyVersionRef) Clone() *CryptoKeyVersionRef {
@@ -319,7 +352,11 @@ func (m *CryptoKeyVersionRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *CryptoKeyVersionRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *CryptoKeyVersionRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, CryptoKeyVersionRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.version = result["version"]
+	m.id.key = result["key"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *CryptoKeyVersionRef) isParsed() bool {
+	return m != nil && m.id.version != "" && m.id.key != "" && m.id.project != ""
 }
 
 func (m *CryptoKeyVersionRef) absolutePath() string {

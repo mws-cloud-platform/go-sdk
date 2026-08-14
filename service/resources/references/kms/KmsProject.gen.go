@@ -4,6 +4,7 @@ package kms
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewKmsProjectID(project string) KmsProjectID {
+func NewKmsProjectID(project string) (KmsProjectID, error) {
+	if project == "" {
+		return KmsProjectID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := KmsProjectID{
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustKmsProjectID(project string) KmsProjectID {
+	m, err := NewKmsProjectID(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseKmsProjectID(path string) (KmsProjectID, error) {
 	m := KmsProjectID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return KmsProjectID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *KmsProjectID) String() string {
 	return m.ID()
 }
 
-func (m *KmsProjectID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, KmsProjectRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *KmsProjectID) Clone() *KmsProjectID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *KmsProjectID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *KmsProjectID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *KmsProjectID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewKmsProjectRef(project string) KmsProjectRef {
+func (m *KmsProjectID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, KmsProjectRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewKmsProjectRef(project string) (KmsProjectRef, error) {
+	if project == "" {
+		return KmsProjectRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := KmsProjectRef{
 		id: KmsProjectID{
 			project: project,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustKmsProjectRef(project string) KmsProjectRef {
+	m, err := NewKmsProjectRef(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *KmsProjectRef) String() string {
 }
 
 func (m *KmsProjectRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, KmsProjectRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *KmsProjectRef) Clone() *KmsProjectRef {
@@ -261,7 +284,11 @@ func (m *KmsProjectRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *KmsProjectRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *KmsProjectRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, KmsProjectRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *KmsProjectRef) isParsed() bool {
+	return m != nil && m.id.project != ""
 }
 
 func (m *KmsProjectRef) absolutePath() string {

@@ -42,7 +42,9 @@ func (m *UpdatePostgresClusterUserSpecRequest) encodeFields(e *jx.Encoder) error
 		if m.Role.IsNull() {
 			e.Null()
 		} else {
-			m.Role.Value.Encode(e)
+			if err := m.Role.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -50,14 +52,18 @@ func (m *UpdatePostgresClusterUserSpecRequest) encodeFields(e *jx.Encoder) error
 		e.FieldStart("additionalRoles")
 		e.ArrStart()
 		for _, elem := range m.AdditionalRoles.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.AccessControlPolicy.IsSet() {
 		e.FieldStart("accessControlPolicy")
-		m.AccessControlPolicy.Value.Encode(e)
+		if err := m.AccessControlPolicy.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

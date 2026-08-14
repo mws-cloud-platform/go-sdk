@@ -63,7 +63,9 @@ func (m *VmTypeLocalDisksSpecOptionalResponse) encodeFields(e *jx.Encoder) error
 		if m.Limits.IsNull() {
 			e.Null()
 		} else {
-			m.Limits.Value.Encode(e)
+			if err := m.Limits.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

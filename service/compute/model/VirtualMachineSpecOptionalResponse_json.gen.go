@@ -38,14 +38,18 @@ func (m *VirtualMachineSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.Str(m.Zone)
 
 	e.FieldStart("vmType")
-	m.VmType.Encode(e)
+	if err := m.VmType.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Hardware.IsSet() {
 		e.FieldStart("hardware")
 		if m.Hardware.IsNull() {
 			e.Null()
 		} else {
-			m.Hardware.Value.Encode(e)
+			if err := m.Hardware.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -54,22 +58,30 @@ func (m *VirtualMachineSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Os.IsNull() {
 			e.Null()
 		} else {
-			m.Os.Value.Encode(e)
+			if err := m.Os.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
 	e.FieldStart("storage")
-	m.Storage.Encode(e)
+	if err := m.Storage.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("network")
-	m.Network.Encode(e)
+	if err := m.Network.Encode(e); err != nil {
+		return err
+	}
 
 	if m.ServiceAccount.IsSet() {
 		e.FieldStart("serviceAccount")
 		if m.ServiceAccount.IsNull() {
 			e.Null()
 		} else {
-			m.ServiceAccount.Value.Encode(e)
+			if err := m.ServiceAccount.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

@@ -34,7 +34,9 @@ func (m *DiskBackupSourceRequest) Encode(e *jx.Encoder) error {
 func (m *DiskBackupSourceRequest) encodeFields(e *jx.Encoder) error {
 	if m.Disk != nil {
 		e.FieldStart("disk")
-		m.Disk.Encode(e)
+		if err := m.Disk.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -91,7 +93,9 @@ func (m *DiskBackupSourceDiskRequest) Encode(e *jx.Encoder) error {
 
 func (m *DiskBackupSourceDiskRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("id")
-	m.Id.Encode(e)
+	if err := m.Id.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

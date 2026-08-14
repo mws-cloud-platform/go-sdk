@@ -35,7 +35,9 @@ func (m *OneToOneNatExternalAddressStatusResponse) Encode(e *jx.Encoder) error {
 func (m *OneToOneNatExternalAddressStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.Ref != nil {
 		e.FieldStart("ref")
-		m.Ref.Encode(e)
+		if err := m.Ref.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.IpAddress != nil {

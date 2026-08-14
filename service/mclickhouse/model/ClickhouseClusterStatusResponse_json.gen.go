@@ -33,20 +33,28 @@ func (m *ClickhouseClusterStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *ClickhouseClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.Health != nil {
 		e.FieldStart("health")
-		m.Health.Encode(e)
+		if err := m.Health.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.State != nil {
 		e.FieldStart("state")
-		m.State.Encode(e)
+		if err := m.State.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Cluster != nil {
 		e.FieldStart("cluster")
-		m.Cluster.Encode(e)
+		if err := m.Cluster.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

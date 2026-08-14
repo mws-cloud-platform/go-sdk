@@ -43,7 +43,9 @@ func (m *ClusterPrimaryEndpointSpecOptionalResponse) encodeFields(e *jx.Encoder)
 	}
 
 	e.FieldStart("subnet")
-	m.Subnet.Encode(e)
+	if err := m.Subnet.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

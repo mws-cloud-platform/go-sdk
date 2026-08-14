@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewZonalIpRangeID(zone, zonalIpRange string) ZonalIpRangeID {
+func NewZonalIpRangeID(zone, zonalIpRange string) (ZonalIpRangeID, error) {
+	if zonalIpRange == "" {
+		return ZonalIpRangeID{}, reserrors.NewFieldIsEmptyError("zonalIpRange")
+	}
+	if zone == "" {
+		return ZonalIpRangeID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalIpRangeID{
 		zonalIpRange: zonalIpRange,
 		zone:         zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalIpRangeID(zone, zonalIpRange string) ZonalIpRangeID {
+	m, err := NewZonalIpRangeID(zone, zonalIpRange)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseZonalIpRangeID(path string) (ZonalIpRangeID, error) {
 	m := ZonalIpRangeID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalIpRangeID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ZonalIpRangeID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalIpRangeID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalIpRangeRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalIpRange = result["zonalIpRange"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalIpRangeID) Clone() *ZonalIpRangeID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ZonalIpRangeID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ZonalIpRangeID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalIpRangeID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalIpRangeRef(zone, zonalIpRange string) ZonalIpRangeRef {
+func (m *ZonalIpRangeID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalIpRangeRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalIpRange = result["zonalIpRange"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalIpRangeRef(zone, zonalIpRange string) (ZonalIpRangeRef, error) {
+	if zonalIpRange == "" {
+		return ZonalIpRangeRef{}, reserrors.NewFieldIsEmptyError("zonalIpRange")
+	}
+	if zone == "" {
+		return ZonalIpRangeRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalIpRangeRef{
 		id: ZonalIpRangeID{
 			zonalIpRange: zonalIpRange,
@@ -183,6 +215,14 @@ func NewZonalIpRangeRef(zone, zonalIpRange string) ZonalIpRangeRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalIpRangeRef(zone, zonalIpRange string) ZonalIpRangeRef {
+	m, err := NewZonalIpRangeRef(zone, zonalIpRange)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ZonalIpRangeRef) String() string {
 }
 
 func (m *ZonalIpRangeRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalIpRangeRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalIpRange = result["zonalIpRange"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalIpRangeRef) Clone() *ZonalIpRangeRef {
@@ -290,7 +318,11 @@ func (m *ZonalIpRangeRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ZonalIpRangeRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalIpRangeRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalIpRangeRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalIpRange = result["zonalIpRange"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalIpRangeRef) isParsed() bool {
+	return m != nil && m.id.zonalIpRange != "" && m.id.zone != ""
 }
 
 func (m *ZonalIpRangeRef) absolutePath() string {

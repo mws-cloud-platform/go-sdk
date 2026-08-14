@@ -32,7 +32,9 @@ func (m *ClickhouseClusterRestoreRequest) Encode(e *jx.Encoder) error {
 
 func (m *ClickhouseClusterRestoreRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("spec")
-	m.Spec.Encode(e)
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

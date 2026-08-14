@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/certmanager/model"
+	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 func TestCertificateRoleBindingOptionalResponseMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestCertificateRoleBindingOptionalResponseMarshalling(t *testing.T) {
 
 func initCertificateRoleBindingOptionalResponse() model.CertificateRoleBindingOptionalResponse {
 	var v model.CertificateRoleBindingOptionalResponse
+	v.Spec.Role = iam.NewMustRoleRef("roleID")
 	return v
 }

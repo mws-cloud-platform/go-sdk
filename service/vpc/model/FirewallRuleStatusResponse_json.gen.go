@@ -34,7 +34,9 @@ func (m *FirewallRuleStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *FirewallRuleStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.Priority != nil {
 		e.FieldStart("priority")
 		e.Int32(*m.Priority)

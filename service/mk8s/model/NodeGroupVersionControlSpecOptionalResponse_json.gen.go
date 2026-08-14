@@ -52,7 +52,9 @@ func (m *NodeGroupVersionControlSpecOptionalResponse) encodeFields(e *jx.Encoder
 		if m.MaintenanceWindow.IsNull() {
 			e.Null()
 		} else {
-			m.MaintenanceWindow.Value.Encode(e)
+			if err := m.MaintenanceWindow.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

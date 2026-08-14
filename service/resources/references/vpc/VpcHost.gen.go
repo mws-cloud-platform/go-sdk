@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewVpcHostID(zone, vpcHost string) VpcHostID {
+func NewVpcHostID(zone, vpcHost string) (VpcHostID, error) {
+	if vpcHost == "" {
+		return VpcHostID{}, reserrors.NewFieldIsEmptyError("vpcHost")
+	}
+	if zone == "" {
+		return VpcHostID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := VpcHostID{
 		vpcHost: vpcHost,
 		zone:    zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustVpcHostID(zone, vpcHost string) VpcHostID {
+	m, err := NewVpcHostID(zone, vpcHost)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseVpcHostID(path string) (VpcHostID, error) {
 	m := VpcHostID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return VpcHostID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *VpcHostID) String() string {
 	return m.ID()
 }
 
-func (m *VpcHostID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, VpcHostRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.vpcHost = result["vpcHost"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *VpcHostID) Clone() *VpcHostID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *VpcHostID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *VpcHostID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *VpcHostID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewVpcHostRef(zone, vpcHost string) VpcHostRef {
+func (m *VpcHostID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, VpcHostRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.vpcHost = result["vpcHost"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewVpcHostRef(zone, vpcHost string) (VpcHostRef, error) {
+	if vpcHost == "" {
+		return VpcHostRef{}, reserrors.NewFieldIsEmptyError("vpcHost")
+	}
+	if zone == "" {
+		return VpcHostRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := VpcHostRef{
 		id: VpcHostID{
 			vpcHost: vpcHost,
@@ -183,6 +215,14 @@ func NewVpcHostRef(zone, vpcHost string) VpcHostRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustVpcHostRef(zone, vpcHost string) VpcHostRef {
+	m, err := NewVpcHostRef(zone, vpcHost)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *VpcHostRef) String() string {
 }
 
 func (m *VpcHostRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, VpcHostRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.vpcHost = result["vpcHost"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *VpcHostRef) Clone() *VpcHostRef {
@@ -290,7 +318,11 @@ func (m *VpcHostRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *VpcHostRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *VpcHostRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, VpcHostRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.vpcHost = result["vpcHost"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *VpcHostRef) isParsed() bool {
+	return m != nil && m.id.vpcHost != "" && m.id.zone != ""
 }
 
 func (m *VpcHostRef) absolutePath() string {

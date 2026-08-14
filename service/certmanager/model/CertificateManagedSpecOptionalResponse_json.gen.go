@@ -34,12 +34,16 @@ func (m *CertificateManagedSpecOptionalResponse) Encode(e *jx.Encoder) error {
 func (m *CertificateManagedSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.PreferredChallengeType.IsSet() {
 		e.FieldStart("preferredChallengeType")
-		m.PreferredChallengeType.Value.Encode(e)
+		if err := m.PreferredChallengeType.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Provider.IsSet() {
 		e.FieldStart("provider")
-		m.Provider.Value.Encode(e)
+		if err := m.Provider.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Issuer.IsSet() {
@@ -47,7 +51,9 @@ func (m *CertificateManagedSpecOptionalResponse) encodeFields(e *jx.Encoder) err
 		if m.Issuer.IsNull() {
 			e.Null()
 		} else {
-			m.Issuer.Value.Encode(e)
+			if err := m.Issuer.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 

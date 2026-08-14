@@ -41,7 +41,9 @@ func (m *BatchEnabledServicesRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.PreviewRequest != nil {
 		e.FieldStart("previewRequest")
-		m.PreviewRequest.Encode(e)
+		if err := m.PreviewRequest.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

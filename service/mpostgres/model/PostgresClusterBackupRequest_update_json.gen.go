@@ -37,7 +37,9 @@ func (m *UpdatePostgresClusterBackupRequest) encodeFields(e *jx.Encoder) error {
 		if m.Daily.IsNull() {
 			e.Null()
 		} else {
-			m.Daily.Value.Encode(e)
+			if err := m.Daily.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 

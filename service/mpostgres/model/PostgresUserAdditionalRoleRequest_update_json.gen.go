@@ -34,7 +34,9 @@ func (m *UpdatePostgresUserAdditionalRoleRequest) Encode(e *jx.Encoder) error {
 func (m *UpdatePostgresUserAdditionalRoleRequest) encodeFields(e *jx.Encoder) error {
 	if m.Name.IsSet() {
 		e.FieldStart("name")
-		m.Name.Value.Encode(e)
+		if err := m.Name.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ExpiresAt.IsSet() {

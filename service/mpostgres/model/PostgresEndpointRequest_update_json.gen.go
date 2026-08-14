@@ -40,14 +40,18 @@ func (m *UpdatePostgresEndpointRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Network.IsSet() {
 		e.FieldStart("network")
-		m.Network.Value.Encode(e)
+		if err := m.Network.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.PrimaryAddresses.IsSet() {
 		e.FieldStart("primaryAddresses")
 		e.ArrStart()
 		for _, elem := range m.PrimaryAddresses.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -56,7 +60,9 @@ func (m *UpdatePostgresEndpointRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("readOnlyAddresses")
 		e.ArrStart()
 		for _, elem := range m.ReadOnlyAddresses.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -65,7 +71,9 @@ func (m *UpdatePostgresEndpointRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("directAddresses")
 		e.ArrStart()
 		for _, elem := range m.DirectAddresses.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

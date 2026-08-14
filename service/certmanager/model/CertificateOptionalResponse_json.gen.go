@@ -37,13 +37,19 @@ func (m *CertificateOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.Str(m.Kind)
 
 	e.FieldStart("metadata")
-	m.Metadata.Encode(e)
+	if err := m.Metadata.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("spec")
-	m.Spec.Encode(e)
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("status")
-	m.Status.Encode(e)
+	if err := m.Status.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -34,7 +34,9 @@ func (m *PostgresClusterBackupRequest) Encode(e *jx.Encoder) error {
 func (m *PostgresClusterBackupRequest) encodeFields(e *jx.Encoder) error {
 	if m.Daily != nil {
 		e.FieldStart("daily")
-		m.Daily.Encode(e)
+		if err := m.Daily.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.RetainPeriodDays != nil {

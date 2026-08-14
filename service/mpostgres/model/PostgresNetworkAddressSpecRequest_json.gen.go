@@ -33,7 +33,9 @@ func (m *PostgresNetworkAddressSpecRequest) Encode(e *jx.Encoder) error {
 
 func (m *PostgresNetworkAddressSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("subnet")
-	m.Subnet.Encode(e)
+	if err := m.Subnet.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

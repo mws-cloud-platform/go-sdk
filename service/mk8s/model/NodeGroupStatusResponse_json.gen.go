@@ -37,10 +37,14 @@ func (m *NodeGroupStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *NodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.VmType != nil {
 		e.FieldStart("vmType")
-		m.VmType.Encode(e)
+		if err := m.VmType.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Cpu != nil {
@@ -67,14 +71,18 @@ func (m *NodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("localDisks")
 		e.ArrStart()
 		for _, elem := range m.LocalDisks {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.Scale != nil {
 		e.FieldStart("scale")
-		m.Scale.Encode(e)
+		if err := m.Scale.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.NodesReady != nil {
@@ -86,7 +94,9 @@ func (m *NodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("labels")
 		e.ArrStart()
 		for _, elem := range m.Labels {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -95,29 +105,39 @@ func (m *NodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("taints")
 		e.ArrStart()
 		for _, elem := range m.Taints {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.RolloutStrategy != nil {
 		e.FieldStart("rolloutStrategy")
-		m.RolloutStrategy.Encode(e)
+		if err := m.RolloutStrategy.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.VersionControl != nil {
 		e.FieldStart("versionControl")
-		m.VersionControl.Encode(e)
+		if err := m.VersionControl.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ServiceAccount != nil {
 		e.FieldStart("serviceAccount")
-		m.ServiceAccount.Encode(e)
+		if err := m.ServiceAccount.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.NodeGroupStatus != nil {
 		e.FieldStart("nodeGroupStatus")
-		m.NodeGroupStatus.Encode(e)
+		if err := m.NodeGroupStatus.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -360,7 +380,9 @@ func (m *NodeGroupStatusNodeGroupStatusResponse) Encode(e *jx.Encoder) error {
 func (m *NodeGroupStatusNodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.State != nil {
 		e.FieldStart("state")
-		m.State.Encode(e)
+		if err := m.State.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Message != nil {
@@ -538,7 +560,9 @@ func (m *NodeGroupStatusScaleResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.Autoscaling != nil {
 		e.FieldStart("autoscaling")
-		m.Autoscaling.Encode(e)
+		if err := m.Autoscaling.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -670,7 +694,9 @@ func (m *NodeGroupStatusServiceAccountResponse) Encode(e *jx.Encoder) error {
 
 func (m *NodeGroupStatusServiceAccountResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -722,7 +748,9 @@ func (m *NodeGroupStatusVmTypeResponse) Encode(e *jx.Encoder) error {
 
 func (m *NodeGroupStatusVmTypeResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

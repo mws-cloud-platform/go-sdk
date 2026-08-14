@@ -4,6 +4,7 @@ package mclickhouse
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewClickhouseClusterShardInstanceID(project, cluster, shard, instance string) ClickhouseClusterShardInstanceID {
+func NewClickhouseClusterShardInstanceID(project, cluster, shard, instance string) (ClickhouseClusterShardInstanceID, error) {
+	if instance == "" {
+		return ClickhouseClusterShardInstanceID{}, reserrors.NewFieldIsEmptyError("instance")
+	}
+	if shard == "" {
+		return ClickhouseClusterShardInstanceID{}, reserrors.NewFieldIsEmptyError("shard")
+	}
+	if cluster == "" {
+		return ClickhouseClusterShardInstanceID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return ClickhouseClusterShardInstanceID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ClickhouseClusterShardInstanceID{
 		instance: instance,
 		shard:    shard,
@@ -74,6 +87,14 @@ func NewClickhouseClusterShardInstanceID(project, cluster, shard, instance strin
 		project:  project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustClickhouseClusterShardInstanceID(project, cluster, shard, instance string) ClickhouseClusterShardInstanceID {
+	m, err := NewClickhouseClusterShardInstanceID(project, cluster, shard, instance)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseClickhouseClusterShardInstanceID(path string) (ClickhouseClusterShardI
 	m := ClickhouseClusterShardInstanceID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ClickhouseClusterShardInstanceID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *ClickhouseClusterShardInstanceID) String() string {
 	return m.ID()
 }
 
-func (m *ClickhouseClusterShardInstanceID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ClickhouseClusterShardInstanceRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.instance = result["instance"]
-	m.shard = result["shard"]
-	m.cluster = result["cluster"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ClickhouseClusterShardInstanceID) Clone() *ClickhouseClusterShardInstanceID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *ClickhouseClusterShardInstanceID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *ClickhouseClusterShardInstanceID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ClickhouseClusterShardInstanceID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewClickhouseClusterShardInstanceRef(project, cluster, shard, instance string) ClickhouseClusterShardInstanceRef {
+func (m *ClickhouseClusterShardInstanceID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ClickhouseClusterShardInstanceRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.instance = result["instance"]
+	m.shard = result["shard"]
+	m.cluster = result["cluster"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewClickhouseClusterShardInstanceRef(project, cluster, shard, instance string) (ClickhouseClusterShardInstanceRef, error) {
+	if instance == "" {
+		return ClickhouseClusterShardInstanceRef{}, reserrors.NewFieldIsEmptyError("instance")
+	}
+	if shard == "" {
+		return ClickhouseClusterShardInstanceRef{}, reserrors.NewFieldIsEmptyError("shard")
+	}
+	if cluster == "" {
+		return ClickhouseClusterShardInstanceRef{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return ClickhouseClusterShardInstanceRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ClickhouseClusterShardInstanceRef{
 		id: ClickhouseClusterShardInstanceID{
 			instance: instance,
@@ -225,6 +269,14 @@ func NewClickhouseClusterShardInstanceRef(project, cluster, shard, instance stri
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustClickhouseClusterShardInstanceRef(project, cluster, shard, instance string) ClickhouseClusterShardInstanceRef {
+	m, err := NewClickhouseClusterShardInstanceRef(project, cluster, shard, instance)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *ClickhouseClusterShardInstanceRef) String() string {
 }
 
 func (m *ClickhouseClusterShardInstanceRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ClickhouseClusterShardInstanceRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.instance = result["instance"]
-	m.id.shard = result["shard"]
-	m.id.cluster = result["cluster"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ClickhouseClusterShardInstanceRef) Clone() *ClickhouseClusterShardInstanceRef {
@@ -348,7 +386,11 @@ func (m *ClickhouseClusterShardInstanceRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *ClickhouseClusterShardInstanceRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ClickhouseClusterShardInstanceRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ClickhouseClusterShardInstanceRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.instance = result["instance"]
+	m.id.shard = result["shard"]
+	m.id.cluster = result["cluster"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ClickhouseClusterShardInstanceRef) isParsed() bool {
+	return m != nil && m.id.instance != "" && m.id.shard != "" && m.id.cluster != "" && m.id.project != ""
 }
 
 func (m *ClickhouseClusterShardInstanceRef) absolutePath() string {

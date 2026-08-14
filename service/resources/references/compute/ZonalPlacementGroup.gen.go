@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewZonalPlacementGroupID(zone, project, zonalPlacementGroup string) ZonalPlacementGroupID {
+func NewZonalPlacementGroupID(zone, project, zonalPlacementGroup string) (ZonalPlacementGroupID, error) {
+	if zonalPlacementGroup == "" {
+		return ZonalPlacementGroupID{}, reserrors.NewFieldIsEmptyError("zonalPlacementGroup")
+	}
+	if project == "" {
+		return ZonalPlacementGroupID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalPlacementGroupID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalPlacementGroupID{
 		zonalPlacementGroup: zonalPlacementGroup,
 		project:             project,
 		zone:                zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalPlacementGroupID(zone, project, zonalPlacementGroup string) ZonalPlacementGroupID {
+	m, err := NewZonalPlacementGroupID(zone, project, zonalPlacementGroup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseZonalPlacementGroupID(path string) (ZonalPlacementGroupID, error) {
 	m := ZonalPlacementGroupID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalPlacementGroupID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ZonalPlacementGroupID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalPlacementGroupID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalPlacementGroupRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalPlacementGroup = result["zonalPlacementGroup"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalPlacementGroupID) Clone() *ZonalPlacementGroupID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ZonalPlacementGroupID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ZonalPlacementGroupID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalPlacementGroupID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalPlacementGroupRef(zone, project, zonalPlacementGroup string) ZonalPlacementGroupRef {
+func (m *ZonalPlacementGroupID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalPlacementGroupRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalPlacementGroup = result["zonalPlacementGroup"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalPlacementGroupRef(zone, project, zonalPlacementGroup string) (ZonalPlacementGroupRef, error) {
+	if zonalPlacementGroup == "" {
+		return ZonalPlacementGroupRef{}, reserrors.NewFieldIsEmptyError("zonalPlacementGroup")
+	}
+	if project == "" {
+		return ZonalPlacementGroupRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalPlacementGroupRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalPlacementGroupRef{
 		id: ZonalPlacementGroupID{
 			zonalPlacementGroup: zonalPlacementGroup,
@@ -204,6 +242,14 @@ func NewZonalPlacementGroupRef(zone, project, zonalPlacementGroup string) ZonalP
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalPlacementGroupRef(zone, project, zonalPlacementGroup string) ZonalPlacementGroupRef {
+	m, err := NewZonalPlacementGroupRef(zone, project, zonalPlacementGroup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ZonalPlacementGroupRef) String() string {
 }
 
 func (m *ZonalPlacementGroupRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalPlacementGroupRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalPlacementGroup = result["zonalPlacementGroup"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalPlacementGroupRef) Clone() *ZonalPlacementGroupRef {
@@ -319,7 +352,11 @@ func (m *ZonalPlacementGroupRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ZonalPlacementGroupRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalPlacementGroupRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalPlacementGroupRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalPlacementGroup = result["zonalPlacementGroup"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalPlacementGroupRef) isParsed() bool {
+	return m != nil && m.id.zonalPlacementGroup != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalPlacementGroupRef) absolutePath() string {

@@ -171,10 +171,6 @@ func (m *SnapshotStatusResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if err := m.InitialSourceImage.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("InitialSourceImage", err)
-	}
-
 	if err := m.Encryption.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Encryption", err)
 	}

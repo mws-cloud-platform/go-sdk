@@ -34,7 +34,9 @@ func (m *NetworkStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *NetworkStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.Mtu != nil {
 		e.FieldStart("mtu")
 		e.Int32(*m.Mtu)

@@ -35,7 +35,9 @@ func (m *UpdateAddressSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateAddressSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Subnet.IsSet() {
 		e.FieldStart("subnet")
-		m.Subnet.Value.Encode(e)
+		if err := m.Subnet.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.IpAddress.IsSet() {
@@ -47,7 +49,9 @@ func (m *UpdateAddressSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("dns")
 		e.ArrStart()
 		for _, elem := range m.Dns.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

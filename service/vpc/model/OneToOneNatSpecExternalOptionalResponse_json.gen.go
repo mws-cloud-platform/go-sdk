@@ -32,7 +32,9 @@ func (m *OneToOneNatSpecExternalOptionalResponse) Encode(e *jx.Encoder) error {
 
 func (m *OneToOneNatSpecExternalOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("address")
-	m.Address.Encode(e)
+	if err := m.Address.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

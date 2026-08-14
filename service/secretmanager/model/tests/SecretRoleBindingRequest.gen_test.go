@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"go.mws.cloud/go-sdk/service/resources/references/iam"
 	"go.mws.cloud/go-sdk/service/secretmanager/model"
 )
 
@@ -24,5 +25,6 @@ func TestSecretRoleBindingRequestMarshalling(t *testing.T) {
 
 func initSecretRoleBindingRequest() model.SecretRoleBindingRequest {
 	var v model.SecretRoleBindingRequest
+	v.Spec.Role = iam.NewMustRoleRef("roleID")
 	return v
 }

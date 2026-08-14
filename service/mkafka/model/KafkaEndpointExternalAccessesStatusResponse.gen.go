@@ -2,13 +2,6 @@
 
 package model
 
-import (
-	"context"
-	"fmt"
-
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-)
-
 // Настройка внешнего доступа к кластеру Kafka.
 // Real OAPI model name: KafkaEndpointExternalAccessesStatus
 type KafkaEndpointExternalAccessesStatusResponse struct {
@@ -129,18 +122,4 @@ func (m *KafkaEndpointExternalAccessesStatusResponse) Clone() *KafkaEndpointExte
 	}
 	clone.SchemaRegistry = m.SchemaRegistry.Clone()
 	return &clone
-}
-
-func (m *KafkaEndpointExternalAccessesStatusResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	for index := range m.BrokerAddresses {
-		if err := m.BrokerAddresses[index].Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("BrokerAddresses"+fmt.Sprint("[", index, "]"), err)
-		}
-	}
-
-	return nil
 }

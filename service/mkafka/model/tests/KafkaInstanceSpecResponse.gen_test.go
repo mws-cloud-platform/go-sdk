@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	"go.mws.cloud/go-sdk/service/mkafka/model"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func TestKafkaInstanceSpecResponseMarshalling(t *testing.T) {
@@ -25,6 +26,7 @@ func TestKafkaInstanceSpecResponseMarshalling(t *testing.T) {
 
 func initKafkaInstanceSpecResponse() model.KafkaInstanceSpecResponse {
 	var v model.KafkaInstanceSpecResponse
+	v.VmType = compute.NewMustVmTypeRef("vmTypeID")
 	v.Disk.Size = bytesize.MustParseString("0 B")
 	return v
 }

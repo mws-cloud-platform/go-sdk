@@ -33,7 +33,9 @@ func (m *KafkaDataDiskStatusResponse) Encode(e *jx.Encoder) error {
 func (m *KafkaDataDiskStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.Iops != nil {
 		e.FieldStart("iops")
-		m.Iops.Encode(e)
+		if err := m.Iops.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

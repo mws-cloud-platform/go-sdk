@@ -3,10 +3,8 @@
 package model
 
 import (
-	"context"
 	"time"
 
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 )
 
@@ -250,16 +248,4 @@ func (m *CommonTypedResourceMetadataResponse) Clone() *CommonTypedResourceMetada
 		clone.Description = &cloneDescription
 	}
 	return &clone
-}
-
-func (m *CommonTypedResourceMetadataResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Id.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Id", err)
-	}
-
-	return nil
 }

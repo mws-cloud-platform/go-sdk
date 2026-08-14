@@ -8,6 +8,7 @@ import (
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m SubnetSpecRequest) MarshalJSON() ([]byte, error) {
@@ -32,12 +33,21 @@ func (m *SubnetSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *SubnetSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Region != nil {
+		e.FieldStart("region")
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
+	}
+
 	e.FieldStart("cidr")
 	m.Cidr.Encode(e)
 
 	if m.DhcpOptions != nil {
 		e.FieldStart("dhcpOptions")
-		m.DhcpOptions.Encode(e)
+		if err := m.DhcpOptions.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -56,6 +66,14 @@ func (m *SubnetSpecRequest) Decode(d *jx.Decoder) error {
 	}
 	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
+			return nil
 		case "cidr":
 			var v cidraddress.CIDR4Address
 			if err := v.Decode(d); err != nil {

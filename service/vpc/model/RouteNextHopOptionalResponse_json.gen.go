@@ -44,7 +44,9 @@ func (m *RouteNextHopOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.NatGateway.IsNull() {
 			e.Null()
 		} else {
-			m.NatGateway.Value.Encode(e)
+			if err := m.NatGateway.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -53,7 +55,9 @@ func (m *RouteNextHopOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Address.IsNull() {
 			e.Null()
 		} else {
-			m.Address.Value.Encode(e)
+			if err := m.Address.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -133,7 +137,9 @@ func (m *RouteNextHopAddressOptionalResponse) Encode(e *jx.Encoder) error {
 
 func (m *RouteNextHopAddressOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

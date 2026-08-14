@@ -35,10 +35,14 @@ func (m *ServiceAccountStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *ServiceAccountStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.Ref != nil {
 		e.FieldStart("ref")
-		m.Ref.Encode(e)
+		if err := m.Ref.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DisplayName != nil {

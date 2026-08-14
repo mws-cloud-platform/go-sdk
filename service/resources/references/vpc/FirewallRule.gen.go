@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewFirewallRuleID(project, network, firewallRule string) FirewallRuleID {
+func NewFirewallRuleID(project, network, firewallRule string) (FirewallRuleID, error) {
+	if firewallRule == "" {
+		return FirewallRuleID{}, reserrors.NewFieldIsEmptyError("firewallRule")
+	}
+	if network == "" {
+		return FirewallRuleID{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return FirewallRuleID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FirewallRuleID{
 		firewallRule: firewallRule,
 		network:      network,
 		project:      project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustFirewallRuleID(project, network, firewallRule string) FirewallRuleID {
+	m, err := NewFirewallRuleID(project, network, firewallRule)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseFirewallRuleID(path string) (FirewallRuleID, error) {
 	m := FirewallRuleID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return FirewallRuleID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *FirewallRuleID) String() string {
 	return m.ID()
 }
 
-func (m *FirewallRuleID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, FirewallRuleRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.firewallRule = result["firewallRule"]
-	m.network = result["network"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *FirewallRuleID) Clone() *FirewallRuleID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *FirewallRuleID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *FirewallRuleID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *FirewallRuleID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewFirewallRuleRef(project, network, firewallRule string) FirewallRuleRef {
+func (m *FirewallRuleID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, FirewallRuleRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.firewallRule = result["firewallRule"]
+	m.network = result["network"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewFirewallRuleRef(project, network, firewallRule string) (FirewallRuleRef, error) {
+	if firewallRule == "" {
+		return FirewallRuleRef{}, reserrors.NewFieldIsEmptyError("firewallRule")
+	}
+	if network == "" {
+		return FirewallRuleRef{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return FirewallRuleRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FirewallRuleRef{
 		id: FirewallRuleID{
 			firewallRule: firewallRule,
@@ -204,6 +242,14 @@ func NewFirewallRuleRef(project, network, firewallRule string) FirewallRuleRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustFirewallRuleRef(project, network, firewallRule string) FirewallRuleRef {
+	m, err := NewFirewallRuleRef(project, network, firewallRule)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *FirewallRuleRef) String() string {
 }
 
 func (m *FirewallRuleRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, FirewallRuleRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.firewallRule = result["firewallRule"]
-	m.id.network = result["network"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *FirewallRuleRef) Clone() *FirewallRuleRef {
@@ -319,7 +352,11 @@ func (m *FirewallRuleRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *FirewallRuleRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *FirewallRuleRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, FirewallRuleRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.firewallRule = result["firewallRule"]
+	m.id.network = result["network"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *FirewallRuleRef) isParsed() bool {
+	return m != nil && m.id.firewallRule != "" && m.id.network != "" && m.id.project != ""
 }
 
 func (m *FirewallRuleRef) absolutePath() string {

@@ -32,7 +32,9 @@ func (m *ClickhouseClusterRestoreSpecRequest) Encode(e *jx.Encoder) error {
 
 func (m *ClickhouseClusterRestoreSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("bootstrapAdmin")
-	m.BootstrapAdmin.Encode(e)
+	if err := m.BootstrapAdmin.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewTrashDiskID(id string) TrashDiskID {
+func NewTrashDiskID(id string) (TrashDiskID, error) {
+	if id == "" {
+		return TrashDiskID{}, reserrors.NewFieldIsEmptyError("id")
+	}
 	m := TrashDiskID{
 		id: id,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustTrashDiskID(id string) TrashDiskID {
+	m, err := NewTrashDiskID(id)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseTrashDiskID(path string) (TrashDiskID, error) {
 	m := TrashDiskID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return TrashDiskID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *TrashDiskID) String() string {
 	return m.ID()
 }
 
-func (m *TrashDiskID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, TrashDiskRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.id = result["id"]
-
-	return nil
-}
-
 func (m *TrashDiskID) Clone() *TrashDiskID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *TrashDiskID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *TrashDiskID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *TrashDiskID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewTrashDiskRef(id string) TrashDiskRef {
+func (m *TrashDiskID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, TrashDiskRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.id = result["id"]
+
+	return nil
+}
+
+func NewTrashDiskRef(id string) (TrashDiskRef, error) {
+	if id == "" {
+		return TrashDiskRef{}, reserrors.NewFieldIsEmptyError("id")
+	}
 	m := TrashDiskRef{
 		id: TrashDiskID{
 			id: id,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustTrashDiskRef(id string) TrashDiskRef {
+	m, err := NewTrashDiskRef(id)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *TrashDiskRef) String() string {
 }
 
 func (m *TrashDiskRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, TrashDiskRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.id = result["id"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *TrashDiskRef) Clone() *TrashDiskRef {
@@ -261,7 +284,11 @@ func (m *TrashDiskRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *TrashDiskRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *TrashDiskRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, TrashDiskRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.id = result["id"]
+
 	return nil
+}
+
+func (m *TrashDiskRef) isParsed() bool {
+	return m != nil && m.id.id != ""
 }
 
 func (m *TrashDiskRef) absolutePath() string {

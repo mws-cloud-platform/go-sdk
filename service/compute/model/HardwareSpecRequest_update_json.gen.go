@@ -34,7 +34,9 @@ func (m *UpdateHardwareSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateHardwareSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Power.IsSet() {
 		e.FieldStart("power")
-		m.Power.Value.Encode(e)
+		if err := m.Power.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.GracefulShutdownTimeout.IsSet() {

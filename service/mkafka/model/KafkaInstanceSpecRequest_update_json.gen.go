@@ -34,19 +34,25 @@ func (m *UpdateKafkaInstanceSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateKafkaInstanceSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.VmType.IsSet() {
 		e.FieldStart("vmType")
-		m.VmType.Value.Encode(e)
+		if err := m.VmType.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Disk.IsSet() {
 		e.FieldStart("disk")
-		m.Disk.Value.Encode(e)
+		if err := m.Disk.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Allocation.IsSet() {
 		e.FieldStart("allocation")
 		e.ArrStart()
 		for _, elem := range m.Allocation.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

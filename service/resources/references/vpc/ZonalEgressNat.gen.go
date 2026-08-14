@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewZonalEgressNatID(zone, project, zonalNetwork, zonalEgressNat string) ZonalEgressNatID {
+func NewZonalEgressNatID(zone, project, zonalNetwork, zonalEgressNat string) (ZonalEgressNatID, error) {
+	if zonalEgressNat == "" {
+		return ZonalEgressNatID{}, reserrors.NewFieldIsEmptyError("zonalEgressNat")
+	}
+	if zonalNetwork == "" {
+		return ZonalEgressNatID{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalEgressNatID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalEgressNatID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalEgressNatID{
 		zonalEgressNat: zonalEgressNat,
 		zonalNetwork:   zonalNetwork,
@@ -74,6 +87,14 @@ func NewZonalEgressNatID(zone, project, zonalNetwork, zonalEgressNat string) Zon
 		zone:           zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalEgressNatID(zone, project, zonalNetwork, zonalEgressNat string) ZonalEgressNatID {
+	m, err := NewZonalEgressNatID(zone, project, zonalNetwork, zonalEgressNat)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseZonalEgressNatID(path string) (ZonalEgressNatID, error) {
 	m := ZonalEgressNatID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalEgressNatID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *ZonalEgressNatID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalEgressNatID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalEgressNatRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalEgressNat = result["zonalEgressNat"]
-	m.zonalNetwork = result["zonalNetwork"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalEgressNatID) Clone() *ZonalEgressNatID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *ZonalEgressNatID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *ZonalEgressNatID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalEgressNatID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalEgressNatRef(zone, project, zonalNetwork, zonalEgressNat string) ZonalEgressNatRef {
+func (m *ZonalEgressNatID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalEgressNatRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalEgressNat = result["zonalEgressNat"]
+	m.zonalNetwork = result["zonalNetwork"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalEgressNatRef(zone, project, zonalNetwork, zonalEgressNat string) (ZonalEgressNatRef, error) {
+	if zonalEgressNat == "" {
+		return ZonalEgressNatRef{}, reserrors.NewFieldIsEmptyError("zonalEgressNat")
+	}
+	if zonalNetwork == "" {
+		return ZonalEgressNatRef{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalEgressNatRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalEgressNatRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalEgressNatRef{
 		id: ZonalEgressNatID{
 			zonalEgressNat: zonalEgressNat,
@@ -225,6 +269,14 @@ func NewZonalEgressNatRef(zone, project, zonalNetwork, zonalEgressNat string) Zo
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalEgressNatRef(zone, project, zonalNetwork, zonalEgressNat string) ZonalEgressNatRef {
+	m, err := NewZonalEgressNatRef(zone, project, zonalNetwork, zonalEgressNat)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *ZonalEgressNatRef) String() string {
 }
 
 func (m *ZonalEgressNatRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalEgressNatRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalEgressNat = result["zonalEgressNat"]
-	m.id.zonalNetwork = result["zonalNetwork"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalEgressNatRef) Clone() *ZonalEgressNatRef {
@@ -348,7 +386,11 @@ func (m *ZonalEgressNatRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *ZonalEgressNatRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalEgressNatRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalEgressNatRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalEgressNat = result["zonalEgressNat"]
+	m.id.zonalNetwork = result["zonalNetwork"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalEgressNatRef) isParsed() bool {
+	return m != nil && m.id.zonalEgressNat != "" && m.id.zonalNetwork != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalEgressNatRef) absolutePath() string {

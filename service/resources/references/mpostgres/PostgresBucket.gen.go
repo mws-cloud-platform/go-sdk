@@ -61,6 +61,15 @@ var (
 )
 
 func NewPostgresBucketID(project, cluster, bucket string) (PostgresBucketID, error) {
+	if bucket == "" {
+		return PostgresBucketID{}, reserrors.NewFieldIsEmptyError("bucket")
+	}
+	if cluster == "" {
+		return PostgresBucketID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return PostgresBucketID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	if match := PostgresBucketClusterValidatePattern.Match([]byte(cluster)); !match {
 		return PostgresBucketID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
 	}
@@ -78,8 +87,6 @@ func NewMustPostgresBucketID(project, cluster, bucket string) PostgresBucketID {
 	if err != nil {
 		panic(err)
 	}
-
-	m.path = m.ID()
 	return m
 }
 
@@ -87,7 +94,7 @@ func ParsePostgresBucketID(path string) (PostgresBucketID, error) {
 	m := PostgresBucketID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return PostgresBucketID{}, err
 	}
 	return m, nil
@@ -148,23 +155,6 @@ func (m *PostgresBucketID) String() string {
 	return m.ID()
 }
 
-func (m *PostgresBucketID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, PostgresBucketRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.bucket = result["bucket"]
-	m.cluster = result["cluster"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *PostgresBucketID) Clone() *PostgresBucketID {
 	if m == nil {
 		return nil
@@ -188,7 +178,7 @@ func (m *PostgresBucketID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -209,6 +199,34 @@ func (m *PostgresBucketID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *PostgresBucketID) Parse(ctx context.Context) error {
+	return nil
+}
+
+func (m *PostgresBucketID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, PostgresBucketRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.bucket = result["bucket"]
+	m.cluster = result["cluster"]
+	m.project = result["project"]
+
 	return nil
 }
 
@@ -226,10 +244,10 @@ func NewPostgresBucketRef(project, cluster, bucket string) (PostgresBucketRef, e
 }
 
 func NewMustPostgresBucketRef(project, cluster, bucket string) PostgresBucketRef {
-	m := PostgresBucketRef{
-		id: NewMustPostgresBucketID(project, cluster, bucket),
+	m, err := NewPostgresBucketRef(project, cluster, bucket)
+	if err != nil {
+		panic(err)
 	}
-	m.id.path = m.absolutePath()
 	return m
 }
 
@@ -308,20 +326,7 @@ func (m *PostgresBucketRef) String() string {
 }
 
 func (m *PostgresBucketRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, PostgresBucketRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.bucket = result["bucket"]
-	m.id.cluster = result["cluster"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *PostgresBucketRef) Clone() *PostgresBucketRef {
@@ -345,7 +350,11 @@ func (m *PostgresBucketRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -364,7 +373,37 @@ func (m *PostgresBucketRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *PostgresBucketRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, PostgresBucketRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.bucket = result["bucket"]
+	m.id.cluster = result["cluster"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *PostgresBucketRef) isParsed() bool {
+	return m != nil && m.id.bucket != "" && m.id.cluster != "" && m.id.project != ""
 }
 
 func (m *PostgresBucketRef) absolutePath() string {

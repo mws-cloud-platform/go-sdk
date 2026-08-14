@@ -44,7 +44,9 @@ func (m *UpdateNodeTaintSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Effect.IsSet() {
 		e.FieldStart("effect")
-		m.Effect.Value.Encode(e)
+		if err := m.Effect.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

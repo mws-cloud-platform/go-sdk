@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewZonalStorageAgentID(zone, agent string) ZonalStorageAgentID {
+func NewZonalStorageAgentID(zone, agent string) (ZonalStorageAgentID, error) {
+	if agent == "" {
+		return ZonalStorageAgentID{}, reserrors.NewFieldIsEmptyError("agent")
+	}
+	if zone == "" {
+		return ZonalStorageAgentID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalStorageAgentID{
 		agent: agent,
 		zone:  zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalStorageAgentID(zone, agent string) ZonalStorageAgentID {
+	m, err := NewZonalStorageAgentID(zone, agent)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseZonalStorageAgentID(path string) (ZonalStorageAgentID, error) {
 	m := ZonalStorageAgentID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalStorageAgentID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ZonalStorageAgentID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalStorageAgentID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalStorageAgentRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.agent = result["agent"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalStorageAgentID) Clone() *ZonalStorageAgentID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ZonalStorageAgentID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ZonalStorageAgentID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalStorageAgentID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalStorageAgentRef(zone, agent string) ZonalStorageAgentRef {
+func (m *ZonalStorageAgentID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalStorageAgentRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.agent = result["agent"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalStorageAgentRef(zone, agent string) (ZonalStorageAgentRef, error) {
+	if agent == "" {
+		return ZonalStorageAgentRef{}, reserrors.NewFieldIsEmptyError("agent")
+	}
+	if zone == "" {
+		return ZonalStorageAgentRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalStorageAgentRef{
 		id: ZonalStorageAgentID{
 			agent: agent,
@@ -183,6 +215,14 @@ func NewZonalStorageAgentRef(zone, agent string) ZonalStorageAgentRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalStorageAgentRef(zone, agent string) ZonalStorageAgentRef {
+	m, err := NewZonalStorageAgentRef(zone, agent)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ZonalStorageAgentRef) String() string {
 }
 
 func (m *ZonalStorageAgentRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalStorageAgentRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.agent = result["agent"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalStorageAgentRef) Clone() *ZonalStorageAgentRef {
@@ -290,7 +318,11 @@ func (m *ZonalStorageAgentRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ZonalStorageAgentRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalStorageAgentRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalStorageAgentRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.agent = result["agent"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalStorageAgentRef) isParsed() bool {
+	return m != nil && m.id.agent != "" && m.id.zone != ""
 }
 
 func (m *ZonalStorageAgentRef) absolutePath() string {

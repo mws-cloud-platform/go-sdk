@@ -4,6 +4,7 @@ package rm
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewProjectRoleID(project, role string) ProjectRoleID {
+func NewProjectRoleID(project, role string) (ProjectRoleID, error) {
+	if role == "" {
+		return ProjectRoleID{}, reserrors.NewFieldIsEmptyError("role")
+	}
+	if project == "" {
+		return ProjectRoleID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ProjectRoleID{
 		role:    role,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustProjectRoleID(project, role string) ProjectRoleID {
+	m, err := NewProjectRoleID(project, role)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseProjectRoleID(path string) (ProjectRoleID, error) {
 	m := ProjectRoleID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ProjectRoleID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ProjectRoleID) String() string {
 	return m.ID()
 }
 
-func (m *ProjectRoleID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ProjectRoleRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.role = result["role"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ProjectRoleID) Clone() *ProjectRoleID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ProjectRoleID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ProjectRoleID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ProjectRoleID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewProjectRoleRef(project, role string) ProjectRoleRef {
+func (m *ProjectRoleID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ProjectRoleRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.role = result["role"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewProjectRoleRef(project, role string) (ProjectRoleRef, error) {
+	if role == "" {
+		return ProjectRoleRef{}, reserrors.NewFieldIsEmptyError("role")
+	}
+	if project == "" {
+		return ProjectRoleRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ProjectRoleRef{
 		id: ProjectRoleID{
 			role:    role,
@@ -183,6 +215,14 @@ func NewProjectRoleRef(project, role string) ProjectRoleRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustProjectRoleRef(project, role string) ProjectRoleRef {
+	m, err := NewProjectRoleRef(project, role)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ProjectRoleRef) String() string {
 }
 
 func (m *ProjectRoleRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ProjectRoleRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.role = result["role"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ProjectRoleRef) Clone() *ProjectRoleRef {
@@ -290,7 +318,11 @@ func (m *ProjectRoleRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ProjectRoleRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ProjectRoleRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ProjectRoleRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.role = result["role"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ProjectRoleRef) isParsed() bool {
+	return m != nil && m.id.role != "" && m.id.project != ""
 }
 
 func (m *ProjectRoleRef) absolutePath() string {

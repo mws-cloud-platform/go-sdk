@@ -63,6 +63,15 @@ var (
 )
 
 func NewPostgresRoleBindingID(project, cluster, roleBinding string) (PostgresRoleBindingID, error) {
+	if roleBinding == "" {
+		return PostgresRoleBindingID{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if cluster == "" {
+		return PostgresRoleBindingID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return PostgresRoleBindingID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	if match := PostgresRoleBindingRoleBindingValidatePattern.Match([]byte(roleBinding)); !match {
 		return PostgresRoleBindingID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "roleBinding", roleBinding)
 	}
@@ -83,8 +92,6 @@ func NewMustPostgresRoleBindingID(project, cluster, roleBinding string) Postgres
 	if err != nil {
 		panic(err)
 	}
-
-	m.path = m.ID()
 	return m
 }
 
@@ -92,7 +99,7 @@ func ParsePostgresRoleBindingID(path string) (PostgresRoleBindingID, error) {
 	m := PostgresRoleBindingID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return PostgresRoleBindingID{}, err
 	}
 	return m, nil
@@ -153,23 +160,6 @@ func (m *PostgresRoleBindingID) String() string {
 	return m.ID()
 }
 
-func (m *PostgresRoleBindingID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, PostgresRoleBindingRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.roleBinding = result["roleBinding"]
-	m.cluster = result["cluster"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *PostgresRoleBindingID) Clone() *PostgresRoleBindingID {
 	if m == nil {
 		return nil
@@ -193,7 +183,7 @@ func (m *PostgresRoleBindingID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -214,6 +204,34 @@ func (m *PostgresRoleBindingID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *PostgresRoleBindingID) Parse(ctx context.Context) error {
+	return nil
+}
+
+func (m *PostgresRoleBindingID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, PostgresRoleBindingRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.roleBinding = result["roleBinding"]
+	m.cluster = result["cluster"]
+	m.project = result["project"]
+
 	return nil
 }
 
@@ -231,10 +249,10 @@ func NewPostgresRoleBindingRef(project, cluster, roleBinding string) (PostgresRo
 }
 
 func NewMustPostgresRoleBindingRef(project, cluster, roleBinding string) PostgresRoleBindingRef {
-	m := PostgresRoleBindingRef{
-		id: NewMustPostgresRoleBindingID(project, cluster, roleBinding),
+	m, err := NewPostgresRoleBindingRef(project, cluster, roleBinding)
+	if err != nil {
+		panic(err)
 	}
-	m.id.path = m.absolutePath()
 	return m
 }
 
@@ -313,20 +331,7 @@ func (m *PostgresRoleBindingRef) String() string {
 }
 
 func (m *PostgresRoleBindingRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, PostgresRoleBindingRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.roleBinding = result["roleBinding"]
-	m.id.cluster = result["cluster"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *PostgresRoleBindingRef) Clone() *PostgresRoleBindingRef {
@@ -350,7 +355,11 @@ func (m *PostgresRoleBindingRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -369,7 +378,37 @@ func (m *PostgresRoleBindingRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *PostgresRoleBindingRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, PostgresRoleBindingRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.roleBinding = result["roleBinding"]
+	m.id.cluster = result["cluster"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *PostgresRoleBindingRef) isParsed() bool {
+	return m != nil && m.id.roleBinding != "" && m.id.cluster != "" && m.id.project != ""
 }
 
 func (m *PostgresRoleBindingRef) absolutePath() string {

@@ -3,10 +3,6 @@
 package model
 
 import (
-	"context"
-	"fmt"
-
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
@@ -234,22 +230,4 @@ func (m *KafkaClusterStatusResponse) Clone() *KafkaClusterStatusResponse {
 	clone.Balancer = m.Balancer.Clone()
 
 	return &clone
-}
-
-func (m *KafkaClusterStatusResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Region.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Region", err)
-	}
-
-	for index := range m.Endpoints {
-		if err := m.Endpoints[index].Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Endpoints"+fmt.Sprint("[", index, "]"), err)
-		}
-	}
-
-	return nil
 }

@@ -105,12 +105,6 @@ func (m *VirtualMachineOptionalResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		if err := m.Metadata.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Metadata", err)
-		}
-	}
-
 	if err := m.Spec.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Spec", err)
 	}
@@ -259,19 +253,4 @@ func (m *VirtualMachineMetadataOptionalResponse) Clone() *VirtualMachineMetadata
 	clone.Id = *m.Id.Clone()
 
 	return &clone
-}
-
-func (m *VirtualMachineMetadataOptionalResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.TypedResourceMetadataOptionalResponse.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("TypedResourceMetadataOptionalResponse", err)
-	}
-	if err := m.Id.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Id", err)
-	}
-
-	return nil
 }

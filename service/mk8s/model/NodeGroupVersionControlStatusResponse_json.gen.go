@@ -45,7 +45,9 @@ func (m *NodeGroupVersionControlStatusResponse) encodeFields(e *jx.Encoder) erro
 
 	if m.MaintenanceWindow != nil {
 		e.FieldStart("maintenanceWindow")
-		m.MaintenanceWindow.Encode(e)
+		if err := m.MaintenanceWindow.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

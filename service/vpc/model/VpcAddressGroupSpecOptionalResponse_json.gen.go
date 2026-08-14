@@ -7,6 +7,7 @@ import (
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m VpcAddressGroupSpecOptionalResponse) MarshalJSON() ([]byte, error) {
@@ -31,10 +32,19 @@ func (m *VpcAddressGroupSpecOptionalResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *VpcAddressGroupSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Region.IsSet() {
+		e.FieldStart("region")
+		if err := m.Region.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
 	e.FieldStart("addresses")
 	e.ArrStart()
 	for _, elem := range m.Addresses {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 	return nil
@@ -51,6 +61,14 @@ func (m *VpcAddressGroupSpecOptionalResponse) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region.SetTo(v)
+			return nil
 		case "addresses":
 			c := make([]ResourceAddressSpecOrRefOptionalResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {

@@ -4,6 +4,7 @@ package support
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewQuestionIDID(questionName string) QuestionIDID {
+func NewQuestionIDID(questionName string) (QuestionIDID, error) {
+	if questionName == "" {
+		return QuestionIDID{}, reserrors.NewFieldIsEmptyError("questionName")
+	}
 	m := QuestionIDID{
 		questionName: questionName,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustQuestionIDID(questionName string) QuestionIDID {
+	m, err := NewQuestionIDID(questionName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseQuestionIDID(path string) (QuestionIDID, error) {
 	m := QuestionIDID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return QuestionIDID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *QuestionIDID) String() string {
 	return m.ID()
 }
 
-func (m *QuestionIDID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, QuestionIDRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.questionName = result["questionName"]
-
-	return nil
-}
-
 func (m *QuestionIDID) Clone() *QuestionIDID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *QuestionIDID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *QuestionIDID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *QuestionIDID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewQuestionIDRef(questionName string) QuestionIDRef {
+func (m *QuestionIDID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, QuestionIDRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.questionName = result["questionName"]
+
+	return nil
+}
+
+func NewQuestionIDRef(questionName string) (QuestionIDRef, error) {
+	if questionName == "" {
+		return QuestionIDRef{}, reserrors.NewFieldIsEmptyError("questionName")
+	}
 	m := QuestionIDRef{
 		id: QuestionIDID{
 			questionName: questionName,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustQuestionIDRef(questionName string) QuestionIDRef {
+	m, err := NewQuestionIDRef(questionName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *QuestionIDRef) String() string {
 }
 
 func (m *QuestionIDRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, QuestionIDRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.questionName = result["questionName"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *QuestionIDRef) Clone() *QuestionIDRef {
@@ -261,7 +284,11 @@ func (m *QuestionIDRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *QuestionIDRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *QuestionIDRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, QuestionIDRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.questionName = result["questionName"]
+
 	return nil
+}
+
+func (m *QuestionIDRef) isParsed() bool {
+	return m != nil && m.id.questionName != ""
 }
 
 func (m *QuestionIDRef) absolutePath() string {

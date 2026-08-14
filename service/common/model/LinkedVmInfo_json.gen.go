@@ -34,7 +34,9 @@ func (m *LinkedVmInfo) Encode(e *jx.Encoder) error {
 
 func (m *LinkedVmInfo) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("id")
-	m.Id.Encode(e)
+	if err := m.Id.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("name")
 	e.Str(m.Name)

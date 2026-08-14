@@ -4,6 +4,7 @@ package secretmanager
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewSecretVersionID(project, secretName, version string) SecretVersionID {
+func NewSecretVersionID(project, secretName, version string) (SecretVersionID, error) {
+	if version == "" {
+		return SecretVersionID{}, reserrors.NewFieldIsEmptyError("version")
+	}
+	if secretName == "" {
+		return SecretVersionID{}, reserrors.NewFieldIsEmptyError("secretName")
+	}
+	if project == "" {
+		return SecretVersionID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := SecretVersionID{
 		version:    version,
 		secretName: secretName,
 		project:    project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustSecretVersionID(project, secretName, version string) SecretVersionID {
+	m, err := NewSecretVersionID(project, secretName, version)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseSecretVersionID(path string) (SecretVersionID, error) {
 	m := SecretVersionID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return SecretVersionID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *SecretVersionID) String() string {
 	return m.ID()
 }
 
-func (m *SecretVersionID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, SecretVersionRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.version = result["version"]
-	m.secretName = result["secretName"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *SecretVersionID) Clone() *SecretVersionID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *SecretVersionID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *SecretVersionID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *SecretVersionID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewSecretVersionRef(project, secretName, version string) SecretVersionRef {
+func (m *SecretVersionID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, SecretVersionRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.version = result["version"]
+	m.secretName = result["secretName"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewSecretVersionRef(project, secretName, version string) (SecretVersionRef, error) {
+	if version == "" {
+		return SecretVersionRef{}, reserrors.NewFieldIsEmptyError("version")
+	}
+	if secretName == "" {
+		return SecretVersionRef{}, reserrors.NewFieldIsEmptyError("secretName")
+	}
+	if project == "" {
+		return SecretVersionRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := SecretVersionRef{
 		id: SecretVersionID{
 			version:    version,
@@ -204,6 +242,14 @@ func NewSecretVersionRef(project, secretName, version string) SecretVersionRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustSecretVersionRef(project, secretName, version string) SecretVersionRef {
+	m, err := NewSecretVersionRef(project, secretName, version)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *SecretVersionRef) String() string {
 }
 
 func (m *SecretVersionRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, SecretVersionRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.version = result["version"]
-	m.id.secretName = result["secretName"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *SecretVersionRef) Clone() *SecretVersionRef {
@@ -319,7 +352,11 @@ func (m *SecretVersionRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *SecretVersionRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *SecretVersionRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, SecretVersionRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.version = result["version"]
+	m.id.secretName = result["secretName"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *SecretVersionRef) isParsed() bool {
+	return m != nil && m.id.version != "" && m.id.secretName != "" && m.id.project != ""
 }
 
 func (m *SecretVersionRef) absolutePath() string {

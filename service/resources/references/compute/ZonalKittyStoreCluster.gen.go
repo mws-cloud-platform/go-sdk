@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewZonalKittyStoreClusterID(zone, cluster string) ZonalKittyStoreClusterID {
+func NewZonalKittyStoreClusterID(zone, cluster string) (ZonalKittyStoreClusterID, error) {
+	if cluster == "" {
+		return ZonalKittyStoreClusterID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if zone == "" {
+		return ZonalKittyStoreClusterID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalKittyStoreClusterID{
 		cluster: cluster,
 		zone:    zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalKittyStoreClusterID(zone, cluster string) ZonalKittyStoreClusterID {
+	m, err := NewZonalKittyStoreClusterID(zone, cluster)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseZonalKittyStoreClusterID(path string) (ZonalKittyStoreClusterID, error
 	m := ZonalKittyStoreClusterID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalKittyStoreClusterID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ZonalKittyStoreClusterID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalKittyStoreClusterID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalKittyStoreClusterRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.cluster = result["cluster"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalKittyStoreClusterID) Clone() *ZonalKittyStoreClusterID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ZonalKittyStoreClusterID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ZonalKittyStoreClusterID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalKittyStoreClusterID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalKittyStoreClusterRef(zone, cluster string) ZonalKittyStoreClusterRef {
+func (m *ZonalKittyStoreClusterID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalKittyStoreClusterRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.cluster = result["cluster"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalKittyStoreClusterRef(zone, cluster string) (ZonalKittyStoreClusterRef, error) {
+	if cluster == "" {
+		return ZonalKittyStoreClusterRef{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if zone == "" {
+		return ZonalKittyStoreClusterRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalKittyStoreClusterRef{
 		id: ZonalKittyStoreClusterID{
 			cluster: cluster,
@@ -183,6 +215,14 @@ func NewZonalKittyStoreClusterRef(zone, cluster string) ZonalKittyStoreClusterRe
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalKittyStoreClusterRef(zone, cluster string) ZonalKittyStoreClusterRef {
+	m, err := NewZonalKittyStoreClusterRef(zone, cluster)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ZonalKittyStoreClusterRef) String() string {
 }
 
 func (m *ZonalKittyStoreClusterRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalKittyStoreClusterRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.cluster = result["cluster"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalKittyStoreClusterRef) Clone() *ZonalKittyStoreClusterRef {
@@ -290,7 +318,11 @@ func (m *ZonalKittyStoreClusterRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ZonalKittyStoreClusterRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalKittyStoreClusterRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalKittyStoreClusterRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.cluster = result["cluster"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalKittyStoreClusterRef) isParsed() bool {
+	return m != nil && m.id.cluster != "" && m.id.zone != ""
 }
 
 func (m *ZonalKittyStoreClusterRef) absolutePath() string {

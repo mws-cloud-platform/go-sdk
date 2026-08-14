@@ -33,7 +33,9 @@ func (m *UpdateClusterPublicEndpointSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateClusterPublicEndpointSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Version.IsSet() {
 		e.FieldStart("version")
-		m.Version.Value.Encode(e)
+		if err := m.Version.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

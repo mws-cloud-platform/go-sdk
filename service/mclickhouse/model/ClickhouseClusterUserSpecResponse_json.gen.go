@@ -33,7 +33,9 @@ func (m *ClickhouseClusterUserSpecResponse) Encode(e *jx.Encoder) error {
 func (m *ClickhouseClusterUserSpecResponse) encodeFields(e *jx.Encoder) error {
 	if m.Role != nil {
 		e.FieldStart("role")
-		m.Role.Encode(e)
+		if err := m.Role.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

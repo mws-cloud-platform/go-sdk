@@ -63,6 +63,15 @@ var (
 )
 
 func NewPostgresClusterDatabaseID(project, cluster, database string) (PostgresClusterDatabaseID, error) {
+	if database == "" {
+		return PostgresClusterDatabaseID{}, reserrors.NewFieldIsEmptyError("database")
+	}
+	if cluster == "" {
+		return PostgresClusterDatabaseID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return PostgresClusterDatabaseID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	if match := PostgresClusterDatabaseDatabaseValidatePattern.Match([]byte(database)); !match {
 		return PostgresClusterDatabaseID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "database", database)
 	}
@@ -83,8 +92,6 @@ func NewMustPostgresClusterDatabaseID(project, cluster, database string) Postgre
 	if err != nil {
 		panic(err)
 	}
-
-	m.path = m.ID()
 	return m
 }
 
@@ -92,7 +99,7 @@ func ParsePostgresClusterDatabaseID(path string) (PostgresClusterDatabaseID, err
 	m := PostgresClusterDatabaseID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return PostgresClusterDatabaseID{}, err
 	}
 	return m, nil
@@ -153,23 +160,6 @@ func (m *PostgresClusterDatabaseID) String() string {
 	return m.ID()
 }
 
-func (m *PostgresClusterDatabaseID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, PostgresClusterDatabaseRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.database = result["database"]
-	m.cluster = result["cluster"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *PostgresClusterDatabaseID) Clone() *PostgresClusterDatabaseID {
 	if m == nil {
 		return nil
@@ -193,7 +183,7 @@ func (m *PostgresClusterDatabaseID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -214,6 +204,34 @@ func (m *PostgresClusterDatabaseID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *PostgresClusterDatabaseID) Parse(ctx context.Context) error {
+	return nil
+}
+
+func (m *PostgresClusterDatabaseID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, PostgresClusterDatabaseRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.database = result["database"]
+	m.cluster = result["cluster"]
+	m.project = result["project"]
+
 	return nil
 }
 
@@ -231,10 +249,10 @@ func NewPostgresClusterDatabaseRef(project, cluster, database string) (PostgresC
 }
 
 func NewMustPostgresClusterDatabaseRef(project, cluster, database string) PostgresClusterDatabaseRef {
-	m := PostgresClusterDatabaseRef{
-		id: NewMustPostgresClusterDatabaseID(project, cluster, database),
+	m, err := NewPostgresClusterDatabaseRef(project, cluster, database)
+	if err != nil {
+		panic(err)
 	}
-	m.id.path = m.absolutePath()
 	return m
 }
 
@@ -313,20 +331,7 @@ func (m *PostgresClusterDatabaseRef) String() string {
 }
 
 func (m *PostgresClusterDatabaseRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, PostgresClusterDatabaseRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.database = result["database"]
-	m.id.cluster = result["cluster"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *PostgresClusterDatabaseRef) Clone() *PostgresClusterDatabaseRef {
@@ -350,7 +355,11 @@ func (m *PostgresClusterDatabaseRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -369,7 +378,37 @@ func (m *PostgresClusterDatabaseRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *PostgresClusterDatabaseRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, PostgresClusterDatabaseRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.database = result["database"]
+	m.id.cluster = result["cluster"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *PostgresClusterDatabaseRef) isParsed() bool {
+	return m != nil && m.id.database != "" && m.id.cluster != "" && m.id.project != ""
 }
 
 func (m *PostgresClusterDatabaseRef) absolutePath() string {

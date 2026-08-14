@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
 
@@ -25,6 +26,7 @@ func TestResourceExternalAddressStatusResponseMarshalling(t *testing.T) {
 
 func initResourceExternalAddressStatusResponse() model.ResourceExternalAddressStatusResponse {
 	var v model.ResourceExternalAddressStatusResponse
+	v.Ref = vpc.NewMustExternalAddressRef("projectID", "externalAddressID")
 	v.IpAddress = ipaddress.MustParseIPAddressString("192.168.1.1")
 	return v
 }

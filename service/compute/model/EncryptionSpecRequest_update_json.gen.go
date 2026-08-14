@@ -34,7 +34,9 @@ func (m *UpdateEncryptionSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateEncryptionSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.CryptoKeyId.IsSet() {
 		e.FieldStart("cryptoKeyId")
-		m.CryptoKeyId.Value.Encode(e)
+		if err := m.CryptoKeyId.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

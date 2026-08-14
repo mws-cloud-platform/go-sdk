@@ -40,7 +40,9 @@ func (m *TypedUsageOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.Str(m.Name)
 
 	e.FieldStart("resource")
-	m.Resource.Encode(e)
+	if err := m.Resource.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

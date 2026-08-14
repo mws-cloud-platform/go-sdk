@@ -35,15 +35,21 @@ func (m *PostgresClusterStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *PostgresClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.State != nil {
 		e.FieldStart("state")
-		m.State.Encode(e)
+		if err := m.State.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Health != nil {
 		e.FieldStart("health")
-		m.Health.Encode(e)
+		if err := m.Health.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Message != nil {
@@ -53,36 +59,48 @@ func (m *PostgresClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.Region != nil {
 		e.FieldStart("region")
-		m.Region.Encode(e)
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Network != nil {
 		e.FieldStart("network")
-		m.Network.Encode(e)
+		if err := m.Network.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Instances != nil {
 		e.FieldStart("instances")
 		e.ArrStart()
 		for _, elem := range m.Instances {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.MaintenanceWindow != nil {
 		e.FieldStart("maintenanceWindow")
-		m.MaintenanceWindow.Encode(e)
+		if err := m.MaintenanceWindow.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Backup != nil {
 		e.FieldStart("backup")
-		m.Backup.Encode(e)
+		if err := m.Backup.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.InstanceTemplate != nil {
 		e.FieldStart("instanceTemplate")
-		m.InstanceTemplate.Encode(e)
+		if err := m.InstanceTemplate.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

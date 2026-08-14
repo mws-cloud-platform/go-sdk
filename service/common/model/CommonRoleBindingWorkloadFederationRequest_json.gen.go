@@ -33,11 +33,15 @@ func (m *CommonRoleBindingWorkloadFederationRequest) Encode(e *jx.Encoder) error
 
 func (m *CommonRoleBindingWorkloadFederationRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("id")
-	m.Id.Encode(e)
+	if err := m.Id.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Context != nil {
 		e.FieldStart("context")
-		m.Context.Encode(e)
+		if err := m.Context.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

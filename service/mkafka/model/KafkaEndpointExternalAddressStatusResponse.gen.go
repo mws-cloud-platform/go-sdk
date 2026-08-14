@@ -3,11 +3,8 @@
 package model
 
 import (
-	"context"
-
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -89,16 +86,4 @@ func (m *KafkaEndpointExternalAddressStatusResponse) Clone() *KafkaEndpointExter
 		clone.Managed = &cloneManaged
 	}
 	return &clone
-}
-
-func (m *KafkaEndpointExternalAddressStatusResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Ref.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Ref", err)
-	}
-
-	return nil
 }

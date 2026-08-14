@@ -35,7 +35,9 @@ func (m *PluginsStatusResponse) Encode(e *jx.Encoder) error {
 func (m *PluginsStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.Cni != nil {
 		e.FieldStart("cni")
-		m.Cni.Encode(e)
+		if err := m.Cni.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

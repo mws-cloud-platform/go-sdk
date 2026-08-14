@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,11 +57,22 @@ var (
 	}
 )
 
-func NewFlagGslbPreviewID(project string) FlagGslbPreviewID {
+func NewFlagGslbPreviewID(project string) (FlagGslbPreviewID, error) {
+	if project == "" {
+		return FlagGslbPreviewID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FlagGslbPreviewID{
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustFlagGslbPreviewID(project string) FlagGslbPreviewID {
+	m, err := NewFlagGslbPreviewID(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -68,7 +80,7 @@ func ParseFlagGslbPreviewID(path string) (FlagGslbPreviewID, error) {
 	m := FlagGslbPreviewID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return FlagGslbPreviewID{}, err
 	}
 	return m, nil
@@ -113,21 +125,6 @@ func (m *FlagGslbPreviewID) String() string {
 	return m.ID()
 }
 
-func (m *FlagGslbPreviewID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, FlagGslbPreviewRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *FlagGslbPreviewID) Clone() *FlagGslbPreviewID {
 	if m == nil {
 		return nil
@@ -151,7 +148,7 @@ func (m *FlagGslbPreviewID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,16 +169,53 @@ func (m *FlagGslbPreviewID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *FlagGslbPreviewID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewFlagGslbPreviewRef(project string) FlagGslbPreviewRef {
+func (m *FlagGslbPreviewID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, FlagGslbPreviewRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewFlagGslbPreviewRef(project string) (FlagGslbPreviewRef, error) {
+	if project == "" {
+		return FlagGslbPreviewRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FlagGslbPreviewRef{
 		id: FlagGslbPreviewID{
 			project: project,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustFlagGslbPreviewRef(project string) FlagGslbPreviewRef {
+	m, err := NewFlagGslbPreviewRef(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -246,18 +280,7 @@ func (m *FlagGslbPreviewRef) String() string {
 }
 
 func (m *FlagGslbPreviewRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, FlagGslbPreviewRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *FlagGslbPreviewRef) Clone() *FlagGslbPreviewRef {
@@ -281,7 +304,11 @@ func (m *FlagGslbPreviewRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -300,7 +327,35 @@ func (m *FlagGslbPreviewRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *FlagGslbPreviewRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, FlagGslbPreviewRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *FlagGslbPreviewRef) isParsed() bool {
+	return m != nil && m.id.project != ""
 }
 
 func (m *FlagGslbPreviewRef) absolutePath() string {

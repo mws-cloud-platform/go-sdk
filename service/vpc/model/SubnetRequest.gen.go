@@ -3,6 +3,9 @@
 package model
 
 import (
+	"context"
+
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -52,4 +55,16 @@ func (m *SubnetRequest) Clone() *SubnetRequest {
 	clone.Metadata = m.Metadata.Clone()
 	clone.Spec = *m.Spec.Clone()
 	return &clone
+}
+
+func (m *SubnetRequest) Parse(ctx context.Context) error {
+	if m == nil {
+		return nil
+	}
+
+	if err := m.Spec.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Spec", err)
+	}
+
+	return nil
 }

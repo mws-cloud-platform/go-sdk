@@ -35,12 +35,16 @@ func (m *KafkaEndpointBrokerAddressStatusResponse) Encode(e *jx.Encoder) error {
 func (m *KafkaEndpointBrokerAddressStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.Ref != nil {
 		e.FieldStart("ref")
-		m.Ref.Encode(e)
+		if err := m.Ref.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Subnet != nil {
 		e.FieldStart("subnet")
-		m.Subnet.Encode(e)
+		if err := m.Subnet.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.IpAddress != nil {
@@ -52,7 +56,9 @@ func (m *KafkaEndpointBrokerAddressStatusResponse) encodeFields(e *jx.Encoder) e
 		e.FieldStart("dns")
 		e.ArrStart()
 		for _, elem := range m.Dns {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

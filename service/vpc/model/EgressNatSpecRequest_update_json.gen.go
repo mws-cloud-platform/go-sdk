@@ -33,12 +33,16 @@ func (m *UpdateEgressNatSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateEgressNatSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Internal.IsSet() {
 		e.FieldStart("internal")
-		m.Internal.Value.Encode(e)
+		if err := m.Internal.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.External.IsSet() {
 		e.FieldStart("external")
-		m.External.Value.Encode(e)
+		if err := m.External.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.PortAllocation.IsSet() {
@@ -46,7 +50,9 @@ func (m *UpdateEgressNatSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.PortAllocation.IsNull() {
 			e.Null()
 		} else {
-			m.PortAllocation.Value.Encode(e)
+			if err := m.PortAllocation.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

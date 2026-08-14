@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewAuthClientID(clientId string) AuthClientID {
+func NewAuthClientID(clientId string) (AuthClientID, error) {
+	if clientId == "" {
+		return AuthClientID{}, reserrors.NewFieldIsEmptyError("clientId")
+	}
 	m := AuthClientID{
 		clientId: clientId,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustAuthClientID(clientId string) AuthClientID {
+	m, err := NewAuthClientID(clientId)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseAuthClientID(path string) (AuthClientID, error) {
 	m := AuthClientID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return AuthClientID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *AuthClientID) String() string {
 	return m.ID()
 }
 
-func (m *AuthClientID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, AuthClientRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.clientId = result["clientId"]
-
-	return nil
-}
-
 func (m *AuthClientID) Clone() *AuthClientID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *AuthClientID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *AuthClientID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *AuthClientID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewAuthClientRef(clientId string) AuthClientRef {
+func (m *AuthClientID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, AuthClientRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.clientId = result["clientId"]
+
+	return nil
+}
+
+func NewAuthClientRef(clientId string) (AuthClientRef, error) {
+	if clientId == "" {
+		return AuthClientRef{}, reserrors.NewFieldIsEmptyError("clientId")
+	}
 	m := AuthClientRef{
 		id: AuthClientID{
 			clientId: clientId,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustAuthClientRef(clientId string) AuthClientRef {
+	m, err := NewAuthClientRef(clientId)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *AuthClientRef) String() string {
 }
 
 func (m *AuthClientRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, AuthClientRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.clientId = result["clientId"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *AuthClientRef) Clone() *AuthClientRef {
@@ -261,7 +284,11 @@ func (m *AuthClientRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *AuthClientRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *AuthClientRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, AuthClientRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.clientId = result["clientId"]
+
 	return nil
+}
+
+func (m *AuthClientRef) isParsed() bool {
+	return m != nil && m.id.clientId != ""
 }
 
 func (m *AuthClientRef) absolutePath() string {

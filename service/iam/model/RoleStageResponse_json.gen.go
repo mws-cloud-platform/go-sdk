@@ -34,7 +34,9 @@ func (m *RoleStageResponse) Encode(e *jx.Encoder) error {
 
 func (m *RoleStageResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("code")
-	m.Code.Encode(e)
+	if err := m.Code.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Comment != nil {
 		e.FieldStart("comment")

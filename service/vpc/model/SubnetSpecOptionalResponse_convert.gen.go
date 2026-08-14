@@ -11,6 +11,9 @@ func SubnetSpecRequestToOptionalResponse(request *SubnetSpecRequest) (*SubnetSpe
 		return nil, nil
 	}
 	var response SubnetSpecOptionalResponse
+	if request.Region != nil {
+		response.Region = optional.NewOptional(*request.Region)
+	}
 	response.Cidr = request.Cidr
 	if request.DhcpOptions != nil {
 		tmpDhcpOptions, err := SubnetDhcpOptionsRequestToOptionalResponse(request.DhcpOptions)

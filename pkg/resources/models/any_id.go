@@ -2,27 +2,53 @@ package models
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	resifaces "go.mws.cloud/go-sdk/pkg/resources/interfaces"
 )
 
 const anyServiceSlug = "any"
 
 // NewAnyResourceID constructor for creating an untyped resource id from its id.
-func NewAnyResourceID(name string) AnyResourceID {
-	return AnyResourceID{
-		resource: name,
+func NewAnyResourceID(id string) (AnyResourceID, error) {
+	if id == "" {
+		return AnyResourceID{}, reserrors.ErrIDIsEmpty
 	}
+	return AnyResourceID{
+		resource: id,
+	}, nil
+}
+
+// NewMustAnyResourceID is like NewAnyResourceID but panics if an error has occurred.
+// Intended for use in initialization code where failures are unrecoverable.
+// Prefer NewAnyResourceID for runtime path processing.
+func NewMustAnyResourceID(id string) AnyResourceID {
+	res, err := NewAnyResourceID(id)
+	if err != nil {
+		panic(err)
+	}
+	return res
 }
 
 // ParseAnyResourceID constructor for creating an untyped resource id from its path.
-func ParseAnyResourceID(path string) AnyResourceID {
+func ParseAnyResourceID(path string) (AnyResourceID, error) {
 	return NewAnyResourceID(path)
+}
+
+// MustParseAnyResourceID is like ParseAnyResourceID but panics if an error has occurred.
+// Intended for use in initialization code where failures are unrecoverable.
+// Prefer ParseAnyResourceID for runtime path processing.
+func MustParseAnyResourceID(path string) AnyResourceID {
+	result, err := ParseAnyResourceID(path)
+	if err != nil {
+		panic(err)
+	}
+	return result
 }
 
 // AnyResourceID a container for untyped resource id that can be cast to a desired type using that type's constructor.
@@ -109,6 +135,10 @@ func (n *AnyResourceID) Encode(e *jx.Encoder) error {
 		return nil
 	}
 
+	if n.ID() == "" {
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
+	}
+
 	e.Str(n.ID())
 	return nil
 }
@@ -116,7 +146,7 @@ func (n *AnyResourceID) Encode(e *jx.Encoder) error {
 // UnmarshalJSON implements [json.Unmarshaler].
 // Parses JSON string into the AnyResourceID.
 func (n *AnyResourceID) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &n.resource)
+	return n.Decode(jx.DecodeBytes(b))
 }
 
 // Decode implements [jx.Decoder].
@@ -129,6 +159,10 @@ func (n *AnyResourceID) Decode(d *jx.Decoder) error {
 	v, err := d.Str()
 	if err != nil {
 		return err
+	}
+
+	if v == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrIDIsEmpty)
 	}
 
 	n.resource = v

@@ -79,7 +79,7 @@ func createVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachi
 		VirtualMachine: virtualMachineName,
 		Body: computemodel.VirtualMachineRequest{
 			Spec: computemodel.VirtualMachineSpecRequest{
-				VmType: computeref.NewVmTypeRef("gen-2-8"),
+				VmType: computeref.NewMustVmTypeRef("gen-2-8"),
 				Zone:   "ru-central1-a",
 				Hardware: &computemodel.HardwareSpecRequest{
 					Power:                   new(computemodel.HardwareSpecPowerRequest_OFF),
@@ -92,11 +92,11 @@ func createVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachi
 							Boot: new(true),
 							Disk: computemodel.StorageDiskSpecOrRefRequest{
 								Spec: &computemodel.StorageDiskSpecRequest{
-									DiskType: new(computeref.NewDiskTypeRef("nbs-pl2")),
+									DiskType: new(computeref.NewMustDiskTypeRef("nbs-pl2")),
 									Iops:     new(computemodel.Iops(1000)),
 									Size:     new(bytesize.MustParseString("10 GB")),
 									Source: &computemodel.StorageDiskSpecSourceRequest{
-										Image: new(computeref.NewImageRef(
+										Image: new(computeref.NewMustImageRef(
 											"mws-ubuntu",
 											"mws-ubuntu-2404-lts-v20260324",
 										)),
@@ -154,7 +154,7 @@ func updateVM(ctx context.Context, virtualMachineClient *computesdk.VirtualMachi
 		VirtualMachine: virtualMachineName,
 		Body: computemodel.UpdateVirtualMachineRequest{
 			Spec: optional.NewOptional(computemodel.UpdateVirtualMachineSpecRequest{
-				VmType: optional.NewOptional(computeref.NewVmTypeRef("gen-2-16")),
+				VmType: optional.NewOptional(computeref.NewMustVmTypeRef("gen-2-16")),
 			}),
 		},
 	}, computeclient.WithWait())
@@ -241,7 +241,7 @@ func createSubnet(ctx context.Context, sdk *mws.SDK, subnetName, networkName str
 		log.Panicln("get subnet id:", err)
 	}
 
-	return vpcref.NewSubnetRef(subnetID.GetProject(), subnetID.GetNetwork(), subnetID.GetSubnet()), deleteSubnet
+	return vpcref.NewMustSubnetRef(subnetID.GetProject(), subnetID.GetNetwork(), subnetID.GetSubnet()), deleteSubnet
 }
 
 func createExternalAddress(ctx context.Context, sdk *mws.SDK, externalAddressName string) (vpcref.ExternalAddressRef, func()) {
@@ -276,5 +276,5 @@ func createExternalAddress(ctx context.Context, sdk *mws.SDK, externalAddressNam
 		log.Panicln("get external address id:", err)
 	}
 
-	return vpcref.NewExternalAddressRef(externalAddressID.GetProject(), externalAddressID.GetExternalAddress()), deleteExternalAddress
+	return vpcref.NewMustExternalAddressRef(externalAddressID.GetProject(), externalAddressID.GetExternalAddress()), deleteExternalAddress
 }

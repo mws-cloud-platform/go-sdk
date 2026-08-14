@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewRoleBindingID(roleBinding string) RoleBindingID {
+func NewRoleBindingID(roleBinding string) (RoleBindingID, error) {
+	if roleBinding == "" {
+		return RoleBindingID{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
 	m := RoleBindingID{
 		roleBinding: roleBinding,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustRoleBindingID(roleBinding string) RoleBindingID {
+	m, err := NewRoleBindingID(roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseRoleBindingID(path string) (RoleBindingID, error) {
 	m := RoleBindingID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return RoleBindingID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *RoleBindingID) String() string {
 	return m.ID()
 }
 
-func (m *RoleBindingID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, RoleBindingRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.roleBinding = result["roleBinding"]
-
-	return nil
-}
-
 func (m *RoleBindingID) Clone() *RoleBindingID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *RoleBindingID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *RoleBindingID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *RoleBindingID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewRoleBindingRef(roleBinding string) RoleBindingRef {
+func (m *RoleBindingID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, RoleBindingRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.roleBinding = result["roleBinding"]
+
+	return nil
+}
+
+func NewRoleBindingRef(roleBinding string) (RoleBindingRef, error) {
+	if roleBinding == "" {
+		return RoleBindingRef{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
 	m := RoleBindingRef{
 		id: RoleBindingID{
 			roleBinding: roleBinding,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustRoleBindingRef(roleBinding string) RoleBindingRef {
+	m, err := NewRoleBindingRef(roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *RoleBindingRef) String() string {
 }
 
 func (m *RoleBindingRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, RoleBindingRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.roleBinding = result["roleBinding"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *RoleBindingRef) Clone() *RoleBindingRef {
@@ -261,7 +284,11 @@ func (m *RoleBindingRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *RoleBindingRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *RoleBindingRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, RoleBindingRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.roleBinding = result["roleBinding"]
+
 	return nil
+}
+
+func (m *RoleBindingRef) isParsed() bool {
+	return m != nil && m.id.roleBinding != ""
 }
 
 func (m *RoleBindingRef) absolutePath() string {

@@ -4,6 +4,7 @@ package kms
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewCryptoKeyRoleBindingID(project, key, roleBinding string) CryptoKeyRoleBindingID {
+func NewCryptoKeyRoleBindingID(project, key, roleBinding string) (CryptoKeyRoleBindingID, error) {
+	if roleBinding == "" {
+		return CryptoKeyRoleBindingID{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if key == "" {
+		return CryptoKeyRoleBindingID{}, reserrors.NewFieldIsEmptyError("key")
+	}
+	if project == "" {
+		return CryptoKeyRoleBindingID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := CryptoKeyRoleBindingID{
 		roleBinding: roleBinding,
 		key:         key,
 		project:     project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustCryptoKeyRoleBindingID(project, key, roleBinding string) CryptoKeyRoleBindingID {
+	m, err := NewCryptoKeyRoleBindingID(project, key, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseCryptoKeyRoleBindingID(path string) (CryptoKeyRoleBindingID, error) {
 	m := CryptoKeyRoleBindingID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return CryptoKeyRoleBindingID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *CryptoKeyRoleBindingID) String() string {
 	return m.ID()
 }
 
-func (m *CryptoKeyRoleBindingID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, CryptoKeyRoleBindingRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.roleBinding = result["roleBinding"]
-	m.key = result["key"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *CryptoKeyRoleBindingID) Clone() *CryptoKeyRoleBindingID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *CryptoKeyRoleBindingID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *CryptoKeyRoleBindingID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *CryptoKeyRoleBindingID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewCryptoKeyRoleBindingRef(project, key, roleBinding string) CryptoKeyRoleBindingRef {
+func (m *CryptoKeyRoleBindingID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, CryptoKeyRoleBindingRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.roleBinding = result["roleBinding"]
+	m.key = result["key"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewCryptoKeyRoleBindingRef(project, key, roleBinding string) (CryptoKeyRoleBindingRef, error) {
+	if roleBinding == "" {
+		return CryptoKeyRoleBindingRef{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if key == "" {
+		return CryptoKeyRoleBindingRef{}, reserrors.NewFieldIsEmptyError("key")
+	}
+	if project == "" {
+		return CryptoKeyRoleBindingRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := CryptoKeyRoleBindingRef{
 		id: CryptoKeyRoleBindingID{
 			roleBinding: roleBinding,
@@ -204,6 +242,14 @@ func NewCryptoKeyRoleBindingRef(project, key, roleBinding string) CryptoKeyRoleB
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustCryptoKeyRoleBindingRef(project, key, roleBinding string) CryptoKeyRoleBindingRef {
+	m, err := NewCryptoKeyRoleBindingRef(project, key, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *CryptoKeyRoleBindingRef) String() string {
 }
 
 func (m *CryptoKeyRoleBindingRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, CryptoKeyRoleBindingRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.roleBinding = result["roleBinding"]
-	m.id.key = result["key"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *CryptoKeyRoleBindingRef) Clone() *CryptoKeyRoleBindingRef {
@@ -319,7 +352,11 @@ func (m *CryptoKeyRoleBindingRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *CryptoKeyRoleBindingRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *CryptoKeyRoleBindingRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, CryptoKeyRoleBindingRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.roleBinding = result["roleBinding"]
+	m.id.key = result["key"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *CryptoKeyRoleBindingRef) isParsed() bool {
+	return m != nil && m.id.roleBinding != "" && m.id.key != "" && m.id.project != ""
 }
 
 func (m *CryptoKeyRoleBindingRef) absolutePath() string {

@@ -38,13 +38,17 @@ func (m *UpdateKafkaUserRequest) encodeFields(e *jx.Encoder) error {
 		if m.Metadata.IsNull() {
 			e.Null()
 		} else {
-			m.Metadata.Value.Encode(e)
+			if err := m.Metadata.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
 	if m.Spec.IsSet() {
 		e.FieldStart("spec")
-		m.Spec.Value.Encode(e)
+		if err := m.Spec.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -118,7 +122,9 @@ func (m *UpdateKafkaUserMetadataRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("usages")
 		e.ArrStart()
 		for _, elem := range m.Usages.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

@@ -34,12 +34,16 @@ func (m *RouteNextHopRequest) Encode(e *jx.Encoder) error {
 func (m *RouteNextHopRequest) encodeFields(e *jx.Encoder) error {
 	if m.NatGateway != nil {
 		e.FieldStart("natGateway")
-		m.NatGateway.Encode(e)
+		if err := m.NatGateway.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Address != nil {
 		e.FieldStart("address")
-		m.Address.Encode(e)
+		if err := m.Address.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -108,7 +112,9 @@ func (m *RouteNextHopAddressRequest) Encode(e *jx.Encoder) error {
 
 func (m *RouteNextHopAddressRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

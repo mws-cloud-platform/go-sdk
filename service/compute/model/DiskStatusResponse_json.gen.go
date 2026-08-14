@@ -36,7 +36,9 @@ func (m *DiskStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *DiskStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.SourceExists != nil {
 		e.FieldStart("sourceExists")
 		e.Bool(*m.SourceExists)
@@ -49,7 +51,9 @@ func (m *DiskStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.Iops != nil {
 		e.FieldStart("iops")
-		m.Iops.Encode(e)
+		if err := m.Iops.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Throughput != nil {
@@ -59,7 +63,9 @@ func (m *DiskStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.DiskType != nil {
 		e.FieldStart("diskType")
-		m.DiskType.Encode(e)
+		if err := m.DiskType.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.BlockSize != nil {
@@ -70,23 +76,31 @@ func (m *DiskStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("linkedVms")
 	e.ArrStart()
 	for _, elem := range m.LinkedVms {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
 	if m.InitialSourceImage != nil {
 		e.FieldStart("initialSourceImage")
-		m.InitialSourceImage.Encode(e)
+		if err := m.InitialSourceImage.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.OsType != nil {
 		e.FieldStart("osType")
-		m.OsType.Encode(e)
+		if err := m.OsType.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Encryption != nil {
 		e.FieldStart("encryption")
-		m.Encryption.Encode(e)
+		if err := m.Encryption.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

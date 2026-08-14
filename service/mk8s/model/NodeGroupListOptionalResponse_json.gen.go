@@ -35,7 +35,9 @@ func (m *NodeGroupListOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("items")
 	e.ArrStart()
 	for _, elem := range m.Items {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
@@ -44,7 +46,9 @@ func (m *NodeGroupListOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.NextPageToken.IsNull() {
 			e.Null()
 		} else {
-			m.NextPageToken.Value.Encode(e)
+			if err := m.NextPageToken.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

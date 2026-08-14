@@ -7,10 +7,11 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func TestSlice(t *testing.T) {
-	for _, v := range []struct {
+	var tt = []struct {
 		Name     string
 		Dst      []model
 		Src      []updateModel
@@ -67,18 +68,30 @@ func TestSlice(t *testing.T) {
 				{name: "foo", number: 42},
 			},
 		},
-	} {
+	}
+	for _, v := range tt {
 		t.Run(v.Name, func(t *testing.T) {
 			t.Parallel()
 
 			actual := merge.Slice(v.Dst, v.Src, (*model).withChanges, (*model).getName, (*updateModel).getName)
 			require.Equal(t, v.Expected, actual)
 		})
+
+		t.Run(v.Name, func(t *testing.T) {
+			t.Parallel()
+
+			actual := merge.SliceSensitive(
+				sensitiveSlice(v.Dst),
+				sensitiveSlice(v.Src),
+				(*model).withChanges, (*model).getName, (*updateModel).getName,
+			)
+			require.Equal(t, v.Expected, unwrapSensitiveSlice(actual))
+		})
 	}
 }
 
 func TestMap(t *testing.T) {
-	for _, v := range []struct {
+	var tt = []struct {
 		Name     string
 		Dst      map[string]model
 		Src      map[string]updateModel
@@ -133,18 +146,30 @@ func TestMap(t *testing.T) {
 				"bar": {name: "bar", number: 24},
 			},
 		},
-	} {
+	}
+	for _, v := range tt {
 		t.Run(v.Name, func(t *testing.T) {
 			t.Parallel()
 
 			actual := merge.Map(v.Dst, v.Src, (*model).withChanges)
 			require.Equal(t, v.Expected, actual)
 		})
+
+		t.Run(v.Name, func(t *testing.T) {
+			t.Parallel()
+
+			actual := merge.MapSensitive(
+				sensitiveMap(v.Dst),
+				sensitiveMap(v.Src),
+				(*model).withChanges,
+			)
+			require.Equal(t, v.Expected, unwrapSensitiveMap(actual))
+		})
 	}
 }
 
 func TestInapplicableSlice(t *testing.T) {
-	for _, v := range []struct {
+	var tt = []struct {
 		Name     string
 		Src      []updateModel
 		Expected []model
@@ -185,12 +210,20 @@ func TestInapplicableSlice(t *testing.T) {
 				{number: 42},
 			},
 		},
-	} {
+	}
+	for _, v := range tt {
 		t.Run(v.Name, func(t *testing.T) {
 			t.Parallel()
 
 			actual := merge.InapplicableSlice(v.Src, (*model).withChanges)
 			require.Equal(t, v.Expected, actual)
+		})
+
+		t.Run(v.Name, func(t *testing.T) {
+			t.Parallel()
+
+			actual := merge.InapplicableSliceSensitive(sensitiveSlice(v.Src), (*model).withChanges)
+			require.Equal(t, v.Expected, unwrapSensitiveSlice(actual))
 		})
 	}
 }
@@ -229,4 +262,42 @@ func (u *updateModel) getName() string {
 		return u.name.Value
 	}
 	return ""
+}
+
+func sensitiveSlice[V any](s []V) []sensitive.Sensitive[V] {
+	out := make([]sensitive.Sensitive[V], len(s))
+	for i, v := range s {
+		out[i] = sensitive.New(v)
+	}
+	return out
+}
+
+func unwrapSensitiveSlice[V any](s []sensitive.Sensitive[V]) []V {
+	if s == nil {
+		return nil
+	}
+	out := make([]V, len(s))
+	for i, v := range s {
+		out[i] = v.Value()
+	}
+	return out
+}
+
+func sensitiveMap[K comparable, V any](m map[K]V) map[K]sensitive.Sensitive[V] {
+	out := make(map[K]sensitive.Sensitive[V], len(m))
+	for k, v := range m {
+		out[k] = sensitive.New(v)
+	}
+	return out
+}
+
+func unwrapSensitiveMap[K comparable, V any](m map[K]sensitive.Sensitive[V]) map[K]V {
+	if m == nil {
+		return nil
+	}
+	out := make(map[K]V, len(m))
+	for k, v := range m {
+		out[k] = v.Value()
+	}
+	return out
 }

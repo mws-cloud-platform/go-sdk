@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewZonalSubnetID(zone, project, zonalNetwork, zonalSubnet string) ZonalSubnetID {
+func NewZonalSubnetID(zone, project, zonalNetwork, zonalSubnet string) (ZonalSubnetID, error) {
+	if zonalSubnet == "" {
+		return ZonalSubnetID{}, reserrors.NewFieldIsEmptyError("zonalSubnet")
+	}
+	if zonalNetwork == "" {
+		return ZonalSubnetID{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalSubnetID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalSubnetID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalSubnetID{
 		zonalSubnet:  zonalSubnet,
 		zonalNetwork: zonalNetwork,
@@ -74,6 +87,14 @@ func NewZonalSubnetID(zone, project, zonalNetwork, zonalSubnet string) ZonalSubn
 		zone:         zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalSubnetID(zone, project, zonalNetwork, zonalSubnet string) ZonalSubnetID {
+	m, err := NewZonalSubnetID(zone, project, zonalNetwork, zonalSubnet)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseZonalSubnetID(path string) (ZonalSubnetID, error) {
 	m := ZonalSubnetID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalSubnetID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *ZonalSubnetID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalSubnetID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalSubnetRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalSubnet = result["zonalSubnet"]
-	m.zonalNetwork = result["zonalNetwork"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalSubnetID) Clone() *ZonalSubnetID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *ZonalSubnetID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *ZonalSubnetID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalSubnetID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalSubnetRef(zone, project, zonalNetwork, zonalSubnet string) ZonalSubnetRef {
+func (m *ZonalSubnetID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalSubnetRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalSubnet = result["zonalSubnet"]
+	m.zonalNetwork = result["zonalNetwork"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalSubnetRef(zone, project, zonalNetwork, zonalSubnet string) (ZonalSubnetRef, error) {
+	if zonalSubnet == "" {
+		return ZonalSubnetRef{}, reserrors.NewFieldIsEmptyError("zonalSubnet")
+	}
+	if zonalNetwork == "" {
+		return ZonalSubnetRef{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalSubnetRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalSubnetRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalSubnetRef{
 		id: ZonalSubnetID{
 			zonalSubnet:  zonalSubnet,
@@ -225,6 +269,14 @@ func NewZonalSubnetRef(zone, project, zonalNetwork, zonalSubnet string) ZonalSub
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalSubnetRef(zone, project, zonalNetwork, zonalSubnet string) ZonalSubnetRef {
+	m, err := NewZonalSubnetRef(zone, project, zonalNetwork, zonalSubnet)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *ZonalSubnetRef) String() string {
 }
 
 func (m *ZonalSubnetRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalSubnetRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalSubnet = result["zonalSubnet"]
-	m.id.zonalNetwork = result["zonalNetwork"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalSubnetRef) Clone() *ZonalSubnetRef {
@@ -348,7 +386,11 @@ func (m *ZonalSubnetRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *ZonalSubnetRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalSubnetRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalSubnetRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalSubnet = result["zonalSubnet"]
+	m.id.zonalNetwork = result["zonalNetwork"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalSubnetRef) isParsed() bool {
+	return m != nil && m.id.zonalSubnet != "" && m.id.zonalNetwork != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalSubnetRef) absolutePath() string {

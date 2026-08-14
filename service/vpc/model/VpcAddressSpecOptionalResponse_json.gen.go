@@ -34,7 +34,9 @@ func (m *VpcAddressSpecOptionalResponse) Encode(e *jx.Encoder) error {
 
 func (m *VpcAddressSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("subnet")
-	m.Subnet.Encode(e)
+	if err := m.Subnet.Encode(e); err != nil {
+		return err
+	}
 
 	if m.IpAddress.IsSet() {
 		e.FieldStart("ipAddress")
@@ -48,7 +50,9 @@ func (m *VpcAddressSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		} else {
 			e.ArrStart()
 			for _, elem := range m.Dns.Value {
-				elem.Encode(e)
+				if err := elem.Encode(e); err != nil {
+					return err
+				}
 			}
 			e.ArrEnd()
 		}

@@ -35,7 +35,9 @@ func (m *PostgresStatusExternalAddressResponse) Encode(e *jx.Encoder) error {
 func (m *PostgresStatusExternalAddressResponse) encodeFields(e *jx.Encoder) error {
 	if m.Address != nil {
 		e.FieldStart("address")
-		m.Address.Encode(e)
+		if err := m.Address.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Ip != nil {

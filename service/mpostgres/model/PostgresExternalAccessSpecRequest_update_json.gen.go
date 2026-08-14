@@ -40,7 +40,9 @@ func (m *UpdatePostgresExternalAccessSpecRequest) encodeFields(e *jx.Encoder) er
 
 	if m.Ref.IsSet() {
 		e.FieldStart("ref")
-		m.Ref.Value.Encode(e)
+		if err := m.Ref.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

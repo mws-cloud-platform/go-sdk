@@ -32,11 +32,15 @@ func (m *AddressSpecOrRefWithAttachmentsRequest) Encode(e *jx.Encoder) error {
 
 func (m *AddressSpecOrRefWithAttachmentsRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("address")
-	m.Address.Encode(e)
+	if err := m.Address.Encode(e); err != nil {
+		return err
+	}
 
 	if m.OneToOneNat != nil {
 		e.FieldStart("oneToOneNat")
-		m.OneToOneNat.Encode(e)
+		if err := m.OneToOneNat.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

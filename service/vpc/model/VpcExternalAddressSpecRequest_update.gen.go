@@ -10,10 +10,16 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 type UpdateVpcExternalAddressSpecRequest struct {
+	// Регион, которому принадлежит адрес.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Region optional.Optional[rm.RegionRef] `json:"region" yaml:"region"`
 	// Шлюз, к которому относится адрес. Если шлюз не указан, для трансляции IP-адресов используется шлюз по умолчанию для выхода в интернет (ref=natGateways/internet-gateway)
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
@@ -23,6 +29,9 @@ type UpdateVpcExternalAddressSpecRequest struct {
 
 func (m *VpcExternalAddressSpecRequest) AsUpdateModel() UpdateVpcExternalAddressSpecRequest {
 	var u UpdateVpcExternalAddressSpecRequest
+	if m.Region != nil {
+		u.Region = optional.NewOptional(m.GetRegionOr(rm.RegionRef{}))
+	}
 	if m.NatGateway != nil {
 		u.NatGateway = optional.NewOptional(m.GetNatGatewayOr(vpc.NatGatewayRef{}))
 	}
@@ -34,6 +43,7 @@ func (m *VpcExternalAddressSpecRequest) Diff(src *VpcExternalAddressSpecRequest)
 	nilDiffers := src != nil && m == nil
 	upd := UpdateVpcExternalAddressSpecRequest{}
 	if !nilDiffers {
+		upd.Region = m.diffRegion(src)
 		upd.NatGateway = m.diffNatGateway(src)
 	}
 	return upd
@@ -45,6 +55,9 @@ func (m *VpcExternalAddressSpecRequest) WithChanges(u UpdateVpcExternalAddressSp
 		out = *m
 	}
 
+	if u.Region.IsSet() {
+		out.Region = ptr.Get(u.Region.Value)
+	}
 	if u.NatGateway.IsSet() {
 		out.NatGateway = ptr.Get(u.NatGateway.Value)
 	}
@@ -53,12 +66,19 @@ func (m *VpcExternalAddressSpecRequest) WithChanges(u UpdateVpcExternalAddressSp
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateVpcExternalAddressSpecRequest) HasChanges() bool {
-	return m.NatGateway.Set
+	return m.Region.Set ||
+		m.NatGateway.Set
 }
 
 func (m *UpdateVpcExternalAddressSpecRequest) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if m.Region.IsSet() {
+		if err := m.Region.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Region", err)
+		}
 	}
 
 	if m.NatGateway.IsSet() {
@@ -68,6 +88,11 @@ func (m *UpdateVpcExternalAddressSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (m *VpcExternalAddressSpecRequest) diffRegion(src *VpcExternalAddressSpecRequest) optional.Optional[rm.RegionRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetRegion(), m.GetRegion(), nilDiffers)
 }
 
 func (m *VpcExternalAddressSpecRequest) diffNatGateway(src *VpcExternalAddressSpecRequest) optional.Optional[vpc.NatGatewayRef] {

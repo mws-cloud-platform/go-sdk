@@ -7,6 +7,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Описывает статус Egress (Many-to-Many) NAT-шлюза.
@@ -19,6 +20,8 @@ type EgressNatStatusResponse struct {
 	External *EgressNatStatusExternalResponse `json:"external,omitempty" yaml:"external,omitempty"`
 	// Описывает примененные настройки управления портами.
 	PortAllocation *EgressNatStatusPortAllocationResponse `json:"portAllocation,omitempty" yaml:"portAllocation,omitempty"`
+	// Регион, которому принадлежит Egress NAT-шлюз.
+	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
 func (m *EgressNatStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -70,6 +73,20 @@ func (m *EgressNatStatusResponse) GetPortAllocationOr(val EgressNatStatusPortAll
 	return val
 }
 
+func (m *EgressNatStatusResponse) GetRegion() *rm.RegionID {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *EgressNatStatusResponse) GetRegionOr(val rm.RegionID) rm.RegionID {
+	if m != nil && m.Region != nil {
+		return *m.Region
+	}
+	return val
+}
+
 func (m *EgressNatStatusResponse) Clone() *EgressNatStatusResponse {
 	if m == nil {
 		return nil
@@ -80,6 +97,7 @@ func (m *EgressNatStatusResponse) Clone() *EgressNatStatusResponse {
 	clone.Internal = m.Internal.Clone()
 	clone.External = m.External.Clone()
 	clone.PortAllocation = m.PortAllocation.Clone()
+	clone.Region = m.Region.Clone()
 
 	return &clone
 }

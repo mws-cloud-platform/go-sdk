@@ -4,6 +4,7 @@ package mclickhouse
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewClickhouseClusterCoordinatorID(project, cluster, coordinator string) ClickhouseClusterCoordinatorID {
+func NewClickhouseClusterCoordinatorID(project, cluster, coordinator string) (ClickhouseClusterCoordinatorID, error) {
+	if coordinator == "" {
+		return ClickhouseClusterCoordinatorID{}, reserrors.NewFieldIsEmptyError("coordinator")
+	}
+	if cluster == "" {
+		return ClickhouseClusterCoordinatorID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return ClickhouseClusterCoordinatorID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ClickhouseClusterCoordinatorID{
 		coordinator: coordinator,
 		cluster:     cluster,
 		project:     project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustClickhouseClusterCoordinatorID(project, cluster, coordinator string) ClickhouseClusterCoordinatorID {
+	m, err := NewClickhouseClusterCoordinatorID(project, cluster, coordinator)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseClickhouseClusterCoordinatorID(path string) (ClickhouseClusterCoordina
 	m := ClickhouseClusterCoordinatorID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ClickhouseClusterCoordinatorID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ClickhouseClusterCoordinatorID) String() string {
 	return m.ID()
 }
 
-func (m *ClickhouseClusterCoordinatorID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ClickhouseClusterCoordinatorRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.coordinator = result["coordinator"]
-	m.cluster = result["cluster"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ClickhouseClusterCoordinatorID) Clone() *ClickhouseClusterCoordinatorID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ClickhouseClusterCoordinatorID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ClickhouseClusterCoordinatorID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ClickhouseClusterCoordinatorID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewClickhouseClusterCoordinatorRef(project, cluster, coordinator string) ClickhouseClusterCoordinatorRef {
+func (m *ClickhouseClusterCoordinatorID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ClickhouseClusterCoordinatorRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.coordinator = result["coordinator"]
+	m.cluster = result["cluster"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewClickhouseClusterCoordinatorRef(project, cluster, coordinator string) (ClickhouseClusterCoordinatorRef, error) {
+	if coordinator == "" {
+		return ClickhouseClusterCoordinatorRef{}, reserrors.NewFieldIsEmptyError("coordinator")
+	}
+	if cluster == "" {
+		return ClickhouseClusterCoordinatorRef{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return ClickhouseClusterCoordinatorRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ClickhouseClusterCoordinatorRef{
 		id: ClickhouseClusterCoordinatorID{
 			coordinator: coordinator,
@@ -204,6 +242,14 @@ func NewClickhouseClusterCoordinatorRef(project, cluster, coordinator string) Cl
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustClickhouseClusterCoordinatorRef(project, cluster, coordinator string) ClickhouseClusterCoordinatorRef {
+	m, err := NewClickhouseClusterCoordinatorRef(project, cluster, coordinator)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ClickhouseClusterCoordinatorRef) String() string {
 }
 
 func (m *ClickhouseClusterCoordinatorRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ClickhouseClusterCoordinatorRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.coordinator = result["coordinator"]
-	m.id.cluster = result["cluster"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ClickhouseClusterCoordinatorRef) Clone() *ClickhouseClusterCoordinatorRef {
@@ -319,7 +352,11 @@ func (m *ClickhouseClusterCoordinatorRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ClickhouseClusterCoordinatorRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ClickhouseClusterCoordinatorRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ClickhouseClusterCoordinatorRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.coordinator = result["coordinator"]
+	m.id.cluster = result["cluster"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ClickhouseClusterCoordinatorRef) isParsed() bool {
+	return m != nil && m.id.coordinator != "" && m.id.cluster != "" && m.id.project != ""
 }
 
 func (m *ClickhouseClusterCoordinatorRef) absolutePath() string {

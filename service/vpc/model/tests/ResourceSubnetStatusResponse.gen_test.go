@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
 
@@ -25,6 +26,7 @@ func TestResourceSubnetStatusResponseMarshalling(t *testing.T) {
 
 func initResourceSubnetStatusResponse() model.ResourceSubnetStatusResponse {
 	var v model.ResourceSubnetStatusResponse
+	v.Ref = vpc.NewMustSubnetRef("projectID", "networkID", "subnetID")
 	v.Cidr = cidraddress.MustParseCIDR4AddressString("192.168.1.0/24")
 	return v
 }

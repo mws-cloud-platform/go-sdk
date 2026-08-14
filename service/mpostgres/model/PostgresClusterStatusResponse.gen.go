@@ -217,10 +217,6 @@ func (m *PostgresClusterStatusResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if err := m.Region.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Region", err)
-	}
-
 	if err := m.Network.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Network", err)
 	}

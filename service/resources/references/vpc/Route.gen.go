@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewRouteID(project, network, route string) RouteID {
+func NewRouteID(project, network, route string) (RouteID, error) {
+	if route == "" {
+		return RouteID{}, reserrors.NewFieldIsEmptyError("route")
+	}
+	if network == "" {
+		return RouteID{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return RouteID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := RouteID{
 		route:   route,
 		network: network,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustRouteID(project, network, route string) RouteID {
+	m, err := NewRouteID(project, network, route)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseRouteID(path string) (RouteID, error) {
 	m := RouteID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return RouteID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *RouteID) String() string {
 	return m.ID()
 }
 
-func (m *RouteID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, RouteRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.route = result["route"]
-	m.network = result["network"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *RouteID) Clone() *RouteID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *RouteID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *RouteID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *RouteID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewRouteRef(project, network, route string) RouteRef {
+func (m *RouteID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, RouteRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.route = result["route"]
+	m.network = result["network"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewRouteRef(project, network, route string) (RouteRef, error) {
+	if route == "" {
+		return RouteRef{}, reserrors.NewFieldIsEmptyError("route")
+	}
+	if network == "" {
+		return RouteRef{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return RouteRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := RouteRef{
 		id: RouteID{
 			route:   route,
@@ -204,6 +242,14 @@ func NewRouteRef(project, network, route string) RouteRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustRouteRef(project, network, route string) RouteRef {
+	m, err := NewRouteRef(project, network, route)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *RouteRef) String() string {
 }
 
 func (m *RouteRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, RouteRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.route = result["route"]
-	m.id.network = result["network"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *RouteRef) Clone() *RouteRef {
@@ -319,7 +352,11 @@ func (m *RouteRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *RouteRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *RouteRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, RouteRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.route = result["route"]
+	m.id.network = result["network"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *RouteRef) isParsed() bool {
+	return m != nil && m.id.route != "" && m.id.network != "" && m.id.project != ""
 }
 
 func (m *RouteRef) absolutePath() string {

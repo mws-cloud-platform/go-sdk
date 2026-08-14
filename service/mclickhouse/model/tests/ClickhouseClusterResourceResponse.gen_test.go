@@ -10,6 +10,7 @@ import (
 
 	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func TestClickhouseClusterResourceResponseMarshalling(t *testing.T) {
@@ -25,6 +26,7 @@ func TestClickhouseClusterResourceResponseMarshalling(t *testing.T) {
 
 func initClickhouseClusterResourceResponse() model.ClickhouseClusterResourceResponse {
 	var v model.ClickhouseClusterResourceResponse
+	v.Region = rm.NewMustRegionID("regionID")
 	v.Shards = make([]model.ClickhouseClusterShardResourceResponse, 0)
 	v.MaintenanceWindow.Weekly.Days = make([]common.DayOfWeek, 0)
 	return v

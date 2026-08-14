@@ -5,10 +5,12 @@ import (
 	"slices"
 
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func DiffPrimitiveRequired[T comparable](from, to T, nilDiffers bool) Optional[T] {
-	return NewDirectOptional[T](to, nilDiffers || from != to)
+	return NewDirectOptional(to, nilDiffers || from != to)
 }
 
 func DiffPrimitiveNonRequired[T comparable](from, to *T, nilDiffers bool) Optional[T] {
@@ -21,12 +23,12 @@ func DiffPrimitiveNonRequired[T comparable](from, to *T, nilDiffers bool) Option
 		hasChanges = *to != *from
 	}
 
-	return NewDirectOptional[T](value, hasChanges)
+	return NewDirectOptional(value, hasChanges)
 }
 
 func DiffPrimitiveNullable[T comparable](from, to *T, nilDiffers bool) OptionalNil[T] {
 	res := DiffPrimitiveNonRequired(from, to, nilDiffers)
-	return NewDirectOptionalNil[T](res.Value, res.Set, to == nil)
+	return NewDirectOptionalNil(res.Value, res.Set, to == nil)
 }
 
 type Equatable[T any] interface {
@@ -34,7 +36,7 @@ type Equatable[T any] interface {
 }
 
 func DiffEquatableIfaceRequired[T Equatable[T]](from, to T, nilDiffers bool) Optional[T] {
-	return NewDirectOptional[T](to, nilDiffers || !from.Equal(to))
+	return NewDirectOptional(to, nilDiffers || !from.Equal(to))
 }
 
 func DiffEquatableIfaceNonRequired[T Equatable[T]](from, to *T, nilDiffers bool) Optional[T] {
@@ -49,16 +51,16 @@ func DiffEquatableIfaceNonRequired[T Equatable[T]](from, to *T, nilDiffers bool)
 		hasChanges = !valTo.Equal(valFrom)
 	}
 
-	return NewDirectOptional[T](value, hasChanges)
+	return NewDirectOptional(value, hasChanges)
 }
 
 func DiffEquatableIfaceNullable[T Equatable[T]](from, to *T, nilDiffers bool) OptionalNil[T] {
 	res := DiffEquatableIfaceNonRequired(from, to, nilDiffers)
-	return NewDirectOptionalNil[T](res.Value, res.Set, to == nil)
+	return NewDirectOptionalNil(res.Value, res.Set, to == nil)
 }
 
 func DiffRawData[T ~[]byte](from, to T) Optional[T] {
-	return NewDirectOptional[T](to, !slices.Equal(from, to))
+	return NewDirectOptional(to, !slices.Equal(from, to))
 }
 
 func DiffRawDataNullable[T ~[]byte](from, to T) OptionalNil[T] {
@@ -339,6 +341,50 @@ func GetChangesMapObject[T any, Tu updateObject](from, to map[string]T, getDiff 
 		}
 	}
 	return value, hasChanges
+}
+
+func UnwrapSliceSensitive[T any](in []sensitive.Sensitive[T]) []T {
+	if in == nil {
+		return nil
+	}
+	out := make([]T, 0, len(in))
+	for _, v := range in {
+		out = append(out, v.Value())
+	}
+	return out
+}
+
+func WrapSliceSensitive[T any](in []T) []sensitive.Sensitive[T] {
+	if in == nil {
+		return nil
+	}
+	out := make([]sensitive.Sensitive[T], 0, len(in))
+	for _, v := range in {
+		out = append(out, sensitive.New(v))
+	}
+	return out
+}
+
+func UnwrapMapSensitive[T any](in map[string]sensitive.Sensitive[T]) map[string]T {
+	if in == nil {
+		return nil
+	}
+	out := make(map[string]T, len(in))
+	for k, v := range in {
+		out[k] = v.Value()
+	}
+	return out
+}
+
+func WrapMapSensitive[T any](in map[string]T) map[string]sensitive.Sensitive[T] {
+	if in == nil {
+		return nil
+	}
+	out := make(map[string]sensitive.Sensitive[T], len(in))
+	for k, v := range in {
+		out[k] = sensitive.New(v)
+	}
+	return out
 }
 
 func arrayObjectNamedHasDuplicateKeys[T namedChild](arr []T) bool {

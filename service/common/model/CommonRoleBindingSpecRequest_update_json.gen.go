@@ -35,17 +35,23 @@ func (m *UpdateCommonRoleBindingSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateCommonRoleBindingSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Subject.IsSet() {
 		e.FieldStart("subject")
-		m.Subject.Value.Encode(e)
+		if err := m.Subject.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Role.IsSet() {
 		e.FieldStart("role")
-		m.Role.Value.Encode(e)
+		if err := m.Role.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.SupportRequestId.IsSet() {
 		e.FieldStart("supportRequestId")
-		m.SupportRequestId.Value.Encode(e)
+		if err := m.SupportRequestId.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

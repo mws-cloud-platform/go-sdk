@@ -45,7 +45,9 @@ func (m *ClusterVersionControlStatusResponse) encodeFields(e *jx.Encoder) error 
 
 	if m.MaintenanceWindow != nil {
 		e.FieldStart("maintenanceWindow")
-		m.MaintenanceWindow.Encode(e)
+		if err := m.MaintenanceWindow.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

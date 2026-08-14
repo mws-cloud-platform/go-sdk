@@ -34,7 +34,9 @@ func (m *ResourceAddressStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *ResourceAddressStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("ipAddress")
 	m.IpAddress.Encode(e)

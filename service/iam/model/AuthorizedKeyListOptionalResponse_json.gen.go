@@ -34,13 +34,17 @@ func (m *AuthorizedKeyListOptionalResponse) Encode(e *jx.Encoder) error {
 func (m *AuthorizedKeyListOptionalResponse) encodeFields(e *jx.Encoder) error {
 	if m.NextPageToken.IsSet() {
 		e.FieldStart("nextPageToken")
-		m.NextPageToken.Value.Encode(e)
+		if err := m.NextPageToken.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	e.FieldStart("items")
 	e.ArrStart()
 	for _, elem := range m.Items {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 	return nil

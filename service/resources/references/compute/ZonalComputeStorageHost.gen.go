@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewZonalComputeStorageHostID(zone, host string) ZonalComputeStorageHostID {
+func NewZonalComputeStorageHostID(zone, host string) (ZonalComputeStorageHostID, error) {
+	if host == "" {
+		return ZonalComputeStorageHostID{}, reserrors.NewFieldIsEmptyError("host")
+	}
+	if zone == "" {
+		return ZonalComputeStorageHostID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalComputeStorageHostID{
 		host: host,
 		zone: zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalComputeStorageHostID(zone, host string) ZonalComputeStorageHostID {
+	m, err := NewZonalComputeStorageHostID(zone, host)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseZonalComputeStorageHostID(path string) (ZonalComputeStorageHostID, err
 	m := ZonalComputeStorageHostID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalComputeStorageHostID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ZonalComputeStorageHostID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalComputeStorageHostID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalComputeStorageHostRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.host = result["host"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalComputeStorageHostID) Clone() *ZonalComputeStorageHostID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ZonalComputeStorageHostID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ZonalComputeStorageHostID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalComputeStorageHostID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalComputeStorageHostRef(zone, host string) ZonalComputeStorageHostRef {
+func (m *ZonalComputeStorageHostID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalComputeStorageHostRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.host = result["host"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalComputeStorageHostRef(zone, host string) (ZonalComputeStorageHostRef, error) {
+	if host == "" {
+		return ZonalComputeStorageHostRef{}, reserrors.NewFieldIsEmptyError("host")
+	}
+	if zone == "" {
+		return ZonalComputeStorageHostRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalComputeStorageHostRef{
 		id: ZonalComputeStorageHostID{
 			host: host,
@@ -183,6 +215,14 @@ func NewZonalComputeStorageHostRef(zone, host string) ZonalComputeStorageHostRef
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalComputeStorageHostRef(zone, host string) ZonalComputeStorageHostRef {
+	m, err := NewZonalComputeStorageHostRef(zone, host)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ZonalComputeStorageHostRef) String() string {
 }
 
 func (m *ZonalComputeStorageHostRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalComputeStorageHostRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.host = result["host"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalComputeStorageHostRef) Clone() *ZonalComputeStorageHostRef {
@@ -290,7 +318,11 @@ func (m *ZonalComputeStorageHostRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ZonalComputeStorageHostRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalComputeStorageHostRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalComputeStorageHostRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.host = result["host"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalComputeStorageHostRef) isParsed() bool {
+	return m != nil && m.id.host != "" && m.id.zone != ""
 }
 
 func (m *ZonalComputeStorageHostRef) absolutePath() string {

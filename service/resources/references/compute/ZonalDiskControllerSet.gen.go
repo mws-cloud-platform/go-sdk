@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewZonalDiskControllerSetID(zone, project, virtualMachine, set string) ZonalDiskControllerSetID {
+func NewZonalDiskControllerSetID(zone, project, virtualMachine, set string) (ZonalDiskControllerSetID, error) {
+	if set == "" {
+		return ZonalDiskControllerSetID{}, reserrors.NewFieldIsEmptyError("set")
+	}
+	if virtualMachine == "" {
+		return ZonalDiskControllerSetID{}, reserrors.NewFieldIsEmptyError("virtualMachine")
+	}
+	if project == "" {
+		return ZonalDiskControllerSetID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalDiskControllerSetID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalDiskControllerSetID{
 		set:            set,
 		virtualMachine: virtualMachine,
@@ -74,6 +87,14 @@ func NewZonalDiskControllerSetID(zone, project, virtualMachine, set string) Zona
 		zone:           zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalDiskControllerSetID(zone, project, virtualMachine, set string) ZonalDiskControllerSetID {
+	m, err := NewZonalDiskControllerSetID(zone, project, virtualMachine, set)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseZonalDiskControllerSetID(path string) (ZonalDiskControllerSetID, error
 	m := ZonalDiskControllerSetID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalDiskControllerSetID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *ZonalDiskControllerSetID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalDiskControllerSetID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalDiskControllerSetRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.set = result["set"]
-	m.virtualMachine = result["virtualMachine"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalDiskControllerSetID) Clone() *ZonalDiskControllerSetID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *ZonalDiskControllerSetID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *ZonalDiskControllerSetID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalDiskControllerSetID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalDiskControllerSetRef(zone, project, virtualMachine, set string) ZonalDiskControllerSetRef {
+func (m *ZonalDiskControllerSetID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalDiskControllerSetRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.set = result["set"]
+	m.virtualMachine = result["virtualMachine"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalDiskControllerSetRef(zone, project, virtualMachine, set string) (ZonalDiskControllerSetRef, error) {
+	if set == "" {
+		return ZonalDiskControllerSetRef{}, reserrors.NewFieldIsEmptyError("set")
+	}
+	if virtualMachine == "" {
+		return ZonalDiskControllerSetRef{}, reserrors.NewFieldIsEmptyError("virtualMachine")
+	}
+	if project == "" {
+		return ZonalDiskControllerSetRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalDiskControllerSetRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalDiskControllerSetRef{
 		id: ZonalDiskControllerSetID{
 			set:            set,
@@ -225,6 +269,14 @@ func NewZonalDiskControllerSetRef(zone, project, virtualMachine, set string) Zon
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalDiskControllerSetRef(zone, project, virtualMachine, set string) ZonalDiskControllerSetRef {
+	m, err := NewZonalDiskControllerSetRef(zone, project, virtualMachine, set)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *ZonalDiskControllerSetRef) String() string {
 }
 
 func (m *ZonalDiskControllerSetRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalDiskControllerSetRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.set = result["set"]
-	m.id.virtualMachine = result["virtualMachine"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalDiskControllerSetRef) Clone() *ZonalDiskControllerSetRef {
@@ -348,7 +386,11 @@ func (m *ZonalDiskControllerSetRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *ZonalDiskControllerSetRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalDiskControllerSetRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalDiskControllerSetRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.set = result["set"]
+	m.id.virtualMachine = result["virtualMachine"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalDiskControllerSetRef) isParsed() bool {
+	return m != nil && m.id.set != "" && m.id.virtualMachine != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalDiskControllerSetRef) absolutePath() string {

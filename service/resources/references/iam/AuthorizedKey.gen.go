@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewAuthorizedKeyID(project, serviceAccount, authorizedKey string) AuthorizedKeyID {
+func NewAuthorizedKeyID(project, serviceAccount, authorizedKey string) (AuthorizedKeyID, error) {
+	if authorizedKey == "" {
+		return AuthorizedKeyID{}, reserrors.NewFieldIsEmptyError("authorizedKey")
+	}
+	if serviceAccount == "" {
+		return AuthorizedKeyID{}, reserrors.NewFieldIsEmptyError("serviceAccount")
+	}
+	if project == "" {
+		return AuthorizedKeyID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := AuthorizedKeyID{
 		authorizedKey:  authorizedKey,
 		serviceAccount: serviceAccount,
 		project:        project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustAuthorizedKeyID(project, serviceAccount, authorizedKey string) AuthorizedKeyID {
+	m, err := NewAuthorizedKeyID(project, serviceAccount, authorizedKey)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseAuthorizedKeyID(path string) (AuthorizedKeyID, error) {
 	m := AuthorizedKeyID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return AuthorizedKeyID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *AuthorizedKeyID) String() string {
 	return m.ID()
 }
 
-func (m *AuthorizedKeyID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, AuthorizedKeyRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.authorizedKey = result["authorizedKey"]
-	m.serviceAccount = result["serviceAccount"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *AuthorizedKeyID) Clone() *AuthorizedKeyID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *AuthorizedKeyID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *AuthorizedKeyID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *AuthorizedKeyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewAuthorizedKeyRef(project, serviceAccount, authorizedKey string) AuthorizedKeyRef {
+func (m *AuthorizedKeyID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, AuthorizedKeyRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.authorizedKey = result["authorizedKey"]
+	m.serviceAccount = result["serviceAccount"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewAuthorizedKeyRef(project, serviceAccount, authorizedKey string) (AuthorizedKeyRef, error) {
+	if authorizedKey == "" {
+		return AuthorizedKeyRef{}, reserrors.NewFieldIsEmptyError("authorizedKey")
+	}
+	if serviceAccount == "" {
+		return AuthorizedKeyRef{}, reserrors.NewFieldIsEmptyError("serviceAccount")
+	}
+	if project == "" {
+		return AuthorizedKeyRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := AuthorizedKeyRef{
 		id: AuthorizedKeyID{
 			authorizedKey:  authorizedKey,
@@ -204,6 +242,14 @@ func NewAuthorizedKeyRef(project, serviceAccount, authorizedKey string) Authoriz
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustAuthorizedKeyRef(project, serviceAccount, authorizedKey string) AuthorizedKeyRef {
+	m, err := NewAuthorizedKeyRef(project, serviceAccount, authorizedKey)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *AuthorizedKeyRef) String() string {
 }
 
 func (m *AuthorizedKeyRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, AuthorizedKeyRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.authorizedKey = result["authorizedKey"]
-	m.id.serviceAccount = result["serviceAccount"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *AuthorizedKeyRef) Clone() *AuthorizedKeyRef {
@@ -319,7 +352,11 @@ func (m *AuthorizedKeyRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *AuthorizedKeyRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *AuthorizedKeyRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, AuthorizedKeyRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.authorizedKey = result["authorizedKey"]
+	m.id.serviceAccount = result["serviceAccount"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *AuthorizedKeyRef) isParsed() bool {
+	return m != nil && m.id.authorizedKey != "" && m.id.serviceAccount != "" && m.id.project != ""
 }
 
 func (m *AuthorizedKeyRef) absolutePath() string {

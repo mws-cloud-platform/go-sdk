@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewServiceAgentSignatureKeyID(project, serviceAgentId, keyName string) ServiceAgentSignatureKeyID {
+func NewServiceAgentSignatureKeyID(project, serviceAgentId, keyName string) (ServiceAgentSignatureKeyID, error) {
+	if keyName == "" {
+		return ServiceAgentSignatureKeyID{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if serviceAgentId == "" {
+		return ServiceAgentSignatureKeyID{}, reserrors.NewFieldIsEmptyError("serviceAgentId")
+	}
+	if project == "" {
+		return ServiceAgentSignatureKeyID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAgentSignatureKeyID{
 		keyName:        keyName,
 		serviceAgentId: serviceAgentId,
 		project:        project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustServiceAgentSignatureKeyID(project, serviceAgentId, keyName string) ServiceAgentSignatureKeyID {
+	m, err := NewServiceAgentSignatureKeyID(project, serviceAgentId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseServiceAgentSignatureKeyID(path string) (ServiceAgentSignatureKeyID, e
 	m := ServiceAgentSignatureKeyID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ServiceAgentSignatureKeyID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ServiceAgentSignatureKeyID) String() string {
 	return m.ID()
 }
 
-func (m *ServiceAgentSignatureKeyID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ServiceAgentSignatureKeyRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.keyName = result["keyName"]
-	m.serviceAgentId = result["serviceAgentId"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ServiceAgentSignatureKeyID) Clone() *ServiceAgentSignatureKeyID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ServiceAgentSignatureKeyID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ServiceAgentSignatureKeyID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ServiceAgentSignatureKeyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewServiceAgentSignatureKeyRef(project, serviceAgentId, keyName string) ServiceAgentSignatureKeyRef {
+func (m *ServiceAgentSignatureKeyID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ServiceAgentSignatureKeyRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.keyName = result["keyName"]
+	m.serviceAgentId = result["serviceAgentId"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewServiceAgentSignatureKeyRef(project, serviceAgentId, keyName string) (ServiceAgentSignatureKeyRef, error) {
+	if keyName == "" {
+		return ServiceAgentSignatureKeyRef{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if serviceAgentId == "" {
+		return ServiceAgentSignatureKeyRef{}, reserrors.NewFieldIsEmptyError("serviceAgentId")
+	}
+	if project == "" {
+		return ServiceAgentSignatureKeyRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAgentSignatureKeyRef{
 		id: ServiceAgentSignatureKeyID{
 			keyName:        keyName,
@@ -204,6 +242,14 @@ func NewServiceAgentSignatureKeyRef(project, serviceAgentId, keyName string) Ser
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustServiceAgentSignatureKeyRef(project, serviceAgentId, keyName string) ServiceAgentSignatureKeyRef {
+	m, err := NewServiceAgentSignatureKeyRef(project, serviceAgentId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ServiceAgentSignatureKeyRef) String() string {
 }
 
 func (m *ServiceAgentSignatureKeyRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ServiceAgentSignatureKeyRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.keyName = result["keyName"]
-	m.id.serviceAgentId = result["serviceAgentId"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ServiceAgentSignatureKeyRef) Clone() *ServiceAgentSignatureKeyRef {
@@ -319,7 +352,11 @@ func (m *ServiceAgentSignatureKeyRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ServiceAgentSignatureKeyRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ServiceAgentSignatureKeyRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ServiceAgentSignatureKeyRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.keyName = result["keyName"]
+	m.id.serviceAgentId = result["serviceAgentId"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ServiceAgentSignatureKeyRef) isParsed() bool {
+	return m != nil && m.id.keyName != "" && m.id.serviceAgentId != "" && m.id.project != ""
 }
 
 func (m *ServiceAgentSignatureKeyRef) absolutePath() string {

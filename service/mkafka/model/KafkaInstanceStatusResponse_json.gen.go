@@ -33,7 +33,9 @@ func (m *KafkaInstanceStatusResponse) Encode(e *jx.Encoder) error {
 func (m *KafkaInstanceStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.Disk != nil {
 		e.FieldStart("disk")
-		m.Disk.Encode(e)
+		if err := m.Disk.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

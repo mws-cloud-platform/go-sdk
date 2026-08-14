@@ -44,16 +44,22 @@ func (m *AuthorizedKeyOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Metadata.IsNull() {
 			e.Null()
 		} else {
-			m.Metadata.Value.Encode(e)
+			if err := m.Metadata.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
 	e.FieldStart("spec")
-	m.Spec.Encode(e)
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Status != nil {
 		e.FieldStart("status")
-		m.Status.Encode(e)
+		if err := m.Status.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -167,7 +173,9 @@ func (m *AuthorizedKeyMetadataOptionalResponse) encodeFields(e *jx.Encoder) erro
 		e.FieldStart("usages")
 		e.ArrStart()
 		for _, elem := range m.Usages.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -183,7 +191,9 @@ func (m *AuthorizedKeyMetadataOptionalResponse) encodeFields(e *jx.Encoder) erro
 	}
 	if m.Id != nil {
 		e.FieldStart("id")
-		m.Id.Encode(e)
+		if err := m.Id.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

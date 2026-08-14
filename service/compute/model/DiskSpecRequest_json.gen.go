@@ -44,17 +44,23 @@ func (m *DiskSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Source != nil {
 		e.FieldStart("source")
-		m.Source.Encode(e)
+		if err := m.Source.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DiskType != nil {
 		e.FieldStart("diskType")
-		m.DiskType.Encode(e)
+		if err := m.DiskType.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Iops != nil {
 		e.FieldStart("iops")
-		m.Iops.Encode(e)
+		if err := m.Iops.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.BlockSize != nil {
@@ -64,12 +70,16 @@ func (m *DiskSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.OsType != nil {
 		e.FieldStart("osType")
-		m.OsType.Encode(e)
+		if err := m.OsType.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Encryption != nil {
 		e.FieldStart("encryption")
-		m.Encryption.Encode(e)
+		if err := m.Encryption.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -196,17 +206,23 @@ func (m *DiskSpecSourceRequest) Encode(e *jx.Encoder) error {
 func (m *DiskSpecSourceRequest) encodeFields(e *jx.Encoder) error {
 	if m.Image != nil {
 		e.FieldStart("image")
-		m.Image.Encode(e)
+		if err := m.Image.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Snapshot != nil {
 		e.FieldStart("snapshot")
-		m.Snapshot.Encode(e)
+		if err := m.Snapshot.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DiskBackup != nil {
 		e.FieldStart("diskBackup")
-		m.DiskBackup.Encode(e)
+		if err := m.DiskBackup.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

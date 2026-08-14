@@ -4,6 +4,7 @@ package rm
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewEnabledServiceID(project, service string) EnabledServiceID {
+func NewEnabledServiceID(project, service string) (EnabledServiceID, error) {
+	if service == "" {
+		return EnabledServiceID{}, reserrors.NewFieldIsEmptyError("service")
+	}
+	if project == "" {
+		return EnabledServiceID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := EnabledServiceID{
 		service: service,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustEnabledServiceID(project, service string) EnabledServiceID {
+	m, err := NewEnabledServiceID(project, service)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseEnabledServiceID(path string) (EnabledServiceID, error) {
 	m := EnabledServiceID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return EnabledServiceID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *EnabledServiceID) String() string {
 	return m.ID()
 }
 
-func (m *EnabledServiceID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, EnabledServiceRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.service = result["service"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *EnabledServiceID) Clone() *EnabledServiceID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *EnabledServiceID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *EnabledServiceID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *EnabledServiceID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewEnabledServiceRef(project, service string) EnabledServiceRef {
+func (m *EnabledServiceID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, EnabledServiceRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.service = result["service"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewEnabledServiceRef(project, service string) (EnabledServiceRef, error) {
+	if service == "" {
+		return EnabledServiceRef{}, reserrors.NewFieldIsEmptyError("service")
+	}
+	if project == "" {
+		return EnabledServiceRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := EnabledServiceRef{
 		id: EnabledServiceID{
 			service: service,
@@ -183,6 +215,14 @@ func NewEnabledServiceRef(project, service string) EnabledServiceRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustEnabledServiceRef(project, service string) EnabledServiceRef {
+	m, err := NewEnabledServiceRef(project, service)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *EnabledServiceRef) String() string {
 }
 
 func (m *EnabledServiceRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, EnabledServiceRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.service = result["service"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *EnabledServiceRef) Clone() *EnabledServiceRef {
@@ -290,7 +318,11 @@ func (m *EnabledServiceRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *EnabledServiceRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *EnabledServiceRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, EnabledServiceRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.service = result["service"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *EnabledServiceRef) isParsed() bool {
+	return m != nil && m.id.service != "" && m.id.project != ""
 }
 
 func (m *EnabledServiceRef) absolutePath() string {

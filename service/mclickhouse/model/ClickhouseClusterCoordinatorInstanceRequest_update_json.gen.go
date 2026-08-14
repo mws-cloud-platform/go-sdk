@@ -40,7 +40,9 @@ func (m *UpdateClickhouseClusterCoordinatorInstanceRequest) encodeFields(e *jx.E
 
 	if m.Zone.IsSet() {
 		e.FieldStart("zone")
-		m.Zone.Value.Encode(e)
+		if err := m.Zone.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

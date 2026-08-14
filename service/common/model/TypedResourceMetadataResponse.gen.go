@@ -3,11 +3,7 @@
 package model
 
 import (
-	"context"
-	"fmt"
 	"time"
-
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
@@ -21,7 +17,8 @@ type TypedResourceMetadataResponse struct {
 	UpdateTime *time.Time `json:"updateTime,omitempty" yaml:"updateTime,omitempty"`
 	// Время запроса на удаление ресурса (не фактическое время удаления).
 	DeleteTime *time.Time `json:"deleteTime,omitempty" yaml:"deleteTime,omitempty"`
-	PurgeTime  *time.Time `json:"purgeTime,omitempty" yaml:"purgeTime,omitempty"`
+	// Время удаления ресурса.
+	PurgeTime *time.Time `json:"purgeTime,omitempty" yaml:"purgeTime,omitempty"`
 	// Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены.
 	Usages []TypedUsageResponse `json:"usages,omitempty" yaml:"usages,omitempty"`
 	// Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса.
@@ -199,18 +196,4 @@ func (m *TypedResourceMetadataResponse) Clone() *TypedResourceMetadataResponse {
 		clone.Description = &cloneDescription
 	}
 	return &clone
-}
-
-func (m *TypedResourceMetadataResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	for index := range m.Usages {
-		if err := m.Usages[index].Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Usages"+fmt.Sprint("[", index, "]"), err)
-		}
-	}
-
-	return nil
 }

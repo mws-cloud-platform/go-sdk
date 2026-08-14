@@ -33,7 +33,9 @@ func (m *FirewallRuleDestinationRequest) Encode(e *jx.Encoder) error {
 func (m *FirewallRuleDestinationRequest) encodeFields(e *jx.Encoder) error {
 	if m.Spec != nil {
 		e.FieldStart("spec")
-		m.Spec.Encode(e)
+		if err := m.Spec.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

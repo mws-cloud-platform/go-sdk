@@ -3,9 +3,6 @@
 package model
 
 import (
-	"context"
-
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -97,18 +94,4 @@ func (m *NetworkOptionalResponse) Clone() *NetworkOptionalResponse {
 	clone.Spec = *m.Spec.Clone()
 	clone.Status = m.Status.Clone()
 	return &clone
-}
-
-func (m *NetworkOptionalResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		if err := m.Metadata.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Metadata", err)
-		}
-	}
-
-	return nil
 }

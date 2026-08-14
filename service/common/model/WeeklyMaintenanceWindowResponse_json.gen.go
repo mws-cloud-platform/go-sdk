@@ -36,7 +36,9 @@ func (m *WeeklyMaintenanceWindowResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("days")
 	e.ArrStart()
 	for _, elem := range m.Days {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 

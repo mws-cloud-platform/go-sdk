@@ -34,7 +34,9 @@ func (m *BatchEnabledServicesResponseResponse) Encode(e *jx.Encoder) error {
 func (m *BatchEnabledServicesResponseResponse) encodeFields(e *jx.Encoder) error {
 	if m.Status != nil {
 		e.FieldStart("status")
-		m.Status.Encode(e)
+		if err := m.Status.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -91,7 +93,9 @@ func (m *BatchEnabledServicesResponseStatusResponse) Encode(e *jx.Encoder) error
 
 func (m *BatchEnabledServicesResponseStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

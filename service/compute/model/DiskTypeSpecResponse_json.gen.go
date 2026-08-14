@@ -36,12 +36,16 @@ func (m *DiskTypeSpecResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("zones")
 	e.ArrStart()
 	for _, elem := range m.Zones {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
 	e.FieldStart("limits")
-	m.Limits.Encode(e)
+	if err := m.Limits.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -108,7 +112,9 @@ func (m *DiskTypeSpecLimitsResponse) Encode(e *jx.Encoder) error {
 
 func (m *DiskTypeSpecLimitsResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("iops")
-	m.Iops.Encode(e)
+	if err := m.Iops.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("minDiskSize")
 	m.MinDiskSize.Encode(e)
@@ -182,10 +188,14 @@ func (m *DiskTypeSpecLimitsIopsResponse) Encode(e *jx.Encoder) error {
 
 func (m *DiskTypeSpecLimitsIopsResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("base")
-	m.Base.Encode(e)
+	if err := m.Base.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("max")
-	m.Max.Encode(e)
+	if err := m.Max.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -35,7 +35,9 @@ func (m *HardwareStatusResponse) Encode(e *jx.Encoder) error {
 func (m *HardwareStatusResponse) encodeFields(e *jx.Encoder) error {
 	if m.Power != nil {
 		e.FieldStart("power")
-		m.Power.Encode(e)
+		if err := m.Power.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.GracefulShutdownTimeout != nil {

@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -47,12 +48,27 @@ var (
 )
 
 // Deprecated: Отказываемся в пользу DiskBackupId
-func NewSnapshotID(project, snapshot string) SnapshotID {
+func NewSnapshotID(project, snapshot string) (SnapshotID, error) {
+	if snapshot == "" {
+		return SnapshotID{}, reserrors.NewFieldIsEmptyError("snapshot")
+	}
+	if project == "" {
+		return SnapshotID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := SnapshotID{
 		snapshot: snapshot,
 		project:  project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+// Deprecated: Отказываемся в пользу DiskBackupId
+func NewMustSnapshotID(project, snapshot string) SnapshotID {
+	m, err := NewSnapshotID(project, snapshot)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -61,7 +77,7 @@ func ParseSnapshotID(path string) (SnapshotID, error) {
 	m := SnapshotID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return SnapshotID{}, err
 	}
 	return m, nil
@@ -116,22 +132,6 @@ func (m *SnapshotID) String() string {
 	return m.ID()
 }
 
-func (m *SnapshotID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, SnapshotRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.snapshot = result["snapshot"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *SnapshotID) Clone() *SnapshotID {
 	if m == nil {
 		return nil
@@ -155,7 +155,7 @@ func (m *SnapshotID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -176,11 +176,44 @@ func (m *SnapshotID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *SnapshotID) Parse(ctx context.Context) error {
+	return nil
+}
+
+func (m *SnapshotID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, SnapshotRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.snapshot = result["snapshot"]
+	m.project = result["project"]
+
 	return nil
 }
 
 // Deprecated: Отказываемся в пользу DiskBackupId
-func NewSnapshotRef(project, snapshot string) SnapshotRef {
+func NewSnapshotRef(project, snapshot string) (SnapshotRef, error) {
+	if snapshot == "" {
+		return SnapshotRef{}, reserrors.NewFieldIsEmptyError("snapshot")
+	}
+	if project == "" {
+		return SnapshotRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := SnapshotRef{
 		id: SnapshotID{
 			snapshot: snapshot,
@@ -188,6 +221,15 @@ func NewSnapshotRef(project, snapshot string) SnapshotRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+// Deprecated: Отказываемся в пользу DiskBackupId
+func NewMustSnapshotRef(project, snapshot string) SnapshotRef {
+	m, err := NewSnapshotRef(project, snapshot)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -262,19 +304,7 @@ func (m *SnapshotRef) String() string {
 }
 
 func (m *SnapshotRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, SnapshotRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.snapshot = result["snapshot"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *SnapshotRef) Clone() *SnapshotRef {
@@ -298,7 +328,11 @@ func (m *SnapshotRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -317,7 +351,36 @@ func (m *SnapshotRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *SnapshotRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, SnapshotRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.snapshot = result["snapshot"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *SnapshotRef) isParsed() bool {
+	return m != nil && m.id.snapshot != "" && m.id.project != ""
 }
 
 func (m *SnapshotRef) absolutePath() string {

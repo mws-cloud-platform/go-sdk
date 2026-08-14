@@ -4,6 +4,7 @@ package org
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewPolicyID(organization, policy string) PolicyID {
+func NewPolicyID(organization, policy string) (PolicyID, error) {
+	if policy == "" {
+		return PolicyID{}, reserrors.NewFieldIsEmptyError("policy")
+	}
+	if organization == "" {
+		return PolicyID{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := PolicyID{
 		policy:       policy,
 		organization: organization,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustPolicyID(organization, policy string) PolicyID {
+	m, err := NewPolicyID(organization, policy)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParsePolicyID(path string) (PolicyID, error) {
 	m := PolicyID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return PolicyID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *PolicyID) String() string {
 	return m.ID()
 }
 
-func (m *PolicyID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, PolicyRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.policy = result["policy"]
-	m.organization = result["organization"]
-
-	return nil
-}
-
 func (m *PolicyID) Clone() *PolicyID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *PolicyID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *PolicyID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *PolicyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewPolicyRef(organization, policy string) PolicyRef {
+func (m *PolicyID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, PolicyRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.policy = result["policy"]
+	m.organization = result["organization"]
+
+	return nil
+}
+
+func NewPolicyRef(organization, policy string) (PolicyRef, error) {
+	if policy == "" {
+		return PolicyRef{}, reserrors.NewFieldIsEmptyError("policy")
+	}
+	if organization == "" {
+		return PolicyRef{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := PolicyRef{
 		id: PolicyID{
 			policy:       policy,
@@ -183,6 +215,14 @@ func NewPolicyRef(organization, policy string) PolicyRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustPolicyRef(organization, policy string) PolicyRef {
+	m, err := NewPolicyRef(organization, policy)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *PolicyRef) String() string {
 }
 
 func (m *PolicyRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, PolicyRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.policy = result["policy"]
-	m.id.organization = result["organization"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *PolicyRef) Clone() *PolicyRef {
@@ -290,7 +318,11 @@ func (m *PolicyRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *PolicyRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *PolicyRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, PolicyRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.policy = result["policy"]
+	m.id.organization = result["organization"]
+
 	return nil
+}
+
+func (m *PolicyRef) isParsed() bool {
+	return m != nil && m.id.policy != "" && m.id.organization != ""
 }
 
 func (m *PolicyRef) absolutePath() string {

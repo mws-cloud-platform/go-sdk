@@ -34,7 +34,9 @@ func (m *CertificateRoleBindingListOptionalResponse) encodeFields(e *jx.Encoder)
 	e.FieldStart("items")
 	e.ArrStart()
 	for _, elem := range m.Items {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 	return nil

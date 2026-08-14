@@ -8,6 +8,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func TestDiffPrimitive(t *testing.T) {
@@ -976,4 +978,36 @@ func TestGetChangesMapObject(t *testing.T) {
 			require.Equal(t, v.hasChanges, hasChanges)
 		})
 	}
+}
+
+func TestWrapUnwrapSliceSensitive(t *testing.T) {
+	t.Run("nil", func(t *testing.T) {
+		require.Nil(t, WrapSliceSensitive[string](nil))
+		require.Nil(t, UnwrapSliceSensitive[string](nil))
+	})
+
+	t.Run("roundtrip", func(t *testing.T) {
+		in := []string{"a", "b"}
+		wrapped := WrapSliceSensitive(in)
+		require.Equal(t, []sensitive.Sensitive[string]{
+			sensitive.New("a"), sensitive.New("b"),
+		}, wrapped)
+		require.Equal(t, in, UnwrapSliceSensitive(wrapped))
+	})
+}
+
+func TestWrapUnwrapMapSensitive(t *testing.T) {
+	t.Run("nil", func(t *testing.T) {
+		require.Nil(t, WrapMapSensitive[string](nil))
+		require.Nil(t, UnwrapMapSensitive[string](nil))
+	})
+
+	t.Run("roundtrip", func(t *testing.T) {
+		in := map[string]string{"k1": "v1", "k2": "v2"}
+		wrapped := WrapMapSensitive(in)
+		require.Equal(t, map[string]sensitive.Sensitive[string]{
+			"k1": sensitive.New("v1"), "k2": sensitive.New("v2"),
+		}, wrapped)
+		require.Equal(t, in, UnwrapMapSensitive(wrapped))
+	})
 }

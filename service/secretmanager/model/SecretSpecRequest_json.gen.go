@@ -40,12 +40,16 @@ func (m *SecretSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.CurrentSecretVersion != nil {
 		e.FieldStart("currentSecretVersion")
-		m.CurrentSecretVersion.Encode(e)
+		if err := m.CurrentSecretVersion.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Encryption != nil {
 		e.FieldStart("encryption")
-		m.Encryption.Encode(e)
+		if err := m.Encryption.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

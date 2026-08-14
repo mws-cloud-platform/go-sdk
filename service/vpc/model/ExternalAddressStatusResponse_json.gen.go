@@ -36,7 +36,9 @@ func (m *ExternalAddressStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *ExternalAddressStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.IpAddress != nil {
 		e.FieldStart("ipAddress")
 		m.IpAddress.Encode(e)
@@ -49,7 +51,9 @@ func (m *ExternalAddressStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.Region != nil {
 		e.FieldStart("region")
-		m.Region.Encode(e)
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -90,7 +94,7 @@ func (m *ExternalAddressStatusResponse) Decode(d *jx.Decoder) error {
 			m.Active = &v
 			return nil
 		case "region":
-			var v rm.RegionRef
+			var v rm.RegionID
 			if err := v.Decode(d); err != nil {
 				return err
 			}

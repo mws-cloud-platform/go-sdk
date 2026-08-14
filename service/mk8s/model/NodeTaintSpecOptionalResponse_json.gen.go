@@ -39,7 +39,9 @@ func (m *NodeTaintSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.Str(m.Value)
 
 	e.FieldStart("effect")
-	m.Effect.Encode(e)
+	if err := m.Effect.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

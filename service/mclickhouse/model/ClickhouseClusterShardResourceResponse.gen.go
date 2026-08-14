@@ -163,10 +163,6 @@ func (m *ClickhouseClusterShardResourceResponse) Parse(ctx context.Context) erro
 		return nil
 	}
 
-	if err := m.Id.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Id", err)
-	}
-
 	if err := m.Resources.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Resources", err)
 	}

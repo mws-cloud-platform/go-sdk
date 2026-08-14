@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/compute/model"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestAddressSpecOptionalResponseMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestAddressSpecOptionalResponseMarshalling(t *testing.T) {
 
 func initAddressSpecOptionalResponse() model.AddressSpecOptionalResponse {
 	var v model.AddressSpecOptionalResponse
+	v.Subnet = vpc.NewMustSubnetRef("projectID", "networkID", "subnetID")
 	return v
 }

@@ -32,14 +32,20 @@ func (m *EgressNatSpecRequest) Encode(e *jx.Encoder) error {
 
 func (m *EgressNatSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("internal")
-	m.Internal.Encode(e)
+	if err := m.Internal.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("external")
-	m.External.Encode(e)
+	if err := m.External.Encode(e); err != nil {
+		return err
+	}
 
 	if m.PortAllocation != nil {
 		e.FieldStart("portAllocation")
-		m.PortAllocation.Encode(e)
+		if err := m.PortAllocation.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

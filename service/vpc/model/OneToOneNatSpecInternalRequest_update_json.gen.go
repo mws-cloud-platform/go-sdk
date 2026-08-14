@@ -33,7 +33,9 @@ func (m *UpdateOneToOneNatSpecInternalRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateOneToOneNatSpecInternalRequest) encodeFields(e *jx.Encoder) error {
 	if m.Address.IsSet() {
 		e.FieldStart("address")
-		m.Address.Value.Encode(e)
+		if err := m.Address.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

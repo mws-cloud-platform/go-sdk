@@ -38,19 +38,29 @@ func (m *ModelSpecResponse) encodeFields(e *jx.Encoder) error {
 	}
 
 	e.FieldStart("inputModalities")
-	m.InputModalities.Encode(e)
+	if err := m.InputModalities.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("outputModalities")
-	m.OutputModalities.Encode(e)
+	if err := m.OutputModalities.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("modalities")
-	m.Modalities.Encode(e)
+	if err := m.Modalities.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("capabilities")
-	m.Capabilities.Encode(e)
+	if err := m.Capabilities.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("deprecation")
-	m.Deprecation.Encode(e)
+	if err := m.Deprecation.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Size != nil {
 		e.FieldStart("size")

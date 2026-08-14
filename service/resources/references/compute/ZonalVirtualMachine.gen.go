@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewZonalVirtualMachineID(zone, project, virtualMachine string) ZonalVirtualMachineID {
+func NewZonalVirtualMachineID(zone, project, virtualMachine string) (ZonalVirtualMachineID, error) {
+	if virtualMachine == "" {
+		return ZonalVirtualMachineID{}, reserrors.NewFieldIsEmptyError("virtualMachine")
+	}
+	if project == "" {
+		return ZonalVirtualMachineID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalVirtualMachineID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalVirtualMachineID{
 		virtualMachine: virtualMachine,
 		project:        project,
 		zone:           zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalVirtualMachineID(zone, project, virtualMachine string) ZonalVirtualMachineID {
+	m, err := NewZonalVirtualMachineID(zone, project, virtualMachine)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseZonalVirtualMachineID(path string) (ZonalVirtualMachineID, error) {
 	m := ZonalVirtualMachineID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalVirtualMachineID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ZonalVirtualMachineID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalVirtualMachineID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalVirtualMachineRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.virtualMachine = result["virtualMachine"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalVirtualMachineID) Clone() *ZonalVirtualMachineID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ZonalVirtualMachineID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ZonalVirtualMachineID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalVirtualMachineID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalVirtualMachineRef(zone, project, virtualMachine string) ZonalVirtualMachineRef {
+func (m *ZonalVirtualMachineID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalVirtualMachineRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.virtualMachine = result["virtualMachine"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalVirtualMachineRef(zone, project, virtualMachine string) (ZonalVirtualMachineRef, error) {
+	if virtualMachine == "" {
+		return ZonalVirtualMachineRef{}, reserrors.NewFieldIsEmptyError("virtualMachine")
+	}
+	if project == "" {
+		return ZonalVirtualMachineRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalVirtualMachineRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalVirtualMachineRef{
 		id: ZonalVirtualMachineID{
 			virtualMachine: virtualMachine,
@@ -204,6 +242,14 @@ func NewZonalVirtualMachineRef(zone, project, virtualMachine string) ZonalVirtua
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalVirtualMachineRef(zone, project, virtualMachine string) ZonalVirtualMachineRef {
+	m, err := NewZonalVirtualMachineRef(zone, project, virtualMachine)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ZonalVirtualMachineRef) String() string {
 }
 
 func (m *ZonalVirtualMachineRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalVirtualMachineRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.virtualMachine = result["virtualMachine"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalVirtualMachineRef) Clone() *ZonalVirtualMachineRef {
@@ -319,7 +352,11 @@ func (m *ZonalVirtualMachineRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ZonalVirtualMachineRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalVirtualMachineRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalVirtualMachineRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.virtualMachine = result["virtualMachine"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalVirtualMachineRef) isParsed() bool {
+	return m != nil && m.id.virtualMachine != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalVirtualMachineRef) absolutePath() string {

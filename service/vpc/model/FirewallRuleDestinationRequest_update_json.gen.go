@@ -36,7 +36,9 @@ func (m *UpdateFirewallRuleDestinationRequest) encodeFields(e *jx.Encoder) error
 		if m.Spec.IsNull() {
 			e.Null()
 		} else {
-			m.Spec.Value.Encode(e)
+			if err := m.Spec.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

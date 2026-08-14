@@ -37,7 +37,9 @@ func (m *SnapshotSourceOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Disk.IsNull() {
 			e.Null()
 		} else {
-			m.Disk.Value.Encode(e)
+			if err := m.Disk.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -96,7 +98,9 @@ func (m *SnapshotSourceDiskOptionalResponse) Encode(e *jx.Encoder) error {
 
 func (m *SnapshotSourceDiskOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("id")
-	m.Id.Encode(e)
+	if err := m.Id.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

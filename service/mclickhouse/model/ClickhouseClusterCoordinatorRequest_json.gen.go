@@ -33,16 +33,22 @@ func (m *ClickhouseClusterCoordinatorRequest) Encode(e *jx.Encoder) error {
 func (m *ClickhouseClusterCoordinatorRequest) encodeFields(e *jx.Encoder) error {
 	if m.Type != nil {
 		e.FieldStart("type")
-		m.Type.Encode(e)
+		if err := m.Type.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	e.FieldStart("resources")
-	m.Resources.Encode(e)
+	if err := m.Resources.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("instances")
 	e.ArrStart()
 	for _, elem := range m.Instances {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 	return nil

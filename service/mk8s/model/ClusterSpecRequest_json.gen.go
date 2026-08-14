@@ -33,17 +33,25 @@ func (m *ClusterSpecRequest) Encode(e *jx.Encoder) error {
 
 func (m *ClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("availability")
-	m.Availability.Encode(e)
+	if err := m.Availability.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("network")
-	m.Network.Encode(e)
+	if err := m.Network.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("versionControl")
-	m.VersionControl.Encode(e)
+	if err := m.VersionControl.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Plugins != nil {
 		e.FieldStart("plugins")
-		m.Plugins.Encode(e)
+		if err := m.Plugins.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -137,11 +145,15 @@ func (m *ClusterSpecNetworkRequest) Encode(e *jx.Encoder) error {
 
 func (m *ClusterSpecNetworkRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("primaryEndpoint")
-	m.PrimaryEndpoint.Encode(e)
+	if err := m.PrimaryEndpoint.Encode(e); err != nil {
+		return err
+	}
 
 	if m.PublicEndpoint != nil {
 		e.FieldStart("publicEndpoint")
-		m.PublicEndpoint.Encode(e)
+		if err := m.PublicEndpoint.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	e.FieldStart("podsCidr")

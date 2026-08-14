@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewZonalCephClusterID(zone, cluster string) ZonalCephClusterID {
+func NewZonalCephClusterID(zone, cluster string) (ZonalCephClusterID, error) {
+	if cluster == "" {
+		return ZonalCephClusterID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if zone == "" {
+		return ZonalCephClusterID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalCephClusterID{
 		cluster: cluster,
 		zone:    zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalCephClusterID(zone, cluster string) ZonalCephClusterID {
+	m, err := NewZonalCephClusterID(zone, cluster)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseZonalCephClusterID(path string) (ZonalCephClusterID, error) {
 	m := ZonalCephClusterID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalCephClusterID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ZonalCephClusterID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalCephClusterID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalCephClusterRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.cluster = result["cluster"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalCephClusterID) Clone() *ZonalCephClusterID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ZonalCephClusterID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ZonalCephClusterID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalCephClusterID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalCephClusterRef(zone, cluster string) ZonalCephClusterRef {
+func (m *ZonalCephClusterID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalCephClusterRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.cluster = result["cluster"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalCephClusterRef(zone, cluster string) (ZonalCephClusterRef, error) {
+	if cluster == "" {
+		return ZonalCephClusterRef{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if zone == "" {
+		return ZonalCephClusterRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalCephClusterRef{
 		id: ZonalCephClusterID{
 			cluster: cluster,
@@ -183,6 +215,14 @@ func NewZonalCephClusterRef(zone, cluster string) ZonalCephClusterRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalCephClusterRef(zone, cluster string) ZonalCephClusterRef {
+	m, err := NewZonalCephClusterRef(zone, cluster)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ZonalCephClusterRef) String() string {
 }
 
 func (m *ZonalCephClusterRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalCephClusterRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.cluster = result["cluster"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalCephClusterRef) Clone() *ZonalCephClusterRef {
@@ -290,7 +318,11 @@ func (m *ZonalCephClusterRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ZonalCephClusterRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalCephClusterRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalCephClusterRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.cluster = result["cluster"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalCephClusterRef) isParsed() bool {
+	return m != nil && m.id.cluster != "" && m.id.zone != ""
 }
 
 func (m *ZonalCephClusterRef) absolutePath() string {

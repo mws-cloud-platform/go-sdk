@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewAddressGroupID(project, network, addressGroup string) AddressGroupID {
+func NewAddressGroupID(project, network, addressGroup string) (AddressGroupID, error) {
+	if addressGroup == "" {
+		return AddressGroupID{}, reserrors.NewFieldIsEmptyError("addressGroup")
+	}
+	if network == "" {
+		return AddressGroupID{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return AddressGroupID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := AddressGroupID{
 		addressGroup: addressGroup,
 		network:      network,
 		project:      project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustAddressGroupID(project, network, addressGroup string) AddressGroupID {
+	m, err := NewAddressGroupID(project, network, addressGroup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseAddressGroupID(path string) (AddressGroupID, error) {
 	m := AddressGroupID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return AddressGroupID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *AddressGroupID) String() string {
 	return m.ID()
 }
 
-func (m *AddressGroupID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, AddressGroupRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.addressGroup = result["addressGroup"]
-	m.network = result["network"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *AddressGroupID) Clone() *AddressGroupID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *AddressGroupID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *AddressGroupID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *AddressGroupID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewAddressGroupRef(project, network, addressGroup string) AddressGroupRef {
+func (m *AddressGroupID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, AddressGroupRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.addressGroup = result["addressGroup"]
+	m.network = result["network"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewAddressGroupRef(project, network, addressGroup string) (AddressGroupRef, error) {
+	if addressGroup == "" {
+		return AddressGroupRef{}, reserrors.NewFieldIsEmptyError("addressGroup")
+	}
+	if network == "" {
+		return AddressGroupRef{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return AddressGroupRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := AddressGroupRef{
 		id: AddressGroupID{
 			addressGroup: addressGroup,
@@ -204,6 +242,14 @@ func NewAddressGroupRef(project, network, addressGroup string) AddressGroupRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustAddressGroupRef(project, network, addressGroup string) AddressGroupRef {
+	m, err := NewAddressGroupRef(project, network, addressGroup)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *AddressGroupRef) String() string {
 }
 
 func (m *AddressGroupRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, AddressGroupRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.addressGroup = result["addressGroup"]
-	m.id.network = result["network"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *AddressGroupRef) Clone() *AddressGroupRef {
@@ -319,7 +352,11 @@ func (m *AddressGroupRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *AddressGroupRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *AddressGroupRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, AddressGroupRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.addressGroup = result["addressGroup"]
+	m.id.network = result["network"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *AddressGroupRef) isParsed() bool {
+	return m != nil && m.id.addressGroup != "" && m.id.network != "" && m.id.project != ""
 }
 
 func (m *AddressGroupRef) absolutePath() string {

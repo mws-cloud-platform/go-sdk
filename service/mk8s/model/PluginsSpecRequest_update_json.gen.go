@@ -38,7 +38,9 @@ func (m *UpdatePluginsSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Cni.IsNull() {
 			e.Null()
 		} else {
-			m.Cni.Value.Encode(e)
+			if err := m.Cni.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

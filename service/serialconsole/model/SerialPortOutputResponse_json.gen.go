@@ -33,7 +33,9 @@ func (m *SerialPortOutputResponse) Encode(e *jx.Encoder) error {
 
 func (m *SerialPortOutputResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("type")
-	m.Type.Encode(e)
+	if err := m.Type.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Project != nil {
 		e.FieldStart("project")

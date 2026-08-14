@@ -4,6 +4,7 @@ package mkafka
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewKafkaVmComponentsID(project, cluster, vmComponent string) KafkaVmComponentsID {
+func NewKafkaVmComponentsID(project, cluster, vmComponent string) (KafkaVmComponentsID, error) {
+	if vmComponent == "" {
+		return KafkaVmComponentsID{}, reserrors.NewFieldIsEmptyError("vmComponent")
+	}
+	if cluster == "" {
+		return KafkaVmComponentsID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return KafkaVmComponentsID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := KafkaVmComponentsID{
 		vmComponent: vmComponent,
 		cluster:     cluster,
 		project:     project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustKafkaVmComponentsID(project, cluster, vmComponent string) KafkaVmComponentsID {
+	m, err := NewKafkaVmComponentsID(project, cluster, vmComponent)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseKafkaVmComponentsID(path string) (KafkaVmComponentsID, error) {
 	m := KafkaVmComponentsID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return KafkaVmComponentsID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *KafkaVmComponentsID) String() string {
 	return m.ID()
 }
 
-func (m *KafkaVmComponentsID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, KafkaVmComponentsRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.vmComponent = result["vmComponent"]
-	m.cluster = result["cluster"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *KafkaVmComponentsID) Clone() *KafkaVmComponentsID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *KafkaVmComponentsID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *KafkaVmComponentsID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *KafkaVmComponentsID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewKafkaVmComponentsRef(project, cluster, vmComponent string) KafkaVmComponentsRef {
+func (m *KafkaVmComponentsID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, KafkaVmComponentsRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.vmComponent = result["vmComponent"]
+	m.cluster = result["cluster"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewKafkaVmComponentsRef(project, cluster, vmComponent string) (KafkaVmComponentsRef, error) {
+	if vmComponent == "" {
+		return KafkaVmComponentsRef{}, reserrors.NewFieldIsEmptyError("vmComponent")
+	}
+	if cluster == "" {
+		return KafkaVmComponentsRef{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return KafkaVmComponentsRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := KafkaVmComponentsRef{
 		id: KafkaVmComponentsID{
 			vmComponent: vmComponent,
@@ -204,6 +242,14 @@ func NewKafkaVmComponentsRef(project, cluster, vmComponent string) KafkaVmCompon
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustKafkaVmComponentsRef(project, cluster, vmComponent string) KafkaVmComponentsRef {
+	m, err := NewKafkaVmComponentsRef(project, cluster, vmComponent)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *KafkaVmComponentsRef) String() string {
 }
 
 func (m *KafkaVmComponentsRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, KafkaVmComponentsRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.vmComponent = result["vmComponent"]
-	m.id.cluster = result["cluster"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *KafkaVmComponentsRef) Clone() *KafkaVmComponentsRef {
@@ -319,7 +352,11 @@ func (m *KafkaVmComponentsRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *KafkaVmComponentsRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *KafkaVmComponentsRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, KafkaVmComponentsRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.vmComponent = result["vmComponent"]
+	m.id.cluster = result["cluster"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *KafkaVmComponentsRef) isParsed() bool {
+	return m != nil && m.id.vmComponent != "" && m.id.cluster != "" && m.id.project != ""
 }
 
 func (m *KafkaVmComponentsRef) absolutePath() string {

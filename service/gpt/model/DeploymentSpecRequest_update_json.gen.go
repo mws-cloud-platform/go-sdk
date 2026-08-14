@@ -40,7 +40,9 @@ func (m *UpdateDeploymentSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Model.IsSet() {
 		e.FieldStart("model")
-		m.Model.Value.Encode(e)
+		if err := m.Model.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

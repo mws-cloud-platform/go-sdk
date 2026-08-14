@@ -3,13 +3,10 @@
 package model
 
 import (
-	"context"
-
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -60,20 +57,6 @@ func (m *ServiceAccountRequest) WithChanges(u UpdateServiceAccountRequest) Servi
 func (m UpdateServiceAccountRequest) HasChanges() bool {
 	return m.Metadata.Set ||
 		m.Spec.Set
-}
-
-func (m *UpdateServiceAccountRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		if err := m.Metadata.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Metadata", err)
-		}
-	}
-
-	return nil
 }
 
 func (m *ServiceAccountRequest) diffMetadata(src *ServiceAccountRequest) optional.OptionalNil[UpdateServiceAccountMetadataRequest] {
@@ -181,17 +164,6 @@ func (m UpdateServiceAccountMetadataRequest) HasChanges() bool {
 // SetName is used in the Diff function for NamedArray
 func (m *UpdateServiceAccountMetadataRequest) SetName(name string) {
 	m.Name = optional.NewOptional(name)
-}
-
-func (m *UpdateServiceAccountMetadataRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.UpdateTypedResourceMetadataRequest.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("UpdateTypedResourceMetadataRequest", err)
-	}
-	return nil
 }
 
 func (m *ServiceAccountMetadataRequest) diffDisplayName(src *ServiceAccountMetadataRequest) optional.Optional[string] {

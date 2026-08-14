@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,11 +57,22 @@ var (
 	}
 )
 
-func NewFlagMvalkeyPreviewID(project string) FlagMvalkeyPreviewID {
+func NewFlagMvalkeyPreviewID(project string) (FlagMvalkeyPreviewID, error) {
+	if project == "" {
+		return FlagMvalkeyPreviewID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FlagMvalkeyPreviewID{
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustFlagMvalkeyPreviewID(project string) FlagMvalkeyPreviewID {
+	m, err := NewFlagMvalkeyPreviewID(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -68,7 +80,7 @@ func ParseFlagMvalkeyPreviewID(path string) (FlagMvalkeyPreviewID, error) {
 	m := FlagMvalkeyPreviewID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return FlagMvalkeyPreviewID{}, err
 	}
 	return m, nil
@@ -113,21 +125,6 @@ func (m *FlagMvalkeyPreviewID) String() string {
 	return m.ID()
 }
 
-func (m *FlagMvalkeyPreviewID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, FlagMvalkeyPreviewRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *FlagMvalkeyPreviewID) Clone() *FlagMvalkeyPreviewID {
 	if m == nil {
 		return nil
@@ -151,7 +148,7 @@ func (m *FlagMvalkeyPreviewID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,16 +169,53 @@ func (m *FlagMvalkeyPreviewID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *FlagMvalkeyPreviewID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewFlagMvalkeyPreviewRef(project string) FlagMvalkeyPreviewRef {
+func (m *FlagMvalkeyPreviewID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, FlagMvalkeyPreviewRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewFlagMvalkeyPreviewRef(project string) (FlagMvalkeyPreviewRef, error) {
+	if project == "" {
+		return FlagMvalkeyPreviewRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FlagMvalkeyPreviewRef{
 		id: FlagMvalkeyPreviewID{
 			project: project,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustFlagMvalkeyPreviewRef(project string) FlagMvalkeyPreviewRef {
+	m, err := NewFlagMvalkeyPreviewRef(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -246,18 +280,7 @@ func (m *FlagMvalkeyPreviewRef) String() string {
 }
 
 func (m *FlagMvalkeyPreviewRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, FlagMvalkeyPreviewRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *FlagMvalkeyPreviewRef) Clone() *FlagMvalkeyPreviewRef {
@@ -281,7 +304,11 @@ func (m *FlagMvalkeyPreviewRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -300,7 +327,35 @@ func (m *FlagMvalkeyPreviewRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *FlagMvalkeyPreviewRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, FlagMvalkeyPreviewRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *FlagMvalkeyPreviewRef) isParsed() bool {
+	return m != nil && m.id.project != ""
 }
 
 func (m *FlagMvalkeyPreviewRef) absolutePath() string {

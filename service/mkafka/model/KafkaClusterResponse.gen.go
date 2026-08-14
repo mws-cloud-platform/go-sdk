@@ -111,16 +111,8 @@ func (m *KafkaClusterResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if err := m.Metadata.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Metadata", err)
-	}
-
 	if err := m.Spec.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Spec", err)
-	}
-
-	if err := m.Status.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Status", err)
 	}
 
 	return nil
@@ -270,19 +262,4 @@ func (m *KafkaClusterMetadataResponse) Clone() *KafkaClusterMetadataResponse {
 	clone.Id = m.Id.Clone()
 
 	return &clone
-}
-
-func (m *KafkaClusterMetadataResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.TypedResourceMetadataResponse.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("TypedResourceMetadataResponse", err)
-	}
-	if err := m.Id.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Id", err)
-	}
-
-	return nil
 }

@@ -34,7 +34,9 @@ func (m *AuthorizedKeyStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *AuthorizedKeyStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.PrivateKey != nil {
 		e.FieldStart("privateKey")
 		e.Str(*m.PrivateKey)

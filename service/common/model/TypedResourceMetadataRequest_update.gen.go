@@ -3,14 +3,10 @@
 package model
 
 import (
-	"context"
-	"fmt"
-
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -91,22 +87,6 @@ func (m UpdateTypedResourceMetadataRequest) HasChanges() bool {
 		m.Usages.Set ||
 		m.Etag.Set ||
 		m.Description.Set
-}
-
-func (m *UpdateTypedResourceMetadataRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Usages.IsSet() {
-		for index := range m.Usages.Value {
-			if err := m.Usages.Value[index].Parse(ctx); err != nil {
-				return reserrors.NewPathAccumulatorError("Usages"+fmt.Sprint("[", index, "]"), err)
-			}
-		}
-	}
-
-	return nil
 }
 
 func (m *TypedResourceMetadataRequest) diffDisplayName(src *TypedResourceMetadataRequest) optional.Optional[string] {

@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/compute/model"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestVirtualMachineOneToOneNatStatusResponseMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestVirtualMachineOneToOneNatStatusResponseMarshalling(t *testing.T) {
 
 func initVirtualMachineOneToOneNatStatusResponse() model.VirtualMachineOneToOneNatStatusResponse {
 	var v model.VirtualMachineOneToOneNatStatusResponse
+	v.Ref = vpc.NewMustOneToOneNatRef("projectID", "networkID", "oneToOneNatID")
 	return v
 }

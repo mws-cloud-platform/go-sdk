@@ -269,9 +269,6 @@ func (m *RegionMetadataResponse) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if err := m.TypedResourceMetadataResponse.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("TypedResourceMetadataResponse", err)
-	}
 	if err := m.Id.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("Id", err)
 	}

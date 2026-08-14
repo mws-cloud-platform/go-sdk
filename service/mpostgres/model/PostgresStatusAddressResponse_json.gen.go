@@ -35,12 +35,16 @@ func (m *PostgresStatusAddressResponse) Encode(e *jx.Encoder) error {
 func (m *PostgresStatusAddressResponse) encodeFields(e *jx.Encoder) error {
 	if m.Address != nil {
 		e.FieldStart("address")
-		m.Address.Encode(e)
+		if err := m.Address.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Subnet != nil {
 		e.FieldStart("subnet")
-		m.Subnet.Encode(e)
+		if err := m.Subnet.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Ip != nil {
@@ -50,7 +54,9 @@ func (m *PostgresStatusAddressResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.External != nil {
 		e.FieldStart("external")
-		m.External.Encode(e)
+		if err := m.External.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

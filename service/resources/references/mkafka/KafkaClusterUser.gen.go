@@ -4,6 +4,7 @@ package mkafka
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewKafkaClusterUserID(project, cluster, user string) KafkaClusterUserID {
+func NewKafkaClusterUserID(project, cluster, user string) (KafkaClusterUserID, error) {
+	if user == "" {
+		return KafkaClusterUserID{}, reserrors.NewFieldIsEmptyError("user")
+	}
+	if cluster == "" {
+		return KafkaClusterUserID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return KafkaClusterUserID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := KafkaClusterUserID{
 		user:    user,
 		cluster: cluster,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustKafkaClusterUserID(project, cluster, user string) KafkaClusterUserID {
+	m, err := NewKafkaClusterUserID(project, cluster, user)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseKafkaClusterUserID(path string) (KafkaClusterUserID, error) {
 	m := KafkaClusterUserID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return KafkaClusterUserID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *KafkaClusterUserID) String() string {
 	return m.ID()
 }
 
-func (m *KafkaClusterUserID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, KafkaClusterUserRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.user = result["user"]
-	m.cluster = result["cluster"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *KafkaClusterUserID) Clone() *KafkaClusterUserID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *KafkaClusterUserID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *KafkaClusterUserID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *KafkaClusterUserID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewKafkaClusterUserRef(project, cluster, user string) KafkaClusterUserRef {
+func (m *KafkaClusterUserID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, KafkaClusterUserRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.user = result["user"]
+	m.cluster = result["cluster"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewKafkaClusterUserRef(project, cluster, user string) (KafkaClusterUserRef, error) {
+	if user == "" {
+		return KafkaClusterUserRef{}, reserrors.NewFieldIsEmptyError("user")
+	}
+	if cluster == "" {
+		return KafkaClusterUserRef{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return KafkaClusterUserRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := KafkaClusterUserRef{
 		id: KafkaClusterUserID{
 			user:    user,
@@ -204,6 +242,14 @@ func NewKafkaClusterUserRef(project, cluster, user string) KafkaClusterUserRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustKafkaClusterUserRef(project, cluster, user string) KafkaClusterUserRef {
+	m, err := NewKafkaClusterUserRef(project, cluster, user)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *KafkaClusterUserRef) String() string {
 }
 
 func (m *KafkaClusterUserRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, KafkaClusterUserRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.user = result["user"]
-	m.id.cluster = result["cluster"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *KafkaClusterUserRef) Clone() *KafkaClusterUserRef {
@@ -319,7 +352,11 @@ func (m *KafkaClusterUserRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *KafkaClusterUserRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *KafkaClusterUserRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, KafkaClusterUserRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.user = result["user"]
+	m.id.cluster = result["cluster"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *KafkaClusterUserRef) isParsed() bool {
+	return m != nil && m.id.user != "" && m.id.cluster != "" && m.id.project != ""
 }
 
 func (m *KafkaClusterUserRef) absolutePath() string {

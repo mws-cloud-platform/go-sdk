@@ -34,7 +34,9 @@ func (m *ResourceExternalAddressSpecRequest) Encode(e *jx.Encoder) error {
 func (m *ResourceExternalAddressSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.NatGateway != nil {
 		e.FieldStart("natGateway")
-		m.NatGateway.Encode(e)
+		if err := m.NatGateway.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -36,7 +36,9 @@ func (m *VmTypeLocalDiskLimitsSpecOptionalResponse) encodeFields(e *jx.Encoder) 
 		if m.Disk.IsNull() {
 			e.Null()
 		} else {
-			m.Disk.Value.Encode(e)
+			if err := m.Disk.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -45,7 +47,9 @@ func (m *VmTypeLocalDiskLimitsSpecOptionalResponse) encodeFields(e *jx.Encoder) 
 		if m.Total.IsNull() {
 			e.Null()
 		} else {
-			m.Total.Value.Encode(e)
+			if err := m.Total.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

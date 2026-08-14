@@ -37,7 +37,9 @@ func (m *KafkaEndpointStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.Str(m.Name)
 
 	e.FieldStart("network")
-	m.Network.Encode(e)
+	if err := m.Network.Encode(e); err != nil {
+		return err
+	}
 
 	if m.BootstrapServers != nil {
 		e.FieldStart("bootstrapServers")
@@ -46,7 +48,9 @@ func (m *KafkaEndpointStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.SchemaRegistry != nil {
 		e.FieldStart("schemaRegistry")
-		m.SchemaRegistry.Encode(e)
+		if err := m.SchemaRegistry.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Port != nil {
@@ -57,12 +61,16 @@ func (m *KafkaEndpointStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("brokerAddresses")
 	e.ArrStart()
 	for _, elem := range m.BrokerAddresses {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
 	e.FieldStart("externalAccess")
-	m.ExternalAccess.Encode(e)
+	if err := m.ExternalAccess.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewUserID(user string) UserID {
+func NewUserID(user string) (UserID, error) {
+	if user == "" {
+		return UserID{}, reserrors.NewFieldIsEmptyError("user")
+	}
 	m := UserID{
 		user: user,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustUserID(user string) UserID {
+	m, err := NewUserID(user)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseUserID(path string) (UserID, error) {
 	m := UserID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return UserID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *UserID) String() string {
 	return m.ID()
 }
 
-func (m *UserID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, UserRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.user = result["user"]
-
-	return nil
-}
-
 func (m *UserID) Clone() *UserID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *UserID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *UserID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *UserID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewUserRef(user string) UserRef {
+func (m *UserID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, UserRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.user = result["user"]
+
+	return nil
+}
+
+func NewUserRef(user string) (UserRef, error) {
+	if user == "" {
+		return UserRef{}, reserrors.NewFieldIsEmptyError("user")
+	}
 	m := UserRef{
 		id: UserID{
 			user: user,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustUserRef(user string) UserRef {
+	m, err := NewUserRef(user)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *UserRef) String() string {
 }
 
 func (m *UserRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, UserRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.user = result["user"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *UserRef) Clone() *UserRef {
@@ -261,7 +284,11 @@ func (m *UserRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *UserRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *UserRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, UserRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.user = result["user"]
+
 	return nil
+}
+
+func (m *UserRef) isParsed() bool {
+	return m != nil && m.id.user != ""
 }
 
 func (m *UserRef) absolutePath() string {

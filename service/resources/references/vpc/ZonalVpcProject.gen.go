@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewZonalVpcProjectID(zone, project string) ZonalVpcProjectID {
+func NewZonalVpcProjectID(zone, project string) (ZonalVpcProjectID, error) {
+	if project == "" {
+		return ZonalVpcProjectID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalVpcProjectID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalVpcProjectID{
 		project: project,
 		zone:    zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalVpcProjectID(zone, project string) ZonalVpcProjectID {
+	m, err := NewZonalVpcProjectID(zone, project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseZonalVpcProjectID(path string) (ZonalVpcProjectID, error) {
 	m := ZonalVpcProjectID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalVpcProjectID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ZonalVpcProjectID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalVpcProjectID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalVpcProjectRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalVpcProjectID) Clone() *ZonalVpcProjectID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ZonalVpcProjectID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ZonalVpcProjectID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalVpcProjectID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalVpcProjectRef(zone, project string) ZonalVpcProjectRef {
+func (m *ZonalVpcProjectID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalVpcProjectRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalVpcProjectRef(zone, project string) (ZonalVpcProjectRef, error) {
+	if project == "" {
+		return ZonalVpcProjectRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalVpcProjectRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalVpcProjectRef{
 		id: ZonalVpcProjectID{
 			project: project,
@@ -183,6 +215,14 @@ func NewZonalVpcProjectRef(zone, project string) ZonalVpcProjectRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalVpcProjectRef(zone, project string) ZonalVpcProjectRef {
+	m, err := NewZonalVpcProjectRef(zone, project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ZonalVpcProjectRef) String() string {
 }
 
 func (m *ZonalVpcProjectRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalVpcProjectRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalVpcProjectRef) Clone() *ZonalVpcProjectRef {
@@ -290,7 +318,11 @@ func (m *ZonalVpcProjectRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ZonalVpcProjectRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalVpcProjectRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalVpcProjectRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalVpcProjectRef) isParsed() bool {
+	return m != nil && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalVpcProjectRef) absolutePath() string {

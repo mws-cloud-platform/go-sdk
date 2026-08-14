@@ -49,14 +49,18 @@ func (m *KafkaEndpointExternalAccessesStatusResponse) encodeFields(e *jx.Encoder
 		e.FieldStart("brokerAddresses")
 		e.ArrStart()
 		for _, elem := range m.BrokerAddresses {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.SchemaRegistry != nil {
 		e.FieldStart("schemaRegistry")
-		m.SchemaRegistry.Encode(e)
+		if err := m.SchemaRegistry.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

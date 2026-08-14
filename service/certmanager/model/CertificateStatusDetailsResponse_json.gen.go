@@ -50,7 +50,9 @@ func (m *CertificateStatusDetailsResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("domains")
 	e.ArrStart()
 	for _, elem := range m.Domains {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 	return nil

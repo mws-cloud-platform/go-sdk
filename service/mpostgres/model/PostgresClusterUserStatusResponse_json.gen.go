@@ -33,12 +33,16 @@ func (m *PostgresClusterUserStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *PostgresClusterUserStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.RoleBindings != nil {
 		e.FieldStart("roleBindings")
 		e.ArrStart()
 		for _, elem := range m.RoleBindings {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

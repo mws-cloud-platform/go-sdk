@@ -47,7 +47,9 @@ func (m *CertificateChallengeResponse) encodeFields(e *jx.Encoder) error {
 	}
 
 	e.FieldStart("status")
-	m.Status.Encode(e)
+	if err := m.Status.Encode(e); err != nil {
+		return err
+	}
 
 	if m.StatusReason != nil {
 		e.FieldStart("statusReason")
@@ -56,12 +58,16 @@ func (m *CertificateChallengeResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.HttpChallenge != nil {
 		e.FieldStart("httpChallenge")
-		m.HttpChallenge.Encode(e)
+		if err := m.HttpChallenge.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DnsChallenge != nil {
 		e.FieldStart("dnsChallenge")
-		m.DnsChallenge.Encode(e)
+		if err := m.DnsChallenge.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

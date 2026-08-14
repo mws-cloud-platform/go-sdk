@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
 
@@ -24,5 +25,6 @@ func TestAddressRequestMarshalling(t *testing.T) {
 
 func initAddressRequest() model.AddressRequest {
 	var v model.AddressRequest
+	v.Spec.Subnet = vpc.NewMustSubnetRef("projectID", "networkID", "subnetID")
 	return v
 }

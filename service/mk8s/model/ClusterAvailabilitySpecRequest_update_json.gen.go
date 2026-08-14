@@ -37,7 +37,9 @@ func (m *UpdateClusterAvailabilitySpecRequest) encodeFields(e *jx.Encoder) error
 		if m.Standalone.IsNull() {
 			e.Null()
 		} else {
-			m.Standalone.Value.Encode(e)
+			if err := m.Standalone.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -46,7 +48,9 @@ func (m *UpdateClusterAvailabilitySpecRequest) encodeFields(e *jx.Encoder) error
 		if m.ZonalHa.IsNull() {
 			e.Null()
 		} else {
-			m.ZonalHa.Value.Encode(e)
+			if err := m.ZonalHa.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

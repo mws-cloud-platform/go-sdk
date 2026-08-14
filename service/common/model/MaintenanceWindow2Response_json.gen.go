@@ -32,7 +32,9 @@ func (m *MaintenanceWindow2Response) Encode(e *jx.Encoder) error {
 
 func (m *MaintenanceWindow2Response) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("weekly")
-	m.Weekly.Encode(e)
+	if err := m.Weekly.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

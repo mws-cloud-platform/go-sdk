@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewNetworkID(project, network string) NetworkID {
+func NewNetworkID(project, network string) (NetworkID, error) {
+	if network == "" {
+		return NetworkID{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return NetworkID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := NetworkID{
 		network: network,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustNetworkID(project, network string) NetworkID {
+	m, err := NewNetworkID(project, network)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseNetworkID(path string) (NetworkID, error) {
 	m := NetworkID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return NetworkID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *NetworkID) String() string {
 	return m.ID()
 }
 
-func (m *NetworkID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, NetworkRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.network = result["network"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *NetworkID) Clone() *NetworkID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *NetworkID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *NetworkID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *NetworkID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewNetworkRef(project, network string) NetworkRef {
+func (m *NetworkID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, NetworkRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.network = result["network"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewNetworkRef(project, network string) (NetworkRef, error) {
+	if network == "" {
+		return NetworkRef{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return NetworkRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := NetworkRef{
 		id: NetworkID{
 			network: network,
@@ -183,6 +215,14 @@ func NewNetworkRef(project, network string) NetworkRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustNetworkRef(project, network string) NetworkRef {
+	m, err := NewNetworkRef(project, network)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *NetworkRef) String() string {
 }
 
 func (m *NetworkRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, NetworkRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.network = result["network"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *NetworkRef) Clone() *NetworkRef {
@@ -290,7 +318,11 @@ func (m *NetworkRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *NetworkRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *NetworkRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, NetworkRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.network = result["network"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *NetworkRef) isParsed() bool {
+	return m != nil && m.id.network != "" && m.id.project != ""
 }
 
 func (m *NetworkRef) absolutePath() string {

@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestClickhouseEndpointAddressSpecOptionalResponseMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestClickhouseEndpointAddressSpecOptionalResponseMarshalling(t *testing.T) 
 
 func initClickhouseEndpointAddressSpecOptionalResponse() model.ClickhouseEndpointAddressSpecOptionalResponse {
 	var v model.ClickhouseEndpointAddressSpecOptionalResponse
+	v.Subnet = vpc.NewMustSubnetRef("projectID", "networkID", "subnetID")
 	return v
 }

@@ -35,12 +35,16 @@ func (m *VpcAddressGroupStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *VpcAddressGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.Addresses != nil {
 		e.FieldStart("addresses")
 		e.ArrStart()
 		for _, elem := range m.Addresses {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -49,14 +53,18 @@ func (m *VpcAddressGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("orphanAddresses")
 		e.ArrStart()
 		for _, elem := range m.OrphanAddresses {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.Region != nil {
 		e.FieldStart("region")
-		m.Region.Encode(e)
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -111,7 +119,7 @@ func (m *VpcAddressGroupStatusResponse) Decode(d *jx.Decoder) error {
 			m.OrphanAddresses = c
 			return nil
 		case "region":
-			var v rm.RegionRef
+			var v rm.RegionID
 			if err := v.Decode(d); err != nil {
 				return err
 			}

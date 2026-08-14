@@ -35,10 +35,14 @@ func (m *AddressStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *AddressStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.Region != nil {
 		e.FieldStart("region")
-		m.Region.Encode(e)
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.IpAddress != nil {
@@ -68,7 +72,7 @@ func (m *AddressStatusResponse) Decode(d *jx.Decoder) error {
 			m.Ready = v
 			return nil
 		case "region":
-			var v rm.RegionRef
+			var v rm.RegionID
 			if err := v.Decode(d); err != nil {
 				return err
 			}

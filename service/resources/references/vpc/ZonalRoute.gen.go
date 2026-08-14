@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewZonalRouteID(zone, project, zonalNetwork, zonalRoute string) ZonalRouteID {
+func NewZonalRouteID(zone, project, zonalNetwork, zonalRoute string) (ZonalRouteID, error) {
+	if zonalRoute == "" {
+		return ZonalRouteID{}, reserrors.NewFieldIsEmptyError("zonalRoute")
+	}
+	if zonalNetwork == "" {
+		return ZonalRouteID{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalRouteID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalRouteID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalRouteID{
 		zonalRoute:   zonalRoute,
 		zonalNetwork: zonalNetwork,
@@ -74,6 +87,14 @@ func NewZonalRouteID(zone, project, zonalNetwork, zonalRoute string) ZonalRouteI
 		zone:         zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalRouteID(zone, project, zonalNetwork, zonalRoute string) ZonalRouteID {
+	m, err := NewZonalRouteID(zone, project, zonalNetwork, zonalRoute)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseZonalRouteID(path string) (ZonalRouteID, error) {
 	m := ZonalRouteID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalRouteID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *ZonalRouteID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalRouteID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalRouteRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalRoute = result["zonalRoute"]
-	m.zonalNetwork = result["zonalNetwork"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalRouteID) Clone() *ZonalRouteID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *ZonalRouteID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *ZonalRouteID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalRouteID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalRouteRef(zone, project, zonalNetwork, zonalRoute string) ZonalRouteRef {
+func (m *ZonalRouteID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalRouteRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalRoute = result["zonalRoute"]
+	m.zonalNetwork = result["zonalNetwork"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalRouteRef(zone, project, zonalNetwork, zonalRoute string) (ZonalRouteRef, error) {
+	if zonalRoute == "" {
+		return ZonalRouteRef{}, reserrors.NewFieldIsEmptyError("zonalRoute")
+	}
+	if zonalNetwork == "" {
+		return ZonalRouteRef{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalRouteRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalRouteRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalRouteRef{
 		id: ZonalRouteID{
 			zonalRoute:   zonalRoute,
@@ -225,6 +269,14 @@ func NewZonalRouteRef(zone, project, zonalNetwork, zonalRoute string) ZonalRoute
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalRouteRef(zone, project, zonalNetwork, zonalRoute string) ZonalRouteRef {
+	m, err := NewZonalRouteRef(zone, project, zonalNetwork, zonalRoute)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *ZonalRouteRef) String() string {
 }
 
 func (m *ZonalRouteRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalRouteRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalRoute = result["zonalRoute"]
-	m.id.zonalNetwork = result["zonalNetwork"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalRouteRef) Clone() *ZonalRouteRef {
@@ -348,7 +386,11 @@ func (m *ZonalRouteRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *ZonalRouteRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalRouteRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalRouteRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalRoute = result["zonalRoute"]
+	m.id.zonalNetwork = result["zonalNetwork"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalRouteRef) isParsed() bool {
+	return m != nil && m.id.zonalRoute != "" && m.id.zonalNetwork != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalRouteRef) absolutePath() string {

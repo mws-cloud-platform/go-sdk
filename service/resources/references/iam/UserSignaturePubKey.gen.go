@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewUserSignaturePubKeyID(userId, keyName string) UserSignaturePubKeyID {
+func NewUserSignaturePubKeyID(userId, keyName string) (UserSignaturePubKeyID, error) {
+	if keyName == "" {
+		return UserSignaturePubKeyID{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if userId == "" {
+		return UserSignaturePubKeyID{}, reserrors.NewFieldIsEmptyError("userId")
+	}
 	m := UserSignaturePubKeyID{
 		keyName: keyName,
 		userId:  userId,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustUserSignaturePubKeyID(userId, keyName string) UserSignaturePubKeyID {
+	m, err := NewUserSignaturePubKeyID(userId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseUserSignaturePubKeyID(path string) (UserSignaturePubKeyID, error) {
 	m := UserSignaturePubKeyID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return UserSignaturePubKeyID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *UserSignaturePubKeyID) String() string {
 	return m.ID()
 }
 
-func (m *UserSignaturePubKeyID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, UserSignaturePubKeyRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.keyName = result["keyName"]
-	m.userId = result["userId"]
-
-	return nil
-}
-
 func (m *UserSignaturePubKeyID) Clone() *UserSignaturePubKeyID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *UserSignaturePubKeyID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *UserSignaturePubKeyID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *UserSignaturePubKeyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewUserSignaturePubKeyRef(userId, keyName string) UserSignaturePubKeyRef {
+func (m *UserSignaturePubKeyID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, UserSignaturePubKeyRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.keyName = result["keyName"]
+	m.userId = result["userId"]
+
+	return nil
+}
+
+func NewUserSignaturePubKeyRef(userId, keyName string) (UserSignaturePubKeyRef, error) {
+	if keyName == "" {
+		return UserSignaturePubKeyRef{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if userId == "" {
+		return UserSignaturePubKeyRef{}, reserrors.NewFieldIsEmptyError("userId")
+	}
 	m := UserSignaturePubKeyRef{
 		id: UserSignaturePubKeyID{
 			keyName: keyName,
@@ -183,6 +215,14 @@ func NewUserSignaturePubKeyRef(userId, keyName string) UserSignaturePubKeyRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustUserSignaturePubKeyRef(userId, keyName string) UserSignaturePubKeyRef {
+	m, err := NewUserSignaturePubKeyRef(userId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *UserSignaturePubKeyRef) String() string {
 }
 
 func (m *UserSignaturePubKeyRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, UserSignaturePubKeyRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.keyName = result["keyName"]
-	m.id.userId = result["userId"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *UserSignaturePubKeyRef) Clone() *UserSignaturePubKeyRef {
@@ -290,7 +318,11 @@ func (m *UserSignaturePubKeyRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *UserSignaturePubKeyRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *UserSignaturePubKeyRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, UserSignaturePubKeyRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.keyName = result["keyName"]
+	m.id.userId = result["userId"]
+
 	return nil
+}
+
+func (m *UserSignaturePubKeyRef) isParsed() bool {
+	return m != nil && m.id.keyName != "" && m.id.userId != ""
 }
 
 func (m *UserSignaturePubKeyRef) absolutePath() string {

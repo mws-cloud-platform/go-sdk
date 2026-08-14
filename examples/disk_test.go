@@ -45,7 +45,7 @@ func Example_disk() {
 		Body: computemodel.DiskRequest{
 			Spec: computemodel.DiskSpecRequest{
 				BlockSize: new(bytesize.MustParseString("4096 B")),
-				DiskType:  new(computeref.NewDiskTypeRef("nbs-pl2")),
+				DiskType:  new(computeref.NewMustDiskTypeRef("nbs-pl2")),
 				Iops:      new(computemodel.Iops(1000)),
 				Size:      new(bytesize.MustParseString("1 GB")),
 				Zone:      "ru-central1-a",

@@ -2,13 +2,6 @@
 
 package model
 
-import (
-	"context"
-	"fmt"
-
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-)
-
 // Типы ВМ Clickhouse кластера.
 // Real OAPI model name: ClickhouseClusterVmTypes
 type ClickhouseClusterVmTypesResponse struct {
@@ -39,18 +32,4 @@ func (m *ClickhouseClusterVmTypesResponse) Clone() *ClickhouseClusterVmTypesResp
 		}
 	}
 	return &clone
-}
-
-func (m *ClickhouseClusterVmTypesResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	for index := range m.Items {
-		if err := m.Items[index].Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Items"+fmt.Sprint("[", index, "]"), err)
-		}
-	}
-
-	return nil
 }

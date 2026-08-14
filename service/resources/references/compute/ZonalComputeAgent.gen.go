@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewZonalComputeAgentID(zone, fqdn string) ZonalComputeAgentID {
+func NewZonalComputeAgentID(zone, fqdn string) (ZonalComputeAgentID, error) {
+	if fqdn == "" {
+		return ZonalComputeAgentID{}, reserrors.NewFieldIsEmptyError("fqdn")
+	}
+	if zone == "" {
+		return ZonalComputeAgentID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalComputeAgentID{
 		fqdn: fqdn,
 		zone: zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalComputeAgentID(zone, fqdn string) ZonalComputeAgentID {
+	m, err := NewZonalComputeAgentID(zone, fqdn)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseZonalComputeAgentID(path string) (ZonalComputeAgentID, error) {
 	m := ZonalComputeAgentID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalComputeAgentID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ZonalComputeAgentID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalComputeAgentID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalComputeAgentRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.fqdn = result["fqdn"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalComputeAgentID) Clone() *ZonalComputeAgentID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ZonalComputeAgentID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ZonalComputeAgentID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalComputeAgentID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalComputeAgentRef(zone, fqdn string) ZonalComputeAgentRef {
+func (m *ZonalComputeAgentID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalComputeAgentRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.fqdn = result["fqdn"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalComputeAgentRef(zone, fqdn string) (ZonalComputeAgentRef, error) {
+	if fqdn == "" {
+		return ZonalComputeAgentRef{}, reserrors.NewFieldIsEmptyError("fqdn")
+	}
+	if zone == "" {
+		return ZonalComputeAgentRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalComputeAgentRef{
 		id: ZonalComputeAgentID{
 			fqdn: fqdn,
@@ -183,6 +215,14 @@ func NewZonalComputeAgentRef(zone, fqdn string) ZonalComputeAgentRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalComputeAgentRef(zone, fqdn string) ZonalComputeAgentRef {
+	m, err := NewZonalComputeAgentRef(zone, fqdn)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ZonalComputeAgentRef) String() string {
 }
 
 func (m *ZonalComputeAgentRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalComputeAgentRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.fqdn = result["fqdn"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalComputeAgentRef) Clone() *ZonalComputeAgentRef {
@@ -290,7 +318,11 @@ func (m *ZonalComputeAgentRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ZonalComputeAgentRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalComputeAgentRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalComputeAgentRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.fqdn = result["fqdn"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalComputeAgentRef) isParsed() bool {
+	return m != nil && m.id.fqdn != "" && m.id.zone != ""
 }
 
 func (m *ZonalComputeAgentRef) absolutePath() string {

@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewServiceAgentEncryptionPubKeyID(project, serviceAgentId, keyName string) ServiceAgentEncryptionPubKeyID {
+func NewServiceAgentEncryptionPubKeyID(project, serviceAgentId, keyName string) (ServiceAgentEncryptionPubKeyID, error) {
+	if keyName == "" {
+		return ServiceAgentEncryptionPubKeyID{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if serviceAgentId == "" {
+		return ServiceAgentEncryptionPubKeyID{}, reserrors.NewFieldIsEmptyError("serviceAgentId")
+	}
+	if project == "" {
+		return ServiceAgentEncryptionPubKeyID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAgentEncryptionPubKeyID{
 		keyName:        keyName,
 		serviceAgentId: serviceAgentId,
 		project:        project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustServiceAgentEncryptionPubKeyID(project, serviceAgentId, keyName string) ServiceAgentEncryptionPubKeyID {
+	m, err := NewServiceAgentEncryptionPubKeyID(project, serviceAgentId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseServiceAgentEncryptionPubKeyID(path string) (ServiceAgentEncryptionPub
 	m := ServiceAgentEncryptionPubKeyID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ServiceAgentEncryptionPubKeyID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ServiceAgentEncryptionPubKeyID) String() string {
 	return m.ID()
 }
 
-func (m *ServiceAgentEncryptionPubKeyID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ServiceAgentEncryptionPubKeyRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.keyName = result["keyName"]
-	m.serviceAgentId = result["serviceAgentId"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ServiceAgentEncryptionPubKeyID) Clone() *ServiceAgentEncryptionPubKeyID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ServiceAgentEncryptionPubKeyID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ServiceAgentEncryptionPubKeyID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ServiceAgentEncryptionPubKeyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewServiceAgentEncryptionPubKeyRef(project, serviceAgentId, keyName string) ServiceAgentEncryptionPubKeyRef {
+func (m *ServiceAgentEncryptionPubKeyID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ServiceAgentEncryptionPubKeyRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.keyName = result["keyName"]
+	m.serviceAgentId = result["serviceAgentId"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewServiceAgentEncryptionPubKeyRef(project, serviceAgentId, keyName string) (ServiceAgentEncryptionPubKeyRef, error) {
+	if keyName == "" {
+		return ServiceAgentEncryptionPubKeyRef{}, reserrors.NewFieldIsEmptyError("keyName")
+	}
+	if serviceAgentId == "" {
+		return ServiceAgentEncryptionPubKeyRef{}, reserrors.NewFieldIsEmptyError("serviceAgentId")
+	}
+	if project == "" {
+		return ServiceAgentEncryptionPubKeyRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAgentEncryptionPubKeyRef{
 		id: ServiceAgentEncryptionPubKeyID{
 			keyName:        keyName,
@@ -204,6 +242,14 @@ func NewServiceAgentEncryptionPubKeyRef(project, serviceAgentId, keyName string)
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustServiceAgentEncryptionPubKeyRef(project, serviceAgentId, keyName string) ServiceAgentEncryptionPubKeyRef {
+	m, err := NewServiceAgentEncryptionPubKeyRef(project, serviceAgentId, keyName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ServiceAgentEncryptionPubKeyRef) String() string {
 }
 
 func (m *ServiceAgentEncryptionPubKeyRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ServiceAgentEncryptionPubKeyRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.keyName = result["keyName"]
-	m.id.serviceAgentId = result["serviceAgentId"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ServiceAgentEncryptionPubKeyRef) Clone() *ServiceAgentEncryptionPubKeyRef {
@@ -319,7 +352,11 @@ func (m *ServiceAgentEncryptionPubKeyRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ServiceAgentEncryptionPubKeyRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ServiceAgentEncryptionPubKeyRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ServiceAgentEncryptionPubKeyRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.keyName = result["keyName"]
+	m.id.serviceAgentId = result["serviceAgentId"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ServiceAgentEncryptionPubKeyRef) isParsed() bool {
+	return m != nil && m.id.keyName != "" && m.id.serviceAgentId != "" && m.id.project != ""
 }
 
 func (m *ServiceAgentEncryptionPubKeyRef) absolutePath() string {

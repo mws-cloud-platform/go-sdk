@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewZonalAddressID(zone, project, zonalNetwork, zonalAddress string) ZonalAddressID {
+func NewZonalAddressID(zone, project, zonalNetwork, zonalAddress string) (ZonalAddressID, error) {
+	if zonalAddress == "" {
+		return ZonalAddressID{}, reserrors.NewFieldIsEmptyError("zonalAddress")
+	}
+	if zonalNetwork == "" {
+		return ZonalAddressID{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalAddressID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalAddressID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalAddressID{
 		zonalAddress: zonalAddress,
 		zonalNetwork: zonalNetwork,
@@ -74,6 +87,14 @@ func NewZonalAddressID(zone, project, zonalNetwork, zonalAddress string) ZonalAd
 		zone:         zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalAddressID(zone, project, zonalNetwork, zonalAddress string) ZonalAddressID {
+	m, err := NewZonalAddressID(zone, project, zonalNetwork, zonalAddress)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseZonalAddressID(path string) (ZonalAddressID, error) {
 	m := ZonalAddressID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalAddressID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *ZonalAddressID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalAddressID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalAddressRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalAddress = result["zonalAddress"]
-	m.zonalNetwork = result["zonalNetwork"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalAddressID) Clone() *ZonalAddressID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *ZonalAddressID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *ZonalAddressID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalAddressID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalAddressRef(zone, project, zonalNetwork, zonalAddress string) ZonalAddressRef {
+func (m *ZonalAddressID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalAddressRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalAddress = result["zonalAddress"]
+	m.zonalNetwork = result["zonalNetwork"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalAddressRef(zone, project, zonalNetwork, zonalAddress string) (ZonalAddressRef, error) {
+	if zonalAddress == "" {
+		return ZonalAddressRef{}, reserrors.NewFieldIsEmptyError("zonalAddress")
+	}
+	if zonalNetwork == "" {
+		return ZonalAddressRef{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalAddressRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalAddressRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalAddressRef{
 		id: ZonalAddressID{
 			zonalAddress: zonalAddress,
@@ -225,6 +269,14 @@ func NewZonalAddressRef(zone, project, zonalNetwork, zonalAddress string) ZonalA
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalAddressRef(zone, project, zonalNetwork, zonalAddress string) ZonalAddressRef {
+	m, err := NewZonalAddressRef(zone, project, zonalNetwork, zonalAddress)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *ZonalAddressRef) String() string {
 }
 
 func (m *ZonalAddressRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalAddressRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalAddress = result["zonalAddress"]
-	m.id.zonalNetwork = result["zonalNetwork"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalAddressRef) Clone() *ZonalAddressRef {
@@ -348,7 +386,11 @@ func (m *ZonalAddressRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *ZonalAddressRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalAddressRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalAddressRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalAddress = result["zonalAddress"]
+	m.id.zonalNetwork = result["zonalNetwork"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalAddressRef) isParsed() bool {
+	return m != nil && m.id.zonalAddress != "" && m.id.zonalNetwork != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalAddressRef) absolutePath() string {

@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,11 +57,22 @@ var (
 	}
 )
 
-func NewTotalApiKeyCountID(project string) TotalApiKeyCountID {
+func NewTotalApiKeyCountID(project string) (TotalApiKeyCountID, error) {
+	if project == "" {
+		return TotalApiKeyCountID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := TotalApiKeyCountID{
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustTotalApiKeyCountID(project string) TotalApiKeyCountID {
+	m, err := NewTotalApiKeyCountID(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -68,7 +80,7 @@ func ParseTotalApiKeyCountID(path string) (TotalApiKeyCountID, error) {
 	m := TotalApiKeyCountID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return TotalApiKeyCountID{}, err
 	}
 	return m, nil
@@ -113,21 +125,6 @@ func (m *TotalApiKeyCountID) String() string {
 	return m.ID()
 }
 
-func (m *TotalApiKeyCountID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, TotalApiKeyCountRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *TotalApiKeyCountID) Clone() *TotalApiKeyCountID {
 	if m == nil {
 		return nil
@@ -151,7 +148,7 @@ func (m *TotalApiKeyCountID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,16 +169,53 @@ func (m *TotalApiKeyCountID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *TotalApiKeyCountID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewTotalApiKeyCountRef(project string) TotalApiKeyCountRef {
+func (m *TotalApiKeyCountID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, TotalApiKeyCountRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewTotalApiKeyCountRef(project string) (TotalApiKeyCountRef, error) {
+	if project == "" {
+		return TotalApiKeyCountRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := TotalApiKeyCountRef{
 		id: TotalApiKeyCountID{
 			project: project,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustTotalApiKeyCountRef(project string) TotalApiKeyCountRef {
+	m, err := NewTotalApiKeyCountRef(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -246,18 +280,7 @@ func (m *TotalApiKeyCountRef) String() string {
 }
 
 func (m *TotalApiKeyCountRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, TotalApiKeyCountRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *TotalApiKeyCountRef) Clone() *TotalApiKeyCountRef {
@@ -281,7 +304,11 @@ func (m *TotalApiKeyCountRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -300,7 +327,35 @@ func (m *TotalApiKeyCountRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *TotalApiKeyCountRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, TotalApiKeyCountRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *TotalApiKeyCountRef) isParsed() bool {
+	return m != nil && m.id.project != ""
 }
 
 func (m *TotalApiKeyCountRef) absolutePath() string {

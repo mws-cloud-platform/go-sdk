@@ -94,6 +94,20 @@ func TestErrors_Comparison(t *testing.T) {
 			},
 			customIs: IsPathAccumulatorError,
 		},
+		{
+			name: "FieldIsEmptyError",
+			newError: func() error {
+				return NewFieldIsEmptyError("project")
+			},
+			asError: func(err error) bool {
+				var target *FieldIsEmptyError
+				return errors.As(err, &target)
+			},
+			errorsIs: func(err error) bool {
+				return errors.Is(err, &FieldIsEmptyError{})
+			},
+			customIs: IsFieldIsEmptyError,
+		},
 	}
 
 	for _, testCase := range testCases {
@@ -177,6 +191,13 @@ func TestErrors_Message(t *testing.T) {
 			expectedInnerPathAccumulatorError: "path '[0].inner': err",
 			expectedInner:                     "path '[0]': err",
 			expectedNil:                       "path '[0]'",
+		},
+		{
+			name: "FieldIsEmptyError",
+			newErrorInner: func() error {
+				return NewFieldIsEmptyError("project")
+			},
+			expectedInner: `field "project" is empty`,
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {

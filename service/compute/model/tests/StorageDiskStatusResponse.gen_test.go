@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/compute/model"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func TestStorageDiskStatusResponseMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestStorageDiskStatusResponseMarshalling(t *testing.T) {
 
 func initStorageDiskStatusResponse() model.StorageDiskStatusResponse {
 	var v model.StorageDiskStatusResponse
+	v.Ref = compute.NewMustDiskRef("projectID", "diskID")
 	return v
 }

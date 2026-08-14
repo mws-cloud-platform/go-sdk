@@ -34,10 +34,14 @@ func (m *ClickhouseEndpointAddressResourceResponse) Encode(e *jx.Encoder) error 
 
 func (m *ClickhouseEndpointAddressResourceResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("subnet")
-	m.Subnet.Encode(e)
+	if err := m.Subnet.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("ipAddress")
 	m.IpAddress.Encode(e)
@@ -45,7 +49,9 @@ func (m *ClickhouseEndpointAddressResourceResponse) encodeFields(e *jx.Encoder) 
 	e.FieldStart("dns")
 	e.ArrStart()
 	for _, elem := range m.Dns {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 	return nil

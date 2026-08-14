@@ -36,7 +36,9 @@ func (m *SingleLocalDiskLimitsSpecOptionalResponse) encodeFields(e *jx.Encoder) 
 		if m.Size.IsNull() {
 			e.Null()
 		} else {
-			m.Size.Value.Encode(e)
+			if err := m.Size.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

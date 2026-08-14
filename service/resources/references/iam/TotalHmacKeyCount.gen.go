@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,11 +57,22 @@ var (
 	}
 )
 
-func NewTotalHmacKeyCountID(project string) TotalHmacKeyCountID {
+func NewTotalHmacKeyCountID(project string) (TotalHmacKeyCountID, error) {
+	if project == "" {
+		return TotalHmacKeyCountID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := TotalHmacKeyCountID{
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustTotalHmacKeyCountID(project string) TotalHmacKeyCountID {
+	m, err := NewTotalHmacKeyCountID(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -68,7 +80,7 @@ func ParseTotalHmacKeyCountID(path string) (TotalHmacKeyCountID, error) {
 	m := TotalHmacKeyCountID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return TotalHmacKeyCountID{}, err
 	}
 	return m, nil
@@ -113,21 +125,6 @@ func (m *TotalHmacKeyCountID) String() string {
 	return m.ID()
 }
 
-func (m *TotalHmacKeyCountID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, TotalHmacKeyCountRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *TotalHmacKeyCountID) Clone() *TotalHmacKeyCountID {
 	if m == nil {
 		return nil
@@ -151,7 +148,7 @@ func (m *TotalHmacKeyCountID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,16 +169,53 @@ func (m *TotalHmacKeyCountID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *TotalHmacKeyCountID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewTotalHmacKeyCountRef(project string) TotalHmacKeyCountRef {
+func (m *TotalHmacKeyCountID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, TotalHmacKeyCountRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewTotalHmacKeyCountRef(project string) (TotalHmacKeyCountRef, error) {
+	if project == "" {
+		return TotalHmacKeyCountRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := TotalHmacKeyCountRef{
 		id: TotalHmacKeyCountID{
 			project: project,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustTotalHmacKeyCountRef(project string) TotalHmacKeyCountRef {
+	m, err := NewTotalHmacKeyCountRef(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -246,18 +280,7 @@ func (m *TotalHmacKeyCountRef) String() string {
 }
 
 func (m *TotalHmacKeyCountRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, TotalHmacKeyCountRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *TotalHmacKeyCountRef) Clone() *TotalHmacKeyCountRef {
@@ -281,7 +304,11 @@ func (m *TotalHmacKeyCountRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -300,7 +327,35 @@ func (m *TotalHmacKeyCountRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *TotalHmacKeyCountRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, TotalHmacKeyCountRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *TotalHmacKeyCountRef) isParsed() bool {
+	return m != nil && m.id.project != ""
 }
 
 func (m *TotalHmacKeyCountRef) absolutePath() string {

@@ -21,7 +21,7 @@ type VpcAddressGroupStatusResponse struct {
 	// Список ссылок на внутренние IP-адреса, которые были удалены, но остались в спецификации группы.
 	OrphanAddresses []vpc.AddressRef `json:"orphanAddresses,omitempty" yaml:"orphanAddresses,omitempty"`
 	// Регион, которому принадлежит группа IP-адресов.
-	Region *rm.RegionRef `json:"region,omitempty" yaml:"region,omitempty"`
+	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
 func (m *VpcAddressGroupStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -59,14 +59,14 @@ func (m *VpcAddressGroupStatusResponse) GetOrphanAddressesOr(val []vpc.AddressRe
 	return val
 }
 
-func (m *VpcAddressGroupStatusResponse) GetRegion() *rm.RegionRef {
+func (m *VpcAddressGroupStatusResponse) GetRegion() *rm.RegionID {
 	if m != nil {
 		return m.Region
 	}
 	return nil
 }
 
-func (m *VpcAddressGroupStatusResponse) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+func (m *VpcAddressGroupStatusResponse) GetRegionOr(val rm.RegionID) rm.RegionID {
 	if m != nil && m.Region != nil {
 		return *m.Region
 	}
@@ -112,10 +112,6 @@ func (m *VpcAddressGroupStatusResponse) Parse(ctx context.Context) error {
 		if err := m.OrphanAddresses[index].Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("OrphanAddresses"+fmt.Sprint("[", index, "]"), err)
 		}
-	}
-
-	if err := m.Region.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Region", err)
 	}
 
 	return nil

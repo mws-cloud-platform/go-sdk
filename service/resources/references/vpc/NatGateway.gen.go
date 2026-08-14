@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewNatGatewayID(project, natGateway string) NatGatewayID {
+func NewNatGatewayID(project, natGateway string) (NatGatewayID, error) {
+	if natGateway == "" {
+		return NatGatewayID{}, reserrors.NewFieldIsEmptyError("natGateway")
+	}
+	if project == "" {
+		return NatGatewayID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := NatGatewayID{
 		natGateway: natGateway,
 		project:    project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustNatGatewayID(project, natGateway string) NatGatewayID {
+	m, err := NewNatGatewayID(project, natGateway)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseNatGatewayID(path string) (NatGatewayID, error) {
 	m := NatGatewayID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return NatGatewayID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *NatGatewayID) String() string {
 	return m.ID()
 }
 
-func (m *NatGatewayID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, NatGatewayRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.natGateway = result["natGateway"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *NatGatewayID) Clone() *NatGatewayID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *NatGatewayID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *NatGatewayID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *NatGatewayID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewNatGatewayRef(project, natGateway string) NatGatewayRef {
+func (m *NatGatewayID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, NatGatewayRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.natGateway = result["natGateway"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewNatGatewayRef(project, natGateway string) (NatGatewayRef, error) {
+	if natGateway == "" {
+		return NatGatewayRef{}, reserrors.NewFieldIsEmptyError("natGateway")
+	}
+	if project == "" {
+		return NatGatewayRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := NatGatewayRef{
 		id: NatGatewayID{
 			natGateway: natGateway,
@@ -183,6 +215,14 @@ func NewNatGatewayRef(project, natGateway string) NatGatewayRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustNatGatewayRef(project, natGateway string) NatGatewayRef {
+	m, err := NewNatGatewayRef(project, natGateway)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *NatGatewayRef) String() string {
 }
 
 func (m *NatGatewayRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, NatGatewayRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.natGateway = result["natGateway"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *NatGatewayRef) Clone() *NatGatewayRef {
@@ -290,7 +318,11 @@ func (m *NatGatewayRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *NatGatewayRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *NatGatewayRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, NatGatewayRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.natGateway = result["natGateway"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *NatGatewayRef) isParsed() bool {
+	return m != nil && m.id.natGateway != "" && m.id.project != ""
 }
 
 func (m *NatGatewayRef) absolutePath() string {

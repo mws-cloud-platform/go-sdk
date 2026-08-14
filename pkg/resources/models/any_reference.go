@@ -2,32 +2,45 @@ package models
 
 import (
 	"context"
+	"fmt"
 	"maps"
 
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/context/values"
 	resifaces "go.mws.cloud/go-sdk/pkg/resources/interfaces"
 )
 
 // NewAnyResourceRef constructor for creating an untyped resource id from its id.
-func NewAnyResourceRef(ref string) AnyResourceRef {
+func NewAnyResourceRef(ref string) (AnyResourceRef, error) {
+	if ref == "" {
+		return AnyResourceRef{}, reserrors.ErrPathIsEmpty
+	}
 	return AnyResourceRef{
 		resource: ref,
-	}
+	}, nil
 }
 
-// NewAnyResourceRefErr is an error-returning variant of NewAnyResourceRef.
-// Always succeeds - error is always nil.
-func NewAnyResourceRefErr(ref string) (AnyResourceRef, error) {
-	return NewAnyResourceRef(ref), nil
+// NewMustAnyResourceRef is like NewAnyResourceRef but panics if an error has occurred.
+// Intended for use in initialization code where failures are unrecoverable.
+// Prefer NewAnyResourceRef for runtime path processing.
+func NewMustAnyResourceRef(ref string) AnyResourceRef {
+	res, err := NewAnyResourceRef(ref)
+	if err != nil {
+		panic(err)
+	}
+	return res
 }
 
 // ParseAnyResourceRef creates an AnyResourceRef from a path string and context.
 func ParseAnyResourceRef(ctx context.Context, path string) (AnyResourceRef, error) {
-	n := NewAnyResourceRef(path)
-	if err := n.Parse(ctx); err != nil {
+	n, err := NewAnyResourceRef(path)
+	if err != nil {
+		return AnyResourceRef{}, err
+	}
+	if err = n.Parse(ctx); err != nil {
 		return AnyResourceRef{}, err
 	}
 	return n, nil
@@ -143,6 +156,10 @@ func (n *AnyResourceRef) Encode(e *jx.Encoder) error {
 		return nil
 	}
 
+	if n.Path() == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+
 	e.Str(n.Path())
 	return nil
 }
@@ -163,6 +180,10 @@ func (n *AnyResourceRef) Decode(d *jx.Decoder) error {
 	v, err := d.Str()
 	if err != nil {
 		return err
+	}
+
+	if v == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
 	}
 
 	n.resource = v

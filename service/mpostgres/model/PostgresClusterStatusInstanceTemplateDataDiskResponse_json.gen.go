@@ -37,7 +37,9 @@ func (m *PostgresClusterStatusInstanceTemplateDataDiskResponse) encodeFields(e *
 	m.Size.Encode(e)
 
 	e.FieldStart("type")
-	m.Type.Encode(e)
+	if err := m.Type.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Iops != nil {
 		e.FieldStart("iops")

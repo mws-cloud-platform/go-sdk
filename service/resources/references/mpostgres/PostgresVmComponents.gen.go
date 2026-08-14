@@ -63,6 +63,15 @@ var (
 )
 
 func NewPostgresVmComponentsID(project, cluster, vmComponent string) (PostgresVmComponentsID, error) {
+	if vmComponent == "" {
+		return PostgresVmComponentsID{}, reserrors.NewFieldIsEmptyError("vmComponent")
+	}
+	if cluster == "" {
+		return PostgresVmComponentsID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if project == "" {
+		return PostgresVmComponentsID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	if match := PostgresVmComponentsVmComponentValidatePattern.Match([]byte(vmComponent)); !match {
 		return PostgresVmComponentsID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "vmComponent", vmComponent)
 	}
@@ -83,8 +92,6 @@ func NewMustPostgresVmComponentsID(project, cluster, vmComponent string) Postgre
 	if err != nil {
 		panic(err)
 	}
-
-	m.path = m.ID()
 	return m
 }
 
@@ -92,7 +99,7 @@ func ParsePostgresVmComponentsID(path string) (PostgresVmComponentsID, error) {
 	m := PostgresVmComponentsID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return PostgresVmComponentsID{}, err
 	}
 	return m, nil
@@ -153,23 +160,6 @@ func (m *PostgresVmComponentsID) String() string {
 	return m.ID()
 }
 
-func (m *PostgresVmComponentsID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, PostgresVmComponentsRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.vmComponent = result["vmComponent"]
-	m.cluster = result["cluster"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *PostgresVmComponentsID) Clone() *PostgresVmComponentsID {
 	if m == nil {
 		return nil
@@ -193,7 +183,7 @@ func (m *PostgresVmComponentsID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -214,6 +204,34 @@ func (m *PostgresVmComponentsID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *PostgresVmComponentsID) Parse(ctx context.Context) error {
+	return nil
+}
+
+func (m *PostgresVmComponentsID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, PostgresVmComponentsRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.vmComponent = result["vmComponent"]
+	m.cluster = result["cluster"]
+	m.project = result["project"]
+
 	return nil
 }
 
@@ -231,10 +249,10 @@ func NewPostgresVmComponentsRef(project, cluster, vmComponent string) (PostgresV
 }
 
 func NewMustPostgresVmComponentsRef(project, cluster, vmComponent string) PostgresVmComponentsRef {
-	m := PostgresVmComponentsRef{
-		id: NewMustPostgresVmComponentsID(project, cluster, vmComponent),
+	m, err := NewPostgresVmComponentsRef(project, cluster, vmComponent)
+	if err != nil {
+		panic(err)
 	}
-	m.id.path = m.absolutePath()
 	return m
 }
 
@@ -313,20 +331,7 @@ func (m *PostgresVmComponentsRef) String() string {
 }
 
 func (m *PostgresVmComponentsRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, PostgresVmComponentsRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.vmComponent = result["vmComponent"]
-	m.id.cluster = result["cluster"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *PostgresVmComponentsRef) Clone() *PostgresVmComponentsRef {
@@ -350,7 +355,11 @@ func (m *PostgresVmComponentsRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -369,7 +378,37 @@ func (m *PostgresVmComponentsRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *PostgresVmComponentsRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, PostgresVmComponentsRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.vmComponent = result["vmComponent"]
+	m.id.cluster = result["cluster"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *PostgresVmComponentsRef) isParsed() bool {
+	return m != nil && m.id.vmComponent != "" && m.id.cluster != "" && m.id.project != ""
 }
 
 func (m *PostgresVmComponentsRef) absolutePath() string {

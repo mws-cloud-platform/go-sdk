@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func TestClickhouseClusterCoordinatorInstanceOptionalResponseMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestClickhouseClusterCoordinatorInstanceOptionalResponseMarshalling(t *test
 
 func initClickhouseClusterCoordinatorInstanceOptionalResponse() model.ClickhouseClusterCoordinatorInstanceOptionalResponse {
 	var v model.ClickhouseClusterCoordinatorInstanceOptionalResponse
+	v.Zone = rm.NewMustZoneRef("zoneID")
 	return v
 }

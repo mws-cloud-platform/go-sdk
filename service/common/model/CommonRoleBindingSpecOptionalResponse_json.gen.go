@@ -34,14 +34,20 @@ func (m *CommonRoleBindingSpecOptionalResponse) Encode(e *jx.Encoder) error {
 
 func (m *CommonRoleBindingSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("subject")
-	m.Subject.Encode(e)
+	if err := m.Subject.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("role")
-	m.Role.Encode(e)
+	if err := m.Role.Encode(e); err != nil {
+		return err
+	}
 
 	if m.SupportRequestId.IsSet() {
 		e.FieldStart("supportRequestId")
-		m.SupportRequestId.Value.Encode(e)
+		if err := m.SupportRequestId.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

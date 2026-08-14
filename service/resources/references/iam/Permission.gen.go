@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewPermissionID(permission string) PermissionID {
+func NewPermissionID(permission string) (PermissionID, error) {
+	if permission == "" {
+		return PermissionID{}, reserrors.NewFieldIsEmptyError("permission")
+	}
 	m := PermissionID{
 		permission: permission,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustPermissionID(permission string) PermissionID {
+	m, err := NewPermissionID(permission)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParsePermissionID(path string) (PermissionID, error) {
 	m := PermissionID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return PermissionID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *PermissionID) String() string {
 	return m.ID()
 }
 
-func (m *PermissionID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, PermissionRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.permission = result["permission"]
-
-	return nil
-}
-
 func (m *PermissionID) Clone() *PermissionID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *PermissionID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *PermissionID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *PermissionID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewPermissionRef(permission string) PermissionRef {
+func (m *PermissionID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, PermissionRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.permission = result["permission"]
+
+	return nil
+}
+
+func NewPermissionRef(permission string) (PermissionRef, error) {
+	if permission == "" {
+		return PermissionRef{}, reserrors.NewFieldIsEmptyError("permission")
+	}
 	m := PermissionRef{
 		id: PermissionID{
 			permission: permission,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustPermissionRef(permission string) PermissionRef {
+	m, err := NewPermissionRef(permission)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *PermissionRef) String() string {
 }
 
 func (m *PermissionRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, PermissionRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.permission = result["permission"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *PermissionRef) Clone() *PermissionRef {
@@ -261,7 +284,11 @@ func (m *PermissionRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *PermissionRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *PermissionRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, PermissionRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.permission = result["permission"]
+
 	return nil
+}
+
+func (m *PermissionRef) isParsed() bool {
+	return m != nil && m.id.permission != ""
 }
 
 func (m *PermissionRef) absolutePath() string {

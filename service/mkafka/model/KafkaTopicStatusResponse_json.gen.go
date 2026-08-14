@@ -33,7 +33,9 @@ func (m *KafkaTopicStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *KafkaTopicStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

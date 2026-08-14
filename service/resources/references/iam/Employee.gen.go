@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewEmployeeID(employee string) EmployeeID {
+func NewEmployeeID(employee string) (EmployeeID, error) {
+	if employee == "" {
+		return EmployeeID{}, reserrors.NewFieldIsEmptyError("employee")
+	}
 	m := EmployeeID{
 		employee: employee,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustEmployeeID(employee string) EmployeeID {
+	m, err := NewEmployeeID(employee)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseEmployeeID(path string) (EmployeeID, error) {
 	m := EmployeeID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return EmployeeID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *EmployeeID) String() string {
 	return m.ID()
 }
 
-func (m *EmployeeID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, EmployeeRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.employee = result["employee"]
-
-	return nil
-}
-
 func (m *EmployeeID) Clone() *EmployeeID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *EmployeeID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *EmployeeID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *EmployeeID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewEmployeeRef(employee string) EmployeeRef {
+func (m *EmployeeID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, EmployeeRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.employee = result["employee"]
+
+	return nil
+}
+
+func NewEmployeeRef(employee string) (EmployeeRef, error) {
+	if employee == "" {
+		return EmployeeRef{}, reserrors.NewFieldIsEmptyError("employee")
+	}
 	m := EmployeeRef{
 		id: EmployeeID{
 			employee: employee,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustEmployeeRef(employee string) EmployeeRef {
+	m, err := NewEmployeeRef(employee)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *EmployeeRef) String() string {
 }
 
 func (m *EmployeeRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, EmployeeRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.employee = result["employee"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *EmployeeRef) Clone() *EmployeeRef {
@@ -261,7 +284,11 @@ func (m *EmployeeRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *EmployeeRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *EmployeeRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, EmployeeRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.employee = result["employee"]
+
 	return nil
+}
+
+func (m *EmployeeRef) isParsed() bool {
+	return m != nil && m.id.employee != ""
 }
 
 func (m *EmployeeRef) absolutePath() string {

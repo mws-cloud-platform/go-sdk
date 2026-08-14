@@ -3,9 +3,6 @@
 package model
 
 import (
-	"context"
-
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -70,16 +67,4 @@ func (m *GlobalRoleV2Response) Clone() *GlobalRoleV2Response {
 	clone.Metadata = *m.Metadata.Clone()
 	clone.Status = *m.Status.Clone()
 	return &clone
-}
-
-func (m *GlobalRoleV2Response) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Metadata.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Metadata", err)
-	}
-
-	return nil
 }

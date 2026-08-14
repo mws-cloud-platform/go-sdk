@@ -4,6 +4,7 @@ package secretmanager
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewSecretmanagerProjectID(project string) SecretmanagerProjectID {
+func NewSecretmanagerProjectID(project string) (SecretmanagerProjectID, error) {
+	if project == "" {
+		return SecretmanagerProjectID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := SecretmanagerProjectID{
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustSecretmanagerProjectID(project string) SecretmanagerProjectID {
+	m, err := NewSecretmanagerProjectID(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseSecretmanagerProjectID(path string) (SecretmanagerProjectID, error) {
 	m := SecretmanagerProjectID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return SecretmanagerProjectID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *SecretmanagerProjectID) String() string {
 	return m.ID()
 }
 
-func (m *SecretmanagerProjectID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, SecretmanagerProjectRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *SecretmanagerProjectID) Clone() *SecretmanagerProjectID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *SecretmanagerProjectID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *SecretmanagerProjectID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *SecretmanagerProjectID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewSecretmanagerProjectRef(project string) SecretmanagerProjectRef {
+func (m *SecretmanagerProjectID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, SecretmanagerProjectRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewSecretmanagerProjectRef(project string) (SecretmanagerProjectRef, error) {
+	if project == "" {
+		return SecretmanagerProjectRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := SecretmanagerProjectRef{
 		id: SecretmanagerProjectID{
 			project: project,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustSecretmanagerProjectRef(project string) SecretmanagerProjectRef {
+	m, err := NewSecretmanagerProjectRef(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *SecretmanagerProjectRef) String() string {
 }
 
 func (m *SecretmanagerProjectRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, SecretmanagerProjectRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *SecretmanagerProjectRef) Clone() *SecretmanagerProjectRef {
@@ -261,7 +284,11 @@ func (m *SecretmanagerProjectRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *SecretmanagerProjectRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *SecretmanagerProjectRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, SecretmanagerProjectRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *SecretmanagerProjectRef) isParsed() bool {
+	return m != nil && m.id.project != ""
 }
 
 func (m *SecretmanagerProjectRef) absolutePath() string {

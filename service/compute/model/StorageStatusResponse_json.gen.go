@@ -34,7 +34,9 @@ func (m *StorageStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("disks")
 	e.ArrStart()
 	for _, elem := range m.Disks {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 	return nil

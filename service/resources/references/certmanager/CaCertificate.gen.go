@@ -4,6 +4,7 @@ package certmanager
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewCaCertificateID(project, ca, name string) CaCertificateID {
+func NewCaCertificateID(project, ca, name string) (CaCertificateID, error) {
+	if name == "" {
+		return CaCertificateID{}, reserrors.NewFieldIsEmptyError("name")
+	}
+	if ca == "" {
+		return CaCertificateID{}, reserrors.NewFieldIsEmptyError("ca")
+	}
+	if project == "" {
+		return CaCertificateID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := CaCertificateID{
 		name:    name,
 		ca:      ca,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustCaCertificateID(project, ca, name string) CaCertificateID {
+	m, err := NewCaCertificateID(project, ca, name)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseCaCertificateID(path string) (CaCertificateID, error) {
 	m := CaCertificateID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return CaCertificateID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *CaCertificateID) String() string {
 	return m.ID()
 }
 
-func (m *CaCertificateID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, CaCertificateRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.name = result["name"]
-	m.ca = result["ca"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *CaCertificateID) Clone() *CaCertificateID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *CaCertificateID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *CaCertificateID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *CaCertificateID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewCaCertificateRef(project, ca, name string) CaCertificateRef {
+func (m *CaCertificateID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, CaCertificateRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.name = result["name"]
+	m.ca = result["ca"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewCaCertificateRef(project, ca, name string) (CaCertificateRef, error) {
+	if name == "" {
+		return CaCertificateRef{}, reserrors.NewFieldIsEmptyError("name")
+	}
+	if ca == "" {
+		return CaCertificateRef{}, reserrors.NewFieldIsEmptyError("ca")
+	}
+	if project == "" {
+		return CaCertificateRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := CaCertificateRef{
 		id: CaCertificateID{
 			name:    name,
@@ -204,6 +242,14 @@ func NewCaCertificateRef(project, ca, name string) CaCertificateRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustCaCertificateRef(project, ca, name string) CaCertificateRef {
+	m, err := NewCaCertificateRef(project, ca, name)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *CaCertificateRef) String() string {
 }
 
 func (m *CaCertificateRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, CaCertificateRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.name = result["name"]
-	m.id.ca = result["ca"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *CaCertificateRef) Clone() *CaCertificateRef {
@@ -319,7 +352,11 @@ func (m *CaCertificateRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *CaCertificateRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *CaCertificateRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, CaCertificateRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.name = result["name"]
+	m.id.ca = result["ca"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *CaCertificateRef) isParsed() bool {
+	return m != nil && m.id.name != "" && m.id.ca != "" && m.id.project != ""
 }
 
 func (m *CaCertificateRef) absolutePath() string {

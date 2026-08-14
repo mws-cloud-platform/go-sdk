@@ -4,6 +4,7 @@ package certmanager
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewCertificateID(project, name string) CertificateID {
+func NewCertificateID(project, name string) (CertificateID, error) {
+	if name == "" {
+		return CertificateID{}, reserrors.NewFieldIsEmptyError("name")
+	}
+	if project == "" {
+		return CertificateID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := CertificateID{
 		name:    name,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustCertificateID(project, name string) CertificateID {
+	m, err := NewCertificateID(project, name)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseCertificateID(path string) (CertificateID, error) {
 	m := CertificateID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return CertificateID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *CertificateID) String() string {
 	return m.ID()
 }
 
-func (m *CertificateID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, CertificateRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.name = result["name"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *CertificateID) Clone() *CertificateID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *CertificateID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *CertificateID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *CertificateID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewCertificateRef(project, name string) CertificateRef {
+func (m *CertificateID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, CertificateRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.name = result["name"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewCertificateRef(project, name string) (CertificateRef, error) {
+	if name == "" {
+		return CertificateRef{}, reserrors.NewFieldIsEmptyError("name")
+	}
+	if project == "" {
+		return CertificateRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := CertificateRef{
 		id: CertificateID{
 			name:    name,
@@ -183,6 +215,14 @@ func NewCertificateRef(project, name string) CertificateRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustCertificateRef(project, name string) CertificateRef {
+	m, err := NewCertificateRef(project, name)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *CertificateRef) String() string {
 }
 
 func (m *CertificateRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, CertificateRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.name = result["name"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *CertificateRef) Clone() *CertificateRef {
@@ -290,7 +318,11 @@ func (m *CertificateRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *CertificateRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *CertificateRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, CertificateRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.name = result["name"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *CertificateRef) isParsed() bool {
+	return m != nil && m.id.name != "" && m.id.project != ""
 }
 
 func (m *CertificateRef) absolutePath() string {

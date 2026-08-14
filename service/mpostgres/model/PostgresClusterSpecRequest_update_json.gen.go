@@ -47,21 +47,27 @@ func (m *UpdatePostgresClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("endpoints")
 		e.ArrStart()
 		for _, elem := range m.Endpoints.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.InstanceTemplate.IsSet() {
 		e.FieldStart("instanceTemplate")
-		m.InstanceTemplate.Value.Encode(e)
+		if err := m.InstanceTemplate.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Instances.IsSet() {
 		e.FieldStart("instances")
 		e.ArrStart()
 		for _, elem := range m.Instances.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -71,7 +77,9 @@ func (m *UpdatePostgresClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Backup.IsNull() {
 			e.Null()
 		} else {
-			m.Backup.Value.Encode(e)
+			if err := m.Backup.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -80,7 +88,9 @@ func (m *UpdatePostgresClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.MaintenanceWindow.IsNull() {
 			e.Null()
 		} else {
-			m.MaintenanceWindow.Value.Encode(e)
+			if err := m.MaintenanceWindow.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 

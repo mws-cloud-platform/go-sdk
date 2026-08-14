@@ -35,13 +35,17 @@ func (m *ListNatGatewayResponseOptionalResponse) encodeFields(e *jx.Encoder) err
 	e.FieldStart("items")
 	e.ArrStart()
 	for _, elem := range m.Items {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
 	if m.NextPageToken.IsSet() {
 		e.FieldStart("nextPageToken")
-		m.NextPageToken.Value.Encode(e)
+		if err := m.NextPageToken.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

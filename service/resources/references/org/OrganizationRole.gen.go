@@ -4,6 +4,7 @@ package org
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewOrganizationRoleID(organization, role string) OrganizationRoleID {
+func NewOrganizationRoleID(organization, role string) (OrganizationRoleID, error) {
+	if role == "" {
+		return OrganizationRoleID{}, reserrors.NewFieldIsEmptyError("role")
+	}
+	if organization == "" {
+		return OrganizationRoleID{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := OrganizationRoleID{
 		role:         role,
 		organization: organization,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustOrganizationRoleID(organization, role string) OrganizationRoleID {
+	m, err := NewOrganizationRoleID(organization, role)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseOrganizationRoleID(path string) (OrganizationRoleID, error) {
 	m := OrganizationRoleID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return OrganizationRoleID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *OrganizationRoleID) String() string {
 	return m.ID()
 }
 
-func (m *OrganizationRoleID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, OrganizationRoleRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.role = result["role"]
-	m.organization = result["organization"]
-
-	return nil
-}
-
 func (m *OrganizationRoleID) Clone() *OrganizationRoleID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *OrganizationRoleID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *OrganizationRoleID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *OrganizationRoleID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewOrganizationRoleRef(organization, role string) OrganizationRoleRef {
+func (m *OrganizationRoleID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, OrganizationRoleRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.role = result["role"]
+	m.organization = result["organization"]
+
+	return nil
+}
+
+func NewOrganizationRoleRef(organization, role string) (OrganizationRoleRef, error) {
+	if role == "" {
+		return OrganizationRoleRef{}, reserrors.NewFieldIsEmptyError("role")
+	}
+	if organization == "" {
+		return OrganizationRoleRef{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := OrganizationRoleRef{
 		id: OrganizationRoleID{
 			role:         role,
@@ -183,6 +215,14 @@ func NewOrganizationRoleRef(organization, role string) OrganizationRoleRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustOrganizationRoleRef(organization, role string) OrganizationRoleRef {
+	m, err := NewOrganizationRoleRef(organization, role)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *OrganizationRoleRef) String() string {
 }
 
 func (m *OrganizationRoleRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, OrganizationRoleRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.role = result["role"]
-	m.id.organization = result["organization"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *OrganizationRoleRef) Clone() *OrganizationRoleRef {
@@ -290,7 +318,11 @@ func (m *OrganizationRoleRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *OrganizationRoleRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *OrganizationRoleRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, OrganizationRoleRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.role = result["role"]
+	m.id.organization = result["organization"]
+
 	return nil
+}
+
+func (m *OrganizationRoleRef) isParsed() bool {
+	return m != nil && m.id.role != "" && m.id.organization != ""
 }
 
 func (m *OrganizationRoleRef) absolutePath() string {

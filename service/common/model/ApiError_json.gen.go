@@ -35,7 +35,9 @@ func (m *ApiError) Encode(e *jx.Encoder) error {
 
 func (m *ApiError) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("code")
-	m.Code.Encode(e)
+	if err := m.Code.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Type != nil {
 		e.FieldStart("type")
@@ -49,7 +51,9 @@ func (m *ApiError) encodeFields(e *jx.Encoder) error {
 
 	if m.RetryPolicy != nil {
 		e.FieldStart("retryPolicy")
-		m.RetryPolicy.Encode(e)
+		if err := m.RetryPolicy.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Details != nil {

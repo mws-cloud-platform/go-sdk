@@ -42,7 +42,9 @@ func (m *OsStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.OsType != nil {
 		e.FieldStart("osType")
-		m.OsType.Encode(e)
+		if err := m.OsType.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

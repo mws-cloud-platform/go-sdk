@@ -35,7 +35,9 @@ func (m *ClickhouseClusterInstanceResourceResponse) Encode(e *jx.Encoder) error 
 
 func (m *ClickhouseClusterInstanceResourceResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("id")
-	m.Id.Encode(e)
+	if err := m.Id.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Index != nil {
 		e.FieldStart("index")
@@ -43,20 +45,26 @@ func (m *ClickhouseClusterInstanceResourceResponse) encodeFields(e *jx.Encoder) 
 	}
 
 	e.FieldStart("zone")
-	m.Zone.Encode(e)
+	if err := m.Zone.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Endpoints != nil {
 		e.FieldStart("endpoints")
 		e.ArrStart()
 		for _, elem := range m.Endpoints {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.Health != nil {
 		e.FieldStart("health")
-		m.Health.Encode(e)
+		if err := m.Health.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

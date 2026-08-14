@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewFederationRoleBindingID(organization, userFederation, roleBinding string) FederationRoleBindingID {
+func NewFederationRoleBindingID(organization, userFederation, roleBinding string) (FederationRoleBindingID, error) {
+	if roleBinding == "" {
+		return FederationRoleBindingID{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if userFederation == "" {
+		return FederationRoleBindingID{}, reserrors.NewFieldIsEmptyError("userFederation")
+	}
+	if organization == "" {
+		return FederationRoleBindingID{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := FederationRoleBindingID{
 		roleBinding:    roleBinding,
 		userFederation: userFederation,
 		organization:   organization,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustFederationRoleBindingID(organization, userFederation, roleBinding string) FederationRoleBindingID {
+	m, err := NewFederationRoleBindingID(organization, userFederation, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseFederationRoleBindingID(path string) (FederationRoleBindingID, error) 
 	m := FederationRoleBindingID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return FederationRoleBindingID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *FederationRoleBindingID) String() string {
 	return m.ID()
 }
 
-func (m *FederationRoleBindingID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, FederationRoleBindingRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.roleBinding = result["roleBinding"]
-	m.userFederation = result["userFederation"]
-	m.organization = result["organization"]
-
-	return nil
-}
-
 func (m *FederationRoleBindingID) Clone() *FederationRoleBindingID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *FederationRoleBindingID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *FederationRoleBindingID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *FederationRoleBindingID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewFederationRoleBindingRef(organization, userFederation, roleBinding string) FederationRoleBindingRef {
+func (m *FederationRoleBindingID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, FederationRoleBindingRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.roleBinding = result["roleBinding"]
+	m.userFederation = result["userFederation"]
+	m.organization = result["organization"]
+
+	return nil
+}
+
+func NewFederationRoleBindingRef(organization, userFederation, roleBinding string) (FederationRoleBindingRef, error) {
+	if roleBinding == "" {
+		return FederationRoleBindingRef{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if userFederation == "" {
+		return FederationRoleBindingRef{}, reserrors.NewFieldIsEmptyError("userFederation")
+	}
+	if organization == "" {
+		return FederationRoleBindingRef{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := FederationRoleBindingRef{
 		id: FederationRoleBindingID{
 			roleBinding:    roleBinding,
@@ -204,6 +242,14 @@ func NewFederationRoleBindingRef(organization, userFederation, roleBinding strin
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustFederationRoleBindingRef(organization, userFederation, roleBinding string) FederationRoleBindingRef {
+	m, err := NewFederationRoleBindingRef(organization, userFederation, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *FederationRoleBindingRef) String() string {
 }
 
 func (m *FederationRoleBindingRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, FederationRoleBindingRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.roleBinding = result["roleBinding"]
-	m.id.userFederation = result["userFederation"]
-	m.id.organization = result["organization"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *FederationRoleBindingRef) Clone() *FederationRoleBindingRef {
@@ -319,7 +352,11 @@ func (m *FederationRoleBindingRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *FederationRoleBindingRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *FederationRoleBindingRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, FederationRoleBindingRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.roleBinding = result["roleBinding"]
+	m.id.userFederation = result["userFederation"]
+	m.id.organization = result["organization"]
+
 	return nil
+}
+
+func (m *FederationRoleBindingRef) isParsed() bool {
+	return m != nil && m.id.roleBinding != "" && m.id.userFederation != "" && m.id.organization != ""
 }
 
 func (m *FederationRoleBindingRef) absolutePath() string {

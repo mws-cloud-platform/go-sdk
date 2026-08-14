@@ -3,13 +3,10 @@
 package model
 
 import (
-	"context"
-
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -61,20 +58,6 @@ func (m *ApiKeyRequest) WithChanges(u UpdateApiKeyRequest) ApiKeyRequest {
 func (m UpdateApiKeyRequest) HasChanges() bool {
 	return m.Metadata.Set ||
 		m.Spec.Set
-}
-
-func (m *UpdateApiKeyRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		if err := m.Metadata.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Metadata", err)
-		}
-	}
-
-	return nil
 }
 
 func (m *ApiKeyRequest) diffMetadata(src *ApiKeyRequest) optional.OptionalNil[UpdateApiKeyMetadataRequest] {
@@ -167,17 +150,6 @@ func (m UpdateApiKeyMetadataRequest) HasChanges() bool {
 		m.Usages.Set ||
 		m.Etag.Set ||
 		m.Description.Set
-}
-
-func (m *UpdateApiKeyMetadataRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.UpdateTypedResourceMetadataRequest.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("UpdateTypedResourceMetadataRequest", err)
-	}
-	return nil
 }
 
 func (m *ApiKeyMetadataRequest) diffDisplayName(src *ApiKeyMetadataRequest) optional.Optional[string] {

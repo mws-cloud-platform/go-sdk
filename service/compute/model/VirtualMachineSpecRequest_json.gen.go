@@ -38,27 +38,39 @@ func (m *VirtualMachineSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.Str(m.Zone)
 
 	e.FieldStart("vmType")
-	m.VmType.Encode(e)
+	if err := m.VmType.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Hardware != nil {
 		e.FieldStart("hardware")
-		m.Hardware.Encode(e)
+		if err := m.Hardware.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Os != nil {
 		e.FieldStart("os")
-		m.Os.Encode(e)
+		if err := m.Os.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	e.FieldStart("storage")
-	m.Storage.Encode(e)
+	if err := m.Storage.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("network")
-	m.Network.Encode(e)
+	if err := m.Network.Encode(e); err != nil {
+		return err
+	}
 
 	if m.ServiceAccount != nil {
 		e.FieldStart("serviceAccount")
-		m.ServiceAccount.Encode(e)
+		if err := m.ServiceAccount.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

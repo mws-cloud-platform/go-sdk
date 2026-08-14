@@ -35,7 +35,9 @@ func (m *ProjectStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *ProjectStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.Active != nil {
 		e.FieldStart("active")
 		e.Bool(*m.Active)
@@ -48,7 +50,9 @@ func (m *ProjectStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.Organization != nil {
 		e.FieldStart("organization")
-		m.Organization.Encode(e)
+		if err := m.Organization.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

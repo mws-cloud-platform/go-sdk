@@ -52,7 +52,9 @@ func (m *OsSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Metadata.IsNull() {
 			e.Null()
 		} else {
-			m.Metadata.Value.Encode(e)
+			if err := m.Metadata.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

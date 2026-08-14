@@ -3,9 +3,6 @@
 package model
 
 import (
-	"context"
-
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 )
 
@@ -59,16 +56,4 @@ func (m *TypedUsage) Clone() *TypedUsage {
 	clone := *m
 	clone.Resource = *m.Resource.Clone()
 	return &clone
-}
-
-func (m *TypedUsage) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Resource.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Resource", err)
-	}
-
-	return nil
 }

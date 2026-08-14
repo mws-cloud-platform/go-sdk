@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,11 +57,22 @@ var (
 	}
 )
 
-func NewFolderCountID(organization string) FolderCountID {
+func NewFolderCountID(organization string) (FolderCountID, error) {
+	if organization == "" {
+		return FolderCountID{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := FolderCountID{
 		organization: organization,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustFolderCountID(organization string) FolderCountID {
+	m, err := NewFolderCountID(organization)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -68,7 +80,7 @@ func ParseFolderCountID(path string) (FolderCountID, error) {
 	m := FolderCountID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return FolderCountID{}, err
 	}
 	return m, nil
@@ -113,21 +125,6 @@ func (m *FolderCountID) String() string {
 	return m.ID()
 }
 
-func (m *FolderCountID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, FolderCountRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.organization = result["organization"]
-
-	return nil
-}
-
 func (m *FolderCountID) Clone() *FolderCountID {
 	if m == nil {
 		return nil
@@ -151,7 +148,7 @@ func (m *FolderCountID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,16 +169,53 @@ func (m *FolderCountID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *FolderCountID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewFolderCountRef(organization string) FolderCountRef {
+func (m *FolderCountID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, FolderCountRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.organization = result["organization"]
+
+	return nil
+}
+
+func NewFolderCountRef(organization string) (FolderCountRef, error) {
+	if organization == "" {
+		return FolderCountRef{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := FolderCountRef{
 		id: FolderCountID{
 			organization: organization,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustFolderCountRef(organization string) FolderCountRef {
+	m, err := NewFolderCountRef(organization)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -246,18 +280,7 @@ func (m *FolderCountRef) String() string {
 }
 
 func (m *FolderCountRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, FolderCountRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.organization = result["organization"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *FolderCountRef) Clone() *FolderCountRef {
@@ -281,7 +304,11 @@ func (m *FolderCountRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -300,7 +327,35 @@ func (m *FolderCountRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *FolderCountRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, FolderCountRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.organization = result["organization"]
+
 	return nil
+}
+
+func (m *FolderCountRef) isParsed() bool {
+	return m != nil && m.id.organization != ""
 }
 
 func (m *FolderCountRef) absolutePath() string {

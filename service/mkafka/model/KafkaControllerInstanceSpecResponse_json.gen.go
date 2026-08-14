@@ -40,19 +40,25 @@ func (m *KafkaControllerInstanceSpecResponse) encodeFields(e *jx.Encoder) error 
 
 	if m.VmType != nil {
 		e.FieldStart("vmType")
-		m.VmType.Encode(e)
+		if err := m.VmType.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Disk != nil {
 		e.FieldStart("disk")
-		m.Disk.Encode(e)
+		if err := m.Disk.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Allocation != nil {
 		e.FieldStart("allocation")
 		e.ArrStart()
 		for _, elem := range m.Allocation {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

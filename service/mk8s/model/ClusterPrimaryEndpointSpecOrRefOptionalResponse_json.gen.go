@@ -37,7 +37,9 @@ func (m *ClusterPrimaryEndpointSpecOrRefOptionalResponse) encodeFields(e *jx.Enc
 		if m.Ref.IsNull() {
 			e.Null()
 		} else {
-			m.Ref.Value.Encode(e)
+			if err := m.Ref.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -46,7 +48,9 @@ func (m *ClusterPrimaryEndpointSpecOrRefOptionalResponse) encodeFields(e *jx.Enc
 		if m.Spec.IsNull() {
 			e.Null()
 		} else {
-			m.Spec.Value.Encode(e)
+			if err := m.Spec.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

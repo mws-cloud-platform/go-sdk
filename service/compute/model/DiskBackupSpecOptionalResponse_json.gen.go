@@ -32,11 +32,15 @@ func (m *DiskBackupSpecOptionalResponse) Encode(e *jx.Encoder) error {
 
 func (m *DiskBackupSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("source")
-	m.Source.Encode(e)
+	if err := m.Source.Encode(e); err != nil {
+		return err
+	}
 
 	if m.OsType.IsSet() {
 		e.FieldStart("osType")
-		m.OsType.Value.Encode(e)
+		if err := m.OsType.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

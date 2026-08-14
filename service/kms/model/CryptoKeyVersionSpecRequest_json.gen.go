@@ -34,12 +34,16 @@ func (m *CryptoKeyVersionSpecRequest) Encode(e *jx.Encoder) error {
 func (m *CryptoKeyVersionSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.UsagePolicy != nil {
 		e.FieldStart("usagePolicy")
-		m.UsagePolicy.Encode(e)
+		if err := m.UsagePolicy.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DestructionPolicy != nil {
 		e.FieldStart("destructionPolicy")
-		m.DestructionPolicy.Encode(e)
+		if err := m.DestructionPolicy.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

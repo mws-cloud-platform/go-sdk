@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewUserFederationProviderID(organization, userFederation, provider string) UserFederationProviderID {
+func NewUserFederationProviderID(organization, userFederation, provider string) (UserFederationProviderID, error) {
+	if provider == "" {
+		return UserFederationProviderID{}, reserrors.NewFieldIsEmptyError("provider")
+	}
+	if userFederation == "" {
+		return UserFederationProviderID{}, reserrors.NewFieldIsEmptyError("userFederation")
+	}
+	if organization == "" {
+		return UserFederationProviderID{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := UserFederationProviderID{
 		provider:       provider,
 		userFederation: userFederation,
 		organization:   organization,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustUserFederationProviderID(organization, userFederation, provider string) UserFederationProviderID {
+	m, err := NewUserFederationProviderID(organization, userFederation, provider)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseUserFederationProviderID(path string) (UserFederationProviderID, error
 	m := UserFederationProviderID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return UserFederationProviderID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *UserFederationProviderID) String() string {
 	return m.ID()
 }
 
-func (m *UserFederationProviderID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, UserFederationProviderRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.provider = result["provider"]
-	m.userFederation = result["userFederation"]
-	m.organization = result["organization"]
-
-	return nil
-}
-
 func (m *UserFederationProviderID) Clone() *UserFederationProviderID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *UserFederationProviderID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *UserFederationProviderID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *UserFederationProviderID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewUserFederationProviderRef(organization, userFederation, provider string) UserFederationProviderRef {
+func (m *UserFederationProviderID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, UserFederationProviderRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.provider = result["provider"]
+	m.userFederation = result["userFederation"]
+	m.organization = result["organization"]
+
+	return nil
+}
+
+func NewUserFederationProviderRef(organization, userFederation, provider string) (UserFederationProviderRef, error) {
+	if provider == "" {
+		return UserFederationProviderRef{}, reserrors.NewFieldIsEmptyError("provider")
+	}
+	if userFederation == "" {
+		return UserFederationProviderRef{}, reserrors.NewFieldIsEmptyError("userFederation")
+	}
+	if organization == "" {
+		return UserFederationProviderRef{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := UserFederationProviderRef{
 		id: UserFederationProviderID{
 			provider:       provider,
@@ -204,6 +242,14 @@ func NewUserFederationProviderRef(organization, userFederation, provider string)
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustUserFederationProviderRef(organization, userFederation, provider string) UserFederationProviderRef {
+	m, err := NewUserFederationProviderRef(organization, userFederation, provider)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *UserFederationProviderRef) String() string {
 }
 
 func (m *UserFederationProviderRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, UserFederationProviderRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.provider = result["provider"]
-	m.id.userFederation = result["userFederation"]
-	m.id.organization = result["organization"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *UserFederationProviderRef) Clone() *UserFederationProviderRef {
@@ -319,7 +352,11 @@ func (m *UserFederationProviderRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *UserFederationProviderRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *UserFederationProviderRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, UserFederationProviderRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.provider = result["provider"]
+	m.id.userFederation = result["userFederation"]
+	m.id.organization = result["organization"]
+
 	return nil
+}
+
+func (m *UserFederationProviderRef) isParsed() bool {
+	return m != nil && m.id.provider != "" && m.id.userFederation != "" && m.id.organization != ""
 }
 
 func (m *UserFederationProviderRef) absolutePath() string {

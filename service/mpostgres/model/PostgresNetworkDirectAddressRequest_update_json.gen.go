@@ -35,7 +35,9 @@ func (m *UpdatePostgresNetworkDirectAddressRequest) Encode(e *jx.Encoder) error 
 func (m *UpdatePostgresNetworkDirectAddressRequest) encodeFields(e *jx.Encoder) error {
 	if m.Ref.IsSet() {
 		e.FieldStart("ref")
-		m.Ref.Value.Encode(e)
+		if err := m.Ref.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Spec.IsSet() {
@@ -43,7 +45,9 @@ func (m *UpdatePostgresNetworkDirectAddressRequest) encodeFields(e *jx.Encoder) 
 		if m.Spec.IsNull() {
 			e.Null()
 		} else {
-			m.Spec.Value.Encode(e)
+			if err := m.Spec.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -52,12 +56,16 @@ func (m *UpdatePostgresNetworkDirectAddressRequest) encodeFields(e *jx.Encoder) 
 		if m.ExternalAccess.IsNull() {
 			e.Null()
 		} else {
-			m.ExternalAccess.Value.Encode(e)
+			if err := m.ExternalAccess.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	if m.Zone.IsSet() {
 		e.FieldStart("zone")
-		m.Zone.Value.Encode(e)
+		if err := m.Zone.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

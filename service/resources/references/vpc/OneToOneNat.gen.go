@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewOneToOneNatID(project, network, oneToOneNat string) OneToOneNatID {
+func NewOneToOneNatID(project, network, oneToOneNat string) (OneToOneNatID, error) {
+	if oneToOneNat == "" {
+		return OneToOneNatID{}, reserrors.NewFieldIsEmptyError("oneToOneNat")
+	}
+	if network == "" {
+		return OneToOneNatID{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return OneToOneNatID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := OneToOneNatID{
 		oneToOneNat: oneToOneNat,
 		network:     network,
 		project:     project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustOneToOneNatID(project, network, oneToOneNat string) OneToOneNatID {
+	m, err := NewOneToOneNatID(project, network, oneToOneNat)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseOneToOneNatID(path string) (OneToOneNatID, error) {
 	m := OneToOneNatID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return OneToOneNatID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *OneToOneNatID) String() string {
 	return m.ID()
 }
 
-func (m *OneToOneNatID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, OneToOneNatRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.oneToOneNat = result["oneToOneNat"]
-	m.network = result["network"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *OneToOneNatID) Clone() *OneToOneNatID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *OneToOneNatID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *OneToOneNatID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *OneToOneNatID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewOneToOneNatRef(project, network, oneToOneNat string) OneToOneNatRef {
+func (m *OneToOneNatID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, OneToOneNatRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.oneToOneNat = result["oneToOneNat"]
+	m.network = result["network"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewOneToOneNatRef(project, network, oneToOneNat string) (OneToOneNatRef, error) {
+	if oneToOneNat == "" {
+		return OneToOneNatRef{}, reserrors.NewFieldIsEmptyError("oneToOneNat")
+	}
+	if network == "" {
+		return OneToOneNatRef{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return OneToOneNatRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := OneToOneNatRef{
 		id: OneToOneNatID{
 			oneToOneNat: oneToOneNat,
@@ -204,6 +242,14 @@ func NewOneToOneNatRef(project, network, oneToOneNat string) OneToOneNatRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustOneToOneNatRef(project, network, oneToOneNat string) OneToOneNatRef {
+	m, err := NewOneToOneNatRef(project, network, oneToOneNat)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *OneToOneNatRef) String() string {
 }
 
 func (m *OneToOneNatRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, OneToOneNatRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.oneToOneNat = result["oneToOneNat"]
-	m.id.network = result["network"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *OneToOneNatRef) Clone() *OneToOneNatRef {
@@ -319,7 +352,11 @@ func (m *OneToOneNatRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *OneToOneNatRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *OneToOneNatRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, OneToOneNatRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.oneToOneNat = result["oneToOneNat"]
+	m.id.network = result["network"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *OneToOneNatRef) isParsed() bool {
+	return m != nil && m.id.oneToOneNat != "" && m.id.network != "" && m.id.project != ""
 }
 
 func (m *OneToOneNatRef) absolutePath() string {

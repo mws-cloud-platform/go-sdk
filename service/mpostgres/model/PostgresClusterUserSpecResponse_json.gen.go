@@ -33,21 +33,27 @@ func (m *PostgresClusterUserSpecResponse) Encode(e *jx.Encoder) error {
 func (m *PostgresClusterUserSpecResponse) encodeFields(e *jx.Encoder) error {
 	if m.Role != nil {
 		e.FieldStart("role")
-		m.Role.Encode(e)
+		if err := m.Role.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.AdditionalRoles != nil {
 		e.FieldStart("additionalRoles")
 		e.ArrStart()
 		for _, elem := range m.AdditionalRoles {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
 
 	if m.AccessControlPolicy != nil {
 		e.FieldStart("accessControlPolicy")
-		m.AccessControlPolicy.Encode(e)
+		if err := m.AccessControlPolicy.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

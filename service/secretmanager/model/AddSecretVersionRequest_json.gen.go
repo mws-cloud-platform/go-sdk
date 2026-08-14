@@ -34,12 +34,16 @@ func (m *AddSecretVersionRequest) Encode(e *jx.Encoder) error {
 func (m *AddSecretVersionRequest) encodeFields(e *jx.Encoder) error {
 	if m.Metadata != nil {
 		e.FieldStart("metadata")
-		m.Metadata.Encode(e)
+		if err := m.Metadata.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Spec != nil {
 		e.FieldStart("spec")
-		m.Spec.Encode(e)
+		if err := m.Spec.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

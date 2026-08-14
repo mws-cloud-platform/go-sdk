@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,11 +57,22 @@ var (
 	}
 )
 
-func NewFlagViPreviewID(project string) FlagViPreviewID {
+func NewFlagViPreviewID(project string) (FlagViPreviewID, error) {
+	if project == "" {
+		return FlagViPreviewID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FlagViPreviewID{
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustFlagViPreviewID(project string) FlagViPreviewID {
+	m, err := NewFlagViPreviewID(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -68,7 +80,7 @@ func ParseFlagViPreviewID(path string) (FlagViPreviewID, error) {
 	m := FlagViPreviewID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return FlagViPreviewID{}, err
 	}
 	return m, nil
@@ -113,21 +125,6 @@ func (m *FlagViPreviewID) String() string {
 	return m.ID()
 }
 
-func (m *FlagViPreviewID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, FlagViPreviewRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *FlagViPreviewID) Clone() *FlagViPreviewID {
 	if m == nil {
 		return nil
@@ -151,7 +148,7 @@ func (m *FlagViPreviewID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,16 +169,53 @@ func (m *FlagViPreviewID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *FlagViPreviewID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewFlagViPreviewRef(project string) FlagViPreviewRef {
+func (m *FlagViPreviewID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, FlagViPreviewRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewFlagViPreviewRef(project string) (FlagViPreviewRef, error) {
+	if project == "" {
+		return FlagViPreviewRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := FlagViPreviewRef{
 		id: FlagViPreviewID{
 			project: project,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustFlagViPreviewRef(project string) FlagViPreviewRef {
+	m, err := NewFlagViPreviewRef(project)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -246,18 +280,7 @@ func (m *FlagViPreviewRef) String() string {
 }
 
 func (m *FlagViPreviewRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, FlagViPreviewRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *FlagViPreviewRef) Clone() *FlagViPreviewRef {
@@ -281,7 +304,11 @@ func (m *FlagViPreviewRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -300,7 +327,35 @@ func (m *FlagViPreviewRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *FlagViPreviewRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, FlagViPreviewRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *FlagViPreviewRef) isParsed() bool {
+	return m != nil && m.id.project != ""
 }
 
 func (m *FlagViPreviewRef) absolutePath() string {

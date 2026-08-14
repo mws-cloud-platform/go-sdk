@@ -7,6 +7,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Описывает статус One-to-One NAT-шлюза.
@@ -17,6 +18,8 @@ type OneToOneNatStatusResponse struct {
 	Internal *OneToOneNatStatusInternalResponse `json:"internal,omitempty" yaml:"internal,omitempty"`
 	// Группирующий элемент для всего, что касается внешней части (ресурсов, доступных извне).
 	External *OneToOneNatStatusExternalResponse `json:"external,omitempty" yaml:"external,omitempty"`
+	// Регион, которому принадлежит One-to-One NAT.
+	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
 func (m *OneToOneNatStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -54,6 +57,20 @@ func (m *OneToOneNatStatusResponse) GetExternalOr(val OneToOneNatStatusExternalR
 	return val
 }
 
+func (m *OneToOneNatStatusResponse) GetRegion() *rm.RegionID {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *OneToOneNatStatusResponse) GetRegionOr(val rm.RegionID) rm.RegionID {
+	if m != nil && m.Region != nil {
+		return *m.Region
+	}
+	return val
+}
+
 func (m *OneToOneNatStatusResponse) Clone() *OneToOneNatStatusResponse {
 	if m == nil {
 		return nil
@@ -63,6 +80,7 @@ func (m *OneToOneNatStatusResponse) Clone() *OneToOneNatStatusResponse {
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
 	clone.Internal = m.Internal.Clone()
 	clone.External = m.External.Clone()
+	clone.Region = m.Region.Clone()
 
 	return &clone
 }

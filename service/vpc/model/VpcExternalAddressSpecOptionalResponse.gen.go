@@ -7,14 +7,31 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 // Спецификация внешнего адреса.
 // Real OAPI model name: VpcExternalAddressSpec
 type VpcExternalAddressSpecOptionalResponse struct {
+	// Регион, которому принадлежит адрес.
+	Region optional.Optional[rm.RegionRef] `json:"region,omitempty" yaml:"region,omitempty"`
 	// Шлюз, к которому относится адрес. Если шлюз не указан, для трансляции IP-адресов используется шлюз по умолчанию для выхода в интернет (ref=natGateways/internet-gateway)
 	NatGateway optional.Optional[vpc.NatGatewayRef] `json:"natGateway,omitempty" yaml:"natGateway,omitempty"`
+}
+
+func (m *VpcExternalAddressSpecOptionalResponse) GetRegion() *rm.RegionRef {
+	if m != nil && m.Region.IsSet() {
+		return &m.Region.Value
+	}
+	return nil
+}
+
+func (m *VpcExternalAddressSpecOptionalResponse) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+	if m != nil && m.Region.IsSet() {
+		return m.Region.Value
+	}
+	return val
 }
 
 func (m *VpcExternalAddressSpecOptionalResponse) GetNatGateway() *vpc.NatGatewayRef {
@@ -37,6 +54,9 @@ func (m *VpcExternalAddressSpecOptionalResponse) Clone() *VpcExternalAddressSpec
 	}
 
 	clone := *m
+	if clone.Region.IsSet() {
+		clone.Region.Value = *m.Region.Value.Clone()
+	}
 	if clone.NatGateway.IsSet() {
 		clone.NatGateway.Value = *m.NatGateway.Value.Clone()
 	}
@@ -46,6 +66,12 @@ func (m *VpcExternalAddressSpecOptionalResponse) Clone() *VpcExternalAddressSpec
 func (m *VpcExternalAddressSpecOptionalResponse) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if m.Region.IsSet() {
+		if err := m.Region.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Region", err)
+		}
 	}
 
 	if m.NatGateway.IsSet() {

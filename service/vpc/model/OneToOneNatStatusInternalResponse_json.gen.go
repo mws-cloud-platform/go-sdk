@@ -32,7 +32,9 @@ func (m *OneToOneNatStatusInternalResponse) Encode(e *jx.Encoder) error {
 
 func (m *OneToOneNatStatusInternalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("address")
-	m.Address.Encode(e)
+	if err := m.Address.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

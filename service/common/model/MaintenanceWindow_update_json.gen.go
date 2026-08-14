@@ -33,7 +33,9 @@ func (m *UpdateMaintenanceWindow) Encode(e *jx.Encoder) error {
 func (m *UpdateMaintenanceWindow) encodeFields(e *jx.Encoder) error {
 	if m.Weekly.IsSet() {
 		e.FieldStart("weekly")
-		m.Weekly.Value.Encode(e)
+		if err := m.Weekly.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -30,6 +30,18 @@ func Example_customFormat() {
 	// 123...
 }
 
+func Example_withValue() {
+	secret := sensitive.New("123456789", sensitive.WithFormat(func(v string) string {
+		return v[0:3] + "..."
+	}))
+	updated := secret.WithValue("987654321")
+	fmt.Println("redacted:", updated)
+	fmt.Println("raw:", updated.Value())
+	// Output:
+	// redacted: 987...
+	// raw: 987654321
+}
+
 func Example_text() {
 	secret := sensitive.New("secret")
 

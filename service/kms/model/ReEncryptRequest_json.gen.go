@@ -38,7 +38,9 @@ func (m *ReEncryptRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.SourceKeyRef != nil {
 		e.FieldStart("sourceKeyRef")
-		m.SourceKeyRef.Encode(e)
+		if err := m.SourceKeyRef.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.SourceAssociatedData != nil {

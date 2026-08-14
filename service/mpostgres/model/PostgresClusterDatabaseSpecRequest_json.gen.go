@@ -34,7 +34,9 @@ func (m *PostgresClusterDatabaseSpecRequest) Encode(e *jx.Encoder) error {
 
 func (m *PostgresClusterDatabaseSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("owner")
-	m.Owner.Encode(e)
+	if err := m.Owner.Encode(e); err != nil {
+		return err
+	}
 
 	if m.LcCollate != nil {
 		e.FieldStart("lcCollate")
@@ -48,7 +50,9 @@ func (m *PostgresClusterDatabaseSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Template != nil {
 		e.FieldStart("template")
-		m.Template.Encode(e)
+		if err := m.Template.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DeletionProtection != nil {
@@ -60,7 +64,9 @@ func (m *PostgresClusterDatabaseSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("extensions")
 		e.ArrStart()
 		for _, elem := range m.Extensions {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

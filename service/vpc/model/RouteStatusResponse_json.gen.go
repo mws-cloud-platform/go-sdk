@@ -33,15 +33,21 @@ func (m *RouteStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *RouteStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.NextHop != nil {
 		e.FieldStart("nextHop")
-		m.NextHop.Encode(e)
+		if err := m.NextHop.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Destination != nil {
 		e.FieldStart("destination")
-		m.Destination.Encode(e)
+		if err := m.Destination.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

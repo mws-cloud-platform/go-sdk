@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewZonalOneToOneNatID(zone, project, zonalNetwork, zonalOneToOneNat string) ZonalOneToOneNatID {
+func NewZonalOneToOneNatID(zone, project, zonalNetwork, zonalOneToOneNat string) (ZonalOneToOneNatID, error) {
+	if zonalOneToOneNat == "" {
+		return ZonalOneToOneNatID{}, reserrors.NewFieldIsEmptyError("zonalOneToOneNat")
+	}
+	if zonalNetwork == "" {
+		return ZonalOneToOneNatID{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalOneToOneNatID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalOneToOneNatID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalOneToOneNatID{
 		zonalOneToOneNat: zonalOneToOneNat,
 		zonalNetwork:     zonalNetwork,
@@ -74,6 +87,14 @@ func NewZonalOneToOneNatID(zone, project, zonalNetwork, zonalOneToOneNat string)
 		zone:             zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalOneToOneNatID(zone, project, zonalNetwork, zonalOneToOneNat string) ZonalOneToOneNatID {
+	m, err := NewZonalOneToOneNatID(zone, project, zonalNetwork, zonalOneToOneNat)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseZonalOneToOneNatID(path string) (ZonalOneToOneNatID, error) {
 	m := ZonalOneToOneNatID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalOneToOneNatID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *ZonalOneToOneNatID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalOneToOneNatID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalOneToOneNatRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalOneToOneNat = result["zonalOneToOneNat"]
-	m.zonalNetwork = result["zonalNetwork"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalOneToOneNatID) Clone() *ZonalOneToOneNatID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *ZonalOneToOneNatID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *ZonalOneToOneNatID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalOneToOneNatID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalOneToOneNatRef(zone, project, zonalNetwork, zonalOneToOneNat string) ZonalOneToOneNatRef {
+func (m *ZonalOneToOneNatID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalOneToOneNatRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalOneToOneNat = result["zonalOneToOneNat"]
+	m.zonalNetwork = result["zonalNetwork"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalOneToOneNatRef(zone, project, zonalNetwork, zonalOneToOneNat string) (ZonalOneToOneNatRef, error) {
+	if zonalOneToOneNat == "" {
+		return ZonalOneToOneNatRef{}, reserrors.NewFieldIsEmptyError("zonalOneToOneNat")
+	}
+	if zonalNetwork == "" {
+		return ZonalOneToOneNatRef{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalOneToOneNatRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalOneToOneNatRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalOneToOneNatRef{
 		id: ZonalOneToOneNatID{
 			zonalOneToOneNat: zonalOneToOneNat,
@@ -225,6 +269,14 @@ func NewZonalOneToOneNatRef(zone, project, zonalNetwork, zonalOneToOneNat string
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalOneToOneNatRef(zone, project, zonalNetwork, zonalOneToOneNat string) ZonalOneToOneNatRef {
+	m, err := NewZonalOneToOneNatRef(zone, project, zonalNetwork, zonalOneToOneNat)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *ZonalOneToOneNatRef) String() string {
 }
 
 func (m *ZonalOneToOneNatRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalOneToOneNatRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalOneToOneNat = result["zonalOneToOneNat"]
-	m.id.zonalNetwork = result["zonalNetwork"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalOneToOneNatRef) Clone() *ZonalOneToOneNatRef {
@@ -348,7 +386,11 @@ func (m *ZonalOneToOneNatRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *ZonalOneToOneNatRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalOneToOneNatRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalOneToOneNatRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalOneToOneNat = result["zonalOneToOneNat"]
+	m.id.zonalNetwork = result["zonalNetwork"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalOneToOneNatRef) isParsed() bool {
+	return m != nil && m.id.zonalOneToOneNat != "" && m.id.zonalNetwork != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalOneToOneNatRef) absolutePath() string {

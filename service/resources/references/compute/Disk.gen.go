@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewDiskID(project, disk string) DiskID {
+func NewDiskID(project, disk string) (DiskID, error) {
+	if disk == "" {
+		return DiskID{}, reserrors.NewFieldIsEmptyError("disk")
+	}
+	if project == "" {
+		return DiskID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := DiskID{
 		disk:    disk,
 		project: project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustDiskID(project, disk string) DiskID {
+	m, err := NewDiskID(project, disk)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseDiskID(path string) (DiskID, error) {
 	m := DiskID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return DiskID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *DiskID) String() string {
 	return m.ID()
 }
 
-func (m *DiskID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, DiskRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.disk = result["disk"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *DiskID) Clone() *DiskID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *DiskID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *DiskID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *DiskID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewDiskRef(project, disk string) DiskRef {
+func (m *DiskID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, DiskRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.disk = result["disk"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewDiskRef(project, disk string) (DiskRef, error) {
+	if disk == "" {
+		return DiskRef{}, reserrors.NewFieldIsEmptyError("disk")
+	}
+	if project == "" {
+		return DiskRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := DiskRef{
 		id: DiskID{
 			disk:    disk,
@@ -183,6 +215,14 @@ func NewDiskRef(project, disk string) DiskRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustDiskRef(project, disk string) DiskRef {
+	m, err := NewDiskRef(project, disk)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *DiskRef) String() string {
 }
 
 func (m *DiskRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, DiskRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.disk = result["disk"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *DiskRef) Clone() *DiskRef {
@@ -290,7 +318,11 @@ func (m *DiskRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *DiskRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *DiskRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, DiskRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.disk = result["disk"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *DiskRef) isParsed() bool {
+	return m != nil && m.id.disk != "" && m.id.project != ""
 }
 
 func (m *DiskRef) absolutePath() string {

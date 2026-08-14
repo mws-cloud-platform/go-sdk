@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"go.mws.cloud/go-sdk/service/resources/references/org"
 	"go.mws.cloud/go-sdk/service/rm/model"
 )
 
@@ -24,5 +25,6 @@ func TestProjectResponseMarshalling(t *testing.T) {
 
 func initProjectResponse() model.ProjectResponse {
 	var v model.ProjectResponse
+	v.Spec.Folder = org.NewMustFolderRef("organizationID", "folderID")
 	return v
 }

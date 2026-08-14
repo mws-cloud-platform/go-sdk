@@ -50,14 +50,18 @@ func (m *UpdateClickhouseClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Region.IsSet() {
 		e.FieldStart("region")
-		m.Region.Value.Encode(e)
+		if err := m.Region.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Endpoints.IsSet() {
 		e.FieldStart("endpoints")
 		e.ArrStart()
 		for _, elem := range m.Endpoints.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -67,7 +71,9 @@ func (m *UpdateClickhouseClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Coordinator.IsNull() {
 			e.Null()
 		} else {
-			m.Coordinator.Value.Encode(e)
+			if err := m.Coordinator.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -75,7 +81,9 @@ func (m *UpdateClickhouseClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("shards")
 		e.ArrStart()
 		for _, elem := range m.Shards.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}
@@ -98,13 +106,17 @@ func (m *UpdateClickhouseClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Storage.IsNull() {
 			e.Null()
 		} else {
-			m.Storage.Value.Encode(e)
+			if err := m.Storage.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
 	if m.BootstrapAdmin.IsSet() {
 		e.FieldStart("bootstrapAdmin")
-		m.BootstrapAdmin.Value.Encode(e)
+		if err := m.BootstrapAdmin.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Backup.IsSet() {
@@ -112,7 +124,9 @@ func (m *UpdateClickhouseClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Backup.IsNull() {
 			e.Null()
 		} else {
-			m.Backup.Value.Encode(e)
+			if err := m.Backup.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -121,7 +135,9 @@ func (m *UpdateClickhouseClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.MaintenanceWindow.IsNull() {
 			e.Null()
 		} else {
-			m.MaintenanceWindow.Value.Encode(e)
+			if err := m.MaintenanceWindow.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

@@ -34,12 +34,16 @@ func (m *ClusterAvailabilitySpecRequest) Encode(e *jx.Encoder) error {
 func (m *ClusterAvailabilitySpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Standalone != nil {
 		e.FieldStart("standalone")
-		m.Standalone.Encode(e)
+		if err := m.Standalone.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ZonalHa != nil {
 		e.FieldStart("zonalHa")
-		m.ZonalHa.Encode(e)
+		if err := m.ZonalHa.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

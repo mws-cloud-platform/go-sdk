@@ -46,7 +46,9 @@ func (m *UpdateCommonTypedResourceMetadataRequest) encodeFields(e *jx.Encoder) e
 		e.FieldStart("usages")
 		e.ArrStart()
 		for _, elem := range m.Usages.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

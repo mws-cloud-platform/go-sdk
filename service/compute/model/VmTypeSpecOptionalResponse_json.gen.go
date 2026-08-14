@@ -36,7 +36,9 @@ func (m *VmTypeSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Cpu.IsNull() {
 			e.Null()
 		} else {
-			m.Cpu.Value.Encode(e)
+			if err := m.Cpu.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -45,7 +47,9 @@ func (m *VmTypeSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Memory.IsNull() {
 			e.Null()
 		} else {
-			m.Memory.Value.Encode(e)
+			if err := m.Memory.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -54,7 +58,9 @@ func (m *VmTypeSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Disks.IsNull() {
 			e.Null()
 		} else {
-			m.Disks.Value.Encode(e)
+			if err := m.Disks.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -63,7 +69,9 @@ func (m *VmTypeSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.LocalDisks.IsNull() {
 			e.Null()
 		} else {
-			m.LocalDisks.Value.Encode(e)
+			if err := m.LocalDisks.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -72,7 +80,9 @@ func (m *VmTypeSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		if m.Network.IsNull() {
 			e.Null()
 		} else {
-			m.Network.Value.Encode(e)
+			if err := m.Network.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

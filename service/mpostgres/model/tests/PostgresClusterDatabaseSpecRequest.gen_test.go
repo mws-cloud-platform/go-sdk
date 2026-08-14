@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/mpostgres/model"
+	"go.mws.cloud/go-sdk/service/resources/references/mpostgres"
 )
 
 func TestPostgresClusterDatabaseSpecRequestMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestPostgresClusterDatabaseSpecRequestMarshalling(t *testing.T) {
 
 func initPostgresClusterDatabaseSpecRequest() model.PostgresClusterDatabaseSpecRequest {
 	var v model.PostgresClusterDatabaseSpecRequest
+	v.Owner = mpostgres.NewMustPostgresClusterUserRef("projectID", "r", "m")
 	return v
 }

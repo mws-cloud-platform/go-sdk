@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/mkafka/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func TestKafkaAllocationRequestMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestKafkaAllocationRequestMarshalling(t *testing.T) {
 
 func initKafkaAllocationRequest() model.KafkaAllocationRequest {
 	var v model.KafkaAllocationRequest
+	v.Zone = rm.NewMustZoneRef("zoneID")
 	return v
 }

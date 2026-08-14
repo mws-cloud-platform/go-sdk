@@ -53,6 +53,12 @@ var (
 )
 
 func NewPostgresShadowClusterID(shadowProject, cluster string) (PostgresShadowClusterID, error) {
+	if cluster == "" {
+		return PostgresShadowClusterID{}, reserrors.NewFieldIsEmptyError("cluster")
+	}
+	if shadowProject == "" {
+		return PostgresShadowClusterID{}, reserrors.NewFieldIsEmptyError("shadowProject")
+	}
 	if match := PostgresShadowClusterClusterValidatePattern.Match([]byte(cluster)); !match {
 		return PostgresShadowClusterID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
 	}
@@ -72,8 +78,6 @@ func NewMustPostgresShadowClusterID(shadowProject, cluster string) PostgresShado
 	if err != nil {
 		panic(err)
 	}
-
-	m.path = m.ID()
 	return m
 }
 
@@ -81,7 +85,7 @@ func ParsePostgresShadowClusterID(path string) (PostgresShadowClusterID, error) 
 	m := PostgresShadowClusterID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return PostgresShadowClusterID{}, err
 	}
 	return m, nil
@@ -134,22 +138,6 @@ func (m *PostgresShadowClusterID) String() string {
 	return m.ID()
 }
 
-func (m *PostgresShadowClusterID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, PostgresShadowClusterRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.cluster = result["cluster"]
-	m.shadowProject = result["shadowProject"]
-
-	return nil
-}
-
 func (m *PostgresShadowClusterID) Clone() *PostgresShadowClusterID {
 	if m == nil {
 		return nil
@@ -173,7 +161,7 @@ func (m *PostgresShadowClusterID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -194,6 +182,33 @@ func (m *PostgresShadowClusterID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *PostgresShadowClusterID) Parse(ctx context.Context) error {
+	return nil
+}
+
+func (m *PostgresShadowClusterID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, PostgresShadowClusterRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.cluster = result["cluster"]
+	m.shadowProject = result["shadowProject"]
+
 	return nil
 }
 
@@ -211,10 +226,10 @@ func NewPostgresShadowClusterRef(shadowProject, cluster string) (PostgresShadowC
 }
 
 func NewMustPostgresShadowClusterRef(shadowProject, cluster string) PostgresShadowClusterRef {
-	m := PostgresShadowClusterRef{
-		id: NewMustPostgresShadowClusterID(shadowProject, cluster),
+	m, err := NewPostgresShadowClusterRef(shadowProject, cluster)
+	if err != nil {
+		panic(err)
 	}
-	m.id.path = m.absolutePath()
 	return m
 }
 
@@ -286,19 +301,7 @@ func (m *PostgresShadowClusterRef) String() string {
 }
 
 func (m *PostgresShadowClusterRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, PostgresShadowClusterRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.cluster = result["cluster"]
-	m.id.shadowProject = result["shadowProject"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *PostgresShadowClusterRef) Clone() *PostgresShadowClusterRef {
@@ -322,7 +325,11 @@ func (m *PostgresShadowClusterRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -341,7 +348,36 @@ func (m *PostgresShadowClusterRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *PostgresShadowClusterRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, PostgresShadowClusterRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.cluster = result["cluster"]
+	m.id.shadowProject = result["shadowProject"]
+
 	return nil
+}
+
+func (m *PostgresShadowClusterRef) isParsed() bool {
+	return m != nil && m.id.cluster != "" && m.id.shadowProject != ""
 }
 
 func (m *PostgresShadowClusterRef) absolutePath() string {

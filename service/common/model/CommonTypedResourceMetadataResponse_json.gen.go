@@ -35,7 +35,9 @@ func (m *CommonTypedResourceMetadataResponse) Encode(e *jx.Encoder) error {
 func (m *CommonTypedResourceMetadataResponse) encodeFields(e *jx.Encoder) error {
 	if m.Id != nil {
 		e.FieldStart("id")
-		m.Id.Encode(e)
+		if err := m.Id.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Name != nil {
@@ -72,7 +74,9 @@ func (m *CommonTypedResourceMetadataResponse) encodeFields(e *jx.Encoder) error 
 		e.FieldStart("usages")
 		e.ArrStart()
 		for _, elem := range m.Usages {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

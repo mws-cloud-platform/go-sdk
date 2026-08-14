@@ -34,7 +34,9 @@ func (m *UpdateCommonRoleBindingWorkloadFederation) Encode(e *jx.Encoder) error 
 func (m *UpdateCommonRoleBindingWorkloadFederation) encodeFields(e *jx.Encoder) error {
 	if m.Id.IsSet() {
 		e.FieldStart("id")
-		m.Id.Value.Encode(e)
+		if err := m.Id.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Context.IsSet() {
@@ -42,7 +44,9 @@ func (m *UpdateCommonRoleBindingWorkloadFederation) encodeFields(e *jx.Encoder) 
 		if m.Context.IsNull() {
 			e.Null()
 		} else {
-			m.Context.Value.Encode(e)
+			if err := m.Context.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

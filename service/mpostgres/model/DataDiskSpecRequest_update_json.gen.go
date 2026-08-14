@@ -39,12 +39,16 @@ func (m *UpdateDataDiskSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.Type.IsSet() {
 		e.FieldStart("type")
-		m.Type.Value.Encode(e)
+		if err := m.Type.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Iops.IsSet() {
 		e.FieldStart("iops")
-		m.Iops.Value.Encode(e)
+		if err := m.Iops.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

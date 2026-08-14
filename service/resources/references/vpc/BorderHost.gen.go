@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewBorderHostID(zone, borderHost string) BorderHostID {
+func NewBorderHostID(zone, borderHost string) (BorderHostID, error) {
+	if borderHost == "" {
+		return BorderHostID{}, reserrors.NewFieldIsEmptyError("borderHost")
+	}
+	if zone == "" {
+		return BorderHostID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := BorderHostID{
 		borderHost: borderHost,
 		zone:       zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustBorderHostID(zone, borderHost string) BorderHostID {
+	m, err := NewBorderHostID(zone, borderHost)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseBorderHostID(path string) (BorderHostID, error) {
 	m := BorderHostID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return BorderHostID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *BorderHostID) String() string {
 	return m.ID()
 }
 
-func (m *BorderHostID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, BorderHostRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.borderHost = result["borderHost"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *BorderHostID) Clone() *BorderHostID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *BorderHostID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *BorderHostID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *BorderHostID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewBorderHostRef(zone, borderHost string) BorderHostRef {
+func (m *BorderHostID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, BorderHostRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.borderHost = result["borderHost"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewBorderHostRef(zone, borderHost string) (BorderHostRef, error) {
+	if borderHost == "" {
+		return BorderHostRef{}, reserrors.NewFieldIsEmptyError("borderHost")
+	}
+	if zone == "" {
+		return BorderHostRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := BorderHostRef{
 		id: BorderHostID{
 			borderHost: borderHost,
@@ -183,6 +215,14 @@ func NewBorderHostRef(zone, borderHost string) BorderHostRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustBorderHostRef(zone, borderHost string) BorderHostRef {
+	m, err := NewBorderHostRef(zone, borderHost)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *BorderHostRef) String() string {
 }
 
 func (m *BorderHostRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, BorderHostRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.borderHost = result["borderHost"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *BorderHostRef) Clone() *BorderHostRef {
@@ -290,7 +318,11 @@ func (m *BorderHostRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *BorderHostRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *BorderHostRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, BorderHostRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.borderHost = result["borderHost"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *BorderHostRef) isParsed() bool {
+	return m != nil && m.id.borderHost != "" && m.id.zone != ""
 }
 
 func (m *BorderHostRef) absolutePath() string {

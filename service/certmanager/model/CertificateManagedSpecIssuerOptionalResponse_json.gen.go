@@ -37,7 +37,9 @@ func (m *CertificateManagedSpecIssuerOptionalResponse) encodeFields(e *jx.Encode
 		if m.Acme.IsNull() {
 			e.Null()
 		} else {
-			m.Acme.Value.Encode(e)
+			if err := m.Acme.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -96,10 +98,14 @@ func (m *CertificateManagedSpecIssuerAcmeOptionalResponse) Encode(e *jx.Encoder)
 
 func (m *CertificateManagedSpecIssuerAcmeOptionalResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("server")
-	m.Server.Encode(e)
+	if err := m.Server.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("challengeType")
-	m.ChallengeType.Encode(e)
+	if err := m.ChallengeType.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Profile.IsSet() {
 		e.FieldStart("profile")

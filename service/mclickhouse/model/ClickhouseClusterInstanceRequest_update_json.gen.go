@@ -45,14 +45,18 @@ func (m *UpdateClickhouseClusterInstanceRequest) encodeFields(e *jx.Encoder) err
 
 	if m.Zone.IsSet() {
 		e.FieldStart("zone")
-		m.Zone.Value.Encode(e)
+		if err := m.Zone.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Endpoints.IsSet() {
 		e.FieldStart("endpoints")
 		e.ArrStart()
 		for _, elem := range m.Endpoints.Value {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

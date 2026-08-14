@@ -37,7 +37,9 @@ func (m *UpdateCryptoKeyVersionSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.UsagePolicy.IsNull() {
 			e.Null()
 		} else {
-			m.UsagePolicy.Value.Encode(e)
+			if err := m.UsagePolicy.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -46,7 +48,9 @@ func (m *UpdateCryptoKeyVersionSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.DestructionPolicy.IsNull() {
 			e.Null()
 		} else {
-			m.DestructionPolicy.Value.Encode(e)
+			if err := m.DestructionPolicy.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

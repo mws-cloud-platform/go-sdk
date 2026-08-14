@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	"go.mws.cloud/go-sdk/service/mpostgres/model"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func TestPostgresInstanceTemplateResponseMarshalling(t *testing.T) {
@@ -25,6 +26,7 @@ func TestPostgresInstanceTemplateResponseMarshalling(t *testing.T) {
 
 func initPostgresInstanceTemplateResponse() model.PostgresInstanceTemplateResponse {
 	var v model.PostgresInstanceTemplateResponse
+	v.VmType = compute.NewMustVmTypeRef("vmTypeID")
 	v.Disk.Size = bytesize.MustParseString("0 B")
 	return v
 }

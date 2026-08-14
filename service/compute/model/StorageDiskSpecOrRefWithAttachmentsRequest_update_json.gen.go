@@ -49,7 +49,9 @@ func (m *UpdateStorageDiskSpecOrRefWithAttachmentsRequest) encodeFields(e *jx.En
 
 	if m.Disk.IsSet() {
 		e.FieldStart("disk")
-		m.Disk.Value.Encode(e)
+		if err := m.Disk.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

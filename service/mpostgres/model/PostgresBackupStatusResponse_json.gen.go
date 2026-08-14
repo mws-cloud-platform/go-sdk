@@ -35,7 +35,9 @@ func (m *PostgresBackupStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *PostgresBackupStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.StartTime != nil {
 		e.FieldStart("startTime")
 		conv.EncodeDateTimeUTC(e, *m.StartTime)
@@ -58,7 +60,9 @@ func (m *PostgresBackupStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.BackupTrigger != nil {
 		e.FieldStart("backupTrigger")
-		m.BackupTrigger.Encode(e)
+		if err := m.BackupTrigger.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

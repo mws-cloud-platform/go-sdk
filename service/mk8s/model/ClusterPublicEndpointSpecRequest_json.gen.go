@@ -34,7 +34,9 @@ func (m *ClusterPublicEndpointSpecRequest) Encode(e *jx.Encoder) error {
 func (m *ClusterPublicEndpointSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Version != nil {
 		e.FieldStart("version")
-		m.Version.Encode(e)
+		if err := m.Version.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

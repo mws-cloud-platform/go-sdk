@@ -4,7 +4,6 @@ package client
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -163,20 +162,6 @@ func (m *ListModelsResponse200) Clone() *ListModelsResponse200 {
 	return &clone
 }
 
-func (m *ListModelsResponse200) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	for index := range m.Items {
-		if err := m.Items[index].Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Items"+fmt.Sprint("[", index, "]"), err)
-		}
-	}
-
-	return nil
-}
-
 func (m ListModelsResponse200) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -202,13 +187,17 @@ func (m *ListModelsResponse200) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("items")
 	e.ArrStart()
 	for _, elem := range m.Items {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 
 	if m.NextPageToken != nil {
 		e.FieldStart("nextPageToken")
-		m.NextPageToken.Encode(e)
+		if err := m.NextPageToken.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

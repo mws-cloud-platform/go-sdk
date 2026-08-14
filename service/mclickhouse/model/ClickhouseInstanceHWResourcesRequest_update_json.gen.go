@@ -34,12 +34,16 @@ func (m *UpdateClickhouseInstanceHWResourcesRequest) Encode(e *jx.Encoder) error
 func (m *UpdateClickhouseInstanceHWResourcesRequest) encodeFields(e *jx.Encoder) error {
 	if m.VmType.IsSet() {
 		e.FieldStart("vmType")
-		m.VmType.Value.Encode(e)
+		if err := m.VmType.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Disk.IsSet() {
 		e.FieldStart("disk")
-		m.Disk.Value.Encode(e)
+		if err := m.Disk.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

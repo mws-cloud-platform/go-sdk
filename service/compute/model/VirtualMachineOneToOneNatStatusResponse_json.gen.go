@@ -34,16 +34,22 @@ func (m *VirtualMachineOneToOneNatStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *VirtualMachineOneToOneNatStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ref")
-	m.Ref.Encode(e)
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Ready != nil {
 		e.FieldStart("ready")
-		m.Ready.Encode(e)
+		if err := m.Ready.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.External != nil {
 		e.FieldStart("external")
-		m.External.Encode(e)
+		if err := m.External.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

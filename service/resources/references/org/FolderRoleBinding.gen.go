@@ -4,6 +4,7 @@ package org
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewFolderRoleBindingID(organization, folder, roleBinding string) FolderRoleBindingID {
+func NewFolderRoleBindingID(organization, folder, roleBinding string) (FolderRoleBindingID, error) {
+	if roleBinding == "" {
+		return FolderRoleBindingID{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if folder == "" {
+		return FolderRoleBindingID{}, reserrors.NewFieldIsEmptyError("folder")
+	}
+	if organization == "" {
+		return FolderRoleBindingID{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := FolderRoleBindingID{
 		roleBinding:  roleBinding,
 		folder:       folder,
 		organization: organization,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustFolderRoleBindingID(organization, folder, roleBinding string) FolderRoleBindingID {
+	m, err := NewFolderRoleBindingID(organization, folder, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseFolderRoleBindingID(path string) (FolderRoleBindingID, error) {
 	m := FolderRoleBindingID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return FolderRoleBindingID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *FolderRoleBindingID) String() string {
 	return m.ID()
 }
 
-func (m *FolderRoleBindingID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, FolderRoleBindingRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.roleBinding = result["roleBinding"]
-	m.folder = result["folder"]
-	m.organization = result["organization"]
-
-	return nil
-}
-
 func (m *FolderRoleBindingID) Clone() *FolderRoleBindingID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *FolderRoleBindingID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *FolderRoleBindingID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *FolderRoleBindingID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewFolderRoleBindingRef(organization, folder, roleBinding string) FolderRoleBindingRef {
+func (m *FolderRoleBindingID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, FolderRoleBindingRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.roleBinding = result["roleBinding"]
+	m.folder = result["folder"]
+	m.organization = result["organization"]
+
+	return nil
+}
+
+func NewFolderRoleBindingRef(organization, folder, roleBinding string) (FolderRoleBindingRef, error) {
+	if roleBinding == "" {
+		return FolderRoleBindingRef{}, reserrors.NewFieldIsEmptyError("roleBinding")
+	}
+	if folder == "" {
+		return FolderRoleBindingRef{}, reserrors.NewFieldIsEmptyError("folder")
+	}
+	if organization == "" {
+		return FolderRoleBindingRef{}, reserrors.NewFieldIsEmptyError("organization")
+	}
 	m := FolderRoleBindingRef{
 		id: FolderRoleBindingID{
 			roleBinding:  roleBinding,
@@ -204,6 +242,14 @@ func NewFolderRoleBindingRef(organization, folder, roleBinding string) FolderRol
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustFolderRoleBindingRef(organization, folder, roleBinding string) FolderRoleBindingRef {
+	m, err := NewFolderRoleBindingRef(organization, folder, roleBinding)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *FolderRoleBindingRef) String() string {
 }
 
 func (m *FolderRoleBindingRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, FolderRoleBindingRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.roleBinding = result["roleBinding"]
-	m.id.folder = result["folder"]
-	m.id.organization = result["organization"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *FolderRoleBindingRef) Clone() *FolderRoleBindingRef {
@@ -319,7 +352,11 @@ func (m *FolderRoleBindingRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *FolderRoleBindingRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *FolderRoleBindingRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, FolderRoleBindingRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.roleBinding = result["roleBinding"]
+	m.id.folder = result["folder"]
+	m.id.organization = result["organization"]
+
 	return nil
+}
+
+func (m *FolderRoleBindingRef) isParsed() bool {
+	return m != nil && m.id.roleBinding != "" && m.id.folder != "" && m.id.organization != ""
 }
 
 func (m *FolderRoleBindingRef) absolutePath() string {

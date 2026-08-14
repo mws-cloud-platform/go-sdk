@@ -35,27 +35,37 @@ func (m *CryptoKeySpecRequest) Encode(e *jx.Encoder) error {
 func (m *CryptoKeySpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.DefaultAlgorithm != nil {
 		e.FieldStart("defaultAlgorithm")
-		m.DefaultAlgorithm.Encode(e)
+		if err := m.DefaultAlgorithm.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.DestructionPolicy != nil {
 		e.FieldStart("destructionPolicy")
-		m.DestructionPolicy.Encode(e)
+		if err := m.DestructionPolicy.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.UsagePolicy != nil {
 		e.FieldStart("usagePolicy")
-		m.UsagePolicy.Encode(e)
+		if err := m.UsagePolicy.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.RotationPolicy != nil {
 		e.FieldStart("rotationPolicy")
-		m.RotationPolicy.Encode(e)
+		if err := m.RotationPolicy.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.PrimaryKeyVersionRef != nil {
 		e.FieldStart("primaryKeyVersionRef")
-		m.PrimaryKeyVersionRef.Encode(e)
+		if err := m.PrimaryKeyVersionRef.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

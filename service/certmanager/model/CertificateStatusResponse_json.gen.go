@@ -34,31 +34,43 @@ func (m *CertificateStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *CertificateStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.Details != nil {
 		e.FieldStart("details")
-		m.Details.Encode(e)
+		if err := m.Details.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	e.FieldStart("valid")
 	e.Bool(m.Valid)
 
 	e.FieldStart("reason")
-	m.Reason.Encode(e)
+	if err := m.Reason.Encode(e); err != nil {
+		return err
+	}
 
 	if m.RenewalStatus != nil {
 		e.FieldStart("renewalStatus")
-		m.RenewalStatus.Encode(e)
+		if err := m.RenewalStatus.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	e.FieldStart("managementType")
-	m.ManagementType.Encode(e)
+	if err := m.ManagementType.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Challenges != nil {
 		e.FieldStart("challenges")
 		e.ArrStart()
 		for _, elem := range m.Challenges {
-			elem.Encode(e)
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
 		}
 		e.ArrEnd()
 	}

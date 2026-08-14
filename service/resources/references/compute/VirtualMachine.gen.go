@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewVirtualMachineID(project, virtualMachine string) VirtualMachineID {
+func NewVirtualMachineID(project, virtualMachine string) (VirtualMachineID, error) {
+	if virtualMachine == "" {
+		return VirtualMachineID{}, reserrors.NewFieldIsEmptyError("virtualMachine")
+	}
+	if project == "" {
+		return VirtualMachineID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := VirtualMachineID{
 		virtualMachine: virtualMachine,
 		project:        project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustVirtualMachineID(project, virtualMachine string) VirtualMachineID {
+	m, err := NewVirtualMachineID(project, virtualMachine)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseVirtualMachineID(path string) (VirtualMachineID, error) {
 	m := VirtualMachineID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return VirtualMachineID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *VirtualMachineID) String() string {
 	return m.ID()
 }
 
-func (m *VirtualMachineID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, VirtualMachineRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.virtualMachine = result["virtualMachine"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *VirtualMachineID) Clone() *VirtualMachineID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *VirtualMachineID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *VirtualMachineID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *VirtualMachineID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewVirtualMachineRef(project, virtualMachine string) VirtualMachineRef {
+func (m *VirtualMachineID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, VirtualMachineRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.virtualMachine = result["virtualMachine"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewVirtualMachineRef(project, virtualMachine string) (VirtualMachineRef, error) {
+	if virtualMachine == "" {
+		return VirtualMachineRef{}, reserrors.NewFieldIsEmptyError("virtualMachine")
+	}
+	if project == "" {
+		return VirtualMachineRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := VirtualMachineRef{
 		id: VirtualMachineID{
 			virtualMachine: virtualMachine,
@@ -183,6 +215,14 @@ func NewVirtualMachineRef(project, virtualMachine string) VirtualMachineRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustVirtualMachineRef(project, virtualMachine string) VirtualMachineRef {
+	m, err := NewVirtualMachineRef(project, virtualMachine)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *VirtualMachineRef) String() string {
 }
 
 func (m *VirtualMachineRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, VirtualMachineRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.virtualMachine = result["virtualMachine"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *VirtualMachineRef) Clone() *VirtualMachineRef {
@@ -290,7 +318,11 @@ func (m *VirtualMachineRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *VirtualMachineRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *VirtualMachineRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, VirtualMachineRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.virtualMachine = result["virtualMachine"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *VirtualMachineRef) isParsed() bool {
+	return m != nil && m.id.virtualMachine != "" && m.id.project != ""
 }
 
 func (m *VirtualMachineRef) absolutePath() string {

@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/mpostgres/model"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestPostgresNetworkAddressSpecRequestMarshalling(t *testing.T) {
@@ -24,5 +25,6 @@ func TestPostgresNetworkAddressSpecRequestMarshalling(t *testing.T) {
 
 func initPostgresNetworkAddressSpecRequest() model.PostgresNetworkAddressSpecRequest {
 	var v model.PostgresNetworkAddressSpecRequest
+	v.Subnet = vpc.NewMustSubnetRef("projectID", "networkID", "subnetID")
 	return v
 }

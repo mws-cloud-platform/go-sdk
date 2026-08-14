@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -24,5 +25,6 @@ func TestTypedUsageOptionalResponseMarshalling(t *testing.T) {
 
 func initTypedUsageOptionalResponse() common.TypedUsageOptionalResponse {
 	var v common.TypedUsageOptionalResponse
+	v.Resource = resmodels.MustParseAnyResourceID("AnyResourceID")
 	return v
 }

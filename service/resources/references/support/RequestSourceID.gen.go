@@ -4,6 +4,7 @@ package support
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewRequestSourceIDID(requestSource string) RequestSourceIDID {
+func NewRequestSourceIDID(requestSource string) (RequestSourceIDID, error) {
+	if requestSource == "" {
+		return RequestSourceIDID{}, reserrors.NewFieldIsEmptyError("requestSource")
+	}
 	m := RequestSourceIDID{
 		requestSource: requestSource,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustRequestSourceIDID(requestSource string) RequestSourceIDID {
+	m, err := NewRequestSourceIDID(requestSource)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseRequestSourceIDID(path string) (RequestSourceIDID, error) {
 	m := RequestSourceIDID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return RequestSourceIDID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *RequestSourceIDID) String() string {
 	return m.ID()
 }
 
-func (m *RequestSourceIDID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, RequestSourceIDRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.requestSource = result["requestSource"]
-
-	return nil
-}
-
 func (m *RequestSourceIDID) Clone() *RequestSourceIDID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *RequestSourceIDID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *RequestSourceIDID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *RequestSourceIDID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewRequestSourceIDRef(requestSource string) RequestSourceIDRef {
+func (m *RequestSourceIDID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, RequestSourceIDRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.requestSource = result["requestSource"]
+
+	return nil
+}
+
+func NewRequestSourceIDRef(requestSource string) (RequestSourceIDRef, error) {
+	if requestSource == "" {
+		return RequestSourceIDRef{}, reserrors.NewFieldIsEmptyError("requestSource")
+	}
 	m := RequestSourceIDRef{
 		id: RequestSourceIDID{
 			requestSource: requestSource,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustRequestSourceIDRef(requestSource string) RequestSourceIDRef {
+	m, err := NewRequestSourceIDRef(requestSource)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *RequestSourceIDRef) String() string {
 }
 
 func (m *RequestSourceIDRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, RequestSourceIDRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.requestSource = result["requestSource"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *RequestSourceIDRef) Clone() *RequestSourceIDRef {
@@ -261,7 +284,11 @@ func (m *RequestSourceIDRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *RequestSourceIDRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *RequestSourceIDRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, RequestSourceIDRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.requestSource = result["requestSource"]
+
 	return nil
+}
+
+func (m *RequestSourceIDRef) isParsed() bool {
+	return m != nil && m.id.requestSource != ""
 }
 
 func (m *RequestSourceIDRef) absolutePath() string {

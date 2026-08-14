@@ -33,7 +33,9 @@ func (m *ZoneSpecResponse) Encode(e *jx.Encoder) error {
 
 func (m *ZoneSpecResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("region")
-	m.Region.Encode(e)
+	if err := m.Region.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

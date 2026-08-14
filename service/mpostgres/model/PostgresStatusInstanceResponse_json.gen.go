@@ -36,10 +36,14 @@ func (m *PostgresStatusInstanceResponse) encodeFields(e *jx.Encoder) error {
 	e.Str(m.Name)
 
 	e.FieldStart("role")
-	m.Role.Encode(e)
+	if err := m.Role.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("health")
-	m.Health.Encode(e)
+	if err := m.Health.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

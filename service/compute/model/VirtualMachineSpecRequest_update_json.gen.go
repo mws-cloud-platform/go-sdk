@@ -41,7 +41,9 @@ func (m *UpdateVirtualMachineSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.VmType.IsSet() {
 		e.FieldStart("vmType")
-		m.VmType.Value.Encode(e)
+		if err := m.VmType.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Hardware.IsSet() {
@@ -49,7 +51,9 @@ func (m *UpdateVirtualMachineSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Hardware.IsNull() {
 			e.Null()
 		} else {
-			m.Hardware.Value.Encode(e)
+			if err := m.Hardware.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -58,18 +62,24 @@ func (m *UpdateVirtualMachineSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Os.IsNull() {
 			e.Null()
 		} else {
-			m.Os.Value.Encode(e)
+			if err := m.Os.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
 	if m.Storage.IsSet() {
 		e.FieldStart("storage")
-		m.Storage.Value.Encode(e)
+		if err := m.Storage.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Network.IsSet() {
 		e.FieldStart("network")
-		m.Network.Value.Encode(e)
+		if err := m.Network.Value.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ServiceAccount.IsSet() {
@@ -77,7 +87,9 @@ func (m *UpdateVirtualMachineSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.ServiceAccount.IsNull() {
 			e.Null()
 		} else {
-			m.ServiceAccount.Value.Encode(e)
+			if err := m.ServiceAccount.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

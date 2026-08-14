@@ -146,7 +146,9 @@ func (m *ListMk8sVersionsResponse200) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("items")
 	e.ArrStart()
 	for _, elem := range m.Items {
-		elem.Encode(e)
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
 	}
 	e.ArrEnd()
 	return nil

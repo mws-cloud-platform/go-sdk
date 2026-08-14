@@ -3,11 +3,8 @@
 package model
 
 import (
-	"context"
-
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
@@ -21,7 +18,7 @@ type ExternalAddressStatusResponse struct {
 	// Состояние внешнего адреса: активен или не активен.
 	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 	// Регион, которому принадлежит адрес.
-	Region *rm.RegionRef `json:"region,omitempty" yaml:"region,omitempty"`
+	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
 func (m *ExternalAddressStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -59,14 +56,14 @@ func (m *ExternalAddressStatusResponse) GetActiveOr(val bool) bool {
 	return val
 }
 
-func (m *ExternalAddressStatusResponse) GetRegion() *rm.RegionRef {
+func (m *ExternalAddressStatusResponse) GetRegion() *rm.RegionID {
 	if m != nil {
 		return m.Region
 	}
 	return nil
 }
 
-func (m *ExternalAddressStatusResponse) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+func (m *ExternalAddressStatusResponse) GetRegionOr(val rm.RegionID) rm.RegionID {
 	if m != nil && m.Region != nil {
 		return *m.Region
 	}
@@ -88,16 +85,4 @@ func (m *ExternalAddressStatusResponse) Clone() *ExternalAddressStatusResponse {
 	clone.Region = m.Region.Clone()
 
 	return &clone
-}
-
-func (m *ExternalAddressStatusResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Region.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Region", err)
-	}
-
-	return nil
 }

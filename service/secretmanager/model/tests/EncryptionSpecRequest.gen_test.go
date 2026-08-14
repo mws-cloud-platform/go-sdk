@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"go.mws.cloud/go-sdk/service/resources/references/kms"
 	"go.mws.cloud/go-sdk/service/secretmanager/model"
 )
 
@@ -24,5 +25,6 @@ func TestEncryptionSpecRequestMarshalling(t *testing.T) {
 
 func initEncryptionSpecRequest() model.EncryptionSpecRequest {
 	var v model.EncryptionSpecRequest
+	v.CryptoKeyId = kms.NewMustCryptoKeyRef("projectID", "keyID")
 	return v
 }

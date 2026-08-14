@@ -4,6 +4,7 @@ package iam
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewWorkloadFederationProviderID(project, workloadFederation, provider string) WorkloadFederationProviderID {
+func NewWorkloadFederationProviderID(project, workloadFederation, provider string) (WorkloadFederationProviderID, error) {
+	if provider == "" {
+		return WorkloadFederationProviderID{}, reserrors.NewFieldIsEmptyError("provider")
+	}
+	if workloadFederation == "" {
+		return WorkloadFederationProviderID{}, reserrors.NewFieldIsEmptyError("workloadFederation")
+	}
+	if project == "" {
+		return WorkloadFederationProviderID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := WorkloadFederationProviderID{
 		provider:           provider,
 		workloadFederation: workloadFederation,
 		project:            project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustWorkloadFederationProviderID(project, workloadFederation, provider string) WorkloadFederationProviderID {
+	m, err := NewWorkloadFederationProviderID(project, workloadFederation, provider)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseWorkloadFederationProviderID(path string) (WorkloadFederationProviderI
 	m := WorkloadFederationProviderID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return WorkloadFederationProviderID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *WorkloadFederationProviderID) String() string {
 	return m.ID()
 }
 
-func (m *WorkloadFederationProviderID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, WorkloadFederationProviderRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.provider = result["provider"]
-	m.workloadFederation = result["workloadFederation"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *WorkloadFederationProviderID) Clone() *WorkloadFederationProviderID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *WorkloadFederationProviderID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *WorkloadFederationProviderID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *WorkloadFederationProviderID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewWorkloadFederationProviderRef(project, workloadFederation, provider string) WorkloadFederationProviderRef {
+func (m *WorkloadFederationProviderID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, WorkloadFederationProviderRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.provider = result["provider"]
+	m.workloadFederation = result["workloadFederation"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewWorkloadFederationProviderRef(project, workloadFederation, provider string) (WorkloadFederationProviderRef, error) {
+	if provider == "" {
+		return WorkloadFederationProviderRef{}, reserrors.NewFieldIsEmptyError("provider")
+	}
+	if workloadFederation == "" {
+		return WorkloadFederationProviderRef{}, reserrors.NewFieldIsEmptyError("workloadFederation")
+	}
+	if project == "" {
+		return WorkloadFederationProviderRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := WorkloadFederationProviderRef{
 		id: WorkloadFederationProviderID{
 			provider:           provider,
@@ -204,6 +242,14 @@ func NewWorkloadFederationProviderRef(project, workloadFederation, provider stri
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustWorkloadFederationProviderRef(project, workloadFederation, provider string) WorkloadFederationProviderRef {
+	m, err := NewWorkloadFederationProviderRef(project, workloadFederation, provider)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *WorkloadFederationProviderRef) String() string {
 }
 
 func (m *WorkloadFederationProviderRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, WorkloadFederationProviderRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.provider = result["provider"]
-	m.id.workloadFederation = result["workloadFederation"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *WorkloadFederationProviderRef) Clone() *WorkloadFederationProviderRef {
@@ -319,7 +352,11 @@ func (m *WorkloadFederationProviderRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *WorkloadFederationProviderRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *WorkloadFederationProviderRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, WorkloadFederationProviderRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.provider = result["provider"]
+	m.id.workloadFederation = result["workloadFederation"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *WorkloadFederationProviderRef) isParsed() bool {
+	return m != nil && m.id.provider != "" && m.id.workloadFederation != "" && m.id.project != ""
 }
 
 func (m *WorkloadFederationProviderRef) absolutePath() string {

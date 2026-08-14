@@ -3,13 +3,10 @@
 package model
 
 import (
-	"context"
-
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -60,20 +57,6 @@ func (m *HmacKeyRequest) WithChanges(u UpdateHmacKeyRequest) HmacKeyRequest {
 func (m UpdateHmacKeyRequest) HasChanges() bool {
 	return m.Metadata.Set ||
 		m.Spec.Set
-}
-
-func (m *UpdateHmacKeyRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		if err := m.Metadata.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Metadata", err)
-		}
-	}
-
-	return nil
 }
 
 func (m *HmacKeyRequest) diffMetadata(src *HmacKeyRequest) optional.OptionalNil[UpdateHmacKeyMetadataRequest] {
@@ -166,17 +149,6 @@ func (m UpdateHmacKeyMetadataRequest) HasChanges() bool {
 		m.Usages.Set ||
 		m.Etag.Set ||
 		m.Description.Set
-}
-
-func (m *UpdateHmacKeyMetadataRequest) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.UpdateTypedResourceMetadataRequest.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("UpdateTypedResourceMetadataRequest", err)
-	}
-	return nil
 }
 
 func (m *HmacKeyMetadataRequest) diffDisplayName(src *HmacKeyMetadataRequest) optional.Optional[string] {

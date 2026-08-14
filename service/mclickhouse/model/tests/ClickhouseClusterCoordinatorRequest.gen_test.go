@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
+	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 )
 
 func TestClickhouseClusterCoordinatorRequestMarshalling(t *testing.T) {
@@ -25,6 +26,7 @@ func TestClickhouseClusterCoordinatorRequestMarshalling(t *testing.T) {
 
 func initClickhouseClusterCoordinatorRequest() model.ClickhouseClusterCoordinatorRequest {
 	var v model.ClickhouseClusterCoordinatorRequest
+	v.Resources.VmType = mclickhouse.NewMustClickhouseVmTypeRef("vmTypeID")
 	v.Resources.Disk.Size = bytesize.MustParseString("0 B")
 	v.Instances = make([]model.ClickhouseClusterCoordinatorInstanceRequest, 0)
 	return v

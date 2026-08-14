@@ -3,11 +3,8 @@
 package model
 
 import (
-	"context"
-	"fmt"
 	"time"
 
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -22,7 +19,8 @@ type TypedResourceMetadataOptionalResponse struct {
 	UpdateTime *time.Time `json:"updateTime,omitempty" yaml:"updateTime,omitempty"`
 	// Время запроса на удаление ресурса (не фактическое время удаления).
 	DeleteTime *time.Time `json:"deleteTime,omitempty" yaml:"deleteTime,omitempty"`
-	PurgeTime  *time.Time `json:"purgeTime,omitempty" yaml:"purgeTime,omitempty"`
+	// Время удаления ресурса.
+	PurgeTime *time.Time `json:"purgeTime,omitempty" yaml:"purgeTime,omitempty"`
 	// Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены.
 	Usages optional.Optional[[]TypedUsageOptionalResponse] `json:"usages,omitempty" yaml:"usages,omitempty"`
 	// Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса.
@@ -172,20 +170,4 @@ func (m *TypedResourceMetadataOptionalResponse) Clone() *TypedResourceMetadataOp
 		}
 	}
 	return &clone
-}
-
-func (m *TypedResourceMetadataOptionalResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Usages.IsSet() {
-		for index := range m.Usages.Value {
-			if err := m.Usages.Value[index].Parse(ctx); err != nil {
-				return reserrors.NewPathAccumulatorError("Usages"+fmt.Sprint("[", index, "]"), err)
-			}
-		}
-	}
-
-	return nil
 }

@@ -3,10 +3,8 @@
 package model
 
 import (
-	"context"
 	"time"
 
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -103,18 +101,6 @@ func (m *ApiKeyResponse) Clone() *ApiKeyResponse {
 	clone.Spec = *m.Spec.Clone()
 	clone.Status = m.Status.Clone()
 	return &clone
-}
-
-func (m *ApiKeyResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Metadata.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Metadata", err)
-	}
-
-	return nil
 }
 
 // Представление поля Metadata анонимного типа структуры ApiKey
@@ -261,19 +247,4 @@ func (m *ApiKeyMetadataResponse) Clone() *ApiKeyMetadataResponse {
 	clone.Id = m.Id.Clone()
 
 	return &clone
-}
-
-func (m *ApiKeyMetadataResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.TypedResourceMetadataResponse.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("TypedResourceMetadataResponse", err)
-	}
-	if err := m.Id.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Id", err)
-	}
-
-	return nil
 }

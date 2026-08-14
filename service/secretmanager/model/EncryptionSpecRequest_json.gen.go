@@ -33,7 +33,9 @@ func (m *EncryptionSpecRequest) Encode(e *jx.Encoder) error {
 
 func (m *EncryptionSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("cryptoKeyId")
-	m.CryptoKeyId.Encode(e)
+	if err := m.CryptoKeyId.Encode(e); err != nil {
+		return err
+	}
 	return nil
 }
 

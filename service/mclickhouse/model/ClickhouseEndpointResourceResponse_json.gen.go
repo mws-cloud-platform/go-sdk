@@ -32,11 +32,15 @@ func (m *ClickhouseEndpointResourceResponse) Encode(e *jx.Encoder) error {
 
 func (m *ClickhouseEndpointResourceResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("address")
-	m.Address.Encode(e)
+	if err := m.Address.Encode(e); err != nil {
+		return err
+	}
 
 	if m.ExternalAddress != nil {
 		e.FieldStart("externalAddress")
-		m.ExternalAddress.Encode(e)
+		if err := m.ExternalAddress.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

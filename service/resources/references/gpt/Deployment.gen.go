@@ -4,6 +4,7 @@ package gpt
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewDeploymentID(project, deploymentName string) DeploymentID {
+func NewDeploymentID(project, deploymentName string) (DeploymentID, error) {
+	if deploymentName == "" {
+		return DeploymentID{}, reserrors.NewFieldIsEmptyError("deploymentName")
+	}
+	if project == "" {
+		return DeploymentID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := DeploymentID{
 		deploymentName: deploymentName,
 		project:        project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustDeploymentID(project, deploymentName string) DeploymentID {
+	m, err := NewDeploymentID(project, deploymentName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseDeploymentID(path string) (DeploymentID, error) {
 	m := DeploymentID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return DeploymentID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *DeploymentID) String() string {
 	return m.ID()
 }
 
-func (m *DeploymentID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, DeploymentRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.deploymentName = result["deploymentName"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *DeploymentID) Clone() *DeploymentID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *DeploymentID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *DeploymentID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *DeploymentID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewDeploymentRef(project, deploymentName string) DeploymentRef {
+func (m *DeploymentID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, DeploymentRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.deploymentName = result["deploymentName"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewDeploymentRef(project, deploymentName string) (DeploymentRef, error) {
+	if deploymentName == "" {
+		return DeploymentRef{}, reserrors.NewFieldIsEmptyError("deploymentName")
+	}
+	if project == "" {
+		return DeploymentRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := DeploymentRef{
 		id: DeploymentID{
 			deploymentName: deploymentName,
@@ -183,6 +215,14 @@ func NewDeploymentRef(project, deploymentName string) DeploymentRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustDeploymentRef(project, deploymentName string) DeploymentRef {
+	m, err := NewDeploymentRef(project, deploymentName)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *DeploymentRef) String() string {
 }
 
 func (m *DeploymentRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, DeploymentRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.deploymentName = result["deploymentName"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *DeploymentRef) Clone() *DeploymentRef {
@@ -290,7 +318,11 @@ func (m *DeploymentRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *DeploymentRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *DeploymentRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, DeploymentRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.deploymentName = result["deploymentName"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *DeploymentRef) isParsed() bool {
+	return m != nil && m.id.deploymentName != "" && m.id.project != ""
 }
 
 func (m *DeploymentRef) absolutePath() string {

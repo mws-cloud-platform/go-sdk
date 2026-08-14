@@ -3,10 +3,8 @@
 package model
 
 import (
-	"context"
 	"time"
 
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -99,18 +97,6 @@ func (m *HmacKeyResponse) Clone() *HmacKeyResponse {
 	clone.Spec = *m.Spec.Clone()
 	clone.Status = m.Status.Clone()
 	return &clone
-}
-
-func (m *HmacKeyResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.Metadata.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Metadata", err)
-	}
-
-	return nil
 }
 
 // Представление поля Metadata анонимного типа структуры HmacKey
@@ -257,19 +243,4 @@ func (m *HmacKeyMetadataResponse) Clone() *HmacKeyMetadataResponse {
 	clone.Id = m.Id.Clone()
 
 	return &clone
-}
-
-func (m *HmacKeyMetadataResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.TypedResourceMetadataResponse.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("TypedResourceMetadataResponse", err)
-	}
-	if err := m.Id.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Id", err)
-	}
-
-	return nil
 }

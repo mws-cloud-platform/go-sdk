@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	"go.mws.cloud/go-sdk/service/mpostgres/model"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func TestPostgresClusterSpecResponseMarshalling(t *testing.T) {
@@ -26,6 +27,7 @@ func TestPostgresClusterSpecResponseMarshalling(t *testing.T) {
 func initPostgresClusterSpecResponse() model.PostgresClusterSpecResponse {
 	var v model.PostgresClusterSpecResponse
 	v.Endpoints = make([]model.PostgresEndpointResponse, 0)
+	v.InstanceTemplate.VmType = compute.NewMustVmTypeRef("vmTypeID")
 	v.InstanceTemplate.Disk.Size = bytesize.MustParseString("0 B")
 	v.Instances = make([]model.PostgresInstanceResponse, 0)
 	return v

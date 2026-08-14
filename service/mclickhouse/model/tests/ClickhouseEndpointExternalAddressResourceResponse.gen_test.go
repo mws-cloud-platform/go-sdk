@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
+	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 func TestClickhouseEndpointExternalAddressResourceResponseMarshalling(t *testing.T) {
@@ -25,6 +26,7 @@ func TestClickhouseEndpointExternalAddressResourceResponseMarshalling(t *testing
 
 func initClickhouseEndpointExternalAddressResourceResponse() model.ClickhouseEndpointExternalAddressResourceResponse {
 	var v model.ClickhouseEndpointExternalAddressResourceResponse
+	v.Ref = vpc.NewMustExternalAddressRef("projectID", "externalAddressID")
 	v.IpAddress = ipaddress.MustParseIPAddressString("192.168.1.1")
 	return v
 }

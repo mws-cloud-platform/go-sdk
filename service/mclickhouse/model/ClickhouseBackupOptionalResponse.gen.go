@@ -3,10 +3,8 @@
 package model
 
 import (
-	"context"
 	"time"
 
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
@@ -104,20 +102,6 @@ func (m *ClickhouseBackupOptionalResponse) Clone() *ClickhouseBackupOptionalResp
 	}
 	clone.Status = m.Status.Clone()
 	return &clone
-}
-
-func (m *ClickhouseBackupOptionalResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if m.Metadata.IsSet() && !m.Metadata.IsNull() {
-		if err := m.Metadata.Value.Parse(ctx); err != nil {
-			return reserrors.NewPathAccumulatorError("Metadata", err)
-		}
-	}
-
-	return nil
 }
 
 // Представление поля Metadata анонимного типа структуры ClickhouseBackup
@@ -264,21 +248,6 @@ func (m *ClickhouseBackupMetadataOptionalResponse) Clone() *ClickhouseBackupMeta
 	clone.Id = m.Id.Clone()
 
 	return &clone
-}
-
-func (m *ClickhouseBackupMetadataOptionalResponse) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	if err := m.TypedResourceMetadataOptionalResponse.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("TypedResourceMetadataOptionalResponse", err)
-	}
-	if err := m.Id.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("Id", err)
-	}
-
-	return nil
 }
 
 // Представление поля Spec анонимного типа структуры ClickhouseBackup

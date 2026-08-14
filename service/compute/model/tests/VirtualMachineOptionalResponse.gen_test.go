@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/compute/model"
+	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 func TestVirtualMachineOptionalResponseMarshalling(t *testing.T) {
@@ -24,6 +25,7 @@ func TestVirtualMachineOptionalResponseMarshalling(t *testing.T) {
 
 func initVirtualMachineOptionalResponse() model.VirtualMachineOptionalResponse {
 	var v model.VirtualMachineOptionalResponse
+	v.Spec.VmType = compute.NewMustVmTypeRef("vmTypeID")
 	v.Spec.Storage.Disks = make([]model.StorageDiskSpecOrRefWithAttachmentsOptionalResponse, 0)
 	v.Spec.Network.NetworkInterfaces = make([]model.NetworkInterfaceSpecOptionalResponse, 0)
 	return v

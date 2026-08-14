@@ -35,10 +35,14 @@ func (m *ClickhouseBackupStatusResponse) Encode(e *jx.Encoder) error {
 
 func (m *ClickhouseBackupStatusResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ready")
-	m.Ready.Encode(e)
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
 	if m.Backup != nil {
 		e.FieldStart("backup")
-		m.Backup.Encode(e)
+		if err := m.Backup.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -103,10 +107,14 @@ func (m *ClickhouseBackupStatusBackupResponse) Encode(e *jx.Encoder) error {
 
 func (m *ClickhouseBackupStatusBackupResponse) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("trigger")
-	m.Trigger.Encode(e)
+	if err := m.Trigger.Encode(e); err != nil {
+		return err
+	}
 
 	e.FieldStart("type")
-	m.Type.Encode(e)
+	if err := m.Type.Encode(e); err != nil {
+		return err
+	}
 
 	if m.StartTime != nil {
 		e.FieldStart("startTime")

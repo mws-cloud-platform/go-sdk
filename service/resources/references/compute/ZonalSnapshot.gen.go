@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewZonalSnapshotID(zone, project, snapshot string) ZonalSnapshotID {
+func NewZonalSnapshotID(zone, project, snapshot string) (ZonalSnapshotID, error) {
+	if snapshot == "" {
+		return ZonalSnapshotID{}, reserrors.NewFieldIsEmptyError("snapshot")
+	}
+	if project == "" {
+		return ZonalSnapshotID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalSnapshotID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalSnapshotID{
 		snapshot: snapshot,
 		project:  project,
 		zone:     zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalSnapshotID(zone, project, snapshot string) ZonalSnapshotID {
+	m, err := NewZonalSnapshotID(zone, project, snapshot)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseZonalSnapshotID(path string) (ZonalSnapshotID, error) {
 	m := ZonalSnapshotID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalSnapshotID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ZonalSnapshotID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalSnapshotID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalSnapshotRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.snapshot = result["snapshot"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalSnapshotID) Clone() *ZonalSnapshotID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ZonalSnapshotID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ZonalSnapshotID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalSnapshotID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalSnapshotRef(zone, project, snapshot string) ZonalSnapshotRef {
+func (m *ZonalSnapshotID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalSnapshotRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.snapshot = result["snapshot"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalSnapshotRef(zone, project, snapshot string) (ZonalSnapshotRef, error) {
+	if snapshot == "" {
+		return ZonalSnapshotRef{}, reserrors.NewFieldIsEmptyError("snapshot")
+	}
+	if project == "" {
+		return ZonalSnapshotRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalSnapshotRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalSnapshotRef{
 		id: ZonalSnapshotID{
 			snapshot: snapshot,
@@ -204,6 +242,14 @@ func NewZonalSnapshotRef(zone, project, snapshot string) ZonalSnapshotRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalSnapshotRef(zone, project, snapshot string) ZonalSnapshotRef {
+	m, err := NewZonalSnapshotRef(zone, project, snapshot)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ZonalSnapshotRef) String() string {
 }
 
 func (m *ZonalSnapshotRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalSnapshotRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.snapshot = result["snapshot"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalSnapshotRef) Clone() *ZonalSnapshotRef {
@@ -319,7 +352,11 @@ func (m *ZonalSnapshotRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ZonalSnapshotRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalSnapshotRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalSnapshotRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.snapshot = result["snapshot"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalSnapshotRef) isParsed() bool {
+	return m != nil && m.id.snapshot != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalSnapshotRef) absolutePath() string {

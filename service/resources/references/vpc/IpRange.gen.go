@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -36,11 +37,22 @@ var (
 	}
 )
 
-func NewIpRangeID(ipRange string) IpRangeID {
+func NewIpRangeID(ipRange string) (IpRangeID, error) {
+	if ipRange == "" {
+		return IpRangeID{}, reserrors.NewFieldIsEmptyError("ipRange")
+	}
 	m := IpRangeID{
 		ipRange: ipRange,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustIpRangeID(ipRange string) IpRangeID {
+	m, err := NewIpRangeID(ipRange)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -48,7 +60,7 @@ func ParseIpRangeID(path string) (IpRangeID, error) {
 	m := IpRangeID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return IpRangeID{}, err
 	}
 	return m, nil
@@ -93,21 +105,6 @@ func (m *IpRangeID) String() string {
 	return m.ID()
 }
 
-func (m *IpRangeID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, IpRangeRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.ipRange = result["ipRange"]
-
-	return nil
-}
-
 func (m *IpRangeID) Clone() *IpRangeID {
 	if m == nil {
 		return nil
@@ -131,7 +128,7 @@ func (m *IpRangeID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -152,16 +149,53 @@ func (m *IpRangeID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *IpRangeID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewIpRangeRef(ipRange string) IpRangeRef {
+func (m *IpRangeID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, IpRangeRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.ipRange = result["ipRange"]
+
+	return nil
+}
+
+func NewIpRangeRef(ipRange string) (IpRangeRef, error) {
+	if ipRange == "" {
+		return IpRangeRef{}, reserrors.NewFieldIsEmptyError("ipRange")
+	}
 	m := IpRangeRef{
 		id: IpRangeID{
 			ipRange: ipRange,
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustIpRangeRef(ipRange string) IpRangeRef {
+	m, err := NewIpRangeRef(ipRange)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -226,18 +260,7 @@ func (m *IpRangeRef) String() string {
 }
 
 func (m *IpRangeRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, IpRangeRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.ipRange = result["ipRange"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *IpRangeRef) Clone() *IpRangeRef {
@@ -261,7 +284,11 @@ func (m *IpRangeRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -280,7 +307,35 @@ func (m *IpRangeRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *IpRangeRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, IpRangeRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.ipRange = result["ipRange"]
+
 	return nil
+}
+
+func (m *IpRangeRef) isParsed() bool {
+	return m != nil && m.id.ipRange != ""
 }
 
 func (m *IpRangeRef) absolutePath() string {

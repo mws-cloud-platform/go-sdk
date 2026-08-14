@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -56,13 +57,30 @@ var (
 	}
 )
 
-func NewServiceAttachmentID(project, network, serviceAttachment string) ServiceAttachmentID {
+func NewServiceAttachmentID(project, network, serviceAttachment string) (ServiceAttachmentID, error) {
+	if serviceAttachment == "" {
+		return ServiceAttachmentID{}, reserrors.NewFieldIsEmptyError("serviceAttachment")
+	}
+	if network == "" {
+		return ServiceAttachmentID{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return ServiceAttachmentID{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAttachmentID{
 		serviceAttachment: serviceAttachment,
 		network:           network,
 		project:           project,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustServiceAttachmentID(project, network, serviceAttachment string) ServiceAttachmentID {
+	m, err := NewServiceAttachmentID(project, network, serviceAttachment)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -70,7 +88,7 @@ func ParseServiceAttachmentID(path string) (ServiceAttachmentID, error) {
 	m := ServiceAttachmentID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ServiceAttachmentID{}, err
 	}
 	return m, nil
@@ -131,23 +149,6 @@ func (m *ServiceAttachmentID) String() string {
 	return m.ID()
 }
 
-func (m *ServiceAttachmentID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ServiceAttachmentRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.serviceAttachment = result["serviceAttachment"]
-	m.network = result["network"]
-	m.project = result["project"]
-
-	return nil
-}
-
 func (m *ServiceAttachmentID) Clone() *ServiceAttachmentID {
 	if m == nil {
 		return nil
@@ -171,7 +172,7 @@ func (m *ServiceAttachmentID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -192,10 +193,47 @@ func (m *ServiceAttachmentID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ServiceAttachmentID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewServiceAttachmentRef(project, network, serviceAttachment string) ServiceAttachmentRef {
+func (m *ServiceAttachmentID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ServiceAttachmentRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.serviceAttachment = result["serviceAttachment"]
+	m.network = result["network"]
+	m.project = result["project"]
+
+	return nil
+}
+
+func NewServiceAttachmentRef(project, network, serviceAttachment string) (ServiceAttachmentRef, error) {
+	if serviceAttachment == "" {
+		return ServiceAttachmentRef{}, reserrors.NewFieldIsEmptyError("serviceAttachment")
+	}
+	if network == "" {
+		return ServiceAttachmentRef{}, reserrors.NewFieldIsEmptyError("network")
+	}
+	if project == "" {
+		return ServiceAttachmentRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
 	m := ServiceAttachmentRef{
 		id: ServiceAttachmentID{
 			serviceAttachment: serviceAttachment,
@@ -204,6 +242,14 @@ func NewServiceAttachmentRef(project, network, serviceAttachment string) Service
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustServiceAttachmentRef(project, network, serviceAttachment string) ServiceAttachmentRef {
+	m, err := NewServiceAttachmentRef(project, network, serviceAttachment)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -282,20 +328,7 @@ func (m *ServiceAttachmentRef) String() string {
 }
 
 func (m *ServiceAttachmentRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ServiceAttachmentRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.serviceAttachment = result["serviceAttachment"]
-	m.id.network = result["network"]
-	m.id.project = result["project"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ServiceAttachmentRef) Clone() *ServiceAttachmentRef {
@@ -319,7 +352,11 @@ func (m *ServiceAttachmentRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -338,7 +375,37 @@ func (m *ServiceAttachmentRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ServiceAttachmentRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ServiceAttachmentRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.serviceAttachment = result["serviceAttachment"]
+	m.id.network = result["network"]
+	m.id.project = result["project"]
+
 	return nil
+}
+
+func (m *ServiceAttachmentRef) isParsed() bool {
+	return m != nil && m.id.serviceAttachment != "" && m.id.network != "" && m.id.project != ""
 }
 
 func (m *ServiceAttachmentRef) absolutePath() string {

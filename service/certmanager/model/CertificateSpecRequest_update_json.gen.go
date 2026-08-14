@@ -36,7 +36,9 @@ func (m *UpdateCertificateSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.SelfManaged.IsNull() {
 			e.Null()
 		} else {
-			m.SelfManaged.Value.Encode(e)
+			if err := m.SelfManaged.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -45,7 +47,9 @@ func (m *UpdateCertificateSpecRequest) encodeFields(e *jx.Encoder) error {
 		if m.Managed.IsNull() {
 			e.Null()
 		} else {
-			m.Managed.Value.Encode(e)
+			if err := m.Managed.Value.Encode(e); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

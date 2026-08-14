@@ -34,37 +34,51 @@ func (m *CommonRoleBindingSpecSubjectResponse) Encode(e *jx.Encoder) error {
 func (m *CommonRoleBindingSpecSubjectResponse) encodeFields(e *jx.Encoder) error {
 	if m.User != nil {
 		e.FieldStart("user")
-		m.User.Encode(e)
+		if err := m.User.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ServiceAccount != nil {
 		e.FieldStart("serviceAccount")
-		m.ServiceAccount.Encode(e)
+		if err := m.ServiceAccount.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.ServiceAgent != nil {
 		e.FieldStart("serviceAgent")
-		m.ServiceAgent.Encode(e)
+		if err := m.ServiceAgent.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.UserFederation != nil {
 		e.FieldStart("userFederation")
-		m.UserFederation.Encode(e)
+		if err := m.UserFederation.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.WorkloadFederation != nil {
 		e.FieldStart("workloadFederation")
-		m.WorkloadFederation.Encode(e)
+		if err := m.WorkloadFederation.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.UserGroup != nil {
 		e.FieldStart("userGroup")
-		m.UserGroup.Encode(e)
+		if err := m.UserGroup.Encode(e); err != nil {
+			return err
+		}
 	}
 
 	if m.Employee != nil {
 		e.FieldStart("employee")
-		m.Employee.Encode(e)
+		if err := m.Employee.Encode(e); err != nil {
+			return err
+		}
 	}
 	return nil
 }

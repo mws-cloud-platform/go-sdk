@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewZonalServiceEndpointID(zone, project, zonalNetwork, serviceEndpoint string) ZonalServiceEndpointID {
+func NewZonalServiceEndpointID(zone, project, zonalNetwork, serviceEndpoint string) (ZonalServiceEndpointID, error) {
+	if serviceEndpoint == "" {
+		return ZonalServiceEndpointID{}, reserrors.NewFieldIsEmptyError("serviceEndpoint")
+	}
+	if zonalNetwork == "" {
+		return ZonalServiceEndpointID{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalServiceEndpointID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalServiceEndpointID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalServiceEndpointID{
 		serviceEndpoint: serviceEndpoint,
 		zonalNetwork:    zonalNetwork,
@@ -74,6 +87,14 @@ func NewZonalServiceEndpointID(zone, project, zonalNetwork, serviceEndpoint stri
 		zone:            zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalServiceEndpointID(zone, project, zonalNetwork, serviceEndpoint string) ZonalServiceEndpointID {
+	m, err := NewZonalServiceEndpointID(zone, project, zonalNetwork, serviceEndpoint)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseZonalServiceEndpointID(path string) (ZonalServiceEndpointID, error) {
 	m := ZonalServiceEndpointID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalServiceEndpointID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *ZonalServiceEndpointID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalServiceEndpointID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalServiceEndpointRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.serviceEndpoint = result["serviceEndpoint"]
-	m.zonalNetwork = result["zonalNetwork"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalServiceEndpointID) Clone() *ZonalServiceEndpointID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *ZonalServiceEndpointID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *ZonalServiceEndpointID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalServiceEndpointID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalServiceEndpointRef(zone, project, zonalNetwork, serviceEndpoint string) ZonalServiceEndpointRef {
+func (m *ZonalServiceEndpointID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalServiceEndpointRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.serviceEndpoint = result["serviceEndpoint"]
+	m.zonalNetwork = result["zonalNetwork"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalServiceEndpointRef(zone, project, zonalNetwork, serviceEndpoint string) (ZonalServiceEndpointRef, error) {
+	if serviceEndpoint == "" {
+		return ZonalServiceEndpointRef{}, reserrors.NewFieldIsEmptyError("serviceEndpoint")
+	}
+	if zonalNetwork == "" {
+		return ZonalServiceEndpointRef{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalServiceEndpointRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalServiceEndpointRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalServiceEndpointRef{
 		id: ZonalServiceEndpointID{
 			serviceEndpoint: serviceEndpoint,
@@ -225,6 +269,14 @@ func NewZonalServiceEndpointRef(zone, project, zonalNetwork, serviceEndpoint str
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalServiceEndpointRef(zone, project, zonalNetwork, serviceEndpoint string) ZonalServiceEndpointRef {
+	m, err := NewZonalServiceEndpointRef(zone, project, zonalNetwork, serviceEndpoint)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *ZonalServiceEndpointRef) String() string {
 }
 
 func (m *ZonalServiceEndpointRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalServiceEndpointRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.serviceEndpoint = result["serviceEndpoint"]
-	m.id.zonalNetwork = result["zonalNetwork"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalServiceEndpointRef) Clone() *ZonalServiceEndpointRef {
@@ -348,7 +386,11 @@ func (m *ZonalServiceEndpointRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *ZonalServiceEndpointRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalServiceEndpointRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalServiceEndpointRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.serviceEndpoint = result["serviceEndpoint"]
+	m.id.zonalNetwork = result["zonalNetwork"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalServiceEndpointRef) isParsed() bool {
+	return m != nil && m.id.serviceEndpoint != "" && m.id.zonalNetwork != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalServiceEndpointRef) absolutePath() string {

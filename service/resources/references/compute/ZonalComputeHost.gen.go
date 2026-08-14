@@ -4,6 +4,7 @@ package compute
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -46,12 +47,26 @@ var (
 	}
 )
 
-func NewZonalComputeHostID(zone, host string) ZonalComputeHostID {
+func NewZonalComputeHostID(zone, host string) (ZonalComputeHostID, error) {
+	if host == "" {
+		return ZonalComputeHostID{}, reserrors.NewFieldIsEmptyError("host")
+	}
+	if zone == "" {
+		return ZonalComputeHostID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalComputeHostID{
 		host: host,
 		zone: zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustZonalComputeHostID(zone, host string) ZonalComputeHostID {
+	m, err := NewZonalComputeHostID(zone, host)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -59,7 +74,7 @@ func ParseZonalComputeHostID(path string) (ZonalComputeHostID, error) {
 	m := ZonalComputeHostID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalComputeHostID{}, err
 	}
 	return m, nil
@@ -112,22 +127,6 @@ func (m *ZonalComputeHostID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalComputeHostID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalComputeHostRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.host = result["host"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalComputeHostID) Clone() *ZonalComputeHostID {
 	if m == nil {
 		return nil
@@ -151,7 +150,7 @@ func (m *ZonalComputeHostID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -172,10 +171,43 @@ func (m *ZonalComputeHostID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalComputeHostID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewZonalComputeHostRef(zone, host string) ZonalComputeHostRef {
+func (m *ZonalComputeHostID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalComputeHostRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.host = result["host"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewZonalComputeHostRef(zone, host string) (ZonalComputeHostRef, error) {
+	if host == "" {
+		return ZonalComputeHostRef{}, reserrors.NewFieldIsEmptyError("host")
+	}
+	if zone == "" {
+		return ZonalComputeHostRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := ZonalComputeHostRef{
 		id: ZonalComputeHostID{
 			host: host,
@@ -183,6 +215,14 @@ func NewZonalComputeHostRef(zone, host string) ZonalComputeHostRef {
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustZonalComputeHostRef(zone, host string) ZonalComputeHostRef {
+	m, err := NewZonalComputeHostRef(zone, host)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -254,19 +294,7 @@ func (m *ZonalComputeHostRef) String() string {
 }
 
 func (m *ZonalComputeHostRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalComputeHostRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.host = result["host"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalComputeHostRef) Clone() *ZonalComputeHostRef {
@@ -290,7 +318,11 @@ func (m *ZonalComputeHostRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -309,7 +341,36 @@ func (m *ZonalComputeHostRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalComputeHostRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalComputeHostRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.host = result["host"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalComputeHostRef) isParsed() bool {
+	return m != nil && m.id.host != "" && m.id.zone != ""
 }
 
 func (m *ZonalComputeHostRef) absolutePath() string {

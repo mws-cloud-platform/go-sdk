@@ -4,6 +4,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-faster/jx"
 
@@ -66,7 +67,19 @@ var (
 	}
 )
 
-func NewHostNetworkAdapterID(zone, project, virtualMachine, hostNetworkAdapter string) HostNetworkAdapterID {
+func NewHostNetworkAdapterID(zone, project, virtualMachine, hostNetworkAdapter string) (HostNetworkAdapterID, error) {
+	if hostNetworkAdapter == "" {
+		return HostNetworkAdapterID{}, reserrors.NewFieldIsEmptyError("hostNetworkAdapter")
+	}
+	if virtualMachine == "" {
+		return HostNetworkAdapterID{}, reserrors.NewFieldIsEmptyError("virtualMachine")
+	}
+	if project == "" {
+		return HostNetworkAdapterID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return HostNetworkAdapterID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := HostNetworkAdapterID{
 		hostNetworkAdapter: hostNetworkAdapter,
 		virtualMachine:     virtualMachine,
@@ -74,6 +87,14 @@ func NewHostNetworkAdapterID(zone, project, virtualMachine, hostNetworkAdapter s
 		zone:               zone,
 	}
 	m.path = m.ID()
+	return m, nil
+}
+
+func NewMustHostNetworkAdapterID(zone, project, virtualMachine, hostNetworkAdapter string) HostNetworkAdapterID {
+	m, err := NewHostNetworkAdapterID(zone, project, virtualMachine, hostNetworkAdapter)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -81,7 +102,7 @@ func ParseHostNetworkAdapterID(path string) (HostNetworkAdapterID, error) {
 	m := HostNetworkAdapterID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return HostNetworkAdapterID{}, err
 	}
 	return m, nil
@@ -150,24 +171,6 @@ func (m *HostNetworkAdapterID) String() string {
 	return m.ID()
 }
 
-func (m *HostNetworkAdapterID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, HostNetworkAdapterRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.hostNetworkAdapter = result["hostNetworkAdapter"]
-	m.virtualMachine = result["virtualMachine"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *HostNetworkAdapterID) Clone() *HostNetworkAdapterID {
 	if m == nil {
 		return nil
@@ -191,7 +194,7 @@ func (m *HostNetworkAdapterID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -212,10 +215,51 @@ func (m *HostNetworkAdapterID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *HostNetworkAdapterID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func NewHostNetworkAdapterRef(zone, project, virtualMachine, hostNetworkAdapter string) HostNetworkAdapterRef {
+func (m *HostNetworkAdapterID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, HostNetworkAdapterRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.hostNetworkAdapter = result["hostNetworkAdapter"]
+	m.virtualMachine = result["virtualMachine"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
+	return nil
+}
+
+func NewHostNetworkAdapterRef(zone, project, virtualMachine, hostNetworkAdapter string) (HostNetworkAdapterRef, error) {
+	if hostNetworkAdapter == "" {
+		return HostNetworkAdapterRef{}, reserrors.NewFieldIsEmptyError("hostNetworkAdapter")
+	}
+	if virtualMachine == "" {
+		return HostNetworkAdapterRef{}, reserrors.NewFieldIsEmptyError("virtualMachine")
+	}
+	if project == "" {
+		return HostNetworkAdapterRef{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return HostNetworkAdapterRef{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	m := HostNetworkAdapterRef{
 		id: HostNetworkAdapterID{
 			hostNetworkAdapter: hostNetworkAdapter,
@@ -225,6 +269,14 @@ func NewHostNetworkAdapterRef(zone, project, virtualMachine, hostNetworkAdapter 
 		},
 	}
 	m.id.path = m.absolutePath()
+	return m, nil
+}
+
+func NewMustHostNetworkAdapterRef(zone, project, virtualMachine, hostNetworkAdapter string) HostNetworkAdapterRef {
+	m, err := NewHostNetworkAdapterRef(zone, project, virtualMachine, hostNetworkAdapter)
+	if err != nil {
+		panic(err)
+	}
 	return m
 }
 
@@ -310,21 +362,7 @@ func (m *HostNetworkAdapterRef) String() string {
 }
 
 func (m *HostNetworkAdapterRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, HostNetworkAdapterRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.hostNetworkAdapter = result["hostNetworkAdapter"]
-	m.id.virtualMachine = result["virtualMachine"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *HostNetworkAdapterRef) Clone() *HostNetworkAdapterRef {
@@ -348,7 +386,11 @@ func (m *HostNetworkAdapterRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -367,7 +409,38 @@ func (m *HostNetworkAdapterRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *HostNetworkAdapterRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, HostNetworkAdapterRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.hostNetworkAdapter = result["hostNetworkAdapter"]
+	m.id.virtualMachine = result["virtualMachine"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *HostNetworkAdapterRef) isParsed() bool {
+	return m != nil && m.id.hostNetworkAdapter != "" && m.id.virtualMachine != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *HostNetworkAdapterRef) absolutePath() string {

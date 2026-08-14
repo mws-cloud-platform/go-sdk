@@ -75,6 +75,18 @@ var (
 )
 
 func NewZonalNlbID(zone, project, zonalNetwork, zonalNlb string) (ZonalNlbID, error) {
+	if zonalNlb == "" {
+		return ZonalNlbID{}, reserrors.NewFieldIsEmptyError("zonalNlb")
+	}
+	if zonalNetwork == "" {
+		return ZonalNlbID{}, reserrors.NewFieldIsEmptyError("zonalNetwork")
+	}
+	if project == "" {
+		return ZonalNlbID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if zone == "" {
+		return ZonalNlbID{}, reserrors.NewFieldIsEmptyError("zone")
+	}
 	if match := ZonalNlbZonalNlbValidatePattern.Match([]byte(zonalNlb)); !match {
 		return ZonalNlbID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "zonalNlb", zonalNlb)
 	}
@@ -99,8 +111,6 @@ func NewMustZonalNlbID(zone, project, zonalNetwork, zonalNlb string) ZonalNlbID 
 	if err != nil {
 		panic(err)
 	}
-
-	m.path = m.ID()
 	return m
 }
 
@@ -108,7 +118,7 @@ func ParseZonalNlbID(path string) (ZonalNlbID, error) {
 	m := ZonalNlbID{
 		path: path,
 	}
-	if err := m.Parse(context.Background()); err != nil {
+	if err := m.parse(); err != nil {
 		return ZonalNlbID{}, err
 	}
 	return m, nil
@@ -177,24 +187,6 @@ func (m *ZonalNlbID) String() string {
 	return m.ID()
 }
 
-func (m *ZonalNlbID) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.path, ZonalNlbRefTemplate.AsID())
-	if err != nil {
-		return reserrors.NewParseIDError(m.path, err)
-	}
-
-	m.zonalNlb = result["zonalNlb"]
-	m.zonalNetwork = result["zonalNetwork"]
-	m.project = result["project"]
-	m.zone = result["zone"]
-
-	return nil
-}
-
 func (m *ZonalNlbID) Clone() *ZonalNlbID {
 	if m == nil {
 		return nil
@@ -218,7 +210,7 @@ func (m *ZonalNlbID) Encode(e *jx.Encoder) error {
 	}
 	result := m.ID()
 	if result == "" {
-		result = m.path
+		return fmt.Errorf("encode id: %w", reserrors.ErrIDIsEmpty)
 	}
 	e.Str(result)
 	return nil
@@ -239,6 +231,35 @@ func (m *ZonalNlbID) Decode(d *jx.Decoder) error {
 	}
 
 	m.path = v
+	return m.parse()
+}
+
+// Deprecated: Parse method is no longer required.
+// Internal fields are populated automatically during decoding.
+// This method will be removed in the next SDK release.
+func (m *ZonalNlbID) Parse(ctx context.Context) error {
+	return nil
+}
+
+func (m *ZonalNlbID) parse() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.path == "" {
+		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
+	}
+
+	result, err := resparsers.Reference(context.Background(), m.path, ZonalNlbRefTemplate.AsID())
+	if err != nil {
+		return reserrors.NewParseIDError(m.path, err)
+	}
+
+	m.zonalNlb = result["zonalNlb"]
+	m.zonalNetwork = result["zonalNetwork"]
+	m.project = result["project"]
+	m.zone = result["zone"]
+
 	return nil
 }
 
@@ -256,10 +277,10 @@ func NewZonalNlbRef(zone, project, zonalNetwork, zonalNlb string) (ZonalNlbRef, 
 }
 
 func NewMustZonalNlbRef(zone, project, zonalNetwork, zonalNlb string) ZonalNlbRef {
-	m := ZonalNlbRef{
-		id: NewMustZonalNlbID(zone, project, zonalNetwork, zonalNlb),
+	m, err := NewZonalNlbRef(zone, project, zonalNetwork, zonalNlb)
+	if err != nil {
+		panic(err)
 	}
-	m.id.path = m.absolutePath()
 	return m
 }
 
@@ -345,21 +366,7 @@ func (m *ZonalNlbRef) String() string {
 }
 
 func (m *ZonalNlbRef) Parse(ctx context.Context) error {
-	if m == nil {
-		return nil
-	}
-
-	result, err := resparsers.Reference(ctx, m.id.path, ZonalNlbRefTemplate)
-	if err != nil {
-		return reserrors.NewParseReferenceError(m.id.path, err)
-	}
-
-	m.id.zonalNlb = result["zonalNlb"]
-	m.id.zonalNetwork = result["zonalNetwork"]
-	m.id.project = result["project"]
-	m.id.zone = result["zone"]
-
-	return nil
+	return m.parse(ctx, false)
 }
 
 func (m *ZonalNlbRef) Clone() *ZonalNlbRef {
@@ -383,7 +390,11 @@ func (m *ZonalNlbRef) Encode(e *jx.Encoder) error {
 		e.Null()
 		return nil
 	}
-	e.Str(m.Path())
+	result := m.Path()
+	if result == "" {
+		return fmt.Errorf("encode reference: %w", reserrors.ErrPathIsEmpty)
+	}
+	e.Str(result)
 	return nil
 }
 
@@ -402,7 +413,38 @@ func (m *ZonalNlbRef) Decode(d *jx.Decoder) error {
 	}
 
 	m.id.path = v
+	return m.parse(context.Background(), true)
+}
+
+func (m *ZonalNlbRef) parse(ctx context.Context, allowPartial bool) error {
+	if m == nil || m.isParsed() {
+		return nil
+	}
+
+	if m.id.path == "" {
+		return reserrors.NewParseReferenceError("", reserrors.ErrPathIsEmpty)
+	}
+
+	var options []resparsers.Option
+	if allowPartial {
+		options = append(options, resparsers.AllowPartial())
+	}
+
+	result, err := resparsers.Reference(ctx, m.id.path, ZonalNlbRefTemplate, options...)
+	if err != nil {
+		return reserrors.NewParseReferenceError(m.id.path, err)
+	}
+
+	m.id.zonalNlb = result["zonalNlb"]
+	m.id.zonalNetwork = result["zonalNetwork"]
+	m.id.project = result["project"]
+	m.id.zone = result["zone"]
+
 	return nil
+}
+
+func (m *ZonalNlbRef) isParsed() bool {
+	return m != nil && m.id.zonalNlb != "" && m.id.zonalNetwork != "" && m.id.project != "" && m.id.zone != ""
 }
 
 func (m *ZonalNlbRef) absolutePath() string {
