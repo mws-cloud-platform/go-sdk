@@ -2,14 +2,18 @@
 
 package model
 
-type SecretVersionDataSpec2 map[string]string
+import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
+type SecretVersionDataSpec2 map[string]sensitive.Sensitive[string]
 
 func (m SecretVersionDataSpec2) Clone() SecretVersionDataSpec2 {
 	if m == nil {
 		return nil
 	}
 
-	clone := make(map[string]string, len(m))
+	clone := make(map[string]sensitive.Sensitive[string], len(m))
 	for k, v := range m {
 		clone[k] = v
 	}

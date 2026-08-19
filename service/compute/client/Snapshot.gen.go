@@ -272,6 +272,8 @@ type DeleteSnapshotRequest struct {
 	Snapshot string // path: "snapshot"
 	// Удалить ресурс без возможности восстановления
 	Purge *bool // query: "purge"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
@@ -410,6 +412,8 @@ type UpsertSnapshotRequest struct {
 	Project string // path: "project"
 	// Путь к снимку
 	Snapshot string // path: "snapshot"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Данные для обновления снимка
@@ -443,6 +447,8 @@ type UpdateSnapshotRequest struct {
 	Project string // path: "project"
 	// Путь к снимку
 	Snapshot string // path: "snapshot"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Данные для обновления снимка

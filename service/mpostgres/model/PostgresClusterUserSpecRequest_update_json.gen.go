@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m UpdatePostgresClusterUserSpecRequest) MarshalJSON() ([]byte, error) {
@@ -34,7 +35,7 @@ func (m *UpdatePostgresClusterUserSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdatePostgresClusterUserSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Password.IsSet() {
 		e.FieldStart("password")
-		e.Str(m.Password.Value)
+		e.Str(m.Password.Value.Value())
 	}
 
 	if m.Role.IsSet() {
@@ -85,7 +86,7 @@ func (m *UpdatePostgresClusterUserSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Password.SetTo(v)
+			m.Password.SetTo(sensitive.New(v))
 			return nil
 		case "role":
 			if d.Next() == jx.Null {

@@ -4,10 +4,12 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m SerialPortOutputResponse) MarshalJSON() ([]byte, error) {
@@ -59,7 +61,7 @@ func (m *SerialPortOutputResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.Output != nil {
 		e.FieldStart("output")
-		e.Str(*m.Output)
+		e.Str(m.Output.Value())
 	}
 	return nil
 }
@@ -121,7 +123,7 @@ func (m *SerialPortOutputResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Output = &v
+			m.Output = ptr.Get(sensitive.New(v))
 			return nil
 		default:
 			return d.Skip()

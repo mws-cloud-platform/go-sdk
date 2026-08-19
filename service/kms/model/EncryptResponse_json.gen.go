@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m EncryptResponse) MarshalJSON() ([]byte, error) {
@@ -36,7 +37,7 @@ func (m *EncryptResponse) encodeFields(e *jx.Encoder) error {
 	e.Int32(m.Version)
 
 	e.FieldStart("ciphertext")
-	e.Base64(m.Ciphertext)
+	e.Base64(m.Ciphertext.Value())
 	return nil
 }
 
@@ -65,7 +66,7 @@ func (m *EncryptResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ciphertext = v
+			m.Ciphertext = sensitive.New(v)
 			return nil
 		default:
 			return d.Skip()

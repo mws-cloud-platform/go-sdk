@@ -622,7 +622,7 @@ func TestGetChangesArrayObjectNamed(t *testing.T) {
 			from:       []element{{num: 1, name: "1"}, {num: 2, name: "2"}},
 			to:         []element{{num: 2, name: "2"}, {num: 1, name: "1"}},
 			expected:   []updateElement{{hasChanges: false}, {hasChanges: false}},
-			hasChanges: false,
+			hasChanges: true,
 		},
 		{
 			name:       "add",
@@ -716,7 +716,7 @@ func TestGetChangesArrayObjectNamedError(t *testing.T) {
 			to:         []element{{num: 2, name: "2"}, {num: 1, name: "1"}},
 			expected:   []updateElement{{hasChanges: false}, {hasChanges: false}},
 			diffFunc:   elementDiffFuncRefError,
-			hasChanges: false,
+			hasChanges: true,
 		},
 		{
 			name:       "add",

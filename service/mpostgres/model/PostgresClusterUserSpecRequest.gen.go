@@ -2,9 +2,13 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Real OAPI model name: PostgresClusterUserSpec
 type PostgresClusterUserSpecRequest struct {
-	Password string `json:"password" yaml:"password"`
+	Password sensitive.Sensitive[string] `json:"password" yaml:"password"`
 	// Пользовательские роли (они же роли приложений):
 	//   - `DB_OWNER_USER`: Пользователь с правами владельца базы данных. Это не суперпользователь,
 	//     не имеет права создавать бд или роли, наследует разрешения db_owner.
@@ -20,14 +24,14 @@ type PostgresClusterUserSpecRequest struct {
 	AccessControlPolicy *PostgresUserAccessControlPolicy `json:"accessControlPolicy,omitempty" yaml:"accessControlPolicy,omitempty"`
 }
 
-func (m *PostgresClusterUserSpecRequest) GetPassword() string {
+func (m *PostgresClusterUserSpecRequest) GetPassword() sensitive.Sensitive[string] {
 	if m != nil {
 		return m.Password
 	}
-	return ""
+	return sensitive.New("")
 }
 
-func (m *PostgresClusterUserSpecRequest) SetPassword(val string) {
+func (m *PostgresClusterUserSpecRequest) SetPassword(val sensitive.Sensitive[string]) {
 	m.Password = val
 }
 

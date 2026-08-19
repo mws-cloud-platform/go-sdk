@@ -20,8 +20,6 @@ type CommonRoleBindingSpecSubjectResponse struct {
 	ServiceAgent *iam.ServiceAgentRef `json:"serviceAgent,omitempty" yaml:"serviceAgent,omitempty"`
 	// Субъект федерации пользователей.
 	UserFederation *CommonRoleBindingFederationResponse `json:"userFederation,omitempty" yaml:"userFederation,omitempty"`
-	// Субъект федерации удостоверений рабочей нагрузки (workload).
-	WorkloadFederation *CommonRoleBindingWorkloadFederationResponse `json:"workloadFederation,omitempty" yaml:"workloadFederation,omitempty"`
 	// Идентификатор группы пользователей.
 	UserGroup *iam.UserGroupRef `json:"userGroup,omitempty" yaml:"userGroup,omitempty"`
 	// Идентификатор пользователя backoffice.
@@ -100,24 +98,6 @@ func (m *CommonRoleBindingSpecSubjectResponse) GetUserFederationOr(val CommonRol
 	return val
 }
 
-func (m *CommonRoleBindingSpecSubjectResponse) GetWorkloadFederation() *CommonRoleBindingWorkloadFederationResponse {
-	if m != nil {
-		return m.WorkloadFederation
-	}
-	return nil
-}
-
-func (m *CommonRoleBindingSpecSubjectResponse) SetWorkloadFederation(val *CommonRoleBindingWorkloadFederationResponse) {
-	m.WorkloadFederation = val
-}
-
-func (m *CommonRoleBindingSpecSubjectResponse) GetWorkloadFederationOr(val CommonRoleBindingWorkloadFederationResponse) CommonRoleBindingWorkloadFederationResponse {
-	if m != nil && m.WorkloadFederation != nil {
-		return *m.WorkloadFederation
-	}
-	return val
-}
-
 func (m *CommonRoleBindingSpecSubjectResponse) GetUserGroup() *iam.UserGroupRef {
 	if m != nil {
 		return m.UserGroup
@@ -164,7 +144,6 @@ func (m *CommonRoleBindingSpecSubjectResponse) Clone() *CommonRoleBindingSpecSub
 	clone.ServiceAccount = m.ServiceAccount.Clone()
 	clone.ServiceAgent = m.ServiceAgent.Clone()
 	clone.UserFederation = m.UserFederation.Clone()
-	clone.WorkloadFederation = m.WorkloadFederation.Clone()
 	clone.UserGroup = m.UserGroup.Clone()
 	clone.Employee = m.Employee.Clone()
 	return &clone
@@ -189,10 +168,6 @@ func (m *CommonRoleBindingSpecSubjectResponse) Parse(ctx context.Context) error 
 
 	if err := m.UserFederation.Parse(ctx); err != nil {
 		return reserrors.NewPathAccumulatorError("UserFederation", err)
-	}
-
-	if err := m.WorkloadFederation.Parse(ctx); err != nil {
-		return reserrors.NewPathAccumulatorError("WorkloadFederation", err)
 	}
 
 	if err := m.UserGroup.Parse(ctx); err != nil {

@@ -4,6 +4,7 @@ package model
 
 import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -11,7 +12,7 @@ type UpdateClickhouseClusterBootstrapAdminSpecRequest struct {
 	// Имя учетной записи администратора.
 	Username optional.Optional[string] `json:"username" yaml:"username"`
 	// Пароль учетной записи администратора.
-	Password optional.Optional[string] `json:"password" yaml:"password"`
+	Password optional.Optional[sensitive.Sensitive[string]] `json:"password" yaml:"password"`
 }
 
 func (m *ClickhouseClusterBootstrapAdminSpecRequest) AsUpdateModel() UpdateClickhouseClusterBootstrapAdminSpecRequest {
@@ -58,7 +59,11 @@ func (m *ClickhouseClusterBootstrapAdminSpecRequest) diffUsername(src *Clickhous
 	return commonclient.DiffPrimitiveRequired(src.GetUsername(), m.GetUsername(), nilDiffers)
 }
 
-func (m *ClickhouseClusterBootstrapAdminSpecRequest) diffPassword(src *ClickhouseClusterBootstrapAdminSpecRequest) optional.Optional[string] {
+func (m *ClickhouseClusterBootstrapAdminSpecRequest) diffPassword(src *ClickhouseClusterBootstrapAdminSpecRequest) optional.Optional[sensitive.Sensitive[string]] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetPassword(), m.GetPassword(), nilDiffers)
+	diff := commonclient.DiffPrimitiveRequired(src.GetPassword().Value(), m.GetPassword().Value(), nilDiffers)
+	return optional.Optional[sensitive.Sensitive[string]]{
+		Value: src.GetPassword().WithValue(diff.Value),
+		Set:   diff.Set,
+	}
 }

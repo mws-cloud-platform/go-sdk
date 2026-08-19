@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m UpdateKafkaUserSpecRequest) MarshalJSON() ([]byte, error) {
@@ -34,7 +35,7 @@ func (m *UpdateKafkaUserSpecRequest) Encode(e *jx.Encoder) error {
 func (m *UpdateKafkaUserSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Password.IsSet() {
 		e.FieldStart("password")
-		e.Str(m.Password.Value)
+		e.Str(m.Password.Value.Value())
 	}
 
 	if m.Roles.IsSet() {
@@ -67,7 +68,7 @@ func (m *UpdateKafkaUserSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Password.SetTo(v)
+			m.Password.SetTo(sensitive.New(v))
 			return nil
 		case "roles":
 			c := make([]UpdateKafkaClusterRoleRequest, 0)

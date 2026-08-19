@@ -264,6 +264,9 @@ func (c *Image) queryDeleteImage(request *client.DeleteImageRequest) string {
 	if request.Purge != nil {
 		q.Add("purge", conv.BoolToString(*request.Purge))
 	}
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -439,6 +442,9 @@ func (c *Image) upsertImageInvoker(ctx context.Context, anyReq any, response com
 
 func (c *Image) queryUpsertImage(request *client.UpsertImageRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -531,6 +537,9 @@ func (c *Image) createImageInvoker(ctx context.Context, anyReq any, response com
 func (c *Image) queryCreateImage(request *client.UpsertImageRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -623,6 +632,9 @@ func (c *Image) updateImageInvoker(ctx context.Context, anyReq any, response com
 func (c *Image) queryUpdateImage(request *client.UpdateImageRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

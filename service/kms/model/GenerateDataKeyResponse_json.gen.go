@@ -4,10 +4,12 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m GenerateDataKeyResponse) MarshalJSON() ([]byte, error) {
@@ -36,11 +38,11 @@ func (m *GenerateDataKeyResponse) encodeFields(e *jx.Encoder) error {
 	e.Int32(m.Version)
 
 	e.FieldStart("dataKeyCiphertext")
-	e.Base64(m.DataKeyCiphertext)
+	e.Base64(m.DataKeyCiphertext.Value())
 
 	if m.DataKeyPlaintext != nil {
 		e.FieldStart("dataKeyPlaintext")
-		e.Base64(m.DataKeyPlaintext)
+		e.Base64(m.DataKeyPlaintext.Value())
 	}
 	return nil
 }
@@ -70,7 +72,7 @@ func (m *GenerateDataKeyResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.DataKeyCiphertext = v
+			m.DataKeyCiphertext = sensitive.New(v)
 			return nil
 		case "dataKeyPlaintext":
 			v, err := d.Base64()
@@ -78,7 +80,7 @@ func (m *GenerateDataKeyResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.DataKeyPlaintext = v
+			m.DataKeyPlaintext = ptr.Get(sensitive.New(v))
 			return nil
 		default:
 			return d.Skip()

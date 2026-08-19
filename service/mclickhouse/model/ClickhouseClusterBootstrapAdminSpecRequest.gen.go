@@ -2,13 +2,17 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Добавление пользователей при создании кластера Clickhouse.
 // Real OAPI model name: ClickhouseClusterBootstrapAdminSpec
 type ClickhouseClusterBootstrapAdminSpecRequest struct {
 	// Имя учетной записи администратора.
 	Username string `json:"username" yaml:"username"`
 	// Пароль учетной записи администратора.
-	Password string `json:"password" yaml:"password"`
+	Password sensitive.Sensitive[string] `json:"password" yaml:"password"`
 }
 
 func (m *ClickhouseClusterBootstrapAdminSpecRequest) GetUsername() string {
@@ -22,14 +26,14 @@ func (m *ClickhouseClusterBootstrapAdminSpecRequest) SetUsername(val string) {
 	m.Username = val
 }
 
-func (m *ClickhouseClusterBootstrapAdminSpecRequest) GetPassword() string {
+func (m *ClickhouseClusterBootstrapAdminSpecRequest) GetPassword() sensitive.Sensitive[string] {
 	if m != nil {
 		return m.Password
 	}
-	return ""
+	return sensitive.New("")
 }
 
-func (m *ClickhouseClusterBootstrapAdminSpecRequest) SetPassword(val string) {
+func (m *ClickhouseClusterBootstrapAdminSpecRequest) SetPassword(val sensitive.Sensitive[string]) {
 	m.Password = val
 }
 

@@ -6,6 +6,8 @@ import (
 	"fmt"
 
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 // Описание протокола обмена для console proxy.
@@ -22,7 +24,7 @@ type SerialPortOutputResponse struct {
 	// Размер лога в байтах для бинарного ответа, для валидации на стороне console-proxy; в остальных случаях - значение null.
 	Length *int `json:"length,omitempty" yaml:"length,omitempty"`
 	// Вывод лога серийной консоли. При бинарном ответе закодированный в base64.
-	Output *string `json:"output,omitempty" yaml:"output,omitempty"`
+	Output *sensitive.Sensitive[string] `json:"output,omitempty" yaml:"output,omitempty"`
 }
 
 func (m *SerialPortOutputResponse) GetType() SerialPortOutputTypeResponse {
@@ -108,18 +110,18 @@ func (m *SerialPortOutputResponse) GetLengthOr(val int) int {
 	return val
 }
 
-func (m *SerialPortOutputResponse) GetOutput() *string {
+func (m *SerialPortOutputResponse) GetOutput() *sensitive.Sensitive[string] {
 	if m != nil {
 		return m.Output
 	}
 	return nil
 }
 
-func (m *SerialPortOutputResponse) SetOutput(val *string) {
+func (m *SerialPortOutputResponse) SetOutput(val *sensitive.Sensitive[string]) {
 	m.Output = val
 }
 
-func (m *SerialPortOutputResponse) GetOutputOr(val string) string {
+func (m *SerialPortOutputResponse) GetOutputOr(val sensitive.Sensitive[string]) sensitive.Sensitive[string] {
 	if m != nil && m.Output != nil {
 		return *m.Output
 	}

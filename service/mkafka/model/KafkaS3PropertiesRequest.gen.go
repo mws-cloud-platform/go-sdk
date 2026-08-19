@@ -2,6 +2,10 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Параметры подключения к S3 для бэкапа данных.
 // Real OAPI model name: KafkaS3Properties
 type KafkaS3PropertiesRequest struct {
@@ -10,7 +14,7 @@ type KafkaS3PropertiesRequest struct {
 	// Идентификатор ключа доступа для подключения к S3.
 	AccessKeyId string `json:"accessKeyId" yaml:"accessKeyId"`
 	// Ключ доступа для подключения к S3-хранилищу.
-	SecretAccessKey string `json:"secretAccessKey" yaml:"secretAccessKey"`
+	SecretAccessKey sensitive.Sensitive[string] `json:"secretAccessKey" yaml:"secretAccessKey"`
 	// Эндпоинт S3-хранилища.
 	Endpoint string `json:"endpoint" yaml:"endpoint"`
 }
@@ -37,14 +41,14 @@ func (m *KafkaS3PropertiesRequest) SetAccessKeyId(val string) {
 	m.AccessKeyId = val
 }
 
-func (m *KafkaS3PropertiesRequest) GetSecretAccessKey() string {
+func (m *KafkaS3PropertiesRequest) GetSecretAccessKey() sensitive.Sensitive[string] {
 	if m != nil {
 		return m.SecretAccessKey
 	}
-	return ""
+	return sensitive.New("")
 }
 
-func (m *KafkaS3PropertiesRequest) SetSecretAccessKey(val string) {
+func (m *KafkaS3PropertiesRequest) SetSecretAccessKey(val sensitive.Sensitive[string]) {
 	m.SecretAccessKey = val
 }
 

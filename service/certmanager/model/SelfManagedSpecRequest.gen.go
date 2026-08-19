@@ -2,12 +2,16 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Real OAPI model name: SelfManagedSpec
 type SelfManagedSpecRequest struct {
 	// Сертификат.
 	Certificate string `json:"certificate" yaml:"certificate"`
 	// Закрытый ключ сертификата.
-	PrivateKey string `json:"privateKey" yaml:"privateKey"`
+	PrivateKey sensitive.Sensitive[string] `json:"privateKey" yaml:"privateKey"`
 	// Цепочка сертификатов.
 	ChainedCert *string `json:"chainedCert,omitempty" yaml:"chainedCert,omitempty"`
 }
@@ -23,14 +27,14 @@ func (m *SelfManagedSpecRequest) SetCertificate(val string) {
 	m.Certificate = val
 }
 
-func (m *SelfManagedSpecRequest) GetPrivateKey() string {
+func (m *SelfManagedSpecRequest) GetPrivateKey() sensitive.Sensitive[string] {
 	if m != nil {
 		return m.PrivateKey
 	}
-	return ""
+	return sensitive.New("")
 }
 
-func (m *SelfManagedSpecRequest) SetPrivateKey(val string) {
+func (m *SelfManagedSpecRequest) SetPrivateKey(val sensitive.Sensitive[string]) {
 	m.PrivateKey = val
 }
 

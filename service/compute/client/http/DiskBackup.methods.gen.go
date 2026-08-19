@@ -183,6 +183,9 @@ func (c *DiskBackup) queryDeleteDiskBackup(request *client.DeleteDiskBackupReque
 	if request.Purge != nil {
 		q.Add("purge", conv.BoolToString(*request.Purge))
 	}
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -358,6 +361,9 @@ func (c *DiskBackup) upsertDiskBackupInvoker(ctx context.Context, anyReq any, re
 
 func (c *DiskBackup) queryUpsertDiskBackup(request *client.UpsertDiskBackupRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -450,6 +456,9 @@ func (c *DiskBackup) createDiskBackupInvoker(ctx context.Context, anyReq any, re
 func (c *DiskBackup) queryCreateDiskBackup(request *client.UpsertDiskBackupRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -542,6 +551,9 @@ func (c *DiskBackup) updateDiskBackupInvoker(ctx context.Context, anyReq any, re
 func (c *DiskBackup) queryUpdateDiskBackup(request *client.UpdateDiskBackupRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

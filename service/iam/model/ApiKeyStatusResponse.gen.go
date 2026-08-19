@@ -5,6 +5,7 @@ package model
 import (
 	"time"
 
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -12,7 +13,7 @@ import (
 type ApiKeyStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
 	// Сгенерированный API-ключ
-	ApiKey *string `json:"apiKey,omitempty" yaml:"apiKey,omitempty"`
+	ApiKey *sensitive.Sensitive[string] `json:"apiKey,omitempty" yaml:"apiKey,omitempty"`
 	// Время последней аутентификации.
 	LastAuthTime *time.Time `json:"lastAuthTime,omitempty" yaml:"lastAuthTime,omitempty"`
 }
@@ -24,14 +25,14 @@ func (m *ApiKeyStatusResponse) GetReady() common.ResourceStatusReadyResponse {
 	return common.ResourceStatusReadyResponse{}
 }
 
-func (m *ApiKeyStatusResponse) GetApiKey() *string {
+func (m *ApiKeyStatusResponse) GetApiKey() *sensitive.Sensitive[string] {
 	if m != nil {
 		return m.ApiKey
 	}
 	return nil
 }
 
-func (m *ApiKeyStatusResponse) GetApiKeyOr(val string) string {
+func (m *ApiKeyStatusResponse) GetApiKeyOr(val sensitive.Sensitive[string]) sensitive.Sensitive[string] {
 	if m != nil && m.ApiKey != nil {
 		return *m.ApiKey
 	}

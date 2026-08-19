@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m UpdateClickhouseClusterBootstrapAdminSpecRequest) MarshalJSON() ([]byte, error) {
@@ -39,7 +40,7 @@ func (m *UpdateClickhouseClusterBootstrapAdminSpecRequest) encodeFields(e *jx.En
 
 	if m.Password.IsSet() {
 		e.FieldStart("password")
-		e.Str(m.Password.Value)
+		e.Str(m.Password.Value.Value())
 	}
 	return nil
 }
@@ -69,7 +70,7 @@ func (m *UpdateClickhouseClusterBootstrapAdminSpecRequest) Decode(d *jx.Decoder)
 				return err
 			}
 
-			m.Password.SetTo(v)
+			m.Password.SetTo(sensitive.New(v))
 			return nil
 		default:
 			return d.Skip()

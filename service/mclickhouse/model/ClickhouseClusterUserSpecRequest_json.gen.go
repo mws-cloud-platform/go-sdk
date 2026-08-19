@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m ClickhouseClusterUserSpecRequest) MarshalJSON() ([]byte, error) {
@@ -40,7 +41,7 @@ func (m *ClickhouseClusterUserSpecRequest) encodeFields(e *jx.Encoder) error {
 	}
 
 	e.FieldStart("password")
-	e.Str(m.Password)
+	e.Str(m.Password.Value())
 	return nil
 }
 
@@ -72,7 +73,7 @@ func (m *ClickhouseClusterUserSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Password = v
+			m.Password = sensitive.New(v)
 			requiredFilled["password"] = true
 			return nil
 		default:

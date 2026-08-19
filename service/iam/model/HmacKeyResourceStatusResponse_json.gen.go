@@ -4,10 +4,12 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -44,7 +46,7 @@ func (m *HmacKeyResourceStatusResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.SecretAccessKey != nil {
 		e.FieldStart("secretAccessKey")
-		e.Str(*m.SecretAccessKey)
+		e.Str(m.SecretAccessKey.Value())
 	}
 
 	if m.LastAuthTime != nil {
@@ -87,7 +89,7 @@ func (m *HmacKeyResourceStatusResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.SecretAccessKey = &v
+			m.SecretAccessKey = ptr.Get(sensitive.New(v))
 			return nil
 		case "lastAuthTime":
 			v, err := decode.DateTime(d)

@@ -7,11 +7,12 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdatePostgresClusterUserSpecRequest struct {
-	Password optional.Optional[string] `json:"password" yaml:"password"`
+	Password optional.Optional[sensitive.Sensitive[string]] `json:"password" yaml:"password"`
 	// Пользовательские роли (они же роли приложений):
 	//   - `DB_OWNER_USER`: Пользователь с правами владельца базы данных. Это не суперпользователь,
 	//     не имеет права создавать бд или роли, наследует разрешения db_owner.
@@ -95,9 +96,13 @@ func (m UpdatePostgresClusterUserSpecRequest) HasChanges() bool {
 		m.AccessControlPolicy.Set
 }
 
-func (m *PostgresClusterUserSpecRequest) diffPassword(src *PostgresClusterUserSpecRequest) optional.Optional[string] {
+func (m *PostgresClusterUserSpecRequest) diffPassword(src *PostgresClusterUserSpecRequest) optional.Optional[sensitive.Sensitive[string]] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetPassword(), m.GetPassword(), nilDiffers)
+	diff := commonclient.DiffPrimitiveRequired(src.GetPassword().Value(), m.GetPassword().Value(), nilDiffers)
+	return optional.Optional[sensitive.Sensitive[string]]{
+		Value: src.GetPassword().WithValue(diff.Value),
+		Set:   diff.Set,
+	}
 }
 
 func (m *PostgresClusterUserSpecRequest) diffRole(src *PostgresClusterUserSpecRequest) optional.OptionalNil[PostgresUserRole] {

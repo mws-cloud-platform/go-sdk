@@ -2,14 +2,20 @@
 
 package model
 
+import (
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Real OAPI model name: Encrypt
 type EncryptRequest struct {
 	// Версия криптографического ключа, используемая для шифрования открытых данных.
 	Version *int32 `json:"version,omitempty" yaml:"version,omitempty"`
 	// Открытые данные, которые необходимо зашифровать. Должны быть закодированы в base64.
-	Plaintext []byte `json:"plaintext" yaml:"plaintext"` // base64
+	Plaintext sensitive.Sensitive[[]byte] `json:"plaintext" yaml:"plaintext"` // base64
 	// Дополнительные данные, которые могут быть включены в процесс аутентифицированного шифрования.
-	AssociatedData []byte `json:"associatedData,omitempty" yaml:"associatedData,omitempty"` // base64
+	AssociatedData *sensitive.Sensitive[[]byte] `json:"associatedData,omitempty" yaml:"associatedData,omitempty"` // base64
 }
 
 func (m *EncryptRequest) GetVersion() *int32 {
@@ -30,31 +36,31 @@ func (m *EncryptRequest) GetVersionOr(val int32) int32 {
 	return val
 }
 
-func (m *EncryptRequest) GetPlaintext() []byte {
+func (m *EncryptRequest) GetPlaintext() sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.Plaintext
 	}
-	return nil
+	return sensitive.New([]byte(nil))
 }
 
-func (m *EncryptRequest) SetPlaintext(val []byte) {
+func (m *EncryptRequest) SetPlaintext(val sensitive.Sensitive[[]byte]) {
 	m.Plaintext = val
 }
 
-func (m *EncryptRequest) GetAssociatedData() []byte {
+func (m *EncryptRequest) GetAssociatedData() *sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.AssociatedData
 	}
 	return nil
 }
 
-func (m *EncryptRequest) SetAssociatedData(val []byte) {
+func (m *EncryptRequest) SetAssociatedData(val *sensitive.Sensitive[[]byte]) {
 	m.AssociatedData = val
 }
 
-func (m *EncryptRequest) GetAssociatedDataOr(val []byte) []byte {
+func (m *EncryptRequest) GetAssociatedDataOr(val sensitive.Sensitive[[]byte]) sensitive.Sensitive[[]byte] {
 	if m != nil && m.AssociatedData != nil {
-		return m.AssociatedData
+		return *m.AssociatedData
 	}
 	return val
 }
@@ -69,16 +75,20 @@ func (m *EncryptRequest) Clone() *EncryptRequest {
 		cloneVersion := *m.Version
 		clone.Version = &cloneVersion
 	}
-	if m.Plaintext != nil {
-		clone.Plaintext = make([]byte, len(m.Plaintext))
-		for i, v := range m.Plaintext {
-			clone.Plaintext[i] = v
+	if m.Plaintext.Value() != nil {
+		clone.Plaintext = sensitive.New(make([]byte, len(m.Plaintext.Value())))
+		for i, v := range m.Plaintext.Value() {
+			clone.Plaintext.Value()[i] = v
 		}
 	}
 	if m.AssociatedData != nil {
-		clone.AssociatedData = make([]byte, len(m.AssociatedData))
-		for i, v := range m.AssociatedData {
-			clone.AssociatedData[i] = v
+		if m.AssociatedData.Value() != nil {
+			clone.AssociatedData = ptr.Get(sensitive.New(make([]byte, len(m.AssociatedData.Value()))))
+			for i, v := range m.AssociatedData.Value() {
+				clone.AssociatedData.Value()[i] = v
+			}
+		} else {
+			clone.AssociatedData = ptr.Get(sensitive.New([]byte(nil)))
 		}
 	}
 	return &clone

@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m KafkaS3PropertiesRequest) MarshalJSON() ([]byte, error) {
@@ -39,7 +40,7 @@ func (m *KafkaS3PropertiesRequest) encodeFields(e *jx.Encoder) error {
 	e.Str(m.AccessKeyId)
 
 	e.FieldStart("secretAccessKey")
-	e.Str(m.SecretAccessKey)
+	e.Str(m.SecretAccessKey.Value())
 
 	e.FieldStart("endpoint")
 	e.Str(m.Endpoint)
@@ -87,7 +88,7 @@ func (m *KafkaS3PropertiesRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.SecretAccessKey = v
+			m.SecretAccessKey = sensitive.New(v)
 			requiredFilled["secretAccessKey"] = true
 			return nil
 		case "endpoint":

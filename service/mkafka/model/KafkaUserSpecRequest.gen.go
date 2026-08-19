@@ -2,23 +2,27 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Параметры пользователя.
 // Real OAPI model name: KafkaUserSpec
 type KafkaUserSpecRequest struct {
 	// Пароль пользователя.
-	Password string `json:"password" yaml:"password"`
+	Password sensitive.Sensitive[string] `json:"password" yaml:"password"`
 	// Роли пользователя.
 	Roles []KafkaClusterRoleRequest `json:"roles" yaml:"roles"`
 }
 
-func (m *KafkaUserSpecRequest) GetPassword() string {
+func (m *KafkaUserSpecRequest) GetPassword() sensitive.Sensitive[string] {
 	if m != nil {
 		return m.Password
 	}
-	return ""
+	return sensitive.New("")
 }
 
-func (m *KafkaUserSpecRequest) SetPassword(val string) {
+func (m *KafkaUserSpecRequest) SetPassword(val sensitive.Sensitive[string]) {
 	m.Password = val
 }
 

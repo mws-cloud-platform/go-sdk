@@ -266,6 +266,8 @@ type DeleteDiskBackupRequest struct {
 	DiskBackup string // path: "diskBackup"
 	// Удалить ресурс без возможности восстановления
 	Purge *bool // query: "purge"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
@@ -404,6 +406,8 @@ type UpsertDiskBackupRequest struct {
 	Project string // path: "project"
 	// Путь к резервной копии диска
 	DiskBackup string // path: "diskBackup"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Данные для обновления резервной копии диска
@@ -437,6 +441,8 @@ type UpdateDiskBackupRequest struct {
 	Project string // path: "project"
 	// Путь к резервной копии диска
 	DiskBackup string // path: "diskBackup"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Данные для обновления резервной копии диска

@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m KafkaUserSpecRequest) MarshalJSON() ([]byte, error) {
@@ -33,7 +34,7 @@ func (m *KafkaUserSpecRequest) Encode(e *jx.Encoder) error {
 
 func (m *KafkaUserSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("password")
-	e.Str(m.Password)
+	e.Str(m.Password.Value())
 
 	e.FieldStart("roles")
 	e.ArrStart()
@@ -67,7 +68,7 @@ func (m *KafkaUserSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Password = v
+			m.Password = sensitive.New(v)
 			requiredFilled["password"] = true
 			return nil
 		case "roles":

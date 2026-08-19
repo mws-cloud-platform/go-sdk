@@ -5,33 +5,36 @@ package model
 import (
 	"context"
 
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/service/resources/references/kms"
 )
 
 // Real OAPI model name: ReEncrypt
 type ReEncryptRequest struct {
 	// Зашифрованные данные (шифротекст).
-	Ciphertext []byte `json:"ciphertext" yaml:"ciphertext"` // base64
+	Ciphertext sensitive.Sensitive[[]byte] `json:"ciphertext" yaml:"ciphertext"` // base64
 	// Ссылка на `CryptoKey`, с помощью которого данные в данный момент зашифрованы.
 	// Если значение не указано, для определения `sourceKeyRef` будут использованы поля `destinationProject` и `destinationKey`.
 	SourceKeyRef *kms.CryptoKeyRef `json:"sourceKeyRef,omitempty" yaml:"sourceKeyRef,omitempty"`
 	// Дополнительные данные, которые были включены в исходный процесс аутентифицированного шифрования.
-	SourceAssociatedData []byte `json:"sourceAssociatedData,omitempty" yaml:"sourceAssociatedData,omitempty"` // base64
+	SourceAssociatedData *sensitive.Sensitive[[]byte] `json:"sourceAssociatedData,omitempty" yaml:"sourceAssociatedData,omitempty"` // base64
 	// Дополнительные данные, которые могут быть включены в процесс аутентифицированного шифрования при повторном шифровании.
-	DestinationAssociatedData []byte `json:"destinationAssociatedData,omitempty" yaml:"destinationAssociatedData,omitempty"` // base64
+	DestinationAssociatedData *sensitive.Sensitive[[]byte] `json:"destinationAssociatedData,omitempty" yaml:"destinationAssociatedData,omitempty"` // base64
 	// Версия криптографического ключа, используемая для повторного шифрования. Если не указано, используется основная версия ключа.
 	DestinationVersion *int32 `json:"destinationVersion,omitempty" yaml:"destinationVersion,omitempty"`
 }
 
-func (m *ReEncryptRequest) GetCiphertext() []byte {
+func (m *ReEncryptRequest) GetCiphertext() sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.Ciphertext
 	}
-	return nil
+	return sensitive.New([]byte(nil))
 }
 
-func (m *ReEncryptRequest) SetCiphertext(val []byte) {
+func (m *ReEncryptRequest) SetCiphertext(val sensitive.Sensitive[[]byte]) {
 	m.Ciphertext = val
 }
 
@@ -53,38 +56,38 @@ func (m *ReEncryptRequest) GetSourceKeyRefOr(val kms.CryptoKeyRef) kms.CryptoKey
 	return val
 }
 
-func (m *ReEncryptRequest) GetSourceAssociatedData() []byte {
+func (m *ReEncryptRequest) GetSourceAssociatedData() *sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.SourceAssociatedData
 	}
 	return nil
 }
 
-func (m *ReEncryptRequest) SetSourceAssociatedData(val []byte) {
+func (m *ReEncryptRequest) SetSourceAssociatedData(val *sensitive.Sensitive[[]byte]) {
 	m.SourceAssociatedData = val
 }
 
-func (m *ReEncryptRequest) GetSourceAssociatedDataOr(val []byte) []byte {
+func (m *ReEncryptRequest) GetSourceAssociatedDataOr(val sensitive.Sensitive[[]byte]) sensitive.Sensitive[[]byte] {
 	if m != nil && m.SourceAssociatedData != nil {
-		return m.SourceAssociatedData
+		return *m.SourceAssociatedData
 	}
 	return val
 }
 
-func (m *ReEncryptRequest) GetDestinationAssociatedData() []byte {
+func (m *ReEncryptRequest) GetDestinationAssociatedData() *sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.DestinationAssociatedData
 	}
 	return nil
 }
 
-func (m *ReEncryptRequest) SetDestinationAssociatedData(val []byte) {
+func (m *ReEncryptRequest) SetDestinationAssociatedData(val *sensitive.Sensitive[[]byte]) {
 	m.DestinationAssociatedData = val
 }
 
-func (m *ReEncryptRequest) GetDestinationAssociatedDataOr(val []byte) []byte {
+func (m *ReEncryptRequest) GetDestinationAssociatedDataOr(val sensitive.Sensitive[[]byte]) sensitive.Sensitive[[]byte] {
 	if m != nil && m.DestinationAssociatedData != nil {
-		return m.DestinationAssociatedData
+		return *m.DestinationAssociatedData
 	}
 	return val
 }
@@ -113,23 +116,31 @@ func (m *ReEncryptRequest) Clone() *ReEncryptRequest {
 	}
 
 	clone := *m
-	if m.Ciphertext != nil {
-		clone.Ciphertext = make([]byte, len(m.Ciphertext))
-		for i, v := range m.Ciphertext {
-			clone.Ciphertext[i] = v
+	if m.Ciphertext.Value() != nil {
+		clone.Ciphertext = sensitive.New(make([]byte, len(m.Ciphertext.Value())))
+		for i, v := range m.Ciphertext.Value() {
+			clone.Ciphertext.Value()[i] = v
 		}
 	}
 	clone.SourceKeyRef = m.SourceKeyRef.Clone()
 	if m.SourceAssociatedData != nil {
-		clone.SourceAssociatedData = make([]byte, len(m.SourceAssociatedData))
-		for i, v := range m.SourceAssociatedData {
-			clone.SourceAssociatedData[i] = v
+		if m.SourceAssociatedData.Value() != nil {
+			clone.SourceAssociatedData = ptr.Get(sensitive.New(make([]byte, len(m.SourceAssociatedData.Value()))))
+			for i, v := range m.SourceAssociatedData.Value() {
+				clone.SourceAssociatedData.Value()[i] = v
+			}
+		} else {
+			clone.SourceAssociatedData = ptr.Get(sensitive.New([]byte(nil)))
 		}
 	}
 	if m.DestinationAssociatedData != nil {
-		clone.DestinationAssociatedData = make([]byte, len(m.DestinationAssociatedData))
-		for i, v := range m.DestinationAssociatedData {
-			clone.DestinationAssociatedData[i] = v
+		if m.DestinationAssociatedData.Value() != nil {
+			clone.DestinationAssociatedData = ptr.Get(sensitive.New(make([]byte, len(m.DestinationAssociatedData.Value()))))
+			for i, v := range m.DestinationAssociatedData.Value() {
+				clone.DestinationAssociatedData.Value()[i] = v
+			}
+		} else {
+			clone.DestinationAssociatedData = ptr.Get(sensitive.New([]byte(nil)))
 		}
 	}
 	if m.DestinationVersion != nil {

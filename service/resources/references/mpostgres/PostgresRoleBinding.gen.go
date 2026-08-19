@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	PostgresRoleBindingRoleBindingValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-_]{0,254}[a-z0-9])?$`)
+	PostgresRoleBindingRoleBindingValidatePattern = regexp.MustCompile(`^[a-zA-Z0-9_]([a-zA-Z0-9_$-]{0,254}[a-zA-Z0-9_$-])?$`)
 	PostgresRoleBindingClusterValidatePattern     = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,45}[a-z0-9])?$`)
 	PostgresRoleBindingRefTemplate                = resparsers.Template{
 		{

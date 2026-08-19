@@ -4,6 +4,7 @@ package model
 
 import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -13,7 +14,7 @@ type UpdateKafkaS3PropertiesRequest struct {
 	// Идентификатор ключа доступа для подключения к S3.
 	AccessKeyId optional.Optional[string] `json:"accessKeyId" yaml:"accessKeyId"`
 	// Ключ доступа для подключения к S3-хранилищу.
-	SecretAccessKey optional.Optional[string] `json:"secretAccessKey" yaml:"secretAccessKey"`
+	SecretAccessKey optional.Optional[sensitive.Sensitive[string]] `json:"secretAccessKey" yaml:"secretAccessKey"`
 	// Эндпоинт S3-хранилища.
 	Endpoint optional.Optional[string] `json:"endpoint" yaml:"endpoint"`
 }
@@ -79,9 +80,13 @@ func (m *KafkaS3PropertiesRequest) diffAccessKeyId(src *KafkaS3PropertiesRequest
 	return commonclient.DiffPrimitiveRequired(src.GetAccessKeyId(), m.GetAccessKeyId(), nilDiffers)
 }
 
-func (m *KafkaS3PropertiesRequest) diffSecretAccessKey(src *KafkaS3PropertiesRequest) optional.Optional[string] {
+func (m *KafkaS3PropertiesRequest) diffSecretAccessKey(src *KafkaS3PropertiesRequest) optional.Optional[sensitive.Sensitive[string]] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetSecretAccessKey(), m.GetSecretAccessKey(), nilDiffers)
+	diff := commonclient.DiffPrimitiveRequired(src.GetSecretAccessKey().Value(), m.GetSecretAccessKey().Value(), nilDiffers)
+	return optional.Optional[sensitive.Sensitive[string]]{
+		Value: src.GetSecretAccessKey().WithValue(diff.Value),
+		Set:   diff.Set,
+	}
 }
 
 func (m *KafkaS3PropertiesRequest) diffEndpoint(src *KafkaS3PropertiesRequest) optional.Optional[string] {

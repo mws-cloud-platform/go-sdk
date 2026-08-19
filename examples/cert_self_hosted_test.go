@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"go.mws.cloud/go-sdk/mws"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	certclient "go.mws.cloud/go-sdk/service/certmanager/client"
 	certmodel "go.mws.cloud/go-sdk/service/certmanager/model"
 	certsdk "go.mws.cloud/go-sdk/service/certmanager/sdk"
@@ -52,7 +53,7 @@ func Example_certSelfHosted() {
 			Spec: certmodel.CertificateSpecRequest{
 				SelfManaged: &certmodel.SelfManagedSpecRequest{
 					Certificate: certPEM,
-					PrivateKey:  privateKeyPEM,
+					PrivateKey:  sensitive.New(privateKeyPEM),
 				},
 			},
 		},
@@ -77,7 +78,7 @@ func Example_certSelfHosted() {
 			Spec: certmodel.CertificateSpecRequest{
 				SelfManaged: &certmodel.SelfManagedSpecRequest{
 					Certificate: newCertPEM,
-					PrivateKey:  newPrivateKeyPEM,
+					PrivateKey:  sensitive.New(newPrivateKeyPEM),
 				},
 			},
 		}).AsUpdateModel(),

@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/service/kms/model"
 )
 
@@ -24,6 +25,6 @@ func TestGenerateDataKeyResponseMarshalling(t *testing.T) {
 
 func initGenerateDataKeyResponse() model.GenerateDataKeyResponse {
 	var v model.GenerateDataKeyResponse
-	v.DataKeyCiphertext = make([]byte, 0)
+	v.DataKeyCiphertext = sensitive.New(make([]byte, 0))
 	return v
 }

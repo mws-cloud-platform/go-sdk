@@ -4,10 +4,12 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m SuccessSessionTokenResponse) MarshalJSON() ([]byte, error) {
@@ -34,7 +36,7 @@ func (m *SuccessSessionTokenResponse) Encode(e *jx.Encoder) error {
 func (m *SuccessSessionTokenResponse) encodeFields(e *jx.Encoder) error {
 	if m.SessionToken != nil {
 		e.FieldStart("SessionToken")
-		e.Str(*m.SessionToken)
+		e.Str(m.SessionToken.Value())
 	}
 
 	if m.Expiration != nil {
@@ -49,7 +51,7 @@ func (m *SuccessSessionTokenResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.SecretAccessKey != nil {
 		e.FieldStart("SecretAccessKey")
-		e.Str(*m.SecretAccessKey)
+		e.Str(m.SecretAccessKey.Value())
 	}
 
 	if m.Version != nil {
@@ -76,7 +78,7 @@ func (m *SuccessSessionTokenResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.SessionToken = &v
+			m.SessionToken = ptr.Get(sensitive.New(v))
 			return nil
 		case "Expiration":
 			v, err := decode.DateTime(d)
@@ -100,7 +102,7 @@ func (m *SuccessSessionTokenResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.SecretAccessKey = &v
+			m.SecretAccessKey = ptr.Get(sensitive.New(v))
 			return nil
 		case "Version":
 			v, err := decode.Int(d)

@@ -8,6 +8,7 @@ import (
 
 	"go.mws.cloud/go-sdk/mws"
 	"go.mws.cloud/go-sdk/mws/page"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	secretmanagerclient "go.mws.cloud/go-sdk/service/secretmanager/client"
 	secretmanagermodel "go.mws.cloud/go-sdk/service/secretmanager/model"
 	secretmanagersdk "go.mws.cloud/go-sdk/service/secretmanager/sdk"
@@ -51,7 +52,7 @@ func Example_secret_version() {
 		Name: secretName,
 		Body: secretmanagermodel.CreateSecretWithSecretVersionRequest{
 			SecretVersionSpecRequest: secretmanagermodel.SecretVersionSpecRequest{
-				Data: secretmanagermodel.SecretVersionDataSpec{"keyA": "A1", "keyB": "B1"},
+				Data: secretmanagermodel.SecretVersionDataSpec{"keyA": sensitive.New("A1"), "keyB": sensitive.New("B1")},
 			},
 		},
 	})
@@ -67,7 +68,7 @@ func Example_secret_version() {
 		Name: secretName,
 		Body: secretmanagermodel.AddSecretVersionRequest{
 			Spec: &secretmanagermodel.SecretVersionSpecRequest{
-				Data: secretmanagermodel.SecretVersionDataSpec{"keyA": "A2", "keyB": "B2"},
+				Data: secretmanagermodel.SecretVersionDataSpec{"keyA": sensitive.New("A2"), "keyB": sensitive.New("B2")},
 			},
 		},
 	})

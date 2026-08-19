@@ -2,14 +2,20 @@
 
 package model
 
+import (
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Real OAPI model name: GenerateDataKey
 type GenerateDataKeyResponse struct {
 	// Версия криптографического ключа, используемая для шифрования ключа данных.
 	Version int32 `json:"version" yaml:"version"`
 	// Зашифрованный ключ шифрования данных.
-	DataKeyCiphertext []byte `json:"dataKeyCiphertext" yaml:"dataKeyCiphertext"` // base64
+	DataKeyCiphertext sensitive.Sensitive[[]byte] `json:"dataKeyCiphertext" yaml:"dataKeyCiphertext"` // base64
 	// Сгенерированный ключ шифрования данных.
-	DataKeyPlaintext []byte `json:"dataKeyPlaintext,omitempty" yaml:"dataKeyPlaintext,omitempty"` // base64
+	DataKeyPlaintext *sensitive.Sensitive[[]byte] `json:"dataKeyPlaintext,omitempty" yaml:"dataKeyPlaintext,omitempty"` // base64
 }
 
 func (m *GenerateDataKeyResponse) GetVersion() int32 {
@@ -23,31 +29,31 @@ func (m *GenerateDataKeyResponse) SetVersion(val int32) {
 	m.Version = val
 }
 
-func (m *GenerateDataKeyResponse) GetDataKeyCiphertext() []byte {
+func (m *GenerateDataKeyResponse) GetDataKeyCiphertext() sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.DataKeyCiphertext
 	}
-	return nil
+	return sensitive.New([]byte(nil))
 }
 
-func (m *GenerateDataKeyResponse) SetDataKeyCiphertext(val []byte) {
+func (m *GenerateDataKeyResponse) SetDataKeyCiphertext(val sensitive.Sensitive[[]byte]) {
 	m.DataKeyCiphertext = val
 }
 
-func (m *GenerateDataKeyResponse) GetDataKeyPlaintext() []byte {
+func (m *GenerateDataKeyResponse) GetDataKeyPlaintext() *sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.DataKeyPlaintext
 	}
 	return nil
 }
 
-func (m *GenerateDataKeyResponse) SetDataKeyPlaintext(val []byte) {
+func (m *GenerateDataKeyResponse) SetDataKeyPlaintext(val *sensitive.Sensitive[[]byte]) {
 	m.DataKeyPlaintext = val
 }
 
-func (m *GenerateDataKeyResponse) GetDataKeyPlaintextOr(val []byte) []byte {
+func (m *GenerateDataKeyResponse) GetDataKeyPlaintextOr(val sensitive.Sensitive[[]byte]) sensitive.Sensitive[[]byte] {
 	if m != nil && m.DataKeyPlaintext != nil {
-		return m.DataKeyPlaintext
+		return *m.DataKeyPlaintext
 	}
 	return val
 }
@@ -58,16 +64,20 @@ func (m *GenerateDataKeyResponse) Clone() *GenerateDataKeyResponse {
 	}
 
 	clone := *m
-	if m.DataKeyCiphertext != nil {
-		clone.DataKeyCiphertext = make([]byte, len(m.DataKeyCiphertext))
-		for i, v := range m.DataKeyCiphertext {
-			clone.DataKeyCiphertext[i] = v
+	if m.DataKeyCiphertext.Value() != nil {
+		clone.DataKeyCiphertext = sensitive.New(make([]byte, len(m.DataKeyCiphertext.Value())))
+		for i, v := range m.DataKeyCiphertext.Value() {
+			clone.DataKeyCiphertext.Value()[i] = v
 		}
 	}
 	if m.DataKeyPlaintext != nil {
-		clone.DataKeyPlaintext = make([]byte, len(m.DataKeyPlaintext))
-		for i, v := range m.DataKeyPlaintext {
-			clone.DataKeyPlaintext[i] = v
+		if m.DataKeyPlaintext.Value() != nil {
+			clone.DataKeyPlaintext = ptr.Get(sensitive.New(make([]byte, len(m.DataKeyPlaintext.Value()))))
+			for i, v := range m.DataKeyPlaintext.Value() {
+				clone.DataKeyPlaintext.Value()[i] = v
+			}
+		} else {
+			clone.DataKeyPlaintext = ptr.Get(sensitive.New([]byte(nil)))
 		}
 	}
 	return &clone

@@ -5,6 +5,7 @@ package model
 import (
 	"time"
 
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -14,7 +15,7 @@ type HmacKeyResourceStatusResponse struct {
 	// Идентификатор ключа (readOnly).
 	AccessKeyId *string `json:"accessKeyId,omitempty" yaml:"accessKeyId,omitempty"`
 	// HMAC-ключ (readOnly).
-	SecretAccessKey *string `json:"secretAccessKey,omitempty" yaml:"secretAccessKey,omitempty"`
+	SecretAccessKey *sensitive.Sensitive[string] `json:"secretAccessKey,omitempty" yaml:"secretAccessKey,omitempty"`
 	// Время последней аутентификации.
 	LastAuthTime *time.Time `json:"lastAuthTime,omitempty" yaml:"lastAuthTime,omitempty"`
 }
@@ -40,14 +41,14 @@ func (m *HmacKeyResourceStatusResponse) GetAccessKeyIdOr(val string) string {
 	return val
 }
 
-func (m *HmacKeyResourceStatusResponse) GetSecretAccessKey() *string {
+func (m *HmacKeyResourceStatusResponse) GetSecretAccessKey() *sensitive.Sensitive[string] {
 	if m != nil {
 		return m.SecretAccessKey
 	}
 	return nil
 }
 
-func (m *HmacKeyResourceStatusResponse) GetSecretAccessKeyOr(val string) string {
+func (m *HmacKeyResourceStatusResponse) GetSecretAccessKeyOr(val sensitive.Sensitive[string]) sensitive.Sensitive[string] {
 	if m != nil && m.SecretAccessKey != nil {
 		return *m.SecretAccessKey
 	}

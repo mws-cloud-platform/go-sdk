@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m SuccessTokenV2Response) MarshalJSON() ([]byte, error) {
@@ -33,7 +34,7 @@ func (m *SuccessTokenV2Response) Encode(e *jx.Encoder) error {
 
 func (m *SuccessTokenV2Response) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("accessToken")
-	e.Str(m.AccessToken)
+	e.Str(m.AccessToken.Value())
 
 	if m.ExpirationTs != nil {
 		e.FieldStart("expirationTs")
@@ -59,7 +60,7 @@ func (m *SuccessTokenV2Response) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.AccessToken = v
+			m.AccessToken = sensitive.New(v)
 			return nil
 		case "expirationTs":
 			v, err := decode.DateTime(d)

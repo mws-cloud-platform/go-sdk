@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/service/kms/model"
 )
 
@@ -24,6 +25,6 @@ func TestDecryptResponseMarshalling(t *testing.T) {
 
 func initDecryptResponse() model.DecryptResponse {
 	var v model.DecryptResponse
-	v.Plaintext = make([]byte, 0)
+	v.Plaintext = sensitive.New(make([]byte, 0))
 	return v
 }

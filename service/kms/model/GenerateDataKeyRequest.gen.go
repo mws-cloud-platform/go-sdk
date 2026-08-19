@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Real OAPI model name: GenerateDataKey
 type GenerateDataKeyRequest struct {
 	// Версия криптографического ключа, используемая для шифрования ключа данных.
@@ -9,7 +15,7 @@ type GenerateDataKeyRequest struct {
 	// Длина генерируемого ключа (в битах — 128, 192, 256).
 	Bits int32 `json:"bits" yaml:"bits"`
 	// Дополнительные данные, которые могут быть включены в процесс аутентифицированного шифрования.
-	AssociatedData []byte `json:"associatedData,omitempty" yaml:"associatedData,omitempty"` // base64
+	AssociatedData *sensitive.Sensitive[[]byte] `json:"associatedData,omitempty" yaml:"associatedData,omitempty"` // base64
 	// Если установлено значение `true`, будет возвращено только зашифрованное значение (ciphertext).
 	CiphertextOnly *bool `json:"ciphertextOnly,omitempty" yaml:"ciphertextOnly,omitempty"`
 }
@@ -43,20 +49,20 @@ func (m *GenerateDataKeyRequest) SetBits(val int32) {
 	m.Bits = val
 }
 
-func (m *GenerateDataKeyRequest) GetAssociatedData() []byte {
+func (m *GenerateDataKeyRequest) GetAssociatedData() *sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.AssociatedData
 	}
 	return nil
 }
 
-func (m *GenerateDataKeyRequest) SetAssociatedData(val []byte) {
+func (m *GenerateDataKeyRequest) SetAssociatedData(val *sensitive.Sensitive[[]byte]) {
 	m.AssociatedData = val
 }
 
-func (m *GenerateDataKeyRequest) GetAssociatedDataOr(val []byte) []byte {
+func (m *GenerateDataKeyRequest) GetAssociatedDataOr(val sensitive.Sensitive[[]byte]) sensitive.Sensitive[[]byte] {
 	if m != nil && m.AssociatedData != nil {
-		return m.AssociatedData
+		return *m.AssociatedData
 	}
 	return val
 }
@@ -90,9 +96,13 @@ func (m *GenerateDataKeyRequest) Clone() *GenerateDataKeyRequest {
 		clone.Version = &cloneVersion
 	}
 	if m.AssociatedData != nil {
-		clone.AssociatedData = make([]byte, len(m.AssociatedData))
-		for i, v := range m.AssociatedData {
-			clone.AssociatedData[i] = v
+		if m.AssociatedData.Value() != nil {
+			clone.AssociatedData = ptr.Get(sensitive.New(make([]byte, len(m.AssociatedData.Value()))))
+			for i, v := range m.AssociatedData.Value() {
+				clone.AssociatedData.Value()[i] = v
+			}
+		} else {
+			clone.AssociatedData = ptr.Get(sensitive.New([]byte(nil)))
 		}
 	}
 	if m.CiphertextOnly != nil {

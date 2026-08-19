@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m UpdateKafkaS3PropertiesRequest) MarshalJSON() ([]byte, error) {
@@ -44,7 +45,7 @@ func (m *UpdateKafkaS3PropertiesRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.SecretAccessKey.IsSet() {
 		e.FieldStart("secretAccessKey")
-		e.Str(m.SecretAccessKey.Value)
+		e.Str(m.SecretAccessKey.Value.Value())
 	}
 
 	if m.Endpoint.IsSet() {
@@ -87,7 +88,7 @@ func (m *UpdateKafkaS3PropertiesRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.SecretAccessKey.SetTo(v)
+			m.SecretAccessKey.SetTo(sensitive.New(v))
 			return nil
 		case "endpoint":
 			v, err := decode.Str(d)

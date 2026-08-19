@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/service/secretmanager/model"
 )
 
@@ -24,6 +25,6 @@ func TestSecretVersionDataSpec2Marshalling(t *testing.T) {
 
 func initSecretVersionDataSpec2() model.SecretVersionDataSpec2 {
 	var v model.SecretVersionDataSpec2
-	v = make(map[string]string)
+	v = make(map[string]sensitive.Sensitive[string])
 	return v
 }

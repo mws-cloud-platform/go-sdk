@@ -6,6 +6,7 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -13,7 +14,7 @@ type UpdateSelfManagedSpecRequest struct {
 	// Сертификат.
 	Certificate optional.Optional[string] `json:"certificate" yaml:"certificate"`
 	// Закрытый ключ сертификата.
-	PrivateKey optional.Optional[string] `json:"privateKey" yaml:"privateKey"`
+	PrivateKey optional.Optional[sensitive.Sensitive[string]] `json:"privateKey" yaml:"privateKey"`
 	// Цепочка сертификатов.
 	ChainedCert optional.Optional[string] `json:"chainedCert" yaml:"chainedCert"`
 }
@@ -70,9 +71,13 @@ func (m *SelfManagedSpecRequest) diffCertificate(src *SelfManagedSpecRequest) op
 	return commonclient.DiffPrimitiveRequired(src.GetCertificate(), m.GetCertificate(), nilDiffers)
 }
 
-func (m *SelfManagedSpecRequest) diffPrivateKey(src *SelfManagedSpecRequest) optional.Optional[string] {
+func (m *SelfManagedSpecRequest) diffPrivateKey(src *SelfManagedSpecRequest) optional.Optional[sensitive.Sensitive[string]] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetPrivateKey(), m.GetPrivateKey(), nilDiffers)
+	diff := commonclient.DiffPrimitiveRequired(src.GetPrivateKey().Value(), m.GetPrivateKey().Value(), nilDiffers)
+	return optional.Optional[sensitive.Sensitive[string]]{
+		Value: src.GetPrivateKey().WithValue(diff.Value),
+		Set:   diff.Set,
+	}
 }
 
 func (m *SelfManagedSpecRequest) diffChainedCert(src *SelfManagedSpecRequest) optional.Optional[string] {

@@ -5,6 +5,7 @@ package model
 import (
 	"time"
 
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -12,9 +13,9 @@ import (
 type AuthorizedKeyStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
 	// Закрытый ключ, сгенерированный на стороне сервиса.
-	PrivateKey *string `json:"privateKey,omitempty" yaml:"privateKey,omitempty"`
+	PrivateKey *sensitive.Sensitive[string] `json:"privateKey,omitempty" yaml:"privateKey,omitempty"`
 	// Файл с закрытым ключом, сгенерированным на стороне сервиса, в формате base64
-	PrivateKeyFile *string `json:"privateKeyFile,omitempty" yaml:"privateKeyFile,omitempty"`
+	PrivateKeyFile *sensitive.Sensitive[string] `json:"privateKeyFile,omitempty" yaml:"privateKeyFile,omitempty"`
 	// Открытый ключ, сгенерированный на стороне сервиса.
 	PublicKey *string `json:"publicKey,omitempty" yaml:"publicKey,omitempty"`
 	// Время последней аутентификации.
@@ -30,28 +31,28 @@ func (m *AuthorizedKeyStatusResponse) GetReady() common.ResourceStatusReadyRespo
 	return common.ResourceStatusReadyResponse{}
 }
 
-func (m *AuthorizedKeyStatusResponse) GetPrivateKey() *string {
+func (m *AuthorizedKeyStatusResponse) GetPrivateKey() *sensitive.Sensitive[string] {
 	if m != nil {
 		return m.PrivateKey
 	}
 	return nil
 }
 
-func (m *AuthorizedKeyStatusResponse) GetPrivateKeyOr(val string) string {
+func (m *AuthorizedKeyStatusResponse) GetPrivateKeyOr(val sensitive.Sensitive[string]) sensitive.Sensitive[string] {
 	if m != nil && m.PrivateKey != nil {
 		return *m.PrivateKey
 	}
 	return val
 }
 
-func (m *AuthorizedKeyStatusResponse) GetPrivateKeyFile() *string {
+func (m *AuthorizedKeyStatusResponse) GetPrivateKeyFile() *sensitive.Sensitive[string] {
 	if m != nil {
 		return m.PrivateKeyFile
 	}
 	return nil
 }
 
-func (m *AuthorizedKeyStatusResponse) GetPrivateKeyFileOr(val string) string {
+func (m *AuthorizedKeyStatusResponse) GetPrivateKeyFileOr(val sensitive.Sensitive[string]) sensitive.Sensitive[string] {
 	if m != nil && m.PrivateKeyFile != nil {
 		return *m.PrivateKeyFile
 	}

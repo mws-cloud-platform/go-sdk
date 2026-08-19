@@ -266,6 +266,8 @@ type DeleteDiskRequest struct {
 	Disk string // path: "disk"
 	// Удалить ресурс без возможности восстановления
 	Purge *bool // query: "purge"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
@@ -404,6 +406,8 @@ type UpsertDiskRequest struct {
 	Project string // path: "project"
 	// Путь к диску
 	Disk string // path: "disk"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Новые параметры диска
@@ -437,6 +441,8 @@ type UpdateDiskRequest struct {
 	Project string // path: "project"
 	// Путь к диску
 	Disk string // path: "disk"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Новые параметры диска

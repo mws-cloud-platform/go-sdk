@@ -193,40 +193,9 @@ func ToPointerArray[T any](arr []T) []*T {
 const ErrDuplicateKeys = consterr.Error("cannot determine changes, slices have duplicate name keys")
 
 func GetChangesArrayObjectNamed[T namedChild, Tu updateObject, Tns nameSetter[Tu]](from, to []T, getDiff func(T, T, bool) Tu) ([]Tu, bool, error) {
-	if arrayObjectNamedHasDuplicateKeys(from) || arrayObjectNamedHasDuplicateKeys(to) {
-		return nil, false, ErrDuplicateKeys
-	}
-
-	value := make([]Tu, 0, len(from))
-	for _, toItem := range to {
-		fromItemFound := false
-		for _, fromItem := range from {
-			if toItem.GetName() == fromItem.GetName() {
-				fromItemFound = true
-				tmp := Tns(new(getDiff(fromItem, toItem, false)))
-				tmp.SetName(toItem.GetName())
-				value = append(value, *tmp)
-				break
-			}
-		}
-		if !fromItemFound {
-			tmp := Tns(new(getDiff(toItem, toItem, true)))
-			tmp.SetName(toItem.GetName())
-			value = append(value, *tmp)
-		}
-	}
-
-	hasChanges := len(to) != len(from)
-	if !hasChanges {
-		for _, item := range value {
-			if item.HasChanges() {
-				hasChanges = true
-				break
-			}
-		}
-	}
-
-	return value, hasChanges, nil
+	return GetChangesArrayObjectNamedError[T, Tu, Tns](from, to, func(fromItem, toItem T, recursive bool) (Tu, error) {
+		return getDiff(fromItem, toItem, recursive), nil
+	})
 }
 
 func GetChangesArrayObjectNamedError[T namedChild, Tu updateObject, Tns nameSetter[Tu]](
@@ -237,41 +206,39 @@ func GetChangesArrayObjectNamedError[T namedChild, Tu updateObject, Tns nameSett
 		return nil, false, ErrDuplicateKeys
 	}
 
-	value := make([]Tu, 0, len(from))
-	for _, toItem := range to {
-		fromItemFound := false
-		for _, fromItem := range from {
-			if toItem.GetName() == fromItem.GetName() {
-				fromItemFound = true
-				diffValue, err := getDiff(fromItem, toItem, false)
-				if err != nil {
-					return nil, false, err
-				}
-				tmp := Tns(&diffValue)
-				tmp.SetName(toItem.GetName())
-				value = append(value, *tmp)
-				break
-			}
-		}
-		if !fromItemFound {
-			diffValue, err := getDiff(toItem, toItem, true)
-			if err != nil {
-				return nil, false, err
-			}
-			tmp := Tns(&diffValue)
-			tmp.SetName(toItem.GetName())
-			value = append(value, *tmp)
-		}
+	fromByName := make(map[string]T, len(from))
+	for _, item := range from {
+		fromByName[item.GetName()] = item
 	}
 
-	hasChanges := len(to) != len(from)
+	value := make([]Tu, 0, len(to))
+	hasChanges := len(from) != len(to)
 	if !hasChanges {
-		for _, item := range value {
-			if item.HasChanges() {
+		for i := range to {
+			if to[i].GetName() != from[i].GetName() {
 				hasChanges = true
 				break
 			}
 		}
+	}
+
+	for _, toItem := range to {
+		var diffValue Tu
+		var err error
+		if fromItem, ok := fromByName[toItem.GetName()]; ok {
+			diffValue, err = getDiff(fromItem, toItem, false)
+		} else {
+			hasChanges = true
+			diffValue, err = getDiff(toItem, toItem, true)
+		}
+		if err != nil {
+			return nil, false, err
+		}
+		if !hasChanges && diffValue.HasChanges() {
+			hasChanges = true
+		}
+		Tns(&diffValue).SetName(toItem.GetName())
+		value = append(value, diffValue)
 	}
 
 	return value, hasChanges, nil

@@ -5,12 +5,13 @@ package model
 import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateKafkaUserSpecRequest struct {
 	// Пароль пользователя.
-	Password optional.Optional[string] `json:"password" yaml:"password"`
+	Password optional.Optional[sensitive.Sensitive[string]] `json:"password" yaml:"password"`
 	// Роли пользователя.
 	Roles optional.Optional[[]UpdateKafkaClusterRoleRequest] `json:"roles" yaml:"roles"`
 }
@@ -63,9 +64,13 @@ func (m UpdateKafkaUserSpecRequest) HasChanges() bool {
 		m.Roles.Set
 }
 
-func (m *KafkaUserSpecRequest) diffPassword(src *KafkaUserSpecRequest) optional.Optional[string] {
+func (m *KafkaUserSpecRequest) diffPassword(src *KafkaUserSpecRequest) optional.Optional[sensitive.Sensitive[string]] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetPassword(), m.GetPassword(), nilDiffers)
+	diff := commonclient.DiffPrimitiveRequired(src.GetPassword().Value(), m.GetPassword().Value(), nilDiffers)
+	return optional.Optional[sensitive.Sensitive[string]]{
+		Value: src.GetPassword().WithValue(diff.Value),
+		Set:   diff.Set,
+	}
 }
 
 func (m *KafkaUserSpecRequest) diffRoles(src *KafkaUserSpecRequest) optional.Optional[[]UpdateKafkaClusterRoleRequest] {

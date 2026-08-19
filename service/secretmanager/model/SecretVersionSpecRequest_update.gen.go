@@ -70,9 +70,9 @@ func (m *SecretVersionSpecRequest) diffActive(src *SecretVersionSpecRequest) opt
 }
 
 func (m *SecretVersionSpecRequest) diffData(src *SecretVersionSpecRequest) optional.Optional[UpdateSecretVersionDataSpec] {
-	value, hasChanges := commonclient.GetChangesMapPrimitive(src.GetData(), m.GetData())
+	value, hasChanges := commonclient.GetChangesMapPrimitive[string](commonclient.UnwrapMapSensitive(src.GetData()), commonclient.UnwrapMapSensitive(m.GetData()))
 	return optional.Optional[UpdateSecretVersionDataSpec]{
-		Value: value,
+		Value: commonclient.WrapMapSensitive(value),
 		Set:   hasChanges,
 	}
 }

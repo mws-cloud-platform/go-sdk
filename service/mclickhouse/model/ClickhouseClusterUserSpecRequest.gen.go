@@ -2,6 +2,10 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Real OAPI model name: ClickhouseClusterUserSpec
 type ClickhouseClusterUserSpecRequest struct {
 	// Пользовательские роли (они же роли приложений):
@@ -10,7 +14,7 @@ type ClickhouseClusterUserSpecRequest struct {
 	// - `DB_READER`: Пользовательская роль с доступом на чтение.
 	Role *ClickhouseClusterUserRole `json:"role,omitempty" yaml:"role,omitempty"`
 	// Пароль учетной записи пользователя.
-	Password string `json:"password" yaml:"password"`
+	Password sensitive.Sensitive[string] `json:"password" yaml:"password"`
 }
 
 func (m *ClickhouseClusterUserSpecRequest) GetRole() *ClickhouseClusterUserRole {
@@ -31,14 +35,14 @@ func (m *ClickhouseClusterUserSpecRequest) GetRoleOr(val ClickhouseClusterUserRo
 	return val
 }
 
-func (m *ClickhouseClusterUserSpecRequest) GetPassword() string {
+func (m *ClickhouseClusterUserSpecRequest) GetPassword() sensitive.Sensitive[string] {
 	if m != nil {
 		return m.Password
 	}
-	return ""
+	return sensitive.New("")
 }
 
-func (m *ClickhouseClusterUserSpecRequest) SetPassword(val string) {
+func (m *ClickhouseClusterUserSpecRequest) SetPassword(val sensitive.Sensitive[string]) {
 	m.Password = val
 }
 

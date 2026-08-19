@@ -4,10 +4,12 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/service/resources/references/kms"
 )
 
@@ -34,7 +36,7 @@ func (m *ReEncryptRequest) Encode(e *jx.Encoder) error {
 
 func (m *ReEncryptRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ciphertext")
-	e.Base64(m.Ciphertext)
+	e.Base64(m.Ciphertext.Value())
 
 	if m.SourceKeyRef != nil {
 		e.FieldStart("sourceKeyRef")
@@ -45,12 +47,12 @@ func (m *ReEncryptRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.SourceAssociatedData != nil {
 		e.FieldStart("sourceAssociatedData")
-		e.Base64(m.SourceAssociatedData)
+		e.Base64(m.SourceAssociatedData.Value())
 	}
 
 	if m.DestinationAssociatedData != nil {
 		e.FieldStart("destinationAssociatedData")
-		e.Base64(m.DestinationAssociatedData)
+		e.Base64(m.DestinationAssociatedData.Value())
 	}
 
 	if m.DestinationVersion != nil {
@@ -80,7 +82,7 @@ func (m *ReEncryptRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ciphertext = v
+			m.Ciphertext = sensitive.New(v)
 			requiredFilled["ciphertext"] = true
 			return nil
 		case "sourceKeyRef":
@@ -97,7 +99,7 @@ func (m *ReEncryptRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.SourceAssociatedData = v
+			m.SourceAssociatedData = ptr.Get(sensitive.New(v))
 			return nil
 		case "destinationAssociatedData":
 			v, err := d.Base64()
@@ -105,7 +107,7 @@ func (m *ReEncryptRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.DestinationAssociatedData = v
+			m.DestinationAssociatedData = ptr.Get(sensitive.New(v))
 			return nil
 		case "destinationVersion":
 			v, err := decode.Int32(d)

@@ -2,22 +2,26 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Real OAPI model name: Decrypt
 type DecryptResponse struct {
 	// Полученный открытый текст.
-	Plaintext []byte `json:"plaintext" yaml:"plaintext"` // base64
+	Plaintext sensitive.Sensitive[[]byte] `json:"plaintext" yaml:"plaintext"` // base64
 	// Версия криптографического ключа, использованная для расшифровки.
 	Version int32 `json:"version" yaml:"version"`
 }
 
-func (m *DecryptResponse) GetPlaintext() []byte {
+func (m *DecryptResponse) GetPlaintext() sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.Plaintext
 	}
-	return nil
+	return sensitive.New([]byte(nil))
 }
 
-func (m *DecryptResponse) SetPlaintext(val []byte) {
+func (m *DecryptResponse) SetPlaintext(val sensitive.Sensitive[[]byte]) {
 	m.Plaintext = val
 }
 
@@ -38,10 +42,10 @@ func (m *DecryptResponse) Clone() *DecryptResponse {
 	}
 
 	clone := *m
-	if m.Plaintext != nil {
-		clone.Plaintext = make([]byte, len(m.Plaintext))
-		for i, v := range m.Plaintext {
-			clone.Plaintext[i] = v
+	if m.Plaintext.Value() != nil {
+		clone.Plaintext = sensitive.New(make([]byte, len(m.Plaintext.Value())))
+		for i, v := range m.Plaintext.Value() {
+			clone.Plaintext.Value()[i] = v
 		}
 	}
 	return &clone

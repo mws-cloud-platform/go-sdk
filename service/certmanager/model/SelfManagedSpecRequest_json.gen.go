@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m SelfManagedSpecRequest) MarshalJSON() ([]byte, error) {
@@ -36,7 +37,7 @@ func (m *SelfManagedSpecRequest) encodeFields(e *jx.Encoder) error {
 	e.Str(m.Certificate)
 
 	e.FieldStart("privateKey")
-	e.Str(m.PrivateKey)
+	e.Str(m.PrivateKey.Value())
 
 	if m.ChainedCert != nil {
 		e.FieldStart("chainedCert")
@@ -75,7 +76,7 @@ func (m *SelfManagedSpecRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.PrivateKey = v
+			m.PrivateKey = sensitive.New(v)
 			requiredFilled["privateKey"] = true
 			return nil
 		case "chainedCert":

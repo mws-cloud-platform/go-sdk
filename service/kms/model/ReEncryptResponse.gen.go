@@ -2,22 +2,26 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Real OAPI model name: ReEncrypt
 type ReEncryptResponse struct {
 	// Зашифрованные данные (шифротекст).
-	Ciphertext []byte `json:"ciphertext" yaml:"ciphertext"` // base64
+	Ciphertext sensitive.Sensitive[[]byte] `json:"ciphertext" yaml:"ciphertext"` // base64
 	// Версия криптографического ключа, использованная для шифрования.
 	Version int32 `json:"version" yaml:"version"`
 }
 
-func (m *ReEncryptResponse) GetCiphertext() []byte {
+func (m *ReEncryptResponse) GetCiphertext() sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.Ciphertext
 	}
-	return nil
+	return sensitive.New([]byte(nil))
 }
 
-func (m *ReEncryptResponse) SetCiphertext(val []byte) {
+func (m *ReEncryptResponse) SetCiphertext(val sensitive.Sensitive[[]byte]) {
 	m.Ciphertext = val
 }
 
@@ -38,10 +42,10 @@ func (m *ReEncryptResponse) Clone() *ReEncryptResponse {
 	}
 
 	clone := *m
-	if m.Ciphertext != nil {
-		clone.Ciphertext = make([]byte, len(m.Ciphertext))
-		for i, v := range m.Ciphertext {
-			clone.Ciphertext[i] = v
+	if m.Ciphertext.Value() != nil {
+		clone.Ciphertext = sensitive.New(make([]byte, len(m.Ciphertext.Value())))
+		for i, v := range m.Ciphertext.Value() {
+			clone.Ciphertext.Value()[i] = v
 		}
 	}
 	return &clone

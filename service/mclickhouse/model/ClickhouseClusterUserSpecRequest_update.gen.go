@@ -6,6 +6,7 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -16,7 +17,7 @@ type UpdateClickhouseClusterUserSpecRequest struct {
 	// - `DB_READER`: Пользовательская роль с доступом на чтение.
 	Role optional.Optional[ClickhouseClusterUserRole] `json:"role" yaml:"role"`
 	// Пароль учетной записи пользователя.
-	Password optional.Optional[string] `json:"password" yaml:"password"`
+	Password optional.Optional[sensitive.Sensitive[string]] `json:"password" yaml:"password"`
 }
 
 func (m *ClickhouseClusterUserSpecRequest) AsUpdateModel() UpdateClickhouseClusterUserSpecRequest {
@@ -65,7 +66,11 @@ func (m *ClickhouseClusterUserSpecRequest) diffRole(src *ClickhouseClusterUserSp
 	return commonclient.DiffPrimitiveNonRequired(src.GetRole(), m.GetRole(), nilDiffers)
 }
 
-func (m *ClickhouseClusterUserSpecRequest) diffPassword(src *ClickhouseClusterUserSpecRequest) optional.Optional[string] {
+func (m *ClickhouseClusterUserSpecRequest) diffPassword(src *ClickhouseClusterUserSpecRequest) optional.Optional[sensitive.Sensitive[string]] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetPassword(), m.GetPassword(), nilDiffers)
+	diff := commonclient.DiffPrimitiveRequired(src.GetPassword().Value(), m.GetPassword().Value(), nilDiffers)
+	return optional.Optional[sensitive.Sensitive[string]]{
+		Value: src.GetPassword().WithValue(diff.Value),
+		Set:   diff.Set,
+	}
 }

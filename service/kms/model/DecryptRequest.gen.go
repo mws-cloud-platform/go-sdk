@@ -2,39 +2,45 @@
 
 package model
 
+import (
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Real OAPI model name: Decrypt
 type DecryptRequest struct {
 	// Шифротекст, который необходимо расшифровать.
-	Ciphertext []byte `json:"ciphertext" yaml:"ciphertext"` // base64
+	Ciphertext sensitive.Sensitive[[]byte] `json:"ciphertext" yaml:"ciphertext"` // base64
 	// Дополнительные данные, которые могут быть включены в процесс аутентифицированного шифрования.
-	AssociatedData []byte `json:"associatedData,omitempty" yaml:"associatedData,omitempty"` // base64
+	AssociatedData *sensitive.Sensitive[[]byte] `json:"associatedData,omitempty" yaml:"associatedData,omitempty"` // base64
 }
 
-func (m *DecryptRequest) GetCiphertext() []byte {
+func (m *DecryptRequest) GetCiphertext() sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.Ciphertext
 	}
-	return nil
+	return sensitive.New([]byte(nil))
 }
 
-func (m *DecryptRequest) SetCiphertext(val []byte) {
+func (m *DecryptRequest) SetCiphertext(val sensitive.Sensitive[[]byte]) {
 	m.Ciphertext = val
 }
 
-func (m *DecryptRequest) GetAssociatedData() []byte {
+func (m *DecryptRequest) GetAssociatedData() *sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.AssociatedData
 	}
 	return nil
 }
 
-func (m *DecryptRequest) SetAssociatedData(val []byte) {
+func (m *DecryptRequest) SetAssociatedData(val *sensitive.Sensitive[[]byte]) {
 	m.AssociatedData = val
 }
 
-func (m *DecryptRequest) GetAssociatedDataOr(val []byte) []byte {
+func (m *DecryptRequest) GetAssociatedDataOr(val sensitive.Sensitive[[]byte]) sensitive.Sensitive[[]byte] {
 	if m != nil && m.AssociatedData != nil {
-		return m.AssociatedData
+		return *m.AssociatedData
 	}
 	return val
 }
@@ -45,16 +51,20 @@ func (m *DecryptRequest) Clone() *DecryptRequest {
 	}
 
 	clone := *m
-	if m.Ciphertext != nil {
-		clone.Ciphertext = make([]byte, len(m.Ciphertext))
-		for i, v := range m.Ciphertext {
-			clone.Ciphertext[i] = v
+	if m.Ciphertext.Value() != nil {
+		clone.Ciphertext = sensitive.New(make([]byte, len(m.Ciphertext.Value())))
+		for i, v := range m.Ciphertext.Value() {
+			clone.Ciphertext.Value()[i] = v
 		}
 	}
 	if m.AssociatedData != nil {
-		clone.AssociatedData = make([]byte, len(m.AssociatedData))
-		for i, v := range m.AssociatedData {
-			clone.AssociatedData[i] = v
+		if m.AssociatedData.Value() != nil {
+			clone.AssociatedData = ptr.Get(sensitive.New(make([]byte, len(m.AssociatedData.Value()))))
+			for i, v := range m.AssociatedData.Value() {
+				clone.AssociatedData.Value()[i] = v
+			}
+		} else {
+			clone.AssociatedData = ptr.Get(sensitive.New([]byte(nil)))
 		}
 	}
 	return &clone

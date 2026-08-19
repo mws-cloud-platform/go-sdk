@@ -14,6 +14,7 @@ import (
 
 	"go.mws.cloud/go-sdk/mws/credentials"
 	"go.mws.cloud/go-sdk/mws/iam"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/clock/fakeclock"
 	"go.mws.cloud/go-sdk/service/iam/client"
 	mockclient "go.mws.cloud/go-sdk/service/iam/client/mocks"
@@ -34,10 +35,10 @@ func TestServiceAccountProvider(t *testing.T) {
 			PrivateKey: getTestPrivateKey(t),
 		},
 	}
-	token := "token"
+	token := sensitive.New("token")
 	now := time.Date(2024, 1, 2, 3, 4, 5, 0, time.UTC)
 	expected := credentials.Credentials{
-		AccessToken: token,
+		AccessToken: token.Value(),
 		ExpiresAt:   now.Add(credentials.DefaultTokenTTL),
 	}
 

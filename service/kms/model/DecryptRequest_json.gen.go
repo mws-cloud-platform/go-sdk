@@ -4,9 +4,11 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m DecryptRequest) MarshalJSON() ([]byte, error) {
@@ -32,11 +34,11 @@ func (m *DecryptRequest) Encode(e *jx.Encoder) error {
 
 func (m *DecryptRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("ciphertext")
-	e.Base64(m.Ciphertext)
+	e.Base64(m.Ciphertext.Value())
 
 	if m.AssociatedData != nil {
 		e.FieldStart("associatedData")
-		e.Base64(m.AssociatedData)
+		e.Base64(m.AssociatedData.Value())
 	}
 	return nil
 }
@@ -61,7 +63,7 @@ func (m *DecryptRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Ciphertext = v
+			m.Ciphertext = sensitive.New(v)
 			requiredFilled["ciphertext"] = true
 			return nil
 		case "associatedData":
@@ -70,7 +72,7 @@ func (m *DecryptRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.AssociatedData = v
+			m.AssociatedData = ptr.Get(sensitive.New(v))
 			return nil
 		default:
 			return d.Skip()

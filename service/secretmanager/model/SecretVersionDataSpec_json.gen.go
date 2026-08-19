@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func (m SecretVersionDataSpec) MarshalJSON() ([]byte, error) {
@@ -34,7 +35,7 @@ func (m *SecretVersionDataSpec) Encode(e *jx.Encoder) error {
 func (m *SecretVersionDataSpec) encodeFields(e *jx.Encoder) error {
 	for key, elem := range *m {
 		e.FieldStart(key)
-		e.Str(elem)
+		e.Str(elem.Value())
 	}
 	return nil
 }
@@ -48,14 +49,14 @@ func (m *SecretVersionDataSpec) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("SecretVersionDataSpec")
 	}
 
-	c := make(map[string]string)
+	c := make(map[string]sensitive.Sensitive[string])
 	if err := d.ObjBytes(reserrors.PathAccumulatorErrorAsIndexObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		v, err := decode.Str(d)
 		if err != nil {
 			return err
 		}
 
-		c[string(k)] = v
+		c[string(k)] = sensitive.New(v)
 		return nil
 	})); err != nil {
 		return err

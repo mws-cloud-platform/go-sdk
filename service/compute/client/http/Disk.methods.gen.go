@@ -183,6 +183,9 @@ func (c *Disk) queryDeleteDisk(request *client.DeleteDiskRequest) string {
 	if request.Purge != nil {
 		q.Add("purge", conv.BoolToString(*request.Purge))
 	}
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -358,6 +361,9 @@ func (c *Disk) upsertDiskInvoker(ctx context.Context, anyReq any, response commo
 
 func (c *Disk) queryUpsertDisk(request *client.UpsertDiskRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -450,6 +456,9 @@ func (c *Disk) createDiskInvoker(ctx context.Context, anyReq any, response commo
 func (c *Disk) queryCreateDisk(request *client.UpsertDiskRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -542,6 +551,9 @@ func (c *Disk) updateDiskInvoker(ctx context.Context, anyReq any, response commo
 func (c *Disk) queryUpdateDisk(request *client.UpdateDiskRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

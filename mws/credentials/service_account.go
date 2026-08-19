@@ -74,7 +74,7 @@ func (p *ServiceAccountProvider) provide(ctx context.Context, id string) (Creden
 	}
 
 	return Credentials{
-		AccessToken: token.GetAccessToken(),
+		AccessToken: token.GetAccessToken().Value(),
 		ExpiresAt:   token.GetExpirationTsOr(p.clock.Now().Add(DefaultTokenTTL)),
 	}, nil
 }

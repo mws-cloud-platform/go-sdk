@@ -333,6 +333,8 @@ type DeleteImageRequest struct {
 	Image string // path: "image"
 	// Удалить ресурс без возможности восстановления
 	Purge *bool // query: "purge"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
@@ -471,6 +473,8 @@ type UpsertImageRequest struct {
 	Project string // path: "project"
 	// Путь к образу
 	Image string // path: "image"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Новые параметры для образа
@@ -504,6 +508,8 @@ type UpdateImageRequest struct {
 	Project string // path: "project"
 	// Путь к образу
 	Image string // path: "image"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Новые параметры для образа

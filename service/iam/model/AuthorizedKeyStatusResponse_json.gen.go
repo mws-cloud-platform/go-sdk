@@ -4,10 +4,12 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -39,12 +41,12 @@ func (m *AuthorizedKeyStatusResponse) encodeFields(e *jx.Encoder) error {
 	}
 	if m.PrivateKey != nil {
 		e.FieldStart("privateKey")
-		e.Str(*m.PrivateKey)
+		e.Str(m.PrivateKey.Value())
 	}
 
 	if m.PrivateKeyFile != nil {
 		e.FieldStart("privateKeyFile")
-		e.Str(*m.PrivateKeyFile)
+		e.Str(m.PrivateKeyFile.Value())
 	}
 
 	if m.PublicKey != nil {
@@ -89,7 +91,7 @@ func (m *AuthorizedKeyStatusResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.PrivateKey = &v
+			m.PrivateKey = ptr.Get(sensitive.New(v))
 			return nil
 		case "privateKeyFile":
 			v, err := decode.Str(d)
@@ -97,7 +99,7 @@ func (m *AuthorizedKeyStatusResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.PrivateKeyFile = &v
+			m.PrivateKeyFile = ptr.Get(sensitive.New(v))
 			return nil
 		case "publicKey":
 			v, err := decode.Str(d)

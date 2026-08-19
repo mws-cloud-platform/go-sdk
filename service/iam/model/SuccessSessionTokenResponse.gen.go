@@ -4,33 +4,35 @@ package model
 
 import (
 	"time"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 // Real OAPI model name: SuccessSessionToken
 type SuccessSessionTokenResponse struct {
-	SessionToken *string `json:"SessionToken,omitempty" yaml:"SessionToken,omitempty"`
+	SessionToken *sensitive.Sensitive[string] `json:"SessionToken,omitempty" yaml:"SessionToken,omitempty"`
 	// Момент времени, после которого токен и ключ перестанут считаться действительными.
 	Expiration *time.Time `json:"Expiration,omitempty" yaml:"Expiration,omitempty"`
 	// Идентификатор HMAC-ключа, используемого для подписания запросов.
 	AccessKeyId *string `json:"AccessKeyId,omitempty" yaml:"AccessKeyId,omitempty"`
 	// Ключ, которым клиент будет подписывать запросы.
-	SecretAccessKey *string `json:"SecretAccessKey,omitempty" yaml:"SecretAccessKey,omitempty"`
+	SecretAccessKey *sensitive.Sensitive[string] `json:"SecretAccessKey,omitempty" yaml:"SecretAccessKey,omitempty"`
 	// Версия ключа
 	Version *int `json:"Version,omitempty" yaml:"Version,omitempty"`
 }
 
-func (m *SuccessSessionTokenResponse) GetSessionToken() *string {
+func (m *SuccessSessionTokenResponse) GetSessionToken() *sensitive.Sensitive[string] {
 	if m != nil {
 		return m.SessionToken
 	}
 	return nil
 }
 
-func (m *SuccessSessionTokenResponse) SetSessionToken(val *string) {
+func (m *SuccessSessionTokenResponse) SetSessionToken(val *sensitive.Sensitive[string]) {
 	m.SessionToken = val
 }
 
-func (m *SuccessSessionTokenResponse) GetSessionTokenOr(val string) string {
+func (m *SuccessSessionTokenResponse) GetSessionTokenOr(val sensitive.Sensitive[string]) sensitive.Sensitive[string] {
 	if m != nil && m.SessionToken != nil {
 		return *m.SessionToken
 	}
@@ -73,18 +75,18 @@ func (m *SuccessSessionTokenResponse) GetAccessKeyIdOr(val string) string {
 	return val
 }
 
-func (m *SuccessSessionTokenResponse) GetSecretAccessKey() *string {
+func (m *SuccessSessionTokenResponse) GetSecretAccessKey() *sensitive.Sensitive[string] {
 	if m != nil {
 		return m.SecretAccessKey
 	}
 	return nil
 }
 
-func (m *SuccessSessionTokenResponse) SetSecretAccessKey(val *string) {
+func (m *SuccessSessionTokenResponse) SetSecretAccessKey(val *sensitive.Sensitive[string]) {
 	m.SecretAccessKey = val
 }
 
-func (m *SuccessSessionTokenResponse) GetSecretAccessKeyOr(val string) string {
+func (m *SuccessSessionTokenResponse) GetSecretAccessKeyOr(val sensitive.Sensitive[string]) sensitive.Sensitive[string] {
 	if m != nil && m.SecretAccessKey != nil {
 		return *m.SecretAccessKey
 	}

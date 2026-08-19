@@ -4,23 +4,25 @@ package model
 
 import (
 	"time"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 // Real OAPI model name: SuccessTokenV2
 type SuccessTokenV2Response struct {
-	AccessToken string `json:"accessToken" yaml:"accessToken"`
+	AccessToken sensitive.Sensitive[string] `json:"accessToken" yaml:"accessToken"`
 	// Момент времени, после которого токен перестанет считаться действительным.
 	ExpirationTs *time.Time `json:"expirationTs,omitempty" yaml:"expirationTs,omitempty"`
 }
 
-func (m *SuccessTokenV2Response) GetAccessToken() string {
+func (m *SuccessTokenV2Response) GetAccessToken() sensitive.Sensitive[string] {
 	if m != nil {
 		return m.AccessToken
 	}
-	return ""
+	return sensitive.New("")
 }
 
-func (m *SuccessTokenV2Response) SetAccessToken(val string) {
+func (m *SuccessTokenV2Response) SetAccessToken(val sensitive.Sensitive[string]) {
 	m.AccessToken = val
 }
 

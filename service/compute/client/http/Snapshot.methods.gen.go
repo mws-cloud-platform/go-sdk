@@ -185,6 +185,9 @@ func (c *Snapshot) queryDeleteSnapshot(request *client.DeleteSnapshotRequest) st
 	if request.Purge != nil {
 		q.Add("purge", conv.BoolToString(*request.Purge))
 	}
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -362,6 +365,9 @@ func (c *Snapshot) upsertSnapshotInvoker(ctx context.Context, anyReq any, respon
 
 func (c *Snapshot) queryUpsertSnapshot(request *client.UpsertSnapshotRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -455,6 +461,9 @@ func (c *Snapshot) createSnapshotInvoker(ctx context.Context, anyReq any, respon
 func (c *Snapshot) queryCreateSnapshot(request *client.UpsertSnapshotRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -548,6 +557,9 @@ func (c *Snapshot) updateSnapshotInvoker(ctx context.Context, anyReq any, respon
 func (c *Snapshot) queryUpdateSnapshot(request *client.UpdateSnapshotRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

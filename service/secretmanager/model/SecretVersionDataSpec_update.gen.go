@@ -6,9 +6,10 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
-type UpdateSecretVersionDataSpec map[string]string
+type UpdateSecretVersionDataSpec map[string]sensitive.Sensitive[string]
 
 func (m *SecretVersionDataSpec) AsUpdateModel() UpdateSecretVersionDataSpec {
 	var u UpdateSecretVersionDataSpec
@@ -27,8 +28,8 @@ func (m *SecretVersionDataSpec) Diff(src *SecretVersionDataSpec) UpdateSecretVer
 	nilDiffers := src != nil && m == nil
 	upd := UpdateSecretVersionDataSpec{}
 	if !nilDiffers {
-		value, _ := commonclient.GetChangesMapPrimitive(ptr.Value(src), ptr.Value(m))
-		return value
+		value, _ := commonclient.GetChangesMapPrimitive[string](commonclient.UnwrapMapSensitive(ptr.Value(src)), commonclient.UnwrapMapSensitive(ptr.Value(m)))
+		return commonclient.WrapMapSensitive(value)
 	}
 	return upd
 }

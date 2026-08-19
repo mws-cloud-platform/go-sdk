@@ -2,12 +2,16 @@
 
 package model
 
+import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+)
+
 // Real OAPI model name: Encrypt
 type EncryptResponse struct {
 	// Версия криптографического ключа, используемая для шифрования открытых данных.
 	Version int32 `json:"version" yaml:"version"`
 	// Полученный шифротекст.
-	Ciphertext []byte `json:"ciphertext" yaml:"ciphertext"` // base64
+	Ciphertext sensitive.Sensitive[[]byte] `json:"ciphertext" yaml:"ciphertext"` // base64
 }
 
 func (m *EncryptResponse) GetVersion() int32 {
@@ -21,14 +25,14 @@ func (m *EncryptResponse) SetVersion(val int32) {
 	m.Version = val
 }
 
-func (m *EncryptResponse) GetCiphertext() []byte {
+func (m *EncryptResponse) GetCiphertext() sensitive.Sensitive[[]byte] {
 	if m != nil {
 		return m.Ciphertext
 	}
-	return nil
+	return sensitive.New([]byte(nil))
 }
 
-func (m *EncryptResponse) SetCiphertext(val []byte) {
+func (m *EncryptResponse) SetCiphertext(val sensitive.Sensitive[[]byte]) {
 	m.Ciphertext = val
 }
 
@@ -38,10 +42,10 @@ func (m *EncryptResponse) Clone() *EncryptResponse {
 	}
 
 	clone := *m
-	if m.Ciphertext != nil {
-		clone.Ciphertext = make([]byte, len(m.Ciphertext))
-		for i, v := range m.Ciphertext {
-			clone.Ciphertext[i] = v
+	if m.Ciphertext.Value() != nil {
+		clone.Ciphertext = sensitive.New(make([]byte, len(m.Ciphertext.Value())))
+		for i, v := range m.Ciphertext.Value() {
+			clone.Ciphertext.Value()[i] = v
 		}
 	}
 	return &clone
