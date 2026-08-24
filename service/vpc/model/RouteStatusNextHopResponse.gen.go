@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -17,7 +18,7 @@ type RouteStatusNextHopResponse struct {
 	// NAT шлюз.
 	NatGateway *vpc.NatGatewayRef `json:"natGateway,omitempty" yaml:"natGateway,omitempty"`
 	// Адрес.
-	Address *ResourceAddressStatusResponse `json:"address,omitempty" yaml:"address,omitempty"`
+	Address *common.ResourceAddressStatusResponse `json:"address,omitempty" yaml:"address,omitempty"`
 }
 
 func (m *RouteStatusNextHopResponse) GetNetworkLocal() json.RawMessage {
@@ -56,18 +57,18 @@ func (m *RouteStatusNextHopResponse) GetNatGatewayOr(val vpc.NatGatewayRef) vpc.
 	return val
 }
 
-func (m *RouteStatusNextHopResponse) GetAddress() *ResourceAddressStatusResponse {
+func (m *RouteStatusNextHopResponse) GetAddress() *common.ResourceAddressStatusResponse {
 	if m != nil {
 		return m.Address
 	}
 	return nil
 }
 
-func (m *RouteStatusNextHopResponse) SetAddress(val *ResourceAddressStatusResponse) {
+func (m *RouteStatusNextHopResponse) SetAddress(val *common.ResourceAddressStatusResponse) {
 	m.Address = val
 }
 
-func (m *RouteStatusNextHopResponse) GetAddressOr(val ResourceAddressStatusResponse) ResourceAddressStatusResponse {
+func (m *RouteStatusNextHopResponse) GetAddressOr(val common.ResourceAddressStatusResponse) common.ResourceAddressStatusResponse {
 	if m != nil && m.Address != nil {
 		return *m.Address
 	}

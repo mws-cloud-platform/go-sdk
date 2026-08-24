@@ -20,6 +20,8 @@ type UpdateClusterSpecRequest struct {
 	Network        optional.Optional[UpdateClusterSpecNetworkRequest]        `json:"network" yaml:"network"`
 	VersionControl optional.Optional[UpdateClusterVersionControlSpecRequest] `json:"versionControl" yaml:"versionControl"`
 	Plugins        optional.OptionalNil[UpdatePluginsSpecRequest]            `json:"plugins" yaml:"plugins"`
+	// Настройка KSP для кластера
+	SecurityPosture optional.OptionalNil[UpdateSecurityPostureSpecRequest] `json:"securityPosture" yaml:"securityPosture"`
 }
 
 func (m *ClusterSpecRequest) AsUpdateModel() UpdateClusterSpecRequest {
@@ -29,6 +31,9 @@ func (m *ClusterSpecRequest) AsUpdateModel() UpdateClusterSpecRequest {
 	u.VersionControl = optional.NewOptional(m.VersionControl.AsUpdateModel())
 	if m.Plugins != nil {
 		u.Plugins = optional.NewOptionalNil(m.Plugins.AsUpdateModel())
+	}
+	if m.SecurityPosture != nil {
+		u.SecurityPosture = optional.NewOptionalNil(m.SecurityPosture.AsUpdateModel())
 	}
 	return u
 }
@@ -42,6 +47,7 @@ func (m *ClusterSpecRequest) Diff(src *ClusterSpecRequest) UpdateClusterSpecRequ
 		upd.Network = m.diffNetwork(src)
 		upd.VersionControl = m.diffVersionControl(src)
 		upd.Plugins = m.diffPlugins(src)
+		upd.SecurityPosture = m.diffSecurityPosture(src)
 	}
 	return upd
 }
@@ -66,6 +72,11 @@ func (m *ClusterSpecRequest) WithChanges(u UpdateClusterSpecRequest) ClusterSpec
 	} else if u.Plugins.IsNull() {
 		out.Plugins = nil
 	}
+	if u.SecurityPosture.IsSet() {
+		out.SecurityPosture = ptr.Get(out.SecurityPosture.WithChanges(u.SecurityPosture.Value))
+	} else if u.SecurityPosture.IsNull() {
+		out.SecurityPosture = nil
+	}
 	return out
 }
 
@@ -74,7 +85,8 @@ func (m UpdateClusterSpecRequest) HasChanges() bool {
 	return m.Availability.Set ||
 		m.Network.Set ||
 		m.VersionControl.Set ||
-		m.Plugins.Set
+		m.Plugins.Set ||
+		m.SecurityPosture.Set
 }
 
 func (m *UpdateClusterSpecRequest) Parse(ctx context.Context) error {
@@ -125,6 +137,16 @@ func (m *ClusterSpecRequest) diffPlugins(src *ClusterSpecRequest) optional.Optio
 	nilDiffers := src != nil && m == nil
 	value := m.GetPlugins().Diff(src.GetPlugins())
 	return optional.OptionalNil[UpdatePluginsSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
+}
+
+func (m *ClusterSpecRequest) diffSecurityPosture(src *ClusterSpecRequest) optional.OptionalNil[UpdateSecurityPostureSpecRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetSecurityPosture().Diff(src.GetSecurityPosture())
+	return optional.OptionalNil[UpdateSecurityPostureSpecRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

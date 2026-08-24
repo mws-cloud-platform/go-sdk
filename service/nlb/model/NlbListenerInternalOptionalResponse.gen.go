@@ -6,23 +6,24 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Конфигурация IP-адреса внутреннего балансировщика.
 // Real OAPI model name: NlbListenerInternal
 type NlbListenerInternalOptionalResponse struct {
 	// Описывает ссылку на внутренний адрес или спецификацию внутреннего адреса как дополнительный ресурс.
-	Address ResourceAddressSpecOrRefOptionalResponse `json:"address" yaml:"address"`
+	Address common.ResourceAddressSpecOrRefOptionalResponse `json:"address" yaml:"address"`
 }
 
-func (m *NlbListenerInternalOptionalResponse) GetAddress() ResourceAddressSpecOrRefOptionalResponse {
+func (m *NlbListenerInternalOptionalResponse) GetAddress() common.ResourceAddressSpecOrRefOptionalResponse {
 	if m != nil {
 		return m.Address
 	}
-	return ResourceAddressSpecOrRefOptionalResponse{}
+	return common.ResourceAddressSpecOrRefOptionalResponse{}
 }
 
-func (m *NlbListenerInternalOptionalResponse) SetAddress(val ResourceAddressSpecOrRefOptionalResponse) {
+func (m *NlbListenerInternalOptionalResponse) SetAddress(val common.ResourceAddressSpecOrRefOptionalResponse) {
 	m.Address = val
 }
 

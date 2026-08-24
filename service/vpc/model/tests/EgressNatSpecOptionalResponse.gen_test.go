@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
@@ -26,6 +27,6 @@ func TestEgressNatSpecOptionalResponseMarshalling(t *testing.T) {
 func initEgressNatSpecOptionalResponse() model.EgressNatSpecOptionalResponse {
 	var v model.EgressNatSpecOptionalResponse
 	v.Internal.Subnets = make([]vpc.SubnetRef, 0)
-	v.External.Addresses = make([]model.ResourceExternalAddressSpecOrRefOptionalResponse, 0)
+	v.External.Addresses = make([]common.ResourceExternalAddressSpecOrRefOptionalResponse, 0)
 	return v
 }

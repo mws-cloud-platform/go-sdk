@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
 
@@ -24,6 +25,6 @@ func TestEgressNatSpecExternalRequestMarshalling(t *testing.T) {
 
 func initEgressNatSpecExternalRequest() model.EgressNatSpecExternalRequest {
 	var v model.EgressNatSpecExternalRequest
-	v.Addresses = make([]model.ResourceExternalAddressSpecOrRefRequest, 0)
+	v.Addresses = make([]common.ResourceExternalAddressSpecOrRefRequest, 0)
 	return v
 }

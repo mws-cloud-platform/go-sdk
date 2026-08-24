@@ -4,6 +4,7 @@ package model
 
 import (
 	"context"
+	"time"
 
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
@@ -11,20 +12,30 @@ import (
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 )
 
 type UpdateCommonRoleBinding struct {
+	Kind     optional.Optional[string]                             `json:"kind" yaml:"kind"`
 	Metadata optional.OptionalNil[UpdateCommonRoleBindingMetadata] `json:"metadata" yaml:"metadata"`
 	// Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав.
 	Spec optional.Optional[UpdateCommonRoleBindingSpec] `json:"spec" yaml:"spec"`
+	// Текущее состояние привязки роли, вычисляемое системой.
+	Status optional.OptionalNil[UpdateCommonRoleBindingStatus] `json:"status" yaml:"status"`
 }
 
 func (m *CommonRoleBinding) AsUpdateModel() UpdateCommonRoleBinding {
 	var u UpdateCommonRoleBinding
+	if m.Kind != nil {
+		u.Kind = optional.NewOptional(m.GetKindOr(""))
+	}
 	if m.Metadata != nil {
 		u.Metadata = optional.NewOptionalNil(m.Metadata.AsUpdateModel())
 	}
 	u.Spec = optional.NewOptional(m.Spec.AsUpdateModel())
+	if m.Status != nil {
+		u.Status = optional.NewOptionalNil(m.Status.AsUpdateModel())
+	}
 	return u
 }
 
@@ -33,8 +44,10 @@ func (m *CommonRoleBinding) Diff(src *CommonRoleBinding) UpdateCommonRoleBinding
 	nilDiffers := src != nil && m == nil
 	upd := UpdateCommonRoleBinding{}
 	if !nilDiffers {
+		upd.Kind = m.diffKind(src)
 		upd.Metadata = m.diffMetadata(src)
 		upd.Spec = m.diffSpec(src)
+		upd.Status = m.diffStatus(src)
 	}
 	return upd
 }
@@ -45,6 +58,9 @@ func (m *CommonRoleBinding) WithChanges(u UpdateCommonRoleBinding) CommonRoleBin
 		out = *m
 	}
 
+	if u.Kind.IsSet() {
+		out.Kind = ptr.Get(u.Kind.Value)
+	}
 	if u.Metadata.IsSet() {
 		out.Metadata = ptr.Get(out.Metadata.WithChanges(u.Metadata.Value))
 	} else if u.Metadata.IsNull() {
@@ -53,13 +69,20 @@ func (m *CommonRoleBinding) WithChanges(u UpdateCommonRoleBinding) CommonRoleBin
 	if u.Spec.IsSet() {
 		out.Spec = out.Spec.WithChanges(u.Spec.Value)
 	}
+	if u.Status.IsSet() {
+		out.Status = ptr.Get(out.Status.WithChanges(u.Status.Value))
+	} else if u.Status.IsNull() {
+		out.Status = nil
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateCommonRoleBinding) HasChanges() bool {
-	return m.Metadata.Set ||
-		m.Spec.Set
+	return m.Kind.Set ||
+		m.Metadata.Set ||
+		m.Spec.Set ||
+		m.Status.Set
 }
 
 func (m *UpdateCommonRoleBinding) Parse(ctx context.Context) error {
@@ -74,6 +97,11 @@ func (m *UpdateCommonRoleBinding) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (m *CommonRoleBinding) diffKind(src *CommonRoleBinding) optional.Optional[string] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetKind(), m.GetKind(), nilDiffers)
 }
 
 func (m *CommonRoleBinding) diffMetadata(src *CommonRoleBinding) optional.OptionalNil[UpdateCommonRoleBindingMetadata] {
@@ -96,14 +124,38 @@ func (m *CommonRoleBinding) diffSpec(src *CommonRoleBinding) optional.Optional[U
 	}
 }
 
+func (m *CommonRoleBinding) diffStatus(src *CommonRoleBinding) optional.OptionalNil[UpdateCommonRoleBindingStatus] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetStatus().Diff(src.GetStatus())
+	return optional.OptionalNil[UpdateCommonRoleBindingStatus]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
+}
+
 type UpdateCommonRoleBindingMetadata struct {
 	UpdateTypedResourceMetadata
+	// ID свойства
+	Id optional.Optional[resmodels.AnyResourceID] `json:"id" yaml:"id"`
 }
 
 func (m *CommonRoleBindingMetadata) AsUpdateModel() UpdateCommonRoleBindingMetadata {
 	var u UpdateCommonRoleBindingMetadata
 	if m.DisplayName != nil {
 		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
+	}
+	if m.CreateTime != nil {
+		u.CreateTime = optional.NewOptional(m.GetCreateTimeOr(time.Time{}))
+	}
+	if m.UpdateTime != nil {
+		u.UpdateTime = optional.NewOptional(m.GetUpdateTimeOr(time.Time{}))
+	}
+	if m.DeleteTime != nil {
+		u.DeleteTime = optional.NewOptional(m.GetDeleteTimeOr(time.Time{}))
+	}
+	if m.PurgeTime != nil {
+		u.PurgeTime = optional.NewOptional(m.GetPurgeTimeOr(time.Time{}))
 	}
 	if m.Usages != nil {
 		u.Usages = optional.NewOptional(func() []UpdateTypedUsage {
@@ -123,6 +175,9 @@ func (m *CommonRoleBindingMetadata) AsUpdateModel() UpdateCommonRoleBindingMetad
 	if m.Description != nil {
 		u.Description = optional.NewOptional(m.GetDescriptionOr(""))
 	}
+	if m.Id != nil {
+		u.Id = optional.NewOptional(m.GetIdOr(resmodels.AnyResourceID{}))
+	}
 	return u
 }
 
@@ -132,9 +187,14 @@ func (m *CommonRoleBindingMetadata) Diff(src *CommonRoleBindingMetadata) UpdateC
 	upd := UpdateCommonRoleBindingMetadata{}
 	if !nilDiffers {
 		upd.DisplayName = m.diffDisplayName(src)
+		upd.CreateTime = m.diffCreateTime(src)
+		upd.UpdateTime = m.diffUpdateTime(src)
+		upd.DeleteTime = m.diffDeleteTime(src)
+		upd.PurgeTime = m.diffPurgeTime(src)
 		upd.Usages = m.diffUsages(src)
 		upd.Etag = m.diffEtag(src)
 		upd.Description = m.diffDescription(src)
+		upd.Id = m.diffId(src)
 	}
 	return upd
 }
@@ -148,6 +208,18 @@ func (m *CommonRoleBindingMetadata) WithChanges(u UpdateCommonRoleBindingMetadat
 	if u.DisplayName.IsSet() {
 		out.DisplayName = ptr.Get(u.DisplayName.Value)
 	}
+	if u.CreateTime.IsSet() {
+		out.CreateTime = ptr.Get(u.CreateTime.Value)
+	}
+	if u.UpdateTime.IsSet() {
+		out.UpdateTime = ptr.Get(u.UpdateTime.Value)
+	}
+	if u.DeleteTime.IsSet() {
+		out.DeleteTime = ptr.Get(u.DeleteTime.Value)
+	}
+	if u.PurgeTime.IsSet() {
+		out.PurgeTime = ptr.Get(u.PurgeTime.Value)
+	}
 	if u.Usages.IsSet() {
 		out.Usages = merge.Slice(out.Usages, u.Usages.Value, (*TypedUsage).WithChanges, (*TypedUsage).GetName, (*UpdateTypedUsage).GetName)
 	}
@@ -157,20 +229,48 @@ func (m *CommonRoleBindingMetadata) WithChanges(u UpdateCommonRoleBindingMetadat
 	if u.Description.IsSet() {
 		out.Description = ptr.Get(u.Description.Value)
 	}
+	if u.Id.IsSet() {
+		out.Id = ptr.Get(u.Id.Value)
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateCommonRoleBindingMetadata) HasChanges() bool {
 	return m.DisplayName.Set ||
+		m.CreateTime.Set ||
+		m.UpdateTime.Set ||
+		m.DeleteTime.Set ||
+		m.PurgeTime.Set ||
 		m.Usages.Set ||
 		m.Etag.Set ||
-		m.Description.Set
+		m.Description.Set ||
+		m.Id.Set
 }
 
 func (m *CommonRoleBindingMetadata) diffDisplayName(src *CommonRoleBindingMetadata) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
+}
+
+func (m *CommonRoleBindingMetadata) diffCreateTime(src *CommonRoleBindingMetadata) optional.Optional[time.Time] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetCreateTime(), m.GetCreateTime(), nilDiffers)
+}
+
+func (m *CommonRoleBindingMetadata) diffUpdateTime(src *CommonRoleBindingMetadata) optional.Optional[time.Time] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetUpdateTime(), m.GetUpdateTime(), nilDiffers)
+}
+
+func (m *CommonRoleBindingMetadata) diffDeleteTime(src *CommonRoleBindingMetadata) optional.Optional[time.Time] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetDeleteTime(), m.GetDeleteTime(), nilDiffers)
+}
+
+func (m *CommonRoleBindingMetadata) diffPurgeTime(src *CommonRoleBindingMetadata) optional.Optional[time.Time] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetPurgeTime(), m.GetPurgeTime(), nilDiffers)
 }
 
 func (m *CommonRoleBindingMetadata) diffUsages(src *CommonRoleBindingMetadata) optional.Optional[[]UpdateTypedUsage] {
@@ -195,4 +295,9 @@ func (m *CommonRoleBindingMetadata) diffEtag(src *CommonRoleBindingMetadata) opt
 func (m *CommonRoleBindingMetadata) diffDescription(src *CommonRoleBindingMetadata) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
+}
+
+func (m *CommonRoleBindingMetadata) diffId(src *CommonRoleBindingMetadata) optional.Optional[resmodels.AnyResourceID] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffEquatableIfaceNonRequired(src.GetId(), m.GetId(), nilDiffers)
 }

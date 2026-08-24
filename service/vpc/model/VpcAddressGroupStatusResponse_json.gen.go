@@ -89,9 +89,9 @@ func (m *VpcAddressGroupStatusResponse) Decode(d *jx.Decoder) error {
 			m.Ready = v
 			return nil
 		case "addresses":
-			c := make([]ResourceAddressStatusResponse, 0)
+			c := make([]common.ResourceAddressStatusResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v ResourceAddressStatusResponse
+				var v common.ResourceAddressStatusResponse
 				if err := v.Decode(d); err != nil {
 					return err
 				}

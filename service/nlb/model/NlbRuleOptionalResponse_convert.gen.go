@@ -4,6 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
+	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func NlbRuleRequestToOptionalResponse(request *NlbRuleRequest) (*NlbRuleOptionalResponse, error) {
@@ -16,7 +17,7 @@ func NlbRuleRequestToOptionalResponse(request *NlbRuleRequest) (*NlbRuleOptional
 		response.TargetPort = optional.NewOptionalNil(*request.TargetPort)
 	}
 	for _, e := range request.TargetAddressGroups {
-		tmp, err := VpcAddressGroupSpecOrRefRequestToOptionalResponse(&e)
+		tmp, err := common.VpcAddressGroupSpecOrRefRequestToOptionalResponse(&e)
 		if err != nil {
 			return nil, err
 		}

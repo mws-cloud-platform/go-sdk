@@ -17,6 +17,8 @@ type ClusterSpecOptionalResponse struct {
 	Network        ClusterSpecNetworkOptionalResponse                `json:"network" yaml:"network"`
 	VersionControl ClusterVersionControlSpecOptionalResponse         `json:"versionControl" yaml:"versionControl"`
 	Plugins        optional.OptionalNil[PluginsSpecOptionalResponse] `json:"plugins,omitempty" yaml:"plugins,omitempty"`
+	// Настройка KSP для кластера
+	SecurityPosture optional.OptionalNil[SecurityPostureSpecOptionalResponse] `json:"securityPosture,omitempty" yaml:"securityPosture,omitempty"`
 }
 
 func (m *ClusterSpecOptionalResponse) GetAvailability() ClusterAvailabilitySpecOptionalResponse {
@@ -66,6 +68,20 @@ func (m *ClusterSpecOptionalResponse) GetPluginsOr(val PluginsSpecOptionalRespon
 	return val
 }
 
+func (m *ClusterSpecOptionalResponse) GetSecurityPosture() *SecurityPostureSpecOptionalResponse {
+	if m != nil && m.SecurityPosture.IsSet() && !m.SecurityPosture.IsNull() {
+		return &m.SecurityPosture.Value
+	}
+	return nil
+}
+
+func (m *ClusterSpecOptionalResponse) GetSecurityPostureOr(val SecurityPostureSpecOptionalResponse) SecurityPostureSpecOptionalResponse {
+	if m != nil && m.SecurityPosture.IsSet() && !m.SecurityPosture.IsNull() {
+		return m.SecurityPosture.Value
+	}
+	return val
+}
+
 func (m *ClusterSpecOptionalResponse) Clone() *ClusterSpecOptionalResponse {
 	if m == nil {
 		return nil
@@ -77,6 +93,9 @@ func (m *ClusterSpecOptionalResponse) Clone() *ClusterSpecOptionalResponse {
 	clone.VersionControl = *m.VersionControl.Clone()
 	if clone.Plugins.IsSet() {
 		clone.Plugins.Value = *m.Plugins.Value.Clone()
+	}
+	if clone.SecurityPosture.IsSet() {
+		clone.SecurityPosture.Value = *m.SecurityPosture.Value.Clone()
 	}
 	return &clone
 }

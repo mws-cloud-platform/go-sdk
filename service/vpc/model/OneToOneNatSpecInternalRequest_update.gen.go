@@ -7,11 +7,12 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateOneToOneNatSpecInternalRequest struct {
 	// Спецификация внутреннего адреса, для которого будет осуществляться трансляция.
-	Address optional.Optional[UpdateResourceAddressSpecOrRefRequest] `json:"address" yaml:"address"`
+	Address optional.Optional[common.UpdateResourceAddressSpecOrRefRequest] `json:"address" yaml:"address"`
 }
 
 func (m *OneToOneNatSpecInternalRequest) AsUpdateModel() UpdateOneToOneNatSpecInternalRequest {
@@ -61,11 +62,11 @@ func (m *UpdateOneToOneNatSpecInternalRequest) Parse(ctx context.Context) error 
 	return nil
 }
 
-func (m *OneToOneNatSpecInternalRequest) diffAddress(src *OneToOneNatSpecInternalRequest) optional.Optional[UpdateResourceAddressSpecOrRefRequest] {
+func (m *OneToOneNatSpecInternalRequest) diffAddress(src *OneToOneNatSpecInternalRequest) optional.Optional[common.UpdateResourceAddressSpecOrRefRequest] {
 	from := src.GetAddress()
 	to := m.GetAddress()
 	value := to.Diff(&from)
-	return optional.Optional[UpdateResourceAddressSpecOrRefRequest]{
+	return optional.Optional[common.UpdateResourceAddressSpecOrRefRequest]{
 		Value: value,
 		Set:   value.HasChanges(),
 	}

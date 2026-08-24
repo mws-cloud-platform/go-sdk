@@ -8,6 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -17,8 +18,8 @@ type VpcAddressSpecRequest struct {
 	// Подсеть облачной сети к которой принадлежит адрес.
 	Subnet vpc.SubnetRef `json:"subnet" yaml:"subnet"`
 	// Желаемый IP адрес. Если не указан, то будет выделен из пула адресов подсети.
-	IpAddress *ipaddress.IPAddress       `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
-	Dns       []VpcAddressDnsSpecRequest `json:"dns,omitempty" yaml:"dns,omitempty"`
+	IpAddress *ipaddress.IPAddress              `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
+	Dns       []common.VpcAddressDnsSpecRequest `json:"dns,omitempty" yaml:"dns,omitempty"`
 }
 
 func (m *VpcAddressSpecRequest) GetSubnet() vpc.SubnetRef {
@@ -50,18 +51,18 @@ func (m *VpcAddressSpecRequest) GetIpAddressOr(val ipaddress.IPAddress) ipaddres
 	return val
 }
 
-func (m *VpcAddressSpecRequest) GetDns() []VpcAddressDnsSpecRequest {
+func (m *VpcAddressSpecRequest) GetDns() []common.VpcAddressDnsSpecRequest {
 	if m != nil {
 		return m.Dns
 	}
 	return nil
 }
 
-func (m *VpcAddressSpecRequest) SetDns(val []VpcAddressDnsSpecRequest) {
+func (m *VpcAddressSpecRequest) SetDns(val []common.VpcAddressDnsSpecRequest) {
 	m.Dns = val
 }
 
-func (m *VpcAddressSpecRequest) GetDnsOr(val []VpcAddressDnsSpecRequest) []VpcAddressDnsSpecRequest {
+func (m *VpcAddressSpecRequest) GetDnsOr(val []common.VpcAddressDnsSpecRequest) []common.VpcAddressDnsSpecRequest {
 	if m != nil && m.Dns != nil {
 		return m.Dns
 	}
@@ -77,7 +78,7 @@ func (m *VpcAddressSpecRequest) Clone() *VpcAddressSpecRequest {
 	clone.Subnet = *m.Subnet.Clone()
 	clone.IpAddress = m.IpAddress.Clone()
 	if m.Dns != nil {
-		clone.Dns = make([]VpcAddressDnsSpecRequest, len(m.Dns))
+		clone.Dns = make([]common.VpcAddressDnsSpecRequest, len(m.Dns))
 		for i, v := range m.Dns {
 			clone.Dns[i] = *v.Clone()
 		}

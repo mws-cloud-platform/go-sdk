@@ -16,6 +16,8 @@ type ClusterSpecRequest struct {
 	Network        ClusterSpecNetworkRequest        `json:"network" yaml:"network"`
 	VersionControl ClusterVersionControlSpecRequest `json:"versionControl" yaml:"versionControl"`
 	Plugins        *PluginsSpecRequest              `json:"plugins,omitempty" yaml:"plugins,omitempty"`
+	// Настройка KSP для кластера
+	SecurityPosture *SecurityPostureSpecRequest `json:"securityPosture,omitempty" yaml:"securityPosture,omitempty"`
 }
 
 func (m *ClusterSpecRequest) GetAvailability() ClusterAvailabilitySpecRequest {
@@ -69,6 +71,24 @@ func (m *ClusterSpecRequest) GetPluginsOr(val PluginsSpecRequest) PluginsSpecReq
 	return val
 }
 
+func (m *ClusterSpecRequest) GetSecurityPosture() *SecurityPostureSpecRequest {
+	if m != nil {
+		return m.SecurityPosture
+	}
+	return nil
+}
+
+func (m *ClusterSpecRequest) SetSecurityPosture(val *SecurityPostureSpecRequest) {
+	m.SecurityPosture = val
+}
+
+func (m *ClusterSpecRequest) GetSecurityPostureOr(val SecurityPostureSpecRequest) SecurityPostureSpecRequest {
+	if m != nil && m.SecurityPosture != nil {
+		return *m.SecurityPosture
+	}
+	return val
+}
+
 func (m *ClusterSpecRequest) Clone() *ClusterSpecRequest {
 	if m == nil {
 		return nil
@@ -79,6 +99,7 @@ func (m *ClusterSpecRequest) Clone() *ClusterSpecRequest {
 	clone.Network = *m.Network.Clone()
 	clone.VersionControl = *m.VersionControl.Clone()
 	clone.Plugins = m.Plugins.Clone()
+	clone.SecurityPosture = m.SecurityPosture.Clone()
 	return &clone
 }
 

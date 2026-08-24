@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/nlb/model"
 )
 
@@ -24,6 +25,6 @@ func TestNlbRuleOptionalResponseMarshalling(t *testing.T) {
 
 func initNlbRuleOptionalResponse() model.NlbRuleOptionalResponse {
 	var v model.NlbRuleOptionalResponse
-	v.TargetAddressGroups = make([]model.VpcAddressGroupSpecOrRefOptionalResponse, 0)
+	v.TargetAddressGroups = make([]common.VpcAddressGroupSpecOrRefOptionalResponse, 0)
 	return v
 }

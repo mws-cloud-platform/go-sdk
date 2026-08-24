@@ -33,6 +33,13 @@ func ClusterSpecRequestToOptionalResponse(request *ClusterSpecRequest) (*Cluster
 		}
 		response.Plugins = optional.NewOptionalNil(*tmpPlugins)
 	}
+	if request.SecurityPosture != nil {
+		tmpSecurityPosture, err := SecurityPostureSpecRequestToOptionalResponse(request.SecurityPosture)
+		if err != nil {
+			return nil, err
+		}
+		response.SecurityPosture = optional.NewOptionalNil(*tmpSecurityPosture)
+	}
 	return &response, nil
 }
 

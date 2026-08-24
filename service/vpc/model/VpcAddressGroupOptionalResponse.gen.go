@@ -17,7 +17,7 @@ type VpcAddressGroupOptionalResponse struct {
 	// Метаданные группы адресов.
 	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация группы адресов.
-	Spec VpcAddressGroupSpecOptionalResponse `json:"spec" yaml:"spec"`
+	Spec common.VpcAddressGroupSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Статус группы адресов.
 	Status *VpcAddressGroupStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
@@ -54,14 +54,14 @@ func (m *VpcAddressGroupOptionalResponse) GetMetadataOr(val common.CommonTypedRe
 	return val
 }
 
-func (m *VpcAddressGroupOptionalResponse) GetSpec() VpcAddressGroupSpecOptionalResponse {
+func (m *VpcAddressGroupOptionalResponse) GetSpec() common.VpcAddressGroupSpecOptionalResponse {
 	if m != nil {
 		return m.Spec
 	}
-	return VpcAddressGroupSpecOptionalResponse{}
+	return common.VpcAddressGroupSpecOptionalResponse{}
 }
 
-func (m *VpcAddressGroupOptionalResponse) SetSpec(val VpcAddressGroupSpecOptionalResponse) {
+func (m *VpcAddressGroupOptionalResponse) SetSpec(val common.VpcAddressGroupSpecOptionalResponse) {
 	m.Spec = val
 }
 

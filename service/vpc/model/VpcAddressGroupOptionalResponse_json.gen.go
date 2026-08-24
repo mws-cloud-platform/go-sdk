@@ -96,7 +96,7 @@ func (m *VpcAddressGroupOptionalResponse) Decode(d *jx.Decoder) error {
 			m.Metadata.SetTo(v)
 			return nil
 		case "spec":
-			var v VpcAddressGroupSpecOptionalResponse
+			var v common.VpcAddressGroupSpecOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

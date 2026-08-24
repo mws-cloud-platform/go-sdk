@@ -2,12 +2,16 @@
 
 package model
 
+import (
+	common "go.mws.cloud/go-sdk/service/common/model"
+)
+
 func OneToOneNatSpecInternalRequestToOptionalResponse(request *OneToOneNatSpecInternalRequest) (*OneToOneNatSpecInternalOptionalResponse, error) {
 	if request == nil {
 		return nil, nil
 	}
 	var response OneToOneNatSpecInternalOptionalResponse
-	tmpAddress, err := ResourceAddressSpecOrRefRequestToOptionalResponse(&request.Address)
+	tmpAddress, err := common.ResourceAddressSpecOrRefRequestToOptionalResponse(&request.Address)
 	if err != nil {
 		return nil, err
 	}

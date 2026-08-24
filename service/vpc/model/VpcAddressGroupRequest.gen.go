@@ -15,7 +15,7 @@ type VpcAddressGroupRequest struct {
 	// Метаданные группы адресов.
 	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация группы адресов.
-	Spec VpcAddressGroupSpecRequest `json:"spec" yaml:"spec"`
+	Spec common.VpcAddressGroupSpecRequest `json:"spec" yaml:"spec"`
 }
 
 func (m *VpcAddressGroupRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
@@ -36,14 +36,14 @@ func (m *VpcAddressGroupRequest) GetMetadataOr(val common.CommonTypedResourceMet
 	return val
 }
 
-func (m *VpcAddressGroupRequest) GetSpec() VpcAddressGroupSpecRequest {
+func (m *VpcAddressGroupRequest) GetSpec() common.VpcAddressGroupSpecRequest {
 	if m != nil {
 		return m.Spec
 	}
-	return VpcAddressGroupSpecRequest{}
+	return common.VpcAddressGroupSpecRequest{}
 }
 
-func (m *VpcAddressGroupRequest) SetSpec(val VpcAddressGroupSpecRequest) {
+func (m *VpcAddressGroupRequest) SetSpec(val common.VpcAddressGroupSpecRequest) {
 	m.Spec = val
 }
 

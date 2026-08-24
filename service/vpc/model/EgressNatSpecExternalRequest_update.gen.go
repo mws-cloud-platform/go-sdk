@@ -10,19 +10,20 @@ import (
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateEgressNatSpecExternalRequest struct {
 	// Список спецификаций внешних адресов, через которых будет осуществляться трансляция.
-	Addresses optional.Optional[[]UpdateResourceExternalAddressSpecOrRefRequest] `json:"addresses" yaml:"addresses"`
+	Addresses optional.Optional[[]common.UpdateResourceExternalAddressSpecOrRefRequest] `json:"addresses" yaml:"addresses"`
 }
 
 func (m *EgressNatSpecExternalRequest) AsUpdateModel() UpdateEgressNatSpecExternalRequest {
 	var u UpdateEgressNatSpecExternalRequest
-	u.Addresses = optional.NewOptional(func() []UpdateResourceExternalAddressSpecOrRefRequest {
-		var tmp []UpdateResourceExternalAddressSpecOrRefRequest
+	u.Addresses = optional.NewOptional(func() []common.UpdateResourceExternalAddressSpecOrRefRequest {
+		var tmp []common.UpdateResourceExternalAddressSpecOrRefRequest
 		if m.GetAddresses() != nil {
-			tmp = make([]UpdateResourceExternalAddressSpecOrRefRequest, 0, len(m.GetAddresses()))
+			tmp = make([]common.UpdateResourceExternalAddressSpecOrRefRequest, 0, len(m.GetAddresses()))
 		}
 		for _, val := range m.GetAddresses() {
 			tmp = append(tmp, val.AsUpdateModel())
@@ -49,7 +50,7 @@ func (m *EgressNatSpecExternalRequest) WithChanges(u UpdateEgressNatSpecExternal
 	}
 
 	if u.Addresses.IsSet() {
-		out.Addresses = merge.InapplicableSlice(u.Addresses.Value, (*ResourceExternalAddressSpecOrRefRequest).WithChanges)
+		out.Addresses = merge.InapplicableSlice(u.Addresses.Value, (*common.ResourceExternalAddressSpecOrRefRequest).WithChanges)
 	}
 	return out
 }
@@ -75,15 +76,15 @@ func (m *UpdateEgressNatSpecExternalRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *EgressNatSpecExternalRequest) diffAddresses(src *EgressNatSpecExternalRequest) optional.Optional[[]UpdateResourceExternalAddressSpecOrRefRequest] {
-	diffFunc := func(fromItem, toItem ResourceExternalAddressSpecOrRefRequest, fromNil bool) UpdateResourceExternalAddressSpecOrRefRequest {
+func (m *EgressNatSpecExternalRequest) diffAddresses(src *EgressNatSpecExternalRequest) optional.Optional[[]common.UpdateResourceExternalAddressSpecOrRefRequest] {
+	diffFunc := func(fromItem, toItem common.ResourceExternalAddressSpecOrRefRequest, fromNil bool) common.UpdateResourceExternalAddressSpecOrRefRequest {
 		if fromNil {
 			return toItem.Diff(nil)
 		}
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetAddresses(), m.GetAddresses(), diffFunc)
-	return optional.Optional[[]UpdateResourceExternalAddressSpecOrRefRequest]{
+	return optional.Optional[[]common.UpdateResourceExternalAddressSpecOrRefRequest]{
 		Value: value,
 		Set:   hasChanges,
 	}

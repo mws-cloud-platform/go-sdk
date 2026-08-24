@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/nlb/model"
 )
 
@@ -24,6 +25,6 @@ func TestNlbStatusRuleResponseMarshalling(t *testing.T) {
 
 func initNlbStatusRuleResponse() model.NlbStatusRuleResponse {
 	var v model.NlbStatusRuleResponse
-	v.TargetAddressGroups = make([]model.VpcAddressGroupSpecOrRefResponse, 0)
+	v.TargetAddressGroups = make([]common.VpcAddressGroupSpecOrRefResponse, 0)
 	return v
 }

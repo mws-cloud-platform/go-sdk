@@ -7,23 +7,24 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Группирующий элемент для всего, что касается внешней части (ресурсов, доступных извне).
 // Real OAPI model name: EgressNatSpecExternal
 type EgressNatSpecExternalRequest struct {
 	// Список спецификаций внешних адресов, через которых будет осуществляться трансляция.
-	Addresses []ResourceExternalAddressSpecOrRefRequest `json:"addresses" yaml:"addresses"`
+	Addresses []common.ResourceExternalAddressSpecOrRefRequest `json:"addresses" yaml:"addresses"`
 }
 
-func (m *EgressNatSpecExternalRequest) GetAddresses() []ResourceExternalAddressSpecOrRefRequest {
+func (m *EgressNatSpecExternalRequest) GetAddresses() []common.ResourceExternalAddressSpecOrRefRequest {
 	if m != nil {
 		return m.Addresses
 	}
 	return nil
 }
 
-func (m *EgressNatSpecExternalRequest) SetAddresses(val []ResourceExternalAddressSpecOrRefRequest) {
+func (m *EgressNatSpecExternalRequest) SetAddresses(val []common.ResourceExternalAddressSpecOrRefRequest) {
 	m.Addresses = val
 }
 
@@ -34,7 +35,7 @@ func (m *EgressNatSpecExternalRequest) Clone() *EgressNatSpecExternalRequest {
 
 	clone := *m
 	if m.Addresses != nil {
-		clone.Addresses = make([]ResourceExternalAddressSpecOrRefRequest, len(m.Addresses))
+		clone.Addresses = make([]common.ResourceExternalAddressSpecOrRefRequest, len(m.Addresses))
 		for i, v := range m.Addresses {
 			clone.Addresses[i] = *v.Clone()
 		}

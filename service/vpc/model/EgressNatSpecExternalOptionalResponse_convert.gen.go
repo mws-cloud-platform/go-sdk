@@ -2,13 +2,17 @@
 
 package model
 
+import (
+	common "go.mws.cloud/go-sdk/service/common/model"
+)
+
 func EgressNatSpecExternalRequestToOptionalResponse(request *EgressNatSpecExternalRequest) (*EgressNatSpecExternalOptionalResponse, error) {
 	if request == nil {
 		return nil, nil
 	}
 	var response EgressNatSpecExternalOptionalResponse
 	for _, e := range request.Addresses {
-		tmp, err := ResourceExternalAddressSpecOrRefRequestToOptionalResponse(&e)
+		tmp, err := common.ResourceExternalAddressSpecOrRefRequestToOptionalResponse(&e)
 		if err != nil {
 			return nil, err
 		}

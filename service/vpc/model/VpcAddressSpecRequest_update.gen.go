@@ -12,6 +12,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
+	common "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -25,8 +26,8 @@ type UpdateVpcAddressSpecRequest struct {
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
-	IpAddress optional.Optional[ipaddress.IPAddress]                 `json:"ipAddress" yaml:"ipAddress"`
-	Dns       optional.OptionalNil[[]UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
+	IpAddress optional.Optional[ipaddress.IPAddress]                        `json:"ipAddress" yaml:"ipAddress"`
+	Dns       optional.OptionalNil[[]common.UpdateVpcAddressDnsSpecRequest] `json:"dns" yaml:"dns"`
 }
 
 func (m *VpcAddressSpecRequest) AsUpdateModel() UpdateVpcAddressSpecRequest {
@@ -36,10 +37,10 @@ func (m *VpcAddressSpecRequest) AsUpdateModel() UpdateVpcAddressSpecRequest {
 		u.IpAddress = optional.NewOptional(m.GetIpAddressOr(ipaddress.IPAddress{}))
 	}
 	if m.Dns != nil {
-		u.Dns = optional.NewOptionalNil(func() []UpdateVpcAddressDnsSpecRequest {
-			var tmp []UpdateVpcAddressDnsSpecRequest
+		u.Dns = optional.NewOptionalNil(func() []common.UpdateVpcAddressDnsSpecRequest {
+			var tmp []common.UpdateVpcAddressDnsSpecRequest
 			if m.GetDns() != nil {
-				tmp = make([]UpdateVpcAddressDnsSpecRequest, 0, len(m.GetDns()))
+				tmp = make([]common.UpdateVpcAddressDnsSpecRequest, 0, len(m.GetDns()))
 			}
 			for _, val := range m.GetDns() {
 				tmp = append(tmp, val.AsUpdateModel())
@@ -75,7 +76,7 @@ func (m *VpcAddressSpecRequest) WithChanges(u UpdateVpcAddressSpecRequest) VpcAd
 		out.IpAddress = ptr.Get(u.IpAddress.Value)
 	}
 	if u.Dns.IsSet() {
-		out.Dns = merge.Slice(out.Dns, u.Dns.Value, (*VpcAddressDnsSpecRequest).WithChanges, (*VpcAddressDnsSpecRequest).GetName, (*UpdateVpcAddressDnsSpecRequest).GetName)
+		out.Dns = merge.Slice(out.Dns, u.Dns.Value, (*common.VpcAddressDnsSpecRequest).WithChanges, (*common.VpcAddressDnsSpecRequest).GetName, (*common.UpdateVpcAddressDnsSpecRequest).GetName)
 	} else if u.Dns.IsNull() {
 		out.Dns = nil
 	}
@@ -113,15 +114,15 @@ func (m *VpcAddressSpecRequest) diffIpAddress(src *VpcAddressSpecRequest) option
 	return commonclient.DiffEquatableIfaceNonRequired(src.GetIpAddress(), m.GetIpAddress(), nilDiffers)
 }
 
-func (m *VpcAddressSpecRequest) diffDns(src *VpcAddressSpecRequest) optional.OptionalNil[[]UpdateVpcAddressDnsSpecRequest] {
-	diffFunc := func(fromItem, toItem VpcAddressDnsSpecRequest, fromNil bool) UpdateVpcAddressDnsSpecRequest {
+func (m *VpcAddressSpecRequest) diffDns(src *VpcAddressSpecRequest) optional.OptionalNil[[]common.UpdateVpcAddressDnsSpecRequest] {
+	diffFunc := func(fromItem, toItem common.VpcAddressDnsSpecRequest, fromNil bool) common.UpdateVpcAddressDnsSpecRequest {
 		if fromNil {
 			return toItem.Diff(nil)
 		}
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetDns(), m.GetDns(), diffFunc)
-	return optional.OptionalNil[[]UpdateVpcAddressDnsSpecRequest]{
+	return optional.OptionalNil[[]common.UpdateVpcAddressDnsSpecRequest]{
 		Value: value,
 		Set:   hasChanges,
 		Null:  value == nil,

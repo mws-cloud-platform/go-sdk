@@ -7,6 +7,7 @@ import (
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m UpdateEgressNatSpecExternalRequest) MarshalJSON() ([]byte, error) {
@@ -56,9 +57,9 @@ func (m *UpdateEgressNatSpecExternalRequest) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "addresses":
-			c := make([]UpdateResourceExternalAddressSpecOrRefRequest, 0)
+			c := make([]common.UpdateResourceExternalAddressSpecOrRefRequest, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v UpdateResourceExternalAddressSpecOrRefRequest
+				var v common.UpdateResourceExternalAddressSpecOrRefRequest
 				if err := v.Decode(d); err != nil {
 					return err
 				}

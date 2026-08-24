@@ -7,6 +7,7 @@ import (
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m OneToOneNatSpecInternalRequest) MarshalJSON() ([]byte, error) {
@@ -53,7 +54,7 @@ func (m *OneToOneNatSpecInternalRequest) Decode(d *jx.Decoder) error {
 	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "address":
-			var v ResourceAddressSpecOrRefRequest
+			var v common.ResourceAddressSpecOrRefRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}

@@ -19,7 +19,7 @@ func VpcAddressGroupRequestToOptionalResponse(request *VpcAddressGroupRequest) (
 		}
 		response.Metadata = optional.NewOptionalNil(*tmpMetadata)
 	}
-	tmpSpec, err := VpcAddressGroupSpecRequestToOptionalResponse(&request.Spec)
+	tmpSpec, err := common.VpcAddressGroupSpecRequestToOptionalResponse(&request.Spec)
 	if err != nil {
 		return nil, err
 	}

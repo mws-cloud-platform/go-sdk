@@ -63,6 +63,17 @@ func (m *UpdateClusterSpecRequest) encodeFields(e *jx.Encoder) error {
 			}
 		}
 	}
+
+	if m.SecurityPosture.IsSet() {
+		e.FieldStart("securityPosture")
+		if m.SecurityPosture.IsNull() {
+			e.Null()
+		} else {
+			if err := m.SecurityPosture.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
 
@@ -113,6 +124,19 @@ func (m *UpdateClusterSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Plugins.SetTo(v)
+			return nil
+		case "securityPosture":
+			if d.Next() == jx.Null {
+				m.SecurityPosture.SetToNull()
+				return d.Null()
+			}
+
+			var v UpdateSecurityPostureSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SecurityPosture.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

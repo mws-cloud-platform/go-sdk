@@ -24,6 +24,8 @@ type ClusterStatusResponse struct {
 	VersionControl       *ClusterVersionControlStatusResponse `json:"versionControl,omitempty" yaml:"versionControl,omitempty"`
 	ClusterStatus        *ClusterStatusClusterStatusResponse  `json:"clusterStatus,omitempty" yaml:"clusterStatus,omitempty"`
 	Plugins              *PluginsStatusResponse               `json:"plugins,omitempty" yaml:"plugins,omitempty"`
+	// Статус KSP для кластера
+	SecurityPosture *SecurityPostureStatusResponse `json:"securityPosture,omitempty" yaml:"securityPosture,omitempty"`
 }
 
 func (m *ClusterStatusResponse) GetReady() common.ResourceStatusReadyResponse {
@@ -103,6 +105,20 @@ func (m *ClusterStatusResponse) GetPluginsOr(val PluginsStatusResponse) PluginsS
 	return val
 }
 
+func (m *ClusterStatusResponse) GetSecurityPosture() *SecurityPostureStatusResponse {
+	if m != nil {
+		return m.SecurityPosture
+	}
+	return nil
+}
+
+func (m *ClusterStatusResponse) GetSecurityPostureOr(val SecurityPostureStatusResponse) SecurityPostureStatusResponse {
+	if m != nil && m.SecurityPosture != nil {
+		return *m.SecurityPosture
+	}
+	return val
+}
+
 func (m *ClusterStatusResponse) Clone() *ClusterStatusResponse {
 	if m == nil {
 		return nil
@@ -120,6 +136,7 @@ func (m *ClusterStatusResponse) Clone() *ClusterStatusResponse {
 	clone.VersionControl = m.VersionControl.Clone()
 	clone.ClusterStatus = m.ClusterStatus.Clone()
 	clone.Plugins = m.Plugins.Clone()
+	clone.SecurityPosture = m.SecurityPosture.Clone()
 
 	return &clone
 }

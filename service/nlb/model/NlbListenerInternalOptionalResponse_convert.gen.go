@@ -2,12 +2,16 @@
 
 package model
 
+import (
+	common "go.mws.cloud/go-sdk/service/common/model"
+)
+
 func NlbListenerInternalRequestToOptionalResponse(request *NlbListenerInternalRequest) (*NlbListenerInternalOptionalResponse, error) {
 	if request == nil {
 		return nil, nil
 	}
 	var response NlbListenerInternalOptionalResponse
-	tmpAddress, err := ResourceAddressSpecOrRefRequestToOptionalResponse(&request.Address)
+	tmpAddress, err := common.ResourceAddressSpecOrRefRequestToOptionalResponse(&request.Address)
 	if err != nil {
 		return nil, err
 	}

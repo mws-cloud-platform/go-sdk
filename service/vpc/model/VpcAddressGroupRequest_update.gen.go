@@ -16,7 +16,7 @@ type UpdateVpcAddressGroupRequest struct {
 	// Метаданные группы адресов.
 	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Спецификация группы адресов.
-	Spec optional.Optional[UpdateVpcAddressGroupSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.Optional[common.UpdateVpcAddressGroupSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *VpcAddressGroupRequest) AsUpdateModel() UpdateVpcAddressGroupRequest {
@@ -86,11 +86,11 @@ func (m *VpcAddressGroupRequest) diffMetadata(src *VpcAddressGroupRequest) optio
 	}
 }
 
-func (m *VpcAddressGroupRequest) diffSpec(src *VpcAddressGroupRequest) optional.Optional[UpdateVpcAddressGroupSpecRequest] {
+func (m *VpcAddressGroupRequest) diffSpec(src *VpcAddressGroupRequest) optional.Optional[common.UpdateVpcAddressGroupSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return optional.Optional[UpdateVpcAddressGroupSpecRequest]{
+	return optional.Optional[common.UpdateVpcAddressGroupSpecRequest]{
 		Value: value,
 		Set:   value.HasChanges(),
 	}

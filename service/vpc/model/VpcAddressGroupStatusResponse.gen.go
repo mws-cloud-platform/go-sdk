@@ -17,7 +17,7 @@ import (
 type VpcAddressGroupStatusResponse struct {
 	common.ResourceStatusResponse `yaml:"-,inline"`
 	// Список статусов внутренних IP-адресов.
-	Addresses []ResourceAddressStatusResponse `json:"addresses,omitempty" yaml:"addresses,omitempty"`
+	Addresses []common.ResourceAddressStatusResponse `json:"addresses,omitempty" yaml:"addresses,omitempty"`
 	// Список ссылок на внутренние IP-адреса, которые были удалены, но остались в спецификации группы.
 	OrphanAddresses []vpc.AddressRef `json:"orphanAddresses,omitempty" yaml:"orphanAddresses,omitempty"`
 	// Регион, которому принадлежит группа IP-адресов.
@@ -31,14 +31,14 @@ func (m *VpcAddressGroupStatusResponse) GetReady() common.ResourceStatusReadyRes
 	return common.ResourceStatusReadyResponse{}
 }
 
-func (m *VpcAddressGroupStatusResponse) GetAddresses() []ResourceAddressStatusResponse {
+func (m *VpcAddressGroupStatusResponse) GetAddresses() []common.ResourceAddressStatusResponse {
 	if m != nil {
 		return m.Addresses
 	}
 	return nil
 }
 
-func (m *VpcAddressGroupStatusResponse) GetAddressesOr(val []ResourceAddressStatusResponse) []ResourceAddressStatusResponse {
+func (m *VpcAddressGroupStatusResponse) GetAddressesOr(val []common.ResourceAddressStatusResponse) []common.ResourceAddressStatusResponse {
 	if m != nil && m.Addresses != nil {
 		return m.Addresses
 	}
@@ -81,7 +81,7 @@ func (m *VpcAddressGroupStatusResponse) Clone() *VpcAddressGroupStatusResponse {
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
 	if m.Addresses != nil {
-		clone.Addresses = make([]ResourceAddressStatusResponse, len(m.Addresses))
+		clone.Addresses = make([]common.ResourceAddressStatusResponse, len(m.Addresses))
 		for i, v := range m.Addresses {
 			clone.Addresses[i] = *v.Clone()
 		}

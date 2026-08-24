@@ -6,23 +6,24 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Группирующий элемент для всего, что касается внешней части (ресурсов, доступных извне).
 // Real OAPI model name: OneToOneNatStatusExternal
 type OneToOneNatStatusExternalResponse struct {
 	// Спецификация внешнего адреса, через который будет осуществляться трансляция.
-	Address ResourceExternalAddressStatusResponse `json:"address" yaml:"address"`
+	Address common.ResourceExternalAddressStatusResponse `json:"address" yaml:"address"`
 }
 
-func (m *OneToOneNatStatusExternalResponse) GetAddress() ResourceExternalAddressStatusResponse {
+func (m *OneToOneNatStatusExternalResponse) GetAddress() common.ResourceExternalAddressStatusResponse {
 	if m != nil {
 		return m.Address
 	}
-	return ResourceExternalAddressStatusResponse{}
+	return common.ResourceExternalAddressStatusResponse{}
 }
 
-func (m *OneToOneNatStatusExternalResponse) SetAddress(val ResourceExternalAddressStatusResponse) {
+func (m *OneToOneNatStatusExternalResponse) SetAddress(val common.ResourceExternalAddressStatusResponse) {
 	m.Address = val
 }
 

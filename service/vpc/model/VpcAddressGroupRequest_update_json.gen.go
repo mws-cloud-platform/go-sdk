@@ -77,7 +77,7 @@ func (m *UpdateVpcAddressGroupRequest) Decode(d *jx.Decoder) error {
 			m.Metadata.SetTo(v)
 			return nil
 		case "spec":
-			var v UpdateVpcAddressGroupSpecRequest
+			var v common.UpdateVpcAddressGroupSpecRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}

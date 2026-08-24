@@ -6,23 +6,24 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Статус IP-адреса внутреннего балансировщика.
 // Real OAPI model name: NlbStatusListenerInternal
 type NlbStatusListenerInternalResponse struct {
 	// Статус IP-адреса внутреннего балансировщика.
-	Address ResourceAddressStatusResponse `json:"address" yaml:"address"`
+	Address common.ResourceAddressStatusResponse `json:"address" yaml:"address"`
 }
 
-func (m *NlbStatusListenerInternalResponse) GetAddress() ResourceAddressStatusResponse {
+func (m *NlbStatusListenerInternalResponse) GetAddress() common.ResourceAddressStatusResponse {
 	if m != nil {
 		return m.Address
 	}
-	return ResourceAddressStatusResponse{}
+	return common.ResourceAddressStatusResponse{}
 }
 
-func (m *NlbStatusListenerInternalResponse) SetAddress(val ResourceAddressStatusResponse) {
+func (m *NlbStatusListenerInternalResponse) SetAddress(val common.ResourceAddressStatusResponse) {
 	m.Address = val
 }
 

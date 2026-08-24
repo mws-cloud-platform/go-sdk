@@ -71,6 +71,13 @@ func (m *ClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 			return err
 		}
 	}
+
+	if m.SecurityPosture != nil {
+		e.FieldStart("securityPosture")
+		if err := m.SecurityPosture.Encode(e); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -152,6 +159,18 @@ func (m *ClusterStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Plugins = &v
+			return nil
+		case "securityPosture":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v SecurityPostureStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SecurityPosture = &v
 			return nil
 		default:
 			return d.Skip()

@@ -4,6 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
+	common "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func VpcAddressSpecRequestToOptionalResponse(request *VpcAddressSpecRequest) (*VpcAddressSpecOptionalResponse, error) {
@@ -16,7 +17,7 @@ func VpcAddressSpecRequestToOptionalResponse(request *VpcAddressSpecRequest) (*V
 		response.IpAddress = optional.NewOptional(*request.IpAddress)
 	}
 	for _, e := range request.Dns {
-		tmp, err := VpcAddressDnsSpecRequestToOptionalResponse(&e)
+		tmp, err := common.VpcAddressDnsSpecRequestToOptionalResponse(&e)
 		if err != nil {
 			return nil, err
 		}
