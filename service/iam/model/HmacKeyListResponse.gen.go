@@ -3,28 +3,28 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: HmacKeyList
 type HmacKeyListResponse struct {
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
-	Items         []HmacKeyResponse     `json:"items" yaml:"items"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	Items         []HmacKeyResponse          `json:"items" yaml:"items"`
 }
 
-func (m *HmacKeyListResponse) GetNextPageToken() *common.NextPageToken {
+func (m *HmacKeyListResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *HmacKeyListResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *HmacKeyListResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *HmacKeyListResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *HmacKeyListResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

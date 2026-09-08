@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
@@ -18,13 +18,13 @@ func TestCommonRoleBindingSpecMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.CommonRoleBindingSpec
+	var actual commonmodel.CommonRoleBindingSpec
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initCommonRoleBindingSpec() common.CommonRoleBindingSpec {
-	var v common.CommonRoleBindingSpec
+func initCommonRoleBindingSpec() commonmodel.CommonRoleBindingSpec {
+	var v commonmodel.CommonRoleBindingSpec
 	v.Role = iam.NewMustRoleRef("roleID")
 	return v
 }

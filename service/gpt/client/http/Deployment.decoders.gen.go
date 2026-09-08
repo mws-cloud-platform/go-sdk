@@ -11,7 +11,7 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	clienterrors "go.mws.cloud/go-sdk/internal/client/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/gpt/client"
 	"go.mws.cloud/go-sdk/service/gpt/model"
 )
@@ -49,7 +49,7 @@ func decodeListDeploymentsResponse(resp *http.Response) (*client.ListDeployments
 		case "application/json":
 			result := &client.ListDeploymentsResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -66,7 +66,7 @@ func decodeListDeploymentsResponse(resp *http.Response) (*client.ListDeployments
 		case "application/json":
 			result := &client.ListDeploymentsResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -83,7 +83,7 @@ func decodeListDeploymentsResponse(resp *http.Response) (*client.ListDeployments
 		case "application/json":
 			result := &client.ListDeploymentsResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -100,7 +100,7 @@ func decodeListDeploymentsResponse(resp *http.Response) (*client.ListDeployments
 		case "application/json":
 			result := &client.ListDeploymentsResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -137,27 +137,10 @@ func decodeDeleteDeploymentResponse(resp *http.Response) (*client.DeleteDeployme
 		case "application/json":
 			result := &client.DeleteDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			return result, nil
-		default:
-			_, _ = io.Copy(io.Discard, resp.Body)
-			return nil, clienterrors.InvalidContentType(ct)
-		}
-	case 401:
-		switch ct {
-		case "application/json":
-			result := &client.DeleteDeploymentResponse{
-				Code:        resp.StatusCode,
-				Response401: &common.ApiError{},
-			}
-
-			if err = devpclient.ReadJSON(resp.Body, result.Response401); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
@@ -171,7 +154,7 @@ func decodeDeleteDeploymentResponse(resp *http.Response) (*client.DeleteDeployme
 		case "application/json":
 			result := &client.DeleteDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -188,61 +171,10 @@ func decodeDeleteDeploymentResponse(resp *http.Response) (*client.DeleteDeployme
 		case "application/json":
 			result := &client.DeleteDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			return result, nil
-		default:
-			_, _ = io.Copy(io.Discard, resp.Body)
-			return nil, clienterrors.InvalidContentType(ct)
-		}
-	case 408:
-		switch ct {
-		case "application/json":
-			result := &client.DeleteDeploymentResponse{
-				Code:        resp.StatusCode,
-				Response408: &common.ApiError{},
-			}
-
-			if err = devpclient.ReadJSON(resp.Body, result.Response408); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			return result, nil
-		default:
-			_, _ = io.Copy(io.Discard, resp.Body)
-			return nil, clienterrors.InvalidContentType(ct)
-		}
-	case 412:
-		switch ct {
-		case "application/json":
-			result := &client.DeleteDeploymentResponse{
-				Code:        resp.StatusCode,
-				Response412: &common.ApiError{},
-			}
-
-			if err = devpclient.ReadJSON(resp.Body, result.Response412); err != nil {
-				return nil, clienterrors.NewDecodeBodyError(ct, err)
-			}
-
-			return result, nil
-		default:
-			_, _ = io.Copy(io.Discard, resp.Body)
-			return nil, clienterrors.InvalidContentType(ct)
-		}
-	case 499:
-		switch ct {
-		case "application/json":
-			result := &client.DeleteDeploymentResponse{
-				Code:        resp.StatusCode,
-				Response499: &common.ApiError{},
-			}
-
-			if err = devpclient.ReadJSON(resp.Body, result.Response499); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
@@ -256,7 +188,7 @@ func decodeDeleteDeploymentResponse(resp *http.Response) (*client.DeleteDeployme
 		case "application/json":
 			result := &client.DeleteDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -307,7 +239,7 @@ func decodeGetDeploymentResponse(resp *http.Response) (*client.GetDeploymentResp
 		case "application/json":
 			result := &client.GetDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -324,7 +256,7 @@ func decodeGetDeploymentResponse(resp *http.Response) (*client.GetDeploymentResp
 		case "application/json":
 			result := &client.GetDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -341,7 +273,7 @@ func decodeGetDeploymentResponse(resp *http.Response) (*client.GetDeploymentResp
 		case "application/json":
 			result := &client.GetDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -358,7 +290,7 @@ func decodeGetDeploymentResponse(resp *http.Response) (*client.GetDeploymentResp
 		case "application/json":
 			result := &client.GetDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -430,7 +362,7 @@ func decodeUpsertDeploymentResponse(resp *http.Response) (*client.UpsertDeployme
 		case "application/json":
 			result := &client.UpsertDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -447,7 +379,7 @@ func decodeUpsertDeploymentResponse(resp *http.Response) (*client.UpsertDeployme
 		case "application/json":
 			result := &client.UpsertDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -464,7 +396,7 @@ func decodeUpsertDeploymentResponse(resp *http.Response) (*client.UpsertDeployme
 		case "application/json":
 			result := &client.UpsertDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -481,7 +413,7 @@ func decodeUpsertDeploymentResponse(resp *http.Response) (*client.UpsertDeployme
 		case "application/json":
 			result := &client.UpsertDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response409: &common.ApiError{},
+				Response409: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response409); err != nil {
@@ -498,7 +430,7 @@ func decodeUpsertDeploymentResponse(resp *http.Response) (*client.UpsertDeployme
 		case "application/json":
 			result := &client.UpsertDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response422: &common.ApiError{},
+				Response422: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response422); err != nil {
@@ -515,7 +447,7 @@ func decodeUpsertDeploymentResponse(resp *http.Response) (*client.UpsertDeployme
 		case "application/json":
 			result := &client.UpsertDeploymentResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

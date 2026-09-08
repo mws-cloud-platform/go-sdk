@@ -15,18 +15,18 @@ import (
 )
 
 type UpdateClickhouseClusterShardRequest struct {
-	// -> Имя шарда, которому будут принадлежать инстансы. В случае с несколькими шардами имя формируется как `name-{shardIndex}`.
+	// -> Имя шарда, которому будут принадлежать узлы. В случае с несколькими шардами имя формируется как `name-{shardIndex}`.
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Name optional.Optional[string] `json:"name" yaml:"name"`
 	// Количество шардов, которые будут созданы.
 	Count optional.Optional[int] `json:"count" yaml:"count"`
-	// Ресурсы одной ноды Clickhouse.
+	// Ресурсы одного узла ClickHouse.
 	Resources optional.Optional[UpdateClickhouseInstanceHWResourcesRequest] `json:"resources" yaml:"resources"`
 	// Вес шарда.
 	Weight optional.Optional[int] `json:"weight" yaml:"weight"`
-	// Описание эдпойнтов шардов.
+	// Описание эндпоинтов шардов.
 	Endpoints optional.Optional[[]UpdateClickhouseEndpointRequest]        `json:"endpoints" yaml:"endpoints"`
 	Instances optional.Optional[[]UpdateClickhouseClusterInstanceRequest] `json:"instances" yaml:"instances"`
 }

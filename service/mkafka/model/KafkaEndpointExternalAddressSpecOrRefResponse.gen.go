@@ -15,7 +15,7 @@ type KafkaEndpointExternalAddressSpecOrRefResponse struct {
 	// Идентификатор существующего внешнего адреса.
 	Ref *vpc.ExternalAddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Спецификация нового внешнего адреса. Адрес будет выделен в ходе реконсиляции кластера.
-	Spec *KafkaEndpointExternalAddressSpecOrRefSpecResponse `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec *KafkaEndpointExternalAddressSpecResponse `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *KafkaEndpointExternalAddressSpecOrRefResponse) GetRef() *vpc.ExternalAddressRef {
@@ -36,18 +36,18 @@ func (m *KafkaEndpointExternalAddressSpecOrRefResponse) GetRefOr(val vpc.Externa
 	return val
 }
 
-func (m *KafkaEndpointExternalAddressSpecOrRefResponse) GetSpec() *KafkaEndpointExternalAddressSpecOrRefSpecResponse {
+func (m *KafkaEndpointExternalAddressSpecOrRefResponse) GetSpec() *KafkaEndpointExternalAddressSpecResponse {
 	if m != nil {
 		return m.Spec
 	}
 	return nil
 }
 
-func (m *KafkaEndpointExternalAddressSpecOrRefResponse) SetSpec(val *KafkaEndpointExternalAddressSpecOrRefSpecResponse) {
+func (m *KafkaEndpointExternalAddressSpecOrRefResponse) SetSpec(val *KafkaEndpointExternalAddressSpecResponse) {
 	m.Spec = val
 }
 
-func (m *KafkaEndpointExternalAddressSpecOrRefResponse) GetSpecOr(val KafkaEndpointExternalAddressSpecOrRefSpecResponse) KafkaEndpointExternalAddressSpecOrRefSpecResponse {
+func (m *KafkaEndpointExternalAddressSpecOrRefResponse) GetSpecOr(val KafkaEndpointExternalAddressSpecResponse) KafkaEndpointExternalAddressSpecResponse {
 	if m != nil && m.Spec != nil {
 		return *m.Spec
 	}
@@ -75,18 +75,4 @@ func (m *KafkaEndpointExternalAddressSpecOrRefResponse) Parse(ctx context.Contex
 	}
 
 	return nil
-}
-
-// Представление поля Spec анонимного типа структуры KafkaEndpointExternalAddressSpecOrRef
-// Real OAPI model name: KafkaEndpointExternalAddressSpecOrRefSpec
-type KafkaEndpointExternalAddressSpecOrRefSpecResponse struct {
-}
-
-func (m *KafkaEndpointExternalAddressSpecOrRefSpecResponse) Clone() *KafkaEndpointExternalAddressSpecOrRefSpecResponse {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
-	return &clone
 }

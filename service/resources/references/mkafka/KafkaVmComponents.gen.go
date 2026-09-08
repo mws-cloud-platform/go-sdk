@@ -157,6 +157,25 @@ func (m *KafkaVmComponentsID) Clone() *KafkaVmComponentsID {
 	return &clone
 }
 
+func (m *KafkaVmComponentsID) AsRef() *KafkaVmComponentsRef {
+	if m == nil {
+		return nil
+	}
+	return &KafkaVmComponentsRef{
+		id: *m,
+	}
+}
+
+func (m *KafkaVmComponentsID) Equal(other *KafkaVmComponentsID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.vmComponent == other.vmComponent && m.cluster == other.cluster && m.project == other.project
+}
+
 func (m KafkaVmComponentsID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *KafkaVmComponentsRef) Clone() *KafkaVmComponentsRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *KafkaVmComponentsRef) Equal(other *KafkaVmComponentsRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.vmComponent == other.id.vmComponent && m.id.cluster == other.id.cluster && m.id.project == other.id.project
 }
 
 func (m KafkaVmComponentsRef) MarshalJSON() ([]byte, error) {

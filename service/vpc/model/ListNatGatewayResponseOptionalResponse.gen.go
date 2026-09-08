@@ -4,14 +4,14 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ListNatGatewayResponse
 type ListNatGatewayResponseOptionalResponse struct {
 	Items []NatGatewayOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken optional.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.Optional[commonmodel.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ListNatGatewayResponseOptionalResponse) GetItems() []NatGatewayOptionalResponse {
@@ -25,14 +25,14 @@ func (m *ListNatGatewayResponseOptionalResponse) SetItems(val []NatGatewayOption
 	m.Items = val
 }
 
-func (m *ListNatGatewayResponseOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *ListNatGatewayResponseOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return &m.NextPageToken.Value
 	}
 	return nil
 }
 
-func (m *ListNatGatewayResponseOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ListNatGatewayResponseOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return m.NextPageToken.Value
 	}

@@ -8,7 +8,7 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateClickhouseClusterUserRequest struct {
@@ -80,7 +80,7 @@ func (m *ClickhouseClusterUserRequest) diffSpec(src *ClickhouseClusterUserReques
 }
 
 type UpdateClickhouseClusterUserMetadataRequest struct {
-	common.UpdateTypedResourceMetadataRequest
+	commonmodel.UpdateTypedResourceMetadataRequest
 }
 
 func (m *ClickhouseClusterUserMetadataRequest) AsUpdateModel() UpdateClickhouseClusterUserMetadataRequest {
@@ -89,10 +89,10 @@ func (m *ClickhouseClusterUserMetadataRequest) AsUpdateModel() UpdateClickhouseC
 		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = optional.NewOptional(func() []common.UpdateTypedUsageRequest {
-			var tmp []common.UpdateTypedUsageRequest
+		u.Usages = optional.NewOptional(func() []commonmodel.UpdateTypedUsageRequest {
+			var tmp []commonmodel.UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
-				tmp = make([]common.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
+				tmp = make([]commonmodel.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
 			}
 			for _, val := range m.GetUsages() {
 				tmp = append(tmp, val.AsUpdateModel())
@@ -132,7 +132,7 @@ func (m *ClickhouseClusterUserMetadataRequest) WithChanges(u UpdateClickhouseClu
 		out.DisplayName = ptr.Get(u.DisplayName.Value)
 	}
 	if u.Usages.IsSet() {
-		out.Usages = merge.Slice(out.Usages, u.Usages.Value, (*common.TypedUsageRequest).WithChanges, (*common.TypedUsageRequest).GetName, (*common.UpdateTypedUsageRequest).GetName)
+		out.Usages = merge.Slice(out.Usages, u.Usages.Value, (*commonmodel.TypedUsageRequest).WithChanges, (*commonmodel.TypedUsageRequest).GetName, (*commonmodel.UpdateTypedUsageRequest).GetName)
 	}
 	if u.Etag.IsSet() {
 		out.Etag = ptr.Get(u.Etag.Value)
@@ -156,15 +156,15 @@ func (m *ClickhouseClusterUserMetadataRequest) diffDisplayName(src *ClickhouseCl
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *ClickhouseClusterUserMetadataRequest) diffUsages(src *ClickhouseClusterUserMetadataRequest) optional.Optional[[]common.UpdateTypedUsageRequest] {
-	diffFunc := func(fromItem, toItem common.TypedUsageRequest, fromNil bool) common.UpdateTypedUsageRequest {
+func (m *ClickhouseClusterUserMetadataRequest) diffUsages(src *ClickhouseClusterUserMetadataRequest) optional.Optional[[]commonmodel.UpdateTypedUsageRequest] {
+	diffFunc := func(fromItem, toItem commonmodel.TypedUsageRequest, fromNil bool) commonmodel.UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
 		}
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return optional.Optional[[]common.UpdateTypedUsageRequest]{
+	return optional.Optional[[]commonmodel.UpdateTypedUsageRequest]{
 		Value: value,
 		Set:   hasChanges,
 	}

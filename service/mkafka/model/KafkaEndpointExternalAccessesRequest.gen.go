@@ -9,7 +9,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
-// Настройка внешнего доступа к кластеру Kafka.
+// Настройка внешнего доступа к кластеру Apache Kafka.
 // Real OAPI model name: KafkaEndpointExternalAccesses
 type KafkaEndpointExternalAccessesRequest struct {
 	// Назначить внешние адреса для кластера Kafka.

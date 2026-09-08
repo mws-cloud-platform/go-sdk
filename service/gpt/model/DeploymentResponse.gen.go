@@ -7,7 +7,7 @@ import (
 	"time"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/gpt"
 )
 
@@ -118,7 +118,7 @@ func (m *DeploymentResponse) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры Deployment
 // Real OAPI model name: DeploymentMetadata
 type DeploymentMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// Ссылка на типизированный референс.
 	Id *gpt.DeploymentID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -193,14 +193,14 @@ func (m *DeploymentMetadataResponse) GetPurgeTimeOr(val time.Time) time.Time {
 	return val
 }
 
-func (m *DeploymentMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *DeploymentMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *DeploymentMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *DeploymentMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}

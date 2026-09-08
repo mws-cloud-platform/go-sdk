@@ -18,7 +18,7 @@ type VmTypeSpecOptionalResponse struct {
 	// Спецификация локальных дисков, которые доступны для ВМ указанного типа.
 	LocalDisks optional.OptionalNil[VmTypeLocalDisksSpecOptionalResponse] `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
 	// Спецификация сети, которая доступна для ВМ указанного типа.
-	Network optional.OptionalNil[VmTypeSpecNetworkOptionalResponse] `json:"network,omitempty" yaml:"network,omitempty"`
+	Network optional.OptionalNil[VmTypeNetworkSpecOptionalResponse] `json:"network,omitempty" yaml:"network,omitempty"`
 }
 
 func (m *VmTypeSpecOptionalResponse) GetCpu() *VmTypeCpuSpecOptionalResponse {
@@ -77,14 +77,14 @@ func (m *VmTypeSpecOptionalResponse) GetLocalDisksOr(val VmTypeLocalDisksSpecOpt
 	return val
 }
 
-func (m *VmTypeSpecOptionalResponse) GetNetwork() *VmTypeSpecNetworkOptionalResponse {
+func (m *VmTypeSpecOptionalResponse) GetNetwork() *VmTypeNetworkSpecOptionalResponse {
 	if m != nil && m.Network.IsSet() && !m.Network.IsNull() {
 		return &m.Network.Value
 	}
 	return nil
 }
 
-func (m *VmTypeSpecOptionalResponse) GetNetworkOr(val VmTypeSpecNetworkOptionalResponse) VmTypeSpecNetworkOptionalResponse {
+func (m *VmTypeSpecOptionalResponse) GetNetworkOr(val VmTypeNetworkSpecOptionalResponse) VmTypeNetworkSpecOptionalResponse {
 	if m != nil && m.Network.IsSet() && !m.Network.IsNull() {
 		return m.Network.Value
 	}
@@ -112,19 +112,5 @@ func (m *VmTypeSpecOptionalResponse) Clone() *VmTypeSpecOptionalResponse {
 	if clone.Network.IsSet() {
 		clone.Network.Value = *m.Network.Value.Clone()
 	}
-	return &clone
-}
-
-// Представление поля Network анонимного типа структуры VmTypeSpec
-// Real OAPI model name: VmTypeSpecNetwork
-type VmTypeSpecNetworkOptionalResponse struct {
-}
-
-func (m *VmTypeSpecNetworkOptionalResponse) Clone() *VmTypeSpecNetworkOptionalResponse {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
 	return &clone
 }

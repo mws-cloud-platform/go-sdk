@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Страница списка привязок ролей к секретам
@@ -16,7 +16,7 @@ type SecretRoleBindingListOptionalResponse struct {
 	// Привязки ролей к секретам
 	Items []SecretRoleBindingOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *SecretRoleBindingListOptionalResponse) GetItems() []SecretRoleBindingOptionalResponse {
@@ -30,18 +30,18 @@ func (m *SecretRoleBindingListOptionalResponse) SetItems(val []SecretRoleBinding
 	m.Items = val
 }
 
-func (m *SecretRoleBindingListOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *SecretRoleBindingListOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *SecretRoleBindingListOptionalResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *SecretRoleBindingListOptionalResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *SecretRoleBindingListOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *SecretRoleBindingListOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

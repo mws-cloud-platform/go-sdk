@@ -8,7 +8,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
-// Спецификация глобальной резервной копии диска
+// Спецификация резервной копии диска
 // Real OAPI model name: DiskBackupSpec
 type DiskBackupSpecRequest struct {
 	// Источник для создания резервной копии диска (На текущий момент поддерживается только диск, но в будущем будут и другие источники)

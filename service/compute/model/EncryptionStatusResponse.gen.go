@@ -5,6 +5,7 @@ package model
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
@@ -21,6 +22,8 @@ type EncryptionStatusResponse struct {
 	Version *int32 `json:"version,omitempty" yaml:"version,omitempty"`
 	// Состояние ключа
 	KeyActivity *EncryptionStatusKeyActivityResponse `json:"keyActivity,omitempty" yaml:"keyActivity,omitempty"`
+	// Время запланированного уничтожения пользовательского ключа
+	ScheduledDestructionTime *time.Time `json:"scheduledDestructionTime,omitempty" yaml:"scheduledDestructionTime,omitempty"`
 }
 
 func (m *EncryptionStatusResponse) GetCryptoKeyId() *kms.CryptoKeyRef {
@@ -77,6 +80,24 @@ func (m *EncryptionStatusResponse) GetKeyActivityOr(val EncryptionStatusKeyActiv
 	return val
 }
 
+func (m *EncryptionStatusResponse) GetScheduledDestructionTime() *time.Time {
+	if m != nil {
+		return m.ScheduledDestructionTime
+	}
+	return nil
+}
+
+func (m *EncryptionStatusResponse) SetScheduledDestructionTime(val *time.Time) {
+	m.ScheduledDestructionTime = val
+}
+
+func (m *EncryptionStatusResponse) GetScheduledDestructionTimeOr(val time.Time) time.Time {
+	if m != nil && m.ScheduledDestructionTime != nil {
+		return *m.ScheduledDestructionTime
+	}
+	return val
+}
+
 func (m *EncryptionStatusResponse) Clone() *EncryptionStatusResponse {
 	if m == nil {
 		return nil
@@ -112,11 +133,12 @@ func (m *EncryptionStatusResponse) Parse(ctx context.Context) error {
 type EncryptionStatusKeyActivityResponse string
 
 const (
-	EncryptionStatusKeyActivityResponse_DISABLED  EncryptionStatusKeyActivityResponse = "DISABLED"
-	EncryptionStatusKeyActivityResponse_DESTROYED EncryptionStatusKeyActivityResponse = "DESTROYED"
-	EncryptionStatusKeyActivityResponse_ACTIVE    EncryptionStatusKeyActivityResponse = "ACTIVE"
+	EncryptionStatusKeyActivityResponse_DISABLED                  EncryptionStatusKeyActivityResponse = "DISABLED"
+	EncryptionStatusKeyActivityResponse_SCHEDULED_FOR_DESTRUCTION EncryptionStatusKeyActivityResponse = "SCHEDULED_FOR_DESTRUCTION"
+	EncryptionStatusKeyActivityResponse_DESTROYED                 EncryptionStatusKeyActivityResponse = "DESTROYED"
+	EncryptionStatusKeyActivityResponse_ACTIVE                    EncryptionStatusKeyActivityResponse = "ACTIVE"
 
-	ErrUnknownEncryptionStatusKeyActivityResponse = consterr.Error(`unknown kind, want one of "DISABLED", "DESTROYED", "ACTIVE"`)
+	ErrUnknownEncryptionStatusKeyActivityResponse = consterr.Error(`unknown kind, want one of "DISABLED", "SCHEDULED_FOR_DESTRUCTION", "DESTROYED", "ACTIVE"`)
 )
 
 func NewEncryptionStatusKeyActivityResponse(s string) (EncryptionStatusKeyActivityResponse, error) {
@@ -134,6 +156,8 @@ func (m EncryptionStatusKeyActivityResponse) String() string {
 func (m EncryptionStatusKeyActivityResponse) IsValid() bool {
 	switch m {
 	case EncryptionStatusKeyActivityResponse_DISABLED:
+		return true
+	case EncryptionStatusKeyActivityResponse_SCHEDULED_FOR_DESTRUCTION:
 		return true
 	case EncryptionStatusKeyActivityResponse_DESTROYED:
 		return true

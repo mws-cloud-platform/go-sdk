@@ -4,7 +4,6 @@ package model
 
 import (
 	"context"
-	"time"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -140,11 +139,6 @@ type CryptoKeySpecDestructionPolicyOptionalResponse struct {
 	// Значение можно задать только при создании ключа, и оно не может быть изменено позже.
 	// Если значение не указано при создании ключа, используется значение по умолчанию (1 день).
 	DefaultDestructionIntervalDays optional.Optional[int32] `json:"defaultDestructionIntervalDays,omitempty" yaml:"defaultDestructionIntervalDays,omitempty"`
-	// Временная метка, указывающая, когда ключ должен быть уничтожен.
-	// Если это поле установлено, ключ будет автоматически уничтожен в указанное время.
-	//
-	// Deprecated: Отказываемся в пользу scheduledDestructionTime в блоке status
-	ScheduledDestructionTime *time.Time `json:"scheduledDestructionTime,omitempty" yaml:"scheduledDestructionTime,omitempty"`
 }
 
 func (m *CryptoKeySpecDestructionPolicyOptionalResponse) GetDefaultDestructionIntervalDays() *int32 {
@@ -157,27 +151,6 @@ func (m *CryptoKeySpecDestructionPolicyOptionalResponse) GetDefaultDestructionIn
 func (m *CryptoKeySpecDestructionPolicyOptionalResponse) GetDefaultDestructionIntervalDaysOr(val int32) int32 {
 	if m != nil && m.DefaultDestructionIntervalDays.IsSet() {
 		return m.DefaultDestructionIntervalDays.Value
-	}
-	return val
-}
-
-// Deprecated: Отказываемся в пользу scheduledDestructionTime в блоке status
-func (m *CryptoKeySpecDestructionPolicyOptionalResponse) GetScheduledDestructionTime() *time.Time {
-	if m != nil {
-		return m.ScheduledDestructionTime
-	}
-	return nil
-}
-
-// Deprecated: Отказываемся в пользу scheduledDestructionTime в блоке status
-func (m *CryptoKeySpecDestructionPolicyOptionalResponse) SetScheduledDestructionTime(val *time.Time) {
-	m.ScheduledDestructionTime = val
-}
-
-// Deprecated: Отказываемся в пользу scheduledDestructionTime в блоке status
-func (m *CryptoKeySpecDestructionPolicyOptionalResponse) GetScheduledDestructionTimeOr(val time.Time) time.Time {
-	if m != nil && m.ScheduledDestructionTime != nil {
-		return *m.ScheduledDestructionTime
 	}
 	return val
 }

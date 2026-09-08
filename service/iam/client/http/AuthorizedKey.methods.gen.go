@@ -149,6 +149,8 @@ func (c *AuthorizedKey) deleteAuthorizedKeyV2Invoker(ctx context.Context, anyReq
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteAuthorizedKeyV2(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteAuthorizedKeyV2(httpReq, request)
 
@@ -173,6 +175,17 @@ func (c *AuthorizedKey) deleteAuthorizedKeyV2Invoker(ctx context.Context, anyReq
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *AuthorizedKey) queryDeleteAuthorizedKeyV2(request *client.DeleteAuthorizedKeyV2Request) string {
+	q := make(url.Values)
+	if request.IfExist != nil {
+		q.Add("ifExist", conv.BoolToString(*request.IfExist))
+	}
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *AuthorizedKey) headerDeleteAuthorizedKeyV2(req *http.Request, request *client.DeleteAuthorizedKeyV2Request) {
@@ -228,7 +241,6 @@ func (c *AuthorizedKey) getAuthorizedKeyV2Invoker(ctx context.Context, anyReq an
 	}
 
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
-	c.headerGetAuthorizedKeyV2(httpReq, request)
 
 	httpResp, err := c.client.Do(httpReq)
 	if err != nil {
@@ -251,10 +263,6 @@ func (c *AuthorizedKey) getAuthorizedKeyV2Invoker(ctx context.Context, anyReq an
 	*respPtr = *decodedResp
 
 	return nil
-}
-
-func (c *AuthorizedKey) headerGetAuthorizedKeyV2(req *http.Request, request *client.GetAuthorizedKeyV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
 // UpsertAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
@@ -340,6 +348,9 @@ func (c *AuthorizedKey) upsertAuthorizedKeyV2Invoker(ctx context.Context, anyReq
 
 func (c *AuthorizedKey) queryUpsertAuthorizedKeyV2(request *client.UpsertAuthorizedKeyV2Request) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -435,6 +446,9 @@ func (c *AuthorizedKey) createAuthorizedKeyV2Invoker(ctx context.Context, anyReq
 func (c *AuthorizedKey) queryCreateAuthorizedKeyV2(request *client.UpsertAuthorizedKeyV2Request) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -530,6 +544,9 @@ func (c *AuthorizedKey) updateAuthorizedKeyV2Invoker(ctx context.Context, anyReq
 func (c *AuthorizedKey) queryUpdateAuthorizedKeyV2(request *client.UpdateAuthorizedKeyV2Request) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -585,6 +602,8 @@ func (c *AuthorizedKey) deleteAuthorizedKeyInvoker(ctx context.Context, anyReq a
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteAuthorizedKey(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteAuthorizedKey(httpReq, request)
 
@@ -609,6 +628,17 @@ func (c *AuthorizedKey) deleteAuthorizedKeyInvoker(ctx context.Context, anyReq a
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *AuthorizedKey) queryDeleteAuthorizedKey(request *client.DeleteAuthorizedKeyRequest) string {
+	q := make(url.Values)
+	if request.IfExist != nil {
+		q.Add("ifExist", conv.BoolToString(*request.IfExist))
+	}
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *AuthorizedKey) headerDeleteAuthorizedKey(req *http.Request, request *client.DeleteAuthorizedKeyRequest) {
@@ -665,7 +695,6 @@ func (c *AuthorizedKey) getAuthorizedKeyInvoker(ctx context.Context, anyReq any,
 	}
 
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
-	c.headerGetAuthorizedKey(httpReq, request)
 
 	httpResp, err := c.client.Do(httpReq)
 	if err != nil {
@@ -688,10 +717,6 @@ func (c *AuthorizedKey) getAuthorizedKeyInvoker(ctx context.Context, anyReq any,
 	*respPtr = *decodedResp
 
 	return nil
-}
-
-func (c *AuthorizedKey) headerGetAuthorizedKey(req *http.Request, request *client.GetAuthorizedKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
 // Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
@@ -778,6 +803,9 @@ func (c *AuthorizedKey) upsertAuthorizedKeyInvoker(ctx context.Context, anyReq a
 
 func (c *AuthorizedKey) queryUpsertAuthorizedKey(request *client.UpsertAuthorizedKeyRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -874,6 +902,9 @@ func (c *AuthorizedKey) createAuthorizedKeyInvoker(ctx context.Context, anyReq a
 func (c *AuthorizedKey) queryCreateAuthorizedKey(request *client.UpsertAuthorizedKeyRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -970,6 +1001,9 @@ func (c *AuthorizedKey) updateAuthorizedKeyInvoker(ctx context.Context, anyReq a
 func (c *AuthorizedKey) queryUpdateAuthorizedKey(request *client.UpdateAuthorizedKeyRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

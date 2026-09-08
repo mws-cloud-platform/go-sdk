@@ -10,7 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// внешний ip-адрес
+// ip-адрес внутри vpc.
 // Real OAPI model name: ClusterPublicEndpointSpecOrRef
 type ClusterPublicEndpointSpecOrRefOptionalResponse struct {
 	Ref optional.OptionalNil[vpc.ExternalAddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`

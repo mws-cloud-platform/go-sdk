@@ -9,7 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
-// Спецификация глобального снимка
+// Спецификация снимка
 // Real OAPI model name: SnapshotSpec
 //
 // Deprecated: Отказываемся в пользу DiskBackupSpec

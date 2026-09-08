@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: CertificateList
@@ -11,7 +11,7 @@ type CertificateListOptionalResponse struct {
 	// Список сертификатов в указанном проекте.
 	Items []CertificateOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *CertificateListOptionalResponse) GetItems() []CertificateOptionalResponse {
@@ -25,18 +25,18 @@ func (m *CertificateListOptionalResponse) SetItems(val []CertificateOptionalResp
 	m.Items = val
 }
 
-func (m *CertificateListOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *CertificateListOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *CertificateListOptionalResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *CertificateListOptionalResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *CertificateListOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *CertificateListOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

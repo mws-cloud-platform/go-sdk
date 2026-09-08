@@ -133,6 +133,25 @@ func (m *FlagGslbPreviewID) Clone() *FlagGslbPreviewID {
 	return &clone
 }
 
+func (m *FlagGslbPreviewID) AsRef() *FlagGslbPreviewRef {
+	if m == nil {
+		return nil
+	}
+	return &FlagGslbPreviewRef{
+		id: *m,
+	}
+}
+
+func (m *FlagGslbPreviewID) Equal(other *FlagGslbPreviewID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m FlagGslbPreviewID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -289,6 +308,16 @@ func (m *FlagGslbPreviewRef) Clone() *FlagGslbPreviewRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *FlagGslbPreviewRef) Equal(other *FlagGslbPreviewRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m FlagGslbPreviewRef) MarshalJSON() ([]byte, error) {

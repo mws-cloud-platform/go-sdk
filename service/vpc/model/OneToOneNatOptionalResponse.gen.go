@@ -7,7 +7,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // One-to-One NAT-шлюз — механизм, с помощью которого ресурсы во внутренней сети могут выходить в интернет через внешний IP-адрес
@@ -15,7 +15,7 @@ import (
 type OneToOneNatOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata optional.OptionalNil[commonmodel.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Описывает спецификацию One-to-One NAT-шлюза.
 	Spec OneToOneNatSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Описывает статус One-to-One NAT-шлюза.
@@ -40,14 +40,14 @@ func (m *OneToOneNatOptionalResponse) GetKindOr(val string) string {
 	return val
 }
 
-func (m *OneToOneNatOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
+func (m *OneToOneNatOptionalResponse) GetMetadata() *commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
-func (m *OneToOneNatOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
+func (m *OneToOneNatOptionalResponse) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataOptionalResponse) commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}

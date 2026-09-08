@@ -53,6 +53,17 @@ func (m *UpdateClusterAvailabilitySpecRequest) encodeFields(e *jx.Encoder) error
 			}
 		}
 	}
+
+	if m.Regional.IsSet() {
+		e.FieldStart("regional")
+		if m.Regional.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Regional.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
 
@@ -92,6 +103,85 @@ func (m *UpdateClusterAvailabilitySpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.ZonalHa.SetTo(v)
+			return nil
+		case "regional":
+			if d.Next() == jx.Null {
+				m.Regional.SetToNull()
+				return d.Null()
+			}
+
+			var v UpdateClusterAvailabilitySpecRegionalRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Regional.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m UpdateClusterAvailabilitySpecRegionalRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *UpdateClusterAvailabilitySpecRegionalRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *UpdateClusterAvailabilitySpecRegionalRequest) encodeFields(e *jx.Encoder) error {
+	if m.Zones.IsSet() {
+		e.FieldStart("zones")
+		e.ArrStart()
+		for _, elem := range m.Zones.Value {
+			e.Str(elem)
+		}
+		e.ArrEnd()
+	}
+	return nil
+}
+
+func (m *UpdateClusterAvailabilitySpecRegionalRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *UpdateClusterAvailabilitySpecRegionalRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("UpdateClusterAvailabilitySpecRegionalRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "zones":
+			c := make([]string, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				v, err := decode.Str(d)
+				if err != nil {
+					return err
+				}
+
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Zones.SetTo(c)
 			return nil
 		default:
 			return d.Skip()

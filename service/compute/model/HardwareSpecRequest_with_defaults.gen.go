@@ -3,6 +3,7 @@
 package model
 
 import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 )
 
@@ -14,6 +15,9 @@ func (m *HardwareSpecRequest) WithDefaults() HardwareSpecRequest {
 
 	if out.Power == nil {
 		out.Power = ptr.Get(HardwareSpecPowerRequest_ON)
+	}
+	if out.GracefulShutdownTimeout == nil {
+		out.GracefulShutdownTimeout = ptr.Get(duration.MustParseString("90s"))
 	}
 	return out
 }

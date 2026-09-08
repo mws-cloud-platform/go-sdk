@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/rm/model"
 )
 
@@ -53,9 +53,9 @@ func (m ListProjectsV3Request) WithPageToken(token *string) ListProjectsV3Reques
 type ListProjectsV3Response struct {
 	Code        int
 	Response200 *model.ProjectListResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

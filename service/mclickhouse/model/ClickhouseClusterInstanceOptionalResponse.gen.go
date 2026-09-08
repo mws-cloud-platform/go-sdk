@@ -11,16 +11,16 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
-// Описание инстанса кластера.
+// Описание узла кластера.
 // Real OAPI model name: ClickhouseClusterInstance
 type ClickhouseClusterInstanceOptionalResponse struct {
-	// -> Имя инстанса в шарде. В случае count>1, имя формируется как name{replicaIndex}, где replicaIndex имеет сквозную нумерацию в рамках имени инстанса.
+	// -> Имя узла или узлов в шарде. В случае count>1, имя формируется как name{replicaIndex}, где replicaIndex имеет сквозную нумерацию в рамках указанного имени.
 	Name string `json:"name" yaml:"name"`
-	// Количество инстансов в зоне доступности.
+	// Количество узлов в зоне доступности.
 	Count optional.Optional[int] `json:"count,omitempty" yaml:"count,omitempty"`
 	// Зона доступности.
 	Zone rm.ZoneRef `json:"zone" yaml:"zone"`
-	// Описание эдпойнтов инстансов.
+	// Описание эндпоинтов узлов.
 	Endpoints optional.Optional[[]ClickhouseEndpointOptionalResponse] `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 }
 

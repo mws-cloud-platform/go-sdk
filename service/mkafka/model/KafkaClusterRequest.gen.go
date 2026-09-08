@@ -6,7 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Кластер Managed Kafka — это группа узлов (брокеров), объединенных для приема,
@@ -76,7 +76,7 @@ func (m *KafkaClusterRequest) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры KafkaCluster
 // Real OAPI model name: KafkaClusterMetadata
 type KafkaClusterMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *KafkaClusterMetadataRequest) GetDisplayName() *string {
@@ -93,14 +93,14 @@ func (m *KafkaClusterMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *KafkaClusterMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *KafkaClusterMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *KafkaClusterMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *KafkaClusterMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

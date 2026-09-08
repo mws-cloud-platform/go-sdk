@@ -5,14 +5,14 @@ package model
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
-// Статус внешнего адреса.
+// Описывает статус внешнего адреса.
 // Real OAPI model name: ExternalAddressStatus
 type ExternalAddressStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Присвоенный адрес.
 	IpAddress *ipaddress.IPAddress `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
 	// Состояние внешнего адреса: активен или не активен.
@@ -21,11 +21,11 @@ type ExternalAddressStatusResponse struct {
 	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
-func (m *ExternalAddressStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *ExternalAddressStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *ExternalAddressStatusResponse) GetIpAddress() *ipaddress.IPAddress {

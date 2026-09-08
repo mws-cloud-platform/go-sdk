@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ServiceAccountList
@@ -11,7 +11,7 @@ type ServiceAccountListResponse struct {
 	// Список сервисных аккаунтов для проекта.
 	Items []ServiceAccountResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ServiceAccountListResponse) GetItems() []ServiceAccountResponse {
@@ -25,18 +25,18 @@ func (m *ServiceAccountListResponse) SetItems(val []ServiceAccountResponse) {
 	m.Items = val
 }
 
-func (m *ServiceAccountListResponse) GetNextPageToken() *common.NextPageToken {
+func (m *ServiceAccountListResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *ServiceAccountListResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *ServiceAccountListResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *ServiceAccountListResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ServiceAccountListResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

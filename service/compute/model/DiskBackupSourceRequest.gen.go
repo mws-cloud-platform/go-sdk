@@ -9,7 +9,6 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
-// Источник для создания резервной копии диска (На текущий момент поддерживается только диск, но в будущем будут и другие источники)
 // Real OAPI model name: DiskBackupSource
 type DiskBackupSourceRequest struct {
 	// Диск как источник для резервной копии

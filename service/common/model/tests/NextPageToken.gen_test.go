@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestNextPageTokenMarshalling(t *testing.T) {
@@ -17,12 +17,12 @@ func TestNextPageTokenMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.NextPageToken
+	var actual commonmodel.NextPageToken
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initNextPageToken() common.NextPageToken {
-	var v common.NextPageToken
+func initNextPageToken() commonmodel.NextPageToken {
+	var v commonmodel.NextPageToken
 	return v
 }

@@ -14,7 +14,7 @@ type NlbHealthCheckOptionalResponse struct {
 	// Конфигурация протокола проверки работоспособности.
 	Protocol NlbHealthCheckProtocolOptionalResponse `json:"protocol" yaml:"protocol"`
 	// Интервал между проверками.
-	Interval duration.Duration `json:"interval" yaml:"interval"`
+	Interval optional.Optional[duration.Duration] `json:"interval,omitempty" yaml:"interval,omitempty"`
 	// Таймаут запроса.
 	Timeout duration.Duration `json:"timeout" yaml:"timeout"`
 	// Количество последовательных проваленных проверок, после которого виртуальная машина считается неработоспособной.
@@ -34,15 +34,18 @@ func (m *NlbHealthCheckOptionalResponse) SetProtocol(val NlbHealthCheckProtocolO
 	m.Protocol = val
 }
 
-func (m *NlbHealthCheckOptionalResponse) GetInterval() duration.Duration {
-	if m != nil {
-		return m.Interval
+func (m *NlbHealthCheckOptionalResponse) GetInterval() *duration.Duration {
+	if m != nil && m.Interval.IsSet() {
+		return &m.Interval.Value
 	}
-	return duration.Duration{}
+	return nil
 }
 
-func (m *NlbHealthCheckOptionalResponse) SetInterval(val duration.Duration) {
-	m.Interval = val
+func (m *NlbHealthCheckOptionalResponse) GetIntervalOr(val duration.Duration) duration.Duration {
+	if m != nil && m.Interval.IsSet() {
+		return m.Interval.Value
+	}
+	return val
 }
 
 func (m *NlbHealthCheckOptionalResponse) GetTimeout() duration.Duration {
@@ -91,7 +94,9 @@ func (m *NlbHealthCheckOptionalResponse) Clone() *NlbHealthCheckOptionalResponse
 
 	clone := *m
 	clone.Protocol = *m.Protocol.Clone()
-	clone.Interval = *m.Interval.Clone()
+	if clone.Interval.IsSet() {
+		clone.Interval.Value = *m.Interval.Value.Clone()
+	}
 	clone.Timeout = *m.Timeout.Clone()
 	return &clone
 }

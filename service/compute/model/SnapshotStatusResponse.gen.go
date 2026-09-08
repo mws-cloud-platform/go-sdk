@@ -8,16 +8,16 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
-// Статус глобального снимка
+// Статус снимка
 // Real OAPI model name: SnapshotStatus
 //
 // Deprecated: Отказываемся в пользу DiskBackupStatus
 type SnapshotStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Размер снимка
 	StorageSize *bytesize.ByteSize `json:"storageSize,omitempty" yaml:"storageSize,omitempty"`
 	// Прогресс готовности снимка в процентах, с точностью до сотых
@@ -29,16 +29,16 @@ type SnapshotStatusResponse struct {
 	// Ссылка на исходный образ
 	InitialSourceImage *compute.ImageID `json:"initialSourceImage,omitempty" yaml:"initialSourceImage,omitempty"`
 	// Тип операционной системы
-	OsType *OsType2 `json:"osType,omitempty" yaml:"osType,omitempty"`
+	OsType *OsType `json:"osType,omitempty" yaml:"osType,omitempty"`
 	// Способ шифрования ресурса
 	Encryption *EncryptionStatusResponse `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
-func (m *SnapshotStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *SnapshotStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *SnapshotStatusResponse) GetStorageSize() *bytesize.ByteSize {
@@ -111,14 +111,14 @@ func (m *SnapshotStatusResponse) GetInitialSourceImageOr(val compute.ImageID) co
 	return val
 }
 
-func (m *SnapshotStatusResponse) GetOsType() *OsType2 {
+func (m *SnapshotStatusResponse) GetOsType() *OsType {
 	if m != nil {
 		return m.OsType
 	}
 	return nil
 }
 
-func (m *SnapshotStatusResponse) GetOsTypeOr(val OsType2) OsType2 {
+func (m *SnapshotStatusResponse) GetOsTypeOr(val OsType) OsType {
 	if m != nil && m.OsType != nil {
 		return *m.OsType
 	}

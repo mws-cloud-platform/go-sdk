@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Параметры кластера.
@@ -22,8 +22,8 @@ type PostgresClusterSpecResponse struct {
 	InstanceTemplate PostgresInstanceTemplateResponse `json:"instanceTemplate" yaml:"instanceTemplate"`
 	Instances        []PostgresInstanceResponse       `json:"instances" yaml:"instances"`
 	// Спецификация автоматического бэкапирования.
-	Backup            *PostgresClusterBackupResponse    `json:"backup,omitempty" yaml:"backup,omitempty"`
-	MaintenanceWindow *common.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	Backup            *PostgresClusterBackupResponse         `json:"backup,omitempty" yaml:"backup,omitempty"`
+	MaintenanceWindow *commonmodel.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Параметры PostgreSQL. Если не указаны, будут использованы параметры по умолчанию.
 	PostgresParameters map[string]string `json:"postgresParameters,omitempty" yaml:"postgresParameters,omitempty"`
 	// Выгрузка пользовательских логов кластера — включена или выключена.
@@ -103,18 +103,18 @@ func (m *PostgresClusterSpecResponse) GetBackupOr(val PostgresClusterBackupRespo
 	return val
 }
 
-func (m *PostgresClusterSpecResponse) GetMaintenanceWindow() *common.MaintenanceWindowResponse {
+func (m *PostgresClusterSpecResponse) GetMaintenanceWindow() *commonmodel.MaintenanceWindowResponse {
 	if m != nil {
 		return m.MaintenanceWindow
 	}
 	return nil
 }
 
-func (m *PostgresClusterSpecResponse) SetMaintenanceWindow(val *common.MaintenanceWindowResponse) {
+func (m *PostgresClusterSpecResponse) SetMaintenanceWindow(val *commonmodel.MaintenanceWindowResponse) {
 	m.MaintenanceWindow = val
 }
 
-func (m *PostgresClusterSpecResponse) GetMaintenanceWindowOr(val common.MaintenanceWindowResponse) common.MaintenanceWindowResponse {
+func (m *PostgresClusterSpecResponse) GetMaintenanceWindowOr(val commonmodel.MaintenanceWindowResponse) commonmodel.MaintenanceWindowResponse {
 	if m != nil && m.MaintenanceWindow != nil {
 		return *m.MaintenanceWindow
 	}

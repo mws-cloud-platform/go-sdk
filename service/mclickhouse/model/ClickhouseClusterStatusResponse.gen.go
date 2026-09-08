@@ -6,15 +6,15 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ClickhouseClusterStatus
 type ClickhouseClusterStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Работоспособность кластера:
 	//   - `ALIVE`    - Полностью работоспособен;
-	//   - `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны);
+	//   - `DEGRADED` - Деградирует (некоторые, но не все, узлы неработоспособны);
 	//   - `FAILED`   - Неработоспособен;
 	//   - `UNKNOWN`  - Не удаётся определить состояние (на этапе создания).
 	Health *ClusterHealth `json:"health,omitempty" yaml:"health,omitempty"`
@@ -35,11 +35,11 @@ type ClickhouseClusterStatusResponse struct {
 	Cluster *ClickhouseClusterResourceResponse `json:"cluster,omitempty" yaml:"cluster,omitempty"`
 }
 
-func (m *ClickhouseClusterStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *ClickhouseClusterStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *ClickhouseClusterStatusResponse) GetHealth() *ClusterHealth {

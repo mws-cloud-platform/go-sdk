@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Пользователь в Managed PostgreSQL — это внутренняя учетная запись PostgreSQL для аутентификации в кластере
@@ -56,7 +56,7 @@ func (m *PostgresClusterUserRequest) Clone() *PostgresClusterUserRequest {
 // Представление поля Metadata анонимного типа структуры PostgresClusterUser
 // Real OAPI model name: PostgresClusterUserMetadata
 type PostgresClusterUserMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *PostgresClusterUserMetadataRequest) GetDisplayName() *string {
@@ -73,14 +73,14 @@ func (m *PostgresClusterUserMetadataRequest) GetDisplayNameOr(val string) string
 	return val
 }
 
-func (m *PostgresClusterUserMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *PostgresClusterUserMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *PostgresClusterUserMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *PostgresClusterUserMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

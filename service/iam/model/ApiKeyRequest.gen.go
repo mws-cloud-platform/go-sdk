@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // API-ключ — это уникальная строка длиной 128 символов, предназначенная для
@@ -60,7 +60,7 @@ func (m *ApiKeyRequest) Clone() *ApiKeyRequest {
 // Представление поля Metadata анонимного типа структуры ApiKey
 // Real OAPI model name: ApiKeyMetadata
 type ApiKeyMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *ApiKeyMetadataRequest) GetDisplayName() *string {
@@ -77,14 +77,14 @@ func (m *ApiKeyMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *ApiKeyMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *ApiKeyMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *ApiKeyMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *ApiKeyMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

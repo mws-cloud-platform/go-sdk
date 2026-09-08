@@ -3,12 +3,12 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: KafkaConnectorStatus
 type KafkaConnectorStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Состояние коннектора
 	//   - `CREATING`     - Создаётся
 	//   - `RUNNING`      - Работает в штатном режиме
@@ -28,11 +28,11 @@ type KafkaConnectorStatusResponse struct {
 	Health *ConnectorHealth `json:"health,omitempty" yaml:"health,omitempty"`
 }
 
-func (m *KafkaConnectorStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *KafkaConnectorStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *KafkaConnectorStatusResponse) GetState() *KafkaConnectorState {

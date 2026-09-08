@@ -2,7 +2,7 @@
 
 package model
 
-// Критерий применимости правила, описывает пункт назначения пакета.
+// Спецификация назначения траффика, к которому будет применено Firewall правило.
 // Real OAPI model name: FirewallRuleDestination
 type FirewallRuleDestinationRequest struct {
 	// Спецификация группы адресов.

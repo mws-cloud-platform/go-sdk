@@ -135,6 +135,25 @@ func (m *ZonalDnsResourceGroupID) Clone() *ZonalDnsResourceGroupID {
 	return &clone
 }
 
+func (m *ZonalDnsResourceGroupID) AsRef() *ZonalDnsResourceGroupRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalDnsResourceGroupRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalDnsResourceGroupID) Equal(other *ZonalDnsResourceGroupID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.zonalDnsResourceGroup == other.zonalDnsResourceGroup && m.zone == other.zone
+}
+
 func (m ZonalDnsResourceGroupID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ZonalDnsResourceGroupRef) Clone() *ZonalDnsResourceGroupRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalDnsResourceGroupRef) Equal(other *ZonalDnsResourceGroupRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.zonalDnsResourceGroup == other.id.zonalDnsResourceGroup && m.id.zone == other.id.zone
 }
 
 func (m ZonalDnsResourceGroupRef) MarshalJSON() ([]byte, error) {

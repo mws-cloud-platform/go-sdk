@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestUsageRequestMarshalling(t *testing.T) {
@@ -17,12 +17,12 @@ func TestUsageRequestMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.UsageRequest
+	var actual commonmodel.UsageRequest
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initUsageRequest() common.UsageRequest {
-	var v common.UsageRequest
+func initUsageRequest() commonmodel.UsageRequest {
+	var v commonmodel.UsageRequest
 	return v
 }

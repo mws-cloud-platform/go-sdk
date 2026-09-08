@@ -14,7 +14,7 @@ import (
 )
 
 type UpdateRouteNextHopRequest struct {
-	// NAT шлюз.
+	// NAT-шлюз.
 	NatGateway optional.OptionalNil[vpc.NatGatewayRef] `json:"natGateway" yaml:"natGateway"`
 	// Адрес.
 	Address optional.OptionalNil[UpdateRouteNextHopAddressRequest] `json:"address" yaml:"address"`

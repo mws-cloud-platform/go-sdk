@@ -113,6 +113,25 @@ func (m *IpRangeID) Clone() *IpRangeID {
 	return &clone
 }
 
+func (m *IpRangeID) AsRef() *IpRangeRef {
+	if m == nil {
+		return nil
+	}
+	return &IpRangeRef{
+		id: *m,
+	}
+}
+
+func (m *IpRangeID) Equal(other *IpRangeID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.ipRange == other.ipRange
+}
+
 func (m IpRangeID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *IpRangeRef) Clone() *IpRangeRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *IpRangeRef) Equal(other *IpRangeRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.ipRange == other.id.ipRange
 }
 
 func (m IpRangeRef) MarshalJSON() ([]byte, error) {

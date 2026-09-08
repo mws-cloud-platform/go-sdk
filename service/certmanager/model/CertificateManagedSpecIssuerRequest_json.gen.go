@@ -6,7 +6,6 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
-	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -57,7 +56,7 @@ func (m *CertificateManagedSpecIssuerRequest) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v CertificateManagedSpecIssuerAcmeRequest
+			var v AcmeIssuerRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -68,95 +67,4 @@ func (m *CertificateManagedSpecIssuerRequest) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}))
-}
-
-func (m CertificateManagedSpecIssuerAcmeRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *CertificateManagedSpecIssuerAcmeRequest) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *CertificateManagedSpecIssuerAcmeRequest) encodeFields(e *jx.Encoder) error {
-	e.FieldStart("server")
-	if err := m.Server.Encode(e); err != nil {
-		return err
-	}
-
-	e.FieldStart("challengeType")
-	if err := m.ChallengeType.Encode(e); err != nil {
-		return err
-	}
-
-	if m.Profile != nil {
-		e.FieldStart("profile")
-		e.Str(*m.Profile)
-	}
-	return nil
-}
-
-func (m *CertificateManagedSpecIssuerAcmeRequest) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *CertificateManagedSpecIssuerAcmeRequest) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("CertificateManagedSpecIssuerAcmeRequest")
-	}
-
-	requiredFilled := map[string]bool{
-		"server":        false,
-		"challengeType": false,
-	}
-	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "server":
-			var v CertificateManagedSpecAcmeServer
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Server = v
-			requiredFilled["server"] = true
-			return nil
-		case "challengeType":
-			var v CertificateChallengeType
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.ChallengeType = v
-			requiredFilled["challengeType"] = true
-			return nil
-		case "profile":
-			v, err := decode.Str(d)
-			if err != nil {
-				return err
-			}
-
-			m.Profile = &v
-			return nil
-		default:
-			return d.Skip()
-		}
-	}))
-	if err != nil {
-		return err
-	}
-
-	return conv.ValidateRequired(requiredFilled)
 }

@@ -6,24 +6,24 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Статус IP-адреса внешнего балансировщика.
+// Описывает статус адреса внешнего балансировщика.
 // Real OAPI model name: NlbStatusListenerExternal
 type NlbStatusListenerExternalResponse struct {
 	// Статус IP-адреса внешнего балансировщика.
-	Address common.ResourceExternalAddressStatusResponse `json:"address" yaml:"address"`
+	Address commonmodel.ResourceExternalAddressStatusResponse `json:"address" yaml:"address"`
 }
 
-func (m *NlbStatusListenerExternalResponse) GetAddress() common.ResourceExternalAddressStatusResponse {
+func (m *NlbStatusListenerExternalResponse) GetAddress() commonmodel.ResourceExternalAddressStatusResponse {
 	if m != nil {
 		return m.Address
 	}
-	return common.ResourceExternalAddressStatusResponse{}
+	return commonmodel.ResourceExternalAddressStatusResponse{}
 }
 
-func (m *NlbStatusListenerExternalResponse) SetAddress(val common.ResourceExternalAddressStatusResponse) {
+func (m *NlbStatusListenerExternalResponse) SetAddress(val commonmodel.ResourceExternalAddressStatusResponse) {
 	m.Address = val
 }
 

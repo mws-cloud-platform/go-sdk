@@ -135,6 +135,25 @@ func (m *ZonalBulkReconciliationID) Clone() *ZonalBulkReconciliationID {
 	return &clone
 }
 
+func (m *ZonalBulkReconciliationID) AsRef() *ZonalBulkReconciliationRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalBulkReconciliationRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalBulkReconciliationID) Equal(other *ZonalBulkReconciliationID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.resourceType == other.resourceType && m.zone == other.zone
+}
+
 func (m ZonalBulkReconciliationID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ZonalBulkReconciliationRef) Clone() *ZonalBulkReconciliationRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalBulkReconciliationRef) Equal(other *ZonalBulkReconciliationRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.resourceType == other.id.resourceType && m.id.zone == other.id.zone
 }
 
 func (m ZonalBulkReconciliationRef) MarshalJSON() ([]byte, error) {

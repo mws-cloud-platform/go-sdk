@@ -157,6 +157,25 @@ func (m *ServiceAccountAwsKeyID) Clone() *ServiceAccountAwsKeyID {
 	return &clone
 }
 
+func (m *ServiceAccountAwsKeyID) AsRef() *ServiceAccountAwsKeyRef {
+	if m == nil {
+		return nil
+	}
+	return &ServiceAccountAwsKeyRef{
+		id: *m,
+	}
+}
+
+func (m *ServiceAccountAwsKeyID) Equal(other *ServiceAccountAwsKeyID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.keyName == other.keyName && m.serviceAccountId == other.serviceAccountId && m.project == other.project
+}
+
 func (m ServiceAccountAwsKeyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *ServiceAccountAwsKeyRef) Clone() *ServiceAccountAwsKeyRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ServiceAccountAwsKeyRef) Equal(other *ServiceAccountAwsKeyRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.keyName == other.id.keyName && m.id.serviceAccountId == other.id.serviceAccountId && m.id.project == other.id.project
 }
 
 func (m ServiceAccountAwsKeyRef) MarshalJSON() ([]byte, error) {

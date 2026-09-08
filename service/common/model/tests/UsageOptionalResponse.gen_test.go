@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestUsageOptionalResponseMarshalling(t *testing.T) {
@@ -17,12 +17,12 @@ func TestUsageOptionalResponseMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.UsageOptionalResponse
+	var actual commonmodel.UsageOptionalResponse
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initUsageOptionalResponse() common.UsageOptionalResponse {
-	var v common.UsageOptionalResponse
+func initUsageOptionalResponse() commonmodel.UsageOptionalResponse {
+	var v commonmodel.UsageOptionalResponse
 	return v
 }

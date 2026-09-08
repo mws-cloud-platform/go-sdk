@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestVpcAddressGroupSpecMarshalling(t *testing.T) {
@@ -17,13 +17,13 @@ func TestVpcAddressGroupSpecMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.VpcAddressGroupSpec
+	var actual commonmodel.VpcAddressGroupSpec
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initVpcAddressGroupSpec() common.VpcAddressGroupSpec {
-	var v common.VpcAddressGroupSpec
-	v.Addresses = make([]common.ResourceAddressSpecOrRef, 0)
+func initVpcAddressGroupSpec() commonmodel.VpcAddressGroupSpec {
+	var v commonmodel.VpcAddressGroupSpec
+	v.Addresses = make([]commonmodel.ResourceAddressSpecOrRef, 0)
 	return v
 }

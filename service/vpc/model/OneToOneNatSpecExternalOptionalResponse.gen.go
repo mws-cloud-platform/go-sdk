@@ -6,24 +6,24 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Группирующий элемент для всего что, касается внешней части (ресурсов, доступных извне).
 // Real OAPI model name: OneToOneNatSpecExternal
 type OneToOneNatSpecExternalOptionalResponse struct {
 	// Спецификация внешнего адреса, через который будет осуществляться трансляция.
-	Address common.ResourceExternalAddressSpecOrRefOptionalResponse `json:"address" yaml:"address"`
+	Address commonmodel.ResourceExternalAddressSpecOrRefOptionalResponse `json:"address" yaml:"address"`
 }
 
-func (m *OneToOneNatSpecExternalOptionalResponse) GetAddress() common.ResourceExternalAddressSpecOrRefOptionalResponse {
+func (m *OneToOneNatSpecExternalOptionalResponse) GetAddress() commonmodel.ResourceExternalAddressSpecOrRefOptionalResponse {
 	if m != nil {
 		return m.Address
 	}
-	return common.ResourceExternalAddressSpecOrRefOptionalResponse{}
+	return commonmodel.ResourceExternalAddressSpecOrRefOptionalResponse{}
 }
 
-func (m *OneToOneNatSpecExternalOptionalResponse) SetAddress(val common.ResourceExternalAddressSpecOrRefOptionalResponse) {
+func (m *OneToOneNatSpecExternalOptionalResponse) SetAddress(val commonmodel.ResourceExternalAddressSpecOrRefOptionalResponse) {
 	m.Address = val
 }
 

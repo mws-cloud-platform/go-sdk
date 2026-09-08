@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestCommonTypedResourceMetadataRequestMarshalling(t *testing.T) {
@@ -17,12 +17,12 @@ func TestCommonTypedResourceMetadataRequestMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.CommonTypedResourceMetadataRequest
+	var actual commonmodel.CommonTypedResourceMetadataRequest
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initCommonTypedResourceMetadataRequest() common.CommonTypedResourceMetadataRequest {
-	var v common.CommonTypedResourceMetadataRequest
+func initCommonTypedResourceMetadataRequest() commonmodel.CommonTypedResourceMetadataRequest {
+	var v commonmodel.CommonTypedResourceMetadataRequest
 	return v
 }

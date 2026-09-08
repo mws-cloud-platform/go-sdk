@@ -230,6 +230,8 @@ func (c *Secret) deleteSecretInvoker(ctx context.Context, anyReq any, response c
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteSecret(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteSecret(httpReq, request)
 
@@ -254,6 +256,20 @@ func (c *Secret) deleteSecretInvoker(ctx context.Context, anyReq any, response c
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *Secret) queryDeleteSecret(request *client.DeleteSecretRequest) string {
+	q := make(url.Values)
+	if request.IfExist != nil {
+		q.Add("ifExist", conv.BoolToString(*request.IfExist))
+	}
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	if request.Cascade != nil {
+		q.Add("cascade", conv.BoolToString(*request.Cascade))
+	}
+	return q.Encode()
 }
 
 func (c *Secret) headerDeleteSecret(req *http.Request, request *client.DeleteSecretRequest) {
@@ -418,6 +434,9 @@ func (c *Secret) upsertSecretInvoker(ctx context.Context, anyReq any, response c
 
 func (c *Secret) queryUpsertSecret(request *client.UpsertSecretRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -510,6 +529,9 @@ func (c *Secret) createSecretInvoker(ctx context.Context, anyReq any, response c
 func (c *Secret) queryCreateSecret(request *client.UpsertSecretRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -602,6 +624,9 @@ func (c *Secret) updateSecretInvoker(ctx context.Context, anyReq any, response c
 func (c *Secret) queryUpdateSecret(request *client.UpdateSecretRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

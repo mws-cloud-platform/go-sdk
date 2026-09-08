@@ -8,7 +8,7 @@ import (
 	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 )
 
-// Доступные параметры для Clickhouse (в формате `json-schema`).
+// Доступные параметры для ClickHouse (в формате `json-schema`).
 type AvailableConfigParametersSchema map[string]jsonapimodels.RawMessageNotNull
 
 func (m AvailableConfigParametersSchema) Clone() AvailableConfigParametersSchema {

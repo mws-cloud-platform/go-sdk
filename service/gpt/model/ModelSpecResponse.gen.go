@@ -8,9 +8,10 @@ type ModelSpecResponse struct {
 	ContextWindowSize *uint                    `json:"contextWindowSize,omitempty" yaml:"contextWindowSize,omitempty"`
 	InputModalities   InputModalitiesResponse  `json:"inputModalities" yaml:"inputModalities"`
 	OutputModalities  OutputModalitiesResponse `json:"outputModalities" yaml:"outputModalities"`
-	Modalities        ModalitiesResponse       `json:"modalities" yaml:"modalities"`
-	Capabilities      CapabilitiesResponse     `json:"capabilities" yaml:"capabilities"`
-	Deprecation       DeprecationResponse      `json:"deprecation" yaml:"deprecation"`
+	// Deprecated: Отказываемся из-за разделения на input и output модальности
+	Modalities   ModalitiesResponse   `json:"modalities" yaml:"modalities"`
+	Capabilities CapabilitiesResponse `json:"capabilities" yaml:"capabilities"`
+	Deprecation  DeprecationResponse  `json:"deprecation" yaml:"deprecation"`
 	// Размер модели в миллиардах параметров.
 	Size *float32 `json:"size,omitempty" yaml:"size,omitempty"`
 	// Разработчик модели.
@@ -57,6 +58,7 @@ func (m *ModelSpecResponse) SetOutputModalities(val OutputModalitiesResponse) {
 	m.OutputModalities = val
 }
 
+// Deprecated: Отказываемся из-за разделения на input и output модальности
 func (m *ModelSpecResponse) GetModalities() ModalitiesResponse {
 	if m != nil {
 		return m.Modalities
@@ -64,6 +66,7 @@ func (m *ModelSpecResponse) GetModalities() ModalitiesResponse {
 	return ModalitiesResponse{}
 }
 
+// Deprecated: Отказываемся из-за разделения на input и output модальности
 func (m *ModelSpecResponse) SetModalities(val ModalitiesResponse) {
 	m.Modalities = val
 }

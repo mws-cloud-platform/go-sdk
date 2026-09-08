@@ -6,7 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Группа узлов в кластере Managed Kubernetes — это группа виртуальных машин
@@ -15,22 +15,22 @@ import (
 // Real OAPI model name: NodeGroup
 type NodeGroupRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     NodeGroupSpecRequest                       `json:"spec" yaml:"spec"`
+	Metadata *commonmodel.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     NodeGroupSpecRequest                            `json:"spec" yaml:"spec"`
 }
 
-func (m *NodeGroupRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
+func (m *NodeGroupRequest) GetMetadata() *commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *NodeGroupRequest) SetMetadata(val *common.CommonTypedResourceMetadataRequest) {
+func (m *NodeGroupRequest) SetMetadata(val *commonmodel.CommonTypedResourceMetadataRequest) {
 	m.Metadata = val
 }
 
-func (m *NodeGroupRequest) GetMetadataOr(val common.CommonTypedResourceMetadataRequest) common.CommonTypedResourceMetadataRequest {
+func (m *NodeGroupRequest) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataRequest) commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}

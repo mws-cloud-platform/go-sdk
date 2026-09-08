@@ -135,6 +135,25 @@ func (m *BorderHostID) Clone() *BorderHostID {
 	return &clone
 }
 
+func (m *BorderHostID) AsRef() *BorderHostRef {
+	if m == nil {
+		return nil
+	}
+	return &BorderHostRef{
+		id: *m,
+	}
+}
+
+func (m *BorderHostID) Equal(other *BorderHostID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.borderHost == other.borderHost && m.zone == other.zone
+}
+
 func (m BorderHostID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *BorderHostRef) Clone() *BorderHostRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *BorderHostRef) Equal(other *BorderHostRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.borderHost == other.id.borderHost && m.id.zone == other.id.zone
 }
 
 func (m BorderHostRef) MarshalJSON() ([]byte, error) {

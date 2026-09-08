@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Правило балансировки нагрузки.
@@ -18,7 +18,7 @@ type NlbRuleRequest struct {
 	// Целевой порт бэкенд-серверов, на которые балансировщик перенаправляет запросы. Если не указан, то считается равным порту балансировщика.
 	TargetPort *int32 `json:"targetPort,omitempty" yaml:"targetPort,omitempty"`
 	// Адреса бэкенд-серверов, на которые балансировщик направляет запросы.
-	TargetAddressGroups []common.VpcAddressGroupSpecOrRefRequest `json:"targetAddressGroups" yaml:"targetAddressGroups"`
+	TargetAddressGroups []commonmodel.VpcAddressGroupSpecOrRefRequest `json:"targetAddressGroups" yaml:"targetAddressGroups"`
 	// Настройка проверки работоспособности виртуальных машин.
 	HealthCheck *NlbHealthCheckRequest `json:"healthCheck,omitempty" yaml:"healthCheck,omitempty"`
 }
@@ -52,14 +52,14 @@ func (m *NlbRuleRequest) GetTargetPortOr(val int32) int32 {
 	return val
 }
 
-func (m *NlbRuleRequest) GetTargetAddressGroups() []common.VpcAddressGroupSpecOrRefRequest {
+func (m *NlbRuleRequest) GetTargetAddressGroups() []commonmodel.VpcAddressGroupSpecOrRefRequest {
 	if m != nil {
 		return m.TargetAddressGroups
 	}
 	return nil
 }
 
-func (m *NlbRuleRequest) SetTargetAddressGroups(val []common.VpcAddressGroupSpecOrRefRequest) {
+func (m *NlbRuleRequest) SetTargetAddressGroups(val []commonmodel.VpcAddressGroupSpecOrRefRequest) {
 	m.TargetAddressGroups = val
 }
 
@@ -92,7 +92,7 @@ func (m *NlbRuleRequest) Clone() *NlbRuleRequest {
 		clone.TargetPort = &cloneTargetPort
 	}
 	if m.TargetAddressGroups != nil {
-		clone.TargetAddressGroups = make([]common.VpcAddressGroupSpecOrRefRequest, len(m.TargetAddressGroups))
+		clone.TargetAddressGroups = make([]commonmodel.VpcAddressGroupSpecOrRefRequest, len(m.TargetAddressGroups))
 		for i, v := range m.TargetAddressGroups {
 			clone.TargetAddressGroups[i] = *v.Clone()
 		}

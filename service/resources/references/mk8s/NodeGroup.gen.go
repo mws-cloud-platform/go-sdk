@@ -157,6 +157,25 @@ func (m *NodeGroupID) Clone() *NodeGroupID {
 	return &clone
 }
 
+func (m *NodeGroupID) AsRef() *NodeGroupRef {
+	if m == nil {
+		return nil
+	}
+	return &NodeGroupRef{
+		id: *m,
+	}
+}
+
+func (m *NodeGroupID) Equal(other *NodeGroupID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.nodeGroupName == other.nodeGroupName && m.clusterName == other.clusterName && m.project == other.project
+}
+
 func (m NodeGroupID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *NodeGroupRef) Clone() *NodeGroupRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *NodeGroupRef) Equal(other *NodeGroupRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.nodeGroupName == other.id.nodeGroupName && m.id.clusterName == other.id.clusterName && m.id.project == other.id.project
 }
 
 func (m NodeGroupRef) MarshalJSON() ([]byte, error) {

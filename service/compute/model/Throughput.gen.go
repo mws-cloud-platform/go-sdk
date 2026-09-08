@@ -6,5 +6,5 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/throughput"
 )
 
-// Пропускная способность диска
+// Пропускная способность, кратно 1 MB
 type Throughput = throughput.Throughput

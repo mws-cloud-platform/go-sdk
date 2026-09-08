@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestResourceStatusOptionalResponseMarshalling(t *testing.T) {
@@ -17,12 +17,12 @@ func TestResourceStatusOptionalResponseMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.ResourceStatusOptionalResponse
+	var actual commonmodel.ResourceStatusOptionalResponse
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initResourceStatusOptionalResponse() common.ResourceStatusOptionalResponse {
-	var v common.ResourceStatusOptionalResponse
+func initResourceStatusOptionalResponse() commonmodel.ResourceStatusOptionalResponse {
+	var v commonmodel.ResourceStatusOptionalResponse
 	return v
 }

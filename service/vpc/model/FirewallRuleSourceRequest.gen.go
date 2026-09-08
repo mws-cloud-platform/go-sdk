@@ -2,7 +2,7 @@
 
 package model
 
-// Критерий применимости правила, описывает источник отправления пакета.
+// Спецификация источника траффика, к которому будет применено Firewall правило.
 // Real OAPI model name: FirewallRuleSource
 type FirewallRuleSourceRequest struct {
 	// Спецификация группы адресов.

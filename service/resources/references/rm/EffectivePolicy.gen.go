@@ -118,6 +118,25 @@ func (m *EffectivePolicyID) Clone() *EffectivePolicyID {
 	return &clone
 }
 
+func (m *EffectivePolicyID) AsRef() *EffectivePolicyRef {
+	if m == nil {
+		return nil
+	}
+	return &EffectivePolicyRef{
+		id: *m,
+	}
+}
+
+func (m *EffectivePolicyID) Equal(other *EffectivePolicyID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m EffectivePolicyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -274,6 +293,16 @@ func (m *EffectivePolicyRef) Clone() *EffectivePolicyRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *EffectivePolicyRef) Equal(other *EffectivePolicyRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m EffectivePolicyRef) MarshalJSON() ([]byte, error) {

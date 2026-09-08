@@ -9,14 +9,14 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
-// Описание координаторов кластера.
+// Описание координатора кластера.
 // Real OAPI model name: ClickhouseClusterCoordinatorResource
 type ClickhouseClusterCoordinatorResourceResponse struct {
-	// Тип координатора. Если не указано, то при наличии более одного хоста, используется Clickhouse Keeper.
+	// Тип координатора. Если не указано, то при наличии более одного узла, используется ClickHouse Keeper.
 	Type *ClickhouseCoordinatorType `json:"type,omitempty" yaml:"type,omitempty"`
-	// Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. Необязательный параметр в standalone-конфигурации.
+	// Параметры виртуальной машины, на которой будет работать ClickHouse Keeper. Необязательный параметр в standalone-конфигурации.
 	Resources ClickhouseCoordinatorHWResourcesResponse `json:"resources" yaml:"resources"`
-	// Описание инстансов координатора.
+	// Описание узлов координатора.
 	Instances []ClickhouseClusterCoordinatorInstanceResourceResponse `json:"instances" yaml:"instances"`
 }
 

@@ -4,7 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func ClickhouseBackupRequestToOptionalResponse(request *ClickhouseBackupRequest) (*ClickhouseBackupOptionalResponse, error) {
@@ -38,7 +38,7 @@ func ClickhouseBackupMetadataRequestToOptionalResponse(request *ClickhouseBackup
 		response.DisplayName = optional.NewOptional(*request.DisplayName)
 	}
 	for _, e := range request.Usages {
-		tmp, err := common.TypedUsageRequestToOptionalResponse(&e)
+		tmp, err := commonmodel.TypedUsageRequestToOptionalResponse(&e)
 		if err != nil {
 			return nil, err
 		}
@@ -50,13 +50,5 @@ func ClickhouseBackupMetadataRequestToOptionalResponse(request *ClickhouseBackup
 	if request.Description != nil {
 		response.Description = optional.NewOptional(*request.Description)
 	}
-	return &response, nil
-}
-
-func ClickhouseBackupSpecRequestToOptionalResponse(request *ClickhouseBackupSpecRequest) (*ClickhouseBackupSpecOptionalResponse, error) {
-	if request == nil {
-		return nil, nil
-	}
-	var response ClickhouseBackupSpecOptionalResponse
 	return &response, nil
 }

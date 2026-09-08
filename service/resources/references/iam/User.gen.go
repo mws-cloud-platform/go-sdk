@@ -113,6 +113,25 @@ func (m *UserID) Clone() *UserID {
 	return &clone
 }
 
+func (m *UserID) AsRef() *UserRef {
+	if m == nil {
+		return nil
+	}
+	return &UserRef{
+		id: *m,
+	}
+}
+
+func (m *UserID) Equal(other *UserID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.user == other.user
+}
+
 func (m UserID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *UserRef) Clone() *UserRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *UserRef) Equal(other *UserRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.user == other.id.user
 }
 
 func (m UserRef) MarshalJSON() ([]byte, error) {

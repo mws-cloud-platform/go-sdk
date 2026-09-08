@@ -2,7 +2,7 @@
 
 package model
 
-// Настройка балансировщика кластера.
+// Конфигурация балансировщика
 // Real OAPI model name: KafkaBalancerSpec
 type KafkaBalancerSpecResponse struct {
 	// Состояние балансировщика — включен или выключен

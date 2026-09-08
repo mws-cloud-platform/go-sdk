@@ -113,6 +113,25 @@ func (m *ClickhouseProjectID) Clone() *ClickhouseProjectID {
 	return &clone
 }
 
+func (m *ClickhouseProjectID) AsRef() *ClickhouseProjectRef {
+	if m == nil {
+		return nil
+	}
+	return &ClickhouseProjectRef{
+		id: *m,
+	}
+}
+
+func (m *ClickhouseProjectID) Equal(other *ClickhouseProjectID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m ClickhouseProjectID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *ClickhouseProjectRef) Clone() *ClickhouseProjectRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ClickhouseProjectRef) Equal(other *ClickhouseProjectRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m ClickhouseProjectRef) MarshalJSON() ([]byte, error) {

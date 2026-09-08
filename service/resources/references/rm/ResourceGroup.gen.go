@@ -113,6 +113,25 @@ func (m *ResourceGroupID) Clone() *ResourceGroupID {
 	return &clone
 }
 
+func (m *ResourceGroupID) AsRef() *ResourceGroupRef {
+	if m == nil {
+		return nil
+	}
+	return &ResourceGroupRef{
+		id: *m,
+	}
+}
+
+func (m *ResourceGroupID) Equal(other *ResourceGroupID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.resourceGroup == other.resourceGroup
+}
+
 func (m ResourceGroupID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *ResourceGroupRef) Clone() *ResourceGroupRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ResourceGroupRef) Equal(other *ResourceGroupRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.resourceGroup == other.id.resourceGroup
 }
 
 func (m ResourceGroupRef) MarshalJSON() ([]byte, error) {

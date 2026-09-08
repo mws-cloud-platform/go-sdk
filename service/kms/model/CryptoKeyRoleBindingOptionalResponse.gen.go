@@ -7,18 +7,18 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: CryptoKeyRoleBinding
 type CryptoKeyRoleBindingOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata optional.OptionalNil[commonmodel.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав.
-	Spec common.CommonRoleBindingSpecOptionalResponse `json:"spec" yaml:"spec"`
+	Spec commonmodel.CommonRoleBindingSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Текущее состояние привязки роли, вычисляемое системой.
-	Status *common.CommonRoleBindingStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
+	Status *commonmodel.CommonRoleBindingStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *CryptoKeyRoleBindingOptionalResponse) GetKind() string {
@@ -32,43 +32,43 @@ func (m *CryptoKeyRoleBindingOptionalResponse) SetKind(val string) {
 	m.Kind = val
 }
 
-func (m *CryptoKeyRoleBindingOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
+func (m *CryptoKeyRoleBindingOptionalResponse) GetMetadata() *commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
-func (m *CryptoKeyRoleBindingOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
+func (m *CryptoKeyRoleBindingOptionalResponse) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataOptionalResponse) commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}
 	return val
 }
 
-func (m *CryptoKeyRoleBindingOptionalResponse) GetSpec() common.CommonRoleBindingSpecOptionalResponse {
+func (m *CryptoKeyRoleBindingOptionalResponse) GetSpec() commonmodel.CommonRoleBindingSpecOptionalResponse {
 	if m != nil {
 		return m.Spec
 	}
-	return common.CommonRoleBindingSpecOptionalResponse{}
+	return commonmodel.CommonRoleBindingSpecOptionalResponse{}
 }
 
-func (m *CryptoKeyRoleBindingOptionalResponse) SetSpec(val common.CommonRoleBindingSpecOptionalResponse) {
+func (m *CryptoKeyRoleBindingOptionalResponse) SetSpec(val commonmodel.CommonRoleBindingSpecOptionalResponse) {
 	m.Spec = val
 }
 
-func (m *CryptoKeyRoleBindingOptionalResponse) GetStatus() *common.CommonRoleBindingStatusResponse {
+func (m *CryptoKeyRoleBindingOptionalResponse) GetStatus() *commonmodel.CommonRoleBindingStatusResponse {
 	if m != nil {
 		return m.Status
 	}
 	return nil
 }
 
-func (m *CryptoKeyRoleBindingOptionalResponse) SetStatus(val *common.CommonRoleBindingStatusResponse) {
+func (m *CryptoKeyRoleBindingOptionalResponse) SetStatus(val *commonmodel.CommonRoleBindingStatusResponse) {
 	m.Status = val
 }
 
-func (m *CryptoKeyRoleBindingOptionalResponse) GetStatusOr(val common.CommonRoleBindingStatusResponse) common.CommonRoleBindingStatusResponse {
+func (m *CryptoKeyRoleBindingOptionalResponse) GetStatusOr(val commonmodel.CommonRoleBindingStatusResponse) commonmodel.CommonRoleBindingStatusResponse {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}

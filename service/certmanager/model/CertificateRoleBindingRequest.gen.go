@@ -6,43 +6,43 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: CertificateRoleBinding
 type CertificateRoleBindingRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata *commonmodel.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав.
-	Spec common.CommonRoleBindingSpecRequest `json:"spec" yaml:"spec"`
+	Spec commonmodel.CommonRoleBindingSpecRequest `json:"spec" yaml:"spec"`
 }
 
-func (m *CertificateRoleBindingRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
+func (m *CertificateRoleBindingRequest) GetMetadata() *commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *CertificateRoleBindingRequest) SetMetadata(val *common.CommonTypedResourceMetadataRequest) {
+func (m *CertificateRoleBindingRequest) SetMetadata(val *commonmodel.CommonTypedResourceMetadataRequest) {
 	m.Metadata = val
 }
 
-func (m *CertificateRoleBindingRequest) GetMetadataOr(val common.CommonTypedResourceMetadataRequest) common.CommonTypedResourceMetadataRequest {
+func (m *CertificateRoleBindingRequest) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataRequest) commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}
 	return val
 }
 
-func (m *CertificateRoleBindingRequest) GetSpec() common.CommonRoleBindingSpecRequest {
+func (m *CertificateRoleBindingRequest) GetSpec() commonmodel.CommonRoleBindingSpecRequest {
 	if m != nil {
 		return m.Spec
 	}
-	return common.CommonRoleBindingSpecRequest{}
+	return commonmodel.CommonRoleBindingSpecRequest{}
 }
 
-func (m *CertificateRoleBindingRequest) SetSpec(val common.CommonRoleBindingSpecRequest) {
+func (m *CertificateRoleBindingRequest) SetSpec(val commonmodel.CommonRoleBindingSpecRequest) {
 	m.Spec = val
 }
 

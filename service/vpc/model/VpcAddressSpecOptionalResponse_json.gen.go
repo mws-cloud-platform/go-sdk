@@ -8,7 +8,7 @@ import (
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -94,9 +94,9 @@ func (m *VpcAddressSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			c := make([]common.VpcAddressDnsSpecOptionalResponse, 0)
+			c := make([]commonmodel.VpcAddressDnsSpecOptionalResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v common.VpcAddressDnsSpecOptionalResponse
+				var v commonmodel.VpcAddressDnsSpecOptionalResponse
 				if err := v.Decode(d); err != nil {
 					return err
 				}

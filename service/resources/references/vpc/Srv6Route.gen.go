@@ -113,6 +113,25 @@ func (m *Srv6RouteID) Clone() *Srv6RouteID {
 	return &clone
 }
 
+func (m *Srv6RouteID) AsRef() *Srv6RouteRef {
+	if m == nil {
+		return nil
+	}
+	return &Srv6RouteRef{
+		id: *m,
+	}
+}
+
+func (m *Srv6RouteID) Equal(other *Srv6RouteID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.srv6Route == other.srv6Route
+}
+
 func (m Srv6RouteID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *Srv6RouteRef) Clone() *Srv6RouteRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *Srv6RouteRef) Equal(other *Srv6RouteRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.srv6Route == other.id.srv6Route
 }
 
 func (m Srv6RouteRef) MarshalJSON() ([]byte, error) {

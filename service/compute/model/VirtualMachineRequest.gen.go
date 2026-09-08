@@ -6,7 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Виртуальная машина (ВМ) — программная эмуляция физического сервера, предназначенная для запуска операционных систем и приложений
@@ -71,7 +71,7 @@ func (m *VirtualMachineRequest) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры VirtualMachine
 // Real OAPI model name: VirtualMachineMetadata
 type VirtualMachineMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *VirtualMachineMetadataRequest) GetDisplayName() *string {
@@ -88,14 +88,14 @@ func (m *VirtualMachineMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *VirtualMachineMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *VirtualMachineMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *VirtualMachineMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *VirtualMachineMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

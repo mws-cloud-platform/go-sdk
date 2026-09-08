@@ -8,7 +8,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
-// Спецификация глобального снимка
+// Спецификация снимка
 // Real OAPI model name: SnapshotSpec
 //
 // Deprecated: Отказываемся в пользу DiskBackupSpec

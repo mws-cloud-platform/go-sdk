@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m GlobalRoleV2Response) MarshalJSON() ([]byte, error) {
@@ -70,7 +70,7 @@ func (m *GlobalRoleV2Response) Decode(d *jx.Decoder) error {
 			m.Kind = &v
 			return nil
 		case "metadata":
-			var v common.CommonTypedResourceMetadataResponse
+			var v commonmodel.CommonTypedResourceMetadataResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

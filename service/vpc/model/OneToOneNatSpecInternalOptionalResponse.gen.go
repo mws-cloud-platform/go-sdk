@@ -6,24 +6,24 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Группирующий элемент для всего, что касается внутренних ресурсов.
 // Real OAPI model name: OneToOneNatSpecInternal
 type OneToOneNatSpecInternalOptionalResponse struct {
 	// Спецификация внутреннего адреса, для которого будет осуществляться трансляция.
-	Address common.ResourceAddressSpecOrRefOptionalResponse `json:"address" yaml:"address"`
+	Address commonmodel.ResourceAddressSpecOrRefOptionalResponse `json:"address" yaml:"address"`
 }
 
-func (m *OneToOneNatSpecInternalOptionalResponse) GetAddress() common.ResourceAddressSpecOrRefOptionalResponse {
+func (m *OneToOneNatSpecInternalOptionalResponse) GetAddress() commonmodel.ResourceAddressSpecOrRefOptionalResponse {
 	if m != nil {
 		return m.Address
 	}
-	return common.ResourceAddressSpecOrRefOptionalResponse{}
+	return commonmodel.ResourceAddressSpecOrRefOptionalResponse{}
 }
 
-func (m *OneToOneNatSpecInternalOptionalResponse) SetAddress(val common.ResourceAddressSpecOrRefOptionalResponse) {
+func (m *OneToOneNatSpecInternalOptionalResponse) SetAddress(val commonmodel.ResourceAddressSpecOrRefOptionalResponse) {
 	m.Address = val
 }
 

@@ -3,14 +3,14 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: PostgresBackupPage
 type PostgresBackupPageResponse struct {
 	Items []PostgresBackupResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *PostgresBackupPageResponse) GetItems() []PostgresBackupResponse {
@@ -24,18 +24,18 @@ func (m *PostgresBackupPageResponse) SetItems(val []PostgresBackupResponse) {
 	m.Items = val
 }
 
-func (m *PostgresBackupPageResponse) GetNextPageToken() *common.NextPageToken {
+func (m *PostgresBackupPageResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *PostgresBackupPageResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *PostgresBackupPageResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *PostgresBackupPageResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *PostgresBackupPageResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

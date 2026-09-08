@@ -157,6 +157,25 @@ func (m *FederationRoleBindingID) Clone() *FederationRoleBindingID {
 	return &clone
 }
 
+func (m *FederationRoleBindingID) AsRef() *FederationRoleBindingRef {
+	if m == nil {
+		return nil
+	}
+	return &FederationRoleBindingRef{
+		id: *m,
+	}
+}
+
+func (m *FederationRoleBindingID) Equal(other *FederationRoleBindingID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.roleBinding == other.roleBinding && m.userFederation == other.userFederation && m.organization == other.organization
+}
+
 func (m FederationRoleBindingID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *FederationRoleBindingRef) Clone() *FederationRoleBindingRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *FederationRoleBindingRef) Equal(other *FederationRoleBindingRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.roleBinding == other.id.roleBinding && m.id.userFederation == other.id.userFederation && m.id.organization == other.id.organization
 }
 
 func (m FederationRoleBindingRef) MarshalJSON() ([]byte, error) {

@@ -9,7 +9,7 @@ import (
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -88,7 +88,7 @@ func (m *RouteStatusNextHopResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v common.ResourceAddressStatusResponse
+			var v commonmodel.ResourceAddressStatusResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

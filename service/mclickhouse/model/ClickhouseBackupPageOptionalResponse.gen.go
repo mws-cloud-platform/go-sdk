@@ -4,14 +4,14 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ClickhouseBackupPage
 type ClickhouseBackupPageOptionalResponse struct {
 	Items []ClickhouseBackupOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken optional.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.Optional[commonmodel.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ClickhouseBackupPageOptionalResponse) GetItems() []ClickhouseBackupOptionalResponse {
@@ -25,14 +25,14 @@ func (m *ClickhouseBackupPageOptionalResponse) SetItems(val []ClickhouseBackupOp
 	m.Items = val
 }
 
-func (m *ClickhouseBackupPageOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *ClickhouseBackupPageOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return &m.NextPageToken.Value
 	}
 	return nil
 }
 
-func (m *ClickhouseBackupPageOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ClickhouseBackupPageOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return m.NextPageToken.Value
 	}

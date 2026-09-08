@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Правило балансировки нагрузки.
@@ -18,7 +18,7 @@ type NlbStatusRuleResponse struct {
 	// Целевой порт бэкенд-серверов, на которые балансировщик перенаправляет запросы. Если не указан, то считается равным порту балансировщика.
 	TargetPort *int32 `json:"targetPort,omitempty" yaml:"targetPort,omitempty"`
 	// Адреса бэкенд-серверов, на которые балансировщик направляет запросы.
-	TargetAddressGroups []common.VpcAddressGroupSpecOrRefResponse `json:"targetAddressGroups" yaml:"targetAddressGroups"`
+	TargetAddressGroups []commonmodel.VpcAddressGroupSpecOrRefResponse `json:"targetAddressGroups" yaml:"targetAddressGroups"`
 	// Статусы виртуальных машин, подключенных к сетевому балансировщику нагрузки.
 	TargetStatuses []NlbStatusRealStatusResponse `json:"targetStatuses,omitempty" yaml:"targetStatuses,omitempty"`
 	// Настройка проверки работоспособности виртуальных машин.
@@ -54,14 +54,14 @@ func (m *NlbStatusRuleResponse) GetTargetPortOr(val int32) int32 {
 	return val
 }
 
-func (m *NlbStatusRuleResponse) GetTargetAddressGroups() []common.VpcAddressGroupSpecOrRefResponse {
+func (m *NlbStatusRuleResponse) GetTargetAddressGroups() []commonmodel.VpcAddressGroupSpecOrRefResponse {
 	if m != nil {
 		return m.TargetAddressGroups
 	}
 	return nil
 }
 
-func (m *NlbStatusRuleResponse) SetTargetAddressGroups(val []common.VpcAddressGroupSpecOrRefResponse) {
+func (m *NlbStatusRuleResponse) SetTargetAddressGroups(val []commonmodel.VpcAddressGroupSpecOrRefResponse) {
 	m.TargetAddressGroups = val
 }
 
@@ -112,7 +112,7 @@ func (m *NlbStatusRuleResponse) Clone() *NlbStatusRuleResponse {
 		clone.TargetPort = &cloneTargetPort
 	}
 	if m.TargetAddressGroups != nil {
-		clone.TargetAddressGroups = make([]common.VpcAddressGroupSpecOrRefResponse, len(m.TargetAddressGroups))
+		clone.TargetAddressGroups = make([]commonmodel.VpcAddressGroupSpecOrRefResponse, len(m.TargetAddressGroups))
 		for i, v := range m.TargetAddressGroups {
 			clone.TargetAddressGroups[i] = *v.Clone()
 		}

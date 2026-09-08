@@ -4,7 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: KafkaConnectorPage
@@ -12,7 +12,7 @@ type KafkaConnectorPageOptionalResponse struct {
 	// Список коннекторов.
 	Items []KafkaConnectorOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken optional.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.Optional[commonmodel.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *KafkaConnectorPageOptionalResponse) GetItems() []KafkaConnectorOptionalResponse {
@@ -26,14 +26,14 @@ func (m *KafkaConnectorPageOptionalResponse) SetItems(val []KafkaConnectorOption
 	m.Items = val
 }
 
-func (m *KafkaConnectorPageOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *KafkaConnectorPageOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return &m.NextPageToken.Value
 	}
 	return nil
 }
 
-func (m *KafkaConnectorPageOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *KafkaConnectorPageOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return m.NextPageToken.Value
 	}

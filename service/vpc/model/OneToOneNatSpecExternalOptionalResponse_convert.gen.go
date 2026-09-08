@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func OneToOneNatSpecExternalRequestToOptionalResponse(request *OneToOneNatSpecExternalRequest) (*OneToOneNatSpecExternalOptionalResponse, error) {
@@ -11,7 +11,7 @@ func OneToOneNatSpecExternalRequestToOptionalResponse(request *OneToOneNatSpecEx
 		return nil, nil
 	}
 	var response OneToOneNatSpecExternalOptionalResponse
-	tmpAddress, err := common.ResourceExternalAddressSpecOrRefRequestToOptionalResponse(&request.Address)
+	tmpAddress, err := commonmodel.ResourceExternalAddressSpecOrRefRequestToOptionalResponse(&request.Address)
 	if err != nil {
 		return nil, err
 	}

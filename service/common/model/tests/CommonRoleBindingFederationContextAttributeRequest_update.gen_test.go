@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestUpdateCommonRoleBindingFederationContextAttributeRequestMarshalling(t *testing.T) {
@@ -18,7 +18,7 @@ func TestUpdateCommonRoleBindingFederationContextAttributeRequestMarshalling(t *
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.UpdateCommonRoleBindingFederationContextAttributeRequest
+	var actual commonmodel.UpdateCommonRoleBindingFederationContextAttributeRequest
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }

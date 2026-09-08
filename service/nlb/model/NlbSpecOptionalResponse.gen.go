@@ -9,7 +9,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
-// Спецификация сетевого балансировщик нагрузки.
+// Спецификация сетевого балансировщика нагрузки.
 // Real OAPI model name: NlbSpec
 type NlbSpecOptionalResponse struct {
 	// Конфигурация IP-адреса, на котором балансировщик будет принимать запросы.

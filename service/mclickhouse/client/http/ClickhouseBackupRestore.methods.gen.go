@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/mclickhouse/client"
 )
 
-// RestoreClickhouseBackup restore Clickhouse cluster from backup.
+// RestoreClickhouseBackup запускает восстановление кластера ClickHouse из указанной резервной копии в новый кластер.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}:restoreCluster

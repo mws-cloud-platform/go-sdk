@@ -7,7 +7,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Группа узлов в кластере Managed Kubernetes — это группа виртуальных машин
@@ -17,8 +17,8 @@ import (
 type NodeGroupOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     NodeGroupSpecOptionalResponse                                            `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[commonmodel.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     NodeGroupSpecOptionalResponse                                                 `json:"spec" yaml:"spec"`
 	// Описывает статусную модель групп узлов Kubernetes.
 	Status *NodeGroupStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
@@ -41,14 +41,14 @@ func (m *NodeGroupOptionalResponse) GetKindOr(val string) string {
 	return val
 }
 
-func (m *NodeGroupOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
+func (m *NodeGroupOptionalResponse) GetMetadata() *commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
-func (m *NodeGroupOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
+func (m *NodeGroupOptionalResponse) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataOptionalResponse) commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}

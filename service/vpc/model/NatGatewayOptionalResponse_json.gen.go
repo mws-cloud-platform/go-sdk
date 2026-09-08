@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m NatGatewayOptionalResponse) MarshalJSON() ([]byte, error) {
@@ -88,7 +88,7 @@ func (m *NatGatewayOptionalResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v common.CommonTypedResourceMetadataOptionalResponse
+			var v commonmodel.CommonTypedResourceMetadataOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -119,41 +119,4 @@ func (m *NatGatewayOptionalResponse) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}))
-}
-
-func (m NatGatewaySpecOptionalResponse) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *NatGatewaySpecOptionalResponse) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *NatGatewaySpecOptionalResponse) encodeFields(e *jx.Encoder) error {
-	return nil
-}
-
-func (m *NatGatewaySpecOptionalResponse) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *NatGatewaySpecOptionalResponse) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("NatGatewaySpecOptionalResponse")
-	}
-
-	return d.Skip()
 }

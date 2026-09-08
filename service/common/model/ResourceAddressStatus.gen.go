@@ -11,7 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Статус IP-адреса внутреннего балансировщика.
+// Описывает статус внутреннего адреса как дополнительный ресурс.
 type ResourceAddressStatus struct {
 	// Относительная ссылка на статический адрес.
 	Ref vpc.AddressRef `json:"ref" yaml:"ref"`

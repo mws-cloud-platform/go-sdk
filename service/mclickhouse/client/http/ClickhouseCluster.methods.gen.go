@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/mclickhouse/client"
 )
 
-// ListClickhouseClusters list Clickhouse clusters.
+// ListClickhouseClusters возвращает постраничный список кластеров ClickHouse в указанном проекте.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/clusters
@@ -111,7 +111,7 @@ func (c *ClickhouseCluster) headerListClickhouseClusters(req *http.Request, requ
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// StopCluster request stopping Clickhouse cluster.
+// StopCluster позволяет остановить кластер ClickHouse.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}:stop
@@ -189,7 +189,7 @@ func (c *ClickhouseCluster) headerStopCluster(req *http.Request, request *client
 	}
 }
 
-// StartCluster request starting Clickhouse cluster.
+// StartCluster позволяет запустить кластер ClickHouse.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}:start
@@ -267,7 +267,7 @@ func (c *ClickhouseCluster) headerStartCluster(req *http.Request, request *clien
 	}
 }
 
-// DeleteClickhouseCluster delete Clickhouse cluster.
+// DeleteClickhouseCluster удаляет указанный кластер ClickHouse.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: DELETE /mclickhouse/v1/projects/{project}/clusters/{cluster}
@@ -352,7 +352,7 @@ func (c *ClickhouseCluster) headerDeleteClickhouseCluster(req *http.Request, req
 	}
 }
 
-// GetClickhouseCluster returns info about the specified cluster.
+// GetClickhouseCluster возвращает информацию об указанном кластере ClickHouse.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}
@@ -427,7 +427,7 @@ func (c *ClickhouseCluster) headerGetClickhouseCluster(req *http.Request, reques
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpsertClickhouseCluster upsert Clickhouse cluster.
+// UpsertClickhouseCluster создаёт новый кластер ClickHouse или изменяет существующий (upsert).
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}
@@ -519,7 +519,7 @@ func (c *ClickhouseCluster) headerUpsertClickhouseCluster(req *http.Request, req
 	}
 }
 
-// CreateClickhouseCluster upsert Clickhouse cluster.
+// CreateClickhouseCluster создаёт новый кластер ClickHouse или изменяет существующий (upsert).
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -613,7 +613,7 @@ func (c *ClickhouseCluster) headerCreateClickhouseCluster(req *http.Request, req
 	}
 }
 
-// UpdateClickhouseCluster upsert Clickhouse cluster.
+// UpdateClickhouseCluster создаёт новый кластер ClickHouse или изменяет существующий (upsert).
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

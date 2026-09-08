@@ -9,13 +9,13 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateSecretRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
-	Spec     optional.Optional[UpdateSecretSpecRequest]                            `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Spec     optional.Optional[UpdateSecretSpecRequest]                                 `json:"spec" yaml:"spec"`
 }
 
 func (m *SecretRequest) AsUpdateModel() UpdateSecretRequest {
@@ -75,10 +75,10 @@ func (m *UpdateSecretRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *SecretRequest) diffMetadata(src *SecretRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *SecretRequest) diffMetadata(src *SecretRequest) optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+	return optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

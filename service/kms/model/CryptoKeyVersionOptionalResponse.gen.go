@@ -3,16 +3,16 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: CryptoKeyVersion
 type CryptoKeyVersionOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata common.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
-	Spec     CryptoKeyVersionSpecOptionalResponse               `json:"spec" yaml:"spec"`
-	Status   CryptoKeyVersionStatusResponse                     `json:"status" yaml:"status"`
+	Metadata commonmodel.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
+	Spec     CryptoKeyVersionSpecOptionalResponse                    `json:"spec" yaml:"spec"`
+	Status   CryptoKeyVersionStatusResponse                          `json:"status" yaml:"status"`
 }
 
 func (m *CryptoKeyVersionOptionalResponse) GetKind() string {
@@ -26,14 +26,14 @@ func (m *CryptoKeyVersionOptionalResponse) SetKind(val string) {
 	m.Kind = val
 }
 
-func (m *CryptoKeyVersionOptionalResponse) GetMetadata() common.CommonTypedResourceMetadataOptionalResponse {
+func (m *CryptoKeyVersionOptionalResponse) GetMetadata() commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil {
 		return m.Metadata
 	}
-	return common.CommonTypedResourceMetadataOptionalResponse{}
+	return commonmodel.CommonTypedResourceMetadataOptionalResponse{}
 }
 
-func (m *CryptoKeyVersionOptionalResponse) SetMetadata(val common.CommonTypedResourceMetadataOptionalResponse) {
+func (m *CryptoKeyVersionOptionalResponse) SetMetadata(val commonmodel.CommonTypedResourceMetadataOptionalResponse) {
 	m.Metadata = val
 }
 

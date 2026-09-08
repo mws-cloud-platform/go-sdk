@@ -135,6 +135,25 @@ func (m *ClusterID) Clone() *ClusterID {
 	return &clone
 }
 
+func (m *ClusterID) AsRef() *ClusterRef {
+	if m == nil {
+		return nil
+	}
+	return &ClusterRef{
+		id: *m,
+	}
+}
+
+func (m *ClusterID) Equal(other *ClusterID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.clusterName == other.clusterName && m.project == other.project
+}
+
 func (m ClusterID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ClusterRef) Clone() *ClusterRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ClusterRef) Equal(other *ClusterRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.clusterName == other.id.clusterName && m.id.project == other.id.project
 }
 
 func (m ClusterRef) MarshalJSON() ([]byte, error) {

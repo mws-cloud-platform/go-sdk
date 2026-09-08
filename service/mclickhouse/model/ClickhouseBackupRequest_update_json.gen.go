@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m UpdateClickhouseBackupRequest) MarshalJSON() ([]byte, error) {
@@ -170,9 +170,9 @@ func (m *UpdateClickhouseBackupMetadataRequest) Decode(d *jx.Decoder) error {
 			m.DisplayName.SetTo(v)
 			return nil
 		case "usages":
-			c := make([]common.UpdateTypedUsageRequest, 0)
+			c := make([]commonmodel.UpdateTypedUsageRequest, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v common.UpdateTypedUsageRequest
+				var v commonmodel.UpdateTypedUsageRequest
 				if err := v.Decode(d); err != nil {
 					return err
 				}
@@ -204,41 +204,4 @@ func (m *UpdateClickhouseBackupMetadataRequest) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}))
-}
-
-func (m UpdateClickhouseBackupSpecRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *UpdateClickhouseBackupSpecRequest) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *UpdateClickhouseBackupSpecRequest) encodeFields(e *jx.Encoder) error {
-	return nil
-}
-
-func (m *UpdateClickhouseBackupSpecRequest) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *UpdateClickhouseBackupSpecRequest) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("UpdateClickhouseBackupSpecRequest")
-	}
-
-	return d.Skip()
 }

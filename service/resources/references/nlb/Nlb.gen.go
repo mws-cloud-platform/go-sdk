@@ -168,6 +168,25 @@ func (m *NlbID) Clone() *NlbID {
 	return &clone
 }
 
+func (m *NlbID) AsRef() *NlbRef {
+	if m == nil {
+		return nil
+	}
+	return &NlbRef{
+		id: *m,
+	}
+}
+
+func (m *NlbID) Equal(other *NlbID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.nlb == other.nlb && m.network == other.network && m.project == other.project
+}
+
 func (m NlbID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -340,6 +359,16 @@ func (m *NlbRef) Clone() *NlbRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *NlbRef) Equal(other *NlbRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.nlb == other.id.nlb && m.id.network == other.id.network && m.id.project == other.id.project
 }
 
 func (m NlbRef) MarshalJSON() ([]byte, error) {

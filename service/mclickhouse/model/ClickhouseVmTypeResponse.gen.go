@@ -5,7 +5,7 @@ package model
 import (
 	"time"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 )
 
@@ -75,7 +75,7 @@ func (m *ClickhouseVmTypeResponse) Clone() *ClickhouseVmTypeResponse {
 // Представление поля Metadata анонимного типа структуры ClickhouseVmType
 // Real OAPI model name: ClickhouseVmTypeMetadata
 type ClickhouseVmTypeMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// ID свойства
 	Id mclickhouse.ClickhouseVmTypeID `json:"id" yaml:"id"`
 }
@@ -150,14 +150,14 @@ func (m *ClickhouseVmTypeMetadataResponse) GetPurgeTimeOr(val time.Time) time.Ti
 	return val
 }
 
-func (m *ClickhouseVmTypeMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *ClickhouseVmTypeMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *ClickhouseVmTypeMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *ClickhouseVmTypeMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}
@@ -215,7 +215,7 @@ func (m *ClickhouseVmTypeMetadataResponse) Clone() *ClickhouseVmTypeMetadataResp
 // Real OAPI model name: ClickhouseVmTypeSpec
 type ClickhouseVmTypeSpecResponse struct {
 	VmTypeSpecResponse `yaml:"-,inline"`
-	// Описание типов инстансов для ВМ данного типа
+	// Описание типов узлов для ВМ данного типа
 	InstanceTypes []VmTypeInstance `json:"instanceTypes,omitempty" yaml:"instanceTypes,omitempty"`
 }
 

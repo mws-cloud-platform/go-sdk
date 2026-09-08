@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/secretmanager/model"
 )
 
@@ -72,16 +72,12 @@ func (m *AddSecretVersionRequest) SetProject(project string) {
 type AddSecretVersionResponse struct {
 	Code        int
 	Response201 *model.SecretVersionOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response422 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -108,20 +104,8 @@ func (m *AddSecretVersionResponse) GetErr() (err error) {
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
 	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
-	if m.Response409 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response409)
-	}
 	if m.Response412 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response422 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response422)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
@@ -177,14 +161,11 @@ func (m ListSecretVersionsRequest) WithPageToken(token *string) ListSecretVersio
 type ListSecretVersionsResponse struct {
 	Code        int
 	Response200 *model.SecretVersionListOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -210,15 +191,6 @@ func (m *ListSecretVersionsResponse) GetErr() (err error) {
 	}
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
-	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
-	if m.Response412 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
@@ -257,15 +229,13 @@ func (m *GetDataRequest) SetProject(project string) {
 
 type GetDataResponse struct {
 	Code        int
-	Response200 model.SecretVersionDataSpec2
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response200 model.SecretVersionDataSpec
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -292,14 +262,8 @@ func (m *GetDataResponse) GetErr() (err error) {
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
 	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
 	if m.Response412 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
@@ -316,6 +280,11 @@ func (m *GetDataResponse) SetErrorWrapper(f func(err error) error) {
 type DeleteSecretVersionRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
+	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+	IfExist *bool // query: "ifExist"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
@@ -350,14 +319,11 @@ func (m *DeleteSecretVersionRequest) getSecretVersionRequest() GetSecretVersionR
 type DeleteSecretVersionResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -383,15 +349,6 @@ func (m *DeleteSecretVersionResponse) GetErr() (err error) {
 	}
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
-	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
-	if m.Response412 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
@@ -431,14 +388,11 @@ func (m *GetSecretVersionRequest) SetProject(project string) {
 type GetSecretVersionResponse struct {
 	Code        int
 	Response200 *model.SecretVersionOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -465,15 +419,6 @@ func (m *GetSecretVersionResponse) GetErr() (err error) {
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
 	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
-	if m.Response412 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
-	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
 	}
@@ -489,6 +434,8 @@ func (m *GetSecretVersionResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertSecretVersionRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
@@ -524,6 +471,8 @@ func (m *UpsertSecretVersionRequest) getSecretVersionRequest() GetSecretVersionR
 type UpdateSecretVersionRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
@@ -559,16 +508,12 @@ func (m *UpdateSecretVersionRequest) getSecretVersionRequest() GetSecretVersionR
 type UpsertSecretVersionResponse struct {
 	Code        int
 	Response200 *model.SecretVersionOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response422 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -595,20 +540,8 @@ func (m *UpsertSecretVersionResponse) GetErr() (err error) {
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
 	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
 	if m.Response409 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response409)
-	}
-	if m.Response412 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response422 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response422)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)

@@ -338,6 +338,9 @@ func (c *VirtualMachine) upsertVirtualMachineInvoker(ctx context.Context, anyReq
 
 func (c *VirtualMachine) queryUpsertVirtualMachine(request *client.UpsertVirtualMachineRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -430,6 +433,9 @@ func (c *VirtualMachine) createVirtualMachineInvoker(ctx context.Context, anyReq
 func (c *VirtualMachine) queryCreateVirtualMachine(request *client.UpsertVirtualMachineRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -522,6 +528,9 @@ func (c *VirtualMachine) updateVirtualMachineInvoker(ctx context.Context, anyReq
 func (c *VirtualMachine) queryUpdateVirtualMachine(request *client.UpdateVirtualMachineRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

@@ -3,20 +3,21 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Статус NAT шлюза.
+// Описывает статус NAT-шлюза.
 // Real OAPI model name: NatGatewayStatus
 type NatGatewayStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	RegionalStatusResponse             `yaml:"-,inline"`
 }
 
-func (m *NatGatewayStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *NatGatewayStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *NatGatewayStatusResponse) Clone() *NatGatewayStatusResponse {
@@ -26,6 +27,6 @@ func (m *NatGatewayStatusResponse) Clone() *NatGatewayStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
-
+	clone.RegionalStatusResponse = *m.RegionalStatusResponse.Clone()
 	return &clone
 }

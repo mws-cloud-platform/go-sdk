@@ -6,44 +6,44 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Группа адресов.
 // Real OAPI model name: VpcAddressGroup
 type VpcAddressGroupRequest struct {
 	// Метаданные группы адресов.
-	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata *commonmodel.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация группы адресов.
-	Spec common.VpcAddressGroupSpecRequest `json:"spec" yaml:"spec"`
+	Spec commonmodel.VpcAddressGroupSpecRequest `json:"spec" yaml:"spec"`
 }
 
-func (m *VpcAddressGroupRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
+func (m *VpcAddressGroupRequest) GetMetadata() *commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *VpcAddressGroupRequest) SetMetadata(val *common.CommonTypedResourceMetadataRequest) {
+func (m *VpcAddressGroupRequest) SetMetadata(val *commonmodel.CommonTypedResourceMetadataRequest) {
 	m.Metadata = val
 }
 
-func (m *VpcAddressGroupRequest) GetMetadataOr(val common.CommonTypedResourceMetadataRequest) common.CommonTypedResourceMetadataRequest {
+func (m *VpcAddressGroupRequest) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataRequest) commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}
 	return val
 }
 
-func (m *VpcAddressGroupRequest) GetSpec() common.VpcAddressGroupSpecRequest {
+func (m *VpcAddressGroupRequest) GetSpec() commonmodel.VpcAddressGroupSpecRequest {
 	if m != nil {
 		return m.Spec
 	}
-	return common.VpcAddressGroupSpecRequest{}
+	return commonmodel.VpcAddressGroupSpecRequest{}
 }
 
-func (m *VpcAddressGroupRequest) SetSpec(val common.VpcAddressGroupSpecRequest) {
+func (m *VpcAddressGroupRequest) SetSpec(val commonmodel.VpcAddressGroupSpecRequest) {
 	m.Spec = val
 }
 

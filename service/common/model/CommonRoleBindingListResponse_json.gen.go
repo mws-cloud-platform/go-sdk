@@ -76,7 +76,7 @@ func (m *CommonRoleBindingListResponse) Decode(d *jx.Decoder) error {
 			m.Items = c
 			return nil
 		case "nextPageToken":
-			var v NextPageToken2
+			var v NextPageToken
 			if err := v.Decode(d); err != nil {
 				return err
 			}

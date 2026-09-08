@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: CryptoKeyList
@@ -15,7 +15,7 @@ type CryptoKeyListOptionalResponse struct {
 	// Список ключей KMS в указанном проекте.
 	Items []CryptoKeyOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *CryptoKeyListOptionalResponse) GetItems() []CryptoKeyOptionalResponse {
@@ -29,18 +29,18 @@ func (m *CryptoKeyListOptionalResponse) SetItems(val []CryptoKeyOptionalResponse
 	m.Items = val
 }
 
-func (m *CryptoKeyListOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *CryptoKeyListOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *CryptoKeyListOptionalResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *CryptoKeyListOptionalResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *CryptoKeyListOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *CryptoKeyListOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

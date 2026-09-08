@@ -157,6 +157,25 @@ func (m *Nat46ID) Clone() *Nat46ID {
 	return &clone
 }
 
+func (m *Nat46ID) AsRef() *Nat46Ref {
+	if m == nil {
+		return nil
+	}
+	return &Nat46Ref{
+		id: *m,
+	}
+}
+
+func (m *Nat46ID) Equal(other *Nat46ID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.nat46 == other.nat46 && m.network == other.network && m.project == other.project
+}
+
 func (m Nat46ID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *Nat46Ref) Clone() *Nat46Ref {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *Nat46Ref) Equal(other *Nat46Ref) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.nat46 == other.id.nat46 && m.id.network == other.id.network && m.id.project == other.id.project
 }
 
 func (m Nat46Ref) MarshalJSON() ([]byte, error) {

@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
 
@@ -81,10 +81,10 @@ func (m ListHmacKeyRequest) WithPageToken(token *string) ListHmacKeyRequest {
 type ListHmacKeyResponse struct {
 	Code        int
 	Response200 *model.HmacKeyListResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -127,6 +127,13 @@ type DeleteHmacKeyRequest struct {
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
+	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+	IfExist *bool // query: "ifExist"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
+	// Удалить зависимые ресурсы, в противном случае при их наличии, будет возвращен ответ `Aborted`
+	Cascade *bool // query: "cascade"
 }
 
 func (m *DeleteHmacKeyRequest) SetAuthorization(authorization string) {
@@ -153,10 +160,10 @@ func (m *DeleteHmacKeyRequest) getHmacKeyRequest() GetHmacKeyRequest {
 type DeleteHmacKeyResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -216,10 +223,10 @@ func (m *GetHmacKeyRequest) SetProject(project string) {
 type GetHmacKeyResponse struct {
 	Code        int
 	Response200 *model.HmacKeyResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -263,8 +270,10 @@ type UpsertHmacKeyRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
-	IdempotencyKey *string              // header: "Idempotency-Key"
-	Body           model.HmacKeyRequest // body
+	IdempotencyKey *string // header: "Idempotency-Key"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool                // query: "validateOnly"
+	Body         model.HmacKeyRequest // body
 }
 
 func (m *UpsertHmacKeyRequest) SetAuthorization(authorization string) {
@@ -287,8 +296,10 @@ type UpdateHmacKeyRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
-	IdempotencyKey *string                    // header: "Idempotency-Key"
-	Body           model.UpdateHmacKeyRequest // body
+	IdempotencyKey *string // header: "Idempotency-Key"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool                      // query: "validateOnly"
+	Body         model.UpdateHmacKeyRequest // body
 }
 
 func (m *UpdateHmacKeyRequest) SetAuthorization(authorization string) {
@@ -307,11 +318,11 @@ type UpsertHmacKeyResponse struct {
 	Code        int
 	Response200 *model.HmacKeyResponse
 	Response201 *model.HmacKeyResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

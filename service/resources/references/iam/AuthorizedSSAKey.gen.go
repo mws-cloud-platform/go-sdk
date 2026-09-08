@@ -135,6 +135,25 @@ func (m *AuthorizedSSAKeyID) Clone() *AuthorizedSSAKeyID {
 	return &clone
 }
 
+func (m *AuthorizedSSAKeyID) AsRef() *AuthorizedSSAKeyRef {
+	if m == nil {
+		return nil
+	}
+	return &AuthorizedSSAKeyRef{
+		id: *m,
+	}
+}
+
+func (m *AuthorizedSSAKeyID) Equal(other *AuthorizedSSAKeyID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.authorizedKey == other.authorizedKey && m.systemServiceAccounts == other.systemServiceAccounts
+}
+
 func (m AuthorizedSSAKeyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *AuthorizedSSAKeyRef) Clone() *AuthorizedSSAKeyRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *AuthorizedSSAKeyRef) Equal(other *AuthorizedSSAKeyRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.authorizedKey == other.id.authorizedKey && m.id.systemServiceAccounts == other.id.systemServiceAccounts
 }
 
 func (m AuthorizedSSAKeyRef) MarshalJSON() ([]byte, error) {

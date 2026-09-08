@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: AuthorizedKey
@@ -56,7 +56,7 @@ func (m *AuthorizedKeyRequest) Clone() *AuthorizedKeyRequest {
 // Представление поля Metadata анонимного типа структуры AuthorizedKey
 // Real OAPI model name: AuthorizedKeyMetadata
 type AuthorizedKeyMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *AuthorizedKeyMetadataRequest) GetDisplayName() *string {
@@ -73,14 +73,14 @@ func (m *AuthorizedKeyMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *AuthorizedKeyMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *AuthorizedKeyMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *AuthorizedKeyMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *AuthorizedKeyMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

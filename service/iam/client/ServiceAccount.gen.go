@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
 
@@ -81,9 +81,9 @@ func (m ListServiceAccountRequest) WithPageToken(token *string) ListServiceAccou
 type ListServiceAccountResponse struct {
 	Code        int
 	Response200 *model.ServiceAccountListResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -119,9 +119,16 @@ func (m *ListServiceAccountResponse) SetErrorWrapper(f func(err error) error) {
 type DeleteServiceAccountRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Ключ идемпотентности
+	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
 	Project        string // path: "project"
 	ServiceAccount string // path: "serviceAccount"
+	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
+	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+	IfExist *bool // query: "ifExist"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteServiceAccountRequest) SetAuthorization(authorization string) {
@@ -147,9 +154,9 @@ func (m *DeleteServiceAccountRequest) getServiceAccountRequest() GetServiceAccou
 type DeleteServiceAccountResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -205,9 +212,9 @@ func (m *GetServiceAccountRequest) SetProject(project string) {
 type GetServiceAccountResponse struct {
 	Code        int
 	Response200 *model.ServiceAccountResponse
-	Response400 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -243,10 +250,14 @@ func (m *GetServiceAccountResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertServiceAccountRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Ключ идемпотентности
+	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
-	Project        string                      // path: "project"
-	ServiceAccount string                      // path: "serviceAccount"
-	Body           model.ServiceAccountRequest // body
+	Project        string // path: "project"
+	ServiceAccount string // path: "serviceAccount"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool                       // query: "validateOnly"
+	Body         model.ServiceAccountRequest // body
 }
 
 func (m *UpsertServiceAccountRequest) SetAuthorization(authorization string) {
@@ -272,10 +283,14 @@ func (m *UpsertServiceAccountRequest) getServiceAccountRequest() GetServiceAccou
 type UpdateServiceAccountRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Ключ идемпотентности
+	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
-	Project        string                            // path: "project"
-	ServiceAccount string                            // path: "serviceAccount"
-	Body           model.UpdateServiceAccountRequest // body
+	Project        string // path: "project"
+	ServiceAccount string // path: "serviceAccount"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool                             // query: "validateOnly"
+	Body         model.UpdateServiceAccountRequest // body
 }
 
 func (m *UpdateServiceAccountRequest) SetAuthorization(authorization string) {
@@ -302,11 +317,11 @@ type UpsertServiceAccountResponse struct {
 	Code        int
 	Response200 *model.ServiceAccountResponse
 	Response201 *model.ServiceAccountResponse
-	Response400 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

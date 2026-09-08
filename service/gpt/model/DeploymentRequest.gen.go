@@ -6,7 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: Deployment
@@ -71,7 +71,7 @@ func (m *DeploymentRequest) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры Deployment
 // Real OAPI model name: DeploymentMetadata
 type DeploymentMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *DeploymentMetadataRequest) GetDisplayName() *string {
@@ -88,14 +88,14 @@ func (m *DeploymentMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *DeploymentMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *DeploymentMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *DeploymentMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *DeploymentMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

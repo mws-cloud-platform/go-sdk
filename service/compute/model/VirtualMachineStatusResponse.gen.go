@@ -6,12 +6,12 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: VirtualMachineStatus
 type VirtualMachineStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Deprecated: Отказываемся, поле временно остается для совместимости
 	Id       string                              `json:"id" yaml:"id"`
 	Hardware HardwareStatusResponse              `json:"hardware" yaml:"hardware"`
@@ -22,11 +22,11 @@ type VirtualMachineStatusResponse struct {
 	ServiceAccount *ServiceAccountStatusResponse `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
 }
 
-func (m *VirtualMachineStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *VirtualMachineStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 // Deprecated: Отказываемся, поле временно остается для совместимости

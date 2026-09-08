@@ -9,12 +9,12 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateEgressNatRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Описывает спецификацию Egress (Many-to-Many) NAT-шлюза.
 	Spec optional.Optional[UpdateEgressNatSpecRequest] `json:"spec" yaml:"spec"`
 }
@@ -76,10 +76,10 @@ func (m *UpdateEgressNatRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *EgressNatRequest) diffMetadata(src *EgressNatRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *EgressNatRequest) diffMetadata(src *EgressNatRequest) optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+	return optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

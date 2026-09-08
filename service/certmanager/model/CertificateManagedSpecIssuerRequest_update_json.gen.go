@@ -6,7 +6,6 @@ import (
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
-	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -62,96 +61,12 @@ func (m *UpdateCertificateManagedSpecIssuerRequest) Decode(d *jx.Decoder) error 
 				return d.Null()
 			}
 
-			var v UpdateCertificateManagedSpecIssuerAcmeRequest
+			var v UpdateAcmeIssuerRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
 			m.Acme.SetTo(v)
-			return nil
-		default:
-			return d.Skip()
-		}
-	}))
-}
-
-func (m UpdateCertificateManagedSpecIssuerAcmeRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *UpdateCertificateManagedSpecIssuerAcmeRequest) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *UpdateCertificateManagedSpecIssuerAcmeRequest) encodeFields(e *jx.Encoder) error {
-	if m.Server.IsSet() {
-		e.FieldStart("server")
-		if err := m.Server.Value.Encode(e); err != nil {
-			return err
-		}
-	}
-
-	if m.ChallengeType.IsSet() {
-		e.FieldStart("challengeType")
-		if err := m.ChallengeType.Value.Encode(e); err != nil {
-			return err
-		}
-	}
-
-	if m.Profile.IsSet() {
-		e.FieldStart("profile")
-		e.Str(m.Profile.Value)
-	}
-	return nil
-}
-
-func (m *UpdateCertificateManagedSpecIssuerAcmeRequest) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *UpdateCertificateManagedSpecIssuerAcmeRequest) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("UpdateCertificateManagedSpecIssuerAcmeRequest")
-	}
-
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "server":
-			var v CertificateManagedSpecAcmeServer
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.Server.SetTo(v)
-			return nil
-		case "challengeType":
-			var v CertificateChallengeType
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.ChallengeType.SetTo(v)
-			return nil
-		case "profile":
-			v, err := decode.Str(d)
-			if err != nil {
-				return err
-			}
-
-			m.Profile.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

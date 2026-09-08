@@ -8,7 +8,10 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
 
-// Роль экземпляра PostgreSQL.
+// Роль экземпляра PostgreSQL
+//   - `PRIMARY`
+//   - `STANDBY`
+//   - `UNKNOWN`
 type PostgresInstanceRole string
 
 const (

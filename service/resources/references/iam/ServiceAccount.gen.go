@@ -135,6 +135,25 @@ func (m *ServiceAccountID) Clone() *ServiceAccountID {
 	return &clone
 }
 
+func (m *ServiceAccountID) AsRef() *ServiceAccountRef {
+	if m == nil {
+		return nil
+	}
+	return &ServiceAccountRef{
+		id: *m,
+	}
+}
+
+func (m *ServiceAccountID) Equal(other *ServiceAccountID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.serviceAccount == other.serviceAccount && m.project == other.project
+}
+
 func (m ServiceAccountID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ServiceAccountRef) Clone() *ServiceAccountRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ServiceAccountRef) Equal(other *ServiceAccountRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.serviceAccount == other.id.serviceAccount && m.id.project == other.id.project
 }
 
 func (m ServiceAccountRef) MarshalJSON() ([]byte, error) {

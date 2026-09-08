@@ -15,7 +15,7 @@ import (
 	"go.mws.cloud/go-sdk/service/mclickhouse/client"
 )
 
-// GetAvailableConfigParameters returns info about available configuration parameters.
+// GetAvailableConfigParameters возвращает список доступных параметров конфигурации ClickHouse для указанной версии.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/availableConfigParameters

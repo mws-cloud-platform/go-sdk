@@ -15,7 +15,7 @@ type ClickhouseEndpointExternalAddressSpecOrRefRequest struct {
 	// Ссылка на внешний адрес эндпоинта в VPC.
 	Ref *vpc.ExternalAddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Описание шаблона внешнего адреса, который будет использоваться при выделении адресов.
-	Spec *ClickhouseEndpointExternalAddressSpecOrRefSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec *ClickhouseEndpointExternalAddressSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) GetRef() *vpc.ExternalAddressRef {
@@ -36,18 +36,18 @@ func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) GetRefOr(val vpc.Ext
 	return val
 }
 
-func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) GetSpec() *ClickhouseEndpointExternalAddressSpecOrRefSpecRequest {
+func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) GetSpec() *ClickhouseEndpointExternalAddressSpecRequest {
 	if m != nil {
 		return m.Spec
 	}
 	return nil
 }
 
-func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) SetSpec(val *ClickhouseEndpointExternalAddressSpecOrRefSpecRequest) {
+func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) SetSpec(val *ClickhouseEndpointExternalAddressSpecRequest) {
 	m.Spec = val
 }
 
-func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) GetSpecOr(val ClickhouseEndpointExternalAddressSpecOrRefSpecRequest) ClickhouseEndpointExternalAddressSpecOrRefSpecRequest {
+func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) GetSpecOr(val ClickhouseEndpointExternalAddressSpecRequest) ClickhouseEndpointExternalAddressSpecRequest {
 	if m != nil && m.Spec != nil {
 		return *m.Spec
 	}
@@ -75,18 +75,4 @@ func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) Parse(ctx context.Co
 	}
 
 	return nil
-}
-
-// Представление поля Spec анонимного типа структуры ClickhouseEndpointExternalAddressSpecOrRef
-// Real OAPI model name: ClickhouseEndpointExternalAddressSpecOrRefSpec
-type ClickhouseEndpointExternalAddressSpecOrRefSpecRequest struct {
-}
-
-func (m *ClickhouseEndpointExternalAddressSpecOrRefSpecRequest) Clone() *ClickhouseEndpointExternalAddressSpecOrRefSpecRequest {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
-	return &clone
 }

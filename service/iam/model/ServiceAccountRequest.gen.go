@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Сервисный аккаунт — это специальная учетная запись, создаваемая пользователем
@@ -59,7 +59,7 @@ func (m *ServiceAccountRequest) Clone() *ServiceAccountRequest {
 // Представление поля Metadata анонимного типа структуры ServiceAccount
 // Real OAPI model name: ServiceAccountMetadata
 type ServiceAccountMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 	// Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта.
 	Name *string `json:"name,omitempty" yaml:"name,omitempty"`
 }
@@ -78,14 +78,14 @@ func (m *ServiceAccountMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *ServiceAccountMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *ServiceAccountMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *ServiceAccountMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *ServiceAccountMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}
@@ -146,19 +146,5 @@ func (m *ServiceAccountMetadataRequest) Clone() *ServiceAccountMetadataRequest {
 		clone.Name = &cloneName
 	}
 
-	return &clone
-}
-
-// Представление поля Spec анонимного типа структуры ServiceAccount
-// Real OAPI model name: ServiceAccountSpec
-type ServiceAccountSpecRequest struct {
-}
-
-func (m *ServiceAccountSpecRequest) Clone() *ServiceAccountSpecRequest {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
 	return &clone
 }

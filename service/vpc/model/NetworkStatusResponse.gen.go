@@ -3,24 +3,24 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: NetworkStatus
 type NetworkStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
-
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	RegionalStatusResponse             `yaml:"-,inline"`
 	// Максимальная единица передачи в байтах (maximum transmission unit - MTU).
 	Mtu *int32 `json:"mtu,omitempty" yaml:"mtu,omitempty"`
 	// Доступ в интернет.
 	InternetAccess *bool `json:"internetAccess,omitempty" yaml:"internetAccess,omitempty"`
 }
 
-func (m *NetworkStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *NetworkStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *NetworkStatusResponse) GetMtu() *int32 {
@@ -58,7 +58,7 @@ func (m *NetworkStatusResponse) Clone() *NetworkStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
-
+	clone.RegionalStatusResponse = *m.RegionalStatusResponse.Clone()
 	if m.Mtu != nil {
 		cloneMtu := *m.Mtu
 		clone.Mtu = &cloneMtu

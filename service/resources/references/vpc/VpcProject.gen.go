@@ -113,6 +113,25 @@ func (m *VpcProjectID) Clone() *VpcProjectID {
 	return &clone
 }
 
+func (m *VpcProjectID) AsRef() *VpcProjectRef {
+	if m == nil {
+		return nil
+	}
+	return &VpcProjectRef{
+		id: *m,
+	}
+}
+
+func (m *VpcProjectID) Equal(other *VpcProjectID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m VpcProjectID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *VpcProjectRef) Clone() *VpcProjectRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *VpcProjectRef) Equal(other *VpcProjectRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m VpcProjectRef) MarshalJSON() ([]byte, error) {

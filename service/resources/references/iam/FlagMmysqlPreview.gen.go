@@ -133,6 +133,25 @@ func (m *FlagMmysqlPreviewID) Clone() *FlagMmysqlPreviewID {
 	return &clone
 }
 
+func (m *FlagMmysqlPreviewID) AsRef() *FlagMmysqlPreviewRef {
+	if m == nil {
+		return nil
+	}
+	return &FlagMmysqlPreviewRef{
+		id: *m,
+	}
+}
+
+func (m *FlagMmysqlPreviewID) Equal(other *FlagMmysqlPreviewID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m FlagMmysqlPreviewID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -289,6 +308,16 @@ func (m *FlagMmysqlPreviewRef) Clone() *FlagMmysqlPreviewRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *FlagMmysqlPreviewRef) Equal(other *FlagMmysqlPreviewRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m FlagMmysqlPreviewRef) MarshalJSON() ([]byte, error) {

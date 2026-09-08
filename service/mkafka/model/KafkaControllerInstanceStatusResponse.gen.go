@@ -2,7 +2,7 @@
 
 package model
 
-// Параметры виртуальной машины, где работает контроллер.
+// Параметры узла-контроллера кластера Managed Kafka.
 // Real OAPI model name: KafkaControllerInstanceStatus
 type KafkaControllerInstanceStatusResponse struct {
 	// Контроллеры размещаются на тех же виртуальных машинах, что и брокеры

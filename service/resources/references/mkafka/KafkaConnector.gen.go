@@ -157,6 +157,25 @@ func (m *KafkaConnectorID) Clone() *KafkaConnectorID {
 	return &clone
 }
 
+func (m *KafkaConnectorID) AsRef() *KafkaConnectorRef {
+	if m == nil {
+		return nil
+	}
+	return &KafkaConnectorRef{
+		id: *m,
+	}
+}
+
+func (m *KafkaConnectorID) Equal(other *KafkaConnectorID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.connector == other.connector && m.cluster == other.cluster && m.project == other.project
+}
+
 func (m KafkaConnectorID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *KafkaConnectorRef) Clone() *KafkaConnectorRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *KafkaConnectorRef) Equal(other *KafkaConnectorRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.connector == other.id.connector && m.id.cluster == other.id.cluster && m.id.project == other.id.project
 }
 
 func (m KafkaConnectorRef) MarshalJSON() ([]byte, error) {

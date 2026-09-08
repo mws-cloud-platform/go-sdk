@@ -9,14 +9,14 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateSecretRoleBindingRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав.
-	Spec optional.Optional[common.UpdateCommonRoleBindingSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.Optional[commonmodel.UpdateCommonRoleBindingSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *SecretRoleBindingRequest) AsUpdateModel() UpdateSecretRoleBindingRequest {
@@ -76,21 +76,21 @@ func (m *UpdateSecretRoleBindingRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *SecretRoleBindingRequest) diffMetadata(src *SecretRoleBindingRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *SecretRoleBindingRequest) diffMetadata(src *SecretRoleBindingRequest) optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+	return optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,
 	}
 }
 
-func (m *SecretRoleBindingRequest) diffSpec(src *SecretRoleBindingRequest) optional.Optional[common.UpdateCommonRoleBindingSpecRequest] {
+func (m *SecretRoleBindingRequest) diffSpec(src *SecretRoleBindingRequest) optional.Optional[commonmodel.UpdateCommonRoleBindingSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return optional.Optional[common.UpdateCommonRoleBindingSpecRequest]{
+	return optional.Optional[commonmodel.UpdateCommonRoleBindingSpecRequest]{
 		Value: value,
 		Set:   value.HasChanges(),
 	}

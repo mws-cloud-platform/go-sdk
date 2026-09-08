@@ -135,6 +135,25 @@ func (m *ImageID) Clone() *ImageID {
 	return &clone
 }
 
+func (m *ImageID) AsRef() *ImageRef {
+	if m == nil {
+		return nil
+	}
+	return &ImageRef{
+		id: *m,
+	}
+}
+
+func (m *ImageID) Equal(other *ImageID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.image == other.image && m.project == other.project
+}
+
 func (m ImageID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ImageRef) Clone() *ImageRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ImageRef) Equal(other *ImageRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.image == other.id.image && m.id.project == other.id.project
 }
 
 func (m ImageRef) MarshalJSON() ([]byte, error) {

@@ -77,7 +77,7 @@ func (m *UpdateOneToOneNatAddressSpecOrRefRequest) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v UpdateOneToOneNatAddressSpecOrRefSpecRequest
+			var v UpdateOneToOneNatAddressSpecRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -88,41 +88,4 @@ func (m *UpdateOneToOneNatAddressSpecOrRefRequest) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}))
-}
-
-func (m UpdateOneToOneNatAddressSpecOrRefSpecRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *UpdateOneToOneNatAddressSpecOrRefSpecRequest) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *UpdateOneToOneNatAddressSpecOrRefSpecRequest) encodeFields(e *jx.Encoder) error {
-	return nil
-}
-
-func (m *UpdateOneToOneNatAddressSpecOrRefSpecRequest) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *UpdateOneToOneNatAddressSpecOrRefSpecRequest) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("UpdateOneToOneNatAddressSpecOrRefSpecRequest")
-	}
-
-	return d.Skip()
 }

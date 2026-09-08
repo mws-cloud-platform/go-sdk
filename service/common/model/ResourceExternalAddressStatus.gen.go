@@ -11,7 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Статус IP-адреса внешнего балансировщика.
+// Описывает статус внешнего адреса как дополнительный ресурс.
 type ResourceExternalAddressStatus struct {
 	// Относительная ссылка на статический адрес.
 	Ref vpc.ExternalAddressRef `json:"ref" yaml:"ref"`

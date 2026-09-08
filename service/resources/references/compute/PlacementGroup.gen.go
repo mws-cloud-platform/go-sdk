@@ -135,6 +135,25 @@ func (m *PlacementGroupID) Clone() *PlacementGroupID {
 	return &clone
 }
 
+func (m *PlacementGroupID) AsRef() *PlacementGroupRef {
+	if m == nil {
+		return nil
+	}
+	return &PlacementGroupRef{
+		id: *m,
+	}
+}
+
+func (m *PlacementGroupID) Equal(other *PlacementGroupID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.placementGroup == other.placementGroup && m.project == other.project
+}
+
 func (m PlacementGroupID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *PlacementGroupRef) Clone() *PlacementGroupRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *PlacementGroupRef) Equal(other *PlacementGroupRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.placementGroup == other.id.placementGroup && m.id.project == other.id.project
 }
 
 func (m PlacementGroupRef) MarshalJSON() ([]byte, error) {

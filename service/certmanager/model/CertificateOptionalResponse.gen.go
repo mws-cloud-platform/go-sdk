@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // TLS/SSL-сертификат — это цифровой объект, с помощью которого веб-системы идентифицируют пользователя и устанавливают зашифрованное сетевое соединение с ним, используя протокол SSL/TLS (Secure Sockets Layer/Transport Layer Security)
@@ -11,9 +11,9 @@ import (
 type CertificateOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata common.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
-	Spec     CertificateSpecOptionalResponse                    `json:"spec" yaml:"spec"`
-	Status   CertificateStatusResponse                          `json:"status" yaml:"status"`
+	Metadata commonmodel.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
+	Spec     CertificateSpecOptionalResponse                         `json:"spec" yaml:"spec"`
+	Status   CertificateStatusResponse                               `json:"status" yaml:"status"`
 }
 
 func (m *CertificateOptionalResponse) GetKind() string {
@@ -27,14 +27,14 @@ func (m *CertificateOptionalResponse) SetKind(val string) {
 	m.Kind = val
 }
 
-func (m *CertificateOptionalResponse) GetMetadata() common.CommonTypedResourceMetadataOptionalResponse {
+func (m *CertificateOptionalResponse) GetMetadata() commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil {
 		return m.Metadata
 	}
-	return common.CommonTypedResourceMetadataOptionalResponse{}
+	return commonmodel.CommonTypedResourceMetadataOptionalResponse{}
 }
 
-func (m *CertificateOptionalResponse) SetMetadata(val common.CommonTypedResourceMetadataOptionalResponse) {
+func (m *CertificateOptionalResponse) SetMetadata(val commonmodel.CommonTypedResourceMetadataOptionalResponse) {
 	m.Metadata = val
 }
 

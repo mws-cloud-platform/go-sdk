@@ -113,6 +113,25 @@ func (m *TrashImageID) Clone() *TrashImageID {
 	return &clone
 }
 
+func (m *TrashImageID) AsRef() *TrashImageRef {
+	if m == nil {
+		return nil
+	}
+	return &TrashImageRef{
+		id: *m,
+	}
+}
+
+func (m *TrashImageID) Equal(other *TrashImageID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id == other.id
+}
+
 func (m TrashImageID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *TrashImageRef) Clone() *TrashImageRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *TrashImageRef) Equal(other *TrashImageRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.id == other.id.id
 }
 
 func (m TrashImageRef) MarshalJSON() ([]byte, error) {

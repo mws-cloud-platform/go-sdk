@@ -16,16 +16,16 @@ import (
 )
 
 type UpdateClickhouseClusterInstanceRequest struct {
-	// -> Имя инстанса в шарде. В случае count>1, имя формируется как name{replicaIndex}, где replicaIndex имеет сквозную нумерацию в рамках имени инстанса.
+	// -> Имя узла или узлов в шарде. В случае count>1, имя формируется как name{replicaIndex}, где replicaIndex имеет сквозную нумерацию в рамках указанного имени.
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Name optional.Optional[string] `json:"name" yaml:"name"`
-	// Количество инстансов в зоне доступности.
+	// Количество узлов в зоне доступности.
 	Count optional.Optional[int] `json:"count" yaml:"count"`
 	// Зона доступности.
 	Zone optional.Optional[rm.ZoneRef] `json:"zone" yaml:"zone"`
-	// Описание эдпойнтов инстансов.
+	// Описание эндпоинтов узлов.
 	Endpoints optional.Optional[[]UpdateClickhouseEndpointRequest] `json:"endpoints" yaml:"endpoints"`
 }
 

@@ -8,7 +8,7 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateClickhouseBackupRequest struct {
@@ -84,7 +84,7 @@ func (m *ClickhouseBackupRequest) diffSpec(src *ClickhouseBackupRequest) optiona
 }
 
 type UpdateClickhouseBackupMetadataRequest struct {
-	common.UpdateTypedResourceMetadataRequest
+	commonmodel.UpdateTypedResourceMetadataRequest
 }
 
 func (m *ClickhouseBackupMetadataRequest) AsUpdateModel() UpdateClickhouseBackupMetadataRequest {
@@ -93,10 +93,10 @@ func (m *ClickhouseBackupMetadataRequest) AsUpdateModel() UpdateClickhouseBackup
 		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = optional.NewOptional(func() []common.UpdateTypedUsageRequest {
-			var tmp []common.UpdateTypedUsageRequest
+		u.Usages = optional.NewOptional(func() []commonmodel.UpdateTypedUsageRequest {
+			var tmp []commonmodel.UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
-				tmp = make([]common.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
+				tmp = make([]commonmodel.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
 			}
 			for _, val := range m.GetUsages() {
 				tmp = append(tmp, val.AsUpdateModel())
@@ -136,7 +136,7 @@ func (m *ClickhouseBackupMetadataRequest) WithChanges(u UpdateClickhouseBackupMe
 		out.DisplayName = ptr.Get(u.DisplayName.Value)
 	}
 	if u.Usages.IsSet() {
-		out.Usages = merge.Slice(out.Usages, u.Usages.Value, (*common.TypedUsageRequest).WithChanges, (*common.TypedUsageRequest).GetName, (*common.UpdateTypedUsageRequest).GetName)
+		out.Usages = merge.Slice(out.Usages, u.Usages.Value, (*commonmodel.TypedUsageRequest).WithChanges, (*commonmodel.TypedUsageRequest).GetName, (*commonmodel.UpdateTypedUsageRequest).GetName)
 	}
 	if u.Etag.IsSet() {
 		out.Etag = ptr.Get(u.Etag.Value)
@@ -160,15 +160,15 @@ func (m *ClickhouseBackupMetadataRequest) diffDisplayName(src *ClickhouseBackupM
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *ClickhouseBackupMetadataRequest) diffUsages(src *ClickhouseBackupMetadataRequest) optional.Optional[[]common.UpdateTypedUsageRequest] {
-	diffFunc := func(fromItem, toItem common.TypedUsageRequest, fromNil bool) common.UpdateTypedUsageRequest {
+func (m *ClickhouseBackupMetadataRequest) diffUsages(src *ClickhouseBackupMetadataRequest) optional.Optional[[]commonmodel.UpdateTypedUsageRequest] {
+	diffFunc := func(fromItem, toItem commonmodel.TypedUsageRequest, fromNil bool) commonmodel.UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
 		}
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return optional.Optional[[]common.UpdateTypedUsageRequest]{
+	return optional.Optional[[]commonmodel.UpdateTypedUsageRequest]{
 		Value: value,
 		Set:   hasChanges,
 	}
@@ -182,35 +182,4 @@ func (m *ClickhouseBackupMetadataRequest) diffEtag(src *ClickhouseBackupMetadata
 func (m *ClickhouseBackupMetadataRequest) diffDescription(src *ClickhouseBackupMetadataRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetDescription(), m.GetDescription(), nilDiffers)
-}
-
-type UpdateClickhouseBackupSpecRequest struct {
-}
-
-func (m *ClickhouseBackupSpecRequest) AsUpdateModel() UpdateClickhouseBackupSpecRequest {
-	var u UpdateClickhouseBackupSpecRequest
-	return u
-}
-
-// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *ClickhouseBackupSpecRequest) Diff(src *ClickhouseBackupSpecRequest) UpdateClickhouseBackupSpecRequest {
-	nilDiffers := src != nil && m == nil
-	upd := UpdateClickhouseBackupSpecRequest{}
-	if !nilDiffers {
-	}
-	return upd
-}
-
-func (m *ClickhouseBackupSpecRequest) WithChanges(u UpdateClickhouseBackupSpecRequest) ClickhouseBackupSpecRequest {
-	var out ClickhouseBackupSpecRequest
-	if m != nil {
-		out = *m
-	}
-
-	return out
-}
-
-// HasChanges returns true if any field has Set == true
-func (m UpdateClickhouseBackupSpecRequest) HasChanges() bool {
-	return false
 }

@@ -9,7 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
@@ -117,7 +117,7 @@ func (m *DiskStatusResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "ready":
-			var v common.ResourceStatusReadyResponse
+			var v commonmodel.ResourceStatusReadyResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -177,9 +177,9 @@ func (m *DiskStatusResponse) Decode(d *jx.Decoder) error {
 			m.BlockSize = &v
 			return nil
 		case "linkedVms":
-			c := make([]common.LinkedVmInfoResponse, 0)
+			c := make([]commonmodel.LinkedVmInfoResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v common.LinkedVmInfoResponse
+				var v commonmodel.LinkedVmInfoResponse
 				if err := v.Decode(d); err != nil {
 					return err
 				}
@@ -200,7 +200,7 @@ func (m *DiskStatusResponse) Decode(d *jx.Decoder) error {
 			m.InitialSourceImage = &v
 			return nil
 		case "osType":
-			var v OsType2
+			var v OsType
 			if err := v.Decode(d); err != nil {
 				return err
 			}

@@ -157,6 +157,25 @@ func (m *UserOsLoginProfileID) Clone() *UserOsLoginProfileID {
 	return &clone
 }
 
+func (m *UserOsLoginProfileID) AsRef() *UserOsLoginProfileRef {
+	if m == nil {
+		return nil
+	}
+	return &UserOsLoginProfileRef{
+		id: *m,
+	}
+}
+
+func (m *UserOsLoginProfileID) Equal(other *UserOsLoginProfileID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.osLoginProfile == other.osLoginProfile && m.member == other.member && m.organization == other.organization
+}
+
 func (m UserOsLoginProfileID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *UserOsLoginProfileRef) Clone() *UserOsLoginProfileRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *UserOsLoginProfileRef) Equal(other *UserOsLoginProfileRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.osLoginProfile == other.id.osLoginProfile && m.id.member == other.id.member && m.id.organization == other.id.organization
 }
 
 func (m UserOsLoginProfileRef) MarshalJSON() ([]byte, error) {

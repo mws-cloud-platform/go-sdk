@@ -2,7 +2,7 @@
 
 package model
 
-// Конфигурация протокола проверки работоспособности.
+// Конфигурация проверки работоспособности виртуальных машин.
 // Real OAPI model name: NlbStatusHealthCheckProtocol
 type NlbStatusHealthCheckProtocolResponse struct {
 	// Конфигурация проверки работоспособности по протоколу HTTP.

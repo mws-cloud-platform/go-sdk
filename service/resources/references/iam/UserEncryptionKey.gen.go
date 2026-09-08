@@ -135,6 +135,25 @@ func (m *UserEncryptionKeyID) Clone() *UserEncryptionKeyID {
 	return &clone
 }
 
+func (m *UserEncryptionKeyID) AsRef() *UserEncryptionKeyRef {
+	if m == nil {
+		return nil
+	}
+	return &UserEncryptionKeyRef{
+		id: *m,
+	}
+}
+
+func (m *UserEncryptionKeyID) Equal(other *UserEncryptionKeyID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.keyName == other.keyName && m.userId == other.userId
+}
+
 func (m UserEncryptionKeyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *UserEncryptionKeyRef) Clone() *UserEncryptionKeyRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *UserEncryptionKeyRef) Equal(other *UserEncryptionKeyRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.keyName == other.id.keyName && m.id.userId == other.id.userId
 }
 
 func (m UserEncryptionKeyRef) MarshalJSON() ([]byte, error) {

@@ -135,6 +135,25 @@ func (m *NatHostID) Clone() *NatHostID {
 	return &clone
 }
 
+func (m *NatHostID) AsRef() *NatHostRef {
+	if m == nil {
+		return nil
+	}
+	return &NatHostRef{
+		id: *m,
+	}
+}
+
+func (m *NatHostID) Equal(other *NatHostID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.natHost == other.natHost && m.zone == other.zone
+}
+
 func (m NatHostID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *NatHostRef) Clone() *NatHostRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *NatHostRef) Equal(other *NatHostRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.natHost == other.id.natHost && m.id.zone == other.id.zone
 }
 
 func (m NatHostRef) MarshalJSON() ([]byte, error) {

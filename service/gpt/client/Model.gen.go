@@ -10,7 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/gpt/model"
 )
 
@@ -67,10 +67,10 @@ func (m ListModelsRequest) WithPageToken(token *string) ListModelsRequest {
 type ListModelsResponse struct {
 	Code        int
 	Response200 *ListModelsResponse200
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -111,7 +111,7 @@ type ListModelsResponse200 struct {
 	// Массив ресурсов Model на текущей странице.
 	Items []model.ModelResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ListModelsResponse200) GetItems() []model.ModelResponse {
@@ -125,18 +125,18 @@ func (m *ListModelsResponse200) SetItems(val []model.ModelResponse) {
 	m.Items = val
 }
 
-func (m *ListModelsResponse200) GetNextPageToken() *common.NextPageToken {
+func (m *ListModelsResponse200) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *ListModelsResponse200) SetNextPageToken(val *common.NextPageToken) {
+func (m *ListModelsResponse200) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *ListModelsResponse200) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ListModelsResponse200) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}
@@ -229,7 +229,7 @@ func (m *ListModelsResponse200) Decode(d *jx.Decoder) error {
 			m.Items = c
 			return nil
 		case "nextPageToken":
-			var v common.NextPageToken
+			var v commonmodel.NextPageToken
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -266,10 +266,10 @@ func (m *GetModelRequest) SetProject(project string) {
 type GetModelResponse struct {
 	Code        int
 	Response200 *model.ModelResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

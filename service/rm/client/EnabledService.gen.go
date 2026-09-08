@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/rm/model"
 )
 
@@ -34,6 +34,8 @@ type BatchEnableServicesV2Request struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
 	Project string                            // path: "project"
 	Body    model.BatchEnabledServicesRequest // body
@@ -55,11 +57,11 @@ type BatchEnableServicesV2Response struct {
 	Code        int
 	Response200 *model.BatchEnabledServicesResponseResponse
 	Response201 *model.BatchEnabledServicesResponseResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -140,9 +142,9 @@ func (m ListEnabledServicesRequest) WithPageToken(token *string) ListEnabledServ
 type ListEnabledServicesResponse struct {
 	Code        int
 	Response200 *model.EnabledServiceListOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -183,6 +185,8 @@ type EnableServiceRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *EnableServiceRequest) SetAuthorization(authorization string) {
@@ -201,11 +205,11 @@ type EnableServiceResponse struct {
 	Code        int
 	Response200 *model.EnabledServiceOptionalResponse
 	Response201 *model.EnabledServiceOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -267,10 +271,10 @@ func (m *GetEnabledServiceRequest) SetProject(project string) {
 type GetEnabledServiceResponse struct {
 	Code        int
 	Response200 *model.EnabledServiceOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

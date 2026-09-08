@@ -5,12 +5,11 @@ package model
 import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateCertificateManagedSpecIssuerRequest struct {
-	Acme optional.OptionalNil[UpdateCertificateManagedSpecIssuerAcmeRequest] `json:"acme" yaml:"acme"`
+	Acme optional.OptionalNil[UpdateAcmeIssuerRequest] `json:"acme" yaml:"acme"`
 }
 
 func (m *CertificateManagedSpecIssuerRequest) AsUpdateModel() UpdateCertificateManagedSpecIssuerRequest {
@@ -50,87 +49,12 @@ func (m UpdateCertificateManagedSpecIssuerRequest) HasChanges() bool {
 	return m.Acme.Set
 }
 
-func (m *CertificateManagedSpecIssuerRequest) diffAcme(src *CertificateManagedSpecIssuerRequest) optional.OptionalNil[UpdateCertificateManagedSpecIssuerAcmeRequest] {
+func (m *CertificateManagedSpecIssuerRequest) diffAcme(src *CertificateManagedSpecIssuerRequest) optional.OptionalNil[UpdateAcmeIssuerRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetAcme().Diff(src.GetAcme())
-	return optional.OptionalNil[UpdateCertificateManagedSpecIssuerAcmeRequest]{
+	return optional.OptionalNil[UpdateAcmeIssuerRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,
 	}
-}
-
-type UpdateCertificateManagedSpecIssuerAcmeRequest struct {
-	// ACME-сервер для выпуска сертификата.
-	Server optional.Optional[CertificateManagedSpecAcmeServer] `json:"server" yaml:"server"`
-	// Предпочтительный тип проверки домена (challenge).
-	// Возможные значения: DNS01 или HTTP01. По умолчанию используется DNS01.
-	//
-	// Неизменяемое поле. Можно установить значение только при создании.
-	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
-	ChallengeType optional.Optional[CertificateChallengeType] `json:"challengeType" yaml:"challengeType"`
-	// Профиль сертификата.
-	Profile optional.Optional[string] `json:"profile" yaml:"profile"`
-}
-
-func (m *CertificateManagedSpecIssuerAcmeRequest) AsUpdateModel() UpdateCertificateManagedSpecIssuerAcmeRequest {
-	var u UpdateCertificateManagedSpecIssuerAcmeRequest
-	u.Server = optional.NewOptional(m.GetServer())
-	u.ChallengeType = optional.NewOptional(m.GetChallengeType())
-	if m.Profile != nil {
-		u.Profile = optional.NewOptional(m.GetProfileOr(""))
-	}
-	return u
-}
-
-// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *CertificateManagedSpecIssuerAcmeRequest) Diff(src *CertificateManagedSpecIssuerAcmeRequest) UpdateCertificateManagedSpecIssuerAcmeRequest {
-	nilDiffers := src != nil && m == nil
-	upd := UpdateCertificateManagedSpecIssuerAcmeRequest{}
-	if !nilDiffers {
-		upd.Server = m.diffServer(src)
-		upd.ChallengeType = m.diffChallengeType(src)
-		upd.Profile = m.diffProfile(src)
-	}
-	return upd
-}
-
-func (m *CertificateManagedSpecIssuerAcmeRequest) WithChanges(u UpdateCertificateManagedSpecIssuerAcmeRequest) CertificateManagedSpecIssuerAcmeRequest {
-	var out CertificateManagedSpecIssuerAcmeRequest
-	if m != nil {
-		out = *m
-	}
-
-	if u.Server.IsSet() {
-		out.Server = u.Server.Value
-	}
-	if u.ChallengeType.IsSet() {
-		out.ChallengeType = u.ChallengeType.Value
-	}
-	if u.Profile.IsSet() {
-		out.Profile = ptr.Get(u.Profile.Value)
-	}
-	return out
-}
-
-// HasChanges returns true if any field has Set == true
-func (m UpdateCertificateManagedSpecIssuerAcmeRequest) HasChanges() bool {
-	return m.Server.Set ||
-		m.ChallengeType.Set ||
-		m.Profile.Set
-}
-
-func (m *CertificateManagedSpecIssuerAcmeRequest) diffServer(src *CertificateManagedSpecIssuerAcmeRequest) optional.Optional[CertificateManagedSpecAcmeServer] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetServer(), m.GetServer(), nilDiffers)
-}
-
-func (m *CertificateManagedSpecIssuerAcmeRequest) diffChallengeType(src *CertificateManagedSpecIssuerAcmeRequest) optional.Optional[CertificateChallengeType] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveRequired(src.GetChallengeType(), m.GetChallengeType(), nilDiffers)
-}
-
-func (m *CertificateManagedSpecIssuerAcmeRequest) diffProfile(src *CertificateManagedSpecIssuerAcmeRequest) optional.Optional[string] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetProfile(), m.GetProfile(), nilDiffers)
 }

@@ -8,7 +8,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: Project
@@ -119,7 +119,7 @@ func (m *ProjectResponse) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры Project
 // Real OAPI model name: ProjectMetadata
 type ProjectMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// ID свойства
 	Id *resmodels.AnyResourceID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -194,14 +194,14 @@ func (m *ProjectMetadataResponse) GetPurgeTimeOr(val time.Time) time.Time {
 	return val
 }
 
-func (m *ProjectMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *ProjectMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *ProjectMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *ProjectMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}

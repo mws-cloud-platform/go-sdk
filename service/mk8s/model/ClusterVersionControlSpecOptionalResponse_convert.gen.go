@@ -4,7 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func ClusterVersionControlSpecRequestToOptionalResponse(request *ClusterVersionControlSpecRequest) (*ClusterVersionControlSpecOptionalResponse, error) {
@@ -14,10 +14,10 @@ func ClusterVersionControlSpecRequestToOptionalResponse(request *ClusterVersionC
 	var response ClusterVersionControlSpecOptionalResponse
 	response.ReleaseChannel = request.ReleaseChannel
 	if request.Version != nil {
-		response.Version = optional.NewOptionalNil(*request.Version)
+		response.Version = optional.NewOptional(*request.Version)
 	}
 	if request.MaintenanceWindow != nil {
-		tmpMaintenanceWindow, err := common.MaintenanceWindowRequestToOptionalResponse(request.MaintenanceWindow)
+		tmpMaintenanceWindow, err := commonmodel.MaintenanceWindowRequestToOptionalResponse(request.MaintenanceWindow)
 		if err != nil {
 			return nil, err
 		}

@@ -3,16 +3,16 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: SecretVersion
 type SecretVersionOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata common.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
-	Spec     SecretVersionSpecOptionalResponse                  `json:"spec" yaml:"spec"`
-	Status   SecretVersionStatusResponse                        `json:"status" yaml:"status"`
+	Metadata commonmodel.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
+	Spec     SecretVersionSpecOptionalResponse                       `json:"spec" yaml:"spec"`
+	Status   SecretVersionStatusResponse                             `json:"status" yaml:"status"`
 }
 
 func (m *SecretVersionOptionalResponse) GetKind() string {
@@ -26,14 +26,14 @@ func (m *SecretVersionOptionalResponse) SetKind(val string) {
 	m.Kind = val
 }
 
-func (m *SecretVersionOptionalResponse) GetMetadata() common.CommonTypedResourceMetadataOptionalResponse {
+func (m *SecretVersionOptionalResponse) GetMetadata() commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil {
 		return m.Metadata
 	}
-	return common.CommonTypedResourceMetadataOptionalResponse{}
+	return commonmodel.CommonTypedResourceMetadataOptionalResponse{}
 }
 
-func (m *SecretVersionOptionalResponse) SetMetadata(val common.CommonTypedResourceMetadataOptionalResponse) {
+func (m *SecretVersionOptionalResponse) SetMetadata(val commonmodel.CommonTypedResourceMetadataOptionalResponse) {
 	m.Metadata = val
 }
 

@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m UpdateClusterVersionControlSpecRequest) MarshalJSON() ([]byte, error) {
@@ -40,11 +40,7 @@ func (m *UpdateClusterVersionControlSpecRequest) encodeFields(e *jx.Encoder) err
 
 	if m.Version.IsSet() {
 		e.FieldStart("version")
-		if m.Version.IsNull() {
-			e.Null()
-		} else {
-			e.Str(m.Version.Value)
-		}
+		e.Str(m.Version.Value)
 	}
 
 	if m.MaintenanceWindow.IsSet() {
@@ -80,11 +76,6 @@ func (m *UpdateClusterVersionControlSpecRequest) Decode(d *jx.Decoder) error {
 			m.ReleaseChannel.SetTo(v)
 			return nil
 		case "version":
-			if d.Next() == jx.Null {
-				m.Version.SetToNull()
-				return d.Null()
-			}
-
 			v, err := decode.Str(d)
 			if err != nil {
 				return err
@@ -98,7 +89,7 @@ func (m *UpdateClusterVersionControlSpecRequest) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v common.UpdateMaintenanceWindowRequest
+			var v commonmodel.UpdateMaintenanceWindowRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}

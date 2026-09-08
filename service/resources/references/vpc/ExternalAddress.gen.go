@@ -135,6 +135,25 @@ func (m *ExternalAddressID) Clone() *ExternalAddressID {
 	return &clone
 }
 
+func (m *ExternalAddressID) AsRef() *ExternalAddressRef {
+	if m == nil {
+		return nil
+	}
+	return &ExternalAddressRef{
+		id: *m,
+	}
+}
+
+func (m *ExternalAddressID) Equal(other *ExternalAddressID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.externalAddress == other.externalAddress && m.project == other.project
+}
+
 func (m ExternalAddressID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ExternalAddressRef) Clone() *ExternalAddressRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ExternalAddressRef) Equal(other *ExternalAddressRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.externalAddress == other.id.externalAddress && m.id.project == other.id.project
 }
 
 func (m ExternalAddressRef) MarshalJSON() ([]byte, error) {

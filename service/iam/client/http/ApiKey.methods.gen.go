@@ -155,6 +155,8 @@ func (c *ApiKey) deleteApiKeyInvoker(ctx context.Context, anyReq any, response c
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteApiKey(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteApiKey(httpReq, request)
 
@@ -179,6 +181,20 @@ func (c *ApiKey) deleteApiKeyInvoker(ctx context.Context, anyReq any, response c
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *ApiKey) queryDeleteApiKey(request *client.DeleteApiKeyRequest) string {
+	q := make(url.Values)
+	if request.IfExist != nil {
+		q.Add("ifExist", conv.BoolToString(*request.IfExist))
+	}
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	if request.Cascade != nil {
+		q.Add("cascade", conv.BoolToString(*request.Cascade))
+	}
+	return q.Encode()
 }
 
 func (c *ApiKey) headerDeleteApiKey(req *http.Request, request *client.DeleteApiKeyRequest) {
@@ -346,6 +362,9 @@ func (c *ApiKey) upsertApiKeyInvoker(ctx context.Context, anyReq any, response c
 
 func (c *ApiKey) queryUpsertApiKey(request *client.UpsertApiKeyRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -441,6 +460,9 @@ func (c *ApiKey) createApiKeyInvoker(ctx context.Context, anyReq any, response c
 func (c *ApiKey) queryCreateApiKey(request *client.UpsertApiKeyRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -536,6 +558,9 @@ func (c *ApiKey) updateApiKeyInvoker(ctx context.Context, anyReq any, response c
 func (c *ApiKey) queryUpdateApiKey(request *client.UpdateApiKeyRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

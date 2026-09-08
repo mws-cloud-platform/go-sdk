@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
 
@@ -25,6 +25,6 @@ func TestDiskStatusResponseMarshalling(t *testing.T) {
 
 func initDiskStatusResponse() model.DiskStatusResponse {
 	var v model.DiskStatusResponse
-	v.LinkedVms = make([]common.LinkedVmInfoResponse, 0)
+	v.LinkedVms = make([]commonmodel.LinkedVmInfoResponse, 0)
 	return v
 }

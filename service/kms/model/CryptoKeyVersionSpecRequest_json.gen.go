@@ -38,13 +38,6 @@ func (m *CryptoKeyVersionSpecRequest) encodeFields(e *jx.Encoder) error {
 			return err
 		}
 	}
-
-	if m.DestructionPolicy != nil {
-		e.FieldStart("destructionPolicy")
-		if err := m.DestructionPolicy.Encode(e); err != nil {
-			return err
-		}
-	}
 	return nil
 }
 
@@ -71,59 +64,10 @@ func (m *CryptoKeyVersionSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.UsagePolicy = &v
 			return nil
-		case "destructionPolicy":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
-			var v CryptoKeyVersionSpecDestructionPolicyRequest
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.DestructionPolicy = &v
-			return nil
 		default:
 			return d.Skip()
 		}
 	}))
-}
-
-func (m CryptoKeyVersionSpecDestructionPolicyRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *CryptoKeyVersionSpecDestructionPolicyRequest) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *CryptoKeyVersionSpecDestructionPolicyRequest) encodeFields(e *jx.Encoder) error {
-	return nil
-}
-
-func (m *CryptoKeyVersionSpecDestructionPolicyRequest) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *CryptoKeyVersionSpecDestructionPolicyRequest) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("CryptoKeyVersionSpecDestructionPolicyRequest")
-	}
-
-	return d.Skip()
 }
 
 func (m CryptoKeyVersionSpecUsagePolicyRequest) MarshalJSON() ([]byte, error) {

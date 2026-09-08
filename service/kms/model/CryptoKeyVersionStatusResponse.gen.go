@@ -8,12 +8,12 @@ import (
 
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: CryptoKeyVersionStatus
 type CryptoKeyVersionStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Порядковый номер ключа. Каждый раз при создании новой версии ключа это значение увеличивается.
 	Version *int32 `json:"version,omitempty" yaml:"version,omitempty"`
 	// Криптографический алгоритм.
@@ -28,11 +28,11 @@ type CryptoKeyVersionStatusResponse struct {
 	Destruction *CryptoKeyVersionStatusDestructionResponse `json:"destruction,omitempty" yaml:"destruction,omitempty"`
 }
 
-func (m *CryptoKeyVersionStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *CryptoKeyVersionStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *CryptoKeyVersionStatusResponse) GetVersion() *int32 {

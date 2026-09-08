@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m CertificateRoleBindingOptionalResponse) MarshalJSON() ([]byte, error) {
@@ -86,7 +86,7 @@ func (m *CertificateRoleBindingOptionalResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v common.CommonTypedResourceMetadataOptionalResponse
+			var v commonmodel.CommonTypedResourceMetadataOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -94,7 +94,7 @@ func (m *CertificateRoleBindingOptionalResponse) Decode(d *jx.Decoder) error {
 			m.Metadata.SetTo(v)
 			return nil
 		case "spec":
-			var v common.CommonRoleBindingSpecOptionalResponse
+			var v commonmodel.CommonRoleBindingSpecOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -106,7 +106,7 @@ func (m *CertificateRoleBindingOptionalResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v common.CommonRoleBindingStatusResponse
+			var v commonmodel.CommonRoleBindingStatusResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

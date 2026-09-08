@@ -12,17 +12,12 @@ import (
 type UpdateCryptoKeyVersionSpecRequest struct {
 	// Политика использования версии ключа. Определяет, разрешены ли криптографические операции с этой версией.
 	UsagePolicy optional.OptionalNil[UpdateCryptoKeyVersionSpecUsagePolicyRequest] `json:"usagePolicy" yaml:"usagePolicy"`
-	// Политика уничтожения версии ключа. Определяет параметры и расписание.
-	DestructionPolicy optional.OptionalNil[UpdateCryptoKeyVersionSpecDestructionPolicyRequest] `json:"destructionPolicy" yaml:"destructionPolicy"`
 }
 
 func (m *CryptoKeyVersionSpecRequest) AsUpdateModel() UpdateCryptoKeyVersionSpecRequest {
 	var u UpdateCryptoKeyVersionSpecRequest
 	if m.UsagePolicy != nil {
 		u.UsagePolicy = optional.NewOptionalNil(m.UsagePolicy.AsUpdateModel())
-	}
-	if m.DestructionPolicy != nil {
-		u.DestructionPolicy = optional.NewOptionalNil(m.DestructionPolicy.AsUpdateModel())
 	}
 	return u
 }
@@ -33,7 +28,6 @@ func (m *CryptoKeyVersionSpecRequest) Diff(src *CryptoKeyVersionSpecRequest) Upd
 	upd := UpdateCryptoKeyVersionSpecRequest{}
 	if !nilDiffers {
 		upd.UsagePolicy = m.diffUsagePolicy(src)
-		upd.DestructionPolicy = m.diffDestructionPolicy(src)
 	}
 	return upd
 }
@@ -49,18 +43,12 @@ func (m *CryptoKeyVersionSpecRequest) WithChanges(u UpdateCryptoKeyVersionSpecRe
 	} else if u.UsagePolicy.IsNull() {
 		out.UsagePolicy = nil
 	}
-	if u.DestructionPolicy.IsSet() {
-		out.DestructionPolicy = ptr.Get(CryptoKeyVersionSpecDestructionPolicyRequest(u.DestructionPolicy.Value))
-	} else if u.DestructionPolicy.IsNull() {
-		out.DestructionPolicy = nil
-	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateCryptoKeyVersionSpecRequest) HasChanges() bool {
-	return m.UsagePolicy.Set ||
-		m.DestructionPolicy.Set
+	return m.UsagePolicy.Set
 }
 
 func (m *CryptoKeyVersionSpecRequest) diffUsagePolicy(src *CryptoKeyVersionSpecRequest) optional.OptionalNil[UpdateCryptoKeyVersionSpecUsagePolicyRequest] {
@@ -71,47 +59,6 @@ func (m *CryptoKeyVersionSpecRequest) diffUsagePolicy(src *CryptoKeyVersionSpecR
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,
 	}
-}
-
-func (m *CryptoKeyVersionSpecRequest) diffDestructionPolicy(src *CryptoKeyVersionSpecRequest) optional.OptionalNil[UpdateCryptoKeyVersionSpecDestructionPolicyRequest] {
-	nilDiffers := src != nil && m == nil
-	value := m.GetDestructionPolicy().Diff(src.GetDestructionPolicy())
-	return optional.OptionalNil[UpdateCryptoKeyVersionSpecDestructionPolicyRequest]{
-		Value: value,
-		Set:   nilDiffers || value.HasChanges(),
-		Null:  nilDiffers,
-	}
-}
-
-type UpdateCryptoKeyVersionSpecDestructionPolicyRequest struct {
-}
-
-func (m *CryptoKeyVersionSpecDestructionPolicyRequest) AsUpdateModel() UpdateCryptoKeyVersionSpecDestructionPolicyRequest {
-	var u UpdateCryptoKeyVersionSpecDestructionPolicyRequest
-	return u
-}
-
-// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *CryptoKeyVersionSpecDestructionPolicyRequest) Diff(src *CryptoKeyVersionSpecDestructionPolicyRequest) UpdateCryptoKeyVersionSpecDestructionPolicyRequest {
-	nilDiffers := src != nil && m == nil
-	upd := UpdateCryptoKeyVersionSpecDestructionPolicyRequest{}
-	if !nilDiffers {
-	}
-	return upd
-}
-
-func (m *CryptoKeyVersionSpecDestructionPolicyRequest) WithChanges(u UpdateCryptoKeyVersionSpecDestructionPolicyRequest) CryptoKeyVersionSpecDestructionPolicyRequest {
-	var out CryptoKeyVersionSpecDestructionPolicyRequest
-	if m != nil {
-		out = *m
-	}
-
-	return out
-}
-
-// HasChanges returns true if any field has Set == true
-func (m UpdateCryptoKeyVersionSpecDestructionPolicyRequest) HasChanges() bool {
-	return false
 }
 
 type UpdateCryptoKeyVersionSpecUsagePolicyRequest struct {

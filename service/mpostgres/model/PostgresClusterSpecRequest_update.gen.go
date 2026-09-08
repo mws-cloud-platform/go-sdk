@@ -13,7 +13,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdatePostgresClusterSpecRequest struct {
@@ -26,8 +26,8 @@ type UpdatePostgresClusterSpecRequest struct {
 	InstanceTemplate optional.Optional[UpdatePostgresInstanceTemplateRequest] `json:"instanceTemplate" yaml:"instanceTemplate"`
 	Instances        optional.Optional[[]UpdatePostgresInstanceRequest]       `json:"instances" yaml:"instances"`
 	// Спецификация автоматического бэкапирования.
-	Backup            optional.OptionalNil[UpdatePostgresClusterBackupRequest]    `json:"backup" yaml:"backup"`
-	MaintenanceWindow optional.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
+	Backup            optional.OptionalNil[UpdatePostgresClusterBackupRequest]         `json:"backup" yaml:"backup"`
+	MaintenanceWindow optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
 	// Параметры PostgreSQL. Если не указаны, будут использованы параметры по умолчанию.
 	PostgresParameters optional.Optional[map[string]string] `json:"postgresParameters" yaml:"postgresParameters"`
 	// Выгрузка пользовательских логов кластера — включена или выключена.
@@ -228,10 +228,10 @@ func (m *PostgresClusterSpecRequest) diffBackup(src *PostgresClusterSpecRequest)
 	}
 }
 
-func (m *PostgresClusterSpecRequest) diffMaintenanceWindow(src *PostgresClusterSpecRequest) optional.OptionalNil[common.UpdateMaintenanceWindowRequest] {
+func (m *PostgresClusterSpecRequest) diffMaintenanceWindow(src *PostgresClusterSpecRequest) optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMaintenanceWindow().Diff(src.GetMaintenanceWindow())
-	return optional.OptionalNil[common.UpdateMaintenanceWindowRequest]{
+	return optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

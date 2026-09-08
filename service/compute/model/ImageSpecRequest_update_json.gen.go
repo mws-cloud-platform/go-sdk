@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m UpdateImageSpecRequest) MarshalJSON() ([]byte, error) {
@@ -37,6 +38,17 @@ func (m *UpdateImageSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Family.IsSet() {
 		e.FieldStart("family")
 		e.Str(m.Family.Value)
+	}
+
+	if m.Regions.IsSet() {
+		e.FieldStart("regions")
+		e.ArrStart()
+		for _, elem := range m.Regions.Value {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
 	}
 
 	if m.Source.IsSet() {
@@ -96,6 +108,21 @@ func (m *UpdateImageSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Family.SetTo(v)
+			return nil
+		case "regions":
+			c := make([]rm.RegionRef, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v rm.RegionRef
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Regions.SetTo(c)
 			return nil
 		case "source":
 			var v UpdateImageSpecSourceRequest

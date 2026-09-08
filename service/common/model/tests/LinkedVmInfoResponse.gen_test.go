@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
@@ -18,13 +18,13 @@ func TestLinkedVmInfoResponseMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.LinkedVmInfoResponse
+	var actual commonmodel.LinkedVmInfoResponse
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initLinkedVmInfoResponse() common.LinkedVmInfoResponse {
-	var v common.LinkedVmInfoResponse
+func initLinkedVmInfoResponse() commonmodel.LinkedVmInfoResponse {
+	var v commonmodel.LinkedVmInfoResponse
 	v.Id = compute.NewMustVirtualMachineRef("projectID", "virtualMachineID")
 	return v
 }

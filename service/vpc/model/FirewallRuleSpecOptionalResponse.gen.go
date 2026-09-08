@@ -10,7 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
-// Спецификация правила файрвола.
+// Описывает спецификацию правила файрвола.
 // Real OAPI model name: FirewallRuleSpec
 type FirewallRuleSpecOptionalResponse struct {
 	// Направление трафика, к которому применяется правило.

@@ -222,6 +222,8 @@ func (c *Certificate) deleteCertificateInvoker(ctx context.Context, anyReq any, 
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteCertificate(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteCertificate(httpReq, request)
 
@@ -246,6 +248,14 @@ func (c *Certificate) deleteCertificateInvoker(ctx context.Context, anyReq any, 
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *Certificate) queryDeleteCertificate(request *client.DeleteCertificateRequest) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *Certificate) headerDeleteCertificate(req *http.Request, request *client.DeleteCertificateRequest) {
@@ -410,6 +420,9 @@ func (c *Certificate) upsertCertificateInvoker(ctx context.Context, anyReq any, 
 
 func (c *Certificate) queryUpsertCertificate(request *client.UpsertCertificateRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -502,6 +515,9 @@ func (c *Certificate) createCertificateInvoker(ctx context.Context, anyReq any, 
 func (c *Certificate) queryCreateCertificate(request *client.UpsertCertificateRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -594,6 +610,9 @@ func (c *Certificate) updateCertificateInvoker(ctx context.Context, anyReq any, 
 func (c *Certificate) queryUpdateCertificate(request *client.UpdateCertificateRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

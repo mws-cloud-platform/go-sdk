@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mkafka"
 )
 
@@ -101,7 +101,7 @@ func (m *KafkaConnectorOptionalResponse) Clone() *KafkaConnectorOptionalResponse
 // Представление поля Metadata анонимного типа структуры KafkaConnector
 // Real OAPI model name: KafkaConnectorMetadata
 type KafkaConnectorMetadataOptionalResponse struct {
-	common.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
 	// Ссылка на типизированный референс.
 	Id *mkafka.KafkaConnectorID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -176,14 +176,14 @@ func (m *KafkaConnectorMetadataOptionalResponse) GetPurgeTimeOr(val time.Time) t
 	return val
 }
 
-func (m *KafkaConnectorMetadataOptionalResponse) GetUsages() []common.TypedUsageOptionalResponse {
+func (m *KafkaConnectorMetadataOptionalResponse) GetUsages() []commonmodel.TypedUsageOptionalResponse {
 	if m != nil && m.Usages.IsSet() {
 		return m.TypedResourceMetadataOptionalResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *KafkaConnectorMetadataOptionalResponse) GetUsagesOr(val []common.TypedUsageOptionalResponse) []common.TypedUsageOptionalResponse {
+func (m *KafkaConnectorMetadataOptionalResponse) GetUsagesOr(val []commonmodel.TypedUsageOptionalResponse) []commonmodel.TypedUsageOptionalResponse {
 	if m != nil {
 		return m.TypedResourceMetadataOptionalResponse.GetUsagesOr(val)
 	}

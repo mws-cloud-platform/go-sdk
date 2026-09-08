@@ -7,7 +7,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Сетевой балансировщик нагрузки.
@@ -15,7 +15,7 @@ import (
 type NlbOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Метаданные сетевого балансировщик нагрузки.
-	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata optional.OptionalNil[commonmodel.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация сетевого балансировщик нагрузки.
 	Spec NlbSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Статус сетевого балансировщик нагрузки.
@@ -40,14 +40,14 @@ func (m *NlbOptionalResponse) GetKindOr(val string) string {
 	return val
 }
 
-func (m *NlbOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
+func (m *NlbOptionalResponse) GetMetadata() *commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
-func (m *NlbOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
+func (m *NlbOptionalResponse) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataOptionalResponse) commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}

@@ -7,12 +7,12 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateOneToOneNatSpecExternalRequest struct {
 	// Спецификация внешнего адреса, через который будет осуществляться трансляция.
-	Address optional.Optional[common.UpdateResourceExternalAddressSpecOrRefRequest] `json:"address" yaml:"address"`
+	Address optional.Optional[commonmodel.UpdateResourceExternalAddressSpecOrRefRequest] `json:"address" yaml:"address"`
 }
 
 func (m *OneToOneNatSpecExternalRequest) AsUpdateModel() UpdateOneToOneNatSpecExternalRequest {
@@ -62,11 +62,11 @@ func (m *UpdateOneToOneNatSpecExternalRequest) Parse(ctx context.Context) error 
 	return nil
 }
 
-func (m *OneToOneNatSpecExternalRequest) diffAddress(src *OneToOneNatSpecExternalRequest) optional.Optional[common.UpdateResourceExternalAddressSpecOrRefRequest] {
+func (m *OneToOneNatSpecExternalRequest) diffAddress(src *OneToOneNatSpecExternalRequest) optional.Optional[commonmodel.UpdateResourceExternalAddressSpecOrRefRequest] {
 	from := src.GetAddress()
 	to := m.GetAddress()
 	value := to.Diff(&from)
-	return optional.Optional[common.UpdateResourceExternalAddressSpecOrRefRequest]{
+	return optional.Optional[commonmodel.UpdateResourceExternalAddressSpecOrRefRequest]{
 		Value: value,
 		Set:   value.HasChanges(),
 	}

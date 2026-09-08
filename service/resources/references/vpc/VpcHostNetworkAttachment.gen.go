@@ -179,6 +179,25 @@ func (m *VpcHostNetworkAttachmentID) Clone() *VpcHostNetworkAttachmentID {
 	return &clone
 }
 
+func (m *VpcHostNetworkAttachmentID) AsRef() *VpcHostNetworkAttachmentRef {
+	if m == nil {
+		return nil
+	}
+	return &VpcHostNetworkAttachmentRef{
+		id: *m,
+	}
+}
+
+func (m *VpcHostNetworkAttachmentID) Equal(other *VpcHostNetworkAttachmentID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.networkAttachment == other.networkAttachment && m.project == other.project && m.vpcHost == other.vpcHost && m.zone == other.zone
+}
+
 func (m VpcHostNetworkAttachmentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -371,6 +390,16 @@ func (m *VpcHostNetworkAttachmentRef) Clone() *VpcHostNetworkAttachmentRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *VpcHostNetworkAttachmentRef) Equal(other *VpcHostNetworkAttachmentRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.networkAttachment == other.id.networkAttachment && m.id.project == other.id.project && m.id.vpcHost == other.id.vpcHost && m.id.zone == other.id.zone
 }
 
 func (m VpcHostNetworkAttachmentRef) MarshalJSON() ([]byte, error) {

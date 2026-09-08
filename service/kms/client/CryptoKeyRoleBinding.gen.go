@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/kms/model"
 )
 
@@ -76,10 +76,10 @@ func (m ListCryptoKeyRoleBindingsRequest) WithPageToken(token *string) ListCrypt
 type ListCryptoKeyRoleBindingsResponse struct {
 	Code        int
 	Response200 *model.CryptoKeyRoleBindingListOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -150,10 +150,10 @@ func (m *DeleteCryptoKeyRoleBindingRequest) getCryptoKeyRoleBindingRequest() Get
 type DeleteCryptoKeyRoleBindingResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -215,10 +215,10 @@ func (m *GetCryptoKeyRoleBindingRequest) SetProject(project string) {
 type GetCryptoKeyRoleBindingResponse struct {
 	Code        int
 	Response200 *model.CryptoKeyRoleBindingOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -328,9 +328,9 @@ type UpsertCryptoKeyRoleBindingResponse struct {
 	Code        int
 	Response200 *model.CryptoKeyRoleBindingOptionalResponse
 	Response201 *model.CryptoKeyRoleBindingOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

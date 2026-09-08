@@ -7,7 +7,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Привязка роли к секрету — это связь субъекта (пользователя, группы пользователей или сервисного аккаунта) и роли, определяющая права субъекта на конкретный секрет
@@ -15,11 +15,11 @@ import (
 type SecretRoleBindingOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata optional.OptionalNil[commonmodel.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав.
-	Spec common.CommonRoleBindingSpecOptionalResponse `json:"spec" yaml:"spec"`
+	Spec commonmodel.CommonRoleBindingSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Текущее состояние привязки роли, вычисляемое системой.
-	Status *common.CommonRoleBindingStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
+	Status *commonmodel.CommonRoleBindingStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *SecretRoleBindingOptionalResponse) GetKind() string {
@@ -33,43 +33,43 @@ func (m *SecretRoleBindingOptionalResponse) SetKind(val string) {
 	m.Kind = val
 }
 
-func (m *SecretRoleBindingOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
+func (m *SecretRoleBindingOptionalResponse) GetMetadata() *commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
-func (m *SecretRoleBindingOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
+func (m *SecretRoleBindingOptionalResponse) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataOptionalResponse) commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}
 	return val
 }
 
-func (m *SecretRoleBindingOptionalResponse) GetSpec() common.CommonRoleBindingSpecOptionalResponse {
+func (m *SecretRoleBindingOptionalResponse) GetSpec() commonmodel.CommonRoleBindingSpecOptionalResponse {
 	if m != nil {
 		return m.Spec
 	}
-	return common.CommonRoleBindingSpecOptionalResponse{}
+	return commonmodel.CommonRoleBindingSpecOptionalResponse{}
 }
 
-func (m *SecretRoleBindingOptionalResponse) SetSpec(val common.CommonRoleBindingSpecOptionalResponse) {
+func (m *SecretRoleBindingOptionalResponse) SetSpec(val commonmodel.CommonRoleBindingSpecOptionalResponse) {
 	m.Spec = val
 }
 
-func (m *SecretRoleBindingOptionalResponse) GetStatus() *common.CommonRoleBindingStatusResponse {
+func (m *SecretRoleBindingOptionalResponse) GetStatus() *commonmodel.CommonRoleBindingStatusResponse {
 	if m != nil {
 		return m.Status
 	}
 	return nil
 }
 
-func (m *SecretRoleBindingOptionalResponse) SetStatus(val *common.CommonRoleBindingStatusResponse) {
+func (m *SecretRoleBindingOptionalResponse) SetStatus(val *commonmodel.CommonRoleBindingStatusResponse) {
 	m.Status = val
 }
 
-func (m *SecretRoleBindingOptionalResponse) GetStatusOr(val common.CommonRoleBindingStatusResponse) common.CommonRoleBindingStatusResponse {
+func (m *SecretRoleBindingOptionalResponse) GetStatusOr(val commonmodel.CommonRoleBindingStatusResponse) commonmodel.CommonRoleBindingStatusResponse {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}

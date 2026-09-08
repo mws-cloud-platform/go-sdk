@@ -3,24 +3,23 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Состояние роли (этап жизненного цикла).
 // Real OAPI model name: RoleStage
 type RoleStageResponse struct {
-	Code    common.RoleStageCode `json:"code" yaml:"code"`
-	Comment *string              `json:"comment,omitempty" yaml:"comment,omitempty"`
+	Code    commonmodel.RoleStageCode `json:"code" yaml:"code"`
+	Comment *string                   `json:"comment,omitempty" yaml:"comment,omitempty"`
 }
 
-func (m *RoleStageResponse) GetCode() common.RoleStageCode {
+func (m *RoleStageResponse) GetCode() commonmodel.RoleStageCode {
 	if m != nil {
 		return m.Code
 	}
 	return ""
 }
 
-func (m *RoleStageResponse) SetCode(val common.RoleStageCode) {
+func (m *RoleStageResponse) SetCode(val commonmodel.RoleStageCode) {
 	m.Code = val
 }
 

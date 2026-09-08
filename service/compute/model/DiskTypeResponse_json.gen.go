@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m DiskTypeResponse) MarshalJSON() ([]byte, error) {
@@ -76,7 +76,7 @@ func (m *DiskTypeResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v common.CommonTypedResourceMetadataResponse
+			var v commonmodel.CommonTypedResourceMetadataResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

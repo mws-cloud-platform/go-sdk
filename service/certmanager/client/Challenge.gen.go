@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type Challenge interface {
@@ -36,8 +36,8 @@ func (m *GetChallengeTokenRequest) SetProject(project string) {
 type GetChallengeTokenResponse struct {
 	Code        int
 	Response200 *string
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

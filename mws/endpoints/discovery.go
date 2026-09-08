@@ -88,7 +88,7 @@ func (c HTTPDiscoveryClient) Endpoints(ctx context.Context) (DiscoveryEndpoints,
 
 	var endpoints []discoveryEndpointJSON
 	if err = client.ReadJSON(response.Body, &endpoints); err != nil {
-		return nil, fmt.Errorf("parse response: %w", err)
+		return nil, fmt.Errorf("parse %q response: %w", response.Status, err)
 	}
 
 	m := make(DiscoveryEndpoints, len(endpoints))

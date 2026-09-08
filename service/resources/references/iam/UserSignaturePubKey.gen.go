@@ -135,6 +135,25 @@ func (m *UserSignaturePubKeyID) Clone() *UserSignaturePubKeyID {
 	return &clone
 }
 
+func (m *UserSignaturePubKeyID) AsRef() *UserSignaturePubKeyRef {
+	if m == nil {
+		return nil
+	}
+	return &UserSignaturePubKeyRef{
+		id: *m,
+	}
+}
+
+func (m *UserSignaturePubKeyID) Equal(other *UserSignaturePubKeyID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.keyName == other.keyName && m.userId == other.userId
+}
+
 func (m UserSignaturePubKeyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *UserSignaturePubKeyRef) Clone() *UserSignaturePubKeyRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *UserSignaturePubKeyRef) Equal(other *UserSignaturePubKeyRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.keyName == other.id.keyName && m.id.userId == other.id.userId
 }
 
 func (m UserSignaturePubKeyRef) MarshalJSON() ([]byte, error) {

@@ -17,7 +17,7 @@ type UpdateClickhouseEndpointExternalAddressSpecOrRefRequest struct {
 	// Ссылка на внешний адрес эндпоинта в VPC.
 	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
 	// Описание шаблона внешнего адреса, который будет использоваться при выделении адресов.
-	Spec optional.OptionalNil[UpdateClickhouseEndpointExternalAddressSpecOrRefSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateClickhouseEndpointExternalAddressSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) AsUpdateModel() UpdateClickhouseEndpointExternalAddressSpecOrRefRequest {
@@ -52,7 +52,7 @@ func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) WithChanges(u Update
 		out.Ref = ptr.Get(u.Ref.Value)
 	}
 	if u.Spec.IsSet() {
-		out.Spec = ptr.Get(ClickhouseEndpointExternalAddressSpecOrRefSpecRequest(u.Spec.Value))
+		out.Spec = ptr.Get(ClickhouseEndpointExternalAddressSpecRequest(u.Spec.Value))
 	} else if u.Spec.IsNull() {
 		out.Spec = nil
 	}
@@ -84,43 +84,12 @@ func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) diffRef(src *Clickho
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) diffSpec(src *ClickhouseEndpointExternalAddressSpecOrRefRequest) optional.OptionalNil[UpdateClickhouseEndpointExternalAddressSpecOrRefSpecRequest] {
+func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) diffSpec(src *ClickhouseEndpointExternalAddressSpecOrRefRequest) optional.OptionalNil[UpdateClickhouseEndpointExternalAddressSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return optional.OptionalNil[UpdateClickhouseEndpointExternalAddressSpecOrRefSpecRequest]{
+	return optional.OptionalNil[UpdateClickhouseEndpointExternalAddressSpecRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,
 	}
-}
-
-type UpdateClickhouseEndpointExternalAddressSpecOrRefSpecRequest struct {
-}
-
-func (m *ClickhouseEndpointExternalAddressSpecOrRefSpecRequest) AsUpdateModel() UpdateClickhouseEndpointExternalAddressSpecOrRefSpecRequest {
-	var u UpdateClickhouseEndpointExternalAddressSpecOrRefSpecRequest
-	return u
-}
-
-// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *ClickhouseEndpointExternalAddressSpecOrRefSpecRequest) Diff(src *ClickhouseEndpointExternalAddressSpecOrRefSpecRequest) UpdateClickhouseEndpointExternalAddressSpecOrRefSpecRequest {
-	nilDiffers := src != nil && m == nil
-	upd := UpdateClickhouseEndpointExternalAddressSpecOrRefSpecRequest{}
-	if !nilDiffers {
-	}
-	return upd
-}
-
-func (m *ClickhouseEndpointExternalAddressSpecOrRefSpecRequest) WithChanges(u UpdateClickhouseEndpointExternalAddressSpecOrRefSpecRequest) ClickhouseEndpointExternalAddressSpecOrRefSpecRequest {
-	var out ClickhouseEndpointExternalAddressSpecOrRefSpecRequest
-	if m != nil {
-		out = *m
-	}
-
-	return out
-}
-
-// HasChanges returns true if any field has Set == true
-func (m UpdateClickhouseEndpointExternalAddressSpecOrRefSpecRequest) HasChanges() bool {
-	return false
 }

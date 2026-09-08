@@ -6,12 +6,12 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
 
 type ClickhouseConfig interface {
-	// GetAvailableConfigParameters returns info about available configuration parameters.
+	// GetAvailableConfigParameters возвращает список доступных параметров конфигурации ClickHouse для указанной версии.
 	//
 	// Путь: GET /mclickhouse/v1/projects/{project}/availableConfigParameters
 	GetAvailableConfigParameters(context.Context, GetAvailableConfigParametersRequest) (*GetAvailableConfigParametersResponse, error)
@@ -41,9 +41,9 @@ func (m *GetAvailableConfigParametersRequest) SetProject(project string) {
 type GetAvailableConfigParametersResponse struct {
 	Code        int
 	Response200 model.AvailableConfigParametersSchema
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

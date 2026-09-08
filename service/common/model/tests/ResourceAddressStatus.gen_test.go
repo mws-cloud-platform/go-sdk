@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -19,13 +19,13 @@ func TestResourceAddressStatusMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.ResourceAddressStatus
+	var actual commonmodel.ResourceAddressStatus
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initResourceAddressStatus() common.ResourceAddressStatus {
-	var v common.ResourceAddressStatus
+func initResourceAddressStatus() commonmodel.ResourceAddressStatus {
+	var v commonmodel.ResourceAddressStatus
 	v.Ref = vpc.NewMustAddressRef("projectID", "networkID", "addressID")
 	v.IpAddress = ipaddress.MustParseIPAddressString("192.168.1.1")
 	return v

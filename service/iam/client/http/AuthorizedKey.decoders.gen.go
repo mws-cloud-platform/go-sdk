@@ -11,7 +11,7 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	clienterrors "go.mws.cloud/go-sdk/internal/client/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/client"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
@@ -45,7 +45,7 @@ func decodeListAuthorizedKeyResponse(resp *http.Response) (*client.ListAuthorize
 		case "application/json":
 			result := &client.ListAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -62,7 +62,7 @@ func decodeListAuthorizedKeyResponse(resp *http.Response) (*client.ListAuthorize
 		case "application/json":
 			result := &client.ListAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -79,7 +79,7 @@ func decodeListAuthorizedKeyResponse(resp *http.Response) (*client.ListAuthorize
 		case "application/json":
 			result := &client.ListAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -96,7 +96,7 @@ func decodeListAuthorizedKeyResponse(resp *http.Response) (*client.ListAuthorize
 		case "application/json":
 			result := &client.ListAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -133,7 +133,7 @@ func decodeDeleteAuthorizedKeyV2Response(resp *http.Response) (*client.DeleteAut
 		case "application/json":
 			result := &client.DeleteAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -150,7 +150,7 @@ func decodeDeleteAuthorizedKeyV2Response(resp *http.Response) (*client.DeleteAut
 		case "application/json":
 			result := &client.DeleteAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -167,7 +167,7 @@ func decodeDeleteAuthorizedKeyV2Response(resp *http.Response) (*client.DeleteAut
 		case "application/json":
 			result := &client.DeleteAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -184,7 +184,7 @@ func decodeDeleteAuthorizedKeyV2Response(resp *http.Response) (*client.DeleteAut
 		case "application/json":
 			result := &client.DeleteAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -231,7 +231,7 @@ func decodeGetAuthorizedKeyV2Response(resp *http.Response) (*client.GetAuthorize
 		case "application/json":
 			result := &client.GetAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -248,7 +248,7 @@ func decodeGetAuthorizedKeyV2Response(resp *http.Response) (*client.GetAuthorize
 		case "application/json":
 			result := &client.GetAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -265,7 +265,7 @@ func decodeGetAuthorizedKeyV2Response(resp *http.Response) (*client.GetAuthorize
 		case "application/json":
 			result := &client.GetAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -282,7 +282,7 @@ func decodeGetAuthorizedKeyV2Response(resp *http.Response) (*client.GetAuthorize
 		case "application/json":
 			result := &client.GetAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -346,7 +346,7 @@ func decodeUpsertAuthorizedKeyV2Response(resp *http.Response) (*client.UpsertAut
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -363,7 +363,7 @@ func decodeUpsertAuthorizedKeyV2Response(resp *http.Response) (*client.UpsertAut
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -380,7 +380,7 @@ func decodeUpsertAuthorizedKeyV2Response(resp *http.Response) (*client.UpsertAut
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -397,7 +397,7 @@ func decodeUpsertAuthorizedKeyV2Response(resp *http.Response) (*client.UpsertAut
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response409: &common.ApiError{},
+				Response409: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response409); err != nil {
@@ -414,7 +414,7 @@ func decodeUpsertAuthorizedKeyV2Response(resp *http.Response) (*client.UpsertAut
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyV2Response{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -451,7 +451,7 @@ func decodeDeleteAuthorizedKeyResponse(resp *http.Response) (*client.DeleteAutho
 		case "application/json":
 			result := &client.DeleteAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -468,7 +468,7 @@ func decodeDeleteAuthorizedKeyResponse(resp *http.Response) (*client.DeleteAutho
 		case "application/json":
 			result := &client.DeleteAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -485,7 +485,7 @@ func decodeDeleteAuthorizedKeyResponse(resp *http.Response) (*client.DeleteAutho
 		case "application/json":
 			result := &client.DeleteAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -502,7 +502,7 @@ func decodeDeleteAuthorizedKeyResponse(resp *http.Response) (*client.DeleteAutho
 		case "application/json":
 			result := &client.DeleteAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -549,7 +549,7 @@ func decodeGetAuthorizedKeyResponse(resp *http.Response) (*client.GetAuthorizedK
 		case "application/json":
 			result := &client.GetAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -566,7 +566,7 @@ func decodeGetAuthorizedKeyResponse(resp *http.Response) (*client.GetAuthorizedK
 		case "application/json":
 			result := &client.GetAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -583,7 +583,7 @@ func decodeGetAuthorizedKeyResponse(resp *http.Response) (*client.GetAuthorizedK
 		case "application/json":
 			result := &client.GetAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -600,7 +600,7 @@ func decodeGetAuthorizedKeyResponse(resp *http.Response) (*client.GetAuthorizedK
 		case "application/json":
 			result := &client.GetAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -664,7 +664,7 @@ func decodeUpsertAuthorizedKeyResponse(resp *http.Response) (*client.UpsertAutho
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -681,7 +681,7 @@ func decodeUpsertAuthorizedKeyResponse(resp *http.Response) (*client.UpsertAutho
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -698,7 +698,7 @@ func decodeUpsertAuthorizedKeyResponse(resp *http.Response) (*client.UpsertAutho
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -715,7 +715,7 @@ func decodeUpsertAuthorizedKeyResponse(resp *http.Response) (*client.UpsertAutho
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response409: &common.ApiError{},
+				Response409: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response409); err != nil {
@@ -732,7 +732,7 @@ func decodeUpsertAuthorizedKeyResponse(resp *http.Response) (*client.UpsertAutho
 		case "application/json":
 			result := &client.UpsertAuthorizedKeyResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

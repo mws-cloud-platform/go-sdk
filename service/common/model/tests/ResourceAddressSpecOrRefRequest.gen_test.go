@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestResourceAddressSpecOrRefRequestMarshalling(t *testing.T) {
@@ -17,12 +17,12 @@ func TestResourceAddressSpecOrRefRequestMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.ResourceAddressSpecOrRefRequest
+	var actual commonmodel.ResourceAddressSpecOrRefRequest
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initResourceAddressSpecOrRefRequest() common.ResourceAddressSpecOrRefRequest {
-	var v common.ResourceAddressSpecOrRefRequest
+func initResourceAddressSpecOrRefRequest() commonmodel.ResourceAddressSpecOrRefRequest {
+	var v commonmodel.ResourceAddressSpecOrRefRequest
 	return v
 }

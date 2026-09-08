@@ -4,7 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func SecretRoleBindingRequestToOptionalResponse(request *SecretRoleBindingRequest) (*SecretRoleBindingOptionalResponse, error) {
@@ -13,13 +13,13 @@ func SecretRoleBindingRequestToOptionalResponse(request *SecretRoleBindingReques
 	}
 	var response SecretRoleBindingOptionalResponse
 	if request.Metadata != nil {
-		tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
+		tmpMetadata, err := commonmodel.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
 		if err != nil {
 			return nil, err
 		}
 		response.Metadata = optional.NewOptionalNil(*tmpMetadata)
 	}
-	tmpSpec, err := common.CommonRoleBindingSpecRequestToOptionalResponse(&request.Spec)
+	tmpSpec, err := commonmodel.CommonRoleBindingSpecRequestToOptionalResponse(&request.Spec)
 	if err != nil {
 		return nil, err
 	}

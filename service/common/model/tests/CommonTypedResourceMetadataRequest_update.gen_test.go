@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestUpdateCommonTypedResourceMetadataRequestMarshalling(t *testing.T) {
@@ -18,7 +18,7 @@ func TestUpdateCommonTypedResourceMetadataRequestMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.UpdateCommonTypedResourceMetadataRequest
+	var actual commonmodel.UpdateCommonTypedResourceMetadataRequest
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }

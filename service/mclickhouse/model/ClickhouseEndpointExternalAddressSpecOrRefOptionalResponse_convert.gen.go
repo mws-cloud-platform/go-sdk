@@ -15,19 +15,11 @@ func ClickhouseEndpointExternalAddressSpecOrRefRequestToOptionalResponse(request
 		response.Ref = optional.NewOptional(*request.Ref)
 	}
 	if request.Spec != nil {
-		tmpSpec, err := ClickhouseEndpointExternalAddressSpecOrRefSpecRequestToOptionalResponse(request.Spec)
+		tmpSpec, err := ClickhouseEndpointExternalAddressSpecRequestToOptionalResponse(request.Spec)
 		if err != nil {
 			return nil, err
 		}
 		response.Spec = optional.NewOptionalNil(*tmpSpec)
 	}
-	return &response, nil
-}
-
-func ClickhouseEndpointExternalAddressSpecOrRefSpecRequestToOptionalResponse(request *ClickhouseEndpointExternalAddressSpecOrRefSpecRequest) (*ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse, error) {
-	if request == nil {
-		return nil, nil
-	}
-	var response ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse
 	return &response, nil
 }

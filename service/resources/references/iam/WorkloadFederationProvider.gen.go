@@ -157,6 +157,25 @@ func (m *WorkloadFederationProviderID) Clone() *WorkloadFederationProviderID {
 	return &clone
 }
 
+func (m *WorkloadFederationProviderID) AsRef() *WorkloadFederationProviderRef {
+	if m == nil {
+		return nil
+	}
+	return &WorkloadFederationProviderRef{
+		id: *m,
+	}
+}
+
+func (m *WorkloadFederationProviderID) Equal(other *WorkloadFederationProviderID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.provider == other.provider && m.workloadFederation == other.workloadFederation && m.project == other.project
+}
+
 func (m WorkloadFederationProviderID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *WorkloadFederationProviderRef) Clone() *WorkloadFederationProviderRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *WorkloadFederationProviderRef) Equal(other *WorkloadFederationProviderRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.provider == other.id.provider && m.id.workloadFederation == other.id.workloadFederation && m.id.project == other.id.project
 }
 
 func (m WorkloadFederationProviderRef) MarshalJSON() ([]byte, error) {

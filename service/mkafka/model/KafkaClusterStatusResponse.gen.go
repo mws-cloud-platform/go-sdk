@@ -3,13 +3,13 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Real OAPI model name: KafkaClusterStatus
 type KafkaClusterStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Состояние кластера:
 	//   - `CREATING`     - Создаётся;
 	//   - `RUNNING`      - Работает в штатном режиме;
@@ -32,24 +32,24 @@ type KafkaClusterStatusResponse struct {
 	Message *string        `json:"message,omitempty" yaml:"message,omitempty"`
 	// Регион, которому принадлежит кластер.
 	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
-	// Конфигурация параметров кластера после валидации и преобразования из пользователского ввода
+	// Конфигурация параметров кластера после валидации и преобразования из пользовательского ввода
 	EffectiveKafkaConfig map[string]string `json:"effectiveKafkaConfig,omitempty" yaml:"effectiveKafkaConfig,omitempty"`
 	// Описание ресурсов хостов брокеров и контроллеров.
 	Instances *KafkaInstancesStatusResponse `json:"instances,omitempty" yaml:"instances,omitempty"`
 	// Описание эндпойнтов в сетях пользователя (VPC) для подключения к брокерам кластера.
-	Endpoints         []KafkaEndpointStatusResponse      `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
-	MaintenanceWindow *common.MaintenanceWindow2Response `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	Endpoints         []KafkaEndpointStatusResponse          `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
+	MaintenanceWindow *commonmodel.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry *KafkaSchemaRegistrySpecResponse `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`
 	// Настройка балансировщика кластера.
 	Balancer *KafkaBalancerSpecResponse `json:"balancer,omitempty" yaml:"balancer,omitempty"`
 }
 
-func (m *KafkaClusterStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *KafkaClusterStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *KafkaClusterStatusResponse) GetState() *ClusterState {
@@ -150,14 +150,14 @@ func (m *KafkaClusterStatusResponse) GetEndpointsOr(val []KafkaEndpointStatusRes
 	return val
 }
 
-func (m *KafkaClusterStatusResponse) GetMaintenanceWindow() *common.MaintenanceWindow2Response {
+func (m *KafkaClusterStatusResponse) GetMaintenanceWindow() *commonmodel.MaintenanceWindowResponse {
 	if m != nil {
 		return m.MaintenanceWindow
 	}
 	return nil
 }
 
-func (m *KafkaClusterStatusResponse) GetMaintenanceWindowOr(val common.MaintenanceWindow2Response) common.MaintenanceWindow2Response {
+func (m *KafkaClusterStatusResponse) GetMaintenanceWindowOr(val commonmodel.MaintenanceWindowResponse) commonmodel.MaintenanceWindowResponse {
 	if m != nil && m.MaintenanceWindow != nil {
 		return *m.MaintenanceWindow
 	}

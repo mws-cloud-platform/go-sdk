@@ -5,7 +5,7 @@ package model
 import (
 	"time"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/gpt"
 )
 
@@ -15,7 +15,7 @@ type ModelResponse struct {
 	Metadata *ModelMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Spec     ModelSpecResponse      `json:"spec" yaml:"spec"`
 	// Текущее состояние ресурса, вычисляемое системой.
-	Status *common.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
+	Status *commonmodel.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *ModelResponse) GetKind() *string {
@@ -65,18 +65,18 @@ func (m *ModelResponse) SetSpec(val ModelSpecResponse) {
 	m.Spec = val
 }
 
-func (m *ModelResponse) GetStatus() *common.ResourceStatusResponse {
+func (m *ModelResponse) GetStatus() *commonmodel.ResourceStatusResponse {
 	if m != nil {
 		return m.Status
 	}
 	return nil
 }
 
-func (m *ModelResponse) SetStatus(val *common.ResourceStatusResponse) {
+func (m *ModelResponse) SetStatus(val *commonmodel.ResourceStatusResponse) {
 	m.Status = val
 }
 
-func (m *ModelResponse) GetStatusOr(val common.ResourceStatusResponse) common.ResourceStatusResponse {
+func (m *ModelResponse) GetStatusOr(val commonmodel.ResourceStatusResponse) commonmodel.ResourceStatusResponse {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
@@ -102,7 +102,7 @@ func (m *ModelResponse) Clone() *ModelResponse {
 // Представление поля Metadata анонимного типа структуры Model
 // Real OAPI model name: ModelMetadata
 type ModelMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// Ссылка на типизированный референс.
 	Id *gpt.ModelID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -177,14 +177,14 @@ func (m *ModelMetadataResponse) GetPurgeTimeOr(val time.Time) time.Time {
 	return val
 }
 
-func (m *ModelMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *ModelMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *ModelMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *ModelMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}

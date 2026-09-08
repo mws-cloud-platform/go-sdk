@@ -157,6 +157,25 @@ func (m *RouteID) Clone() *RouteID {
 	return &clone
 }
 
+func (m *RouteID) AsRef() *RouteRef {
+	if m == nil {
+		return nil
+	}
+	return &RouteRef{
+		id: *m,
+	}
+}
+
+func (m *RouteID) Equal(other *RouteID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.route == other.route && m.network == other.network && m.project == other.project
+}
+
 func (m RouteID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *RouteRef) Clone() *RouteRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *RouteRef) Equal(other *RouteRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.route == other.id.route && m.id.network == other.id.network && m.id.project == other.id.project
 }
 
 func (m RouteRef) MarshalJSON() ([]byte, error) {

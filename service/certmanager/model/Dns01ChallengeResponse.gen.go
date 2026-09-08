@@ -2,8 +2,6 @@
 
 package model
 
-// Данные для прохождения проверки типа dns-01.
-//
 // Real OAPI model name: Dns01Challenge
 type Dns01ChallengeResponse struct {
 	// Указывает, настроена ли делегация корректно.

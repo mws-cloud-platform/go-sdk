@@ -57,6 +57,8 @@ func (c *EnabledService) batchEnableServicesV2Invoker(ctx context.Context, anyRe
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryBatchEnableServicesV2(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerBatchEnableServicesV2(httpReq, request)
 
@@ -86,6 +88,14 @@ func (c *EnabledService) batchEnableServicesV2Invoker(ctx context.Context, anyRe
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *EnabledService) queryBatchEnableServicesV2(request *client.BatchEnableServicesV2Request) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *EnabledService) headerBatchEnableServicesV2(req *http.Request, request *client.BatchEnableServicesV2Request) {
@@ -235,6 +245,8 @@ func (c *EnabledService) enableServiceInvoker(ctx context.Context, anyReq any, r
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryEnableService(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerEnableService(httpReq, request)
 
@@ -259,6 +271,14 @@ func (c *EnabledService) enableServiceInvoker(ctx context.Context, anyReq any, r
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *EnabledService) queryEnableService(request *client.EnableServiceRequest) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *EnabledService) headerEnableService(req *http.Request, request *client.EnableServiceRequest) {

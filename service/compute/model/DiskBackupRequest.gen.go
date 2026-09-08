@@ -6,30 +6,30 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Резервная копия (backup) диска
 // Real OAPI model name: DiskBackup
 type DiskBackupRequest struct {
 	// Дополнительная информация об объекте
-	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata *commonmodel.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация глобальной резервной копии диска
 	Spec DiskBackupSpecRequest `json:"spec" yaml:"spec"`
 }
 
-func (m *DiskBackupRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
+func (m *DiskBackupRequest) GetMetadata() *commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *DiskBackupRequest) SetMetadata(val *common.CommonTypedResourceMetadataRequest) {
+func (m *DiskBackupRequest) SetMetadata(val *commonmodel.CommonTypedResourceMetadataRequest) {
 	m.Metadata = val
 }
 
-func (m *DiskBackupRequest) GetMetadataOr(val common.CommonTypedResourceMetadataRequest) common.CommonTypedResourceMetadataRequest {
+func (m *DiskBackupRequest) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataRequest) commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}

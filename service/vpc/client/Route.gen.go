@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
 
@@ -81,13 +81,13 @@ func (m ListRoutesRequest) WithPageToken(token *string) ListRoutesRequest {
 type ListRoutesResponse struct {
 	Code        int
 	Response200 *model.ListRoutesResponseOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response408 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response499 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -171,13 +171,13 @@ func (m *DeleteRouteRequest) getRouteRequest() GetRouteRequest {
 type DeleteRouteResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response408 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response499 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -248,13 +248,13 @@ func (m *GetRouteRequest) SetProject(project string) {
 type GetRouteResponse struct {
 	Code        int
 	Response200 *model.RouteOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response408 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response499 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -378,15 +378,15 @@ func (m *UpdateRouteRequest) getRouteRequest() GetRouteRequest {
 type UpsertRouteResponse struct {
 	Code        int
 	Response200 *model.RouteOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response422 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response408 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response422 *commonmodel.ApiError
+	Response499 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

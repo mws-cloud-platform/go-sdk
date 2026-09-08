@@ -4,7 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func ClickhouseClusterRequestToOptionalResponse(request *ClickhouseClusterRequest) (*ClickhouseClusterOptionalResponse, error) {
@@ -36,7 +36,7 @@ func ClickhouseClusterMetadataRequestToOptionalResponse(request *ClickhouseClust
 		response.DisplayName = optional.NewOptional(*request.DisplayName)
 	}
 	for _, e := range request.Usages {
-		tmp, err := common.TypedUsageRequestToOptionalResponse(&e)
+		tmp, err := commonmodel.TypedUsageRequestToOptionalResponse(&e)
 		if err != nil {
 			return nil, err
 		}

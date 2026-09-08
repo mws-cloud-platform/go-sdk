@@ -8,7 +8,13 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
 
-// Исправность экземпляра PostgreSQL.
+// Исправность экземпляра PostgreSQL
+//   - `ALIVE`   - Инстанс может обрабатывать запросы
+//   - `PROCESSING` - Инстанс в состоянии starting/stopping/restarting. Не может обрабатывать запросы
+//   - `INACTIVE` - Инстанс остановлен
+//   - `FAILED`  - Инстанс в состоянии crashed или failed
+//   - `UNAVAILABLE` - Продукт недоступен при сборе health
+//   - `UNKNOWN` - В неизвестном состоянии
 type PostgresInstanceHealth string
 
 const (

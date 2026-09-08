@@ -7,14 +7,14 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Статус сетевого балансировщик нагрузки.
 // Real OAPI model name: NlbStatus
 type NlbStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Группирующий элемент для статуса адресов внешнего и внутреннего балансировщика.
 	Listener *NlbStatusListenerResponse `json:"listener,omitempty" yaml:"listener,omitempty"`
 	// Группирующий элемент для статуса групп адресов балансировщика.
@@ -27,11 +27,11 @@ type NlbStatusResponse struct {
 	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
-func (m *NlbStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *NlbStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *NlbStatusResponse) GetListener() *NlbStatusListenerResponse {

@@ -140,6 +140,25 @@ func (m *SnapshotID) Clone() *SnapshotID {
 	return &clone
 }
 
+func (m *SnapshotID) AsRef() *SnapshotRef {
+	if m == nil {
+		return nil
+	}
+	return &SnapshotRef{
+		id: *m,
+	}
+}
+
+func (m *SnapshotID) Equal(other *SnapshotID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.snapshot == other.snapshot && m.project == other.project
+}
+
 func (m SnapshotID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -313,6 +332,16 @@ func (m *SnapshotRef) Clone() *SnapshotRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *SnapshotRef) Equal(other *SnapshotRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.snapshot == other.id.snapshot && m.id.project == other.id.project
 }
 
 func (m SnapshotRef) MarshalJSON() ([]byte, error) {

@@ -77,7 +77,7 @@ func (m *UpdateKafkaEndpointExternalAddressSpecOrRefRequest) Decode(d *jx.Decode
 				return d.Null()
 			}
 
-			var v UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest
+			var v UpdateKafkaEndpointExternalAddressSpecRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -88,41 +88,4 @@ func (m *UpdateKafkaEndpointExternalAddressSpecOrRefRequest) Decode(d *jx.Decode
 			return d.Skip()
 		}
 	}))
-}
-
-func (m UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest) encodeFields(e *jx.Encoder) error {
-	return nil
-}
-
-func (m *UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest")
-	}
-
-	return d.Skip()
 }

@@ -3,25 +3,24 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Статус правила файрвола.
 // Real OAPI model name: FirewallRuleStatus
 type FirewallRuleStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
-
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	RegionalStatusResponse             `yaml:"-,inline"`
 	// Эффективный приоритет правила.
 	Priority *int32 `json:"priority,omitempty" yaml:"priority,omitempty"`
 	// Состояние правила. True - правило активно и контролирует поведение трафика. False - правило не активно.
 	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
-func (m *FirewallRuleStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *FirewallRuleStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *FirewallRuleStatusResponse) GetPriority() *int32 {
@@ -59,7 +58,7 @@ func (m *FirewallRuleStatusResponse) Clone() *FirewallRuleStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
-
+	clone.RegionalStatusResponse = *m.RegionalStatusResponse.Clone()
 	if m.Priority != nil {
 		clonePriority := *m.Priority
 		clone.Priority = &clonePriority

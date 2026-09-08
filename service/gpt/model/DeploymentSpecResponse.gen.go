@@ -9,7 +9,6 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/gpt"
 )
 
-// Спецификация желаемого состояния деплоймента.
 // Real OAPI model name: DeploymentSpec
 type DeploymentSpecResponse struct {
 	// Флаг, устанавливающий активность деплоймента.

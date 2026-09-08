@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ProjectList
@@ -15,7 +15,7 @@ type ProjectListResponse struct {
 	// List of retrieved projects
 	Items []ProjectResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ProjectListResponse) GetItems() []ProjectResponse {
@@ -29,18 +29,18 @@ func (m *ProjectListResponse) SetItems(val []ProjectResponse) {
 	m.Items = val
 }
 
-func (m *ProjectListResponse) GetNextPageToken() *common.NextPageToken {
+func (m *ProjectListResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *ProjectListResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *ProjectListResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *ProjectListResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ProjectListResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

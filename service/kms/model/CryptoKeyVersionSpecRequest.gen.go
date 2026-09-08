@@ -6,8 +6,6 @@ package model
 type CryptoKeyVersionSpecRequest struct {
 	// Политика использования версии ключа. Определяет, разрешены ли криптографические операции с этой версией.
 	UsagePolicy *CryptoKeyVersionSpecUsagePolicyRequest `json:"usagePolicy,omitempty" yaml:"usagePolicy,omitempty"`
-	// Политика уничтожения версии ключа. Определяет параметры и расписание.
-	DestructionPolicy *CryptoKeyVersionSpecDestructionPolicyRequest `json:"destructionPolicy,omitempty" yaml:"destructionPolicy,omitempty"`
 }
 
 func (m *CryptoKeyVersionSpecRequest) GetUsagePolicy() *CryptoKeyVersionSpecUsagePolicyRequest {
@@ -28,24 +26,6 @@ func (m *CryptoKeyVersionSpecRequest) GetUsagePolicyOr(val CryptoKeyVersionSpecU
 	return val
 }
 
-func (m *CryptoKeyVersionSpecRequest) GetDestructionPolicy() *CryptoKeyVersionSpecDestructionPolicyRequest {
-	if m != nil {
-		return m.DestructionPolicy
-	}
-	return nil
-}
-
-func (m *CryptoKeyVersionSpecRequest) SetDestructionPolicy(val *CryptoKeyVersionSpecDestructionPolicyRequest) {
-	m.DestructionPolicy = val
-}
-
-func (m *CryptoKeyVersionSpecRequest) GetDestructionPolicyOr(val CryptoKeyVersionSpecDestructionPolicyRequest) CryptoKeyVersionSpecDestructionPolicyRequest {
-	if m != nil && m.DestructionPolicy != nil {
-		return *m.DestructionPolicy
-	}
-	return val
-}
-
 func (m *CryptoKeyVersionSpecRequest) Clone() *CryptoKeyVersionSpecRequest {
 	if m == nil {
 		return nil
@@ -53,21 +33,6 @@ func (m *CryptoKeyVersionSpecRequest) Clone() *CryptoKeyVersionSpecRequest {
 
 	clone := *m
 	clone.UsagePolicy = m.UsagePolicy.Clone()
-	clone.DestructionPolicy = m.DestructionPolicy.Clone()
-	return &clone
-}
-
-// Представление поля DestructionPolicy анонимного типа структуры CryptoKeyVersionSpec
-// Real OAPI model name: CryptoKeyVersionSpecDestructionPolicy
-type CryptoKeyVersionSpecDestructionPolicyRequest struct {
-}
-
-func (m *CryptoKeyVersionSpecDestructionPolicyRequest) Clone() *CryptoKeyVersionSpecDestructionPolicyRequest {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
 	return &clone
 }
 

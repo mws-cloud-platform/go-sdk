@@ -135,6 +135,25 @@ func (m *CertificateID) Clone() *CertificateID {
 	return &clone
 }
 
+func (m *CertificateID) AsRef() *CertificateRef {
+	if m == nil {
+		return nil
+	}
+	return &CertificateRef{
+		id: *m,
+	}
+}
+
+func (m *CertificateID) Equal(other *CertificateID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.name == other.name && m.project == other.project
+}
+
 func (m CertificateID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *CertificateRef) Clone() *CertificateRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *CertificateRef) Equal(other *CertificateRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.name == other.id.name && m.id.project == other.id.project
 }
 
 func (m CertificateRef) MarshalJSON() ([]byte, error) {

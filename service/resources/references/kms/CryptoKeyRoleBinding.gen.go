@@ -157,6 +157,25 @@ func (m *CryptoKeyRoleBindingID) Clone() *CryptoKeyRoleBindingID {
 	return &clone
 }
 
+func (m *CryptoKeyRoleBindingID) AsRef() *CryptoKeyRoleBindingRef {
+	if m == nil {
+		return nil
+	}
+	return &CryptoKeyRoleBindingRef{
+		id: *m,
+	}
+}
+
+func (m *CryptoKeyRoleBindingID) Equal(other *CryptoKeyRoleBindingID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.roleBinding == other.roleBinding && m.key == other.key && m.project == other.project
+}
+
 func (m CryptoKeyRoleBindingID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *CryptoKeyRoleBindingRef) Clone() *CryptoKeyRoleBindingRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *CryptoKeyRoleBindingRef) Equal(other *CryptoKeyRoleBindingRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.roleBinding == other.id.roleBinding && m.id.key == other.id.key && m.id.project == other.id.project
 }
 
 func (m CryptoKeyRoleBindingRef) MarshalJSON() ([]byte, error) {

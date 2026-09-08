@@ -6,24 +6,24 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/secretmanager"
 )
 
 // Real OAPI model name: SecretStatus
 type SecretStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Секрет активен/неактивен
 	Active bool `json:"active" yaml:"active"`
 	// Номер текущей версии секрета.
 	CurrentSecretVersion *secretmanager.SecretVersionRef `json:"currentSecretVersion,omitempty" yaml:"currentSecretVersion,omitempty"`
 }
 
-func (m *SecretStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *SecretStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *SecretStatusResponse) GetActive() bool {

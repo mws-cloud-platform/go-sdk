@@ -179,6 +179,25 @@ func (m *ClickhouseClusterCoordinatorInstanceID) Clone() *ClickhouseClusterCoord
 	return &clone
 }
 
+func (m *ClickhouseClusterCoordinatorInstanceID) AsRef() *ClickhouseClusterCoordinatorInstanceRef {
+	if m == nil {
+		return nil
+	}
+	return &ClickhouseClusterCoordinatorInstanceRef{
+		id: *m,
+	}
+}
+
+func (m *ClickhouseClusterCoordinatorInstanceID) Equal(other *ClickhouseClusterCoordinatorInstanceID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.instance == other.instance && m.coordinator == other.coordinator && m.cluster == other.cluster && m.project == other.project
+}
+
 func (m ClickhouseClusterCoordinatorInstanceID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -371,6 +390,16 @@ func (m *ClickhouseClusterCoordinatorInstanceRef) Clone() *ClickhouseClusterCoor
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ClickhouseClusterCoordinatorInstanceRef) Equal(other *ClickhouseClusterCoordinatorInstanceRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.instance == other.id.instance && m.id.coordinator == other.id.coordinator && m.id.cluster == other.id.cluster && m.id.project == other.id.project
 }
 
 func (m ClickhouseClusterCoordinatorInstanceRef) MarshalJSON() ([]byte, error) {

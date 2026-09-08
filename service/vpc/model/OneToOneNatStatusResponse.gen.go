@@ -6,14 +6,14 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Описывает статус One-to-One NAT-шлюза.
 // Real OAPI model name: OneToOneNatStatus
 type OneToOneNatStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Группирующий элемент для всего, что касается внутренних ресурсов.
 	Internal *OneToOneNatStatusInternalResponse `json:"internal,omitempty" yaml:"internal,omitempty"`
 	// Группирующий элемент для всего, что касается внешней части (ресурсов, доступных извне).
@@ -22,11 +22,11 @@ type OneToOneNatStatusResponse struct {
 	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
-func (m *OneToOneNatStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *OneToOneNatStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *OneToOneNatStatusResponse) GetInternal() *OneToOneNatStatusInternalResponse {

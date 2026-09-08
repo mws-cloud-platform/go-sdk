@@ -57,12 +57,14 @@ func (m *CertificateManagedSpecOptionalResponse) encodeFields(e *jx.Encoder) err
 		}
 	}
 
-	e.FieldStart("domains")
-	e.ArrStart()
-	for _, elem := range m.Domains {
-		e.Str(elem)
+	if m.Domains.IsSet() {
+		e.FieldStart("domains")
+		e.ArrStart()
+		for _, elem := range m.Domains.Value {
+			e.Str(elem)
+		}
+		e.ArrEnd()
 	}
-	e.ArrEnd()
 	return nil
 }
 
@@ -120,7 +122,7 @@ func (m *CertificateManagedSpecOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Domains = c
+			m.Domains.SetTo(c)
 			return nil
 		default:
 			return d.Skip()

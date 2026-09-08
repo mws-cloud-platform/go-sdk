@@ -6,7 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Снимок (snapshot) диска — это копия состояния диска
@@ -15,23 +15,23 @@ import (
 // Deprecated: Отказываемся в пользу DiskBackup
 type SnapshotRequest struct {
 	// Дополнительная информация об объекте
-	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata *commonmodel.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация глобального снимка
 	Spec SnapshotSpecRequest `json:"spec" yaml:"spec"`
 }
 
-func (m *SnapshotRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
+func (m *SnapshotRequest) GetMetadata() *commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *SnapshotRequest) SetMetadata(val *common.CommonTypedResourceMetadataRequest) {
+func (m *SnapshotRequest) SetMetadata(val *commonmodel.CommonTypedResourceMetadataRequest) {
 	m.Metadata = val
 }
 
-func (m *SnapshotRequest) GetMetadataOr(val common.CommonTypedResourceMetadataRequest) common.CommonTypedResourceMetadataRequest {
+func (m *SnapshotRequest) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataRequest) commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}

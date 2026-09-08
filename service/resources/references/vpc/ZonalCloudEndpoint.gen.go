@@ -179,6 +179,25 @@ func (m *ZonalCloudEndpointID) Clone() *ZonalCloudEndpointID {
 	return &clone
 }
 
+func (m *ZonalCloudEndpointID) AsRef() *ZonalCloudEndpointRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalCloudEndpointRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalCloudEndpointID) Equal(other *ZonalCloudEndpointID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.zonalCloudEndpoint == other.zonalCloudEndpoint && m.zonalNetwork == other.zonalNetwork && m.project == other.project && m.zone == other.zone
+}
+
 func (m ZonalCloudEndpointID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -371,6 +390,16 @@ func (m *ZonalCloudEndpointRef) Clone() *ZonalCloudEndpointRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalCloudEndpointRef) Equal(other *ZonalCloudEndpointRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.zonalCloudEndpoint == other.id.zonalCloudEndpoint && m.id.zonalNetwork == other.id.zonalNetwork && m.id.project == other.id.project && m.id.zone == other.id.zone
 }
 
 func (m ZonalCloudEndpointRef) MarshalJSON() ([]byte, error) {

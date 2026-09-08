@@ -23,7 +23,7 @@ func (x *VmTypeSugared) Impl() VmType {
 	return x.impl
 }
 
-// GetClickhouseClusterVmTypes returns Clickhouse cluster vm types.
+// GetClickhouseClusterVmTypes возвращает список доступных типов виртуальных машин для кластера ClickHouse.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/availableVmTypes
 func (x *VmTypeSugared) GetClickhouseClusterVmTypes(ctx context.Context, request GetClickhouseClusterVmTypesRequest) (*model.ClickhouseClusterVmTypesResponse, error) {

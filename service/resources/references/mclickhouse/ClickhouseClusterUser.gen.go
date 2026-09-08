@@ -157,6 +157,25 @@ func (m *ClickhouseClusterUserID) Clone() *ClickhouseClusterUserID {
 	return &clone
 }
 
+func (m *ClickhouseClusterUserID) AsRef() *ClickhouseClusterUserRef {
+	if m == nil {
+		return nil
+	}
+	return &ClickhouseClusterUserRef{
+		id: *m,
+	}
+}
+
+func (m *ClickhouseClusterUserID) Equal(other *ClickhouseClusterUserID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.user == other.user && m.cluster == other.cluster && m.project == other.project
+}
+
 func (m ClickhouseClusterUserID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *ClickhouseClusterUserRef) Clone() *ClickhouseClusterUserRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ClickhouseClusterUserRef) Equal(other *ClickhouseClusterUserRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.user == other.id.user && m.id.cluster == other.id.cluster && m.id.project == other.id.project
 }
 
 func (m ClickhouseClusterUserRef) MarshalJSON() ([]byte, error) {

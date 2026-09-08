@@ -133,6 +133,25 @@ func (m *FlagInterconnectPreviewID) Clone() *FlagInterconnectPreviewID {
 	return &clone
 }
 
+func (m *FlagInterconnectPreviewID) AsRef() *FlagInterconnectPreviewRef {
+	if m == nil {
+		return nil
+	}
+	return &FlagInterconnectPreviewRef{
+		id: *m,
+	}
+}
+
+func (m *FlagInterconnectPreviewID) Equal(other *FlagInterconnectPreviewID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m FlagInterconnectPreviewID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -289,6 +308,16 @@ func (m *FlagInterconnectPreviewRef) Clone() *FlagInterconnectPreviewRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *FlagInterconnectPreviewRef) Equal(other *FlagInterconnectPreviewRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m FlagInterconnectPreviewRef) MarshalJSON() ([]byte, error) {

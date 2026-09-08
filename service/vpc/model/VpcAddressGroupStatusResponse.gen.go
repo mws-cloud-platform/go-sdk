@@ -7,38 +7,38 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Статус группы адресов.
+// Описывает статус группы адресов.
 // Real OAPI model name: VpcAddressGroupStatus
 type VpcAddressGroupStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Список статусов внутренних IP-адресов.
-	Addresses []common.ResourceAddressStatusResponse `json:"addresses,omitempty" yaml:"addresses,omitempty"`
+	Addresses []commonmodel.ResourceAddressStatusResponse `json:"addresses,omitempty" yaml:"addresses,omitempty"`
 	// Список ссылок на внутренние IP-адреса, которые были удалены, но остались в спецификации группы.
 	OrphanAddresses []vpc.AddressRef `json:"orphanAddresses,omitempty" yaml:"orphanAddresses,omitempty"`
 	// Регион, которому принадлежит группа IP-адресов.
 	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
-func (m *VpcAddressGroupStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *VpcAddressGroupStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
-func (m *VpcAddressGroupStatusResponse) GetAddresses() []common.ResourceAddressStatusResponse {
+func (m *VpcAddressGroupStatusResponse) GetAddresses() []commonmodel.ResourceAddressStatusResponse {
 	if m != nil {
 		return m.Addresses
 	}
 	return nil
 }
 
-func (m *VpcAddressGroupStatusResponse) GetAddressesOr(val []common.ResourceAddressStatusResponse) []common.ResourceAddressStatusResponse {
+func (m *VpcAddressGroupStatusResponse) GetAddressesOr(val []commonmodel.ResourceAddressStatusResponse) []commonmodel.ResourceAddressStatusResponse {
 	if m != nil && m.Addresses != nil {
 		return m.Addresses
 	}
@@ -81,7 +81,7 @@ func (m *VpcAddressGroupStatusResponse) Clone() *VpcAddressGroupStatusResponse {
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
 	if m.Addresses != nil {
-		clone.Addresses = make([]common.ResourceAddressStatusResponse, len(m.Addresses))
+		clone.Addresses = make([]commonmodel.ResourceAddressStatusResponse, len(m.Addresses))
 		for i, v := range m.Addresses {
 			clone.Addresses[i] = *v.Clone()
 		}

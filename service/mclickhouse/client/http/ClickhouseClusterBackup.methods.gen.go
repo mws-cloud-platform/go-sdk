@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/mclickhouse/client"
 )
 
-// ListClickhouseClusterBackups list Clickhouse cluster backups.
+// ListClickhouseClusterBackups возвращает постраничный список резервных копий указанного кластера ClickHouse.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups
@@ -114,7 +114,7 @@ func (c *ClickhouseClusterBackup) headerListClickhouseClusterBackups(req *http.R
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// DeleteClickhouseClusterBackup delete Clickhouse cluster backup.
+// DeleteClickhouseClusterBackup удаляет указанную резервную копию кластера ClickHouse.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: DELETE /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}
@@ -201,7 +201,7 @@ func (c *ClickhouseClusterBackup) headerDeleteClickhouseClusterBackup(req *http.
 	}
 }
 
-// GetClickhouseClusterBackup returns info about the specified cluster backup.
+// GetClickhouseClusterBackup возвращает информацию об указанной резервной копии кластера ClickHouse.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}
@@ -279,7 +279,7 @@ func (c *ClickhouseClusterBackup) headerGetClickhouseClusterBackup(req *http.Req
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpsertClickhouseClusterBackup upsert Clickhouse cluster backup.
+// UpsertClickhouseClusterBackup создаёт новую резервную копию кластера ClickHouse.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}
@@ -372,7 +372,7 @@ func (c *ClickhouseClusterBackup) headerUpsertClickhouseClusterBackup(req *http.
 	}
 }
 
-// CreateClickhouseClusterBackup upsert Clickhouse cluster backup.
+// CreateClickhouseClusterBackup создаёт новую резервную копию кластера ClickHouse.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -467,7 +467,7 @@ func (c *ClickhouseClusterBackup) headerCreateClickhouseClusterBackup(req *http.
 	}
 }
 
-// UpdateClickhouseClusterBackup upsert Clickhouse cluster backup.
+// UpdateClickhouseClusterBackup создаёт новую резервную копию кластера ClickHouse.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

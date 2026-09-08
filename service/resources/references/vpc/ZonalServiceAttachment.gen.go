@@ -179,6 +179,25 @@ func (m *ZonalServiceAttachmentID) Clone() *ZonalServiceAttachmentID {
 	return &clone
 }
 
+func (m *ZonalServiceAttachmentID) AsRef() *ZonalServiceAttachmentRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalServiceAttachmentRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalServiceAttachmentID) Equal(other *ZonalServiceAttachmentID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.serviceAttachment == other.serviceAttachment && m.zonalNetwork == other.zonalNetwork && m.project == other.project && m.zone == other.zone
+}
+
 func (m ZonalServiceAttachmentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -371,6 +390,16 @@ func (m *ZonalServiceAttachmentRef) Clone() *ZonalServiceAttachmentRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalServiceAttachmentRef) Equal(other *ZonalServiceAttachmentRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.serviceAttachment == other.id.serviceAttachment && m.id.zonalNetwork == other.id.zonalNetwork && m.id.project == other.id.project && m.id.zone == other.id.zone
 }
 
 func (m ZonalServiceAttachmentRef) MarshalJSON() ([]byte, error) {

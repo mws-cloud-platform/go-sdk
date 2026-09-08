@@ -157,6 +157,25 @@ func (m *ServiceEndpointID) Clone() *ServiceEndpointID {
 	return &clone
 }
 
+func (m *ServiceEndpointID) AsRef() *ServiceEndpointRef {
+	if m == nil {
+		return nil
+	}
+	return &ServiceEndpointRef{
+		id: *m,
+	}
+}
+
+func (m *ServiceEndpointID) Equal(other *ServiceEndpointID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.serviceEndpoint == other.serviceEndpoint && m.network == other.network && m.project == other.project
+}
+
 func (m ServiceEndpointID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *ServiceEndpointRef) Clone() *ServiceEndpointRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ServiceEndpointRef) Equal(other *ServiceEndpointRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.serviceEndpoint == other.id.serviceEndpoint && m.id.network == other.id.network && m.id.project == other.id.project
 }
 
 func (m ServiceEndpointRef) MarshalJSON() ([]byte, error) {

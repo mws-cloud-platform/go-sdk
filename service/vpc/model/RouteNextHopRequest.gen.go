@@ -9,10 +9,9 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Переход
 // Real OAPI model name: RouteNextHop
 type RouteNextHopRequest struct {
-	// NAT шлюз.
+	// NAT-шлюз.
 	NatGateway *vpc.NatGatewayRef `json:"natGateway,omitempty" yaml:"natGateway,omitempty"`
 	// Адрес.
 	Address *RouteNextHopAddressRequest `json:"address,omitempty" yaml:"address,omitempty"`

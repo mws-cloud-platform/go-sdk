@@ -7,7 +7,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Группа адресов.
@@ -15,9 +15,9 @@ import (
 type VpcAddressGroupOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Метаданные группы адресов.
-	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata optional.OptionalNil[commonmodel.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация группы адресов.
-	Spec common.VpcAddressGroupSpecOptionalResponse `json:"spec" yaml:"spec"`
+	Spec commonmodel.VpcAddressGroupSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Статус группы адресов.
 	Status *VpcAddressGroupStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
@@ -40,28 +40,28 @@ func (m *VpcAddressGroupOptionalResponse) GetKindOr(val string) string {
 	return val
 }
 
-func (m *VpcAddressGroupOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
+func (m *VpcAddressGroupOptionalResponse) GetMetadata() *commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
-func (m *VpcAddressGroupOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
+func (m *VpcAddressGroupOptionalResponse) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataOptionalResponse) commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}
 	return val
 }
 
-func (m *VpcAddressGroupOptionalResponse) GetSpec() common.VpcAddressGroupSpecOptionalResponse {
+func (m *VpcAddressGroupOptionalResponse) GetSpec() commonmodel.VpcAddressGroupSpecOptionalResponse {
 	if m != nil {
 		return m.Spec
 	}
-	return common.VpcAddressGroupSpecOptionalResponse{}
+	return commonmodel.VpcAddressGroupSpecOptionalResponse{}
 }
 
-func (m *VpcAddressGroupOptionalResponse) SetSpec(val common.VpcAddressGroupSpecOptionalResponse) {
+func (m *VpcAddressGroupOptionalResponse) SetSpec(val commonmodel.VpcAddressGroupSpecOptionalResponse) {
 	m.Spec = val
 }
 

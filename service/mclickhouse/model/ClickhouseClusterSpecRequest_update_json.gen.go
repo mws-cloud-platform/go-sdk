@@ -12,7 +12,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/encode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
@@ -281,7 +281,7 @@ func (m *UpdateClickhouseClusterSpecRequest) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v common.UpdateMaintenanceWindowRequest
+			var v commonmodel.UpdateMaintenanceWindowRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}

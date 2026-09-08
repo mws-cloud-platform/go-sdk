@@ -7,21 +7,21 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: PostgresClusterUserStatus
 type PostgresClusterUserStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Список привязок ролей текущего пользователя
 	RoleBindings []PostgresUserRoleBindingStatusResponse `json:"roleBindings,omitempty" yaml:"roleBindings,omitempty"`
 }
 
-func (m *PostgresClusterUserStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *PostgresClusterUserStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *PostgresClusterUserStatusResponse) GetRoleBindings() []PostgresUserRoleBindingStatusResponse {

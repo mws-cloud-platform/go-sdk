@@ -4,18 +4,21 @@ package model
 
 import (
 	"context"
+	"fmt"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
 // Статус образа
 // Real OAPI model name: ImageStatus
 type ImageStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	// Список статусов готовности образов по каждому региону
+	RegionalImageStatuses []RegionalImageStatusResponse `json:"regionalImageStatuses,omitempty" yaml:"regionalImageStatuses,omitempty"`
 	// Размер образа
 	StorageSize *bytesize.ByteSize `json:"storageSize,omitempty" yaml:"storageSize,omitempty"`
 	// Признак, указывающий, удален ли родительский ресурс-источник
@@ -27,16 +30,30 @@ type ImageStatusResponse struct {
 	// Ссылка на исходный образ
 	InitialSourceImage *compute.ImageID `json:"initialSourceImage,omitempty" yaml:"initialSourceImage,omitempty"`
 	// Тип операционной системы
-	OsType *OsType2 `json:"osType,omitempty" yaml:"osType,omitempty"`
+	OsType *OsType `json:"osType,omitempty" yaml:"osType,omitempty"`
 	// Способ шифрования ресурса
 	Encryption *EncryptionStatusResponse `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
-func (m *ImageStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *ImageStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
+}
+
+func (m *ImageStatusResponse) GetRegionalImageStatuses() []RegionalImageStatusResponse {
+	if m != nil {
+		return m.RegionalImageStatuses
+	}
+	return nil
+}
+
+func (m *ImageStatusResponse) GetRegionalImageStatusesOr(val []RegionalImageStatusResponse) []RegionalImageStatusResponse {
+	if m != nil && m.RegionalImageStatuses != nil {
+		return m.RegionalImageStatuses
+	}
+	return val
 }
 
 func (m *ImageStatusResponse) GetStorageSize() *bytesize.ByteSize {
@@ -109,14 +126,14 @@ func (m *ImageStatusResponse) GetInitialSourceImageOr(val compute.ImageID) compu
 	return val
 }
 
-func (m *ImageStatusResponse) GetOsType() *OsType2 {
+func (m *ImageStatusResponse) GetOsType() *OsType {
 	if m != nil {
 		return m.OsType
 	}
 	return nil
 }
 
-func (m *ImageStatusResponse) GetOsTypeOr(val OsType2) OsType2 {
+func (m *ImageStatusResponse) GetOsTypeOr(val OsType) OsType {
 	if m != nil && m.OsType != nil {
 		return *m.OsType
 	}
@@ -144,6 +161,12 @@ func (m *ImageStatusResponse) Clone() *ImageStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
+	if m.RegionalImageStatuses != nil {
+		clone.RegionalImageStatuses = make([]RegionalImageStatusResponse, len(m.RegionalImageStatuses))
+		for i, v := range m.RegionalImageStatuses {
+			clone.RegionalImageStatuses[i] = *v.Clone()
+		}
+	}
 	clone.StorageSize = m.StorageSize.Clone()
 	if m.SourceExists != nil {
 		cloneSourceExists := *m.SourceExists
@@ -167,6 +190,12 @@ func (m *ImageStatusResponse) Clone() *ImageStatusResponse {
 func (m *ImageStatusResponse) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	for index := range m.RegionalImageStatuses {
+		if err := m.RegionalImageStatuses[index].Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("RegionalImageStatuses"+fmt.Sprint("[", index, "]"), err)
+		}
 	}
 
 	if err := m.Encryption.Parse(ctx); err != nil {

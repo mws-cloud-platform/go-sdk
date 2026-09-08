@@ -6,7 +6,6 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 )
 
-// Назначение
 // Real OAPI model name: RouteDestination
 type RouteDestinationRequest struct {
 	Spec RouteDestinationSpecRequest `json:"spec" yaml:"spec"`

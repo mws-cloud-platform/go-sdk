@@ -4,28 +4,28 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: NodeGroupVersionControlSpec
 type NodeGroupVersionControlSpecOptionalResponse struct {
 	// Минимальная версия NodeGroup. Не может быть выше версии кластера.  Автоматически обновляется до default-версии в окно обслуживания. Если указанная версия выше текущей, обновление запустится немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе NodeGroup
-	Version optional.OptionalNil[string] `json:"version,omitempty" yaml:"version,omitempty"`
+	Version optional.Optional[string] `json:"version,omitempty" yaml:"version,omitempty"`
 	// авто обновление версии нод группы в рамках релизного канала и окна обслуживания
 	AutoUpdate optional.Optional[bool] `json:"autoUpdate,omitempty" yaml:"autoUpdate,omitempty"`
 	// Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration можно указывать. Если отсутствует, то не ограничено по времени
-	MaintenanceWindow optional.OptionalNil[common.MaintenanceWindowOptionalResponse] `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	MaintenanceWindow optional.OptionalNil[commonmodel.MaintenanceWindowOptionalResponse] `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 }
 
 func (m *NodeGroupVersionControlSpecOptionalResponse) GetVersion() *string {
-	if m != nil && m.Version.IsSet() && !m.Version.IsNull() {
+	if m != nil && m.Version.IsSet() {
 		return &m.Version.Value
 	}
 	return nil
 }
 
 func (m *NodeGroupVersionControlSpecOptionalResponse) GetVersionOr(val string) string {
-	if m != nil && m.Version.IsSet() && !m.Version.IsNull() {
+	if m != nil && m.Version.IsSet() {
 		return m.Version.Value
 	}
 	return val
@@ -45,14 +45,14 @@ func (m *NodeGroupVersionControlSpecOptionalResponse) GetAutoUpdateOr(val bool) 
 	return val
 }
 
-func (m *NodeGroupVersionControlSpecOptionalResponse) GetMaintenanceWindow() *common.MaintenanceWindowOptionalResponse {
+func (m *NodeGroupVersionControlSpecOptionalResponse) GetMaintenanceWindow() *commonmodel.MaintenanceWindowOptionalResponse {
 	if m != nil && m.MaintenanceWindow.IsSet() && !m.MaintenanceWindow.IsNull() {
 		return &m.MaintenanceWindow.Value
 	}
 	return nil
 }
 
-func (m *NodeGroupVersionControlSpecOptionalResponse) GetMaintenanceWindowOr(val common.MaintenanceWindowOptionalResponse) common.MaintenanceWindowOptionalResponse {
+func (m *NodeGroupVersionControlSpecOptionalResponse) GetMaintenanceWindowOr(val commonmodel.MaintenanceWindowOptionalResponse) commonmodel.MaintenanceWindowOptionalResponse {
 	if m != nil && m.MaintenanceWindow.IsSet() && !m.MaintenanceWindow.IsNull() {
 		return m.MaintenanceWindow.Value
 	}

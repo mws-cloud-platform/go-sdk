@@ -24,6 +24,5 @@ func TestCertificateManagedSpecRequestMarshalling(t *testing.T) {
 
 func initCertificateManagedSpecRequest() model.CertificateManagedSpecRequest {
 	var v model.CertificateManagedSpecRequest
-	v.Domains = make([]string, 0)
 	return v
 }

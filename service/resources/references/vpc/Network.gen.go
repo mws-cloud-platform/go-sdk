@@ -135,6 +135,25 @@ func (m *NetworkID) Clone() *NetworkID {
 	return &clone
 }
 
+func (m *NetworkID) AsRef() *NetworkRef {
+	if m == nil {
+		return nil
+	}
+	return &NetworkRef{
+		id: *m,
+	}
+}
+
+func (m *NetworkID) Equal(other *NetworkID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.network == other.network && m.project == other.project
+}
+
 func (m NetworkID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *NetworkRef) Clone() *NetworkRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *NetworkRef) Equal(other *NetworkRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.network == other.id.network && m.id.project == other.id.project
 }
 
 func (m NetworkRef) MarshalJSON() ([]byte, error) {

@@ -10,14 +10,14 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
 // Описывает статусную модель k8s cluster.
 // Real OAPI model name: ClusterStatus
 type ClusterStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// root сертификат кластера
 	ClusterCaCertificate []byte                               `json:"clusterCaCertificate,omitempty" yaml:"clusterCaCertificate,omitempty"` // base64
 	Network              *ClusterStatusNetworkResponse        `json:"network,omitempty" yaml:"network,omitempty"`
@@ -28,11 +28,11 @@ type ClusterStatusResponse struct {
 	SecurityPosture *SecurityPostureStatusResponse `json:"securityPosture,omitempty" yaml:"securityPosture,omitempty"`
 }
 
-func (m *ClusterStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *ClusterStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *ClusterStatusResponse) GetClusterCaCertificate() []byte {

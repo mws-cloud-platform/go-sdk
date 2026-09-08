@@ -6,7 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Тип диска
@@ -15,7 +15,7 @@ type DiskTypeResponse struct {
 	// Тип объекта (diskType)
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Дополнительная информация об объекте
-	Metadata *common.CommonTypedResourceMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata *commonmodel.CommonTypedResourceMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация типа глобального диска
 	Spec DiskTypeSpecResponse `json:"spec" yaml:"spec"`
 }
@@ -38,18 +38,18 @@ func (m *DiskTypeResponse) GetKindOr(val string) string {
 	return val
 }
 
-func (m *DiskTypeResponse) GetMetadata() *common.CommonTypedResourceMetadataResponse {
+func (m *DiskTypeResponse) GetMetadata() *commonmodel.CommonTypedResourceMetadataResponse {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *DiskTypeResponse) SetMetadata(val *common.CommonTypedResourceMetadataResponse) {
+func (m *DiskTypeResponse) SetMetadata(val *commonmodel.CommonTypedResourceMetadataResponse) {
 	m.Metadata = val
 }
 
-func (m *DiskTypeResponse) GetMetadataOr(val common.CommonTypedResourceMetadataResponse) common.CommonTypedResourceMetadataResponse {
+func (m *DiskTypeResponse) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataResponse) commonmodel.CommonTypedResourceMetadataResponse {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}

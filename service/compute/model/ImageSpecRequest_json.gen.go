@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m ImageSpecRequest) MarshalJSON() ([]byte, error) {
@@ -37,6 +38,17 @@ func (m *ImageSpecRequest) encodeFields(e *jx.Encoder) error {
 	if m.Family != nil {
 		e.FieldStart("family")
 		e.Str(*m.Family)
+	}
+
+	if m.Regions != nil {
+		e.FieldStart("regions")
+		e.ArrStart()
+		for _, elem := range m.Regions {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
 	}
 
 	e.FieldStart("source")
@@ -93,6 +105,21 @@ func (m *ImageSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Family = &v
+			return nil
+		case "regions":
+			c := make([]rm.RegionRef, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v rm.RegionRef
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Regions = c
 			return nil
 		case "source":
 			var v ImageSpecSourceRequest

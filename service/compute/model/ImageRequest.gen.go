@@ -6,30 +6,30 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Образ диска — шаблон диска с установленной операционной системой (ОС) и предустановленным ПО (опционально), используемый для создания виртуальных машин или других вычислительных ресурсов
 // Real OAPI model name: Image
 type ImageRequest struct {
 	// Дополнительная информация об объекте
-	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata *commonmodel.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация образа
 	Spec ImageSpecRequest `json:"spec" yaml:"spec"`
 }
 
-func (m *ImageRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
+func (m *ImageRequest) GetMetadata() *commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *ImageRequest) SetMetadata(val *common.CommonTypedResourceMetadataRequest) {
+func (m *ImageRequest) SetMetadata(val *commonmodel.CommonTypedResourceMetadataRequest) {
 	m.Metadata = val
 }
 
-func (m *ImageRequest) GetMetadataOr(val common.CommonTypedResourceMetadataRequest) common.CommonTypedResourceMetadataRequest {
+func (m *ImageRequest) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataRequest) commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}

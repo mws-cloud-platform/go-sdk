@@ -157,6 +157,25 @@ func (m *AuthorizedKeyID) Clone() *AuthorizedKeyID {
 	return &clone
 }
 
+func (m *AuthorizedKeyID) AsRef() *AuthorizedKeyRef {
+	if m == nil {
+		return nil
+	}
+	return &AuthorizedKeyRef{
+		id: *m,
+	}
+}
+
+func (m *AuthorizedKeyID) Equal(other *AuthorizedKeyID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.authorizedKey == other.authorizedKey && m.serviceAccount == other.serviceAccount && m.project == other.project
+}
+
 func (m AuthorizedKeyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *AuthorizedKeyRef) Clone() *AuthorizedKeyRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *AuthorizedKeyRef) Equal(other *AuthorizedKeyRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.authorizedKey == other.id.authorizedKey && m.id.serviceAccount == other.id.serviceAccount && m.id.project == other.id.project
 }
 
 func (m AuthorizedKeyRef) MarshalJSON() ([]byte, error) {

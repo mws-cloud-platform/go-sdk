@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
 
@@ -51,14 +51,13 @@ func (m ListVmTypesRequest) WithPageToken(token *string) ListVmTypesRequest {
 type ListVmTypesResponse struct {
 	Code        int
 	Response200 *model.VmTypesListOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response408 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response499 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -75,9 +74,6 @@ func (m *ListVmTypesResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
-	}
-	if m.Response401 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -119,14 +115,13 @@ func (m *GetVmTypeRequest) SetAuthorization(authorization string) {
 type GetVmTypeResponse struct {
 	Code        int
 	Response200 *model.VmTypeOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response408 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response499 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -143,9 +138,6 @@ func (m *GetVmTypeResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
-	}
-	if m.Response401 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)

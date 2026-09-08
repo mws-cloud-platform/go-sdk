@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/rm/model"
 )
 
@@ -55,11 +55,11 @@ func (m ListZonesRequest) WithPageToken(token *string) ListZonesRequest {
 type ListZonesResponse struct {
 	Code        int
 	Response200 *model.ZoneListResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -120,11 +120,11 @@ func (m *GetZoneRequest) SetZone(zone string) {
 type GetZoneResponse struct {
 	Code        int
 	Response200 *model.ZoneResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

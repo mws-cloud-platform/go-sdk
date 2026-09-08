@@ -8,7 +8,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
-// Описание ресурсов хостов брокеров и контроллеров.
+// Описание ресурсов хостов брокеров и контроллера.
 // Real OAPI model name: KafkaInstance
 type KafkaInstanceRequest struct {
 	// Параметры виртуальной машины, где будет работать брокер Кафки.

@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func EgressNatSpecExternalRequestToOptionalResponse(request *EgressNatSpecExternalRequest) (*EgressNatSpecExternalOptionalResponse, error) {
@@ -12,7 +12,7 @@ func EgressNatSpecExternalRequestToOptionalResponse(request *EgressNatSpecExtern
 	}
 	var response EgressNatSpecExternalOptionalResponse
 	for _, e := range request.Addresses {
-		tmp, err := common.ResourceExternalAddressSpecOrRefRequestToOptionalResponse(&e)
+		tmp, err := commonmodel.ResourceExternalAddressSpecOrRefRequestToOptionalResponse(&e)
 		if err != nil {
 			return nil, err
 		}

@@ -15,7 +15,7 @@ type KafkaEndpointExternalAddressSpecOrRefRequest struct {
 	// Идентификатор существующего внешнего адреса.
 	Ref *vpc.ExternalAddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Спецификация нового внешнего адреса. Адрес будет выделен в ходе реконсиляции кластера.
-	Spec *KafkaEndpointExternalAddressSpecOrRefSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec *KafkaEndpointExternalAddressSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *KafkaEndpointExternalAddressSpecOrRefRequest) GetRef() *vpc.ExternalAddressRef {
@@ -36,18 +36,18 @@ func (m *KafkaEndpointExternalAddressSpecOrRefRequest) GetRefOr(val vpc.External
 	return val
 }
 
-func (m *KafkaEndpointExternalAddressSpecOrRefRequest) GetSpec() *KafkaEndpointExternalAddressSpecOrRefSpecRequest {
+func (m *KafkaEndpointExternalAddressSpecOrRefRequest) GetSpec() *KafkaEndpointExternalAddressSpecRequest {
 	if m != nil {
 		return m.Spec
 	}
 	return nil
 }
 
-func (m *KafkaEndpointExternalAddressSpecOrRefRequest) SetSpec(val *KafkaEndpointExternalAddressSpecOrRefSpecRequest) {
+func (m *KafkaEndpointExternalAddressSpecOrRefRequest) SetSpec(val *KafkaEndpointExternalAddressSpecRequest) {
 	m.Spec = val
 }
 
-func (m *KafkaEndpointExternalAddressSpecOrRefRequest) GetSpecOr(val KafkaEndpointExternalAddressSpecOrRefSpecRequest) KafkaEndpointExternalAddressSpecOrRefSpecRequest {
+func (m *KafkaEndpointExternalAddressSpecOrRefRequest) GetSpecOr(val KafkaEndpointExternalAddressSpecRequest) KafkaEndpointExternalAddressSpecRequest {
 	if m != nil && m.Spec != nil {
 		return *m.Spec
 	}
@@ -75,18 +75,4 @@ func (m *KafkaEndpointExternalAddressSpecOrRefRequest) Parse(ctx context.Context
 	}
 
 	return nil
-}
-
-// Представление поля Spec анонимного типа структуры KafkaEndpointExternalAddressSpecOrRef
-// Real OAPI model name: KafkaEndpointExternalAddressSpecOrRefSpec
-type KafkaEndpointExternalAddressSpecOrRefSpecRequest struct {
-}
-
-func (m *KafkaEndpointExternalAddressSpecOrRefSpecRequest) Clone() *KafkaEndpointExternalAddressSpecOrRefSpecRequest {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
-	return &clone
 }

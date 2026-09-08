@@ -4,10 +4,12 @@ package model
 
 // Real OAPI model name: ClusterAvailabilitySpec
 type ClusterAvailabilitySpecRequest struct {
-	// Кластер с одним мастером
+	// Кластер с одним мастером.
 	Standalone *ClusterAvailabilitySpecStandaloneRequest `json:"standalone,omitempty" yaml:"standalone,omitempty"`
-	// Зональный высокодоступный кластер с несколькими мастерами
+	// Зональный высокодоступный кластер с несколькими мастерами в одной зоне доступности.
 	ZonalHa *ClusterAvailabilitySpecZonalHaRequest `json:"zonalHa,omitempty" yaml:"zonalHa,omitempty"`
+	// Высокодоступный кластер с несколькими мастерами в разных зонах доступности одного региона.
+	Regional *ClusterAvailabilitySpecRegionalRequest `json:"regional,omitempty" yaml:"regional,omitempty"`
 }
 
 func (m *ClusterAvailabilitySpecRequest) GetStandalone() *ClusterAvailabilitySpecStandaloneRequest {
@@ -46,6 +48,24 @@ func (m *ClusterAvailabilitySpecRequest) GetZonalHaOr(val ClusterAvailabilitySpe
 	return val
 }
 
+func (m *ClusterAvailabilitySpecRequest) GetRegional() *ClusterAvailabilitySpecRegionalRequest {
+	if m != nil {
+		return m.Regional
+	}
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecRequest) SetRegional(val *ClusterAvailabilitySpecRegionalRequest) {
+	m.Regional = val
+}
+
+func (m *ClusterAvailabilitySpecRequest) GetRegionalOr(val ClusterAvailabilitySpecRegionalRequest) ClusterAvailabilitySpecRegionalRequest {
+	if m != nil && m.Regional != nil {
+		return *m.Regional
+	}
+	return val
+}
+
 func (m *ClusterAvailabilitySpecRequest) Clone() *ClusterAvailabilitySpecRequest {
 	if m == nil {
 		return nil
@@ -54,13 +74,47 @@ func (m *ClusterAvailabilitySpecRequest) Clone() *ClusterAvailabilitySpecRequest
 	clone := *m
 	clone.Standalone = m.Standalone.Clone()
 	clone.ZonalHa = m.ZonalHa.Clone()
+	clone.Regional = m.Regional.Clone()
+	return &clone
+}
+
+// Представление поля Regional анонимного типа структуры ClusterAvailabilitySpec
+// Real OAPI model name: ClusterAvailabilitySpecRegional
+type ClusterAvailabilitySpecRegionalRequest struct {
+	// Имена зон для размещения кластера. Должно быть ровно три зоны.
+	Zones []string `json:"zones" yaml:"zones"`
+}
+
+func (m *ClusterAvailabilitySpecRegionalRequest) GetZones() []string {
+	if m != nil {
+		return m.Zones
+	}
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecRegionalRequest) SetZones(val []string) {
+	m.Zones = val
+}
+
+func (m *ClusterAvailabilitySpecRegionalRequest) Clone() *ClusterAvailabilitySpecRegionalRequest {
+	if m == nil {
+		return nil
+	}
+
+	clone := *m
+	if m.Zones != nil {
+		clone.Zones = make([]string, len(m.Zones))
+		for i, v := range m.Zones {
+			clone.Zones[i] = v
+		}
+	}
 	return &clone
 }
 
 // Представление поля Standalone анонимного типа структуры ClusterAvailabilitySpec
 // Real OAPI model name: ClusterAvailabilitySpecStandalone
 type ClusterAvailabilitySpecStandaloneRequest struct {
-	// Имя зоны для размещения cluster
+	// Имя зоны для размещения кластера.
 	Zone string `json:"zone" yaml:"zone"`
 }
 
@@ -87,7 +141,7 @@ func (m *ClusterAvailabilitySpecStandaloneRequest) Clone() *ClusterAvailabilityS
 // Представление поля ZonalHa анонимного типа структуры ClusterAvailabilitySpec
 // Real OAPI model name: ClusterAvailabilitySpecZonalHa
 type ClusterAvailabilitySpecZonalHaRequest struct {
-	// Имя зоны для размещения cluster
+	// Имя зоны для размещения кластера.
 	Zone string `json:"zone" yaml:"zone"`
 }
 

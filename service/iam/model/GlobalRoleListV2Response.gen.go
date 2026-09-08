@@ -3,28 +3,28 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: GlobalRoleListV2
 type GlobalRoleListV2Response struct {
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken  `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
-	Items         []GlobalRoleV2Response `json:"items" yaml:"items"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	Items         []GlobalRoleV2Response     `json:"items" yaml:"items"`
 }
 
-func (m *GlobalRoleListV2Response) GetNextPageToken() *common.NextPageToken {
+func (m *GlobalRoleListV2Response) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *GlobalRoleListV2Response) SetNextPageToken(val *common.NextPageToken) {
+func (m *GlobalRoleListV2Response) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *GlobalRoleListV2Response) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *GlobalRoleListV2Response) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

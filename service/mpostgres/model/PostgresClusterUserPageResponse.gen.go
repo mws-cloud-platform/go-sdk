@@ -7,14 +7,14 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: PostgresClusterUserPage
 type PostgresClusterUserPageResponse struct {
 	Items []PostgresClusterUserResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *PostgresClusterUserPageResponse) GetItems() []PostgresClusterUserResponse {
@@ -28,18 +28,18 @@ func (m *PostgresClusterUserPageResponse) SetItems(val []PostgresClusterUserResp
 	m.Items = val
 }
 
-func (m *PostgresClusterUserPageResponse) GetNextPageToken() *common.NextPageToken {
+func (m *PostgresClusterUserPageResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *PostgresClusterUserPageResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *PostgresClusterUserPageResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *PostgresClusterUserPageResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *PostgresClusterUserPageResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

@@ -6,29 +6,29 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Ключ — ресурс облака, который объединяет несколько экземпляров криптографических ключей, называемых версиями ключа
 // Real OAPI model name: CryptoKey
 type CryptoKeyRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     CryptoKeySpecRequest                       `json:"spec" yaml:"spec"`
+	Metadata *commonmodel.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     CryptoKeySpecRequest                            `json:"spec" yaml:"spec"`
 }
 
-func (m *CryptoKeyRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
+func (m *CryptoKeyRequest) GetMetadata() *commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *CryptoKeyRequest) SetMetadata(val *common.CommonTypedResourceMetadataRequest) {
+func (m *CryptoKeyRequest) SetMetadata(val *commonmodel.CommonTypedResourceMetadataRequest) {
 	m.Metadata = val
 }
 
-func (m *CryptoKeyRequest) GetMetadataOr(val common.CommonTypedResourceMetadataRequest) common.CommonTypedResourceMetadataRequest {
+func (m *CryptoKeyRequest) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataRequest) commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}

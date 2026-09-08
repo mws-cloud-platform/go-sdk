@@ -25,6 +25,22 @@ func ClusterAvailabilitySpecRequestToOptionalResponse(request *ClusterAvailabili
 		}
 		response.ZonalHa = optional.NewOptionalNil(*tmpZonalHa)
 	}
+	if request.Regional != nil {
+		tmpRegional, err := ClusterAvailabilitySpecRegionalRequestToOptionalResponse(request.Regional)
+		if err != nil {
+			return nil, err
+		}
+		response.Regional = optional.NewOptionalNil(*tmpRegional)
+	}
+	return &response, nil
+}
+
+func ClusterAvailabilitySpecRegionalRequestToOptionalResponse(request *ClusterAvailabilitySpecRegionalRequest) (*ClusterAvailabilitySpecRegionalOptionalResponse, error) {
+	if request == nil {
+		return nil, nil
+	}
+	var response ClusterAvailabilitySpecRegionalOptionalResponse
+	response.Zones = request.Zones
 	return &response, nil
 }
 

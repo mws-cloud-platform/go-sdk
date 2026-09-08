@@ -8,14 +8,14 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: VirtualMachinesList
 type VirtualMachinesListOptionalResponse struct {
 	Items []VirtualMachineOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken optional.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.Optional[commonmodel.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *VirtualMachinesListOptionalResponse) GetItems() []VirtualMachineOptionalResponse {
@@ -29,14 +29,14 @@ func (m *VirtualMachinesListOptionalResponse) SetItems(val []VirtualMachineOptio
 	m.Items = val
 }
 
-func (m *VirtualMachinesListOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *VirtualMachinesListOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return &m.NextPageToken.Value
 	}
 	return nil
 }
 
-func (m *VirtualMachinesListOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *VirtualMachinesListOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return m.NextPageToken.Value
 	}

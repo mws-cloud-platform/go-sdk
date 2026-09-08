@@ -157,6 +157,25 @@ func (m *SecretRoleBindingID) Clone() *SecretRoleBindingID {
 	return &clone
 }
 
+func (m *SecretRoleBindingID) AsRef() *SecretRoleBindingRef {
+	if m == nil {
+		return nil
+	}
+	return &SecretRoleBindingRef{
+		id: *m,
+	}
+}
+
+func (m *SecretRoleBindingID) Equal(other *SecretRoleBindingID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.roleBinding == other.roleBinding && m.secretName == other.secretName && m.project == other.project
+}
+
 func (m SecretRoleBindingID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *SecretRoleBindingRef) Clone() *SecretRoleBindingRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *SecretRoleBindingRef) Equal(other *SecretRoleBindingRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.roleBinding == other.id.roleBinding && m.id.secretName == other.id.secretName && m.id.project == other.id.project
 }
 
 func (m SecretRoleBindingRef) MarshalJSON() ([]byte, error) {

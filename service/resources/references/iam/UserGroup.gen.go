@@ -113,6 +113,25 @@ func (m *UserGroupID) Clone() *UserGroupID {
 	return &clone
 }
 
+func (m *UserGroupID) AsRef() *UserGroupRef {
+	if m == nil {
+		return nil
+	}
+	return &UserGroupRef{
+		id: *m,
+	}
+}
+
+func (m *UserGroupID) Equal(other *UserGroupID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.userGroup == other.userGroup
+}
+
 func (m UserGroupID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *UserGroupRef) Clone() *UserGroupRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *UserGroupRef) Equal(other *UserGroupRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.userGroup == other.id.userGroup
 }
 
 func (m UserGroupRef) MarshalJSON() ([]byte, error) {

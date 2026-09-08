@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
@@ -25,8 +25,8 @@ type KafkaClusterSpecRequest struct {
 	// Описание ресурсов хостов брокеров и контроллеров.
 	Instances KafkaInstanceRequest `json:"instances" yaml:"instances"`
 	// Настройки Kafka. Если не указаны, будут использованы настройки по умолчанию
-	ProductConfig     *string                          `json:"productConfig,omitempty" yaml:"productConfig,omitempty"`
-	MaintenanceWindow *common.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	ProductConfig     *string                               `json:"productConfig,omitempty" yaml:"productConfig,omitempty"`
+	MaintenanceWindow *commonmodel.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry *KafkaSchemaRegistrySpecRequest `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`
 	// Настройка балансировщика кластера.
@@ -120,18 +120,18 @@ func (m *KafkaClusterSpecRequest) GetProductConfigOr(val string) string {
 	return val
 }
 
-func (m *KafkaClusterSpecRequest) GetMaintenanceWindow() *common.MaintenanceWindowRequest {
+func (m *KafkaClusterSpecRequest) GetMaintenanceWindow() *commonmodel.MaintenanceWindowRequest {
 	if m != nil {
 		return m.MaintenanceWindow
 	}
 	return nil
 }
 
-func (m *KafkaClusterSpecRequest) SetMaintenanceWindow(val *common.MaintenanceWindowRequest) {
+func (m *KafkaClusterSpecRequest) SetMaintenanceWindow(val *commonmodel.MaintenanceWindowRequest) {
 	m.MaintenanceWindow = val
 }
 
-func (m *KafkaClusterSpecRequest) GetMaintenanceWindowOr(val common.MaintenanceWindowRequest) common.MaintenanceWindowRequest {
+func (m *KafkaClusterSpecRequest) GetMaintenanceWindowOr(val commonmodel.MaintenanceWindowRequest) commonmodel.MaintenanceWindowRequest {
 	if m != nil && m.MaintenanceWindow != nil {
 		return *m.MaintenanceWindow
 	}

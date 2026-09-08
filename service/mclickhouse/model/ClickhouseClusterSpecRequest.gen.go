@@ -9,7 +9,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
@@ -28,15 +28,15 @@ type ClickhouseClusterSpecRequest struct {
 	Coordinator *ClickhouseClusterCoordinatorRequest `json:"coordinator,omitempty" yaml:"coordinator,omitempty"`
 	// Описание шардов кластера.
 	Shards []ClickhouseClusterShardRequest `json:"shards" yaml:"shards"`
-	// Настройки Clickhouse. Если не указаны, будут использованы настройки по умолчанию
+	// Настройки ClickHouse. Если не указаны, будут использованы настройки по умолчанию
 	Config map[string]jsonapimodels.RawMessageNotNull `json:"config,omitempty" yaml:"config,omitempty"`
 	// Конфигурация схемы хранилищ ClickHouse.
 	Storage *ClickhouseStorageConfigurationRequest `json:"storage,omitempty" yaml:"storage,omitempty"`
-	// Добавление пользователей при создании кластера Clickhouse.
+	// Добавление пользователей при создании кластера ClickHouse.
 	BootstrapAdmin ClickhouseClusterBootstrapAdminSpecRequest `json:"bootstrapAdmin" yaml:"bootstrapAdmin"`
 	// Спецификация работы автоматического резервного копирования.
-	Backup            *ClickhouseClusterBackupRequest  `json:"backup,omitempty" yaml:"backup,omitempty"`
-	MaintenanceWindow *common.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	Backup            *ClickhouseClusterBackupRequest       `json:"backup,omitempty" yaml:"backup,omitempty"`
+	MaintenanceWindow *commonmodel.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 }
 
 func (m *ClickhouseClusterSpecRequest) GetActive() *bool {
@@ -198,18 +198,18 @@ func (m *ClickhouseClusterSpecRequest) GetBackupOr(val ClickhouseClusterBackupRe
 	return val
 }
 
-func (m *ClickhouseClusterSpecRequest) GetMaintenanceWindow() *common.MaintenanceWindowRequest {
+func (m *ClickhouseClusterSpecRequest) GetMaintenanceWindow() *commonmodel.MaintenanceWindowRequest {
 	if m != nil {
 		return m.MaintenanceWindow
 	}
 	return nil
 }
 
-func (m *ClickhouseClusterSpecRequest) SetMaintenanceWindow(val *common.MaintenanceWindowRequest) {
+func (m *ClickhouseClusterSpecRequest) SetMaintenanceWindow(val *commonmodel.MaintenanceWindowRequest) {
 	m.MaintenanceWindow = val
 }
 
-func (m *ClickhouseClusterSpecRequest) GetMaintenanceWindowOr(val common.MaintenanceWindowRequest) common.MaintenanceWindowRequest {
+func (m *ClickhouseClusterSpecRequest) GetMaintenanceWindowOr(val commonmodel.MaintenanceWindowRequest) commonmodel.MaintenanceWindowRequest {
 	if m != nil && m.MaintenanceWindow != nil {
 		return *m.MaintenanceWindow
 	}

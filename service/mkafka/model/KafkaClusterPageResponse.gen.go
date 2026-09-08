@@ -7,14 +7,14 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: KafkaClusterPage
 type KafkaClusterPageResponse struct {
 	Items []KafkaClusterResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *KafkaClusterPageResponse) GetItems() []KafkaClusterResponse {
@@ -28,18 +28,18 @@ func (m *KafkaClusterPageResponse) SetItems(val []KafkaClusterResponse) {
 	m.Items = val
 }
 
-func (m *KafkaClusterPageResponse) GetNextPageToken() *common.NextPageToken {
+func (m *KafkaClusterPageResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *KafkaClusterPageResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *KafkaClusterPageResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *KafkaClusterPageResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *KafkaClusterPageResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: NodeGroupVersionControlSpec
@@ -13,7 +13,7 @@ type NodeGroupVersionControlSpecRequest struct {
 	// авто обновление версии нод группы в рамках релизного канала и окна обслуживания
 	AutoUpdate *bool `json:"autoUpdate,omitempty" yaml:"autoUpdate,omitempty"`
 	// Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration можно указывать. Если отсутствует, то не ограничено по времени
-	MaintenanceWindow *common.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	MaintenanceWindow *commonmodel.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 }
 
 func (m *NodeGroupVersionControlSpecRequest) GetVersion() *string {
@@ -52,18 +52,18 @@ func (m *NodeGroupVersionControlSpecRequest) GetAutoUpdateOr(val bool) bool {
 	return val
 }
 
-func (m *NodeGroupVersionControlSpecRequest) GetMaintenanceWindow() *common.MaintenanceWindowRequest {
+func (m *NodeGroupVersionControlSpecRequest) GetMaintenanceWindow() *commonmodel.MaintenanceWindowRequest {
 	if m != nil {
 		return m.MaintenanceWindow
 	}
 	return nil
 }
 
-func (m *NodeGroupVersionControlSpecRequest) SetMaintenanceWindow(val *common.MaintenanceWindowRequest) {
+func (m *NodeGroupVersionControlSpecRequest) SetMaintenanceWindow(val *commonmodel.MaintenanceWindowRequest) {
 	m.MaintenanceWindow = val
 }
 
-func (m *NodeGroupVersionControlSpecRequest) GetMaintenanceWindowOr(val common.MaintenanceWindowRequest) common.MaintenanceWindowRequest {
+func (m *NodeGroupVersionControlSpecRequest) GetMaintenanceWindowOr(val commonmodel.MaintenanceWindowRequest) commonmodel.MaintenanceWindowRequest {
 	if m != nil && m.MaintenanceWindow != nil {
 		return *m.MaintenanceWindow
 	}

@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m AuthorizedKeyRequest) MarshalJSON() ([]byte, error) {
@@ -163,9 +163,9 @@ func (m *AuthorizedKeyMetadataRequest) Decode(d *jx.Decoder) error {
 			m.DisplayName = &v
 			return nil
 		case "usages":
-			c := make([]common.TypedUsageRequest, 0)
+			c := make([]commonmodel.TypedUsageRequest, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v common.TypedUsageRequest
+				var v commonmodel.TypedUsageRequest
 				if err := v.Decode(d); err != nil {
 					return err
 				}

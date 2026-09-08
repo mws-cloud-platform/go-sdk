@@ -135,6 +135,25 @@ func (m *DeploymentID) Clone() *DeploymentID {
 	return &clone
 }
 
+func (m *DeploymentID) AsRef() *DeploymentRef {
+	if m == nil {
+		return nil
+	}
+	return &DeploymentRef{
+		id: *m,
+	}
+}
+
+func (m *DeploymentID) Equal(other *DeploymentID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.deploymentName == other.deploymentName && m.project == other.project
+}
+
 func (m DeploymentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *DeploymentRef) Clone() *DeploymentRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *DeploymentRef) Equal(other *DeploymentRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.deploymentName == other.id.deploymentName && m.id.project == other.id.project
 }
 
 func (m DeploymentRef) MarshalJSON() ([]byte, error) {

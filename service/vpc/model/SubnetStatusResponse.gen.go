@@ -3,23 +3,23 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Real OAPI model name: SubnetStatus
 type SubnetStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
-	DhcpOptions                   *SubnetDhcpOptionsResponse `json:"dhcpOptions,omitempty" yaml:"dhcpOptions,omitempty"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	DhcpOptions                        *SubnetDhcpOptionsResponse `json:"dhcpOptions,omitempty" yaml:"dhcpOptions,omitempty"`
 	// Регион, которому принадлежит подсеть.
 	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 }
 
-func (m *SubnetStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *SubnetStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *SubnetStatusResponse) GetDhcpOptions() *SubnetDhcpOptionsResponse {

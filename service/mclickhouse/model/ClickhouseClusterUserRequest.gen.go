@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ClickhouseClusterUser
@@ -55,7 +55,7 @@ func (m *ClickhouseClusterUserRequest) Clone() *ClickhouseClusterUserRequest {
 // Представление поля Metadata анонимного типа структуры ClickhouseClusterUser
 // Real OAPI model name: ClickhouseClusterUserMetadata
 type ClickhouseClusterUserMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *ClickhouseClusterUserMetadataRequest) GetDisplayName() *string {
@@ -72,14 +72,14 @@ func (m *ClickhouseClusterUserMetadataRequest) GetDisplayNameOr(val string) stri
 	return val
 }
 
-func (m *ClickhouseClusterUserMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *ClickhouseClusterUserMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *ClickhouseClusterUserMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *ClickhouseClusterUserMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

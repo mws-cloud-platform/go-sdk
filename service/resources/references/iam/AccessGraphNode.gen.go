@@ -113,6 +113,25 @@ func (m *AccessGraphNodeID) Clone() *AccessGraphNodeID {
 	return &clone
 }
 
+func (m *AccessGraphNodeID) AsRef() *AccessGraphNodeRef {
+	if m == nil {
+		return nil
+	}
+	return &AccessGraphNodeRef{
+		id: *m,
+	}
+}
+
+func (m *AccessGraphNodeID) Equal(other *AccessGraphNodeID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.accessGraphNode == other.accessGraphNode
+}
+
 func (m AccessGraphNodeID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *AccessGraphNodeRef) Clone() *AccessGraphNodeRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *AccessGraphNodeRef) Equal(other *AccessGraphNodeRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.accessGraphNode == other.id.accessGraphNode
 }
 
 func (m AccessGraphNodeRef) MarshalJSON() ([]byte, error) {

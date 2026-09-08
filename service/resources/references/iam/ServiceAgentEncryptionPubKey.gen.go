@@ -157,6 +157,25 @@ func (m *ServiceAgentEncryptionPubKeyID) Clone() *ServiceAgentEncryptionPubKeyID
 	return &clone
 }
 
+func (m *ServiceAgentEncryptionPubKeyID) AsRef() *ServiceAgentEncryptionPubKeyRef {
+	if m == nil {
+		return nil
+	}
+	return &ServiceAgentEncryptionPubKeyRef{
+		id: *m,
+	}
+}
+
+func (m *ServiceAgentEncryptionPubKeyID) Equal(other *ServiceAgentEncryptionPubKeyID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.keyName == other.keyName && m.serviceAgentId == other.serviceAgentId && m.project == other.project
+}
+
 func (m ServiceAgentEncryptionPubKeyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *ServiceAgentEncryptionPubKeyRef) Clone() *ServiceAgentEncryptionPubKeyR
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ServiceAgentEncryptionPubKeyRef) Equal(other *ServiceAgentEncryptionPubKeyRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.keyName == other.id.keyName && m.id.serviceAgentId == other.id.serviceAgentId && m.id.project == other.id.project
 }
 
 func (m ServiceAgentEncryptionPubKeyRef) MarshalJSON() ([]byte, error) {

@@ -8,7 +8,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Правило балансировки нагрузки.
@@ -19,7 +19,7 @@ type NlbRuleOptionalResponse struct {
 	// Целевой порт бэкенд-серверов, на которые балансировщик перенаправляет запросы. Если не указан, то считается равным порту балансировщика.
 	TargetPort optional.OptionalNil[int32] `json:"targetPort,omitempty" yaml:"targetPort,omitempty"`
 	// Адреса бэкенд-серверов, на которые балансировщик направляет запросы.
-	TargetAddressGroups []common.VpcAddressGroupSpecOrRefOptionalResponse `json:"targetAddressGroups" yaml:"targetAddressGroups"`
+	TargetAddressGroups []commonmodel.VpcAddressGroupSpecOrRefOptionalResponse `json:"targetAddressGroups" yaml:"targetAddressGroups"`
 	// Настройка проверки работоспособности виртуальных машин.
 	HealthCheck optional.OptionalNil[NlbHealthCheckOptionalResponse] `json:"healthCheck,omitempty" yaml:"healthCheck,omitempty"`
 }
@@ -49,14 +49,14 @@ func (m *NlbRuleOptionalResponse) GetTargetPortOr(val int32) int32 {
 	return val
 }
 
-func (m *NlbRuleOptionalResponse) GetTargetAddressGroups() []common.VpcAddressGroupSpecOrRefOptionalResponse {
+func (m *NlbRuleOptionalResponse) GetTargetAddressGroups() []commonmodel.VpcAddressGroupSpecOrRefOptionalResponse {
 	if m != nil {
 		return m.TargetAddressGroups
 	}
 	return nil
 }
 
-func (m *NlbRuleOptionalResponse) SetTargetAddressGroups(val []common.VpcAddressGroupSpecOrRefOptionalResponse) {
+func (m *NlbRuleOptionalResponse) SetTargetAddressGroups(val []commonmodel.VpcAddressGroupSpecOrRefOptionalResponse) {
 	m.TargetAddressGroups = val
 }
 
@@ -81,7 +81,7 @@ func (m *NlbRuleOptionalResponse) Clone() *NlbRuleOptionalResponse {
 
 	clone := *m
 	if m.TargetAddressGroups != nil {
-		clone.TargetAddressGroups = make([]common.VpcAddressGroupSpecOrRefOptionalResponse, len(m.TargetAddressGroups))
+		clone.TargetAddressGroups = make([]commonmodel.VpcAddressGroupSpecOrRefOptionalResponse, len(m.TargetAddressGroups))
 		for i, v := range m.TargetAddressGroups {
 			clone.TargetAddressGroups[i] = *v.Clone()
 		}

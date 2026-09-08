@@ -113,6 +113,25 @@ func (m *TrashDiskBackupID) Clone() *TrashDiskBackupID {
 	return &clone
 }
 
+func (m *TrashDiskBackupID) AsRef() *TrashDiskBackupRef {
+	if m == nil {
+		return nil
+	}
+	return &TrashDiskBackupRef{
+		id: *m,
+	}
+}
+
+func (m *TrashDiskBackupID) Equal(other *TrashDiskBackupID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id == other.id
+}
+
 func (m TrashDiskBackupID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *TrashDiskBackupRef) Clone() *TrashDiskBackupRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *TrashDiskBackupRef) Equal(other *TrashDiskBackupRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.id == other.id.id
 }
 
 func (m TrashDiskBackupRef) MarshalJSON() ([]byte, error) {

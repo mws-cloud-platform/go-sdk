@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestCommonRoleBindingListMarshalling(t *testing.T) {
@@ -17,13 +17,13 @@ func TestCommonRoleBindingListMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.CommonRoleBindingList
+	var actual commonmodel.CommonRoleBindingList
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initCommonRoleBindingList() common.CommonRoleBindingList {
-	var v common.CommonRoleBindingList
-	v.Items = make([]common.CommonRoleBinding, 0)
+func initCommonRoleBindingList() commonmodel.CommonRoleBindingList {
+	var v commonmodel.CommonRoleBindingList
+	v.Items = make([]commonmodel.CommonRoleBinding, 0)
 	return v
 }

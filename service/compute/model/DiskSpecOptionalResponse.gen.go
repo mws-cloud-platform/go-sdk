@@ -12,7 +12,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
-// Спецификация глобального диска
+// Спецификация диска
 // Real OAPI model name: DiskSpec
 type DiskSpecOptionalResponse struct {
 	// Зона доступности (ЦОД)

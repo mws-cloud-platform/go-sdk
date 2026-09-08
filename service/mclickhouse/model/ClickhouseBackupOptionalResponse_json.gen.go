@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 )
 
@@ -261,9 +261,9 @@ func (m *ClickhouseBackupMetadataOptionalResponse) Decode(d *jx.Decoder) error {
 			m.PurgeTime = &v
 			return nil
 		case "usages":
-			c := make([]common.TypedUsageOptionalResponse, 0)
+			c := make([]commonmodel.TypedUsageOptionalResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v common.TypedUsageOptionalResponse
+				var v commonmodel.TypedUsageOptionalResponse
 				if err := v.Decode(d); err != nil {
 					return err
 				}
@@ -303,41 +303,4 @@ func (m *ClickhouseBackupMetadataOptionalResponse) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}))
-}
-
-func (m ClickhouseBackupSpecOptionalResponse) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *ClickhouseBackupSpecOptionalResponse) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *ClickhouseBackupSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
-	return nil
-}
-
-func (m *ClickhouseBackupSpecOptionalResponse) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *ClickhouseBackupSpecOptionalResponse) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("ClickhouseBackupSpecOptionalResponse")
-	}
-
-	return d.Skip()
 }

@@ -15,19 +15,11 @@ func OneToOneNatAddressSpecOrRefRequestToOptionalResponse(request *OneToOneNatAd
 		response.Ref = optional.NewOptional(*request.Ref)
 	}
 	if request.Spec != nil {
-		tmpSpec, err := OneToOneNatAddressSpecOrRefSpecRequestToOptionalResponse(request.Spec)
+		tmpSpec, err := OneToOneNatAddressSpecRequestToOptionalResponse(request.Spec)
 		if err != nil {
 			return nil, err
 		}
 		response.Spec = optional.NewOptionalNil(*tmpSpec)
 	}
-	return &response, nil
-}
-
-func OneToOneNatAddressSpecOrRefSpecRequestToOptionalResponse(request *OneToOneNatAddressSpecOrRefSpecRequest) (*OneToOneNatAddressSpecOrRefSpecOptionalResponse, error) {
-	if request == nil {
-		return nil, nil
-	}
-	var response OneToOneNatAddressSpecOrRefSpecOptionalResponse
 	return &response, nil
 }

@@ -10,7 +10,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
@@ -29,15 +29,15 @@ type ClickhouseClusterSpecOptionalResponse struct {
 	Coordinator optional.OptionalNil[ClickhouseClusterCoordinatorOptionalResponse] `json:"coordinator,omitempty" yaml:"coordinator,omitempty"`
 	// Описание шардов кластера.
 	Shards []ClickhouseClusterShardOptionalResponse `json:"shards" yaml:"shards"`
-	// Настройки Clickhouse. Если не указаны, будут использованы настройки по умолчанию
+	// Настройки ClickHouse. Если не указаны, будут использованы настройки по умолчанию
 	Config optional.Optional[map[string]jsonapimodels.RawMessageNotNull] `json:"config,omitempty" yaml:"config,omitempty"`
 	// Конфигурация схемы хранилищ ClickHouse.
 	Storage optional.OptionalNil[ClickhouseStorageConfigurationOptionalResponse] `json:"storage,omitempty" yaml:"storage,omitempty"`
-	// Добавление пользователей при создании кластера Clickhouse.
+	// Добавление пользователей при создании кластера ClickHouse.
 	BootstrapAdmin ClickhouseClusterBootstrapAdminSpecOptionalResponse `json:"bootstrapAdmin" yaml:"bootstrapAdmin"`
 	// Спецификация работы автоматического резервного копирования.
-	Backup            optional.OptionalNil[ClickhouseClusterBackupOptionalResponse]  `json:"backup,omitempty" yaml:"backup,omitempty"`
-	MaintenanceWindow optional.OptionalNil[common.MaintenanceWindowOptionalResponse] `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	Backup            optional.OptionalNil[ClickhouseClusterBackupOptionalResponse]       `json:"backup,omitempty" yaml:"backup,omitempty"`
+	MaintenanceWindow optional.OptionalNil[commonmodel.MaintenanceWindowOptionalResponse] `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 }
 
 func (m *ClickhouseClusterSpecOptionalResponse) GetActive() *bool {
@@ -171,14 +171,14 @@ func (m *ClickhouseClusterSpecOptionalResponse) GetBackupOr(val ClickhouseCluste
 	return val
 }
 
-func (m *ClickhouseClusterSpecOptionalResponse) GetMaintenanceWindow() *common.MaintenanceWindowOptionalResponse {
+func (m *ClickhouseClusterSpecOptionalResponse) GetMaintenanceWindow() *commonmodel.MaintenanceWindowOptionalResponse {
 	if m != nil && m.MaintenanceWindow.IsSet() && !m.MaintenanceWindow.IsNull() {
 		return &m.MaintenanceWindow.Value
 	}
 	return nil
 }
 
-func (m *ClickhouseClusterSpecOptionalResponse) GetMaintenanceWindowOr(val common.MaintenanceWindowOptionalResponse) common.MaintenanceWindowOptionalResponse {
+func (m *ClickhouseClusterSpecOptionalResponse) GetMaintenanceWindowOr(val commonmodel.MaintenanceWindowOptionalResponse) commonmodel.MaintenanceWindowOptionalResponse {
 	if m != nil && m.MaintenanceWindow.IsSet() && !m.MaintenanceWindow.IsNull() {
 		return m.MaintenanceWindow.Value
 	}

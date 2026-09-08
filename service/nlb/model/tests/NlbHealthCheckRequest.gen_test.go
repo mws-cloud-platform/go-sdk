@@ -25,7 +25,6 @@ func TestNlbHealthCheckRequestMarshalling(t *testing.T) {
 
 func initNlbHealthCheckRequest() model.NlbHealthCheckRequest {
 	var v model.NlbHealthCheckRequest
-	v.Interval = duration.MustParseString("PT0S")
 	v.Timeout = duration.MustParseString("PT0S")
 	return v
 }

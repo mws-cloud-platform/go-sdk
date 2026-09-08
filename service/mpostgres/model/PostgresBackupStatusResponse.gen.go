@@ -7,24 +7,24 @@ import (
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: PostgresBackupStatus
 type PostgresBackupStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
-	StartTime                     *time.Time         `json:"startTime,omitempty" yaml:"startTime,omitempty"`
-	FinishTime                    *time.Time         `json:"finishTime,omitempty" yaml:"finishTime,omitempty"`
-	UncompressedSize              *bytesize.ByteSize `json:"uncompressedSize,omitempty" yaml:"uncompressedSize,omitempty"`
-	CompressedSize                *bytesize.ByteSize `json:"compressedSize,omitempty" yaml:"compressedSize,omitempty"`
-	BackupTrigger                 *BackupTrigger     `json:"backupTrigger,omitempty" yaml:"backupTrigger,omitempty"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	StartTime                          *time.Time         `json:"startTime,omitempty" yaml:"startTime,omitempty"`
+	FinishTime                         *time.Time         `json:"finishTime,omitempty" yaml:"finishTime,omitempty"`
+	UncompressedSize                   *bytesize.ByteSize `json:"uncompressedSize,omitempty" yaml:"uncompressedSize,omitempty"`
+	CompressedSize                     *bytesize.ByteSize `json:"compressedSize,omitempty" yaml:"compressedSize,omitempty"`
+	BackupTrigger                      *BackupTrigger     `json:"backupTrigger,omitempty" yaml:"backupTrigger,omitempty"`
 }
 
-func (m *PostgresBackupStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *PostgresBackupStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *PostgresBackupStatusResponse) GetStartTime() *time.Time {

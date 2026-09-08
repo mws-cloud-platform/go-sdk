@@ -9,7 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 )
 
-// Параметры виртуальной машины, где будут работать инстансы Clickhouse данного шарда.
+// Ресурсы одного узла ClickHouse.
 // Real OAPI model name: ClickhouseInstanceHWResources
 type ClickhouseInstanceHWResourcesResponse struct {
 	// Тип виртуальной машины, описывающий ресурсы (vCPU, memory).

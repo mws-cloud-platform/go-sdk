@@ -3,31 +3,31 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Текущее наблюдаемое состояние деплоймента.
 // Real OAPI model name: DeploymentStatus
 type DeploymentStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Размер контекстного окна модели в токенах.
 	ContextWindowSize *uint                    `json:"contextWindowSize,omitempty" yaml:"contextWindowSize,omitempty"`
 	InputModalities   InputModalitiesResponse  `json:"inputModalities" yaml:"inputModalities"`
 	OutputModalities  OutputModalitiesResponse `json:"outputModalities" yaml:"outputModalities"`
-	Modalities        ModalitiesResponse       `json:"modalities" yaml:"modalities"`
-	Capabilities      CapabilitiesResponse     `json:"capabilities" yaml:"capabilities"`
-	Deprecation       DeprecationResponse      `json:"deprecation" yaml:"deprecation"`
+	// Deprecated: Отказываемся из-за разделения на input и output модальности
+	Modalities   ModalitiesResponse   `json:"modalities" yaml:"modalities"`
+	Capabilities CapabilitiesResponse `json:"capabilities" yaml:"capabilities"`
+	Deprecation  DeprecationResponse  `json:"deprecation" yaml:"deprecation"`
 	// Размер модели в миллиардах параметров.
 	Size *float32 `json:"size,omitempty" yaml:"size,omitempty"`
 	// Разработчик модели.
 	Developer *string `json:"developer,omitempty" yaml:"developer,omitempty"`
 }
 
-func (m *DeploymentStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *DeploymentStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *DeploymentStatusResponse) GetContextWindowSize() *uint {
@@ -58,6 +58,7 @@ func (m *DeploymentStatusResponse) GetOutputModalities() OutputModalitiesRespons
 	return OutputModalitiesResponse{}
 }
 
+// Deprecated: Отказываемся из-за разделения на input и output модальности
 func (m *DeploymentStatusResponse) GetModalities() ModalitiesResponse {
 	if m != nil {
 		return m.Modalities

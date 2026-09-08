@@ -16,7 +16,9 @@ func NlbHealthCheckRequestToOptionalResponse(request *NlbHealthCheckRequest) (*N
 		return nil, err
 	}
 	response.Protocol = *tmpProtocol
-	response.Interval = request.Interval
+	if request.Interval != nil {
+		response.Interval = optional.NewOptional(*request.Interval)
+	}
 	response.Timeout = request.Timeout
 	if request.UnhealthyThreshold != nil {
 		response.UnhealthyThreshold = optional.NewOptional(*request.UnhealthyThreshold)

@@ -11,16 +11,16 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
-// Описание инстанса шарда.
+// Описание узла шарда.
 // Real OAPI model name: ClickhouseClusterInstanceResource
 type ClickhouseClusterInstanceResourceResponse struct {
-	// Идентификатор инстанса шарда.
+	// Идентификатор узла шарда.
 	Id mclickhouse.ClickhouseClusterShardInstanceID `json:"id" yaml:"id"`
-	// Индекс реплики в шарде в кластере Clickhouse, который будет указан в настройках кластера в макросе `replica`. Влияет на очередность исполнения распределенных запросов в кластере.
+	// Индекс реплики в шарде в кластере ClickHouse, который будет указан в настройках кластера в макросе `replica`. Влияет на очередность исполнения распределенных запросов в кластере.
 	Index *int `json:"index,omitempty" yaml:"index,omitempty"`
 	// Зона доступности.
 	Zone rm.ZoneRef `json:"zone" yaml:"zone"`
-	// Список эндпойнтов для подключения к инстансу.
+	// Список эндпойнтов для подключения к узлу.
 	Endpoints []ClickhouseEndpointResourceResponse `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
 	Health    *ClickhouseInstanceHealth            `json:"health,omitempty" yaml:"health,omitempty"`
 }

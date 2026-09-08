@@ -133,6 +133,25 @@ func (m *TotalHmacKeyCountID) Clone() *TotalHmacKeyCountID {
 	return &clone
 }
 
+func (m *TotalHmacKeyCountID) AsRef() *TotalHmacKeyCountRef {
+	if m == nil {
+		return nil
+	}
+	return &TotalHmacKeyCountRef{
+		id: *m,
+	}
+}
+
+func (m *TotalHmacKeyCountID) Equal(other *TotalHmacKeyCountID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m TotalHmacKeyCountID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -289,6 +308,16 @@ func (m *TotalHmacKeyCountRef) Clone() *TotalHmacKeyCountRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *TotalHmacKeyCountRef) Equal(other *TotalHmacKeyCountRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m TotalHmacKeyCountRef) MarshalJSON() ([]byte, error) {

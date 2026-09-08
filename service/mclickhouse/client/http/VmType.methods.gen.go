@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/mclickhouse/client"
 )
 
-// GetClickhouseClusterVmTypes returns Clickhouse cluster vm types.
+// GetClickhouseClusterVmTypes возвращает список доступных типов виртуальных машин для кластера ClickHouse.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/availableVmTypes

@@ -38,8 +38,10 @@ func (m *NlbHealthCheckOptionalResponse) encodeFields(e *jx.Encoder) error {
 		return err
 	}
 
-	e.FieldStart("interval")
-	m.Interval.Encode(e)
+	if m.Interval.IsSet() {
+		e.FieldStart("interval")
+		m.Interval.Value.Encode(e)
+	}
 
 	e.FieldStart("timeout")
 	m.Timeout.Encode(e)
@@ -81,7 +83,7 @@ func (m *NlbHealthCheckOptionalResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Interval = v
+			m.Interval.SetTo(v)
 			return nil
 		case "timeout":
 			var v duration.Duration

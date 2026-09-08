@@ -8,14 +8,14 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ClusterList
 type ClusterListOptionalResponse struct {
 	Items []ClusterOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken optional.OptionalNil[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.OptionalNil[commonmodel.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ClusterListOptionalResponse) GetItems() []ClusterOptionalResponse {
@@ -29,14 +29,14 @@ func (m *ClusterListOptionalResponse) SetItems(val []ClusterOptionalResponse) {
 	m.Items = val
 }
 
-func (m *ClusterListOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *ClusterListOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() && !m.NextPageToken.IsNull() {
 		return &m.NextPageToken.Value
 	}
 	return nil
 }
 
-func (m *ClusterListOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ClusterListOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() && !m.NextPageToken.IsNull() {
 		return m.NextPageToken.Value
 	}

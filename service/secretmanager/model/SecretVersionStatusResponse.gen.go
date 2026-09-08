@@ -3,21 +3,21 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: SecretVersionStatus
 type SecretVersionStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Версия секрета активна/неактивна
 	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
-func (m *SecretVersionStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *SecretVersionStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *SecretVersionStatusResponse) GetActive() *bool {

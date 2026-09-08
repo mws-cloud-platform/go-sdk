@@ -12,24 +12,11 @@ func CertificateManagedSpecIssuerRequestToOptionalResponse(request *CertificateM
 	}
 	var response CertificateManagedSpecIssuerOptionalResponse
 	if request.Acme != nil {
-		tmpAcme, err := CertificateManagedSpecIssuerAcmeRequestToOptionalResponse(request.Acme)
+		tmpAcme, err := AcmeIssuerRequestToOptionalResponse(request.Acme)
 		if err != nil {
 			return nil, err
 		}
 		response.Acme = optional.NewOptionalNil(*tmpAcme)
-	}
-	return &response, nil
-}
-
-func CertificateManagedSpecIssuerAcmeRequestToOptionalResponse(request *CertificateManagedSpecIssuerAcmeRequest) (*CertificateManagedSpecIssuerAcmeOptionalResponse, error) {
-	if request == nil {
-		return nil, nil
-	}
-	var response CertificateManagedSpecIssuerAcmeOptionalResponse
-	response.Server = request.Server
-	response.ChallengeType = request.ChallengeType
-	if request.Profile != nil {
-		response.Profile = optional.NewOptional(*request.Profile)
 	}
 	return &response, nil
 }

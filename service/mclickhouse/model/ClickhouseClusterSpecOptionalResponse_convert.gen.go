@@ -4,7 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func ClickhouseClusterSpecRequestToOptionalResponse(request *ClickhouseClusterSpecRequest) (*ClickhouseClusterSpecOptionalResponse, error) {
@@ -63,7 +63,7 @@ func ClickhouseClusterSpecRequestToOptionalResponse(request *ClickhouseClusterSp
 		response.Backup = optional.NewOptionalNil(*tmpBackup)
 	}
 	if request.MaintenanceWindow != nil {
-		tmpMaintenanceWindow, err := common.MaintenanceWindowRequestToOptionalResponse(request.MaintenanceWindow)
+		tmpMaintenanceWindow, err := commonmodel.MaintenanceWindowRequestToOptionalResponse(request.MaintenanceWindow)
 		if err != nil {
 			return nil, err
 		}

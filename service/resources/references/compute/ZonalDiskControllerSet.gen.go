@@ -179,6 +179,25 @@ func (m *ZonalDiskControllerSetID) Clone() *ZonalDiskControllerSetID {
 	return &clone
 }
 
+func (m *ZonalDiskControllerSetID) AsRef() *ZonalDiskControllerSetRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalDiskControllerSetRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalDiskControllerSetID) Equal(other *ZonalDiskControllerSetID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.set == other.set && m.virtualMachine == other.virtualMachine && m.project == other.project && m.zone == other.zone
+}
+
 func (m ZonalDiskControllerSetID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -371,6 +390,16 @@ func (m *ZonalDiskControllerSetRef) Clone() *ZonalDiskControllerSetRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalDiskControllerSetRef) Equal(other *ZonalDiskControllerSetRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.set == other.id.set && m.id.virtualMachine == other.id.virtualMachine && m.id.project == other.id.project && m.id.zone == other.id.zone
 }
 
 func (m ZonalDiskControllerSetRef) MarshalJSON() ([]byte, error) {

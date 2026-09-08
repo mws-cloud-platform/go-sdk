@@ -3,30 +3,30 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Правило файрвола — набор параметров, который разрешает или запрещает определенный тип трафика.
 // Real OAPI model name: FirewallRule
 type FirewallRuleRequest struct {
 	// Метаданные правила файрвола.
-	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata *commonmodel.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация правила файрвола.
 	Spec FirewallRuleSpecRequest `json:"spec" yaml:"spec"`
 }
 
-func (m *FirewallRuleRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
+func (m *FirewallRuleRequest) GetMetadata() *commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *FirewallRuleRequest) SetMetadata(val *common.CommonTypedResourceMetadataRequest) {
+func (m *FirewallRuleRequest) SetMetadata(val *commonmodel.CommonTypedResourceMetadataRequest) {
 	m.Metadata = val
 }
 
-func (m *FirewallRuleRequest) GetMetadataOr(val common.CommonTypedResourceMetadataRequest) common.CommonTypedResourceMetadataRequest {
+func (m *FirewallRuleRequest) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataRequest) commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}

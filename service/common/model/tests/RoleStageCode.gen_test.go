@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestRoleStageCodeMarshalling(t *testing.T) {
@@ -17,12 +17,12 @@ func TestRoleStageCodeMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.RoleStageCode
+	var actual commonmodel.RoleStageCode
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initRoleStageCode() common.RoleStageCode {
-	var v common.RoleStageCode
+func initRoleStageCode() commonmodel.RoleStageCode {
+	var v commonmodel.RoleStageCode
 	return v
 }

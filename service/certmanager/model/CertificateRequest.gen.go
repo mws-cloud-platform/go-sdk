@@ -3,29 +3,29 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // TLS/SSL-сертификат — это цифровой объект, с помощью которого веб-системы идентифицируют пользователя и устанавливают зашифрованное сетевое соединение с ним, используя протокол SSL/TLS (Secure Sockets Layer/Transport Layer Security)
 // Real OAPI model name: Certificate
 type CertificateRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     CertificateSpecRequest                     `json:"spec" yaml:"spec"`
+	Metadata *commonmodel.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     CertificateSpecRequest                          `json:"spec" yaml:"spec"`
 }
 
-func (m *CertificateRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
+func (m *CertificateRequest) GetMetadata() *commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *CertificateRequest) SetMetadata(val *common.CommonTypedResourceMetadataRequest) {
+func (m *CertificateRequest) SetMetadata(val *commonmodel.CommonTypedResourceMetadataRequest) {
 	m.Metadata = val
 }
 
-func (m *CertificateRequest) GetMetadataOr(val common.CommonTypedResourceMetadataRequest) common.CommonTypedResourceMetadataRequest {
+func (m *CertificateRequest) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataRequest) commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}

@@ -6,7 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Кластер в Managed PostgreSQL — это группа узлов (виртуальных машин), объединенных для хранения и обработки данных с помощью СУБД PostgreSQL. В облачной инфраструктуре кластер — единый интерфейс для управления базами данных
@@ -72,7 +72,7 @@ func (m *PostgresClusterRequest) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры PostgresCluster
 // Real OAPI model name: PostgresClusterMetadata
 type PostgresClusterMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *PostgresClusterMetadataRequest) GetDisplayName() *string {
@@ -89,14 +89,14 @@ func (m *PostgresClusterMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *PostgresClusterMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *PostgresClusterMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *PostgresClusterMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *PostgresClusterMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

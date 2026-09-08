@@ -157,6 +157,25 @@ func (m *OneToOneNatID) Clone() *OneToOneNatID {
 	return &clone
 }
 
+func (m *OneToOneNatID) AsRef() *OneToOneNatRef {
+	if m == nil {
+		return nil
+	}
+	return &OneToOneNatRef{
+		id: *m,
+	}
+}
+
+func (m *OneToOneNatID) Equal(other *OneToOneNatID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.oneToOneNat == other.oneToOneNat && m.network == other.network && m.project == other.project
+}
+
 func (m OneToOneNatID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *OneToOneNatRef) Clone() *OneToOneNatRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *OneToOneNatRef) Equal(other *OneToOneNatRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.oneToOneNat == other.id.oneToOneNat && m.id.network == other.id.network && m.id.project == other.id.project
 }
 
 func (m OneToOneNatRef) MarshalJSON() ([]byte, error) {

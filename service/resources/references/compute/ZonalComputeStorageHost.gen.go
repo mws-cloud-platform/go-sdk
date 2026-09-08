@@ -135,6 +135,25 @@ func (m *ZonalComputeStorageHostID) Clone() *ZonalComputeStorageHostID {
 	return &clone
 }
 
+func (m *ZonalComputeStorageHostID) AsRef() *ZonalComputeStorageHostRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalComputeStorageHostRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalComputeStorageHostID) Equal(other *ZonalComputeStorageHostID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.host == other.host && m.zone == other.zone
+}
+
 func (m ZonalComputeStorageHostID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ZonalComputeStorageHostRef) Clone() *ZonalComputeStorageHostRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalComputeStorageHostRef) Equal(other *ZonalComputeStorageHostRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.host == other.id.host && m.id.zone == other.id.zone
 }
 
 func (m ZonalComputeStorageHostRef) MarshalJSON() ([]byte, error) {

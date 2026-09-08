@@ -15,17 +15,17 @@ import (
 type ClickhouseClusterShardResourceResponse struct {
 	// Идентификатор шарда.
 	Id mclickhouse.ClickhouseClusterShardID `json:"id" yaml:"id"`
-	// Имя шарда, которому будут принадлежать инстансы.
+	// Имя шарда, которому будут принадлежать узлы.
 	Name *string `json:"name,omitempty" yaml:"name,omitempty"`
 	// Вес шарда.
 	Weight int `json:"weight" yaml:"weight"`
-	// Индекс шарда в кластере Clickhouse, который будет указан в настройках кластера в макросе `shard`.  Влияет на очередность исполнения распределенных запросов в кластере.
+	// Индекс шарда в кластере ClickHouse, который будет указан в настройках кластера в макросе `shard`. Влияет на очередность исполнения распределенных запросов в кластере.
 	Index *int `json:"index,omitempty" yaml:"index,omitempty"`
-	// Параметры виртуальной машины, где будут работать инстансы Clickhouse данного шарда.
+	// Параметры виртуальной машины, где будут работать узлы ClickHouse данного шарда.
 	Resources ClickhouseInstanceHWResourcesResponse `json:"resources" yaml:"resources"`
 	// Список эндпойнтов для подключения к шарду.
 	Endpoints []ClickhouseEndpointResourceResponse `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
-	// Описание инстансов шарда.
+	// Описание узлов шарда.
 	Instances []ClickhouseClusterInstanceResourceResponse `json:"instances" yaml:"instances"`
 }
 

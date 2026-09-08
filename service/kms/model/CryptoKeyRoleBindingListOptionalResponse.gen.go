@@ -7,14 +7,14 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: CryptoKeyRoleBindingList
 type CryptoKeyRoleBindingListOptionalResponse struct {
 	Items []CryptoKeyRoleBindingOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *CryptoKeyRoleBindingListOptionalResponse) GetItems() []CryptoKeyRoleBindingOptionalResponse {
@@ -28,18 +28,18 @@ func (m *CryptoKeyRoleBindingListOptionalResponse) SetItems(val []CryptoKeyRoleB
 	m.Items = val
 }
 
-func (m *CryptoKeyRoleBindingListOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *CryptoKeyRoleBindingListOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *CryptoKeyRoleBindingListOptionalResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *CryptoKeyRoleBindingListOptionalResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *CryptoKeyRoleBindingListOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *CryptoKeyRoleBindingListOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

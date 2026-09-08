@@ -23,7 +23,7 @@ func (x *ClickhouseConfigSugared) Impl() ClickhouseConfig {
 	return x.impl
 }
 
-// GetAvailableConfigParameters returns info about available configuration parameters.
+// GetAvailableConfigParameters возвращает список доступных параметров конфигурации ClickHouse для указанной версии.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/availableConfigParameters
 func (x *ClickhouseConfigSugared) GetAvailableConfigParameters(ctx context.Context, request GetAvailableConfigParametersRequest) (model.AvailableConfigParametersSchema, error) {

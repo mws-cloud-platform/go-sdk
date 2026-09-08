@@ -10,10 +10,9 @@ import (
 type PostgresClusterUserSpecRequest struct {
 	Password sensitive.Sensitive[string] `json:"password" yaml:"password"`
 	// Пользовательские роли (они же роли приложений):
-	//   - `DB_OWNER_USER`: Пользователь с правами владельца базы данных. Это не суперпользователь,
-	//     не имеет права создавать бд или роли, наследует разрешения db_owner.
-	//   - `DB_WRITER_USER`: Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
-	//   - `DB_READER_USER`: Пользовательская роль, наследует разрешения групповой роли db_reader.
+	// - `DB_OWNER_USER` (deprecated): Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
+	// - `DB_WRITER_USER`: Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
+	// - `DB_READER_USER`: Пользовательская роль, наследует разрешения групповой роли db_reader.
 	Role *PostgresUserRole `json:"role,omitempty" yaml:"role,omitempty"`
 	// Дополнительные роли пользователя
 	AdditionalRoles []PostgresUserAdditionalRoleRequest `json:"additionalRoles,omitempty" yaml:"additionalRoles,omitempty"`

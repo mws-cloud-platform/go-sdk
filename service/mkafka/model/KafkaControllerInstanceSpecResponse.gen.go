@@ -10,7 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
-// Параметры виртуальной машины, где будет работать KRaft контроллер Кафки.
+// Параметры узлов контроллеров.
 // Real OAPI model name: KafkaControllerInstanceSpec
 type KafkaControllerInstanceSpecResponse struct {
 	// Размещать контроллеры на тех же виртуальных машинах, что и брокеры

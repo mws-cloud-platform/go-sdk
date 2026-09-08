@@ -4,7 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Сеть — это виртуальный аналог физической сети на базе инфраструктуры MWS
@@ -12,9 +12,9 @@ import (
 type NetworkOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Spec     VpcNetworkSpecOptionalResponse                                           `json:"spec" yaml:"spec"`
-	Status   *NetworkStatusResponse                                                   `json:"status,omitempty" yaml:"status,omitempty"`
+	Metadata optional.OptionalNil[commonmodel.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Spec     VpcNetworkSpecOptionalResponse                                                `json:"spec" yaml:"spec"`
+	Status   *NetworkStatusResponse                                                        `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *NetworkOptionalResponse) GetKind() *string {
@@ -35,14 +35,14 @@ func (m *NetworkOptionalResponse) GetKindOr(val string) string {
 	return val
 }
 
-func (m *NetworkOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
+func (m *NetworkOptionalResponse) GetMetadata() *commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
-func (m *NetworkOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
+func (m *NetworkOptionalResponse) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataOptionalResponse) commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}

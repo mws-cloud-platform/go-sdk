@@ -3,6 +3,8 @@
 package model
 
 import (
+	"slices"
+
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
@@ -10,16 +12,21 @@ import (
 )
 
 type UpdateClusterAvailabilitySpecRequest struct {
-	// Кластер с одним мастером
+	// Кластер с одним мастером.
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Standalone optional.OptionalNil[UpdateClusterAvailabilitySpecStandaloneRequest] `json:"standalone" yaml:"standalone"`
-	// Зональный высокодоступный кластер с несколькими мастерами
+	// Зональный высокодоступный кластер с несколькими мастерами в одной зоне доступности.
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	ZonalHa optional.OptionalNil[UpdateClusterAvailabilitySpecZonalHaRequest] `json:"zonalHa" yaml:"zonalHa"`
+	// Высокодоступный кластер с несколькими мастерами в разных зонах доступности одного региона.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Regional optional.OptionalNil[UpdateClusterAvailabilitySpecRegionalRequest] `json:"regional" yaml:"regional"`
 }
 
 func (m *ClusterAvailabilitySpecRequest) AsUpdateModel() UpdateClusterAvailabilitySpecRequest {
@@ -29,6 +36,9 @@ func (m *ClusterAvailabilitySpecRequest) AsUpdateModel() UpdateClusterAvailabili
 	}
 	if m.ZonalHa != nil {
 		u.ZonalHa = optional.NewOptionalNil(m.ZonalHa.AsUpdateModel())
+	}
+	if m.Regional != nil {
+		u.Regional = optional.NewOptionalNil(m.Regional.AsUpdateModel())
 	}
 	return u
 }
@@ -40,6 +50,7 @@ func (m *ClusterAvailabilitySpecRequest) Diff(src *ClusterAvailabilitySpecReques
 	if !nilDiffers {
 		upd.Standalone = m.diffStandalone(src)
 		upd.ZonalHa = m.diffZonalHa(src)
+		upd.Regional = m.diffRegional(src)
 	}
 	return upd
 }
@@ -60,13 +71,19 @@ func (m *ClusterAvailabilitySpecRequest) WithChanges(u UpdateClusterAvailability
 	} else if u.ZonalHa.IsNull() {
 		out.ZonalHa = nil
 	}
+	if u.Regional.IsSet() {
+		out.Regional = ptr.Get(out.Regional.WithChanges(u.Regional.Value))
+	} else if u.Regional.IsNull() {
+		out.Regional = nil
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateClusterAvailabilitySpecRequest) HasChanges() bool {
 	return m.Standalone.Set ||
-		m.ZonalHa.Set
+		m.ZonalHa.Set ||
+		m.Regional.Set
 }
 
 func (m *ClusterAvailabilitySpecRequest) diffStandalone(src *ClusterAvailabilitySpecRequest) optional.OptionalNil[UpdateClusterAvailabilitySpecStandaloneRequest] {
@@ -89,8 +106,67 @@ func (m *ClusterAvailabilitySpecRequest) diffZonalHa(src *ClusterAvailabilitySpe
 	}
 }
 
+func (m *ClusterAvailabilitySpecRequest) diffRegional(src *ClusterAvailabilitySpecRequest) optional.OptionalNil[UpdateClusterAvailabilitySpecRegionalRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetRegional().Diff(src.GetRegional())
+	return optional.OptionalNil[UpdateClusterAvailabilitySpecRegionalRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
+}
+
+type UpdateClusterAvailabilitySpecRegionalRequest struct {
+	// Имена зон для размещения кластера. Должно быть ровно три зоны.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Zones optional.Optional[[]string] `json:"zones" yaml:"zones"`
+}
+
+func (m *ClusterAvailabilitySpecRegionalRequest) AsUpdateModel() UpdateClusterAvailabilitySpecRegionalRequest {
+	var u UpdateClusterAvailabilitySpecRegionalRequest
+	u.Zones = optional.NewOptional(m.GetZones())
+	return u
+}
+
+// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
+func (m *ClusterAvailabilitySpecRegionalRequest) Diff(src *ClusterAvailabilitySpecRegionalRequest) UpdateClusterAvailabilitySpecRegionalRequest {
+	nilDiffers := src != nil && m == nil
+	upd := UpdateClusterAvailabilitySpecRegionalRequest{}
+	if !nilDiffers {
+		upd.Zones = m.diffZones(src)
+	}
+	return upd
+}
+
+func (m *ClusterAvailabilitySpecRegionalRequest) WithChanges(u UpdateClusterAvailabilitySpecRegionalRequest) ClusterAvailabilitySpecRegionalRequest {
+	var out ClusterAvailabilitySpecRegionalRequest
+	if m != nil {
+		out = *m
+	}
+
+	if u.Zones.IsSet() {
+		out.Zones = slices.Clone(u.Zones.Value)
+	}
+	return out
+}
+
+// HasChanges returns true if any field has Set == true
+func (m UpdateClusterAvailabilitySpecRegionalRequest) HasChanges() bool {
+	return m.Zones.Set
+}
+
+func (m *ClusterAvailabilitySpecRegionalRequest) diffZones(src *ClusterAvailabilitySpecRegionalRequest) optional.Optional[[]string] {
+	value, hasChanges := commonclient.GetChangesArrayPrimitive(src.GetZones(), m.GetZones())
+	return optional.Optional[[]string]{
+		Value: value,
+		Set:   hasChanges,
+	}
+}
+
 type UpdateClusterAvailabilitySpecStandaloneRequest struct {
-	// Имя зоны для размещения cluster
+	// Имя зоны для размещения кластера.
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
@@ -136,7 +212,7 @@ func (m *ClusterAvailabilitySpecStandaloneRequest) diffZone(src *ClusterAvailabi
 }
 
 type UpdateClusterAvailabilitySpecZonalHaRequest struct {
-	// Имя зоны для размещения cluster
+	// Имя зоны для размещения кластера.
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.

@@ -13,9 +13,9 @@ import (
 // Описание координатора кластера.
 // Real OAPI model name: ClickhouseClusterCoordinator
 type ClickhouseClusterCoordinatorOptionalResponse struct {
-	// Тип координатора. Если не указано, то при наличии более одного хоста, используется Clickhouse Keeper.
+	// Тип координатора. Если не указано, то при наличии более одного узла, используется ClickHouse Keeper.
 	Type optional.Optional[ClickhouseCoordinatorType] `json:"type,omitempty" yaml:"type,omitempty"`
-	// Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. Необязательный параметр в standalone-конфигурации.
+	// Параметры виртуальной машины, на которой будет работать ClickHouse Keeper. Необязательный параметр в standalone-конфигурации.
 	Resources ClickhouseCoordinatorHWResourcesOptionalResponse       `json:"resources" yaml:"resources"`
 	Instances []ClickhouseClusterCoordinatorInstanceOptionalResponse `json:"instances" yaml:"instances"`
 }

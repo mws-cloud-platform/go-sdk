@@ -113,6 +113,25 @@ func (m *QuestionIDID) Clone() *QuestionIDID {
 	return &clone
 }
 
+func (m *QuestionIDID) AsRef() *QuestionIDRef {
+	if m == nil {
+		return nil
+	}
+	return &QuestionIDRef{
+		id: *m,
+	}
+}
+
+func (m *QuestionIDID) Equal(other *QuestionIDID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.questionName == other.questionName
+}
+
 func (m QuestionIDID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *QuestionIDRef) Clone() *QuestionIDRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *QuestionIDRef) Equal(other *QuestionIDRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.questionName == other.id.questionName
 }
 
 func (m QuestionIDRef) MarshalJSON() ([]byte, error) {

@@ -3,6 +3,7 @@
 package model
 
 import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 )
 
@@ -20,6 +21,12 @@ func (m *ClickhouseStorageConfigurationRequest) WithDefaults() ClickhouseStorage
 	}
 	if out.DataCachingEnabled == nil {
 		out.DataCachingEnabled = ptr.Get(false)
+	}
+	if out.CacheMaxSize == nil {
+		out.CacheMaxSize = ptr.Get(bytesize.MustParseString("1Gb"))
+	}
+	if out.MaxDataPartSizeSsd == nil {
+		out.MaxDataPartSizeSsd = ptr.Get(bytesize.MustParseString("10Gb"))
 	}
 	return out
 }

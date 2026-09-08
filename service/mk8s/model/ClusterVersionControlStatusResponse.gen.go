@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ClusterVersionControlStatus
@@ -11,8 +11,8 @@ type ClusterVersionControlStatusResponse struct {
 	// Cluster обновляется всегда до default версии, поэтому необходимо выбрать релизный канал и настроить окно обслуживания
 	ReleaseChannel *string `json:"releaseChannel,omitempty" yaml:"releaseChannel,omitempty"`
 	// Текущая версия Cluster
-	Version           *string                            `json:"version,omitempty" yaml:"version,omitempty"`
-	MaintenanceWindow *common.MaintenanceWindow2Response `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	Version           *string                                `json:"version,omitempty" yaml:"version,omitempty"`
+	MaintenanceWindow *commonmodel.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 }
 
 func (m *ClusterVersionControlStatusResponse) GetReleaseChannel() *string {
@@ -51,18 +51,18 @@ func (m *ClusterVersionControlStatusResponse) GetVersionOr(val string) string {
 	return val
 }
 
-func (m *ClusterVersionControlStatusResponse) GetMaintenanceWindow() *common.MaintenanceWindow2Response {
+func (m *ClusterVersionControlStatusResponse) GetMaintenanceWindow() *commonmodel.MaintenanceWindowResponse {
 	if m != nil {
 		return m.MaintenanceWindow
 	}
 	return nil
 }
 
-func (m *ClusterVersionControlStatusResponse) SetMaintenanceWindow(val *common.MaintenanceWindow2Response) {
+func (m *ClusterVersionControlStatusResponse) SetMaintenanceWindow(val *commonmodel.MaintenanceWindowResponse) {
 	m.MaintenanceWindow = val
 }
 
-func (m *ClusterVersionControlStatusResponse) GetMaintenanceWindowOr(val common.MaintenanceWindow2Response) common.MaintenanceWindow2Response {
+func (m *ClusterVersionControlStatusResponse) GetMaintenanceWindowOr(val commonmodel.MaintenanceWindowResponse) commonmodel.MaintenanceWindowResponse {
 	if m != nil && m.MaintenanceWindow != nil {
 		return *m.MaintenanceWindow
 	}

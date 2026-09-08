@@ -23,7 +23,7 @@ func (x *ClickhouseClusterUserSugared) Impl() ClickhouseClusterUser {
 	return x.impl
 }
 
-// ListClickhouseClusterUsers list clickhouse users.
+// ListClickhouseClusterUsers возвращает постраничный список пользователей указанного кластера ClickHouse.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/users
 func (x *ClickhouseClusterUserSugared) ListClickhouseClusterUsers(ctx context.Context, request ListClickhouseClusterUsersRequest) (*model.ClickhouseClusterUserPageResponse, error) {
@@ -47,7 +47,7 @@ func (x *ClickhouseClusterUserSugared) respHandlerListClickhouseClusterUsers(res
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// UpdateClickhouseClusterUser updates the cluster user.
+// UpdateClickhouseClusterUser создаёт нового пользователя кластера ClickHouse или изменяет существующего (upsert).
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/users/{user}
 func (x *ClickhouseClusterUserSugared) UpdateClickhouseClusterUser(ctx context.Context, request UpdateClickhouseClusterUserRequest) (*model.ClickhouseClusterUserOptionalResponse, error) {
@@ -71,7 +71,7 @@ func (x *ClickhouseClusterUserSugared) respHandlerUpdateClickhouseClusterUser(re
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// CreateUpdateClickhouseClusterUser updates the cluster user.
+// CreateUpdateClickhouseClusterUser создаёт нового пользователя кластера ClickHouse или изменяет существующего (upsert).
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/users/{user}?createOnly=true
@@ -84,7 +84,7 @@ func (x *ClickhouseClusterUserSugared) CreateUpdateClickhouseClusterUser(ctx con
 	return x.respHandlerUpdateClickhouseClusterUser(resp)
 }
 
-// UpdateUpdateClickhouseClusterUser updates the cluster user.
+// UpdateUpdateClickhouseClusterUser создаёт нового пользователя кластера ClickHouse или изменяет существующего (upsert).
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/users/{user}?updateOnly=true

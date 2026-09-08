@@ -18,21 +18,6 @@ func CryptoKeyVersionSpecRequestToOptionalResponse(request *CryptoKeyVersionSpec
 		}
 		response.UsagePolicy = optional.NewOptionalNil(*tmpUsagePolicy)
 	}
-	if request.DestructionPolicy != nil {
-		tmpDestructionPolicy, err := CryptoKeyVersionSpecDestructionPolicyRequestToOptionalResponse(request.DestructionPolicy)
-		if err != nil {
-			return nil, err
-		}
-		response.DestructionPolicy = optional.NewOptionalNil(*tmpDestructionPolicy)
-	}
-	return &response, nil
-}
-
-func CryptoKeyVersionSpecDestructionPolicyRequestToOptionalResponse(request *CryptoKeyVersionSpecDestructionPolicyRequest) (*CryptoKeyVersionSpecDestructionPolicyOptionalResponse, error) {
-	if request == nil {
-		return nil, nil
-	}
-	var response CryptoKeyVersionSpecDestructionPolicyOptionalResponse
 	return &response, nil
 }
 

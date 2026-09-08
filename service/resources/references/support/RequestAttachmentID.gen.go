@@ -135,6 +135,25 @@ func (m *RequestAttachmentIDID) Clone() *RequestAttachmentIDID {
 	return &clone
 }
 
+func (m *RequestAttachmentIDID) AsRef() *RequestAttachmentIDRef {
+	if m == nil {
+		return nil
+	}
+	return &RequestAttachmentIDRef{
+		id: *m,
+	}
+}
+
+func (m *RequestAttachmentIDID) Equal(other *RequestAttachmentIDID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.attachmentName == other.attachmentName && m.requestName == other.requestName
+}
+
 func (m RequestAttachmentIDID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *RequestAttachmentIDRef) Clone() *RequestAttachmentIDRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *RequestAttachmentIDRef) Equal(other *RequestAttachmentIDRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.attachmentName == other.id.attachmentName && m.id.requestName == other.id.requestName
 }
 
 func (m RequestAttachmentIDRef) MarshalJSON() ([]byte, error) {

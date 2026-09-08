@@ -3,28 +3,28 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ApiKeyList
 type ApiKeyListResponse struct {
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
-	Items         []ApiKeyResponse      `json:"items" yaml:"items"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	Items         []ApiKeyResponse           `json:"items" yaml:"items"`
 }
 
-func (m *ApiKeyListResponse) GetNextPageToken() *common.NextPageToken {
+func (m *ApiKeyListResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *ApiKeyListResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *ApiKeyListResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *ApiKeyListResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ApiKeyListResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

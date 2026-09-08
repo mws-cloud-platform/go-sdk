@@ -6,25 +6,25 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 // Cтатус привязанного сервисного аккаунта
 // Real OAPI model name: ServiceAccountStatus
 type ServiceAccountStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Ссылка на сервисный аккаунт
 	Ref *iam.ServiceAccountRef `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Отображаемое имя сервисного аккаунта (может отличаться от имени в ID).
 	DisplayName *string `json:"displayName,omitempty" yaml:"displayName,omitempty"`
 }
 
-func (m *ServiceAccountStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *ServiceAccountStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *ServiceAccountStatusResponse) GetRef() *iam.ServiceAccountRef {

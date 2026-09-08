@@ -4,7 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ClusterVersionControlSpec
@@ -12,9 +12,9 @@ type ClusterVersionControlSpecOptionalResponse struct {
 	// Cluster обновляется всегда до default версии, поэтому необходимо выбрать релизный канал и настроить окно обслуживания
 	ReleaseChannel string `json:"releaseChannel" yaml:"releaseChannel"`
 	// Минимальная версия Cluster. Автоматически обновляется до версии default в окно обслуживания. При указании версии выше default обновление запускается немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе Cluster
-	Version optional.OptionalNil[string] `json:"version,omitempty" yaml:"version,omitempty"`
+	Version optional.Optional[string] `json:"version,omitempty" yaml:"version,omitempty"`
 	// Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration нельзя указывать, так как обновление мастер нод не прерывается
-	MaintenanceWindow optional.OptionalNil[common.MaintenanceWindowOptionalResponse] `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	MaintenanceWindow optional.OptionalNil[commonmodel.MaintenanceWindowOptionalResponse] `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 }
 
 func (m *ClusterVersionControlSpecOptionalResponse) GetReleaseChannel() string {
@@ -29,27 +29,27 @@ func (m *ClusterVersionControlSpecOptionalResponse) SetReleaseChannel(val string
 }
 
 func (m *ClusterVersionControlSpecOptionalResponse) GetVersion() *string {
-	if m != nil && m.Version.IsSet() && !m.Version.IsNull() {
+	if m != nil && m.Version.IsSet() {
 		return &m.Version.Value
 	}
 	return nil
 }
 
 func (m *ClusterVersionControlSpecOptionalResponse) GetVersionOr(val string) string {
-	if m != nil && m.Version.IsSet() && !m.Version.IsNull() {
+	if m != nil && m.Version.IsSet() {
 		return m.Version.Value
 	}
 	return val
 }
 
-func (m *ClusterVersionControlSpecOptionalResponse) GetMaintenanceWindow() *common.MaintenanceWindowOptionalResponse {
+func (m *ClusterVersionControlSpecOptionalResponse) GetMaintenanceWindow() *commonmodel.MaintenanceWindowOptionalResponse {
 	if m != nil && m.MaintenanceWindow.IsSet() && !m.MaintenanceWindow.IsNull() {
 		return &m.MaintenanceWindow.Value
 	}
 	return nil
 }
 
-func (m *ClusterVersionControlSpecOptionalResponse) GetMaintenanceWindowOr(val common.MaintenanceWindowOptionalResponse) common.MaintenanceWindowOptionalResponse {
+func (m *ClusterVersionControlSpecOptionalResponse) GetMaintenanceWindowOr(val commonmodel.MaintenanceWindowOptionalResponse) commonmodel.MaintenanceWindowOptionalResponse {
 	if m != nil && m.MaintenanceWindow.IsSet() && !m.MaintenanceWindow.IsNull() {
 		return m.MaintenanceWindow.Value
 	}

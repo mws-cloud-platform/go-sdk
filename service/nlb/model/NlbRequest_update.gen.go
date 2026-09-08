@@ -9,12 +9,12 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateNlbRequest struct {
 	// Метаданные сетевого балансировщик нагрузки.
-	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Спецификация сетевого балансировщик нагрузки.
 	Spec optional.Optional[UpdateNlbSpecRequest] `json:"spec" yaml:"spec"`
 }
@@ -76,10 +76,10 @@ func (m *UpdateNlbRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *NlbRequest) diffMetadata(src *NlbRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *NlbRequest) diffMetadata(src *NlbRequest) optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+	return optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

@@ -157,6 +157,25 @@ func (m *EgressNatID) Clone() *EgressNatID {
 	return &clone
 }
 
+func (m *EgressNatID) AsRef() *EgressNatRef {
+	if m == nil {
+		return nil
+	}
+	return &EgressNatRef{
+		id: *m,
+	}
+}
+
+func (m *EgressNatID) Equal(other *EgressNatID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.egressNat == other.egressNat && m.network == other.network && m.project == other.project
+}
+
 func (m EgressNatID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *EgressNatRef) Clone() *EgressNatRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *EgressNatRef) Equal(other *EgressNatRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.egressNat == other.id.egressNat && m.id.network == other.id.network && m.id.project == other.id.project
 }
 
 func (m EgressNatRef) MarshalJSON() ([]byte, error) {

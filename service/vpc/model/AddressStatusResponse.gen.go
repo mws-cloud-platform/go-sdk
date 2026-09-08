@@ -5,25 +5,25 @@ package model
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
-// Статус адреса.
+// Описывает статус внутреннего адреса.
 // Real OAPI model name: AddressStatus
 type AddressStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Регион, которому принадлежит адрес; берется из подсети.
 	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
-	// Присвоенный адрес. Совпадает с запрошенным ipAddress из спецификации, если последний указан при создании адреса.
+	// Присвоенный адрес. Совпадает с запрошенным IP-адресом из спецификации, если последний указан при создании адреса.
 	IpAddress *ipaddress.IPAddress `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
 }
 
-func (m *AddressStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *AddressStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *AddressStatusResponse) GetRegion() *rm.RegionID {

@@ -11,12 +11,11 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Переход
 // Real OAPI model name: RouteNextHop
 type RouteNextHopOptionalResponse struct {
 	// Локальная сеть.
 	NetworkLocal json.RawMessage `json:"networkLocal,omitempty" yaml:"networkLocal,omitempty"`
-	// NAT шлюз.
+	// NAT-шлюз.
 	NatGateway optional.OptionalNil[vpc.NatGatewayRef] `json:"natGateway,omitempty" yaml:"natGateway,omitempty"`
 	// Адрес.
 	Address optional.OptionalNil[RouteNextHopAddressOptionalResponse] `json:"address,omitempty" yaml:"address,omitempty"`

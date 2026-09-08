@@ -9,14 +9,14 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateVpcAddressGroupRequest struct {
 	// Метаданные группы адресов.
-	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Спецификация группы адресов.
-	Spec optional.Optional[common.UpdateVpcAddressGroupSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.Optional[commonmodel.UpdateVpcAddressGroupSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *VpcAddressGroupRequest) AsUpdateModel() UpdateVpcAddressGroupRequest {
@@ -76,21 +76,21 @@ func (m *UpdateVpcAddressGroupRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *VpcAddressGroupRequest) diffMetadata(src *VpcAddressGroupRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *VpcAddressGroupRequest) diffMetadata(src *VpcAddressGroupRequest) optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+	return optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,
 	}
 }
 
-func (m *VpcAddressGroupRequest) diffSpec(src *VpcAddressGroupRequest) optional.Optional[common.UpdateVpcAddressGroupSpecRequest] {
+func (m *VpcAddressGroupRequest) diffSpec(src *VpcAddressGroupRequest) optional.Optional[commonmodel.UpdateVpcAddressGroupSpecRequest] {
 	from := src.GetSpec()
 	to := m.GetSpec()
 	value := to.Diff(&from)
-	return optional.Optional[common.UpdateVpcAddressGroupSpecRequest]{
+	return optional.Optional[commonmodel.UpdateVpcAddressGroupSpecRequest]{
 		Value: value,
 		Set:   value.HasChanges(),
 	}

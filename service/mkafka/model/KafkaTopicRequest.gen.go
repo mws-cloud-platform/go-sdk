@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Топик — это логический поток сообщений, который создается пользователем в
@@ -59,7 +59,7 @@ func (m *KafkaTopicRequest) Clone() *KafkaTopicRequest {
 // Представление поля Metadata анонимного типа структуры KafkaTopic
 // Real OAPI model name: KafkaTopicMetadata
 type KafkaTopicMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *KafkaTopicMetadataRequest) GetDisplayName() *string {
@@ -76,14 +76,14 @@ func (m *KafkaTopicMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *KafkaTopicMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *KafkaTopicMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *KafkaTopicMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *KafkaTopicMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

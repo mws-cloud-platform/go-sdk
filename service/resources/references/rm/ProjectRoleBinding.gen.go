@@ -135,6 +135,25 @@ func (m *ProjectRoleBindingID) Clone() *ProjectRoleBindingID {
 	return &clone
 }
 
+func (m *ProjectRoleBindingID) AsRef() *ProjectRoleBindingRef {
+	if m == nil {
+		return nil
+	}
+	return &ProjectRoleBindingRef{
+		id: *m,
+	}
+}
+
+func (m *ProjectRoleBindingID) Equal(other *ProjectRoleBindingID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.roleBinding == other.roleBinding && m.project == other.project
+}
+
 func (m ProjectRoleBindingID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ProjectRoleBindingRef) Clone() *ProjectRoleBindingRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ProjectRoleBindingRef) Equal(other *ProjectRoleBindingRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.roleBinding == other.id.roleBinding && m.id.project == other.id.project
 }
 
 func (m ProjectRoleBindingRef) MarshalJSON() ([]byte, error) {

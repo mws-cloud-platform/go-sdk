@@ -42,17 +42,6 @@ func (m *CryptoKeyVersionSpecOptionalResponse) encodeFields(e *jx.Encoder) error
 			}
 		}
 	}
-
-	if m.DestructionPolicy.IsSet() {
-		e.FieldStart("destructionPolicy")
-		if m.DestructionPolicy.IsNull() {
-			e.Null()
-		} else {
-			if err := m.DestructionPolicy.Value.Encode(e); err != nil {
-				return err
-			}
-		}
-	}
 	return nil
 }
 
@@ -79,73 +68,6 @@ func (m *CryptoKeyVersionSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.UsagePolicy.SetTo(v)
-			return nil
-		case "destructionPolicy":
-			if d.Next() == jx.Null {
-				m.DestructionPolicy.SetToNull()
-				return d.Null()
-			}
-
-			var v CryptoKeyVersionSpecDestructionPolicyOptionalResponse
-			if err := v.Decode(d); err != nil {
-				return err
-			}
-
-			m.DestructionPolicy.SetTo(v)
-			return nil
-		default:
-			return d.Skip()
-		}
-	}))
-}
-
-func (m CryptoKeyVersionSpecDestructionPolicyOptionalResponse) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *CryptoKeyVersionSpecDestructionPolicyOptionalResponse) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *CryptoKeyVersionSpecDestructionPolicyOptionalResponse) encodeFields(e *jx.Encoder) error {
-	if m.ScheduledDestructionTime != nil {
-		e.FieldStart("scheduledDestructionTime")
-		conv.EncodeDateTimeUTC(e, *m.ScheduledDestructionTime)
-	}
-	return nil
-}
-
-func (m *CryptoKeyVersionSpecDestructionPolicyOptionalResponse) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *CryptoKeyVersionSpecDestructionPolicyOptionalResponse) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("CryptoKeyVersionSpecDestructionPolicyOptionalResponse")
-	}
-
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "scheduledDestructionTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.ScheduledDestructionTime = &v
 			return nil
 		default:
 			return d.Skip()

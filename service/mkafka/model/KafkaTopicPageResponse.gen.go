@@ -3,14 +3,14 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: KafkaTopicPage
 type KafkaTopicPageResponse struct {
 	Items []KafkaTopicResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *KafkaTopicPageResponse) GetItems() []KafkaTopicResponse {
@@ -24,18 +24,18 @@ func (m *KafkaTopicPageResponse) SetItems(val []KafkaTopicResponse) {
 	m.Items = val
 }
 
-func (m *KafkaTopicPageResponse) GetNextPageToken() *common.NextPageToken {
+func (m *KafkaTopicPageResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *KafkaTopicPageResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *KafkaTopicPageResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *KafkaTopicPageResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *KafkaTopicPageResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

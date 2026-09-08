@@ -2,7 +2,7 @@
 
 package model
 
-// Описание ресурсов хостов брокеров и контроллеров.
+// Описание ресурсов хостов брокеров и контроллера.
 // Real OAPI model name: KafkaInstancesStatus
 type KafkaInstancesStatusResponse struct {
 	// Параметры виртуальной машины, где работает брокер Кафки.

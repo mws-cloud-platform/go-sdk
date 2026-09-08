@@ -9,7 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
@@ -39,6 +39,17 @@ func (m *ImageStatusResponse) encodeFields(e *jx.Encoder) error {
 	if err := m.Ready.Encode(e); err != nil {
 		return err
 	}
+	if m.RegionalImageStatuses != nil {
+		e.FieldStart("regionalImageStatuses")
+		e.ArrStart()
+		for _, elem := range m.RegionalImageStatuses {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
 	if m.StorageSize != nil {
 		e.FieldStart("storageSize")
 		m.StorageSize.Encode(e)
@@ -96,12 +107,27 @@ func (m *ImageStatusResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "ready":
-			var v common.ResourceStatusReadyResponse
+			var v commonmodel.ResourceStatusReadyResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
 			m.Ready = v
+			return nil
+		case "regionalImageStatuses":
+			c := make([]RegionalImageStatusResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v RegionalImageStatusResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.RegionalImageStatuses = c
 			return nil
 		case "storageSize":
 			var v bytesize.ByteSize
@@ -144,7 +170,7 @@ func (m *ImageStatusResponse) Decode(d *jx.Decoder) error {
 			m.InitialSourceImage = &v
 			return nil
 		case "osType":
-			var v OsType2
+			var v OsType
 			if err := v.Decode(d); err != nil {
 				return err
 			}

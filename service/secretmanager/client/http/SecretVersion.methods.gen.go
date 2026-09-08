@@ -309,6 +309,8 @@ func (c *SecretVersion) deleteSecretVersionInvoker(ctx context.Context, anyReq a
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteSecretVersion(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteSecretVersion(httpReq, request)
 
@@ -333,6 +335,17 @@ func (c *SecretVersion) deleteSecretVersionInvoker(ctx context.Context, anyReq a
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *SecretVersion) queryDeleteSecretVersion(request *client.DeleteSecretVersionRequest) string {
+	q := make(url.Values)
+	if request.IfExist != nil {
+		q.Add("ifExist", conv.BoolToString(*request.IfExist))
+	}
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *SecretVersion) headerDeleteSecretVersion(req *http.Request, request *client.DeleteSecretVersionRequest) {
@@ -503,6 +516,9 @@ func (c *SecretVersion) upsertSecretVersionInvoker(ctx context.Context, anyReq a
 
 func (c *SecretVersion) queryUpsertSecretVersion(request *client.UpsertSecretVersionRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -598,6 +614,9 @@ func (c *SecretVersion) createSecretVersionInvoker(ctx context.Context, anyReq a
 func (c *SecretVersion) queryCreateSecretVersion(request *client.UpsertSecretVersionRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -693,6 +712,9 @@ func (c *SecretVersion) updateSecretVersionInvoker(ctx context.Context, anyReq a
 func (c *SecretVersion) queryUpdateSecretVersion(request *client.UpdateSecretVersionRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

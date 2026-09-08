@@ -179,6 +179,25 @@ func (m *ZonalFirewallRuleID) Clone() *ZonalFirewallRuleID {
 	return &clone
 }
 
+func (m *ZonalFirewallRuleID) AsRef() *ZonalFirewallRuleRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalFirewallRuleRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalFirewallRuleID) Equal(other *ZonalFirewallRuleID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.zonalFirewallRule == other.zonalFirewallRule && m.zonalNetwork == other.zonalNetwork && m.project == other.project && m.zone == other.zone
+}
+
 func (m ZonalFirewallRuleID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -371,6 +390,16 @@ func (m *ZonalFirewallRuleRef) Clone() *ZonalFirewallRuleRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalFirewallRuleRef) Equal(other *ZonalFirewallRuleRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.zonalFirewallRule == other.id.zonalFirewallRule && m.id.zonalNetwork == other.id.zonalNetwork && m.id.project == other.id.project && m.id.zone == other.id.zone
 }
 
 func (m ZonalFirewallRuleRef) MarshalJSON() ([]byte, error) {

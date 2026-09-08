@@ -14,7 +14,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
@@ -34,15 +34,15 @@ type UpdateClickhouseClusterSpecRequest struct {
 	Coordinator optional.OptionalNil[UpdateClickhouseClusterCoordinatorRequest] `json:"coordinator" yaml:"coordinator"`
 	// Описание шардов кластера.
 	Shards optional.Optional[[]UpdateClickhouseClusterShardRequest] `json:"shards" yaml:"shards"`
-	// Настройки Clickhouse. Если не указаны, будут использованы настройки по умолчанию
+	// Настройки ClickHouse. Если не указаны, будут использованы настройки по умолчанию
 	Config optional.Optional[map[string]jsonapimodels.RawMessageNotNull] `json:"config" yaml:"config"`
 	// Конфигурация схемы хранилищ ClickHouse.
 	Storage optional.OptionalNil[UpdateClickhouseStorageConfigurationRequest] `json:"storage" yaml:"storage"`
-	// Добавление пользователей при создании кластера Clickhouse.
+	// Добавление пользователей при создании кластера ClickHouse.
 	BootstrapAdmin optional.Optional[UpdateClickhouseClusterBootstrapAdminSpecRequest] `json:"bootstrapAdmin" yaml:"bootstrapAdmin"`
 	// Спецификация работы автоматического резервного копирования.
-	Backup            optional.OptionalNil[UpdateClickhouseClusterBackupRequest]  `json:"backup" yaml:"backup"`
-	MaintenanceWindow optional.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
+	Backup            optional.OptionalNil[UpdateClickhouseClusterBackupRequest]       `json:"backup" yaml:"backup"`
+	MaintenanceWindow optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
 }
 
 func (m *ClickhouseClusterSpecRequest) AsUpdateModel() UpdateClickhouseClusterSpecRequest {
@@ -317,10 +317,10 @@ func (m *ClickhouseClusterSpecRequest) diffBackup(src *ClickhouseClusterSpecRequ
 	}
 }
 
-func (m *ClickhouseClusterSpecRequest) diffMaintenanceWindow(src *ClickhouseClusterSpecRequest) optional.OptionalNil[common.UpdateMaintenanceWindowRequest] {
+func (m *ClickhouseClusterSpecRequest) diffMaintenanceWindow(src *ClickhouseClusterSpecRequest) optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMaintenanceWindow().Diff(src.GetMaintenanceWindow())
-	return optional.OptionalNil[common.UpdateMaintenanceWindowRequest]{
+	return optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

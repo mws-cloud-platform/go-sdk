@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 )
 
-// Резервное копирование в Managed Clickhouse позволяет автоматизировать создание резервных копий кластера и его восстановление.  С помощью резервных копий можно восстановить данные в новый кластер в случае повреждения, потери данных или совершения ошибочных операций.
+// Резервное копирование в Managed ClickHouse позволяет автоматизировать создание резервных копий кластера и его восстановление. С помощью резервных копий можно восстановить данные в новый кластер в случае повреждения, потери данных или совершения ошибочных операций.
 //
 // Real OAPI model name: ClickhouseBackup
 type ClickhouseBackupOptionalResponse struct {
@@ -107,7 +107,7 @@ func (m *ClickhouseBackupOptionalResponse) Clone() *ClickhouseBackupOptionalResp
 // Представление поля Metadata анонимного типа структуры ClickhouseBackup
 // Real OAPI model name: ClickhouseBackupMetadata
 type ClickhouseBackupMetadataOptionalResponse struct {
-	common.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
 	// Ссылка на типизированный референс.
 	Id *mclickhouse.ClickhouseBackupID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -182,14 +182,14 @@ func (m *ClickhouseBackupMetadataOptionalResponse) GetPurgeTimeOr(val time.Time)
 	return val
 }
 
-func (m *ClickhouseBackupMetadataOptionalResponse) GetUsages() []common.TypedUsageOptionalResponse {
+func (m *ClickhouseBackupMetadataOptionalResponse) GetUsages() []commonmodel.TypedUsageOptionalResponse {
 	if m != nil && m.Usages.IsSet() {
 		return m.TypedResourceMetadataOptionalResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *ClickhouseBackupMetadataOptionalResponse) GetUsagesOr(val []common.TypedUsageOptionalResponse) []common.TypedUsageOptionalResponse {
+func (m *ClickhouseBackupMetadataOptionalResponse) GetUsagesOr(val []commonmodel.TypedUsageOptionalResponse) []commonmodel.TypedUsageOptionalResponse {
 	if m != nil {
 		return m.TypedResourceMetadataOptionalResponse.GetUsagesOr(val)
 	}
@@ -247,19 +247,5 @@ func (m *ClickhouseBackupMetadataOptionalResponse) Clone() *ClickhouseBackupMeta
 	clone.TypedResourceMetadataOptionalResponse = *m.TypedResourceMetadataOptionalResponse.Clone()
 	clone.Id = m.Id.Clone()
 
-	return &clone
-}
-
-// Представление поля Spec анонимного типа структуры ClickhouseBackup
-// Real OAPI model name: ClickhouseBackupSpec
-type ClickhouseBackupSpecOptionalResponse struct {
-}
-
-func (m *ClickhouseBackupSpecOptionalResponse) Clone() *ClickhouseBackupSpecOptionalResponse {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
 	return &clone
 }

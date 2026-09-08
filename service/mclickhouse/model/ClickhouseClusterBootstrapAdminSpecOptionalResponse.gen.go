@@ -2,7 +2,7 @@
 
 package model
 
-// Добавление пользователей при создании кластера Clickhouse.
+// Добавление пользователей при создании кластера ClickHouse.
 // Real OAPI model name: ClickhouseClusterBootstrapAdminSpec
 type ClickhouseClusterBootstrapAdminSpecOptionalResponse struct {
 	// Имя учетной записи администратора.

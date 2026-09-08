@@ -113,6 +113,25 @@ func (m *PermissionID) Clone() *PermissionID {
 	return &clone
 }
 
+func (m *PermissionID) AsRef() *PermissionRef {
+	if m == nil {
+		return nil
+	}
+	return &PermissionRef{
+		id: *m,
+	}
+}
+
+func (m *PermissionID) Equal(other *PermissionID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.permission == other.permission
+}
+
 func (m PermissionID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *PermissionRef) Clone() *PermissionRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *PermissionRef) Equal(other *PermissionRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.permission == other.id.permission
 }
 
 func (m PermissionRef) MarshalJSON() ([]byte, error) {

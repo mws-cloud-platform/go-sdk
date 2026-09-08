@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
@@ -248,9 +248,9 @@ func (m *VirtualMachineMetadataOptionalResponse) Decode(d *jx.Decoder) error {
 			m.PurgeTime = &v
 			return nil
 		case "usages":
-			c := make([]common.TypedUsageOptionalResponse, 0)
+			c := make([]commonmodel.TypedUsageOptionalResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v common.TypedUsageOptionalResponse
+				var v commonmodel.TypedUsageOptionalResponse
 				if err := v.Decode(d); err != nil {
 					return err
 				}

@@ -11,7 +11,7 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	clienterrors "go.mws.cloud/go-sdk/internal/client/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mk8s/client"
 	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
@@ -49,7 +49,7 @@ func decodeListMk8sClustersResponse(resp *http.Response) (*client.ListMk8sCluste
 		case "application/json":
 			result := &client.ListMk8sClustersResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -66,7 +66,7 @@ func decodeListMk8sClustersResponse(resp *http.Response) (*client.ListMk8sCluste
 		case "application/json":
 			result := &client.ListMk8sClustersResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -83,7 +83,7 @@ func decodeListMk8sClustersResponse(resp *http.Response) (*client.ListMk8sCluste
 		case "application/json":
 			result := &client.ListMk8sClustersResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -100,7 +100,7 @@ func decodeListMk8sClustersResponse(resp *http.Response) (*client.ListMk8sCluste
 		case "application/json":
 			result := &client.ListMk8sClustersResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -137,7 +137,7 @@ func decodeDeleteMk8sClusterResponse(resp *http.Response) (*client.DeleteMk8sClu
 		case "application/json":
 			result := &client.DeleteMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -154,7 +154,7 @@ func decodeDeleteMk8sClusterResponse(resp *http.Response) (*client.DeleteMk8sClu
 		case "application/json":
 			result := &client.DeleteMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -171,7 +171,7 @@ func decodeDeleteMk8sClusterResponse(resp *http.Response) (*client.DeleteMk8sClu
 		case "application/json":
 			result := &client.DeleteMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -188,7 +188,7 @@ func decodeDeleteMk8sClusterResponse(resp *http.Response) (*client.DeleteMk8sClu
 		case "application/json":
 			result := &client.DeleteMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -239,7 +239,7 @@ func decodeGetMk8sClusterResponse(resp *http.Response) (*client.GetMk8sClusterRe
 		case "application/json":
 			result := &client.GetMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -256,7 +256,7 @@ func decodeGetMk8sClusterResponse(resp *http.Response) (*client.GetMk8sClusterRe
 		case "application/json":
 			result := &client.GetMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -273,7 +273,7 @@ func decodeGetMk8sClusterResponse(resp *http.Response) (*client.GetMk8sClusterRe
 		case "application/json":
 			result := &client.GetMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -290,7 +290,7 @@ func decodeGetMk8sClusterResponse(resp *http.Response) (*client.GetMk8sClusterRe
 		case "application/json":
 			result := &client.GetMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -341,7 +341,7 @@ func decodeUpsertMk8sClusterResponse(resp *http.Response) (*client.UpsertMk8sClu
 		case "application/json":
 			result := &client.UpsertMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -358,7 +358,7 @@ func decodeUpsertMk8sClusterResponse(resp *http.Response) (*client.UpsertMk8sClu
 		case "application/json":
 			result := &client.UpsertMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -375,7 +375,7 @@ func decodeUpsertMk8sClusterResponse(resp *http.Response) (*client.UpsertMk8sClu
 		case "application/json":
 			result := &client.UpsertMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -392,7 +392,7 @@ func decodeUpsertMk8sClusterResponse(resp *http.Response) (*client.UpsertMk8sClu
 		case "application/json":
 			result := &client.UpsertMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response409: &common.ApiError{},
+				Response409: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response409); err != nil {
@@ -409,7 +409,7 @@ func decodeUpsertMk8sClusterResponse(resp *http.Response) (*client.UpsertMk8sClu
 		case "application/json":
 			result := &client.UpsertMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response412: &common.ApiError{},
+				Response412: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response412); err != nil {
@@ -426,7 +426,7 @@ func decodeUpsertMk8sClusterResponse(resp *http.Response) (*client.UpsertMk8sClu
 		case "application/json":
 			result := &client.UpsertMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response422: &common.ApiError{},
+				Response422: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response422); err != nil {
@@ -443,7 +443,7 @@ func decodeUpsertMk8sClusterResponse(resp *http.Response) (*client.UpsertMk8sClu
 		case "application/json":
 			result := &client.UpsertMk8sClusterResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

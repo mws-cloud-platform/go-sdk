@@ -8,14 +8,14 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ListExternalAddressesResponse
 type ListExternalAddressesResponseOptionalResponse struct {
 	Items []ExternalAddressOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken optional.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.Optional[commonmodel.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ListExternalAddressesResponseOptionalResponse) GetItems() []ExternalAddressOptionalResponse {
@@ -29,14 +29,14 @@ func (m *ListExternalAddressesResponseOptionalResponse) SetItems(val []ExternalA
 	m.Items = val
 }
 
-func (m *ListExternalAddressesResponseOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *ListExternalAddressesResponseOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return &m.NextPageToken.Value
 	}
 	return nil
 }
 
-func (m *ListExternalAddressesResponseOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ListExternalAddressesResponseOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return m.NextPageToken.Value
 	}

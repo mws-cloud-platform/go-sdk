@@ -6,22 +6,22 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: RouteStatus
 type RouteStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
-
-	NextHop     *RouteStatusNextHopResponse     `json:"nextHop,omitempty" yaml:"nextHop,omitempty"`
-	Destination *RouteStatusDestinationResponse `json:"destination,omitempty" yaml:"destination,omitempty"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	RegionalStatusResponse             `yaml:"-,inline"`
+	NextHop                            *RouteStatusNextHopResponse     `json:"nextHop,omitempty" yaml:"nextHop,omitempty"`
+	Destination                        *RouteStatusDestinationResponse `json:"destination,omitempty" yaml:"destination,omitempty"`
 }
 
-func (m *RouteStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *RouteStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *RouteStatusResponse) GetNextHop() *RouteStatusNextHopResponse {
@@ -59,7 +59,7 @@ func (m *RouteStatusResponse) Clone() *RouteStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
-
+	clone.RegionalStatusResponse = *m.RegionalStatusResponse.Clone()
 	clone.NextHop = m.NextHop.Clone()
 	clone.Destination = m.Destination.Clone()
 

@@ -6,30 +6,30 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // One-to-One NAT-шлюз — механизм, с помощью которого ресурсы во внутренней сети могут выходить в интернет через внешний IP-адрес
 // Real OAPI model name: OneToOneNat
 type OneToOneNatRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata *commonmodel.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Описывает спецификацию One-to-One NAT-шлюза.
 	Spec OneToOneNatSpecRequest `json:"spec" yaml:"spec"`
 }
 
-func (m *OneToOneNatRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
+func (m *OneToOneNatRequest) GetMetadata() *commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *OneToOneNatRequest) SetMetadata(val *common.CommonTypedResourceMetadataRequest) {
+func (m *OneToOneNatRequest) SetMetadata(val *commonmodel.CommonTypedResourceMetadataRequest) {
 	m.Metadata = val
 }
 
-func (m *OneToOneNatRequest) GetMetadataOr(val common.CommonTypedResourceMetadataRequest) common.CommonTypedResourceMetadataRequest {
+func (m *OneToOneNatRequest) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataRequest) commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}

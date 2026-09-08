@@ -6,13 +6,13 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Real OAPI model name: PostgresClusterStatus
 type PostgresClusterStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Состояние кластера:
 	//   - `CREATING`     - Создается;
 	//   - `RUNNING`      - Работает в штатном режиме;
@@ -31,25 +31,25 @@ type PostgresClusterStatusResponse struct {
 	//   - `ALIVE`    - Полностью работоспособен;
 	//   - `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны);
 	//   - `FAILED`   - Неработоспособен;
-	//   - `UNKNOWN`  - Не удается определить состояние (на этапе создания).
+	//   - `UNKNOWN`  - Не удаётся определить состояние (на этапе создания).
 	Health  *ClusterHealth `json:"health,omitempty" yaml:"health,omitempty"`
 	Message *string        `json:"message,omitempty" yaml:"message,omitempty"`
 	// Регион, которому принадлежит кластер.
 	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
 	// Описание IP-адресов для доступа к кластеру.
-	Network           *PostgresStatusNetworkResponse     `json:"network,omitempty" yaml:"network,omitempty"`
-	Instances         []PostgresStatusInstanceResponse   `json:"instances,omitempty" yaml:"instances,omitempty"`
-	MaintenanceWindow *common.MaintenanceWindow2Response `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	Network           *PostgresStatusNetworkResponse         `json:"network,omitempty" yaml:"network,omitempty"`
+	Instances         []PostgresStatusInstanceResponse       `json:"instances,omitempty" yaml:"instances,omitempty"`
+	MaintenanceWindow *commonmodel.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Фактические параметры для автоматического бэкапирования.
 	Backup           *PostgresClusterStatusBackupResponse           `json:"backup,omitempty" yaml:"backup,omitempty"`
 	InstanceTemplate *PostgresClusterStatusInstanceTemplateResponse `json:"instanceTemplate,omitempty" yaml:"instanceTemplate,omitempty"`
 }
 
-func (m *PostgresClusterStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *PostgresClusterStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *PostgresClusterStatusResponse) GetState() *ClusterState {
@@ -136,14 +136,14 @@ func (m *PostgresClusterStatusResponse) GetInstancesOr(val []PostgresStatusInsta
 	return val
 }
 
-func (m *PostgresClusterStatusResponse) GetMaintenanceWindow() *common.MaintenanceWindow2Response {
+func (m *PostgresClusterStatusResponse) GetMaintenanceWindow() *commonmodel.MaintenanceWindowResponse {
 	if m != nil {
 		return m.MaintenanceWindow
 	}
 	return nil
 }
 
-func (m *PostgresClusterStatusResponse) GetMaintenanceWindowOr(val common.MaintenanceWindow2Response) common.MaintenanceWindow2Response {
+func (m *PostgresClusterStatusResponse) GetMaintenanceWindowOr(val commonmodel.MaintenanceWindowResponse) commonmodel.MaintenanceWindowResponse {
 	if m != nil && m.MaintenanceWindow != nil {
 		return *m.MaintenanceWindow
 	}

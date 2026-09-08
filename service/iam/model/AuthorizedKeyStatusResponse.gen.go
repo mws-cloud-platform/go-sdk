@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: AuthorizedKeyStatus
 type AuthorizedKeyStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Закрытый ключ, сгенерированный на стороне сервиса.
 	PrivateKey *sensitive.Sensitive[string] `json:"privateKey,omitempty" yaml:"privateKey,omitempty"`
 	// Файл с закрытым ключом, сгенерированным на стороне сервиса, в формате base64
@@ -24,11 +24,11 @@ type AuthorizedKeyStatusResponse struct {
 	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
-func (m *AuthorizedKeyStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *AuthorizedKeyStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *AuthorizedKeyStatusResponse) GetPrivateKey() *sensitive.Sensitive[string] {

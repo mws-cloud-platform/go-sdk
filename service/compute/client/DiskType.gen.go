@@ -11,7 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
 
@@ -56,8 +56,8 @@ func (m ListDiskTypesRequest) WithPageToken(token *string) ListDiskTypesRequest 
 type ListDiskTypesResponse struct {
 	Code        int
 	Response200 *ListDiskTypesResponse200
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -91,7 +91,7 @@ func (m *ListDiskTypesResponse) SetErrorWrapper(f func(err error) error) {
 type ListDiskTypesResponse200 struct {
 	Items []model.DiskTypeResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ListDiskTypesResponse200) GetItems() []model.DiskTypeResponse {
@@ -105,18 +105,18 @@ func (m *ListDiskTypesResponse200) SetItems(val []model.DiskTypeResponse) {
 	m.Items = val
 }
 
-func (m *ListDiskTypesResponse200) GetNextPageToken() *common.NextPageToken {
+func (m *ListDiskTypesResponse200) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *ListDiskTypesResponse200) SetNextPageToken(val *common.NextPageToken) {
+func (m *ListDiskTypesResponse200) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *ListDiskTypesResponse200) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ListDiskTypesResponse200) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}
@@ -223,7 +223,7 @@ func (m *ListDiskTypesResponse200) Decode(d *jx.Decoder) error {
 			m.Items = c
 			return nil
 		case "nextPageToken":
-			var v common.NextPageToken
+			var v commonmodel.NextPageToken
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -252,10 +252,10 @@ func (m *GetDiskTypeRequest) SetAuthorization(authorization string) {
 type GetDiskTypeResponse struct {
 	Code        int
 	Response200 *model.DiskTypeResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

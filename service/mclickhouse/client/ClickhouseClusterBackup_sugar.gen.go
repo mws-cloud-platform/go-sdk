@@ -26,7 +26,7 @@ func (x *ClickhouseClusterBackupSugared) Impl() ClickhouseClusterBackup {
 	return x.impl
 }
 
-// ListClickhouseClusterBackups list Clickhouse cluster backups.
+// ListClickhouseClusterBackups возвращает постраничный список резервных копий указанного кластера ClickHouse.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups
 func (x *ClickhouseClusterBackupSugared) ListClickhouseClusterBackups(ctx context.Context, request ListClickhouseClusterBackupsRequest) (*model.ClickhouseBackupPageOptionalResponse, error) {
@@ -50,7 +50,7 @@ func (x *ClickhouseClusterBackupSugared) respHandlerListClickhouseClusterBackups
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// DeleteClickhouseClusterBackup delete Clickhouse cluster backup.
+// DeleteClickhouseClusterBackup удаляет указанную резервную копию кластера ClickHouse.
 //
 // Путь: DELETE /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}
 func (x *ClickhouseClusterBackupSugared) DeleteClickhouseClusterBackup(ctx context.Context, request DeleteClickhouseClusterBackupRequest, opts ...Option) error {
@@ -98,7 +98,7 @@ func (x *ClickhouseClusterBackupSugared) waitDeleteClickhouseClusterBackup(ctx c
 	return err
 }
 
-// GetClickhouseClusterBackup returns info about the specified cluster backup.
+// GetClickhouseClusterBackup возвращает информацию об указанной резервной копии кластера ClickHouse.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}
 func (x *ClickhouseClusterBackupSugared) GetClickhouseClusterBackup(ctx context.Context, request GetClickhouseClusterBackupRequest, opts ...Option) (*model.ClickhouseBackupOptionalResponse, error) {
@@ -143,7 +143,7 @@ func (x *ClickhouseClusterBackupSugared) waitGetClickhouseClusterBackup(ctx cont
 	return waiter.Wait(ctx)
 }
 
-// UpsertClickhouseClusterBackup upsert Clickhouse cluster backup.
+// UpsertClickhouseClusterBackup создаёт новую резервную копию кластера ClickHouse.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}
 func (x *ClickhouseClusterBackupSugared) UpsertClickhouseClusterBackup(ctx context.Context, request UpsertClickhouseClusterBackupRequest, opts ...Option) (*model.ClickhouseBackupOptionalResponse, error) {
@@ -188,7 +188,7 @@ func (x *ClickhouseClusterBackupSugared) waitUpsertClickhouseClusterBackup(ctx c
 	return waiter.Wait(ctx)
 }
 
-// CreateClickhouseClusterBackup upsert Clickhouse cluster backup.
+// CreateClickhouseClusterBackup создаёт новую резервную копию кластера ClickHouse.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}?createOnly=true
@@ -212,7 +212,7 @@ func (x *ClickhouseClusterBackupSugared) CreateClickhouseClusterBackup(ctx conte
 	return x.waitUpsertClickhouseClusterBackup(ctx, request.getClickhouseClusterBackupRequest(), config.waitOptions...)
 }
 
-// UpdateClickhouseClusterBackup upsert Clickhouse cluster backup.
+// UpdateClickhouseClusterBackup создаёт новую резервную копию кластера ClickHouse.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}?updateOnly=true

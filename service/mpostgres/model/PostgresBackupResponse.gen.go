@@ -5,7 +5,7 @@ package model
 import (
 	"time"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mpostgres"
 )
 
@@ -109,7 +109,7 @@ func (m *PostgresBackupResponse) Clone() *PostgresBackupResponse {
 // Представление поля Metadata анонимного типа структуры PostgresBackup
 // Real OAPI model name: PostgresBackupMetadata
 type PostgresBackupMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// Ссылка на типизированный референс.
 	Id *mpostgres.PostgresBackupID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -184,14 +184,14 @@ func (m *PostgresBackupMetadataResponse) GetPurgeTimeOr(val time.Time) time.Time
 	return val
 }
 
-func (m *PostgresBackupMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *PostgresBackupMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *PostgresBackupMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *PostgresBackupMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}
@@ -249,19 +249,5 @@ func (m *PostgresBackupMetadataResponse) Clone() *PostgresBackupMetadataResponse
 	clone.TypedResourceMetadataResponse = *m.TypedResourceMetadataResponse.Clone()
 	clone.Id = m.Id.Clone()
 
-	return &clone
-}
-
-// Представление поля Spec анонимного типа структуры PostgresBackup
-// Real OAPI model name: PostgresBackupSpec
-type PostgresBackupSpecResponse struct {
-}
-
-func (m *PostgresBackupSpecResponse) Clone() *PostgresBackupSpecResponse {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
 	return &clone
 }

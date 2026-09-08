@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
@@ -28,6 +28,6 @@ func initClickhouseClusterResourceResponse() model.ClickhouseClusterResourceResp
 	var v model.ClickhouseClusterResourceResponse
 	v.Region = rm.NewMustRegionID("regionID")
 	v.Shards = make([]model.ClickhouseClusterShardResourceResponse, 0)
-	v.MaintenanceWindow.Weekly.Days = make([]common.DayOfWeek, 0)
+	v.MaintenanceWindow.Weekly.Days = make([]commonmodel.DayOfWeek, 0)
 	return v
 }

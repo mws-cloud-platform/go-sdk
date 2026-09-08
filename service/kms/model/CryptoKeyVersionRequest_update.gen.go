@@ -6,13 +6,13 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateCryptoKeyVersionRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
-	Spec     optional.Optional[UpdateCryptoKeyVersionSpecRequest]                  `json:"spec" yaml:"spec"`
+	Metadata optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Spec     optional.Optional[UpdateCryptoKeyVersionSpecRequest]                       `json:"spec" yaml:"spec"`
 }
 
 func (m *CryptoKeyVersionRequest) AsUpdateModel() UpdateCryptoKeyVersionRequest {
@@ -58,10 +58,10 @@ func (m UpdateCryptoKeyVersionRequest) HasChanges() bool {
 		m.Spec.Set
 }
 
-func (m *CryptoKeyVersionRequest) diffMetadata(src *CryptoKeyVersionRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *CryptoKeyVersionRequest) diffMetadata(src *CryptoKeyVersionRequest) optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+	return optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

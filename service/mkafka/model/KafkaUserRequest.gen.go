@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Пользователь — это внутренняя учетная запись Kafka для аутентификации в кластере
@@ -58,7 +58,7 @@ func (m *KafkaUserRequest) Clone() *KafkaUserRequest {
 // Представление поля Metadata анонимного типа структуры KafkaUser
 // Real OAPI model name: KafkaUserMetadata
 type KafkaUserMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *KafkaUserMetadataRequest) GetDisplayName() *string {
@@ -75,14 +75,14 @@ func (m *KafkaUserMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *KafkaUserMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *KafkaUserMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *KafkaUserMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *KafkaUserMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

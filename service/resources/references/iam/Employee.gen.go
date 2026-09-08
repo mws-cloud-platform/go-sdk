@@ -113,6 +113,25 @@ func (m *EmployeeID) Clone() *EmployeeID {
 	return &clone
 }
 
+func (m *EmployeeID) AsRef() *EmployeeRef {
+	if m == nil {
+		return nil
+	}
+	return &EmployeeRef{
+		id: *m,
+	}
+}
+
+func (m *EmployeeID) Equal(other *EmployeeID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.employee == other.employee
+}
+
 func (m EmployeeID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *EmployeeRef) Clone() *EmployeeRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *EmployeeRef) Equal(other *EmployeeRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.employee == other.id.employee
 }
 
 func (m EmployeeRef) MarshalJSON() ([]byte, error) {

@@ -6,7 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Секрет — это текстовая строка, содержащая любую информацию, которую пользователь хочет защитить, например, пароли, токены или ключи API
@@ -14,9 +14,9 @@ import (
 type SecretOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata common.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
-	Spec     SecretSpecOptionalResponse                         `json:"spec" yaml:"spec"`
-	Status   SecretStatusResponse                               `json:"status" yaml:"status"`
+	Metadata commonmodel.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
+	Spec     SecretSpecOptionalResponse                              `json:"spec" yaml:"spec"`
+	Status   SecretStatusResponse                                    `json:"status" yaml:"status"`
 }
 
 func (m *SecretOptionalResponse) GetKind() string {
@@ -30,14 +30,14 @@ func (m *SecretOptionalResponse) SetKind(val string) {
 	m.Kind = val
 }
 
-func (m *SecretOptionalResponse) GetMetadata() common.CommonTypedResourceMetadataOptionalResponse {
+func (m *SecretOptionalResponse) GetMetadata() commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil {
 		return m.Metadata
 	}
-	return common.CommonTypedResourceMetadataOptionalResponse{}
+	return commonmodel.CommonTypedResourceMetadataOptionalResponse{}
 }
 
-func (m *SecretOptionalResponse) SetMetadata(val common.CommonTypedResourceMetadataOptionalResponse) {
+func (m *SecretOptionalResponse) SetMetadata(val commonmodel.CommonTypedResourceMetadataOptionalResponse) {
 	m.Metadata = val
 }
 

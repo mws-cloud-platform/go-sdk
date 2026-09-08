@@ -16,7 +16,7 @@ import (
 type UpdateOneToOneNatAddressSpecOrRefRequest struct {
 	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
 	// NAT правило для связи внутреннего адреса с внешним адресом.
-	Spec optional.OptionalNil[UpdateOneToOneNatAddressSpecOrRefSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateOneToOneNatAddressSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *OneToOneNatAddressSpecOrRefRequest) AsUpdateModel() UpdateOneToOneNatAddressSpecOrRefRequest {
@@ -51,7 +51,7 @@ func (m *OneToOneNatAddressSpecOrRefRequest) WithChanges(u UpdateOneToOneNatAddr
 		out.Ref = ptr.Get(u.Ref.Value)
 	}
 	if u.Spec.IsSet() {
-		out.Spec = ptr.Get(OneToOneNatAddressSpecOrRefSpecRequest(u.Spec.Value))
+		out.Spec = ptr.Get(OneToOneNatAddressSpecRequest(u.Spec.Value))
 	} else if u.Spec.IsNull() {
 		out.Spec = nil
 	}
@@ -83,43 +83,12 @@ func (m *OneToOneNatAddressSpecOrRefRequest) diffRef(src *OneToOneNatAddressSpec
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *OneToOneNatAddressSpecOrRefRequest) diffSpec(src *OneToOneNatAddressSpecOrRefRequest) optional.OptionalNil[UpdateOneToOneNatAddressSpecOrRefSpecRequest] {
+func (m *OneToOneNatAddressSpecOrRefRequest) diffSpec(src *OneToOneNatAddressSpecOrRefRequest) optional.OptionalNil[UpdateOneToOneNatAddressSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return optional.OptionalNil[UpdateOneToOneNatAddressSpecOrRefSpecRequest]{
+	return optional.OptionalNil[UpdateOneToOneNatAddressSpecRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,
 	}
-}
-
-type UpdateOneToOneNatAddressSpecOrRefSpecRequest struct {
-}
-
-func (m *OneToOneNatAddressSpecOrRefSpecRequest) AsUpdateModel() UpdateOneToOneNatAddressSpecOrRefSpecRequest {
-	var u UpdateOneToOneNatAddressSpecOrRefSpecRequest
-	return u
-}
-
-// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *OneToOneNatAddressSpecOrRefSpecRequest) Diff(src *OneToOneNatAddressSpecOrRefSpecRequest) UpdateOneToOneNatAddressSpecOrRefSpecRequest {
-	nilDiffers := src != nil && m == nil
-	upd := UpdateOneToOneNatAddressSpecOrRefSpecRequest{}
-	if !nilDiffers {
-	}
-	return upd
-}
-
-func (m *OneToOneNatAddressSpecOrRefSpecRequest) WithChanges(u UpdateOneToOneNatAddressSpecOrRefSpecRequest) OneToOneNatAddressSpecOrRefSpecRequest {
-	var out OneToOneNatAddressSpecOrRefSpecRequest
-	if m != nil {
-		out = *m
-	}
-
-	return out
-}
-
-// HasChanges returns true if any field has Set == true
-func (m UpdateOneToOneNatAddressSpecOrRefSpecRequest) HasChanges() bool {
-	return false
 }

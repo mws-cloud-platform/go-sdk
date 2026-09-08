@@ -5,7 +5,7 @@ package model
 // Параметры восстанавливаемого кластера.
 // Real OAPI model name: ClickhouseClusterRestoreSpec
 type ClickhouseClusterRestoreSpecRequest struct {
-	// Добавление пользователей при создании кластера Clickhouse.
+	// Добавление пользователей при создании кластера ClickHouse.
 	BootstrapAdmin ClickhouseClusterBootstrapAdminSpecRequest `json:"bootstrapAdmin" yaml:"bootstrapAdmin"`
 }
 

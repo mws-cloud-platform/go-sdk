@@ -43,7 +43,9 @@ func (m *CertificateManagedSpecRequest) AsUpdateModel() UpdateCertificateManaged
 	if m.Issuer != nil {
 		u.Issuer = optional.NewOptionalNil(m.Issuer.AsUpdateModel())
 	}
-	u.Domains = optional.NewOptional(m.GetDomains())
+	if m.Domains != nil {
+		u.Domains = optional.NewOptional(m.GetDomains())
+	}
 	return u
 }
 

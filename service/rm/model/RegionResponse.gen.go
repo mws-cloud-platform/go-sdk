@@ -4,11 +4,10 @@ package model
 
 import (
 	"context"
-	"encoding/json"
 	"time"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
@@ -18,9 +17,9 @@ type RegionResponse struct {
 	Kind     *string                 `json:"kind,omitempty" yaml:"kind,omitempty"`
 	Metadata *RegionMetadataResponse `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация региона
-	Spec json.RawMessage `json:"spec" yaml:"spec"`
+	Spec RegionSpec `json:"spec" yaml:"spec"`
 	// Текущее состояние ресурса, вычисляемое системой.
-	Status *common.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
+	Status *commonmodel.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *RegionResponse) GetKind() *string {
@@ -59,29 +58,29 @@ func (m *RegionResponse) GetMetadataOr(val RegionMetadataResponse) RegionMetadat
 	return val
 }
 
-func (m *RegionResponse) GetSpec() json.RawMessage {
+func (m *RegionResponse) GetSpec() RegionSpec {
 	if m != nil {
 		return m.Spec
 	}
 	return []byte(`""`)
 }
 
-func (m *RegionResponse) SetSpec(val json.RawMessage) {
+func (m *RegionResponse) SetSpec(val RegionSpec) {
 	m.Spec = val
 }
 
-func (m *RegionResponse) GetStatus() *common.ResourceStatusResponse {
+func (m *RegionResponse) GetStatus() *commonmodel.ResourceStatusResponse {
 	if m != nil {
 		return m.Status
 	}
 	return nil
 }
 
-func (m *RegionResponse) SetStatus(val *common.ResourceStatusResponse) {
+func (m *RegionResponse) SetStatus(val *commonmodel.ResourceStatusResponse) {
 	m.Status = val
 }
 
-func (m *RegionResponse) GetStatusOr(val common.ResourceStatusResponse) common.ResourceStatusResponse {
+func (m *RegionResponse) GetStatusOr(val commonmodel.ResourceStatusResponse) commonmodel.ResourceStatusResponse {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
@@ -99,9 +98,7 @@ func (m *RegionResponse) Clone() *RegionResponse {
 		clone.Kind = &cloneKind
 	}
 	clone.Metadata = m.Metadata.Clone()
-	if m.Spec != nil {
-		clone.Spec = append([]byte{}, m.Spec...)
-	}
+	clone.Spec = m.Spec.Clone()
 	clone.Status = m.Status.Clone()
 	return &clone
 }
@@ -121,7 +118,7 @@ func (m *RegionResponse) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры Region
 // Real OAPI model name: RegionMetadata
 type RegionMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// ID свойства
 	Id *rm.RegionRef `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -196,14 +193,14 @@ func (m *RegionMetadataResponse) GetPurgeTimeOr(val time.Time) time.Time {
 	return val
 }
 
-func (m *RegionMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *RegionMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *RegionMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *RegionMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}

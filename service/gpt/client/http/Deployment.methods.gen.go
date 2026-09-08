@@ -180,6 +180,9 @@ func (c *Deployment) deleteDeploymentInvoker(ctx context.Context, anyReq any, re
 
 func (c *Deployment) queryDeleteDeployment(request *client.DeleteDeploymentRequest) string {
 	q := make(url.Values)
+	if request.IfExist != nil {
+		q.Add("ifExist", conv.BoolToString(*request.IfExist))
+	}
 	if request.Etag != nil {
 		q.Add("etag", conv.StringToString(*request.Etag))
 	}

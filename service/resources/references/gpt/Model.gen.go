@@ -135,6 +135,25 @@ func (m *ModelID) Clone() *ModelID {
 	return &clone
 }
 
+func (m *ModelID) AsRef() *ModelRef {
+	if m == nil {
+		return nil
+	}
+	return &ModelRef{
+		id: *m,
+	}
+}
+
+func (m *ModelID) Equal(other *ModelID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.modelName == other.modelName && m.project == other.project
+}
+
 func (m ModelID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ModelRef) Clone() *ModelRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ModelRef) Equal(other *ModelRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.modelName == other.id.modelName && m.id.project == other.id.project
 }
 
 func (m ModelRef) MarshalJSON() ([]byte, error) {

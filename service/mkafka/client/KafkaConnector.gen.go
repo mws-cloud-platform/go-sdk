@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mkafka/model"
 )
 
@@ -91,9 +91,9 @@ func (m ListKafkaConnectorsRequest) WithPageToken(token *string) ListKafkaConnec
 type ListKafkaConnectorsResponse struct {
 	Code        int
 	Response200 *model.KafkaConnectorPageOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -154,12 +154,12 @@ func (m *StopConnectorRequest) SetProject(project string) {
 type StopConnectorResponse struct {
 	Code        int
 	Response200 *model.KafkaConnectorOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -229,12 +229,12 @@ func (m *StartConnectorRequest) SetProject(project string) {
 type StartConnectorResponse struct {
 	Code        int
 	Response200 *model.KafkaConnectorOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -315,11 +315,11 @@ func (m *DeleteKafkaConnectorRequest) getKafkaConnectorRequest() GetKafkaConnect
 type DeleteKafkaConnectorResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response412 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -384,10 +384,10 @@ func (m *GetKafkaConnectorRequest) SetProject(project string) {
 type GetKafkaConnectorResponse struct {
 	Code        int
 	Response200 *model.KafkaConnectorOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -498,12 +498,12 @@ func (m *UpdateKafkaConnectorRequest) getKafkaConnectorRequest() GetKafkaConnect
 type UpsertKafkaConnectorResponse struct {
 	Code        int
 	Response200 *model.KafkaConnectorOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

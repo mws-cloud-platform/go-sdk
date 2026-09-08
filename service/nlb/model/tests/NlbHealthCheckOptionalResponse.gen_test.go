@@ -25,7 +25,6 @@ func TestNlbHealthCheckOptionalResponseMarshalling(t *testing.T) {
 
 func initNlbHealthCheckOptionalResponse() model.NlbHealthCheckOptionalResponse {
 	var v model.NlbHealthCheckOptionalResponse
-	v.Interval = duration.MustParseString("PT0S")
 	v.Timeout = duration.MustParseString("PT0S")
 	return v
 }

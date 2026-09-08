@@ -8,18 +8,10 @@ func KafkaEndpointExternalAddressSpecOrRefRequestToResponse(request *KafkaEndpoi
 	}
 	var response KafkaEndpointExternalAddressSpecOrRefResponse
 	response.Ref = request.Ref
-	tmpSpec, err := KafkaEndpointExternalAddressSpecOrRefSpecRequestToResponse(request.Spec)
+	tmpSpec, err := KafkaEndpointExternalAddressSpecRequestToResponse(request.Spec)
 	if err != nil {
 		return nil, err
 	}
 	response.Spec = tmpSpec
-	return &response, nil
-}
-
-func KafkaEndpointExternalAddressSpecOrRefSpecRequestToResponse(request *KafkaEndpointExternalAddressSpecOrRefSpecRequest) (*KafkaEndpointExternalAddressSpecOrRefSpecResponse, error) {
-	if request == nil {
-		return nil, nil
-	}
-	var response KafkaEndpointExternalAddressSpecOrRefSpecResponse
 	return &response, nil
 }

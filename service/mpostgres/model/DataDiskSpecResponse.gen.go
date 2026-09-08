@@ -12,8 +12,8 @@ type DataDiskSpecResponse struct {
 	// Размер диска.
 	Size bytesize.ByteSize `json:"size" yaml:"size"`
 	// Тип используемого диска:
-	// * `NETWORK_STANDARD_SSD` — сетевой SSD;
-	// * `LOCAL` — локальный диск.
+	// * `NETWORK_STANDARD_SSD` — сетевой SSD
+	// * `LOCAL` — локальный SSD
 	Type DataDiskType `json:"type" yaml:"type"`
 	// IOPS.
 	Iops *Iops `json:"iops,omitempty" yaml:"iops,omitempty"`

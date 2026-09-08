@@ -14,7 +14,7 @@ import (
 type OneToOneNatAddressSpecOrRefOptionalResponse struct {
 	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// NAT правило для связи внутреннего адреса с внешним адресом.
-	Spec optional.OptionalNil[OneToOneNatAddressSpecOrRefSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec optional.OptionalNil[OneToOneNatAddressSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *OneToOneNatAddressSpecOrRefOptionalResponse) GetRef() *vpc.ExternalAddressRef {
@@ -31,14 +31,14 @@ func (m *OneToOneNatAddressSpecOrRefOptionalResponse) GetRefOr(val vpc.ExternalA
 	return val
 }
 
-func (m *OneToOneNatAddressSpecOrRefOptionalResponse) GetSpec() *OneToOneNatAddressSpecOrRefSpecOptionalResponse {
+func (m *OneToOneNatAddressSpecOrRefOptionalResponse) GetSpec() *OneToOneNatAddressSpecOptionalResponse {
 	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
-func (m *OneToOneNatAddressSpecOrRefOptionalResponse) GetSpecOr(val OneToOneNatAddressSpecOrRefSpecOptionalResponse) OneToOneNatAddressSpecOrRefSpecOptionalResponse {
+func (m *OneToOneNatAddressSpecOrRefOptionalResponse) GetSpecOr(val OneToOneNatAddressSpecOptionalResponse) OneToOneNatAddressSpecOptionalResponse {
 	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
@@ -72,18 +72,4 @@ func (m *OneToOneNatAddressSpecOrRefOptionalResponse) Parse(ctx context.Context)
 	}
 
 	return nil
-}
-
-// Представление поля Spec анонимного типа структуры OneToOneNatAddressSpecOrRef
-// Real OAPI model name: OneToOneNatAddressSpecOrRefSpec
-type OneToOneNatAddressSpecOrRefSpecOptionalResponse struct {
-}
-
-func (m *OneToOneNatAddressSpecOrRefSpecOptionalResponse) Clone() *OneToOneNatAddressSpecOrRefSpecOptionalResponse {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
-	return &clone
 }

@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -18,13 +18,13 @@ func TestResourceAddressSpecRequestMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.ResourceAddressSpecRequest
+	var actual commonmodel.ResourceAddressSpecRequest
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initResourceAddressSpecRequest() common.ResourceAddressSpecRequest {
-	var v common.ResourceAddressSpecRequest
+func initResourceAddressSpecRequest() commonmodel.ResourceAddressSpecRequest {
+	var v commonmodel.ResourceAddressSpecRequest
 	v.Subnet = vpc.NewMustSubnetRef("projectID", "networkID", "subnetID")
 	return v
 }

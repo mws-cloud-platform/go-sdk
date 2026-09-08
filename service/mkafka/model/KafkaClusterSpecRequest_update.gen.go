@@ -12,7 +12,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
@@ -31,8 +31,8 @@ type UpdateKafkaClusterSpecRequest struct {
 	// Описание ресурсов хостов брокеров и контроллеров.
 	Instances optional.Optional[UpdateKafkaInstanceRequest] `json:"instances" yaml:"instances"`
 	// Настройки Kafka. Если не указаны, будут использованы настройки по умолчанию
-	ProductConfig     optional.Optional[string]                                   `json:"productConfig" yaml:"productConfig"`
-	MaintenanceWindow optional.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
+	ProductConfig     optional.Optional[string]                                        `json:"productConfig" yaml:"productConfig"`
+	MaintenanceWindow optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry optional.OptionalNil[UpdateKafkaSchemaRegistrySpecRequest] `json:"schemaRegistry" yaml:"schemaRegistry"`
 	// Настройка балансировщика кластера.
@@ -219,10 +219,10 @@ func (m *KafkaClusterSpecRequest) diffProductConfig(src *KafkaClusterSpecRequest
 	return commonclient.DiffPrimitiveNonRequired(src.GetProductConfig(), m.GetProductConfig(), nilDiffers)
 }
 
-func (m *KafkaClusterSpecRequest) diffMaintenanceWindow(src *KafkaClusterSpecRequest) optional.OptionalNil[common.UpdateMaintenanceWindowRequest] {
+func (m *KafkaClusterSpecRequest) diffMaintenanceWindow(src *KafkaClusterSpecRequest) optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMaintenanceWindow().Diff(src.GetMaintenanceWindow())
-	return optional.OptionalNil[common.UpdateMaintenanceWindowRequest]{
+	return optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

@@ -14,6 +14,9 @@ func ImageSpecRequestToOptionalResponse(request *ImageSpecRequest) (*ImageSpecOp
 	if request.Family != nil {
 		response.Family = optional.NewOptional(*request.Family)
 	}
+	if request.Regions != nil {
+		response.Regions = optional.NewOptional(request.Regions)
+	}
 	tmpSource, err := ImageSpecSourceRequestToOptionalResponse(&request.Source)
 	if err != nil {
 		return nil, err

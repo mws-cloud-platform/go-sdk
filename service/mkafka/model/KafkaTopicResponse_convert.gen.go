@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func KafkaTopicRequestToResponse(request *KafkaTopicRequest) (*KafkaTopicResponse, error) {
@@ -31,7 +31,7 @@ func KafkaTopicMetadataRequestToResponse(request *KafkaTopicMetadataRequest) (*K
 	var response KafkaTopicMetadataResponse
 	response.DisplayName = request.DisplayName
 	for _, e := range request.Usages {
-		tmp, err := common.TypedUsageRequestToResponse(&e)
+		tmp, err := commonmodel.TypedUsageRequestToResponse(&e)
 		if err != nil {
 			return nil, err
 		}

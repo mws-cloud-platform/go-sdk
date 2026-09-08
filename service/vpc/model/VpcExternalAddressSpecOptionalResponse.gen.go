@@ -11,7 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Спецификация внешнего адреса.
+// Описывает спецификацию внешнего адреса.
 // Real OAPI model name: VpcExternalAddressSpec
 type VpcExternalAddressSpecOptionalResponse struct {
 	// Регион, которому принадлежит адрес.

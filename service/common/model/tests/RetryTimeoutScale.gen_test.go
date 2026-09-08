@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestRetryTimeoutScaleMarshalling(t *testing.T) {
@@ -17,12 +17,12 @@ func TestRetryTimeoutScaleMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.RetryTimeoutScale
+	var actual commonmodel.RetryTimeoutScale
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initRetryTimeoutScale() common.RetryTimeoutScale {
-	var v common.RetryTimeoutScale
+func initRetryTimeoutScale() commonmodel.RetryTimeoutScale {
+	var v commonmodel.RetryTimeoutScale
 	return v
 }

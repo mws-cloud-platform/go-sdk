@@ -13,7 +13,7 @@ import (
 	clienterrors "go.mws.cloud/go-sdk/internal/client/errors"
 	"go.mws.cloud/go-sdk/service/certmanager/client"
 	"go.mws.cloud/go-sdk/service/certmanager/model"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func decodeListCertificateRoleBindingsResponse(resp *http.Response) (*client.ListCertificateRoleBindingsResponse, error) {
@@ -49,7 +49,7 @@ func decodeListCertificateRoleBindingsResponse(resp *http.Response) (*client.Lis
 		case "application/json":
 			result := &client.ListCertificateRoleBindingsResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -66,7 +66,7 @@ func decodeListCertificateRoleBindingsResponse(resp *http.Response) (*client.Lis
 		case "application/json":
 			result := &client.ListCertificateRoleBindingsResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -83,7 +83,7 @@ func decodeListCertificateRoleBindingsResponse(resp *http.Response) (*client.Lis
 		case "application/json":
 			result := &client.ListCertificateRoleBindingsResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -100,7 +100,7 @@ func decodeListCertificateRoleBindingsResponse(resp *http.Response) (*client.Lis
 		case "application/json":
 			result := &client.ListCertificateRoleBindingsResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -137,7 +137,7 @@ func decodeDeleteCertificateRoleBindingResponse(resp *http.Response) (*client.De
 		case "application/json":
 			result := &client.DeleteCertificateRoleBindingResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -154,7 +154,7 @@ func decodeDeleteCertificateRoleBindingResponse(resp *http.Response) (*client.De
 		case "application/json":
 			result := &client.DeleteCertificateRoleBindingResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -171,7 +171,7 @@ func decodeDeleteCertificateRoleBindingResponse(resp *http.Response) (*client.De
 		case "application/json":
 			result := &client.DeleteCertificateRoleBindingResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -188,7 +188,7 @@ func decodeDeleteCertificateRoleBindingResponse(resp *http.Response) (*client.De
 		case "application/json":
 			result := &client.DeleteCertificateRoleBindingResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -239,7 +239,7 @@ func decodeGetCertificateRoleBindingResponse(resp *http.Response) (*client.GetCe
 		case "application/json":
 			result := &client.GetCertificateRoleBindingResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -256,7 +256,7 @@ func decodeGetCertificateRoleBindingResponse(resp *http.Response) (*client.GetCe
 		case "application/json":
 			result := &client.GetCertificateRoleBindingResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -273,7 +273,7 @@ func decodeGetCertificateRoleBindingResponse(resp *http.Response) (*client.GetCe
 		case "application/json":
 			result := &client.GetCertificateRoleBindingResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -290,7 +290,7 @@ func decodeGetCertificateRoleBindingResponse(resp *http.Response) (*client.GetCe
 		case "application/json":
 			result := &client.GetCertificateRoleBindingResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -362,7 +362,7 @@ func decodeUpsertCertificateRoleBindingResponse(resp *http.Response) (*client.Up
 		case "application/json":
 			result := &client.UpsertCertificateRoleBindingResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -379,7 +379,7 @@ func decodeUpsertCertificateRoleBindingResponse(resp *http.Response) (*client.Up
 		case "application/json":
 			result := &client.UpsertCertificateRoleBindingResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -396,7 +396,7 @@ func decodeUpsertCertificateRoleBindingResponse(resp *http.Response) (*client.Up
 		case "application/json":
 			result := &client.UpsertCertificateRoleBindingResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

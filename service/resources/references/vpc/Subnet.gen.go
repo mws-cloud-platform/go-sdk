@@ -157,6 +157,25 @@ func (m *SubnetID) Clone() *SubnetID {
 	return &clone
 }
 
+func (m *SubnetID) AsRef() *SubnetRef {
+	if m == nil {
+		return nil
+	}
+	return &SubnetRef{
+		id: *m,
+	}
+}
+
+func (m *SubnetID) Equal(other *SubnetID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.subnet == other.subnet && m.network == other.network && m.project == other.project
+}
+
 func (m SubnetID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *SubnetRef) Clone() *SubnetRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *SubnetRef) Equal(other *SubnetRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.subnet == other.id.subnet && m.id.network == other.id.network && m.id.project == other.id.project
 }
 
 func (m SubnetRef) MarshalJSON() ([]byte, error) {

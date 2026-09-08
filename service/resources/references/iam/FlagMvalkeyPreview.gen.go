@@ -133,6 +133,25 @@ func (m *FlagMvalkeyPreviewID) Clone() *FlagMvalkeyPreviewID {
 	return &clone
 }
 
+func (m *FlagMvalkeyPreviewID) AsRef() *FlagMvalkeyPreviewRef {
+	if m == nil {
+		return nil
+	}
+	return &FlagMvalkeyPreviewRef{
+		id: *m,
+	}
+}
+
+func (m *FlagMvalkeyPreviewID) Equal(other *FlagMvalkeyPreviewID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m FlagMvalkeyPreviewID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -289,6 +308,16 @@ func (m *FlagMvalkeyPreviewRef) Clone() *FlagMvalkeyPreviewRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *FlagMvalkeyPreviewRef) Equal(other *FlagMvalkeyPreviewRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m FlagMvalkeyPreviewRef) MarshalJSON() ([]byte, error) {

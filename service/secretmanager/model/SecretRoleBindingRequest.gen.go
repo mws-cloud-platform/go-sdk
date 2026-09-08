@@ -6,44 +6,44 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Привязка роли к секрету — это связь субъекта (пользователя, группы пользователей или сервисного аккаунта) и роли, определяющая права субъекта на конкретный секрет
 // Real OAPI model name: SecretRoleBinding
 type SecretRoleBindingRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata *common.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Metadata *commonmodel.CommonTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав.
-	Spec common.CommonRoleBindingSpecRequest `json:"spec" yaml:"spec"`
+	Spec commonmodel.CommonRoleBindingSpecRequest `json:"spec" yaml:"spec"`
 }
 
-func (m *SecretRoleBindingRequest) GetMetadata() *common.CommonTypedResourceMetadataRequest {
+func (m *SecretRoleBindingRequest) GetMetadata() *commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil {
 		return m.Metadata
 	}
 	return nil
 }
 
-func (m *SecretRoleBindingRequest) SetMetadata(val *common.CommonTypedResourceMetadataRequest) {
+func (m *SecretRoleBindingRequest) SetMetadata(val *commonmodel.CommonTypedResourceMetadataRequest) {
 	m.Metadata = val
 }
 
-func (m *SecretRoleBindingRequest) GetMetadataOr(val common.CommonTypedResourceMetadataRequest) common.CommonTypedResourceMetadataRequest {
+func (m *SecretRoleBindingRequest) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataRequest) commonmodel.CommonTypedResourceMetadataRequest {
 	if m != nil && m.Metadata != nil {
 		return *m.Metadata
 	}
 	return val
 }
 
-func (m *SecretRoleBindingRequest) GetSpec() common.CommonRoleBindingSpecRequest {
+func (m *SecretRoleBindingRequest) GetSpec() commonmodel.CommonRoleBindingSpecRequest {
 	if m != nil {
 		return m.Spec
 	}
-	return common.CommonRoleBindingSpecRequest{}
+	return commonmodel.CommonRoleBindingSpecRequest{}
 }
 
-func (m *SecretRoleBindingRequest) SetSpec(val common.CommonRoleBindingSpecRequest) {
+func (m *SecretRoleBindingRequest) SetSpec(val commonmodel.CommonRoleBindingSpecRequest) {
 	m.Spec = val
 }
 

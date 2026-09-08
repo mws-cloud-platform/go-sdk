@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
 
@@ -79,14 +79,13 @@ func (m ListVirtualMachinesRequest) WithPageToken(token *string) ListVirtualMach
 type ListVirtualMachinesResponse struct {
 	Code        int
 	Response200 *model.VirtualMachinesListOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response408 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response499 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -103,9 +102,6 @@ func (m *ListVirtualMachinesResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
-	}
-	if m.Response401 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -168,15 +164,14 @@ type DeleteVirtualMachineResponse struct {
 	Code        int
 	Response202 bool // empty response
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response422 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response408 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response422 *commonmodel.ApiError
+	Response499 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -193,9 +188,6 @@ func (m *DeleteVirtualMachineResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
-	}
-	if m.Response401 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -250,14 +242,13 @@ func (m *GetVirtualMachineRequest) SetProject(project string) {
 type GetVirtualMachineResponse struct {
 	Code        int
 	Response200 *model.VirtualMachineOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response408 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response499 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -274,9 +265,6 @@ func (m *GetVirtualMachineResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
-	}
-	if m.Response401 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
@@ -308,6 +296,8 @@ func (m *GetVirtualMachineResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertVirtualMachineRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -340,6 +330,8 @@ func (m *UpsertVirtualMachineRequest) getVirtualMachineRequest() GetVirtualMachi
 type UpdateVirtualMachineRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -372,16 +364,15 @@ func (m *UpdateVirtualMachineRequest) getVirtualMachineRequest() GetVirtualMachi
 type UpsertVirtualMachineResponse struct {
 	Code        int
 	Response200 *model.VirtualMachineOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response422 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response408 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response422 *commonmodel.ApiError
+	Response499 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -398,9 +389,6 @@ func (m *UpsertVirtualMachineResponse) GetErr() (err error) {
 	}()
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
-	}
-	if m.Response401 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
 	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)

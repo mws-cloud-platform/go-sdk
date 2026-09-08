@@ -146,6 +146,25 @@ func (m *PostgresShadowClusterID) Clone() *PostgresShadowClusterID {
 	return &clone
 }
 
+func (m *PostgresShadowClusterID) AsRef() *PostgresShadowClusterRef {
+	if m == nil {
+		return nil
+	}
+	return &PostgresShadowClusterRef{
+		id: *m,
+	}
+}
+
+func (m *PostgresShadowClusterID) Equal(other *PostgresShadowClusterID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.cluster == other.cluster && m.shadowProject == other.shadowProject
+}
+
 func (m PostgresShadowClusterID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -310,6 +329,16 @@ func (m *PostgresShadowClusterRef) Clone() *PostgresShadowClusterRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *PostgresShadowClusterRef) Equal(other *PostgresShadowClusterRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.cluster == other.id.cluster && m.id.shadowProject == other.id.shadowProject
 }
 
 func (m PostgresShadowClusterRef) MarshalJSON() ([]byte, error) {

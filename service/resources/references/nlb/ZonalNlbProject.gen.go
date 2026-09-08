@@ -146,6 +146,25 @@ func (m *ZonalNlbProjectID) Clone() *ZonalNlbProjectID {
 	return &clone
 }
 
+func (m *ZonalNlbProjectID) AsRef() *ZonalNlbProjectRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalNlbProjectRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalNlbProjectID) Equal(other *ZonalNlbProjectID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project && m.zone == other.zone
+}
+
 func (m ZonalNlbProjectID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -310,6 +329,16 @@ func (m *ZonalNlbProjectRef) Clone() *ZonalNlbProjectRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalNlbProjectRef) Equal(other *ZonalNlbProjectRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project && m.id.zone == other.id.zone
 }
 
 func (m ZonalNlbProjectRef) MarshalJSON() ([]byte, error) {

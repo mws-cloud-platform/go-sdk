@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m UpdateNlbRuleRequest) MarshalJSON() ([]byte, error) {
@@ -104,9 +104,9 @@ func (m *UpdateNlbRuleRequest) Decode(d *jx.Decoder) error {
 			m.TargetPort.SetTo(v)
 			return nil
 		case "targetAddressGroups":
-			c := make([]common.UpdateVpcAddressGroupSpecOrRefRequest, 0)
+			c := make([]commonmodel.UpdateVpcAddressGroupSpecOrRefRequest, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v common.UpdateVpcAddressGroupSpecOrRefRequest
+				var v commonmodel.UpdateVpcAddressGroupSpecOrRefRequest
 				if err := v.Decode(d); err != nil {
 					return err
 				}

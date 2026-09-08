@@ -12,7 +12,7 @@ import (
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
 
@@ -73,10 +73,10 @@ func (m *LatestImageRequest) SetProject(project string) {
 type LatestImageResponse struct {
 	Code        int
 	Response200 *model.ImageOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -152,8 +152,8 @@ func (m ListImagesRequest) WithPageToken(token *string) ListImagesRequest {
 type ListImagesResponse struct {
 	Code        int
 	Response200 *ListImagesResponse200
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -187,7 +187,7 @@ func (m *ListImagesResponse) SetErrorWrapper(f func(err error) error) {
 type ListImagesResponse200 struct {
 	Items []model.ImageOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken optional.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.Optional[commonmodel.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ListImagesResponse200) GetItems() []model.ImageOptionalResponse {
@@ -201,14 +201,14 @@ func (m *ListImagesResponse200) SetItems(val []model.ImageOptionalResponse) {
 	m.Items = val
 }
 
-func (m *ListImagesResponse200) GetNextPageToken() *common.NextPageToken {
+func (m *ListImagesResponse200) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return &m.NextPageToken.Value
 	}
 	return nil
 }
 
-func (m *ListImagesResponse200) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ListImagesResponse200) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return m.NextPageToken.Value
 	}
@@ -311,7 +311,7 @@ func (m *ListImagesResponse200) Decode(d *jx.Decoder) error {
 			m.Items = c
 			return nil
 		case "nextPageToken":
-			var v common.NextPageToken
+			var v commonmodel.NextPageToken
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -362,10 +362,10 @@ func (m *DeleteImageRequest) getImageRequest() GetImageRequest {
 type DeleteImageResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -427,10 +427,10 @@ func (m *GetImageRequest) SetProject(project string) {
 type GetImageResponse struct {
 	Code        int
 	Response200 *model.ImageOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -539,10 +539,10 @@ func (m *UpdateImageRequest) getImageRequest() GetImageRequest {
 type UpsertImageResponse struct {
 	Code        int
 	Response200 *model.ImageOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response409 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

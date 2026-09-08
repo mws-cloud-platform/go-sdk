@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
@@ -25,7 +25,7 @@ type VirtualMachineAddressStatusResponse struct {
 	StandardDns *VirtualMachineAddressDnsStatusResponse  `json:"standardDns,omitempty" yaml:"standardDns,omitempty"`
 	Dns         []VirtualMachineAddressDnsStatusResponse `json:"dns,omitempty" yaml:"dns,omitempty"`
 	// Статус ресурса Адрес
-	Ready       *common.ResourceStatusReadyResponse      `json:"ready,omitempty" yaml:"ready,omitempty"`
+	Ready       *commonmodel.ResourceStatusReadyResponse `json:"ready,omitempty" yaml:"ready,omitempty"`
 	OneToOneNat *VirtualMachineOneToOneNatStatusResponse `json:"oneToOneNat,omitempty" yaml:"oneToOneNat,omitempty"`
 }
 
@@ -130,18 +130,18 @@ func (m *VirtualMachineAddressStatusResponse) GetDnsOr(val []VirtualMachineAddre
 	return val
 }
 
-func (m *VirtualMachineAddressStatusResponse) GetReady() *common.ResourceStatusReadyResponse {
+func (m *VirtualMachineAddressStatusResponse) GetReady() *commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.Ready
 	}
 	return nil
 }
 
-func (m *VirtualMachineAddressStatusResponse) SetReady(val *common.ResourceStatusReadyResponse) {
+func (m *VirtualMachineAddressStatusResponse) SetReady(val *commonmodel.ResourceStatusReadyResponse) {
 	m.Ready = val
 }
 
-func (m *VirtualMachineAddressStatusResponse) GetReadyOr(val common.ResourceStatusReadyResponse) common.ResourceStatusReadyResponse {
+func (m *VirtualMachineAddressStatusResponse) GetReadyOr(val commonmodel.ResourceStatusReadyResponse) commonmodel.ResourceStatusReadyResponse {
 	if m != nil && m.Ready != nil {
 		return *m.Ready
 	}

@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Параметры кластера.
@@ -22,8 +22,8 @@ type PostgresClusterSpecRequest struct {
 	InstanceTemplate PostgresInstanceTemplateRequest `json:"instanceTemplate" yaml:"instanceTemplate"`
 	Instances        []PostgresInstanceRequest       `json:"instances" yaml:"instances"`
 	// Спецификация автоматического бэкапирования.
-	Backup            *PostgresClusterBackupRequest    `json:"backup,omitempty" yaml:"backup,omitempty"`
-	MaintenanceWindow *common.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
+	Backup            *PostgresClusterBackupRequest         `json:"backup,omitempty" yaml:"backup,omitempty"`
+	MaintenanceWindow *commonmodel.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Параметры PostgreSQL. Если не указаны, будут использованы параметры по умолчанию.
 	PostgresParameters map[string]string `json:"postgresParameters,omitempty" yaml:"postgresParameters,omitempty"`
 	// Выгрузка пользовательских логов кластера — включена или выключена.
@@ -103,18 +103,18 @@ func (m *PostgresClusterSpecRequest) GetBackupOr(val PostgresClusterBackupReques
 	return val
 }
 
-func (m *PostgresClusterSpecRequest) GetMaintenanceWindow() *common.MaintenanceWindowRequest {
+func (m *PostgresClusterSpecRequest) GetMaintenanceWindow() *commonmodel.MaintenanceWindowRequest {
 	if m != nil {
 		return m.MaintenanceWindow
 	}
 	return nil
 }
 
-func (m *PostgresClusterSpecRequest) SetMaintenanceWindow(val *common.MaintenanceWindowRequest) {
+func (m *PostgresClusterSpecRequest) SetMaintenanceWindow(val *commonmodel.MaintenanceWindowRequest) {
 	m.MaintenanceWindow = val
 }
 
-func (m *PostgresClusterSpecRequest) GetMaintenanceWindowOr(val common.MaintenanceWindowRequest) common.MaintenanceWindowRequest {
+func (m *PostgresClusterSpecRequest) GetMaintenanceWindowOr(val commonmodel.MaintenanceWindowRequest) commonmodel.MaintenanceWindowRequest {
 	if m != nil && m.MaintenanceWindow != nil {
 		return *m.MaintenanceWindow
 	}

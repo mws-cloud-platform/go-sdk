@@ -7,23 +7,23 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateClusterVersionControlSpecRequest struct {
 	// Cluster обновляется всегда до default версии, поэтому необходимо выбрать релизный канал и настроить окно обслуживания
 	ReleaseChannel optional.Optional[string] `json:"releaseChannel" yaml:"releaseChannel"`
 	// Минимальная версия Cluster. Автоматически обновляется до версии default в окно обслуживания. При указании версии выше default обновление запускается немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе Cluster
-	Version optional.OptionalNil[string] `json:"version" yaml:"version"`
+	Version optional.Optional[string] `json:"version" yaml:"version"`
 	// Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration нельзя указывать, так как обновление мастер нод не прерывается
-	MaintenanceWindow optional.OptionalNil[common.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
+	MaintenanceWindow optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
 }
 
 func (m *ClusterVersionControlSpecRequest) AsUpdateModel() UpdateClusterVersionControlSpecRequest {
 	var u UpdateClusterVersionControlSpecRequest
 	u.ReleaseChannel = optional.NewOptional(m.GetReleaseChannel())
 	if m.Version != nil {
-		u.Version = optional.NewOptionalNil(m.GetVersionOr(""))
+		u.Version = optional.NewOptional(m.GetVersionOr(""))
 	}
 	if m.MaintenanceWindow != nil {
 		u.MaintenanceWindow = optional.NewOptionalNil(m.MaintenanceWindow.AsUpdateModel())
@@ -54,8 +54,6 @@ func (m *ClusterVersionControlSpecRequest) WithChanges(u UpdateClusterVersionCon
 	}
 	if u.Version.IsSet() {
 		out.Version = ptr.Get(u.Version.Value)
-	} else if u.Version.IsNull() {
-		out.Version = nil
 	}
 	if u.MaintenanceWindow.IsSet() {
 		out.MaintenanceWindow = ptr.Get(out.MaintenanceWindow.WithChanges(u.MaintenanceWindow.Value))
@@ -77,15 +75,15 @@ func (m *ClusterVersionControlSpecRequest) diffReleaseChannel(src *ClusterVersio
 	return commonclient.DiffPrimitiveRequired(src.GetReleaseChannel(), m.GetReleaseChannel(), nilDiffers)
 }
 
-func (m *ClusterVersionControlSpecRequest) diffVersion(src *ClusterVersionControlSpecRequest) optional.OptionalNil[string] {
+func (m *ClusterVersionControlSpecRequest) diffVersion(src *ClusterVersionControlSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNullable(src.GetVersion(), m.GetVersion(), nilDiffers)
+	return commonclient.DiffPrimitiveNonRequired(src.GetVersion(), m.GetVersion(), nilDiffers)
 }
 
-func (m *ClusterVersionControlSpecRequest) diffMaintenanceWindow(src *ClusterVersionControlSpecRequest) optional.OptionalNil[common.UpdateMaintenanceWindowRequest] {
+func (m *ClusterVersionControlSpecRequest) diffMaintenanceWindow(src *ClusterVersionControlSpecRequest) optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMaintenanceWindow().Diff(src.GetMaintenanceWindow())
-	return optional.OptionalNil[common.UpdateMaintenanceWindowRequest]{
+	return optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

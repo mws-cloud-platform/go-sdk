@@ -179,6 +179,25 @@ func (m *ClickhouseClusterShardInstanceID) Clone() *ClickhouseClusterShardInstan
 	return &clone
 }
 
+func (m *ClickhouseClusterShardInstanceID) AsRef() *ClickhouseClusterShardInstanceRef {
+	if m == nil {
+		return nil
+	}
+	return &ClickhouseClusterShardInstanceRef{
+		id: *m,
+	}
+}
+
+func (m *ClickhouseClusterShardInstanceID) Equal(other *ClickhouseClusterShardInstanceID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.instance == other.instance && m.shard == other.shard && m.cluster == other.cluster && m.project == other.project
+}
+
 func (m ClickhouseClusterShardInstanceID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -371,6 +390,16 @@ func (m *ClickhouseClusterShardInstanceRef) Clone() *ClickhouseClusterShardInsta
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ClickhouseClusterShardInstanceRef) Equal(other *ClickhouseClusterShardInstanceRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.instance == other.id.instance && m.id.shard == other.id.shard && m.id.cluster == other.id.cluster && m.id.project == other.id.project
 }
 
 func (m ClickhouseClusterShardInstanceRef) MarshalJSON() ([]byte, error) {

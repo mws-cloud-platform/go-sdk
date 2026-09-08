@@ -2,7 +2,7 @@
 
 package model
 
-// Настройка внешнего доступа к кластеру Kafka.
+// Описание внешнего доступа к кластеру Apache Kafka.
 // Real OAPI model name: KafkaEndpointExternalAccessesStatus
 type KafkaEndpointExternalAccessesStatusResponse struct {
 	// Назначить внешние адреса для кластера Kafka.

@@ -11,7 +11,7 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	clienterrors "go.mws.cloud/go-sdk/internal/client/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/client"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
@@ -45,7 +45,7 @@ func decodeListGlobalRoleV2Response(resp *http.Response) (*client.ListGlobalRole
 		case "application/json":
 			result := &client.ListGlobalRoleV2Response{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -62,7 +62,7 @@ func decodeListGlobalRoleV2Response(resp *http.Response) (*client.ListGlobalRole
 		case "application/json":
 			result := &client.ListGlobalRoleV2Response{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -79,7 +79,7 @@ func decodeListGlobalRoleV2Response(resp *http.Response) (*client.ListGlobalRole
 		case "application/json":
 			result := &client.ListGlobalRoleV2Response{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -126,7 +126,7 @@ func decodeGetGlobalRoleV2Response(resp *http.Response) (*client.GetGlobalRoleV2
 		case "application/json":
 			result := &client.GetGlobalRoleV2Response{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -143,7 +143,7 @@ func decodeGetGlobalRoleV2Response(resp *http.Response) (*client.GetGlobalRoleV2
 		case "application/json":
 			result := &client.GetGlobalRoleV2Response{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -160,7 +160,7 @@ func decodeGetGlobalRoleV2Response(resp *http.Response) (*client.GetGlobalRoleV2
 		case "application/json":
 			result := &client.GetGlobalRoleV2Response{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -177,7 +177,7 @@ func decodeGetGlobalRoleV2Response(resp *http.Response) (*client.GetGlobalRoleV2
 		case "application/json":
 			result := &client.GetGlobalRoleV2Response{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

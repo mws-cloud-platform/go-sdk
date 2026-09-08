@@ -113,6 +113,25 @@ func (m *SecretmanagerProjectID) Clone() *SecretmanagerProjectID {
 	return &clone
 }
 
+func (m *SecretmanagerProjectID) AsRef() *SecretmanagerProjectRef {
+	if m == nil {
+		return nil
+	}
+	return &SecretmanagerProjectRef{
+		id: *m,
+	}
+}
+
+func (m *SecretmanagerProjectID) Equal(other *SecretmanagerProjectID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m SecretmanagerProjectID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *SecretmanagerProjectRef) Clone() *SecretmanagerProjectRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *SecretmanagerProjectRef) Equal(other *SecretmanagerProjectRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m SecretmanagerProjectRef) MarshalJSON() ([]byte, error) {

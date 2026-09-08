@@ -7,7 +7,7 @@ import (
 
 	"go.mws.cloud/go-sdk/pkg/optional"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: AuthorizedKey
@@ -101,7 +101,7 @@ func (m *AuthorizedKeyOptionalResponse) Clone() *AuthorizedKeyOptionalResponse {
 // Представление поля Metadata анонимного типа структуры AuthorizedKey
 // Real OAPI model name: AuthorizedKeyMetadata
 type AuthorizedKeyMetadataOptionalResponse struct {
-	common.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
 	// ID свойства
 	Id *resmodels.AnyResourceID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -176,14 +176,14 @@ func (m *AuthorizedKeyMetadataOptionalResponse) GetPurgeTimeOr(val time.Time) ti
 	return val
 }
 
-func (m *AuthorizedKeyMetadataOptionalResponse) GetUsages() []common.TypedUsageOptionalResponse {
+func (m *AuthorizedKeyMetadataOptionalResponse) GetUsages() []commonmodel.TypedUsageOptionalResponse {
 	if m != nil && m.Usages.IsSet() {
 		return m.TypedResourceMetadataOptionalResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *AuthorizedKeyMetadataOptionalResponse) GetUsagesOr(val []common.TypedUsageOptionalResponse) []common.TypedUsageOptionalResponse {
+func (m *AuthorizedKeyMetadataOptionalResponse) GetUsagesOr(val []commonmodel.TypedUsageOptionalResponse) []commonmodel.TypedUsageOptionalResponse {
 	if m != nil {
 		return m.TypedResourceMetadataOptionalResponse.GetUsagesOr(val)
 	}

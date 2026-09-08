@@ -26,7 +26,7 @@ func (x *ClickhouseClusterSugared) Impl() ClickhouseCluster {
 	return x.impl
 }
 
-// ListClickhouseClusters list Clickhouse clusters.
+// ListClickhouseClusters возвращает постраничный список кластеров ClickHouse в указанном проекте.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/clusters
 func (x *ClickhouseClusterSugared) ListClickhouseClusters(ctx context.Context, request ListClickhouseClustersRequest) (*model.ClickhouseClusterPageOptionalResponse, error) {
@@ -50,7 +50,7 @@ func (x *ClickhouseClusterSugared) respHandlerListClickhouseClusters(resp *ListC
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// StopCluster request stopping Clickhouse cluster.
+// StopCluster позволяет остановить кластер ClickHouse.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}:stop
 func (x *ClickhouseClusterSugared) StopCluster(ctx context.Context, request StopClusterRequest) (*model.ClickhouseClusterOptionalResponse, error) {
@@ -74,7 +74,7 @@ func (x *ClickhouseClusterSugared) respHandlerStopCluster(resp *StopClusterRespo
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// StartCluster request starting Clickhouse cluster.
+// StartCluster позволяет запустить кластер ClickHouse.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}:start
 func (x *ClickhouseClusterSugared) StartCluster(ctx context.Context, request StartClusterRequest) (*model.ClickhouseClusterOptionalResponse, error) {
@@ -98,7 +98,7 @@ func (x *ClickhouseClusterSugared) respHandlerStartCluster(resp *StartClusterRes
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// DeleteClickhouseCluster delete Clickhouse cluster.
+// DeleteClickhouseCluster удаляет указанный кластер ClickHouse.
 //
 // Путь: DELETE /mclickhouse/v1/projects/{project}/clusters/{cluster}
 func (x *ClickhouseClusterSugared) DeleteClickhouseCluster(ctx context.Context, request DeleteClickhouseClusterRequest, opts ...Option) error {
@@ -146,7 +146,7 @@ func (x *ClickhouseClusterSugared) waitDeleteClickhouseCluster(ctx context.Conte
 	return err
 }
 
-// GetClickhouseCluster returns info about the specified cluster.
+// GetClickhouseCluster возвращает информацию об указанном кластере ClickHouse.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}
 func (x *ClickhouseClusterSugared) GetClickhouseCluster(ctx context.Context, request GetClickhouseClusterRequest, opts ...Option) (*model.ClickhouseClusterOptionalResponse, error) {
@@ -191,7 +191,7 @@ func (x *ClickhouseClusterSugared) waitGetClickhouseCluster(ctx context.Context,
 	return waiter.Wait(ctx)
 }
 
-// UpsertClickhouseCluster upsert Clickhouse cluster.
+// UpsertClickhouseCluster создаёт новый кластер ClickHouse или изменяет существующий (upsert).
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}
 func (x *ClickhouseClusterSugared) UpsertClickhouseCluster(ctx context.Context, request UpsertClickhouseClusterRequest, opts ...Option) (*model.ClickhouseClusterOptionalResponse, error) {
@@ -236,7 +236,7 @@ func (x *ClickhouseClusterSugared) waitUpsertClickhouseCluster(ctx context.Conte
 	return waiter.Wait(ctx)
 }
 
-// CreateClickhouseCluster upsert Clickhouse cluster.
+// CreateClickhouseCluster создаёт новый кластер ClickHouse или изменяет существующий (upsert).
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}?createOnly=true
@@ -260,7 +260,7 @@ func (x *ClickhouseClusterSugared) CreateClickhouseCluster(ctx context.Context, 
 	return x.waitUpsertClickhouseCluster(ctx, request.getClickhouseClusterRequest(), config.waitOptions...)
 }
 
-// UpdateClickhouseCluster upsert Clickhouse cluster.
+// UpdateClickhouseCluster создаёт новый кластер ClickHouse или изменяет существующий (upsert).
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}?updateOnly=true

@@ -157,6 +157,25 @@ func (m *KafkaTopicID) Clone() *KafkaTopicID {
 	return &clone
 }
 
+func (m *KafkaTopicID) AsRef() *KafkaTopicRef {
+	if m == nil {
+		return nil
+	}
+	return &KafkaTopicRef{
+		id: *m,
+	}
+}
+
+func (m *KafkaTopicID) Equal(other *KafkaTopicID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.topic == other.topic && m.cluster == other.cluster && m.project == other.project
+}
+
 func (m KafkaTopicID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *KafkaTopicRef) Clone() *KafkaTopicRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *KafkaTopicRef) Equal(other *KafkaTopicRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.topic == other.id.topic && m.id.cluster == other.id.cluster && m.id.project == other.id.project
 }
 
 func (m KafkaTopicRef) MarshalJSON() ([]byte, error) {

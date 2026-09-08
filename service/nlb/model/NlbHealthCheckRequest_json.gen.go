@@ -38,8 +38,10 @@ func (m *NlbHealthCheckRequest) encodeFields(e *jx.Encoder) error {
 		return err
 	}
 
-	e.FieldStart("interval")
-	m.Interval.Encode(e)
+	if m.Interval != nil {
+		e.FieldStart("interval")
+		m.Interval.Encode(e)
+	}
 
 	e.FieldStart("timeout")
 	m.Timeout.Encode(e)
@@ -67,7 +69,6 @@ func (m *NlbHealthCheckRequest) Decode(d *jx.Decoder) error {
 
 	requiredFilled := map[string]bool{
 		"protocol": false,
-		"interval": false,
 		"timeout":  false,
 	}
 	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
@@ -87,8 +88,7 @@ func (m *NlbHealthCheckRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Interval = v
-			requiredFilled["interval"] = true
+			m.Interval = &v
 			return nil
 		case "timeout":
 			var v duration.Duration

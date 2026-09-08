@@ -6,7 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Кластер Managed ClickHouse — это группа узлов (виртуальных машин), объединенных для высокоскоростной обработки и хранения данных с помощью СУБД ClickHouse.
@@ -72,7 +72,7 @@ func (m *ClickhouseClusterRequest) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры ClickhouseCluster
 // Real OAPI model name: ClickhouseClusterMetadata
 type ClickhouseClusterMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *ClickhouseClusterMetadataRequest) GetDisplayName() *string {
@@ -89,14 +89,14 @@ func (m *ClickhouseClusterMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *ClickhouseClusterMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *ClickhouseClusterMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *ClickhouseClusterMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *ClickhouseClusterMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

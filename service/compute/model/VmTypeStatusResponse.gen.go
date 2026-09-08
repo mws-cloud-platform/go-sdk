@@ -3,20 +3,20 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Статус типа ВМ.
 // Real OAPI model name: VmTypeStatus
 type VmTypeStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 }
 
-func (m *VmTypeStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *VmTypeStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *VmTypeStatusResponse) Clone() *VmTypeStatusResponse {

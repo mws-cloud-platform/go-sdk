@@ -153,6 +153,8 @@ func (c *ServiceAccount) deleteServiceAccountInvoker(ctx context.Context, anyReq
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteServiceAccount(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteServiceAccount(httpReq, request)
 
@@ -179,8 +181,22 @@ func (c *ServiceAccount) deleteServiceAccountInvoker(ctx context.Context, anyReq
 	return nil
 }
 
+func (c *ServiceAccount) queryDeleteServiceAccount(request *client.DeleteServiceAccountRequest) string {
+	q := make(url.Values)
+	if request.IfExist != nil {
+		q.Add("ifExist", conv.BoolToString(*request.IfExist))
+	}
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
+}
+
 func (c *ServiceAccount) headerDeleteServiceAccount(req *http.Request, request *client.DeleteServiceAccountRequest) {
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	if request.IdempotencyKey != nil {
+		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
+	}
 }
 
 // GetServiceAccount позволяет получить информацию о сервисном аккаунте.
@@ -338,11 +354,17 @@ func (c *ServiceAccount) upsertServiceAccountInvoker(ctx context.Context, anyReq
 
 func (c *ServiceAccount) queryUpsertServiceAccount(request *client.UpsertServiceAccountRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
 func (c *ServiceAccount) headerUpsertServiceAccount(req *http.Request, request *client.UpsertServiceAccountRequest) {
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	if request.IdempotencyKey != nil {
+		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
+	}
 }
 
 // CreateServiceAccount позволяет создать или обновить сервисный аккаунт.
@@ -427,11 +449,17 @@ func (c *ServiceAccount) createServiceAccountInvoker(ctx context.Context, anyReq
 func (c *ServiceAccount) queryCreateServiceAccount(request *client.UpsertServiceAccountRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
 func (c *ServiceAccount) headerCreateServiceAccount(req *http.Request, request *client.UpsertServiceAccountRequest) {
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	if request.IdempotencyKey != nil {
+		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
+	}
 }
 
 // UpdateServiceAccount позволяет создать или обновить сервисный аккаунт.
@@ -516,9 +544,15 @@ func (c *ServiceAccount) updateServiceAccountInvoker(ctx context.Context, anyReq
 func (c *ServiceAccount) queryUpdateServiceAccount(request *client.UpdateServiceAccountRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
 func (c *ServiceAccount) headerUpdateServiceAccount(req *http.Request, request *client.UpdateServiceAccountRequest) {
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	if request.IdempotencyKey != nil {
+		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
+	}
 }

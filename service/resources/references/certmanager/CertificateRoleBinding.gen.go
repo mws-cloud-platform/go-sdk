@@ -157,6 +157,25 @@ func (m *CertificateRoleBindingID) Clone() *CertificateRoleBindingID {
 	return &clone
 }
 
+func (m *CertificateRoleBindingID) AsRef() *CertificateRoleBindingRef {
+	if m == nil {
+		return nil
+	}
+	return &CertificateRoleBindingRef{
+		id: *m,
+	}
+}
+
+func (m *CertificateRoleBindingID) Equal(other *CertificateRoleBindingID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.roleBinding == other.roleBinding && m.name == other.name && m.project == other.project
+}
+
 func (m CertificateRoleBindingID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *CertificateRoleBindingRef) Clone() *CertificateRoleBindingRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *CertificateRoleBindingRef) Equal(other *CertificateRoleBindingRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.roleBinding == other.id.roleBinding && m.id.name == other.id.name && m.id.project == other.id.project
 }
 
 func (m CertificateRoleBindingRef) MarshalJSON() ([]byte, error) {

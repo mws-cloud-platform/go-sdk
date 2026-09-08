@@ -11,7 +11,7 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	clienterrors "go.mws.cloud/go-sdk/internal/client/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mclickhouse/client"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
@@ -49,7 +49,7 @@ func decodeListClickhouseClustersResponse(resp *http.Response) (*client.ListClic
 		case "application/json":
 			result := &client.ListClickhouseClustersResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -66,7 +66,7 @@ func decodeListClickhouseClustersResponse(resp *http.Response) (*client.ListClic
 		case "application/json":
 			result := &client.ListClickhouseClustersResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -83,7 +83,7 @@ func decodeListClickhouseClustersResponse(resp *http.Response) (*client.ListClic
 		case "application/json":
 			result := &client.ListClickhouseClustersResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -134,7 +134,7 @@ func decodeStopClusterResponse(resp *http.Response) (*client.StopClusterResponse
 		case "application/json":
 			result := &client.StopClusterResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -151,7 +151,7 @@ func decodeStopClusterResponse(resp *http.Response) (*client.StopClusterResponse
 		case "application/json":
 			result := &client.StopClusterResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -168,7 +168,7 @@ func decodeStopClusterResponse(resp *http.Response) (*client.StopClusterResponse
 		case "application/json":
 			result := &client.StopClusterResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -185,7 +185,7 @@ func decodeStopClusterResponse(resp *http.Response) (*client.StopClusterResponse
 		case "application/json":
 			result := &client.StopClusterResponse{
 				Code:        resp.StatusCode,
-				Response409: &common.ApiError{},
+				Response409: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response409); err != nil {
@@ -202,7 +202,7 @@ func decodeStopClusterResponse(resp *http.Response) (*client.StopClusterResponse
 		case "application/json":
 			result := &client.StopClusterResponse{
 				Code:        resp.StatusCode,
-				Response412: &common.ApiError{},
+				Response412: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response412); err != nil {
@@ -219,7 +219,7 @@ func decodeStopClusterResponse(resp *http.Response) (*client.StopClusterResponse
 		case "application/json":
 			result := &client.StopClusterResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -270,7 +270,7 @@ func decodeStartClusterResponse(resp *http.Response) (*client.StartClusterRespon
 		case "application/json":
 			result := &client.StartClusterResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -287,7 +287,7 @@ func decodeStartClusterResponse(resp *http.Response) (*client.StartClusterRespon
 		case "application/json":
 			result := &client.StartClusterResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -304,7 +304,7 @@ func decodeStartClusterResponse(resp *http.Response) (*client.StartClusterRespon
 		case "application/json":
 			result := &client.StartClusterResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -321,7 +321,7 @@ func decodeStartClusterResponse(resp *http.Response) (*client.StartClusterRespon
 		case "application/json":
 			result := &client.StartClusterResponse{
 				Code:        resp.StatusCode,
-				Response409: &common.ApiError{},
+				Response409: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response409); err != nil {
@@ -338,7 +338,7 @@ func decodeStartClusterResponse(resp *http.Response) (*client.StartClusterRespon
 		case "application/json":
 			result := &client.StartClusterResponse{
 				Code:        resp.StatusCode,
-				Response412: &common.ApiError{},
+				Response412: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response412); err != nil {
@@ -355,7 +355,7 @@ func decodeStartClusterResponse(resp *http.Response) (*client.StartClusterRespon
 		case "application/json":
 			result := &client.StartClusterResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -392,7 +392,7 @@ func decodeDeleteClickhouseClusterResponse(resp *http.Response) (*client.DeleteC
 		case "application/json":
 			result := &client.DeleteClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -409,7 +409,7 @@ func decodeDeleteClickhouseClusterResponse(resp *http.Response) (*client.DeleteC
 		case "application/json":
 			result := &client.DeleteClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -426,7 +426,7 @@ func decodeDeleteClickhouseClusterResponse(resp *http.Response) (*client.DeleteC
 		case "application/json":
 			result := &client.DeleteClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -443,7 +443,7 @@ func decodeDeleteClickhouseClusterResponse(resp *http.Response) (*client.DeleteC
 		case "application/json":
 			result := &client.DeleteClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response412: &common.ApiError{},
+				Response412: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response412); err != nil {
@@ -460,7 +460,7 @@ func decodeDeleteClickhouseClusterResponse(resp *http.Response) (*client.DeleteC
 		case "application/json":
 			result := &client.DeleteClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -511,7 +511,7 @@ func decodeGetClickhouseClusterResponse(resp *http.Response) (*client.GetClickho
 		case "application/json":
 			result := &client.GetClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -528,7 +528,7 @@ func decodeGetClickhouseClusterResponse(resp *http.Response) (*client.GetClickho
 		case "application/json":
 			result := &client.GetClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -545,7 +545,7 @@ func decodeGetClickhouseClusterResponse(resp *http.Response) (*client.GetClickho
 		case "application/json":
 			result := &client.GetClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -562,7 +562,7 @@ func decodeGetClickhouseClusterResponse(resp *http.Response) (*client.GetClickho
 		case "application/json":
 			result := &client.GetClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -613,7 +613,7 @@ func decodeUpsertClickhouseClusterResponse(resp *http.Response) (*client.UpsertC
 		case "application/json":
 			result := &client.UpsertClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -630,7 +630,7 @@ func decodeUpsertClickhouseClusterResponse(resp *http.Response) (*client.UpsertC
 		case "application/json":
 			result := &client.UpsertClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -647,7 +647,7 @@ func decodeUpsertClickhouseClusterResponse(resp *http.Response) (*client.UpsertC
 		case "application/json":
 			result := &client.UpsertClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -664,7 +664,7 @@ func decodeUpsertClickhouseClusterResponse(resp *http.Response) (*client.UpsertC
 		case "application/json":
 			result := &client.UpsertClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response409: &common.ApiError{},
+				Response409: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response409); err != nil {
@@ -681,7 +681,7 @@ func decodeUpsertClickhouseClusterResponse(resp *http.Response) (*client.UpsertC
 		case "application/json":
 			result := &client.UpsertClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response412: &common.ApiError{},
+				Response412: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response412); err != nil {
@@ -698,7 +698,7 @@ func decodeUpsertClickhouseClusterResponse(resp *http.Response) (*client.UpsertC
 		case "application/json":
 			result := &client.UpsertClickhouseClusterResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

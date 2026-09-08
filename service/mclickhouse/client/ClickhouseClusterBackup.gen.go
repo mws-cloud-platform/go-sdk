@@ -6,33 +6,33 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
 
 type ClickhouseClusterBackup interface {
-	// ListClickhouseClusterBackups list Clickhouse cluster backups.
+	// ListClickhouseClusterBackups возвращает постраничный список резервных копий указанного кластера ClickHouse.
 	//
 	// Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups
 	ListClickhouseClusterBackups(context.Context, ListClickhouseClusterBackupsRequest) (*ListClickhouseClusterBackupsResponse, error)
-	// DeleteClickhouseClusterBackup delete Clickhouse cluster backup.
+	// DeleteClickhouseClusterBackup удаляет указанную резервную копию кластера ClickHouse.
 	//
 	// Путь: DELETE /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}
 	DeleteClickhouseClusterBackup(context.Context, DeleteClickhouseClusterBackupRequest) (*DeleteClickhouseClusterBackupResponse, error)
-	// GetClickhouseClusterBackup returns info about the specified cluster backup.
+	// GetClickhouseClusterBackup возвращает информацию об указанной резервной копии кластера ClickHouse.
 	//
 	// Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}
 	GetClickhouseClusterBackup(context.Context, GetClickhouseClusterBackupRequest) (*GetClickhouseClusterBackupResponse, error)
-	// UpsertClickhouseClusterBackup upsert Clickhouse cluster backup.
+	// UpsertClickhouseClusterBackup создаёт новую резервную копию кластера ClickHouse.
 	//
 	// Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}
 	UpsertClickhouseClusterBackup(context.Context, UpsertClickhouseClusterBackupRequest) (*UpsertClickhouseClusterBackupResponse, error)
-	// CreateClickhouseClusterBackup upsert Clickhouse cluster backup.
+	// CreateClickhouseClusterBackup создаёт новую резервную копию кластера ClickHouse.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}?createOnly=true
 	CreateClickhouseClusterBackup(context.Context, UpsertClickhouseClusterBackupRequest) (*UpsertClickhouseClusterBackupResponse, error)
-	// UpdateClickhouseClusterBackup upsert Clickhouse cluster backup.
+	// UpdateClickhouseClusterBackup создаёт новую резервную копию кластера ClickHouse.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}?updateOnly=true
@@ -83,10 +83,10 @@ func (m ListClickhouseClusterBackupsRequest) WithPageToken(token *string) ListCl
 type ListClickhouseClusterBackupsResponse struct {
 	Code        int
 	Response200 *model.ClickhouseBackupPageOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -161,10 +161,10 @@ func (m *DeleteClickhouseClusterBackupRequest) getClickhouseClusterBackupRequest
 type DeleteClickhouseClusterBackupResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -226,10 +226,10 @@ func (m *GetClickhouseClusterBackupRequest) SetProject(project string) {
 type GetClickhouseClusterBackupResponse struct {
 	Code        int
 	Response200 *model.ClickhouseBackupOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -276,7 +276,7 @@ type UpsertClickhouseClusterBackupRequest struct {
 	Cluster string // path: "cluster"
 	// Имя резервной копии.
 	Backup string // path: "backup"
-	// Create Clickhouse cluster backup
+	// Данные для создания резервной копии кластера ClickHouse
 	Body model.ClickhouseBackupRequest // body
 }
 
@@ -312,7 +312,7 @@ type UpdateClickhouseClusterBackupRequest struct {
 	Cluster string // path: "cluster"
 	// Имя резервной копии.
 	Backup string // path: "backup"
-	// Create Clickhouse cluster backup
+	// Данные для создания резервной копии кластера ClickHouse
 	Body model.UpdateClickhouseBackupRequest // body
 }
 
@@ -340,12 +340,12 @@ func (m *UpdateClickhouseClusterBackupRequest) getClickhouseClusterBackupRequest
 type UpsertClickhouseClusterBackupResponse struct {
 	Code        int
 	Response200 *model.ClickhouseBackupOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

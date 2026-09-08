@@ -168,6 +168,25 @@ func (m *PostgresRoleBindingID) Clone() *PostgresRoleBindingID {
 	return &clone
 }
 
+func (m *PostgresRoleBindingID) AsRef() *PostgresRoleBindingRef {
+	if m == nil {
+		return nil
+	}
+	return &PostgresRoleBindingRef{
+		id: *m,
+	}
+}
+
+func (m *PostgresRoleBindingID) Equal(other *PostgresRoleBindingID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.roleBinding == other.roleBinding && m.cluster == other.cluster && m.project == other.project
+}
+
 func (m PostgresRoleBindingID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -340,6 +359,16 @@ func (m *PostgresRoleBindingRef) Clone() *PostgresRoleBindingRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *PostgresRoleBindingRef) Equal(other *PostgresRoleBindingRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.roleBinding == other.id.roleBinding && m.id.cluster == other.id.cluster && m.id.project == other.id.project
 }
 
 func (m PostgresRoleBindingRef) MarshalJSON() ([]byte, error) {

@@ -17,7 +17,7 @@ type UpdateKafkaEndpointExternalAddressSpecOrRefRequest struct {
 	// Идентификатор существующего внешнего адреса.
 	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
 	// Спецификация нового внешнего адреса. Адрес будет выделен в ходе реконсиляции кластера.
-	Spec optional.OptionalNil[UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest] `json:"spec" yaml:"spec"`
+	Spec optional.OptionalNil[UpdateKafkaEndpointExternalAddressSpecRequest] `json:"spec" yaml:"spec"`
 }
 
 func (m *KafkaEndpointExternalAddressSpecOrRefRequest) AsUpdateModel() UpdateKafkaEndpointExternalAddressSpecOrRefRequest {
@@ -52,7 +52,7 @@ func (m *KafkaEndpointExternalAddressSpecOrRefRequest) WithChanges(u UpdateKafka
 		out.Ref = ptr.Get(u.Ref.Value)
 	}
 	if u.Spec.IsSet() {
-		out.Spec = ptr.Get(KafkaEndpointExternalAddressSpecOrRefSpecRequest(u.Spec.Value))
+		out.Spec = ptr.Get(KafkaEndpointExternalAddressSpecRequest(u.Spec.Value))
 	} else if u.Spec.IsNull() {
 		out.Spec = nil
 	}
@@ -84,43 +84,12 @@ func (m *KafkaEndpointExternalAddressSpecOrRefRequest) diffRef(src *KafkaEndpoin
 	return commonclient.DiffPrimitiveNonRequired(src.GetRef(), m.GetRef(), nilDiffers)
 }
 
-func (m *KafkaEndpointExternalAddressSpecOrRefRequest) diffSpec(src *KafkaEndpointExternalAddressSpecOrRefRequest) optional.OptionalNil[UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest] {
+func (m *KafkaEndpointExternalAddressSpecOrRefRequest) diffSpec(src *KafkaEndpointExternalAddressSpecOrRefRequest) optional.OptionalNil[UpdateKafkaEndpointExternalAddressSpecRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetSpec().Diff(src.GetSpec())
-	return optional.OptionalNil[UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest]{
+	return optional.OptionalNil[UpdateKafkaEndpointExternalAddressSpecRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,
 	}
-}
-
-type UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest struct {
-}
-
-func (m *KafkaEndpointExternalAddressSpecOrRefSpecRequest) AsUpdateModel() UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest {
-	var u UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest
-	return u
-}
-
-// Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *KafkaEndpointExternalAddressSpecOrRefSpecRequest) Diff(src *KafkaEndpointExternalAddressSpecOrRefSpecRequest) UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest {
-	nilDiffers := src != nil && m == nil
-	upd := UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest{}
-	if !nilDiffers {
-	}
-	return upd
-}
-
-func (m *KafkaEndpointExternalAddressSpecOrRefSpecRequest) WithChanges(u UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest) KafkaEndpointExternalAddressSpecOrRefSpecRequest {
-	var out KafkaEndpointExternalAddressSpecOrRefSpecRequest
-	if m != nil {
-		out = *m
-	}
-
-	return out
-}
-
-// HasChanges returns true if any field has Set == true
-func (m UpdateKafkaEndpointExternalAddressSpecOrRefSpecRequest) HasChanges() bool {
-	return false
 }

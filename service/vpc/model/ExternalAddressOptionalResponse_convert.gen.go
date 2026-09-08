@@ -4,7 +4,7 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func ExternalAddressRequestToOptionalResponse(request *ExternalAddressRequest) (*ExternalAddressOptionalResponse, error) {
@@ -13,7 +13,7 @@ func ExternalAddressRequestToOptionalResponse(request *ExternalAddressRequest) (
 	}
 	var response ExternalAddressOptionalResponse
 	if request.Metadata != nil {
-		tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
+		tmpMetadata, err := commonmodel.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
 		if err != nil {
 			return nil, err
 		}

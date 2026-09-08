@@ -7,7 +7,7 @@ import (
 	"time"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
@@ -19,7 +19,7 @@ type ZoneResponse struct {
 	// Спецификация зоны доступности
 	Spec ZoneSpecResponse `json:"spec" yaml:"spec"`
 	// Текущее состояние ресурса, вычисляемое системой.
-	Status *common.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
+	Status *commonmodel.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *ZoneResponse) GetKind() *string {
@@ -69,18 +69,18 @@ func (m *ZoneResponse) SetSpec(val ZoneSpecResponse) {
 	m.Spec = val
 }
 
-func (m *ZoneResponse) GetStatus() *common.ResourceStatusResponse {
+func (m *ZoneResponse) GetStatus() *commonmodel.ResourceStatusResponse {
 	if m != nil {
 		return m.Status
 	}
 	return nil
 }
 
-func (m *ZoneResponse) SetStatus(val *common.ResourceStatusResponse) {
+func (m *ZoneResponse) SetStatus(val *commonmodel.ResourceStatusResponse) {
 	m.Status = val
 }
 
-func (m *ZoneResponse) GetStatusOr(val common.ResourceStatusResponse) common.ResourceStatusResponse {
+func (m *ZoneResponse) GetStatusOr(val commonmodel.ResourceStatusResponse) commonmodel.ResourceStatusResponse {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
@@ -122,7 +122,7 @@ func (m *ZoneResponse) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры Zone
 // Real OAPI model name: ZoneMetadata
 type ZoneMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// ID свойства
 	Id *rm.ZoneRef `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -197,14 +197,14 @@ func (m *ZoneMetadataResponse) GetPurgeTimeOr(val time.Time) time.Time {
 	return val
 }
 
-func (m *ZoneMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *ZoneMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *ZoneMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *ZoneMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}

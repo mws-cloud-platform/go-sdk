@@ -12,7 +12,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/encode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
@@ -218,7 +218,7 @@ func (m *ClickhouseClusterResourceResponse) Decode(d *jx.Decoder) error {
 			m.Storage = &v
 			return nil
 		case "maintenanceWindow":
-			var v common.MaintenanceWindowResponse
+			var v commonmodel.MaintenanceWindowResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

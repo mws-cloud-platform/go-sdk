@@ -189,11 +189,6 @@ func (m *CryptoKeySpecDestructionPolicyOptionalResponse) encodeFields(e *jx.Enco
 		e.FieldStart("defaultDestructionIntervalDays")
 		e.Int32(m.DefaultDestructionIntervalDays.Value)
 	}
-
-	if m.ScheduledDestructionTime != nil {
-		e.FieldStart("scheduledDestructionTime")
-		conv.EncodeDateTimeUTC(e, *m.ScheduledDestructionTime)
-	}
 	return nil
 }
 
@@ -215,14 +210,6 @@ func (m *CryptoKeySpecDestructionPolicyOptionalResponse) Decode(d *jx.Decoder) e
 			}
 
 			m.DefaultDestructionIntervalDays.SetTo(v)
-			return nil
-		case "scheduledDestructionTime":
-			v, err := decode.DateTime(d)
-			if err != nil {
-				return err
-			}
-
-			m.ScheduledDestructionTime = &v
 			return nil
 		default:
 			return d.Skip()

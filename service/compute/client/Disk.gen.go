@@ -12,7 +12,7 @@ import (
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
 
@@ -85,8 +85,8 @@ func (m ListDisksRequest) WithPageToken(token *string) ListDisksRequest {
 type ListDisksResponse struct {
 	Code        int
 	Response200 *ListDisksResponse200
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -120,7 +120,7 @@ func (m *ListDisksResponse) SetErrorWrapper(f func(err error) error) {
 type ListDisksResponse200 struct {
 	Items []model.DiskOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken optional.Optional[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.Optional[commonmodel.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ListDisksResponse200) GetItems() []model.DiskOptionalResponse {
@@ -134,14 +134,14 @@ func (m *ListDisksResponse200) SetItems(val []model.DiskOptionalResponse) {
 	m.Items = val
 }
 
-func (m *ListDisksResponse200) GetNextPageToken() *common.NextPageToken {
+func (m *ListDisksResponse200) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return &m.NextPageToken.Value
 	}
 	return nil
 }
 
-func (m *ListDisksResponse200) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ListDisksResponse200) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() {
 		return m.NextPageToken.Value
 	}
@@ -244,7 +244,7 @@ func (m *ListDisksResponse200) Decode(d *jx.Decoder) error {
 			m.Items = c
 			return nil
 		case "nextPageToken":
-			var v common.NextPageToken
+			var v commonmodel.NextPageToken
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -295,10 +295,10 @@ func (m *DeleteDiskRequest) getDiskRequest() GetDiskRequest {
 type DeleteDiskResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -360,10 +360,10 @@ func (m *GetDiskRequest) SetProject(project string) {
 type GetDiskResponse struct {
 	Code        int
 	Response200 *model.DiskOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -472,10 +472,10 @@ func (m *UpdateDiskRequest) getDiskRequest() GetDiskRequest {
 type UpsertDiskResponse struct {
 	Code        int
 	Response200 *model.DiskOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response409 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

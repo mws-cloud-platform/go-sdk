@@ -6,7 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Ключ — ресурс облака, который объединяет несколько экземпляров криптографических ключей, называемых версиями ключа
@@ -14,9 +14,9 @@ import (
 type CryptoKeyOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata common.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
-	Spec     CryptoKeySpecOptionalResponse                      `json:"spec" yaml:"spec"`
-	Status   CryptoKeyStatusResponse                            `json:"status" yaml:"status"`
+	Metadata commonmodel.CommonTypedResourceMetadataOptionalResponse `json:"metadata" yaml:"metadata"`
+	Spec     CryptoKeySpecOptionalResponse                           `json:"spec" yaml:"spec"`
+	Status   CryptoKeyStatusResponse                                 `json:"status" yaml:"status"`
 }
 
 func (m *CryptoKeyOptionalResponse) GetKind() string {
@@ -30,14 +30,14 @@ func (m *CryptoKeyOptionalResponse) SetKind(val string) {
 	m.Kind = val
 }
 
-func (m *CryptoKeyOptionalResponse) GetMetadata() common.CommonTypedResourceMetadataOptionalResponse {
+func (m *CryptoKeyOptionalResponse) GetMetadata() commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil {
 		return m.Metadata
 	}
-	return common.CommonTypedResourceMetadataOptionalResponse{}
+	return commonmodel.CommonTypedResourceMetadataOptionalResponse{}
 }
 
-func (m *CryptoKeyOptionalResponse) SetMetadata(val common.CommonTypedResourceMetadataOptionalResponse) {
+func (m *CryptoKeyOptionalResponse) SetMetadata(val commonmodel.CommonTypedResourceMetadataOptionalResponse) {
 	m.Metadata = val
 }
 

@@ -16,7 +16,7 @@ type ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse struct {
 	// Ссылка на внешний адрес эндпоинта в VPC.
 	Ref optional.Optional[vpc.ExternalAddressRef] `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// Описание шаблона внешнего адреса, который будет использоваться при выделении адресов.
-	Spec optional.OptionalNil[ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec optional.OptionalNil[ClickhouseEndpointExternalAddressSpecOptionalResponse] `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) GetRef() *vpc.ExternalAddressRef {
@@ -33,14 +33,14 @@ func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) GetRefOr(va
 	return val
 }
 
-func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) GetSpec() *ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse {
+func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) GetSpec() *ClickhouseEndpointExternalAddressSpecOptionalResponse {
 	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return &m.Spec.Value
 	}
 	return nil
 }
 
-func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) GetSpecOr(val ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse) ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse {
+func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) GetSpecOr(val ClickhouseEndpointExternalAddressSpecOptionalResponse) ClickhouseEndpointExternalAddressSpecOptionalResponse {
 	if m != nil && m.Spec.IsSet() && !m.Spec.IsNull() {
 		return m.Spec.Value
 	}
@@ -74,18 +74,4 @@ func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) Parse(ctx c
 	}
 
 	return nil
-}
-
-// Представление поля Spec анонимного типа структуры ClickhouseEndpointExternalAddressSpecOrRef
-// Real OAPI model name: ClickhouseEndpointExternalAddressSpecOrRefSpec
-type ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse struct {
-}
-
-func (m *ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse) Clone() *ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
-	return &clone
 }

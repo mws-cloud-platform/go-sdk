@@ -6,7 +6,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
-// Добавление пользователей при создании кластера Clickhouse.
+// Добавление пользователей при создании кластера ClickHouse.
 // Real OAPI model name: ClickhouseClusterBootstrapAdminSpec
 type ClickhouseClusterBootstrapAdminSpecRequest struct {
 	// Имя учетной записи администратора.

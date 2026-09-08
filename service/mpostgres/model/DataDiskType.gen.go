@@ -8,7 +8,9 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
 
-// Тип диска.
+// Тип используемого диска:
+// * `NETWORK_STANDARD_SSD` — сетевой SSD
+// * `LOCAL` — локальный SSD
 type DataDiskType string
 
 const (

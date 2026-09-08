@@ -6,12 +6,12 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateFirewallRuleRequest struct {
 	// Метаданные правила файрвола.
-	Metadata optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
+	Metadata optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] `json:"metadata" yaml:"metadata"`
 	// Спецификация правила файрвола.
 	Spec optional.Optional[UpdateFirewallRuleSpecRequest] `json:"spec" yaml:"spec"`
 }
@@ -59,10 +59,10 @@ func (m UpdateFirewallRuleRequest) HasChanges() bool {
 		m.Spec.Set
 }
 
-func (m *FirewallRuleRequest) diffMetadata(src *FirewallRuleRequest) optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest] {
+func (m *FirewallRuleRequest) diffMetadata(src *FirewallRuleRequest) optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest] {
 	nilDiffers := src != nil && m == nil
 	value := m.GetMetadata().Diff(src.GetMetadata())
-	return optional.OptionalNil[common.UpdateCommonTypedResourceMetadataRequest]{
+	return optional.OptionalNil[commonmodel.UpdateCommonTypedResourceMetadataRequest]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,

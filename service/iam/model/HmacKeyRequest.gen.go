@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // HMAC-ключ (англ. Hash-based Message Authentication Code) — это статический ключ, необходимый для аутентификации сервисного аккаунта в AWS-совместимом API
@@ -56,7 +56,7 @@ func (m *HmacKeyRequest) Clone() *HmacKeyRequest {
 // Представление поля Metadata анонимного типа структуры HmacKey
 // Real OAPI model name: HmacKeyMetadata
 type HmacKeyMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *HmacKeyMetadataRequest) GetDisplayName() *string {
@@ -73,14 +73,14 @@ func (m *HmacKeyMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *HmacKeyMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *HmacKeyMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *HmacKeyMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *HmacKeyMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

@@ -168,6 +168,25 @@ func (m *PostgresBackupID) Clone() *PostgresBackupID {
 	return &clone
 }
 
+func (m *PostgresBackupID) AsRef() *PostgresBackupRef {
+	if m == nil {
+		return nil
+	}
+	return &PostgresBackupRef{
+		id: *m,
+	}
+}
+
+func (m *PostgresBackupID) Equal(other *PostgresBackupID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.backup == other.backup && m.cluster == other.cluster && m.project == other.project
+}
+
 func (m PostgresBackupID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -340,6 +359,16 @@ func (m *PostgresBackupRef) Clone() *PostgresBackupRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *PostgresBackupRef) Equal(other *PostgresBackupRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.backup == other.id.backup && m.id.cluster == other.id.cluster && m.id.project == other.id.project
 }
 
 func (m PostgresBackupRef) MarshalJSON() ([]byte, error) {

@@ -8,7 +8,6 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
-// NAT-правило для связи внутреннего адреса с внешним адресом.
 // Real OAPI model name: ComputeOneToOneNatSpec
 type ComputeOneToOneNatSpecRequest struct {
 	// Информация о внешнем адресе.

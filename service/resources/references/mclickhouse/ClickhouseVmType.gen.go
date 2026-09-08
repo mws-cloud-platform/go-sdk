@@ -113,6 +113,25 @@ func (m *ClickhouseVmTypeID) Clone() *ClickhouseVmTypeID {
 	return &clone
 }
 
+func (m *ClickhouseVmTypeID) AsRef() *ClickhouseVmTypeRef {
+	if m == nil {
+		return nil
+	}
+	return &ClickhouseVmTypeRef{
+		id: *m,
+	}
+}
+
+func (m *ClickhouseVmTypeID) Equal(other *ClickhouseVmTypeID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.vmType == other.vmType
+}
+
 func (m ClickhouseVmTypeID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *ClickhouseVmTypeRef) Clone() *ClickhouseVmTypeRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ClickhouseVmTypeRef) Equal(other *ClickhouseVmTypeRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.vmType == other.id.vmType
 }
 
 func (m ClickhouseVmTypeRef) MarshalJSON() ([]byte, error) {

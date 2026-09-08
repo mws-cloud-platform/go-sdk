@@ -135,6 +135,25 @@ func (m *ZonalStorageAgentDeploymentID) Clone() *ZonalStorageAgentDeploymentID {
 	return &clone
 }
 
+func (m *ZonalStorageAgentDeploymentID) AsRef() *ZonalStorageAgentDeploymentRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalStorageAgentDeploymentRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalStorageAgentDeploymentID) Equal(other *ZonalStorageAgentDeploymentID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.agent == other.agent && m.zone == other.zone
+}
+
 func (m ZonalStorageAgentDeploymentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ZonalStorageAgentDeploymentRef) Clone() *ZonalStorageAgentDeploymentRef
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalStorageAgentDeploymentRef) Equal(other *ZonalStorageAgentDeploymentRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.agent == other.id.agent && m.id.zone == other.id.zone
 }
 
 func (m ZonalStorageAgentDeploymentRef) MarshalJSON() ([]byte, error) {

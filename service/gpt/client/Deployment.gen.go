@@ -11,7 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/gpt/model"
 )
 
@@ -84,10 +84,10 @@ func (m ListDeploymentsRequest) WithPageToken(token *string) ListDeploymentsRequ
 type ListDeploymentsResponse struct {
 	Code        int
 	Response200 *ListDeploymentsResponse200
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -128,7 +128,7 @@ type ListDeploymentsResponse200 struct {
 	// Массив ресурсов Deployment на текущей странице.
 	Items []model.DeploymentResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ListDeploymentsResponse200) GetItems() []model.DeploymentResponse {
@@ -142,18 +142,18 @@ func (m *ListDeploymentsResponse200) SetItems(val []model.DeploymentResponse) {
 	m.Items = val
 }
 
-func (m *ListDeploymentsResponse200) GetNextPageToken() *common.NextPageToken {
+func (m *ListDeploymentsResponse200) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *ListDeploymentsResponse200) SetNextPageToken(val *common.NextPageToken) {
+func (m *ListDeploymentsResponse200) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *ListDeploymentsResponse200) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ListDeploymentsResponse200) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}
@@ -260,7 +260,7 @@ func (m *ListDeploymentsResponse200) Decode(d *jx.Decoder) error {
 			m.Items = c
 			return nil
 		case "nextPageToken":
-			var v common.NextPageToken
+			var v commonmodel.NextPageToken
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -278,6 +278,9 @@ type DeleteDeploymentRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
+	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
+	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+	IfExist *bool // query: "ifExist"
 	// Идентификатор состояния ресурса. Позволяет предотвратить конфликты при конкурентном удалении.
 	// Если не передан, удаление выполняется без проверки версии ресурса.
 	Etag *string // query: "etag"
@@ -310,14 +313,10 @@ func (m *DeleteDeploymentRequest) getDeploymentRequest() GetDeploymentRequest {
 type DeleteDeploymentResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -335,23 +334,11 @@ func (m *DeleteDeploymentResponse) GetErr() (err error) {
 	if m.Response400 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
 	}
-	if m.Response401 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response401)
-	}
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
 	}
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
-	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
-	if m.Response412 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
@@ -389,10 +376,10 @@ func (m *GetDeploymentRequest) SetProject(project string) {
 type GetDeploymentResponse struct {
 	Code        int
 	Response200 *model.DeploymentResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -498,12 +485,12 @@ type UpsertDeploymentResponse struct {
 	Code        int
 	Response200 *model.DeploymentResponse
 	Response201 *model.DeploymentResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response422 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response422 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

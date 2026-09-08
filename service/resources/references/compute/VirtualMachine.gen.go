@@ -135,6 +135,25 @@ func (m *VirtualMachineID) Clone() *VirtualMachineID {
 	return &clone
 }
 
+func (m *VirtualMachineID) AsRef() *VirtualMachineRef {
+	if m == nil {
+		return nil
+	}
+	return &VirtualMachineRef{
+		id: *m,
+	}
+}
+
+func (m *VirtualMachineID) Equal(other *VirtualMachineID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.virtualMachine == other.virtualMachine && m.project == other.project
+}
+
 func (m VirtualMachineID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *VirtualMachineRef) Clone() *VirtualMachineRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *VirtualMachineRef) Equal(other *VirtualMachineRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.virtualMachine == other.id.virtualMachine && m.id.project == other.id.project
 }
 
 func (m VirtualMachineRef) MarshalJSON() ([]byte, error) {

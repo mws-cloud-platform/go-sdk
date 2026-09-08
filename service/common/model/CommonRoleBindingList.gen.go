@@ -13,7 +13,7 @@ type CommonRoleBindingList struct {
 	// List of public role bindings
 	Items []CommonRoleBinding `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *NextPageToken2 `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *CommonRoleBindingList) GetItems() []CommonRoleBinding {
@@ -27,18 +27,18 @@ func (m *CommonRoleBindingList) SetItems(val []CommonRoleBinding) {
 	m.Items = val
 }
 
-func (m *CommonRoleBindingList) GetNextPageToken() *NextPageToken2 {
+func (m *CommonRoleBindingList) GetNextPageToken() *NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *CommonRoleBindingList) SetNextPageToken(val *NextPageToken2) {
+func (m *CommonRoleBindingList) SetNextPageToken(val *NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *CommonRoleBindingList) GetNextPageTokenOr(val NextPageToken2) NextPageToken2 {
+func (m *CommonRoleBindingList) GetNextPageTokenOr(val NextPageToken) NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

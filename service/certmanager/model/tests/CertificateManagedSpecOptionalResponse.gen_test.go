@@ -24,6 +24,5 @@ func TestCertificateManagedSpecOptionalResponseMarshalling(t *testing.T) {
 
 func initCertificateManagedSpecOptionalResponse() model.CertificateManagedSpecOptionalResponse {
 	var v model.CertificateManagedSpecOptionalResponse
-	v.Domains = make([]string, 0)
 	return v
 }

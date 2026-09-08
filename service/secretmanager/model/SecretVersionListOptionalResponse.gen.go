@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: SecretVersionList
@@ -11,7 +11,7 @@ type SecretVersionListOptionalResponse struct {
 	// Список версий соответствующего секрета.
 	Items []SecretVersionOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *SecretVersionListOptionalResponse) GetItems() []SecretVersionOptionalResponse {
@@ -25,18 +25,18 @@ func (m *SecretVersionListOptionalResponse) SetItems(val []SecretVersionOptional
 	m.Items = val
 }
 
-func (m *SecretVersionListOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *SecretVersionListOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *SecretVersionListOptionalResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *SecretVersionListOptionalResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *SecretVersionListOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *SecretVersionListOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

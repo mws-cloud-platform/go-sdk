@@ -179,6 +179,25 @@ func (m *HostNetworkAdapterID) Clone() *HostNetworkAdapterID {
 	return &clone
 }
 
+func (m *HostNetworkAdapterID) AsRef() *HostNetworkAdapterRef {
+	if m == nil {
+		return nil
+	}
+	return &HostNetworkAdapterRef{
+		id: *m,
+	}
+}
+
+func (m *HostNetworkAdapterID) Equal(other *HostNetworkAdapterID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.hostNetworkAdapter == other.hostNetworkAdapter && m.virtualMachine == other.virtualMachine && m.project == other.project && m.zone == other.zone
+}
+
 func (m HostNetworkAdapterID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -371,6 +390,16 @@ func (m *HostNetworkAdapterRef) Clone() *HostNetworkAdapterRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *HostNetworkAdapterRef) Equal(other *HostNetworkAdapterRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.hostNetworkAdapter == other.id.hostNetworkAdapter && m.id.virtualMachine == other.id.virtualMachine && m.id.project == other.id.project && m.id.zone == other.id.zone
 }
 
 func (m HostNetworkAdapterRef) MarshalJSON() ([]byte, error) {

@@ -5,7 +5,7 @@ package model
 import (
 	"time"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mkafka"
 )
 
@@ -104,7 +104,7 @@ func (m *KafkaUserResponse) Clone() *KafkaUserResponse {
 // Представление поля Metadata анонимного типа структуры KafkaUser
 // Real OAPI model name: KafkaUserMetadata
 type KafkaUserMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// Ссылка на типизированный референс.
 	Id *mkafka.KafkaClusterUserID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -179,14 +179,14 @@ func (m *KafkaUserMetadataResponse) GetPurgeTimeOr(val time.Time) time.Time {
 	return val
 }
 
-func (m *KafkaUserMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *KafkaUserMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *KafkaUserMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *KafkaUserMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}

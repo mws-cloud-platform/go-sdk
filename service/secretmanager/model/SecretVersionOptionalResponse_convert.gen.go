@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func SecretVersionRequestToOptionalResponse(request *SecretVersionRequest) (*SecretVersionOptionalResponse, error) {
@@ -12,7 +12,7 @@ func SecretVersionRequestToOptionalResponse(request *SecretVersionRequest) (*Sec
 	}
 	var response SecretVersionOptionalResponse
 	if request.Metadata != nil {
-		tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
+		tmpMetadata, err := commonmodel.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
 		if err != nil {
 			return nil, err
 		}

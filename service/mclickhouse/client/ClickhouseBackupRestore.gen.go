@@ -6,12 +6,12 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
 
 type ClickhouseBackupRestore interface {
-	// RestoreClickhouseBackup restore Clickhouse cluster from backup.
+	// RestoreClickhouseBackup запускает восстановление кластера ClickHouse из указанной резервной копии в новый кластер.
 	//
 	// Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}:restoreCluster
 	RestoreClickhouseBackup(context.Context, RestoreClickhouseBackupRequest) (*RestoreClickhouseBackupResponse, error)
@@ -28,7 +28,7 @@ type RestoreClickhouseBackupRequest struct {
 	Cluster string // path: "cluster"
 	// Имя резервной копии.
 	Backup string // path: "backup"
-	// Some Clickhouse cluster settings
+	// Параметры восстановления из резервной копии
 	Body *model.ClickhouseClusterRestoreRequest // body
 }
 
@@ -47,12 +47,12 @@ func (m *RestoreClickhouseBackupRequest) SetProject(project string) {
 type RestoreClickhouseBackupResponse struct {
 	Code        int
 	Response200 *model.ClickhouseClusterOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

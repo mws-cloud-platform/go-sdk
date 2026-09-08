@@ -3,14 +3,12 @@
 package model
 
 import (
-	"encoding/json"
-
 	"github.com/go-faster/jx"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
@@ -49,7 +47,9 @@ func (m *RegionResponse) encodeFields(e *jx.Encoder) error {
 	}
 
 	e.FieldStart("spec")
-	e.Raw(m.Spec)
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
 
 	if m.Status != nil {
 		e.FieldStart("status")
@@ -92,19 +92,19 @@ func (m *RegionResponse) Decode(d *jx.Decoder) error {
 			m.Metadata = &v
 			return nil
 		case "spec":
-			v, err := d.Raw()
-			if err != nil {
+			var v RegionSpec
+			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.Spec = json.RawMessage(v)
+			m.Spec = v
 			return nil
 		case "status":
 			if d.Next() == jx.Null {
 				return d.Null()
 			}
 
-			var v common.ResourceStatusResponse
+			var v commonmodel.ResourceStatusResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -245,9 +245,9 @@ func (m *RegionMetadataResponse) Decode(d *jx.Decoder) error {
 			m.PurgeTime = &v
 			return nil
 		case "usages":
-			c := make([]common.TypedUsageResponse, 0)
+			c := make([]commonmodel.TypedUsageResponse, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v common.TypedUsageResponse
+				var v commonmodel.TypedUsageResponse
 				if err := v.Decode(d); err != nil {
 					return err
 				}

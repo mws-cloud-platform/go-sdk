@@ -5,20 +5,20 @@ package model
 import (
 	"time"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ServiceAccountStatus
 type ServiceAccountStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
-	LastAuthDateTime              *time.Time `json:"lastAuthDateTime,omitempty" yaml:"lastAuthDateTime,omitempty"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	LastAuthDateTime                   *time.Time `json:"lastAuthDateTime,omitempty" yaml:"lastAuthDateTime,omitempty"`
 }
 
-func (m *ServiceAccountStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *ServiceAccountStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *ServiceAccountStatusResponse) GetLastAuthDateTime() *time.Time {

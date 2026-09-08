@@ -9,10 +9,10 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
-// Описание инстанса координатора.
+// Описание узла координатора.
 // Real OAPI model name: ClickhouseClusterCoordinatorInstance
 type ClickhouseClusterCoordinatorInstanceRequest struct {
-	// Количество инстансов в зоне доступности.
+	// Количество узлов в зоне доступности.
 	Count *int `json:"count,omitempty" yaml:"count,omitempty"`
 	// Зона доступности.
 	Zone rm.ZoneRef `json:"zone" yaml:"zone"`

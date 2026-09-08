@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestApiErrorMarshalling(t *testing.T) {
@@ -17,12 +17,12 @@ func TestApiErrorMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.ApiError
+	var actual commonmodel.ApiError
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initApiError() common.ApiError {
-	var v common.ApiError
+func initApiError() commonmodel.ApiError {
+	var v commonmodel.ApiError
 	return v
 }

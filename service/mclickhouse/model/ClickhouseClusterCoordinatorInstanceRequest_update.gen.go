@@ -14,7 +14,7 @@ import (
 )
 
 type UpdateClickhouseClusterCoordinatorInstanceRequest struct {
-	// Количество инстансов в зоне доступности.
+	// Количество узлов в зоне доступности.
 	Count optional.Optional[int] `json:"count" yaml:"count"`
 	// Зона доступности.
 	Zone optional.Optional[rm.ZoneRef] `json:"zone" yaml:"zone"`

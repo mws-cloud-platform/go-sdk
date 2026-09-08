@@ -10,7 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m AuthorizedKeyStatusResponse) MarshalJSON() ([]byte, error) {
@@ -78,7 +78,7 @@ func (m *AuthorizedKeyStatusResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "ready":
-			var v common.ResourceStatusReadyResponse
+			var v commonmodel.ResourceStatusReadyResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}

@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
 
@@ -35,10 +35,10 @@ func (m *IssueServiceAccountTokenV2Request) SetAuthorization(authorization strin
 type IssueServiceAccountTokenV2Response struct {
 	Code        int
 	Response200 *model.SuccessTokenV2Response
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -87,10 +87,10 @@ func (m *IssueServiceAccountTokenRequest) SetAuthorization(authorization string)
 type IssueServiceAccountTokenResponse struct {
 	Code        int
 	Response200 *model.SuccessTokenResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

@@ -2,8 +2,6 @@
 
 package model
 
-// Данные для прохождения проверки типа http-01.
-//
 // Real OAPI model name: Http01Challenge
 type Http01ChallengeResponse struct {
 	// Исходный URL, по которому должен быть доступен HTTP-01 challenge.

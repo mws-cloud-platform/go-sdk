@@ -4,18 +4,18 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Описывает Nat шлюз.
+// Описывает NAT-шлюз.
 // Real OAPI model name: NatGateway
 type NatGatewayOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
-	// Метаданные Nat шлюза.
-	Metadata optional.OptionalNil[common.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	// Спецификация Nat шлюза.
+	// Метаданные NAT-шлюза.
+	Metadata optional.OptionalNil[commonmodel.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	// Спецификация NAT-шлюза.
 	Spec NatGatewaySpecOptionalResponse `json:"spec" yaml:"spec"`
-	// Статус NAT шлюза.
+	// Статус NAT-шлюза.
 	Status *NatGatewayStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
@@ -37,14 +37,14 @@ func (m *NatGatewayOptionalResponse) GetKindOr(val string) string {
 	return val
 }
 
-func (m *NatGatewayOptionalResponse) GetMetadata() *common.CommonTypedResourceMetadataOptionalResponse {
+func (m *NatGatewayOptionalResponse) GetMetadata() *commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return &m.Metadata.Value
 	}
 	return nil
 }
 
-func (m *NatGatewayOptionalResponse) GetMetadataOr(val common.CommonTypedResourceMetadataOptionalResponse) common.CommonTypedResourceMetadataOptionalResponse {
+func (m *NatGatewayOptionalResponse) GetMetadataOr(val commonmodel.CommonTypedResourceMetadataOptionalResponse) commonmodel.CommonTypedResourceMetadataOptionalResponse {
 	if m != nil && m.Metadata.IsSet() && !m.Metadata.IsNull() {
 		return m.Metadata.Value
 	}
@@ -95,19 +95,5 @@ func (m *NatGatewayOptionalResponse) Clone() *NatGatewayOptionalResponse {
 	}
 	clone.Spec = *m.Spec.Clone()
 	clone.Status = m.Status.Clone()
-	return &clone
-}
-
-// Представление поля Spec анонимного типа структуры NatGateway
-// Real OAPI model name: NatGatewaySpec
-type NatGatewaySpecOptionalResponse struct {
-}
-
-func (m *NatGatewaySpecOptionalResponse) Clone() *NatGatewaySpecOptionalResponse {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
 	return &clone
 }

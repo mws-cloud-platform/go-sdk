@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestRetryPolicyResponseMarshalling(t *testing.T) {
@@ -18,13 +18,13 @@ func TestRetryPolicyResponseMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.RetryPolicyResponse
+	var actual commonmodel.RetryPolicyResponse
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initRetryPolicyResponse() common.RetryPolicyResponse {
-	var v common.RetryPolicyResponse
+func initRetryPolicyResponse() commonmodel.RetryPolicyResponse {
+	var v commonmodel.RetryPolicyResponse
 	v.RetryTimeout = duration.MustParseString("PT0S")
 	return v
 }

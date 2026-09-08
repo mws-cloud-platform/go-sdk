@@ -23,7 +23,7 @@ func (x *ClickhouseBackupRestoreSugared) Impl() ClickhouseBackupRestore {
 	return x.impl
 }
 
-// RestoreClickhouseBackup restore Clickhouse cluster from backup.
+// RestoreClickhouseBackup запускает восстановление кластера ClickHouse из указанной резервной копии в новый кластер.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}:restoreCluster
 func (x *ClickhouseBackupRestoreSugared) RestoreClickhouseBackup(ctx context.Context, request RestoreClickhouseBackupRequest) (*model.ClickhouseClusterOptionalResponse, error) {

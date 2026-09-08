@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func KafkaClusterSpecRequestToResponse(request *KafkaClusterSpecRequest) (*KafkaClusterSpecResponse, error) {
@@ -27,7 +27,7 @@ func KafkaClusterSpecRequestToResponse(request *KafkaClusterSpecRequest) (*Kafka
 	}
 	response.Instances = *tmpInstances
 	response.ProductConfig = request.ProductConfig
-	tmpMaintenanceWindow, err := common.MaintenanceWindowRequestToResponse(request.MaintenanceWindow)
+	tmpMaintenanceWindow, err := commonmodel.MaintenanceWindowRequestToResponse(request.MaintenanceWindow)
 	if err != nil {
 		return nil, err
 	}

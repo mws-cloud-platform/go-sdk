@@ -10,10 +10,10 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
-// Описание инстанса координатора.
+// Описание узла координатора.
 // Real OAPI model name: ClickhouseClusterCoordinatorInstanceResource
 type ClickhouseClusterCoordinatorInstanceResourceResponse struct {
-	// Идентификатор инстанса координатора.
+	// Идентификатор узла координатора.
 	Id mclickhouse.ClickhouseClusterCoordinatorInstanceID `json:"id" yaml:"id"`
 	// Зона доступности.
 	Zone   rm.ZoneRef                `json:"zone" yaml:"zone"`

@@ -3,7 +3,6 @@
 package model
 
 // Real OAPI model name: Modalities
-// Deprecated: Отказываемся из-за разделения на input и output модальности
 type ModalitiesResponse struct {
 	Text   bool `json:"text" yaml:"text"`
 	Vision bool `json:"vision" yaml:"vision"`

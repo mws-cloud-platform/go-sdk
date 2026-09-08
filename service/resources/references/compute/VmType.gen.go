@@ -113,6 +113,25 @@ func (m *VmTypeID) Clone() *VmTypeID {
 	return &clone
 }
 
+func (m *VmTypeID) AsRef() *VmTypeRef {
+	if m == nil {
+		return nil
+	}
+	return &VmTypeRef{
+		id: *m,
+	}
+}
+
+func (m *VmTypeID) Equal(other *VmTypeID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.vmType == other.vmType
+}
+
 func (m VmTypeID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *VmTypeRef) Clone() *VmTypeRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *VmTypeRef) Equal(other *VmTypeRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.vmType == other.id.vmType
 }
 
 func (m VmTypeRef) MarshalJSON() ([]byte, error) {

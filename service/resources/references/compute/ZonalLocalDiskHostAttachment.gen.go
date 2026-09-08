@@ -179,6 +179,25 @@ func (m *ZonalLocalDiskHostAttachmentID) Clone() *ZonalLocalDiskHostAttachmentID
 	return &clone
 }
 
+func (m *ZonalLocalDiskHostAttachmentID) AsRef() *ZonalLocalDiskHostAttachmentRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalLocalDiskHostAttachmentRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalLocalDiskHostAttachmentID) Equal(other *ZonalLocalDiskHostAttachmentID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.attachment == other.attachment && m.virtualMachine == other.virtualMachine && m.project == other.project && m.zone == other.zone
+}
+
 func (m ZonalLocalDiskHostAttachmentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -371,6 +390,16 @@ func (m *ZonalLocalDiskHostAttachmentRef) Clone() *ZonalLocalDiskHostAttachmentR
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalLocalDiskHostAttachmentRef) Equal(other *ZonalLocalDiskHostAttachmentRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.attachment == other.id.attachment && m.id.virtualMachine == other.id.virtualMachine && m.id.project == other.id.project && m.id.zone == other.id.zone
 }
 
 func (m ZonalLocalDiskHostAttachmentRef) MarshalJSON() ([]byte, error) {

@@ -32,8 +32,10 @@ func (m *CertificateChallengeResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *CertificateChallengeResponse) encodeFields(e *jx.Encoder) error {
-	e.FieldStart("domain")
-	e.Str(m.Domain)
+	if m.Domain != nil {
+		e.FieldStart("domain")
+		e.Str(*m.Domain)
+	}
 
 	e.FieldStart("createdAt")
 	conv.EncodeDateTimeUTC(e, m.CreatedAt)
@@ -89,7 +91,7 @@ func (m *CertificateChallengeResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Domain = v
+			m.Domain = &v
 			return nil
 		case "createdAt":
 			v, err := decode.DateTime(d)

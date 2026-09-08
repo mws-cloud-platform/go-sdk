@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestVpcAddressDnsSpecRequestMarshalling(t *testing.T) {
@@ -18,13 +18,13 @@ func TestVpcAddressDnsSpecRequestMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.VpcAddressDnsSpecRequest
+	var actual commonmodel.VpcAddressDnsSpecRequest
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initVpcAddressDnsSpecRequest() common.VpcAddressDnsSpecRequest {
-	var v common.VpcAddressDnsSpecRequest
+func initVpcAddressDnsSpecRequest() commonmodel.VpcAddressDnsSpecRequest {
+	var v commonmodel.VpcAddressDnsSpecRequest
 	v.Ttl = duration.MustParseString("PT0S")
 	return v
 }

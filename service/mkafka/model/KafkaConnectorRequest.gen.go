@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: KafkaConnector
@@ -56,7 +56,7 @@ func (m *KafkaConnectorRequest) Clone() *KafkaConnectorRequest {
 // Представление поля Metadata анонимного типа структуры KafkaConnector
 // Real OAPI model name: KafkaConnectorMetadata
 type KafkaConnectorMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *KafkaConnectorMetadataRequest) GetDisplayName() *string {
@@ -73,14 +73,14 @@ func (m *KafkaConnectorMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *KafkaConnectorMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *KafkaConnectorMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *KafkaConnectorMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *KafkaConnectorMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

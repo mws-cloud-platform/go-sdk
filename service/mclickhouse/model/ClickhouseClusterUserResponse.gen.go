@@ -5,7 +5,7 @@ package model
 import (
 	"time"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 )
 
@@ -101,7 +101,7 @@ func (m *ClickhouseClusterUserResponse) Clone() *ClickhouseClusterUserResponse {
 // Представление поля Metadata анонимного типа структуры ClickhouseClusterUser
 // Real OAPI model name: ClickhouseClusterUserMetadata
 type ClickhouseClusterUserMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// Ссылка на типизированный референс.
 	Id *mclickhouse.ClickhouseClusterUserID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -176,14 +176,14 @@ func (m *ClickhouseClusterUserMetadataResponse) GetPurgeTimeOr(val time.Time) ti
 	return val
 }
 
-func (m *ClickhouseClusterUserMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *ClickhouseClusterUserMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *ClickhouseClusterUserMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *ClickhouseClusterUserMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}

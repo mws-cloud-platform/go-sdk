@@ -135,6 +135,25 @@ func (m *ZonalKittyStoreClusterID) Clone() *ZonalKittyStoreClusterID {
 	return &clone
 }
 
+func (m *ZonalKittyStoreClusterID) AsRef() *ZonalKittyStoreClusterRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalKittyStoreClusterRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalKittyStoreClusterID) Equal(other *ZonalKittyStoreClusterID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.cluster == other.cluster && m.zone == other.zone
+}
+
 func (m ZonalKittyStoreClusterID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ZonalKittyStoreClusterRef) Clone() *ZonalKittyStoreClusterRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalKittyStoreClusterRef) Equal(other *ZonalKittyStoreClusterRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.cluster == other.id.cluster && m.id.zone == other.id.zone
 }
 
 func (m ZonalKittyStoreClusterRef) MarshalJSON() ([]byte, error) {

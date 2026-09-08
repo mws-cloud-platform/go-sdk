@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestDayOfWeekMarshalling(t *testing.T) {
@@ -17,12 +17,12 @@ func TestDayOfWeekMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.DayOfWeek
+	var actual commonmodel.DayOfWeek
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initDayOfWeek() common.DayOfWeek {
-	var v common.DayOfWeek
+func initDayOfWeek() commonmodel.DayOfWeek {
+	var v commonmodel.DayOfWeek
 	return v
 }

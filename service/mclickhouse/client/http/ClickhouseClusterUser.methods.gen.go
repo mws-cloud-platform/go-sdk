@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/mclickhouse/client"
 )
 
-// ListClickhouseClusterUsers list clickhouse users.
+// ListClickhouseClusterUsers возвращает постраничный список пользователей указанного кластера ClickHouse.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/users
@@ -114,7 +114,7 @@ func (c *ClickhouseClusterUser) headerListClickhouseClusterUsers(req *http.Reque
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpdateClickhouseClusterUser updates the cluster user.
+// UpdateClickhouseClusterUser создаёт нового пользователя кластера ClickHouse или изменяет существующего (upsert).
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/users/{user}
@@ -207,7 +207,7 @@ func (c *ClickhouseClusterUser) headerUpdateClickhouseClusterUser(req *http.Requ
 	}
 }
 
-// CreateUpdateClickhouseClusterUser updates the cluster user.
+// CreateUpdateClickhouseClusterUser создаёт нового пользователя кластера ClickHouse или изменяет существующего (upsert).
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -302,7 +302,7 @@ func (c *ClickhouseClusterUser) headerCreateUpdateClickhouseClusterUser(req *htt
 	}
 }
 
-// UpdateUpdateClickhouseClusterUser updates the cluster user.
+// UpdateUpdateClickhouseClusterUser создаёт нового пользователя кластера ClickHouse или изменяет существующего (upsert).
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

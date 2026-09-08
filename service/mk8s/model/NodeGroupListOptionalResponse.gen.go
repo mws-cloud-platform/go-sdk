@@ -8,14 +8,14 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: NodeGroupList
 type NodeGroupListOptionalResponse struct {
 	Items []NodeGroupOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken optional.OptionalNil[common.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken optional.OptionalNil[commonmodel.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *NodeGroupListOptionalResponse) GetItems() []NodeGroupOptionalResponse {
@@ -29,14 +29,14 @@ func (m *NodeGroupListOptionalResponse) SetItems(val []NodeGroupOptionalResponse
 	m.Items = val
 }
 
-func (m *NodeGroupListOptionalResponse) GetNextPageToken() *common.NextPageToken {
+func (m *NodeGroupListOptionalResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() && !m.NextPageToken.IsNull() {
 		return &m.NextPageToken.Value
 	}
 	return nil
 }
 
-func (m *NodeGroupListOptionalResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *NodeGroupListOptionalResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken.IsSet() && !m.NextPageToken.IsNull() {
 		return m.NextPageToken.Value
 	}

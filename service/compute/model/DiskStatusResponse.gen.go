@@ -9,14 +9,14 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
-// Статус глобального диска
+// Статус диска
 // Real OAPI model name: DiskStatus
 type DiskStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Признак, указывающий, удален ли родительский ресурс-источник
 	SourceExists *bool `json:"sourceExists,omitempty" yaml:"sourceExists,omitempty"`
 	// Размер диска
@@ -30,20 +30,20 @@ type DiskStatusResponse struct {
 	// Размер блока диска
 	BlockSize *bytesize.ByteSize `json:"blockSize,omitempty" yaml:"blockSize,omitempty"`
 	// Информация о ВМ, использующих этот диск
-	LinkedVms []common.LinkedVmInfoResponse `json:"linkedVms" yaml:"linkedVms"`
+	LinkedVms []commonmodel.LinkedVmInfoResponse `json:"linkedVms" yaml:"linkedVms"`
 	// Ссылка на исходный образ
 	InitialSourceImage *compute.ImageID `json:"initialSourceImage,omitempty" yaml:"initialSourceImage,omitempty"`
 	// Тип операционной системы
-	OsType *OsType2 `json:"osType,omitempty" yaml:"osType,omitempty"`
+	OsType *OsType `json:"osType,omitempty" yaml:"osType,omitempty"`
 	// Способ шифрования ресурса
 	Encryption *EncryptionStatusResponse `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
-func (m *DiskStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *DiskStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *DiskStatusResponse) GetSourceExists() *bool {
@@ -130,7 +130,7 @@ func (m *DiskStatusResponse) GetBlockSizeOr(val bytesize.ByteSize) bytesize.Byte
 	return val
 }
 
-func (m *DiskStatusResponse) GetLinkedVms() []common.LinkedVmInfoResponse {
+func (m *DiskStatusResponse) GetLinkedVms() []commonmodel.LinkedVmInfoResponse {
 	if m != nil {
 		return m.LinkedVms
 	}
@@ -151,14 +151,14 @@ func (m *DiskStatusResponse) GetInitialSourceImageOr(val compute.ImageID) comput
 	return val
 }
 
-func (m *DiskStatusResponse) GetOsType() *OsType2 {
+func (m *DiskStatusResponse) GetOsType() *OsType {
 	if m != nil {
 		return m.OsType
 	}
 	return nil
 }
 
-func (m *DiskStatusResponse) GetOsTypeOr(val OsType2) OsType2 {
+func (m *DiskStatusResponse) GetOsTypeOr(val OsType) OsType {
 	if m != nil && m.OsType != nil {
 		return *m.OsType
 	}
@@ -196,7 +196,7 @@ func (m *DiskStatusResponse) Clone() *DiskStatusResponse {
 	clone.DiskType = m.DiskType.Clone()
 	clone.BlockSize = m.BlockSize.Clone()
 	if m.LinkedVms != nil {
-		clone.LinkedVms = make([]common.LinkedVmInfoResponse, len(m.LinkedVms))
+		clone.LinkedVms = make([]commonmodel.LinkedVmInfoResponse, len(m.LinkedVms))
 		for i, v := range m.LinkedVms {
 			clone.LinkedVms[i] = *v.Clone()
 		}

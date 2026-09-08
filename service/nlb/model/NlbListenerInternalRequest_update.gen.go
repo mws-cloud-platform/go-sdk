@@ -7,12 +7,12 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateNlbListenerInternalRequest struct {
 	// Описывает ссылку на внутренний адрес или спецификацию внутреннего адреса как дополнительный ресурс.
-	Address optional.Optional[common.UpdateResourceAddressSpecOrRefRequest] `json:"address" yaml:"address"`
+	Address optional.Optional[commonmodel.UpdateResourceAddressSpecOrRefRequest] `json:"address" yaml:"address"`
 }
 
 func (m *NlbListenerInternalRequest) AsUpdateModel() UpdateNlbListenerInternalRequest {
@@ -62,11 +62,11 @@ func (m *UpdateNlbListenerInternalRequest) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *NlbListenerInternalRequest) diffAddress(src *NlbListenerInternalRequest) optional.Optional[common.UpdateResourceAddressSpecOrRefRequest] {
+func (m *NlbListenerInternalRequest) diffAddress(src *NlbListenerInternalRequest) optional.Optional[commonmodel.UpdateResourceAddressSpecOrRefRequest] {
 	from := src.GetAddress()
 	to := m.GetAddress()
 	value := to.Diff(&from)
-	return optional.Optional[common.UpdateResourceAddressSpecOrRefRequest]{
+	return optional.Optional[commonmodel.UpdateResourceAddressSpecOrRefRequest]{
 		Value: value,
 		Set:   value.HasChanges(),
 	}

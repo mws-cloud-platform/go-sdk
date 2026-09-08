@@ -45,6 +45,13 @@ func (m *ClusterAvailabilitySpecRequest) encodeFields(e *jx.Encoder) error {
 			return err
 		}
 	}
+
+	if m.Regional != nil {
+		e.FieldStart("regional")
+		if err := m.Regional.Encode(e); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -83,10 +90,95 @@ func (m *ClusterAvailabilitySpecRequest) Decode(d *jx.Decoder) error {
 
 			m.ZonalHa = &v
 			return nil
+		case "regional":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v ClusterAvailabilitySpecRegionalRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Regional = &v
+			return nil
 		default:
 			return d.Skip()
 		}
 	}))
+}
+
+func (m ClusterAvailabilitySpecRegionalRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClusterAvailabilitySpecRegionalRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecRegionalRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("zones")
+	e.ArrStart()
+	for _, elem := range m.Zones {
+		e.Str(elem)
+	}
+	e.ArrEnd()
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecRegionalRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClusterAvailabilitySpecRegionalRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClusterAvailabilitySpecRegionalRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"zones": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "zones":
+			c := make([]string, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				v, err := decode.Str(d)
+				if err != nil {
+					return err
+				}
+
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Zones = c
+			requiredFilled["zones"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }
 
 func (m ClusterAvailabilitySpecStandaloneRequest) MarshalJSON() ([]byte, error) {

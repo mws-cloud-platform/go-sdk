@@ -135,6 +135,25 @@ func (m *NatGatewayID) Clone() *NatGatewayID {
 	return &clone
 }
 
+func (m *NatGatewayID) AsRef() *NatGatewayRef {
+	if m == nil {
+		return nil
+	}
+	return &NatGatewayRef{
+		id: *m,
+	}
+}
+
+func (m *NatGatewayID) Equal(other *NatGatewayID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.natGateway == other.natGateway && m.project == other.project
+}
+
 func (m NatGatewayID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *NatGatewayRef) Clone() *NatGatewayRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *NatGatewayRef) Equal(other *NatGatewayRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.natGateway == other.id.natGateway && m.id.project == other.id.project
 }
 
 func (m NatGatewayRef) MarshalJSON() ([]byte, error) {

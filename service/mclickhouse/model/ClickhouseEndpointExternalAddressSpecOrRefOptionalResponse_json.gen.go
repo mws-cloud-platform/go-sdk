@@ -77,7 +77,7 @@ func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) Decode(d *j
 				return d.Null()
 			}
 
-			var v ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse
+			var v ClickhouseEndpointExternalAddressSpecOptionalResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -88,41 +88,4 @@ func (m *ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse) Decode(d *j
 			return d.Skip()
 		}
 	}))
-}
-
-func (m ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
-	return nil
-}
-
-func (m *ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("ClickhouseEndpointExternalAddressSpecOrRefSpecOptionalResponse")
-	}
-
-	return d.Skip()
 }

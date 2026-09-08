@@ -135,6 +135,25 @@ func (m *RequestCommentIDID) Clone() *RequestCommentIDID {
 	return &clone
 }
 
+func (m *RequestCommentIDID) AsRef() *RequestCommentIDRef {
+	if m == nil {
+		return nil
+	}
+	return &RequestCommentIDRef{
+		id: *m,
+	}
+}
+
+func (m *RequestCommentIDID) Equal(other *RequestCommentIDID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.commentName == other.commentName && m.requestName == other.requestName
+}
+
 func (m RequestCommentIDID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *RequestCommentIDRef) Clone() *RequestCommentIDRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *RequestCommentIDRef) Equal(other *RequestCommentIDRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.commentName == other.id.commentName && m.id.requestName == other.id.requestName
 }
 
 func (m RequestCommentIDRef) MarshalJSON() ([]byte, error) {

@@ -155,6 +155,8 @@ func (c *ServiceAccountHmacKey) deleteHmacKeyInvoker(ctx context.Context, anyReq
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteHmacKey(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteHmacKey(httpReq, request)
 
@@ -179,6 +181,20 @@ func (c *ServiceAccountHmacKey) deleteHmacKeyInvoker(ctx context.Context, anyReq
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *ServiceAccountHmacKey) queryDeleteHmacKey(request *client.DeleteHmacKeyRequest) string {
+	q := make(url.Values)
+	if request.IfExist != nil {
+		q.Add("ifExist", conv.BoolToString(*request.IfExist))
+	}
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	if request.Cascade != nil {
+		q.Add("cascade", conv.BoolToString(*request.Cascade))
+	}
+	return q.Encode()
 }
 
 func (c *ServiceAccountHmacKey) headerDeleteHmacKey(req *http.Request, request *client.DeleteHmacKeyRequest) {
@@ -346,6 +362,9 @@ func (c *ServiceAccountHmacKey) upsertHmacKeyInvoker(ctx context.Context, anyReq
 
 func (c *ServiceAccountHmacKey) queryUpsertHmacKey(request *client.UpsertHmacKeyRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -441,6 +460,9 @@ func (c *ServiceAccountHmacKey) createHmacKeyInvoker(ctx context.Context, anyReq
 func (c *ServiceAccountHmacKey) queryCreateHmacKey(request *client.UpsertHmacKeyRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -536,6 +558,9 @@ func (c *ServiceAccountHmacKey) updateHmacKeyInvoker(ctx context.Context, anyReq
 func (c *ServiceAccountHmacKey) queryUpdateHmacKey(request *client.UpdateHmacKeyRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

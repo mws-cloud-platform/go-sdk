@@ -12,7 +12,7 @@ type CertificateManagedSpecRequest struct {
 	// Конфигурация провайдера выпуска сертификата.
 	Issuer *CertificateManagedSpecIssuerRequest `json:"issuer,omitempty" yaml:"issuer,omitempty"`
 	// Список доменов, для которых будет выдан сертификат.
-	Domains []string `json:"domains" yaml:"domains"`
+	Domains []string `json:"domains,omitempty" yaml:"domains,omitempty"`
 }
 
 func (m *CertificateManagedSpecRequest) GetPreferredChallengeType() *CertificateChallengeType {
@@ -78,6 +78,13 @@ func (m *CertificateManagedSpecRequest) GetDomains() []string {
 
 func (m *CertificateManagedSpecRequest) SetDomains(val []string) {
 	m.Domains = val
+}
+
+func (m *CertificateManagedSpecRequest) GetDomainsOr(val []string) []string {
+	if m != nil && m.Domains != nil {
+		return m.Domains
+	}
+	return val
 }
 
 func (m *CertificateManagedSpecRequest) Clone() *CertificateManagedSpecRequest {

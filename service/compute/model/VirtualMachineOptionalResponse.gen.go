@@ -8,7 +8,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
@@ -119,7 +119,7 @@ func (m *VirtualMachineOptionalResponse) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры VirtualMachine
 // Real OAPI model name: VirtualMachineMetadata
 type VirtualMachineMetadataOptionalResponse struct {
-	common.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
 	// ID свойства
 	Id compute.VirtualMachineID `json:"id" yaml:"id"`
 }
@@ -194,14 +194,14 @@ func (m *VirtualMachineMetadataOptionalResponse) GetPurgeTimeOr(val time.Time) t
 	return val
 }
 
-func (m *VirtualMachineMetadataOptionalResponse) GetUsages() []common.TypedUsageOptionalResponse {
+func (m *VirtualMachineMetadataOptionalResponse) GetUsages() []commonmodel.TypedUsageOptionalResponse {
 	if m != nil && m.Usages.IsSet() {
 		return m.TypedResourceMetadataOptionalResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *VirtualMachineMetadataOptionalResponse) GetUsagesOr(val []common.TypedUsageOptionalResponse) []common.TypedUsageOptionalResponse {
+func (m *VirtualMachineMetadataOptionalResponse) GetUsagesOr(val []commonmodel.TypedUsageOptionalResponse) []commonmodel.TypedUsageOptionalResponse {
 	if m != nil {
 		return m.TypedResourceMetadataOptionalResponse.GetUsagesOr(val)
 	}

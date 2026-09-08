@@ -2,7 +2,7 @@
 
 package model
 
-// Внешние HTTPS-адреса Schema Registry.
+// Адреса эндпоинтов Schema Registry.
 // Real OAPI model name: KafkaSchemaRegistryUrls
 type KafkaSchemaRegistryUrlsResponse struct {
 	// Список HTTPS URL Schema Registry.

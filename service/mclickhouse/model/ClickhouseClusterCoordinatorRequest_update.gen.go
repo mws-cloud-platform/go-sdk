@@ -15,12 +15,12 @@ import (
 )
 
 type UpdateClickhouseClusterCoordinatorRequest struct {
-	// Тип координатора. Если не указано, то при наличии более одного хоста, используется Clickhouse Keeper.
+	// Тип координатора. Если не указано, то при наличии более одного узла, используется ClickHouse Keeper.
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Type optional.Optional[ClickhouseCoordinatorType] `json:"type" yaml:"type"`
-	// Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. Необязательный параметр в standalone-конфигурации.
+	// Параметры виртуальной машины, на которой будет работать ClickHouse Keeper. Необязательный параметр в standalone-конфигурации.
 	Resources optional.Optional[UpdateClickhouseCoordinatorHWResourcesRequest] `json:"resources" yaml:"resources"`
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.

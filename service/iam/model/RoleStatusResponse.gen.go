@@ -3,21 +3,21 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: RoleStatus
 type RoleStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Состояние роли (этап жизненного цикла).
 	Stage RoleStageResponse `json:"stage" yaml:"stage"`
 }
 
-func (m *RoleStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *RoleStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *RoleStatusResponse) GetStage() RoleStageResponse {

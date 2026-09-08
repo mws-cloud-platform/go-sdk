@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func PostgresClusterSpecRequestToResponse(request *PostgresClusterSpecRequest) (*PostgresClusterSpecResponse, error) {
@@ -37,7 +37,7 @@ func PostgresClusterSpecRequestToResponse(request *PostgresClusterSpecRequest) (
 		return nil, err
 	}
 	response.Backup = tmpBackup
-	tmpMaintenanceWindow, err := common.MaintenanceWindowRequestToResponse(request.MaintenanceWindow)
+	tmpMaintenanceWindow, err := commonmodel.MaintenanceWindowRequestToResponse(request.MaintenanceWindow)
 	if err != nil {
 		return nil, err
 	}

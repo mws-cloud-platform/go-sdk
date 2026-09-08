@@ -7,7 +7,7 @@ import (
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	"go.mws.cloud/go-sdk/service/certmanager/model"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type CertificateRoleBinding interface {
@@ -81,10 +81,10 @@ func (m ListCertificateRoleBindingsRequest) WithPageToken(token *string) ListCer
 type ListCertificateRoleBindingsResponse struct {
 	Code        int
 	Response200 *model.CertificateRoleBindingListOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -155,10 +155,10 @@ func (m *DeleteCertificateRoleBindingRequest) getCertificateRoleBindingRequest()
 type DeleteCertificateRoleBindingResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -220,10 +220,10 @@ func (m *GetCertificateRoleBindingRequest) SetProject(project string) {
 type GetCertificateRoleBindingResponse struct {
 	Code        int
 	Response200 *model.CertificateRoleBindingOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -333,9 +333,9 @@ type UpsertCertificateRoleBindingResponse struct {
 	Code        int
 	Response200 *model.CertificateRoleBindingOptionalResponse
 	Response201 *model.CertificateRoleBindingOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

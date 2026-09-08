@@ -12,7 +12,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateNlbRuleRequest struct {
@@ -21,7 +21,7 @@ type UpdateNlbRuleRequest struct {
 	// Целевой порт бэкенд-серверов, на которые балансировщик перенаправляет запросы. Если не указан, то считается равным порту балансировщика.
 	TargetPort optional.OptionalNil[int32] `json:"targetPort" yaml:"targetPort"`
 	// Адреса бэкенд-серверов, на которые балансировщик направляет запросы.
-	TargetAddressGroups optional.Optional[[]common.UpdateVpcAddressGroupSpecOrRefRequest] `json:"targetAddressGroups" yaml:"targetAddressGroups"`
+	TargetAddressGroups optional.Optional[[]commonmodel.UpdateVpcAddressGroupSpecOrRefRequest] `json:"targetAddressGroups" yaml:"targetAddressGroups"`
 	// Настройка проверки работоспособности виртуальных машин.
 	HealthCheck optional.OptionalNil[UpdateNlbHealthCheckRequest] `json:"healthCheck" yaml:"healthCheck"`
 }
@@ -32,10 +32,10 @@ func (m *NlbRuleRequest) AsUpdateModel() UpdateNlbRuleRequest {
 	if m.TargetPort != nil {
 		u.TargetPort = optional.NewOptionalNil(m.GetTargetPortOr(0))
 	}
-	u.TargetAddressGroups = optional.NewOptional(func() []common.UpdateVpcAddressGroupSpecOrRefRequest {
-		var tmp []common.UpdateVpcAddressGroupSpecOrRefRequest
+	u.TargetAddressGroups = optional.NewOptional(func() []commonmodel.UpdateVpcAddressGroupSpecOrRefRequest {
+		var tmp []commonmodel.UpdateVpcAddressGroupSpecOrRefRequest
 		if m.GetTargetAddressGroups() != nil {
-			tmp = make([]common.UpdateVpcAddressGroupSpecOrRefRequest, 0, len(m.GetTargetAddressGroups()))
+			tmp = make([]commonmodel.UpdateVpcAddressGroupSpecOrRefRequest, 0, len(m.GetTargetAddressGroups()))
 		}
 		for _, val := range m.GetTargetAddressGroups() {
 			tmp = append(tmp, val.AsUpdateModel())
@@ -76,7 +76,7 @@ func (m *NlbRuleRequest) WithChanges(u UpdateNlbRuleRequest) NlbRuleRequest {
 		out.TargetPort = nil
 	}
 	if u.TargetAddressGroups.IsSet() {
-		out.TargetAddressGroups = merge.InapplicableSlice(u.TargetAddressGroups.Value, (*common.VpcAddressGroupSpecOrRefRequest).WithChanges)
+		out.TargetAddressGroups = merge.InapplicableSlice(u.TargetAddressGroups.Value, (*commonmodel.VpcAddressGroupSpecOrRefRequest).WithChanges)
 	}
 	if u.HealthCheck.IsSet() {
 		out.HealthCheck = ptr.Get(out.HealthCheck.WithChanges(u.HealthCheck.Value))
@@ -120,15 +120,15 @@ func (m *NlbRuleRequest) diffTargetPort(src *NlbRuleRequest) optional.OptionalNi
 	return commonclient.DiffPrimitiveNullable(src.GetTargetPort(), m.GetTargetPort(), nilDiffers)
 }
 
-func (m *NlbRuleRequest) diffTargetAddressGroups(src *NlbRuleRequest) optional.Optional[[]common.UpdateVpcAddressGroupSpecOrRefRequest] {
-	diffFunc := func(fromItem, toItem common.VpcAddressGroupSpecOrRefRequest, fromNil bool) common.UpdateVpcAddressGroupSpecOrRefRequest {
+func (m *NlbRuleRequest) diffTargetAddressGroups(src *NlbRuleRequest) optional.Optional[[]commonmodel.UpdateVpcAddressGroupSpecOrRefRequest] {
+	diffFunc := func(fromItem, toItem commonmodel.VpcAddressGroupSpecOrRefRequest, fromNil bool) commonmodel.UpdateVpcAddressGroupSpecOrRefRequest {
 		if fromNil {
 			return toItem.Diff(nil)
 		}
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetTargetAddressGroups(), m.GetTargetAddressGroups(), diffFunc)
-	return optional.Optional[[]common.UpdateVpcAddressGroupSpecOrRefRequest]{
+	return optional.Optional[[]commonmodel.UpdateVpcAddressGroupSpecOrRefRequest]{
 		Value: value,
 		Set:   hasChanges,
 	}

@@ -113,6 +113,25 @@ func (m *ServiceDefinitionID) Clone() *ServiceDefinitionID {
 	return &clone
 }
 
+func (m *ServiceDefinitionID) AsRef() *ServiceDefinitionRef {
+	if m == nil {
+		return nil
+	}
+	return &ServiceDefinitionRef{
+		id: *m,
+	}
+}
+
+func (m *ServiceDefinitionID) Equal(other *ServiceDefinitionID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.service == other.service
+}
+
 func (m ServiceDefinitionID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *ServiceDefinitionRef) Clone() *ServiceDefinitionRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ServiceDefinitionRef) Equal(other *ServiceDefinitionRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.service == other.id.service
 }
 
 func (m ServiceDefinitionRef) MarshalJSON() ([]byte, error) {

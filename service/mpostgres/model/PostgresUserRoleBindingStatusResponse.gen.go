@@ -7,14 +7,14 @@ import (
 	"time"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mpostgres"
 )
 
 // Статус привязки роли текущего пользователя
 // Real OAPI model name: PostgresUserRoleBindingStatus
 type PostgresUserRoleBindingStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Идентификатор привязки роли.
 	RoleBindingId *mpostgres.PostgresRoleBindingRef `json:"roleBindingId,omitempty" yaml:"roleBindingId,omitempty"`
 	// Идентификатор базы данных, в которой пользователю назначена роль; `null` — если роль глобальная.
@@ -29,11 +29,11 @@ type PostgresUserRoleBindingStatusResponse struct {
 	ExpiresAt *time.Time `json:"expiresAt,omitempty" yaml:"expiresAt,omitempty"`
 }
 
-func (m *PostgresUserRoleBindingStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *PostgresUserRoleBindingStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *PostgresUserRoleBindingStatusResponse) GetRoleBindingId() *mpostgres.PostgresRoleBindingRef {

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Сервисный аккаунт — это специальная учетная запись, создаваемая пользователем
@@ -105,7 +105,7 @@ func (m *ServiceAccountResponse) Clone() *ServiceAccountResponse {
 // Представление поля Metadata анонимного типа структуры ServiceAccount
 // Real OAPI model name: ServiceAccountMetadata
 type ServiceAccountMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// ID свойства
 	Id *resmodels.AnyResourceID `json:"id,omitempty" yaml:"id,omitempty"`
 	// Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта.
@@ -182,14 +182,14 @@ func (m *ServiceAccountMetadataResponse) GetPurgeTimeOr(val time.Time) time.Time
 	return val
 }
 
-func (m *ServiceAccountMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *ServiceAccountMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *ServiceAccountMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *ServiceAccountMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}
@@ -265,19 +265,5 @@ func (m *ServiceAccountMetadataResponse) Clone() *ServiceAccountMetadataResponse
 		clone.Name = &cloneName
 	}
 
-	return &clone
-}
-
-// Представление поля Spec анонимного типа структуры ServiceAccount
-// Real OAPI model name: ServiceAccountSpec
-type ServiceAccountSpecResponse struct {
-}
-
-func (m *ServiceAccountSpecResponse) Clone() *ServiceAccountSpecResponse {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
 	return &clone
 }

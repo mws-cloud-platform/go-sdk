@@ -5,13 +5,13 @@ package model
 import (
 	"time"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: CertificateStatus
 type CertificateStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
-	Details                       *CertificateStatusDetailsResponse `json:"details,omitempty" yaml:"details,omitempty"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	Details                            *CertificateStatusDetailsResponse `json:"details,omitempty" yaml:"details,omitempty"`
 	// Показывает, может ли сертификат использоваться в данный момент.
 	Valid bool `json:"valid" yaml:"valid"`
 	// Подробная причина, по которой сертификат не может быть использован.
@@ -31,11 +31,11 @@ type CertificateStatusResponse struct {
 	ChallengesDeadline *time.Time `json:"challengesDeadline,omitempty" yaml:"challengesDeadline,omitempty"`
 }
 
-func (m *CertificateStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *CertificateStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *CertificateStatusResponse) GetDetails() *CertificateStatusDetailsResponse {

@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func SecretRequestToOptionalResponse(request *SecretRequest) (*SecretOptionalResponse, error) {
@@ -12,7 +12,7 @@ func SecretRequestToOptionalResponse(request *SecretRequest) (*SecretOptionalRes
 	}
 	var response SecretOptionalResponse
 	if request.Metadata != nil {
-		tmpMetadata, err := common.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
+		tmpMetadata, err := commonmodel.CommonTypedResourceMetadataRequestToOptionalResponse(request.Metadata)
 		if err != nil {
 			return nil, err
 		}

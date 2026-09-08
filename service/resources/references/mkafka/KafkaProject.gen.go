@@ -113,6 +113,25 @@ func (m *KafkaProjectID) Clone() *KafkaProjectID {
 	return &clone
 }
 
+func (m *KafkaProjectID) AsRef() *KafkaProjectRef {
+	if m == nil {
+		return nil
+	}
+	return &KafkaProjectRef{
+		id: *m,
+	}
+}
+
+func (m *KafkaProjectID) Equal(other *KafkaProjectID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m KafkaProjectID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *KafkaProjectRef) Clone() *KafkaProjectRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *KafkaProjectRef) Equal(other *KafkaProjectRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m KafkaProjectRef) MarshalJSON() ([]byte, error) {

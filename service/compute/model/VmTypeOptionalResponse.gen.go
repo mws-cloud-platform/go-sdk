@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
@@ -105,7 +105,7 @@ func (m *VmTypeOptionalResponse) Clone() *VmTypeOptionalResponse {
 // Представление поля Metadata анонимного типа структуры VmType
 // Real OAPI model name: VmTypeMetadata
 type VmTypeMetadataOptionalResponse struct {
-	common.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
 	// ID свойства
 	Id compute.VmTypeID `json:"id" yaml:"id"`
 }
@@ -180,14 +180,14 @@ func (m *VmTypeMetadataOptionalResponse) GetPurgeTimeOr(val time.Time) time.Time
 	return val
 }
 
-func (m *VmTypeMetadataOptionalResponse) GetUsages() []common.TypedUsageOptionalResponse {
+func (m *VmTypeMetadataOptionalResponse) GetUsages() []commonmodel.TypedUsageOptionalResponse {
 	if m != nil && m.Usages.IsSet() {
 		return m.TypedResourceMetadataOptionalResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *VmTypeMetadataOptionalResponse) GetUsagesOr(val []common.TypedUsageOptionalResponse) []common.TypedUsageOptionalResponse {
+func (m *VmTypeMetadataOptionalResponse) GetUsagesOr(val []commonmodel.TypedUsageOptionalResponse) []commonmodel.TypedUsageOptionalResponse {
 	if m != nil {
 		return m.TypedResourceMetadataOptionalResponse.GetUsagesOr(val)
 	}

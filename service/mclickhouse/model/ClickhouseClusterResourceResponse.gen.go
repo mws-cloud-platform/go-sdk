@@ -9,7 +9,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
@@ -28,11 +28,11 @@ type ClickhouseClusterResourceResponse struct {
 	Coordinator *ClickhouseClusterCoordinatorResourceResponse `json:"coordinator,omitempty" yaml:"coordinator,omitempty"`
 	// Описание шардов кластера.
 	Shards []ClickhouseClusterShardResourceResponse `json:"shards" yaml:"shards"`
-	// Настройки Clickhouse.
+	// Настройки ClickHouse.
 	Config map[string]jsonapimodels.RawMessageNotNull `json:"config,omitempty" yaml:"config,omitempty"`
 	// Конфигурация схемы хранилищ ClickHouse.
 	Storage           *ClickhouseStorageConfigurationResponse `json:"storage,omitempty" yaml:"storage,omitempty"`
-	MaintenanceWindow common.MaintenanceWindowResponse        `json:"maintenanceWindow" yaml:"maintenanceWindow"`
+	MaintenanceWindow commonmodel.MaintenanceWindowResponse   `json:"maintenanceWindow" yaml:"maintenanceWindow"`
 	// Спецификация работы автоматического резервного копирования.
 	Backup ClickhouseClusterBackupResourceResponse `json:"backup" yaml:"backup"`
 }
@@ -153,14 +153,14 @@ func (m *ClickhouseClusterResourceResponse) GetStorageOr(val ClickhouseStorageCo
 	return val
 }
 
-func (m *ClickhouseClusterResourceResponse) GetMaintenanceWindow() common.MaintenanceWindowResponse {
+func (m *ClickhouseClusterResourceResponse) GetMaintenanceWindow() commonmodel.MaintenanceWindowResponse {
 	if m != nil {
 		return m.MaintenanceWindow
 	}
-	return common.MaintenanceWindowResponse{}
+	return commonmodel.MaintenanceWindowResponse{}
 }
 
-func (m *ClickhouseClusterResourceResponse) SetMaintenanceWindow(val common.MaintenanceWindowResponse) {
+func (m *ClickhouseClusterResourceResponse) SetMaintenanceWindow(val commonmodel.MaintenanceWindowResponse) {
 	m.MaintenanceWindow = val
 }
 

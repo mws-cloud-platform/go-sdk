@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestTypedUsageMarshalling(t *testing.T) {
@@ -18,13 +18,13 @@ func TestTypedUsageMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.TypedUsage
+	var actual commonmodel.TypedUsage
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initTypedUsage() common.TypedUsage {
-	var v common.TypedUsage
+func initTypedUsage() commonmodel.TypedUsage {
+	var v commonmodel.TypedUsage
 	v.Resource = resmodels.MustParseAnyResourceID("AnyResourceID")
 	return v
 }

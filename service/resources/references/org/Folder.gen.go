@@ -135,6 +135,25 @@ func (m *FolderID) Clone() *FolderID {
 	return &clone
 }
 
+func (m *FolderID) AsRef() *FolderRef {
+	if m == nil {
+		return nil
+	}
+	return &FolderRef{
+		id: *m,
+	}
+}
+
+func (m *FolderID) Equal(other *FolderID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.folder == other.folder && m.organization == other.organization
+}
+
 func (m FolderID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *FolderRef) Clone() *FolderRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *FolderRef) Equal(other *FolderRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.folder == other.id.folder && m.id.organization == other.id.organization
 }
 
 func (m FolderRef) MarshalJSON() ([]byte, error) {

@@ -113,6 +113,25 @@ func (m *CertmanagerProjectID) Clone() *CertmanagerProjectID {
 	return &clone
 }
 
+func (m *CertmanagerProjectID) AsRef() *CertmanagerProjectRef {
+	if m == nil {
+		return nil
+	}
+	return &CertmanagerProjectRef{
+		id: *m,
+	}
+}
+
+func (m *CertmanagerProjectID) Equal(other *CertmanagerProjectID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m CertmanagerProjectID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *CertmanagerProjectRef) Clone() *CertmanagerProjectRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *CertmanagerProjectRef) Equal(other *CertmanagerProjectRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m CertmanagerProjectRef) MarshalJSON() ([]byte, error) {

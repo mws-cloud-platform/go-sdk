@@ -12,7 +12,7 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	clienterrors "go.mws.cloud/go-sdk/internal/client/errors"
 	"go.mws.cloud/go-sdk/service/certmanager/client"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func decodeGetChallengeTokenResponse(resp *http.Response) (*client.GetChallengeTokenResponse, error) {
@@ -44,7 +44,7 @@ func decodeGetChallengeTokenResponse(resp *http.Response) (*client.GetChallengeT
 		case "application/json":
 			result := &client.GetChallengeTokenResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -61,7 +61,7 @@ func decodeGetChallengeTokenResponse(resp *http.Response) (*client.GetChallengeT
 		case "application/json":
 			result := &client.GetChallengeTokenResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

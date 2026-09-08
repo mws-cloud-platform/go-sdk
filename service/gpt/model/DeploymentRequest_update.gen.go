@@ -11,7 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type UpdateDeploymentRequest struct {
@@ -98,7 +98,7 @@ func (m *DeploymentRequest) diffSpec(src *DeploymentRequest) optional.Optional[U
 }
 
 type UpdateDeploymentMetadataRequest struct {
-	common.UpdateTypedResourceMetadataRequest
+	commonmodel.UpdateTypedResourceMetadataRequest
 }
 
 func (m *DeploymentMetadataRequest) AsUpdateModel() UpdateDeploymentMetadataRequest {
@@ -107,10 +107,10 @@ func (m *DeploymentMetadataRequest) AsUpdateModel() UpdateDeploymentMetadataRequ
 		u.DisplayName = optional.NewOptional(m.GetDisplayNameOr(""))
 	}
 	if m.Usages != nil {
-		u.Usages = optional.NewOptional(func() []common.UpdateTypedUsageRequest {
-			var tmp []common.UpdateTypedUsageRequest
+		u.Usages = optional.NewOptional(func() []commonmodel.UpdateTypedUsageRequest {
+			var tmp []commonmodel.UpdateTypedUsageRequest
 			if m.GetUsages() != nil {
-				tmp = make([]common.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
+				tmp = make([]commonmodel.UpdateTypedUsageRequest, 0, len(m.GetUsages()))
 			}
 			for _, val := range m.GetUsages() {
 				tmp = append(tmp, val.AsUpdateModel())
@@ -150,7 +150,7 @@ func (m *DeploymentMetadataRequest) WithChanges(u UpdateDeploymentMetadataReques
 		out.DisplayName = ptr.Get(u.DisplayName.Value)
 	}
 	if u.Usages.IsSet() {
-		out.Usages = merge.Slice(out.Usages, u.Usages.Value, (*common.TypedUsageRequest).WithChanges, (*common.TypedUsageRequest).GetName, (*common.UpdateTypedUsageRequest).GetName)
+		out.Usages = merge.Slice(out.Usages, u.Usages.Value, (*commonmodel.TypedUsageRequest).WithChanges, (*commonmodel.TypedUsageRequest).GetName, (*commonmodel.UpdateTypedUsageRequest).GetName)
 	}
 	if u.Etag.IsSet() {
 		out.Etag = ptr.Get(u.Etag.Value)
@@ -174,15 +174,15 @@ func (m *DeploymentMetadataRequest) diffDisplayName(src *DeploymentMetadataReque
 	return commonclient.DiffPrimitiveNonRequired(src.GetDisplayName(), m.GetDisplayName(), nilDiffers)
 }
 
-func (m *DeploymentMetadataRequest) diffUsages(src *DeploymentMetadataRequest) optional.Optional[[]common.UpdateTypedUsageRequest] {
-	diffFunc := func(fromItem, toItem common.TypedUsageRequest, fromNil bool) common.UpdateTypedUsageRequest {
+func (m *DeploymentMetadataRequest) diffUsages(src *DeploymentMetadataRequest) optional.Optional[[]commonmodel.UpdateTypedUsageRequest] {
+	diffFunc := func(fromItem, toItem commonmodel.TypedUsageRequest, fromNil bool) commonmodel.UpdateTypedUsageRequest {
 		if fromNil {
 			return toItem.Diff(nil)
 		}
 		return toItem.Diff(&fromItem)
 	}
 	value, hasChanges := commonclient.GetChangesArrayObject(src.GetUsages(), m.GetUsages(), diffFunc)
-	return optional.Optional[[]common.UpdateTypedUsageRequest]{
+	return optional.Optional[[]commonmodel.UpdateTypedUsageRequest]{
 		Value: value,
 		Set:   hasChanges,
 	}

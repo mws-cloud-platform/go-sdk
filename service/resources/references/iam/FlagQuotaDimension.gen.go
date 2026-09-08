@@ -133,6 +133,25 @@ func (m *FlagQuotaDimensionID) Clone() *FlagQuotaDimensionID {
 	return &clone
 }
 
+func (m *FlagQuotaDimensionID) AsRef() *FlagQuotaDimensionRef {
+	if m == nil {
+		return nil
+	}
+	return &FlagQuotaDimensionRef{
+		id: *m,
+	}
+}
+
+func (m *FlagQuotaDimensionID) Equal(other *FlagQuotaDimensionID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m FlagQuotaDimensionID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -289,6 +308,16 @@ func (m *FlagQuotaDimensionRef) Clone() *FlagQuotaDimensionRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *FlagQuotaDimensionRef) Equal(other *FlagQuotaDimensionRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m FlagQuotaDimensionRef) MarshalJSON() ([]byte, error) {

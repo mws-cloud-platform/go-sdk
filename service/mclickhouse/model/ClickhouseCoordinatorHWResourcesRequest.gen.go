@@ -9,7 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 )
 
-// Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. Необязательный параметр в standalone-конфигурации.
+// Ресурсы одного узла-координатора ClickHouse Keeper.
 // Real OAPI model name: ClickhouseCoordinatorHWResources
 type ClickhouseCoordinatorHWResourcesRequest struct {
 	// Тип виртуальной машины, описывающий ресурсы (vCPU, memory).

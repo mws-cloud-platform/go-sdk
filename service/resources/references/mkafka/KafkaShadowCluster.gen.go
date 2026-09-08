@@ -135,6 +135,25 @@ func (m *KafkaShadowClusterID) Clone() *KafkaShadowClusterID {
 	return &clone
 }
 
+func (m *KafkaShadowClusterID) AsRef() *KafkaShadowClusterRef {
+	if m == nil {
+		return nil
+	}
+	return &KafkaShadowClusterRef{
+		id: *m,
+	}
+}
+
+func (m *KafkaShadowClusterID) Equal(other *KafkaShadowClusterID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.cluster == other.cluster && m.shadowProject == other.shadowProject
+}
+
 func (m KafkaShadowClusterID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *KafkaShadowClusterRef) Clone() *KafkaShadowClusterRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *KafkaShadowClusterRef) Equal(other *KafkaShadowClusterRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.cluster == other.id.cluster && m.id.shadowProject == other.id.shadowProject
 }
 
 func (m KafkaShadowClusterRef) MarshalJSON() ([]byte, error) {

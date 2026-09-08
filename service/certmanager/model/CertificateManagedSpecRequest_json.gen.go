@@ -53,12 +53,14 @@ func (m *CertificateManagedSpecRequest) encodeFields(e *jx.Encoder) error {
 		}
 	}
 
-	e.FieldStart("domains")
-	e.ArrStart()
-	for _, elem := range m.Domains {
-		e.Str(elem)
+	if m.Domains != nil {
+		e.FieldStart("domains")
+		e.ArrStart()
+		for _, elem := range m.Domains {
+			e.Str(elem)
+		}
+		e.ArrEnd()
 	}
-	e.ArrEnd()
 	return nil
 }
 
@@ -71,10 +73,7 @@ func (m *CertificateManagedSpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("CertificateManagedSpecRequest")
 	}
 
-	requiredFilled := map[string]bool{
-		"domains": false,
-	}
-	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "preferredChallengeType":
 			var v CertificateChallengeType
@@ -119,15 +118,9 @@ func (m *CertificateManagedSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Domains = c
-			requiredFilled["domains"] = true
 			return nil
 		default:
 			return d.Skip()
 		}
 	}))
-	if err != nil {
-		return err
-	}
-
-	return conv.ValidateRequired(requiredFilled)
 }

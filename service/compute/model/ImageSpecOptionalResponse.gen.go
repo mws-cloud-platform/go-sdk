@@ -4,12 +4,14 @@ package model
 
 import (
 	"context"
+	"fmt"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Спецификация образа
@@ -17,6 +19,8 @@ import (
 type ImageSpecOptionalResponse struct {
 	// Семейство образа
 	Family optional.Optional[string] `json:"family,omitempty" yaml:"family,omitempty"`
+	// Список регионов, в которых будет создана физическая копия образа
+	Regions optional.Optional[[]rm.RegionRef] `json:"regions,omitempty" yaml:"regions,omitempty"`
 	// Источник для создания образа
 	Source ImageSpecSourceOptionalResponse `json:"source" yaml:"source"`
 	// Актуальность образа
@@ -39,6 +43,20 @@ func (m *ImageSpecOptionalResponse) GetFamily() *string {
 func (m *ImageSpecOptionalResponse) GetFamilyOr(val string) string {
 	if m != nil && m.Family.IsSet() {
 		return m.Family.Value
+	}
+	return val
+}
+
+func (m *ImageSpecOptionalResponse) GetRegions() []rm.RegionRef {
+	if m != nil && m.Regions.IsSet() {
+		return m.Regions.Value
+	}
+	return nil
+}
+
+func (m *ImageSpecOptionalResponse) GetRegionsOr(val []rm.RegionRef) []rm.RegionRef {
+	if m != nil && m.Regions.IsSet() {
+		return m.Regions.Value
 	}
 	return val
 }
@@ -116,6 +134,12 @@ func (m *ImageSpecOptionalResponse) Clone() *ImageSpecOptionalResponse {
 	}
 
 	clone := *m
+	if m.Regions.Value != nil {
+		clone.Regions.Value = make([]rm.RegionRef, len(m.Regions.Value))
+		for i, v := range m.Regions.Value {
+			clone.Regions.Value[i] = *v.Clone()
+		}
+	}
 	clone.Source = *m.Source.Clone()
 	if clone.MinDiskSize.IsSet() {
 		clone.MinDiskSize.Value = *m.MinDiskSize.Value.Clone()
@@ -129,6 +153,14 @@ func (m *ImageSpecOptionalResponse) Clone() *ImageSpecOptionalResponse {
 func (m *ImageSpecOptionalResponse) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if m.Regions.IsSet() {
+		for index := range m.Regions.Value {
+			if err := m.Regions.Value[index].Parse(ctx); err != nil {
+				return reserrors.NewPathAccumulatorError("Regions"+fmt.Sprint("[", index, "]"), err)
+			}
+		}
 	}
 
 	if err := m.Source.Parse(ctx); err != nil {

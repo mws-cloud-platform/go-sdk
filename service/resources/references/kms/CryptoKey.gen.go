@@ -135,6 +135,25 @@ func (m *CryptoKeyID) Clone() *CryptoKeyID {
 	return &clone
 }
 
+func (m *CryptoKeyID) AsRef() *CryptoKeyRef {
+	if m == nil {
+		return nil
+	}
+	return &CryptoKeyRef{
+		id: *m,
+	}
+}
+
+func (m *CryptoKeyID) Equal(other *CryptoKeyID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.key == other.key && m.project == other.project
+}
+
 func (m CryptoKeyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *CryptoKeyRef) Clone() *CryptoKeyRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *CryptoKeyRef) Equal(other *CryptoKeyRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.key == other.id.key && m.id.project == other.id.project
 }
 
 func (m CryptoKeyRef) MarshalJSON() ([]byte, error) {

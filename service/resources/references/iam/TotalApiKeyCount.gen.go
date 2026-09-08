@@ -133,6 +133,25 @@ func (m *TotalApiKeyCountID) Clone() *TotalApiKeyCountID {
 	return &clone
 }
 
+func (m *TotalApiKeyCountID) AsRef() *TotalApiKeyCountRef {
+	if m == nil {
+		return nil
+	}
+	return &TotalApiKeyCountRef{
+		id: *m,
+	}
+}
+
+func (m *TotalApiKeyCountID) Equal(other *TotalApiKeyCountID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m TotalApiKeyCountID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -289,6 +308,16 @@ func (m *TotalApiKeyCountRef) Clone() *TotalApiKeyCountRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *TotalApiKeyCountRef) Equal(other *TotalApiKeyCountRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m TotalApiKeyCountRef) MarshalJSON() ([]byte, error) {

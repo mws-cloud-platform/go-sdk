@@ -3,15 +3,15 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: GlobalRoleV2
 type GlobalRoleV2Response struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
-	Metadata common.CommonTypedResourceMetadataResponse `json:"metadata" yaml:"metadata"`
-	Status   RoleStatusResponse                         `json:"status" yaml:"status"`
+	Metadata commonmodel.CommonTypedResourceMetadataResponse `json:"metadata" yaml:"metadata"`
+	Status   RoleStatusResponse                              `json:"status" yaml:"status"`
 }
 
 func (m *GlobalRoleV2Response) GetKind() *string {
@@ -32,14 +32,14 @@ func (m *GlobalRoleV2Response) GetKindOr(val string) string {
 	return val
 }
 
-func (m *GlobalRoleV2Response) GetMetadata() common.CommonTypedResourceMetadataResponse {
+func (m *GlobalRoleV2Response) GetMetadata() commonmodel.CommonTypedResourceMetadataResponse {
 	if m != nil {
 		return m.Metadata
 	}
-	return common.CommonTypedResourceMetadataResponse{}
+	return commonmodel.CommonTypedResourceMetadataResponse{}
 }
 
-func (m *GlobalRoleV2Response) SetMetadata(val common.CommonTypedResourceMetadataResponse) {
+func (m *GlobalRoleV2Response) SetMetadata(val commonmodel.CommonTypedResourceMetadataResponse) {
 	m.Metadata = val
 }
 

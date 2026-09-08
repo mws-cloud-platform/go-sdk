@@ -11,7 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Описание subnet пользователя, из которого будет выделен ip-адрес
+// Идентификатор ресурса subnet пользователя, из которого будет выделен ip-адрес.
 // Real OAPI model name: ClusterPrimaryEndpointSpec
 type ClusterPrimaryEndpointSpecRequest struct {
 	// Желаемый IP адрес. Если не указан, то будет выделен из пула адресов подсети.

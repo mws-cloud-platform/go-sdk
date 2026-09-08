@@ -6,7 +6,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 )
 
-// Спецификация группы адресов.
+// Группа CIDR-ов, выступающая в качестве перечня получателей траффика, к которому будет применено Firewall правило.
 // Real OAPI model name: FirewallRuleDestinationSpec
 type FirewallRuleDestinationSpecRequest struct {
 	// Диапазоны IPv4 адресов, которые входят в группу.

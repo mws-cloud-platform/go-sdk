@@ -7,7 +7,7 @@ import (
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m UpdateVpcAddressGroupRequest) MarshalJSON() ([]byte, error) {
@@ -69,7 +69,7 @@ func (m *UpdateVpcAddressGroupRequest) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v common.UpdateCommonTypedResourceMetadataRequest
+			var v commonmodel.UpdateCommonTypedResourceMetadataRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
@@ -77,7 +77,7 @@ func (m *UpdateVpcAddressGroupRequest) Decode(d *jx.Decoder) error {
 			m.Metadata.SetTo(v)
 			return nil
 		case "spec":
-			var v common.UpdateVpcAddressGroupSpecRequest
+			var v commonmodel.UpdateVpcAddressGroupSpecRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}

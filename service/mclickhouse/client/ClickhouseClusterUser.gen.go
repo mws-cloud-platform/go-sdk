@@ -6,25 +6,25 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
 
 type ClickhouseClusterUser interface {
-	// ListClickhouseClusterUsers list clickhouse users.
+	// ListClickhouseClusterUsers возвращает постраничный список пользователей указанного кластера ClickHouse.
 	//
 	// Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/users
 	ListClickhouseClusterUsers(context.Context, ListClickhouseClusterUsersRequest) (*ListClickhouseClusterUsersResponse, error)
-	// UpdateClickhouseClusterUser updates the cluster user.
+	// UpdateClickhouseClusterUser создаёт нового пользователя кластера ClickHouse или изменяет существующего (upsert).
 	//
 	// Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/users/{user}
 	UpdateClickhouseClusterUser(context.Context, UpdateClickhouseClusterUserRequest) (*UpdateClickhouseClusterUserResponse, error)
-	// CreateUpdateClickhouseClusterUser updates the cluster user.
+	// CreateUpdateClickhouseClusterUser создаёт нового пользователя кластера ClickHouse или изменяет существующего (upsert).
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/users/{user}?createOnly=true
 	CreateUpdateClickhouseClusterUser(context.Context, UpdateClickhouseClusterUserRequest) (*UpdateClickhouseClusterUserResponse, error)
-	// UpdateUpdateClickhouseClusterUser updates the cluster user.
+	// UpdateUpdateClickhouseClusterUser создаёт нового пользователя кластера ClickHouse или изменяет существующего (upsert).
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/users/{user}?updateOnly=true
@@ -75,9 +75,9 @@ func (m ListClickhouseClusterUsersRequest) WithPageToken(token *string) ListClic
 type ListClickhouseClusterUsersResponse struct {
 	Code        int
 	Response200 *model.ClickhouseClusterUserPageResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -121,7 +121,7 @@ type UpdateClickhouseClusterUserRequest struct {
 	Cluster string // path: "cluster"
 	// Пользователь кластера
 	User string // path: "user"
-	// Update clickhouse cluster user
+	// Данные для создания или изменения пользователя кластера ClickHouse
 	Body model.ClickhouseClusterUserRequest // body
 }
 
@@ -148,7 +148,7 @@ type UpdateUpdateClickhouseClusterUserRequest struct {
 	Cluster string // path: "cluster"
 	// Пользователь кластера
 	User string // path: "user"
-	// Update clickhouse cluster user
+	// Данные для создания или изменения пользователя кластера ClickHouse
 	Body model.UpdateClickhouseClusterUserRequest // body
 }
 
@@ -167,12 +167,12 @@ func (m *UpdateUpdateClickhouseClusterUserRequest) SetProject(project string) {
 type UpdateClickhouseClusterUserResponse struct {
 	Code        int
 	Response200 *model.ClickhouseClusterUserOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

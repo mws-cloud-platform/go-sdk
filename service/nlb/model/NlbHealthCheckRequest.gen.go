@@ -12,7 +12,7 @@ type NlbHealthCheckRequest struct {
 	// Конфигурация протокола проверки работоспособности.
 	Protocol NlbHealthCheckProtocolRequest `json:"protocol" yaml:"protocol"`
 	// Интервал между проверками.
-	Interval duration.Duration `json:"interval" yaml:"interval"`
+	Interval *duration.Duration `json:"interval,omitempty" yaml:"interval,omitempty"`
 	// Таймаут запроса.
 	Timeout duration.Duration `json:"timeout" yaml:"timeout"`
 	// Количество последовательных проваленных проверок, после которого виртуальная машина считается неработоспособной.
@@ -32,15 +32,22 @@ func (m *NlbHealthCheckRequest) SetProtocol(val NlbHealthCheckProtocolRequest) {
 	m.Protocol = val
 }
 
-func (m *NlbHealthCheckRequest) GetInterval() duration.Duration {
+func (m *NlbHealthCheckRequest) GetInterval() *duration.Duration {
 	if m != nil {
 		return m.Interval
 	}
-	return duration.Duration{}
+	return nil
 }
 
-func (m *NlbHealthCheckRequest) SetInterval(val duration.Duration) {
+func (m *NlbHealthCheckRequest) SetInterval(val *duration.Duration) {
 	m.Interval = val
+}
+
+func (m *NlbHealthCheckRequest) GetIntervalOr(val duration.Duration) duration.Duration {
+	if m != nil && m.Interval != nil {
+		return *m.Interval
+	}
+	return val
 }
 
 func (m *NlbHealthCheckRequest) GetTimeout() duration.Duration {
@@ -97,7 +104,7 @@ func (m *NlbHealthCheckRequest) Clone() *NlbHealthCheckRequest {
 
 	clone := *m
 	clone.Protocol = *m.Protocol.Clone()
-	clone.Interval = *m.Interval.Clone()
+	clone.Interval = m.Interval.Clone()
 	clone.Timeout = *m.Timeout.Clone()
 	if m.UnhealthyThreshold != nil {
 		cloneUnhealthyThreshold := *m.UnhealthyThreshold

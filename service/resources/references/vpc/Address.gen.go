@@ -157,6 +157,25 @@ func (m *AddressID) Clone() *AddressID {
 	return &clone
 }
 
+func (m *AddressID) AsRef() *AddressRef {
+	if m == nil {
+		return nil
+	}
+	return &AddressRef{
+		id: *m,
+	}
+}
+
+func (m *AddressID) Equal(other *AddressID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.address == other.address && m.network == other.network && m.project == other.project
+}
+
 func (m AddressID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *AddressRef) Clone() *AddressRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *AddressRef) Equal(other *AddressRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.address == other.id.address && m.id.network == other.id.network && m.id.project == other.id.project
 }
 
 func (m AddressRef) MarshalJSON() ([]byte, error) {

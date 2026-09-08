@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func ServiceAccountRequestToResponse(request *ServiceAccountRequest) (*ServiceAccountResponse, error) {
@@ -31,7 +31,7 @@ func ServiceAccountMetadataRequestToResponse(request *ServiceAccountMetadataRequ
 	var response ServiceAccountMetadataResponse
 	response.DisplayName = request.DisplayName
 	for _, e := range request.Usages {
-		tmp, err := common.TypedUsageRequestToResponse(&e)
+		tmp, err := commonmodel.TypedUsageRequestToResponse(&e)
 		if err != nil {
 			return nil, err
 		}
@@ -40,13 +40,5 @@ func ServiceAccountMetadataRequestToResponse(request *ServiceAccountMetadataRequ
 	response.Etag = request.Etag
 	response.Description = request.Description
 	response.Name = request.Name
-	return &response, nil
-}
-
-func ServiceAccountSpecRequestToResponse(request *ServiceAccountSpecRequest) (*ServiceAccountSpecResponse, error) {
-	if request == nil {
-		return nil, nil
-	}
-	var response ServiceAccountSpecResponse
 	return &response, nil
 }

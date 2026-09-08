@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
 
@@ -55,9 +55,9 @@ func (m ListGlobalRoleV2Request) WithPageToken(token *string) ListGlobalRoleV2Re
 type ListGlobalRoleV2Response struct {
 	Code        int
 	Response200 *model.GlobalRoleListV2Response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -103,10 +103,10 @@ func (m *GetGlobalRoleV2Request) SetAuthorization(authorization string) {
 type GetGlobalRoleV2Response struct {
 	Code        int
 	Response200 *model.GlobalRoleV2Response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

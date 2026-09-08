@@ -157,6 +157,25 @@ func (m *BucketPolicyID) Clone() *BucketPolicyID {
 	return &clone
 }
 
+func (m *BucketPolicyID) AsRef() *BucketPolicyRef {
+	if m == nil {
+		return nil
+	}
+	return &BucketPolicyRef{
+		id: *m,
+	}
+}
+
+func (m *BucketPolicyID) Equal(other *BucketPolicyID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.name == other.name && m.bucket == other.bucket && m.project == other.project
+}
+
 func (m BucketPolicyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *BucketPolicyRef) Clone() *BucketPolicyRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *BucketPolicyRef) Equal(other *BucketPolicyRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.name == other.id.name && m.id.bucket == other.id.bucket && m.id.project == other.id.project
 }
 
 func (m BucketPolicyRef) MarshalJSON() ([]byte, error) {

@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func PostgresBackupRequestToResponse(request *PostgresBackupRequest) (*PostgresBackupResponse, error) {
@@ -31,7 +31,7 @@ func PostgresBackupMetadataRequestToResponse(request *PostgresBackupMetadataRequ
 	var response PostgresBackupMetadataResponse
 	response.DisplayName = request.DisplayName
 	for _, e := range request.Usages {
-		tmp, err := common.TypedUsageRequestToResponse(&e)
+		tmp, err := commonmodel.TypedUsageRequestToResponse(&e)
 		if err != nil {
 			return nil, err
 		}
@@ -39,13 +39,5 @@ func PostgresBackupMetadataRequestToResponse(request *PostgresBackupMetadataRequ
 	}
 	response.Etag = request.Etag
 	response.Description = request.Description
-	return &response, nil
-}
-
-func PostgresBackupSpecRequestToResponse(request *PostgresBackupSpecRequest) (*PostgresBackupSpecResponse, error) {
-	if request == nil {
-		return nil, nil
-	}
-	var response PostgresBackupSpecResponse
 	return &response, nil
 }

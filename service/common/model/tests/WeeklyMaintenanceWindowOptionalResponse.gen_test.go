@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestWeeklyMaintenanceWindowOptionalResponseMarshalling(t *testing.T) {
@@ -17,13 +17,13 @@ func TestWeeklyMaintenanceWindowOptionalResponseMarshalling(t *testing.T) {
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 
-	var actual common.WeeklyMaintenanceWindowOptionalResponse
+	var actual commonmodel.WeeklyMaintenanceWindowOptionalResponse
 	require.NoError(t, json.Unmarshal(b, &actual))
 	require.Equal(t, expected, actual)
 }
 
-func initWeeklyMaintenanceWindowOptionalResponse() common.WeeklyMaintenanceWindowOptionalResponse {
-	var v common.WeeklyMaintenanceWindowOptionalResponse
-	v.Days = make([]common.DayOfWeek, 0)
+func initWeeklyMaintenanceWindowOptionalResponse() commonmodel.WeeklyMaintenanceWindowOptionalResponse {
+	var v commonmodel.WeeklyMaintenanceWindowOptionalResponse
+	v.Days = make([]commonmodel.DayOfWeek, 0)
 	return v
 }

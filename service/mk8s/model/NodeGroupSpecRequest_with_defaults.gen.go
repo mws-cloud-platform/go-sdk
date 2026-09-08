@@ -3,6 +3,7 @@
 package model
 
 import (
+	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 )
 
@@ -12,6 +13,9 @@ func (m *NodeGroupSpecRequest) WithDefaults() NodeGroupSpecRequest {
 		out = *m
 	}
 
+	if out.ImageStorageSize == nil {
+		out.ImageStorageSize = ptr.Get(bytesize.MustParseString("15Gb"))
+	}
 	if out.ImageStorageIops == nil {
 		out.ImageStorageIops = ptr.Get(int64(1000))
 	}

@@ -8,7 +8,7 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mclickhouse"
 )
 
@@ -120,7 +120,7 @@ func (m *ClickhouseClusterOptionalResponse) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры ClickhouseCluster
 // Real OAPI model name: ClickhouseClusterMetadata
 type ClickhouseClusterMetadataOptionalResponse struct {
-	common.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataOptionalResponse `yaml:"-,inline"`
 	// Ссылка на типизированный референс.
 	Id *mclickhouse.ClickhouseClusterID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -195,14 +195,14 @@ func (m *ClickhouseClusterMetadataOptionalResponse) GetPurgeTimeOr(val time.Time
 	return val
 }
 
-func (m *ClickhouseClusterMetadataOptionalResponse) GetUsages() []common.TypedUsageOptionalResponse {
+func (m *ClickhouseClusterMetadataOptionalResponse) GetUsages() []commonmodel.TypedUsageOptionalResponse {
 	if m != nil && m.Usages.IsSet() {
 		return m.TypedResourceMetadataOptionalResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *ClickhouseClusterMetadataOptionalResponse) GetUsagesOr(val []common.TypedUsageOptionalResponse) []common.TypedUsageOptionalResponse {
+func (m *ClickhouseClusterMetadataOptionalResponse) GetUsagesOr(val []commonmodel.TypedUsageOptionalResponse) []commonmodel.TypedUsageOptionalResponse {
 	if m != nil {
 		return m.TypedResourceMetadataOptionalResponse.GetUsagesOr(val)
 	}

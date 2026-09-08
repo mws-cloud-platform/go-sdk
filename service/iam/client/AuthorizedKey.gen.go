@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
 
@@ -98,10 +98,10 @@ func (m ListAuthorizedKeyRequest) WithPageToken(token *string) ListAuthorizedKey
 type ListAuthorizedKeyResponse struct {
 	Code        int
 	Response200 *model.AuthorizedKeyListOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -144,6 +144,11 @@ type DeleteAuthorizedKeyV2Request struct {
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
+	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+	IfExist *bool // query: "ifExist"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteAuthorizedKeyV2Request) SetAuthorization(authorization string) {
@@ -163,17 +168,16 @@ func (m *DeleteAuthorizedKeyV2Request) getAuthorizedKeyV2Request() GetAuthorized
 		ServiceAccount: m.ServiceAccount,
 		AuthorizedKey:  m.AuthorizedKey,
 		Project:        m.Project,
-		Authorization:  m.Authorization,
 	}
 }
 
 type DeleteAuthorizedKeyV2Response struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -214,12 +218,6 @@ type GetAuthorizedKeyV2Request struct {
 	AuthorizedKey  string // path: "authorizedKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
-}
-
-func (m *GetAuthorizedKeyV2Request) SetAuthorization(authorization string) {
-	m.Authorization = authorization
 }
 
 func (m GetAuthorizedKeyV2Request) GetProject() string {
@@ -233,10 +231,10 @@ func (m *GetAuthorizedKeyV2Request) SetProject(project string) {
 type GetAuthorizedKeyV2Response struct {
 	Code        int
 	Response200 *model.AuthorizedKeyOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -280,8 +278,10 @@ type UpsertAuthorizedKeyV2Request struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
-	IdempotencyKey *string                    // header: "Idempotency-Key"
-	Body           model.AuthorizedKeyRequest // body
+	IdempotencyKey *string // header: "Idempotency-Key"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool                      // query: "validateOnly"
+	Body         model.AuthorizedKeyRequest // body
 }
 
 func (m *UpsertAuthorizedKeyV2Request) SetAuthorization(authorization string) {
@@ -304,8 +304,10 @@ type UpdateAuthorizedKeyV2Request struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
-	IdempotencyKey *string                          // header: "Idempotency-Key"
-	Body           model.UpdateAuthorizedKeyRequest // body
+	IdempotencyKey *string // header: "Idempotency-Key"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool                            // query: "validateOnly"
+	Body         model.UpdateAuthorizedKeyRequest // body
 }
 
 func (m *UpdateAuthorizedKeyV2Request) SetAuthorization(authorization string) {
@@ -324,11 +326,11 @@ type UpsertAuthorizedKeyV2Response struct {
 	Code        int
 	Response200 *model.AuthorizedKeyOptionalResponse
 	Response201 *model.AuthorizedKeyOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -374,6 +376,11 @@ type DeleteAuthorizedKeyRequest struct {
 	Project string // path: "project"
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
+	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+	IfExist *bool // query: "ifExist"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteAuthorizedKeyRequest) SetAuthorization(authorization string) {
@@ -393,17 +400,16 @@ func (m *DeleteAuthorizedKeyRequest) getAuthorizedKeyRequest() GetAuthorizedKeyR
 		ServiceAccount: m.ServiceAccount,
 		AuthorizedKey:  m.AuthorizedKey,
 		Project:        m.Project,
-		Authorization:  m.Authorization,
 	}
 }
 
 type DeleteAuthorizedKeyResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -444,12 +450,6 @@ type GetAuthorizedKeyRequest struct {
 	AuthorizedKey  string // path: "authorizedKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
-}
-
-func (m *GetAuthorizedKeyRequest) SetAuthorization(authorization string) {
-	m.Authorization = authorization
 }
 
 func (m GetAuthorizedKeyRequest) GetProject() string {
@@ -463,10 +463,10 @@ func (m *GetAuthorizedKeyRequest) SetProject(project string) {
 type GetAuthorizedKeyResponse struct {
 	Code        int
 	Response200 *model.AuthorizedKeyOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -510,8 +510,10 @@ type UpsertAuthorizedKeyRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
-	IdempotencyKey *string                    // header: "Idempotency-Key"
-	Body           model.AuthorizedKeyRequest // body
+	IdempotencyKey *string // header: "Idempotency-Key"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool                      // query: "validateOnly"
+	Body         model.AuthorizedKeyRequest // body
 }
 
 func (m *UpsertAuthorizedKeyRequest) SetAuthorization(authorization string) {
@@ -534,8 +536,10 @@ type UpdateAuthorizedKeyRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
-	IdempotencyKey *string                          // header: "Idempotency-Key"
-	Body           model.UpdateAuthorizedKeyRequest // body
+	IdempotencyKey *string // header: "Idempotency-Key"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool                            // query: "validateOnly"
+	Body         model.UpdateAuthorizedKeyRequest // body
 }
 
 func (m *UpdateAuthorizedKeyRequest) SetAuthorization(authorization string) {
@@ -554,11 +558,11 @@ type UpsertAuthorizedKeyResponse struct {
 	Code        int
 	Response200 *model.AuthorizedKeyOptionalResponse
 	Response201 *model.AuthorizedKeyOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

@@ -10,7 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
-// Параметры виртуальной машины, где будет работать брокер Кафки.
+// Параметры ноды брокера.
 // Real OAPI model name: KafkaInstanceSpec
 type KafkaInstanceSpecRequest struct {
 	// Тип виртуальной машины, описывающий ресурсы (vCPU, memory).

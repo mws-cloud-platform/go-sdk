@@ -7,7 +7,7 @@ import (
 	"time"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/mpostgres"
 )
 
@@ -116,7 +116,7 @@ func (m *PostgresClusterDatabaseResponse) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры PostgresClusterDatabase
 // Real OAPI model name: PostgresClusterDatabaseMetadata
 type PostgresClusterDatabaseMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// Ссылка на типизированный референс.
 	Id *mpostgres.PostgresClusterDatabaseID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -191,14 +191,14 @@ func (m *PostgresClusterDatabaseMetadataResponse) GetPurgeTimeOr(val time.Time) 
 	return val
 }
 
-func (m *PostgresClusterDatabaseMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *PostgresClusterDatabaseMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *PostgresClusterDatabaseMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *PostgresClusterDatabaseMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}

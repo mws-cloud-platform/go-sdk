@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func (m UpdatePostgresBackupRequest) MarshalJSON() ([]byte, error) {
@@ -170,9 +170,9 @@ func (m *UpdatePostgresBackupMetadataRequest) Decode(d *jx.Decoder) error {
 			m.DisplayName.SetTo(v)
 			return nil
 		case "usages":
-			c := make([]common.UpdateTypedUsageRequest, 0)
+			c := make([]commonmodel.UpdateTypedUsageRequest, 0)
 			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v common.UpdateTypedUsageRequest
+				var v commonmodel.UpdateTypedUsageRequest
 				if err := v.Decode(d); err != nil {
 					return err
 				}
@@ -204,41 +204,4 @@ func (m *UpdatePostgresBackupMetadataRequest) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}))
-}
-
-func (m UpdatePostgresBackupSpecRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *UpdatePostgresBackupSpecRequest) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *UpdatePostgresBackupSpecRequest) encodeFields(e *jx.Encoder) error {
-	return nil
-}
-
-func (m *UpdatePostgresBackupSpecRequest) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *UpdatePostgresBackupSpecRequest) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("UpdatePostgresBackupSpecRequest")
-	}
-
-	return d.Skip()
 }

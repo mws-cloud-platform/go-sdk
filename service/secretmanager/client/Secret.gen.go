@@ -6,7 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/secretmanager/model"
 )
 
@@ -83,14 +83,11 @@ func (m ListSecretsRequest) WithPageToken(token *string) ListSecretsRequest {
 type ListSecretsResponse struct {
 	Code        int
 	Response200 *model.SecretListOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -116,15 +113,6 @@ func (m *ListSecretsResponse) GetErr() (err error) {
 	}
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
-	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
-	if m.Response412 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
@@ -163,16 +151,12 @@ func (m *CreateSecretWithSecretVersionRequest) SetProject(project string) {
 type CreateSecretWithSecretVersionResponse struct {
 	Code        int
 	Response201 *model.SecretOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response422 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -196,23 +180,11 @@ func (m *CreateSecretWithSecretVersionResponse) GetErr() (err error) {
 	if m.Response403 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
 	}
-	if m.Response404 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
-	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
 	if m.Response409 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response409)
 	}
 	if m.Response412 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response422 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response422)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
@@ -229,6 +201,13 @@ func (m *CreateSecretWithSecretVersionResponse) SetErrorWrapper(f func(err error
 type DeleteSecretRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
+	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+	IfExist *bool // query: "ifExist"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
+	// Удалить зависимые ресурсы, в противном случае при их наличии, будет возвращен ответ `Aborted`
+	Cascade *bool // query: "cascade"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
@@ -260,14 +239,12 @@ func (m *DeleteSecretRequest) getSecretRequest() GetSecretRequest {
 type DeleteSecretResponse struct {
 	Code        int
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -294,14 +271,8 @@ func (m *DeleteSecretResponse) GetErr() (err error) {
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
 	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
 	if m.Response412 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
@@ -339,14 +310,11 @@ func (m *GetSecretRequest) SetProject(project string) {
 type GetSecretResponse struct {
 	Code        int
 	Response200 *model.SecretOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response412 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -373,15 +341,6 @@ func (m *GetSecretResponse) GetErr() (err error) {
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
 	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
-	if m.Response412 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
-	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
 	}
@@ -397,6 +356,8 @@ func (m *GetSecretResponse) SetErrorWrapper(f func(err error) error) {
 type UpsertSecretRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
@@ -429,6 +390,8 @@ func (m *UpsertSecretRequest) getSecretRequest() GetSecretRequest {
 type UpdateSecretRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
@@ -462,16 +425,13 @@ type UpsertSecretResponse struct {
 	Code        int
 	Response200 *model.SecretOptionalResponse
 	Response201 *model.SecretOptionalResponse
-	Response400 *common.ApiError
-	Response401 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response408 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response422 *common.ApiError
-	Response499 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response401 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -498,20 +458,11 @@ func (m *UpsertSecretResponse) GetErr() (err error) {
 	if m.Response404 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
 	}
-	if m.Response408 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response408)
-	}
 	if m.Response409 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response409)
 	}
 	if m.Response412 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
-	}
-	if m.Response422 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response422)
-	}
-	if m.Response499 != nil {
-		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
 	if m.Response500 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)

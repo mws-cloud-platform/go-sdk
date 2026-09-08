@@ -133,6 +133,25 @@ func (m *FlagMkafkaPreviewID) Clone() *FlagMkafkaPreviewID {
 	return &clone
 }
 
+func (m *FlagMkafkaPreviewID) AsRef() *FlagMkafkaPreviewRef {
+	if m == nil {
+		return nil
+	}
+	return &FlagMkafkaPreviewRef{
+		id: *m,
+	}
+}
+
+func (m *FlagMkafkaPreviewID) Equal(other *FlagMkafkaPreviewID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m FlagMkafkaPreviewID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -289,6 +308,16 @@ func (m *FlagMkafkaPreviewRef) Clone() *FlagMkafkaPreviewRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *FlagMkafkaPreviewRef) Equal(other *FlagMkafkaPreviewRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m FlagMkafkaPreviewRef) MarshalJSON() ([]byte, error) {

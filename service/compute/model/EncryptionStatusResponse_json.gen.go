@@ -51,6 +51,11 @@ func (m *EncryptionStatusResponse) encodeFields(e *jx.Encoder) error {
 			return err
 		}
 	}
+
+	if m.ScheduledDestructionTime != nil {
+		e.FieldStart("scheduledDestructionTime")
+		conv.EncodeDateTimeUTC(e, *m.ScheduledDestructionTime)
+	}
 	return nil
 }
 
@@ -88,6 +93,14 @@ func (m *EncryptionStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.KeyActivity = &v
+			return nil
+		case "scheduledDestructionTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.ScheduledDestructionTime = &v
 			return nil
 		default:
 			return d.Skip()

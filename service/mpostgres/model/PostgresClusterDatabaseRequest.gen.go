@@ -6,7 +6,7 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // База данных в Managed PostgreSQL — это логически изолированный набор данных внутри кластера PostgreSQL
@@ -71,7 +71,7 @@ func (m *PostgresClusterDatabaseRequest) Parse(ctx context.Context) error {
 // Представление поля Metadata анонимного типа структуры PostgresClusterDatabase
 // Real OAPI model name: PostgresClusterDatabaseMetadata
 type PostgresClusterDatabaseMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *PostgresClusterDatabaseMetadataRequest) GetDisplayName() *string {
@@ -88,14 +88,14 @@ func (m *PostgresClusterDatabaseMetadataRequest) GetDisplayNameOr(val string) st
 	return val
 }
 
-func (m *PostgresClusterDatabaseMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *PostgresClusterDatabaseMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *PostgresClusterDatabaseMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *PostgresClusterDatabaseMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}

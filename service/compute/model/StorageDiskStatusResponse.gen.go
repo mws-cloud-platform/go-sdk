@@ -8,7 +8,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
@@ -23,7 +23,7 @@ type StorageDiskStatusResponse struct {
 	// Ссылка на ресурс "Диск"
 	Ref compute.DiskRef `json:"ref" yaml:"ref"`
 	// Состояние ресурса Диска
-	Ready *common.ResourceStatusReadyResponse `json:"ready,omitempty" yaml:"ready,omitempty"`
+	Ready *commonmodel.ResourceStatusReadyResponse `json:"ready,omitempty" yaml:"ready,omitempty"`
 	// Количество операций ввода-вывода в секунду (IOPS) для диска
 	Iops *Iops              `json:"iops,omitempty" yaml:"iops,omitempty"`
 	Size *bytesize.ByteSize `json:"size,omitempty" yaml:"size,omitempty"`
@@ -73,18 +73,18 @@ func (m *StorageDiskStatusResponse) SetRef(val compute.DiskRef) {
 	m.Ref = val
 }
 
-func (m *StorageDiskStatusResponse) GetReady() *common.ResourceStatusReadyResponse {
+func (m *StorageDiskStatusResponse) GetReady() *commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.Ready
 	}
 	return nil
 }
 
-func (m *StorageDiskStatusResponse) SetReady(val *common.ResourceStatusReadyResponse) {
+func (m *StorageDiskStatusResponse) SetReady(val *commonmodel.ResourceStatusReadyResponse) {
 	m.Ready = val
 }
 
-func (m *StorageDiskStatusResponse) GetReadyOr(val common.ResourceStatusReadyResponse) common.ResourceStatusReadyResponse {
+func (m *StorageDiskStatusResponse) GetReadyOr(val commonmodel.ResourceStatusReadyResponse) commonmodel.ResourceStatusReadyResponse {
 	if m != nil && m.Ready != nil {
 		return *m.Ready
 	}

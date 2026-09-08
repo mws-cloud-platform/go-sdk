@@ -6,7 +6,7 @@ import (
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
-// Критерий применимости правила, описывает пункт назначения пакета.
+// Спецификация назначения траффика, к которому будет применено Firewall правило.
 // Real OAPI model name: FirewallRuleDestination
 type FirewallRuleDestinationOptionalResponse struct {
 	// Спецификация группы адресов.

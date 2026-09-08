@@ -13,7 +13,7 @@ import (
 type OneToOneNatAddressSpecOrRefRequest struct {
 	Ref *vpc.ExternalAddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
 	// NAT правило для связи внутреннего адреса с внешним адресом.
-	Spec *OneToOneNatAddressSpecOrRefSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec *OneToOneNatAddressSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 func (m *OneToOneNatAddressSpecOrRefRequest) GetRef() *vpc.ExternalAddressRef {
@@ -34,18 +34,18 @@ func (m *OneToOneNatAddressSpecOrRefRequest) GetRefOr(val vpc.ExternalAddressRef
 	return val
 }
 
-func (m *OneToOneNatAddressSpecOrRefRequest) GetSpec() *OneToOneNatAddressSpecOrRefSpecRequest {
+func (m *OneToOneNatAddressSpecOrRefRequest) GetSpec() *OneToOneNatAddressSpecRequest {
 	if m != nil {
 		return m.Spec
 	}
 	return nil
 }
 
-func (m *OneToOneNatAddressSpecOrRefRequest) SetSpec(val *OneToOneNatAddressSpecOrRefSpecRequest) {
+func (m *OneToOneNatAddressSpecOrRefRequest) SetSpec(val *OneToOneNatAddressSpecRequest) {
 	m.Spec = val
 }
 
-func (m *OneToOneNatAddressSpecOrRefRequest) GetSpecOr(val OneToOneNatAddressSpecOrRefSpecRequest) OneToOneNatAddressSpecOrRefSpecRequest {
+func (m *OneToOneNatAddressSpecOrRefRequest) GetSpecOr(val OneToOneNatAddressSpecRequest) OneToOneNatAddressSpecRequest {
 	if m != nil && m.Spec != nil {
 		return *m.Spec
 	}
@@ -73,18 +73,4 @@ func (m *OneToOneNatAddressSpecOrRefRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
-}
-
-// Представление поля Spec анонимного типа структуры OneToOneNatAddressSpecOrRef
-// Real OAPI model name: OneToOneNatAddressSpecOrRefSpec
-type OneToOneNatAddressSpecOrRefSpecRequest struct {
-}
-
-func (m *OneToOneNatAddressSpecOrRefSpecRequest) Clone() *OneToOneNatAddressSpecOrRefSpecRequest {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
-	return &clone
 }

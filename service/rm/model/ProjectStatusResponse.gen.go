@@ -6,13 +6,13 @@ import (
 	"context"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/org"
 )
 
 // Real OAPI model name: ProjectStatus
 type ProjectStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Project status.
 	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 	// If project is deactivated, this field describes the reason why (e.x., disabled by owner).
@@ -20,11 +20,11 @@ type ProjectStatusResponse struct {
 	Organization     *org.OrganizationRef `json:"organization,omitempty" yaml:"organization,omitempty"`
 }
 
-func (m *ProjectStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *ProjectStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *ProjectStatusResponse) GetActive() *bool {

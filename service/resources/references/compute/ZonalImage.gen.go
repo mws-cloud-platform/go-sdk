@@ -157,6 +157,25 @@ func (m *ZonalImageID) Clone() *ZonalImageID {
 	return &clone
 }
 
+func (m *ZonalImageID) AsRef() *ZonalImageRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalImageRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalImageID) Equal(other *ZonalImageID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.image == other.image && m.project == other.project && m.zone == other.zone
+}
+
 func (m ZonalImageID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -337,6 +356,16 @@ func (m *ZonalImageRef) Clone() *ZonalImageRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalImageRef) Equal(other *ZonalImageRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.image == other.id.image && m.id.project == other.id.project && m.id.zone == other.id.zone
 }
 
 func (m ZonalImageRef) MarshalJSON() ([]byte, error) {

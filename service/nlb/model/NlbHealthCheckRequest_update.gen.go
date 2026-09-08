@@ -26,7 +26,9 @@ type UpdateNlbHealthCheckRequest struct {
 func (m *NlbHealthCheckRequest) AsUpdateModel() UpdateNlbHealthCheckRequest {
 	var u UpdateNlbHealthCheckRequest
 	u.Protocol = optional.NewOptional(m.Protocol.AsUpdateModel())
-	u.Interval = optional.NewOptional(m.GetInterval())
+	if m.Interval != nil {
+		u.Interval = optional.NewOptional(m.GetIntervalOr(duration.Duration{}))
+	}
 	u.Timeout = optional.NewOptional(m.GetTimeout())
 	if m.UnhealthyThreshold != nil {
 		u.UnhealthyThreshold = optional.NewOptional(m.GetUnhealthyThresholdOr(0))
@@ -61,7 +63,7 @@ func (m *NlbHealthCheckRequest) WithChanges(u UpdateNlbHealthCheckRequest) NlbHe
 		out.Protocol = out.Protocol.WithChanges(u.Protocol.Value)
 	}
 	if u.Interval.IsSet() {
-		out.Interval = u.Interval.Value
+		out.Interval = ptr.Get(u.Interval.Value)
 	}
 	if u.Timeout.IsSet() {
 		out.Timeout = u.Timeout.Value
@@ -96,7 +98,7 @@ func (m *NlbHealthCheckRequest) diffProtocol(src *NlbHealthCheckRequest) optiona
 
 func (m *NlbHealthCheckRequest) diffInterval(src *NlbHealthCheckRequest) optional.Optional[duration.Duration] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffEquatableIfaceRequired(src.GetInterval(), m.GetInterval(), nilDiffers)
+	return commonclient.DiffEquatableIfaceNonRequired(src.GetInterval(), m.GetInterval(), nilDiffers)
 }
 
 func (m *NlbHealthCheckRequest) diffTimeout(src *NlbHealthCheckRequest) optional.Optional[duration.Duration] {

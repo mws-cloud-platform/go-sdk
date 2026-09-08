@@ -135,6 +135,25 @@ func (m *ZonalCephClusterID) Clone() *ZonalCephClusterID {
 	return &clone
 }
 
+func (m *ZonalCephClusterID) AsRef() *ZonalCephClusterRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalCephClusterRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalCephClusterID) Equal(other *ZonalCephClusterID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.cluster == other.cluster && m.zone == other.zone
+}
+
 func (m ZonalCephClusterID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ZonalCephClusterRef) Clone() *ZonalCephClusterRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalCephClusterRef) Equal(other *ZonalCephClusterRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.cluster == other.id.cluster && m.id.zone == other.id.zone
 }
 
 func (m ZonalCephClusterRef) MarshalJSON() ([]byte, error) {

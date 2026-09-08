@@ -179,6 +179,25 @@ func (m *ZonalNat46ID) Clone() *ZonalNat46ID {
 	return &clone
 }
 
+func (m *ZonalNat46ID) AsRef() *ZonalNat46Ref {
+	if m == nil {
+		return nil
+	}
+	return &ZonalNat46Ref{
+		id: *m,
+	}
+}
+
+func (m *ZonalNat46ID) Equal(other *ZonalNat46ID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.zonalNat46 == other.zonalNat46 && m.zonalNetwork == other.zonalNetwork && m.project == other.project && m.zone == other.zone
+}
+
 func (m ZonalNat46ID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -371,6 +390,16 @@ func (m *ZonalNat46Ref) Clone() *ZonalNat46Ref {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalNat46Ref) Equal(other *ZonalNat46Ref) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.zonalNat46 == other.id.zonalNat46 && m.id.zonalNetwork == other.id.zonalNetwork && m.id.project == other.id.project && m.id.zone == other.id.zone
 }
 
 func (m ZonalNat46Ref) MarshalJSON() ([]byte, error) {

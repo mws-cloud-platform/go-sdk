@@ -2,7 +2,7 @@
 
 package model
 
-// Параметры виртуальной машины, где работает брокер Кафки.
+// Параметры узла-брокера кластера Managed Kafka.
 // Real OAPI model name: KafkaInstanceStatus
 type KafkaInstanceStatusResponse struct {
 	// Параметры диска с данными на узле кластера Managed Kafka.

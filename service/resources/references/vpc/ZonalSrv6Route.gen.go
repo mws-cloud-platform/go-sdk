@@ -135,6 +135,25 @@ func (m *ZonalSrv6RouteID) Clone() *ZonalSrv6RouteID {
 	return &clone
 }
 
+func (m *ZonalSrv6RouteID) AsRef() *ZonalSrv6RouteRef {
+	if m == nil {
+		return nil
+	}
+	return &ZonalSrv6RouteRef{
+		id: *m,
+	}
+}
+
+func (m *ZonalSrv6RouteID) Equal(other *ZonalSrv6RouteID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.zonalSrv6Route == other.zonalSrv6Route && m.zone == other.zone
+}
+
 func (m ZonalSrv6RouteID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *ZonalSrv6RouteRef) Clone() *ZonalSrv6RouteRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *ZonalSrv6RouteRef) Equal(other *ZonalSrv6RouteRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.zonalSrv6Route == other.id.zonalSrv6Route && m.id.zone == other.id.zone
 }
 
 func (m ZonalSrv6RouteRef) MarshalJSON() ([]byte, error) {

@@ -135,6 +135,25 @@ func (m *UserFederationID) Clone() *UserFederationID {
 	return &clone
 }
 
+func (m *UserFederationID) AsRef() *UserFederationRef {
+	if m == nil {
+		return nil
+	}
+	return &UserFederationRef{
+		id: *m,
+	}
+}
+
+func (m *UserFederationID) Equal(other *UserFederationID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.userFederation == other.userFederation && m.organization == other.organization
+}
+
 func (m UserFederationID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *UserFederationRef) Clone() *UserFederationRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *UserFederationRef) Equal(other *UserFederationRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.userFederation == other.id.userFederation && m.id.organization == other.id.organization
 }
 
 func (m UserFederationRef) MarshalJSON() ([]byte, error) {

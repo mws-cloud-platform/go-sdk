@@ -168,6 +168,25 @@ func (m *PostgresVmComponentsID) Clone() *PostgresVmComponentsID {
 	return &clone
 }
 
+func (m *PostgresVmComponentsID) AsRef() *PostgresVmComponentsRef {
+	if m == nil {
+		return nil
+	}
+	return &PostgresVmComponentsRef{
+		id: *m,
+	}
+}
+
+func (m *PostgresVmComponentsID) Equal(other *PostgresVmComponentsID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.vmComponent == other.vmComponent && m.cluster == other.cluster && m.project == other.project
+}
+
 func (m PostgresVmComponentsID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -340,6 +359,16 @@ func (m *PostgresVmComponentsRef) Clone() *PostgresVmComponentsRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *PostgresVmComponentsRef) Equal(other *PostgresVmComponentsRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.vmComponent == other.id.vmComponent && m.id.cluster == other.id.cluster && m.id.project == other.id.project
 }
 
 func (m PostgresVmComponentsRef) MarshalJSON() ([]byte, error) {

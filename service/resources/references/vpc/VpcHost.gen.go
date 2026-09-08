@@ -135,6 +135,25 @@ func (m *VpcHostID) Clone() *VpcHostID {
 	return &clone
 }
 
+func (m *VpcHostID) AsRef() *VpcHostRef {
+	if m == nil {
+		return nil
+	}
+	return &VpcHostRef{
+		id: *m,
+	}
+}
+
+func (m *VpcHostID) Equal(other *VpcHostID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.vpcHost == other.vpcHost && m.zone == other.zone
+}
+
 func (m VpcHostID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -303,6 +322,16 @@ func (m *VpcHostRef) Clone() *VpcHostRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *VpcHostRef) Equal(other *VpcHostRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.vpcHost == other.id.vpcHost && m.id.zone == other.id.zone
 }
 
 func (m VpcHostRef) MarshalJSON() ([]byte, error) {

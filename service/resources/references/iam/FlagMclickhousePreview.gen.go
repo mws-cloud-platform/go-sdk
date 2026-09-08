@@ -133,6 +133,25 @@ func (m *FlagMclickhousePreviewID) Clone() *FlagMclickhousePreviewID {
 	return &clone
 }
 
+func (m *FlagMclickhousePreviewID) AsRef() *FlagMclickhousePreviewRef {
+	if m == nil {
+		return nil
+	}
+	return &FlagMclickhousePreviewRef{
+		id: *m,
+	}
+}
+
+func (m *FlagMclickhousePreviewID) Equal(other *FlagMclickhousePreviewID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m FlagMclickhousePreviewID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -289,6 +308,16 @@ func (m *FlagMclickhousePreviewRef) Clone() *FlagMclickhousePreviewRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *FlagMclickhousePreviewRef) Equal(other *FlagMclickhousePreviewRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m FlagMclickhousePreviewRef) MarshalJSON() ([]byte, error) {

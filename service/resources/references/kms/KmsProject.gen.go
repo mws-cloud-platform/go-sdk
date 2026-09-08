@@ -113,6 +113,25 @@ func (m *KmsProjectID) Clone() *KmsProjectID {
 	return &clone
 }
 
+func (m *KmsProjectID) AsRef() *KmsProjectRef {
+	if m == nil {
+		return nil
+	}
+	return &KmsProjectRef{
+		id: *m,
+	}
+}
+
+func (m *KmsProjectID) Equal(other *KmsProjectID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.project == other.project
+}
+
 func (m KmsProjectID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *KmsProjectRef) Clone() *KmsProjectRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *KmsProjectRef) Equal(other *KmsProjectRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.project == other.id.project
 }
 
 func (m KmsProjectRef) MarshalJSON() ([]byte, error) {

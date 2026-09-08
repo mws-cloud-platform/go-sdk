@@ -6,7 +6,7 @@ import (
 	"time"
 
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // HMAC-ключ (англ. Hash-based Message Authentication Code) — это статический ключ, необходимый для аутентификации сервисного аккаунта в AWS-совместимом API
@@ -102,7 +102,7 @@ func (m *HmacKeyResponse) Clone() *HmacKeyResponse {
 // Представление поля Metadata анонимного типа структуры HmacKey
 // Real OAPI model name: HmacKeyMetadata
 type HmacKeyMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// ID свойства
 	Id *resmodels.AnyResourceID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -177,14 +177,14 @@ func (m *HmacKeyMetadataResponse) GetPurgeTimeOr(val time.Time) time.Time {
 	return val
 }
 
-func (m *HmacKeyMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *HmacKeyMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *HmacKeyMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *HmacKeyMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}

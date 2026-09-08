@@ -8,14 +8,14 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
 
-// Статус глобальной резервной копии диска
+// Статус резервной копии диска
 // Real OAPI model name: DiskBackupStatus
 type DiskBackupStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Размер резервной копии диска
 	StorageSize *bytesize.ByteSize `json:"storageSize,omitempty" yaml:"storageSize,omitempty"`
 	// Прогресс готовности резервной копии диска в процентах, с точностью до сотых
@@ -27,16 +27,16 @@ type DiskBackupStatusResponse struct {
 	// Ссылка на исходный образ
 	InitialSourceImage *compute.ImageID `json:"initialSourceImage,omitempty" yaml:"initialSourceImage,omitempty"`
 	// Тип операционной системы
-	OsType *OsType2 `json:"osType,omitempty" yaml:"osType,omitempty"`
+	OsType *OsType `json:"osType,omitempty" yaml:"osType,omitempty"`
 	// Способ шифрования ресурса
 	Encryption *EncryptionStatusResponse `json:"encryption,omitempty" yaml:"encryption,omitempty"`
 }
 
-func (m *DiskBackupStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *DiskBackupStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *DiskBackupStatusResponse) GetStorageSize() *bytesize.ByteSize {
@@ -109,14 +109,14 @@ func (m *DiskBackupStatusResponse) GetInitialSourceImageOr(val compute.ImageID) 
 	return val
 }
 
-func (m *DiskBackupStatusResponse) GetOsType() *OsType2 {
+func (m *DiskBackupStatusResponse) GetOsType() *OsType {
 	if m != nil {
 		return m.OsType
 	}
 	return nil
 }
 
-func (m *DiskBackupStatusResponse) GetOsTypeOr(val OsType2) OsType2 {
+func (m *DiskBackupStatusResponse) GetOsTypeOr(val OsType) OsType {
 	if m != nil && m.OsType != nil {
 		return *m.OsType
 	}

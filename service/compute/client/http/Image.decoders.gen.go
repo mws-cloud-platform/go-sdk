@@ -11,7 +11,7 @@ import (
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	clienterrors "go.mws.cloud/go-sdk/internal/client/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/client"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
@@ -49,7 +49,7 @@ func decodeLatestImageResponse(resp *http.Response) (*client.LatestImageResponse
 		case "application/json":
 			result := &client.LatestImageResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -66,7 +66,7 @@ func decodeLatestImageResponse(resp *http.Response) (*client.LatestImageResponse
 		case "application/json":
 			result := &client.LatestImageResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -83,7 +83,7 @@ func decodeLatestImageResponse(resp *http.Response) (*client.LatestImageResponse
 		case "application/json":
 			result := &client.LatestImageResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -100,7 +100,7 @@ func decodeLatestImageResponse(resp *http.Response) (*client.LatestImageResponse
 		case "application/json":
 			result := &client.LatestImageResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -151,7 +151,7 @@ func decodeListImagesResponse(resp *http.Response) (*client.ListImagesResponse, 
 		case "application/json":
 			result := &client.ListImagesResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -168,7 +168,7 @@ func decodeListImagesResponse(resp *http.Response) (*client.ListImagesResponse, 
 		case "application/json":
 			result := &client.ListImagesResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -205,7 +205,7 @@ func decodeDeleteImageResponse(resp *http.Response) (*client.DeleteImageResponse
 		case "application/json":
 			result := &client.DeleteImageResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -222,7 +222,7 @@ func decodeDeleteImageResponse(resp *http.Response) (*client.DeleteImageResponse
 		case "application/json":
 			result := &client.DeleteImageResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -239,7 +239,7 @@ func decodeDeleteImageResponse(resp *http.Response) (*client.DeleteImageResponse
 		case "application/json":
 			result := &client.DeleteImageResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -256,7 +256,7 @@ func decodeDeleteImageResponse(resp *http.Response) (*client.DeleteImageResponse
 		case "application/json":
 			result := &client.DeleteImageResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -307,7 +307,7 @@ func decodeGetImageResponse(resp *http.Response) (*client.GetImageResponse, erro
 		case "application/json":
 			result := &client.GetImageResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -324,7 +324,7 @@ func decodeGetImageResponse(resp *http.Response) (*client.GetImageResponse, erro
 		case "application/json":
 			result := &client.GetImageResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -341,7 +341,7 @@ func decodeGetImageResponse(resp *http.Response) (*client.GetImageResponse, erro
 		case "application/json":
 			result := &client.GetImageResponse{
 				Code:        resp.StatusCode,
-				Response404: &common.ApiError{},
+				Response404: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
@@ -358,7 +358,7 @@ func decodeGetImageResponse(resp *http.Response) (*client.GetImageResponse, erro
 		case "application/json":
 			result := &client.GetImageResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
@@ -409,7 +409,7 @@ func decodeUpsertImageResponse(resp *http.Response) (*client.UpsertImageResponse
 		case "application/json":
 			result := &client.UpsertImageResponse{
 				Code:        resp.StatusCode,
-				Response400: &common.ApiError{},
+				Response400: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
@@ -426,7 +426,7 @@ func decodeUpsertImageResponse(resp *http.Response) (*client.UpsertImageResponse
 		case "application/json":
 			result := &client.UpsertImageResponse{
 				Code:        resp.StatusCode,
-				Response403: &common.ApiError{},
+				Response403: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
@@ -443,7 +443,7 @@ func decodeUpsertImageResponse(resp *http.Response) (*client.UpsertImageResponse
 		case "application/json":
 			result := &client.UpsertImageResponse{
 				Code:        resp.StatusCode,
-				Response409: &common.ApiError{},
+				Response409: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response409); err != nil {
@@ -460,7 +460,7 @@ func decodeUpsertImageResponse(resp *http.Response) (*client.UpsertImageResponse
 		case "application/json":
 			result := &client.UpsertImageResponse{
 				Code:        resp.StatusCode,
-				Response500: &common.ApiError{},
+				Response500: &commonmodel.ApiError{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {

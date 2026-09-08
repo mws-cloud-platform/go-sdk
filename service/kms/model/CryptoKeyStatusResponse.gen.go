@@ -10,25 +10,25 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/kms"
 )
 
 // Real OAPI model name: CryptoKeyStatus
 type CryptoKeyStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
-	Rotation                      *CryptoKeyStatusRotationResponse `json:"rotation,omitempty" yaml:"rotation,omitempty"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	Rotation                           *CryptoKeyStatusRotationResponse `json:"rotation,omitempty" yaml:"rotation,omitempty"`
 	// Информация о процессе уничтожения криптографического ключа.
 	// Этот раздел присутствует только в том случае, если ключ запланирован к уничтожению
 	// или уже уничтожен.
 	Destruction *CryptoKeyStatusDestructionResponse `json:"destruction,omitempty" yaml:"destruction,omitempty"`
 }
 
-func (m *CryptoKeyStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *CryptoKeyStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *CryptoKeyStatusResponse) GetRotation() *CryptoKeyStatusRotationResponse {

@@ -4,6 +4,8 @@ package model
 
 import (
 	"context"
+	"fmt"
+	"slices"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
@@ -12,11 +14,14 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 type UpdateImageSpecRequest struct {
 	// Семейство образа
 	Family optional.Optional[string] `json:"family" yaml:"family"`
+	// Список регионов, в которых будет создана физическая копия образа
+	Regions optional.Optional[[]rm.RegionRef] `json:"regions" yaml:"regions"`
 	// Источник для создания образа
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
@@ -43,6 +48,9 @@ func (m *ImageSpecRequest) AsUpdateModel() UpdateImageSpecRequest {
 	if m.Family != nil {
 		u.Family = optional.NewOptional(m.GetFamilyOr(""))
 	}
+	if m.Regions != nil {
+		u.Regions = optional.NewOptional(m.GetRegions())
+	}
 	u.Source = optional.NewOptional(m.Source.AsUpdateModel())
 	if m.Activity != nil {
 		u.Activity = optional.NewOptional(m.GetActivityOr(""))
@@ -65,6 +73,7 @@ func (m *ImageSpecRequest) Diff(src *ImageSpecRequest) UpdateImageSpecRequest {
 	upd := UpdateImageSpecRequest{}
 	if !nilDiffers {
 		upd.Family = m.diffFamily(src)
+		upd.Regions = m.diffRegions(src)
 		upd.Source = m.diffSource(src)
 		upd.Activity = m.diffActivity(src)
 		upd.MinDiskSize = m.diffMinDiskSize(src)
@@ -82,6 +91,9 @@ func (m *ImageSpecRequest) WithChanges(u UpdateImageSpecRequest) ImageSpecReques
 
 	if u.Family.IsSet() {
 		out.Family = ptr.Get(u.Family.Value)
+	}
+	if u.Regions.IsSet() {
+		out.Regions = slices.Clone(u.Regions.Value)
 	}
 	if u.Source.IsSet() {
 		out.Source = out.Source.WithChanges(u.Source.Value)
@@ -106,6 +118,7 @@ func (m *ImageSpecRequest) WithChanges(u UpdateImageSpecRequest) ImageSpecReques
 // HasChanges returns true if any field has Set == true
 func (m UpdateImageSpecRequest) HasChanges() bool {
 	return m.Family.Set ||
+		m.Regions.Set ||
 		m.Source.Set ||
 		m.Activity.Set ||
 		m.MinDiskSize.Set ||
@@ -116,6 +129,14 @@ func (m UpdateImageSpecRequest) HasChanges() bool {
 func (m *UpdateImageSpecRequest) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if m.Regions.IsSet() {
+		for index := range m.Regions.Value {
+			if err := m.Regions.Value[index].Parse(ctx); err != nil {
+				return reserrors.NewPathAccumulatorError("Regions"+fmt.Sprint("[", index, "]"), err)
+			}
+		}
 	}
 
 	if m.Source.IsSet() {
@@ -136,6 +157,14 @@ func (m *UpdateImageSpecRequest) Parse(ctx context.Context) error {
 func (m *ImageSpecRequest) diffFamily(src *ImageSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetFamily(), m.GetFamily(), nilDiffers)
+}
+
+func (m *ImageSpecRequest) diffRegions(src *ImageSpecRequest) optional.Optional[[]rm.RegionRef] {
+	value, hasChanges := commonclient.GetChangesArrayPrimitive(src.GetRegions(), m.GetRegions())
+	return optional.Optional[[]rm.RegionRef]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
 func (m *ImageSpecRequest) diffSource(src *ImageSpecRequest) optional.Optional[UpdateImageSpecSourceRequest] {

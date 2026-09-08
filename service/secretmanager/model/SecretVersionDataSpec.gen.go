@@ -6,7 +6,6 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
-// Содержимое секрета
 type SecretVersionDataSpec map[string]sensitive.Sensitive[string]
 
 func (m SecretVersionDataSpec) Clone() SecretVersionDataSpec {

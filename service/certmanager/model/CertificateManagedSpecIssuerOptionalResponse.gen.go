@@ -10,17 +10,17 @@ import (
 //
 // Real OAPI model name: CertificateManagedSpecIssuer
 type CertificateManagedSpecIssuerOptionalResponse struct {
-	Acme optional.OptionalNil[CertificateManagedSpecIssuerAcmeOptionalResponse] `json:"acme,omitempty" yaml:"acme,omitempty"`
+	Acme optional.OptionalNil[AcmeIssuerOptionalResponse] `json:"acme,omitempty" yaml:"acme,omitempty"`
 }
 
-func (m *CertificateManagedSpecIssuerOptionalResponse) GetAcme() *CertificateManagedSpecIssuerAcmeOptionalResponse {
+func (m *CertificateManagedSpecIssuerOptionalResponse) GetAcme() *AcmeIssuerOptionalResponse {
 	if m != nil && m.Acme.IsSet() && !m.Acme.IsNull() {
 		return &m.Acme.Value
 	}
 	return nil
 }
 
-func (m *CertificateManagedSpecIssuerOptionalResponse) GetAcmeOr(val CertificateManagedSpecIssuerAcmeOptionalResponse) CertificateManagedSpecIssuerAcmeOptionalResponse {
+func (m *CertificateManagedSpecIssuerOptionalResponse) GetAcmeOr(val AcmeIssuerOptionalResponse) AcmeIssuerOptionalResponse {
 	if m != nil && m.Acme.IsSet() && !m.Acme.IsNull() {
 		return m.Acme.Value
 	}
@@ -36,62 +36,5 @@ func (m *CertificateManagedSpecIssuerOptionalResponse) Clone() *CertificateManag
 	if clone.Acme.IsSet() {
 		clone.Acme.Value = *m.Acme.Value.Clone()
 	}
-	return &clone
-}
-
-// Представление поля Acme анонимного типа структуры CertificateManagedSpecIssuer
-// Real OAPI model name: CertificateManagedSpecIssuerAcme
-type CertificateManagedSpecIssuerAcmeOptionalResponse struct {
-	// ACME-сервер для выпуска сертификата.
-	Server CertificateManagedSpecAcmeServer `json:"server" yaml:"server"`
-	// Предпочтительный тип проверки домена (challenge).
-	// Возможные значения: DNS01 или HTTP01. По умолчанию используется DNS01.
-	ChallengeType CertificateChallengeType `json:"challengeType" yaml:"challengeType"`
-	// Профиль сертификата.
-	Profile optional.Optional[string] `json:"profile,omitempty" yaml:"profile,omitempty"`
-}
-
-func (m *CertificateManagedSpecIssuerAcmeOptionalResponse) GetServer() CertificateManagedSpecAcmeServer {
-	if m != nil {
-		return m.Server
-	}
-	return ""
-}
-
-func (m *CertificateManagedSpecIssuerAcmeOptionalResponse) SetServer(val CertificateManagedSpecAcmeServer) {
-	m.Server = val
-}
-
-func (m *CertificateManagedSpecIssuerAcmeOptionalResponse) GetChallengeType() CertificateChallengeType {
-	if m != nil {
-		return m.ChallengeType
-	}
-	return ""
-}
-
-func (m *CertificateManagedSpecIssuerAcmeOptionalResponse) SetChallengeType(val CertificateChallengeType) {
-	m.ChallengeType = val
-}
-
-func (m *CertificateManagedSpecIssuerAcmeOptionalResponse) GetProfile() *string {
-	if m != nil && m.Profile.IsSet() {
-		return &m.Profile.Value
-	}
-	return nil
-}
-
-func (m *CertificateManagedSpecIssuerAcmeOptionalResponse) GetProfileOr(val string) string {
-	if m != nil && m.Profile.IsSet() {
-		return m.Profile.Value
-	}
-	return val
-}
-
-func (m *CertificateManagedSpecIssuerAcmeOptionalResponse) Clone() *CertificateManagedSpecIssuerAcmeOptionalResponse {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
 	return &clone
 }

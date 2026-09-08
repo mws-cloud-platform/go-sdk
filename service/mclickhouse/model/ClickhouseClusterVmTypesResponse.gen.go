@@ -2,7 +2,7 @@
 
 package model
 
-// Типы ВМ Clickhouse кластера.
+// Типы ВМ кластера ClickHouse.
 // Real OAPI model name: ClickhouseClusterVmTypes
 type ClickhouseClusterVmTypesResponse struct {
 	Items []ClickhouseVmTypeResponse `json:"items" yaml:"items"`

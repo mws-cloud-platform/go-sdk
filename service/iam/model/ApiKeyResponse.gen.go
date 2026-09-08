@@ -6,7 +6,7 @@ import (
 	"time"
 
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // API-ключ — это уникальная строка длиной 128 символов, предназначенная для
@@ -106,7 +106,7 @@ func (m *ApiKeyResponse) Clone() *ApiKeyResponse {
 // Представление поля Metadata анонимного типа структуры ApiKey
 // Real OAPI model name: ApiKeyMetadata
 type ApiKeyMetadataResponse struct {
-	common.TypedResourceMetadataResponse `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataResponse `yaml:"-,inline"`
 	// ID свойства
 	Id *resmodels.AnyResourceID `json:"id,omitempty" yaml:"id,omitempty"`
 }
@@ -181,14 +181,14 @@ func (m *ApiKeyMetadataResponse) GetPurgeTimeOr(val time.Time) time.Time {
 	return val
 }
 
-func (m *ApiKeyMetadataResponse) GetUsages() []common.TypedUsageResponse {
+func (m *ApiKeyMetadataResponse) GetUsages() []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsages()
 	}
 	return nil
 }
 
-func (m *ApiKeyMetadataResponse) GetUsagesOr(val []common.TypedUsageResponse) []common.TypedUsageResponse {
+func (m *ApiKeyMetadataResponse) GetUsagesOr(val []commonmodel.TypedUsageResponse) []commonmodel.TypedUsageResponse {
 	if m != nil {
 		return m.TypedResourceMetadataResponse.GetUsagesOr(val)
 	}

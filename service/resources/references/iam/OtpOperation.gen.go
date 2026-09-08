@@ -113,6 +113,25 @@ func (m *OtpOperationID) Clone() *OtpOperationID {
 	return &clone
 }
 
+func (m *OtpOperationID) AsRef() *OtpOperationRef {
+	if m == nil {
+		return nil
+	}
+	return &OtpOperationRef{
+		id: *m,
+	}
+}
+
+func (m *OtpOperationID) Equal(other *OtpOperationID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.operation == other.operation
+}
+
 func (m OtpOperationID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *OtpOperationRef) Clone() *OtpOperationRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *OtpOperationRef) Equal(other *OtpOperationRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.operation == other.id.operation
 }
 
 func (m OtpOperationRef) MarshalJSON() ([]byte, error) {

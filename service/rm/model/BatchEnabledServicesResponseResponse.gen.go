@@ -3,7 +3,7 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: BatchEnabledServicesResponse
@@ -42,14 +42,14 @@ func (m *BatchEnabledServicesResponseResponse) Clone() *BatchEnabledServicesResp
 // Представление поля Status union (allOf) типа структуры BatchEnabledServicesResponse
 // Real OAPI model name: BatchEnabledServicesResponseStatus
 type BatchEnabledServicesResponseStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 }
 
-func (m *BatchEnabledServicesResponseStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *BatchEnabledServicesResponseStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *BatchEnabledServicesResponseStatusResponse) Clone() *BatchEnabledServicesResponseStatusResponse {

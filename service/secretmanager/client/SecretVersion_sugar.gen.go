@@ -77,7 +77,7 @@ func (x *SecretVersionSugared) respHandlerListSecretVersions(resp *ListSecretVer
 // GetData извлечь содержимое секрета указанной версии.
 //
 // Путь: GET /secretmanager/v1/projects/{project}/secrets/{name}/secretVersions/{version}:getData
-func (x *SecretVersionSugared) GetData(ctx context.Context, request GetDataRequest) (model.SecretVersionDataSpec2, error) {
+func (x *SecretVersionSugared) GetData(ctx context.Context, request GetDataRequest) (model.SecretVersionDataSpec, error) {
 	resp, err := x.impl.GetData(ctx, request)
 	if err != nil {
 		return nil, err
@@ -86,7 +86,7 @@ func (x *SecretVersionSugared) GetData(ctx context.Context, request GetDataReque
 	return x.respHandlerGetData(resp)
 }
 
-func (x *SecretVersionSugared) respHandlerGetData(resp *GetDataResponse) (model.SecretVersionDataSpec2, error) {
+func (x *SecretVersionSugared) respHandlerGetData(resp *GetDataResponse) (model.SecretVersionDataSpec, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}

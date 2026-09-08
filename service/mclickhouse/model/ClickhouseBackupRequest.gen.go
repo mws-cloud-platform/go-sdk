@@ -3,10 +3,10 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
-// Резервное копирование в Managed Clickhouse позволяет автоматизировать создание резервных копий кластера и его восстановление.  С помощью резервных копий можно восстановить данные в новый кластер в случае повреждения, потери данных или совершения ошибочных операций.
+// Резервное копирование в Managed ClickHouse позволяет автоматизировать создание резервных копий кластера и его восстановление. С помощью резервных копий можно восстановить данные в новый кластер в случае повреждения, потери данных или совершения ошибочных операций.
 //
 // Real OAPI model name: ClickhouseBackup
 type ClickhouseBackupRequest struct {
@@ -64,7 +64,7 @@ func (m *ClickhouseBackupRequest) Clone() *ClickhouseBackupRequest {
 // Представление поля Metadata анонимного типа структуры ClickhouseBackup
 // Real OAPI model name: ClickhouseBackupMetadata
 type ClickhouseBackupMetadataRequest struct {
-	common.TypedResourceMetadataRequest `yaml:"-,inline"`
+	commonmodel.TypedResourceMetadataRequest `yaml:"-,inline"`
 }
 
 func (m *ClickhouseBackupMetadataRequest) GetDisplayName() *string {
@@ -81,14 +81,14 @@ func (m *ClickhouseBackupMetadataRequest) GetDisplayNameOr(val string) string {
 	return val
 }
 
-func (m *ClickhouseBackupMetadataRequest) GetUsages() []common.TypedUsageRequest {
+func (m *ClickhouseBackupMetadataRequest) GetUsages() []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsages()
 	}
 	return nil
 }
 
-func (m *ClickhouseBackupMetadataRequest) GetUsagesOr(val []common.TypedUsageRequest) []common.TypedUsageRequest {
+func (m *ClickhouseBackupMetadataRequest) GetUsagesOr(val []commonmodel.TypedUsageRequest) []commonmodel.TypedUsageRequest {
 	if m != nil {
 		return m.TypedResourceMetadataRequest.GetUsagesOr(val)
 	}
@@ -131,19 +131,5 @@ func (m *ClickhouseBackupMetadataRequest) Clone() *ClickhouseBackupMetadataReque
 	clone := *m
 	clone.TypedResourceMetadataRequest = *m.TypedResourceMetadataRequest.Clone()
 
-	return &clone
-}
-
-// Представление поля Spec анонимного типа структуры ClickhouseBackup
-// Real OAPI model name: ClickhouseBackupSpec
-type ClickhouseBackupSpecRequest struct {
-}
-
-func (m *ClickhouseBackupSpecRequest) Clone() *ClickhouseBackupSpecRequest {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
 	return &clone
 }

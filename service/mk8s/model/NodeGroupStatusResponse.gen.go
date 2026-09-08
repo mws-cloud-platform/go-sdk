@@ -10,7 +10,7 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
@@ -18,8 +18,8 @@ import (
 // Описывает статусную модель групп узлов Kubernetes.
 // Real OAPI model name: NodeGroupStatus
 type NodeGroupStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
-	VmType                        *NodeGroupStatusVmTypeResponse `json:"vmType,omitempty" yaml:"vmType,omitempty"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	VmType                             *NodeGroupStatusVmTypeResponse `json:"vmType,omitempty" yaml:"vmType,omitempty"`
 	// Количество ядер vCPU на узле.
 	Cpu *string `json:"cpu,omitempty" yaml:"cpu,omitempty"`
 	// Объем оперативной памяти на узле.
@@ -41,11 +41,11 @@ type NodeGroupStatusResponse struct {
 	NodeGroupStatus *NodeGroupStatusNodeGroupStatusResponse `json:"nodeGroupStatus,omitempty" yaml:"nodeGroupStatus,omitempty"`
 }
 
-func (m *NodeGroupStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *NodeGroupStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *NodeGroupStatusResponse) GetVmType() *NodeGroupStatusVmTypeResponse {

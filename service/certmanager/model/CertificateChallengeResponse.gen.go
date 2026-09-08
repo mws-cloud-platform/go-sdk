@@ -9,7 +9,7 @@ import (
 // Real OAPI model name: CertificateChallenge
 type CertificateChallengeResponse struct {
 	// Домен, права на который проверяются.
-	Domain string `json:"domain" yaml:"domain"`
+	Domain *string `json:"domain,omitempty" yaml:"domain,omitempty"`
 	// Время создания проверки.
 	CreatedAt time.Time `json:"createdAt" yaml:"createdAt"`
 	// Время последнего обновления проверки.
@@ -26,15 +26,22 @@ type CertificateChallengeResponse struct {
 	DnsChallenge *Dns01ChallengeResponse `json:"dnsChallenge,omitempty" yaml:"dnsChallenge,omitempty"`
 }
 
-func (m *CertificateChallengeResponse) GetDomain() string {
+func (m *CertificateChallengeResponse) GetDomain() *string {
 	if m != nil {
 		return m.Domain
 	}
-	return ""
+	return nil
 }
 
-func (m *CertificateChallengeResponse) SetDomain(val string) {
+func (m *CertificateChallengeResponse) SetDomain(val *string) {
 	m.Domain = val
+}
+
+func (m *CertificateChallengeResponse) GetDomainOr(val string) string {
+	if m != nil && m.Domain != nil {
+		return *m.Domain
+	}
+	return val
 }
 
 func (m *CertificateChallengeResponse) GetCreatedAt() time.Time {
@@ -148,6 +155,10 @@ func (m *CertificateChallengeResponse) Clone() *CertificateChallengeResponse {
 	}
 
 	clone := *m
+	if m.Domain != nil {
+		cloneDomain := *m.Domain
+		clone.Domain = &cloneDomain
+	}
 	if m.StatusReason != nil {
 		cloneStatusReason := *m.StatusReason
 		clone.StatusReason = &cloneStatusReason

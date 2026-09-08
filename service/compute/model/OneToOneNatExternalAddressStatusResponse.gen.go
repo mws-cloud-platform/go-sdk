@@ -11,8 +11,6 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Статус внешнего (публичного) Адреса
-//
 // Real OAPI model name: OneToOneNatExternalAddressStatus
 type OneToOneNatExternalAddressStatusResponse struct {
 	// ref на публичный Адрес

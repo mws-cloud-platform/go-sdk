@@ -7,7 +7,7 @@ import (
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	"go.mws.cloud/go-sdk/service/certmanager/model"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 type Certificate interface {
@@ -83,10 +83,10 @@ func (m ListCertificatesRequest) WithPageToken(token *string) ListCertificatesRe
 type ListCertificatesResponse struct {
 	Code        int
 	Response200 *model.CertificateListOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -146,10 +146,10 @@ func (m *GetCertificateContentRequest) SetProject(project string) {
 type GetCertificateContentResponse struct {
 	Code        int
 	Response200 *model.CertificateContentResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -194,6 +194,8 @@ type DeleteCertificateRequest struct {
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteCertificateRequest) SetAuthorization(authorization string) {
@@ -220,11 +222,11 @@ type DeleteCertificateResponse struct {
 	Code        int
 	Response202 bool // empty response
 	Response204 bool // empty response
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response412 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -287,10 +289,10 @@ func (m *GetCertificateRequest) SetProject(project string) {
 type GetCertificateResponse struct {
 	Code        int
 	Response200 *model.CertificateOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }
@@ -334,8 +336,10 @@ type UpsertCertificateRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
-	IdempotencyKey *string                  // header: "Idempotency-Key"
-	Body           model.CertificateRequest // body
+	IdempotencyKey *string // header: "Idempotency-Key"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool                    // query: "validateOnly"
+	Body         model.CertificateRequest // body
 }
 
 func (m *UpsertCertificateRequest) SetAuthorization(authorization string) {
@@ -366,8 +370,10 @@ type UpdateCertificateRequest struct {
 	// Токен авторизации IAM
 	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
-	IdempotencyKey *string                        // header: "Idempotency-Key"
-	Body           model.UpdateCertificateRequest // body
+	IdempotencyKey *string // header: "Idempotency-Key"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool                          // query: "validateOnly"
+	Body         model.UpdateCertificateRequest // body
 }
 
 func (m *UpdateCertificateRequest) SetAuthorization(authorization string) {
@@ -394,12 +400,12 @@ type UpsertCertificateResponse struct {
 	Code        int
 	Response200 *model.CertificateOptionalResponse
 	Response201 *model.CertificateOptionalResponse
-	Response400 *common.ApiError
-	Response403 *common.ApiError
-	Response404 *common.ApiError
-	Response409 *common.ApiError
-	Response412 *common.ApiError
-	Response500 *common.ApiError
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response409 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
 
 	errorWrapper func(err error) error
 }

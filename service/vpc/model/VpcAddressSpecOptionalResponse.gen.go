@@ -9,18 +9,18 @@ import (
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Спецификация адреса.
+// Описывает спецификацию внутреннего адреса.
 // Real OAPI model name: VpcAddressSpec
 type VpcAddressSpecOptionalResponse struct {
 	// Подсеть облачной сети к которой принадлежит адрес.
 	Subnet vpc.SubnetRef `json:"subnet" yaml:"subnet"`
 	// Желаемый IP адрес. Если не указан, то будет выделен из пула адресов подсети.
-	IpAddress optional.Optional[ipaddress.IPAddress]                           `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
-	Dns       optional.OptionalNil[[]common.VpcAddressDnsSpecOptionalResponse] `json:"dns,omitempty" yaml:"dns,omitempty"`
+	IpAddress optional.Optional[ipaddress.IPAddress]                                `json:"ipAddress,omitempty" yaml:"ipAddress,omitempty"`
+	Dns       optional.OptionalNil[[]commonmodel.VpcAddressDnsSpecOptionalResponse] `json:"dns,omitempty" yaml:"dns,omitempty"`
 }
 
 func (m *VpcAddressSpecOptionalResponse) GetSubnet() vpc.SubnetRef {
@@ -48,14 +48,14 @@ func (m *VpcAddressSpecOptionalResponse) GetIpAddressOr(val ipaddress.IPAddress)
 	return val
 }
 
-func (m *VpcAddressSpecOptionalResponse) GetDns() []common.VpcAddressDnsSpecOptionalResponse {
+func (m *VpcAddressSpecOptionalResponse) GetDns() []commonmodel.VpcAddressDnsSpecOptionalResponse {
 	if m != nil && m.Dns.IsSet() && !m.Dns.IsNull() {
 		return m.Dns.Value
 	}
 	return nil
 }
 
-func (m *VpcAddressSpecOptionalResponse) GetDnsOr(val []common.VpcAddressDnsSpecOptionalResponse) []common.VpcAddressDnsSpecOptionalResponse {
+func (m *VpcAddressSpecOptionalResponse) GetDnsOr(val []commonmodel.VpcAddressDnsSpecOptionalResponse) []commonmodel.VpcAddressDnsSpecOptionalResponse {
 	if m != nil && m.Dns.IsSet() && !m.Dns.IsNull() {
 		return m.Dns.Value
 	}
@@ -73,7 +73,7 @@ func (m *VpcAddressSpecOptionalResponse) Clone() *VpcAddressSpecOptionalResponse
 		clone.IpAddress.Value = *m.IpAddress.Value.Clone()
 	}
 	if m.Dns.Value != nil {
-		clone.Dns.Value = make([]common.VpcAddressDnsSpecOptionalResponse, len(m.Dns.Value))
+		clone.Dns.Value = make([]commonmodel.VpcAddressDnsSpecOptionalResponse, len(m.Dns.Value))
 		for i, v := range m.Dns.Value {
 			clone.Dns.Value[i] = *v.Clone()
 		}

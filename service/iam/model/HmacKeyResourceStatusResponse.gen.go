@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: HmacKeyResourceStatus
 type HmacKeyResourceStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	// Идентификатор ключа (readOnly).
 	AccessKeyId *string `json:"accessKeyId,omitempty" yaml:"accessKeyId,omitempty"`
 	// HMAC-ключ (readOnly).
@@ -20,11 +20,11 @@ type HmacKeyResourceStatusResponse struct {
 	LastAuthTime *time.Time `json:"lastAuthTime,omitempty" yaml:"lastAuthTime,omitempty"`
 }
 
-func (m *HmacKeyResourceStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *HmacKeyResourceStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *HmacKeyResourceStatusResponse) GetAccessKeyId() *string {

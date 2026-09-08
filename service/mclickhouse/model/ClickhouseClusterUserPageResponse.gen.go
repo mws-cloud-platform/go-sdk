@@ -3,14 +3,14 @@
 package model
 
 import (
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ClickhouseClusterUserPage
 type ClickhouseClusterUserPageResponse struct {
 	Items []ClickhouseClusterUserResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
-	NextPageToken *common.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
+	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`
 }
 
 func (m *ClickhouseClusterUserPageResponse) GetItems() []ClickhouseClusterUserResponse {
@@ -24,18 +24,18 @@ func (m *ClickhouseClusterUserPageResponse) SetItems(val []ClickhouseClusterUser
 	m.Items = val
 }
 
-func (m *ClickhouseClusterUserPageResponse) GetNextPageToken() *common.NextPageToken {
+func (m *ClickhouseClusterUserPageResponse) GetNextPageToken() *commonmodel.NextPageToken {
 	if m != nil {
 		return m.NextPageToken
 	}
 	return nil
 }
 
-func (m *ClickhouseClusterUserPageResponse) SetNextPageToken(val *common.NextPageToken) {
+func (m *ClickhouseClusterUserPageResponse) SetNextPageToken(val *commonmodel.NextPageToken) {
 	m.NextPageToken = val
 }
 
-func (m *ClickhouseClusterUserPageResponse) GetNextPageTokenOr(val common.NextPageToken) common.NextPageToken {
+func (m *ClickhouseClusterUserPageResponse) GetNextPageTokenOr(val commonmodel.NextPageToken) commonmodel.NextPageToken {
 	if m != nil && m.NextPageToken != nil {
 		return *m.NextPageToken
 	}

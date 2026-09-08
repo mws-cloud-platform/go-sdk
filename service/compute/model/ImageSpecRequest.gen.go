@@ -4,11 +4,13 @@ package model
 
 import (
 	"context"
+	"fmt"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Спецификация образа
@@ -16,6 +18,8 @@ import (
 type ImageSpecRequest struct {
 	// Семейство образа
 	Family *string `json:"family,omitempty" yaml:"family,omitempty"`
+	// Список регионов, в которых будет создана физическая копия образа
+	Regions []rm.RegionRef `json:"regions,omitempty" yaml:"regions,omitempty"`
 	// Источник для создания образа
 	Source ImageSpecSourceRequest `json:"source" yaml:"source"`
 	// Актуальность образа
@@ -42,6 +46,24 @@ func (m *ImageSpecRequest) SetFamily(val *string) {
 func (m *ImageSpecRequest) GetFamilyOr(val string) string {
 	if m != nil && m.Family != nil {
 		return *m.Family
+	}
+	return val
+}
+
+func (m *ImageSpecRequest) GetRegions() []rm.RegionRef {
+	if m != nil {
+		return m.Regions
+	}
+	return nil
+}
+
+func (m *ImageSpecRequest) SetRegions(val []rm.RegionRef) {
+	m.Regions = val
+}
+
+func (m *ImageSpecRequest) GetRegionsOr(val []rm.RegionRef) []rm.RegionRef {
+	if m != nil && m.Regions != nil {
+		return m.Regions
 	}
 	return val
 }
@@ -139,6 +161,12 @@ func (m *ImageSpecRequest) Clone() *ImageSpecRequest {
 		cloneFamily := *m.Family
 		clone.Family = &cloneFamily
 	}
+	if m.Regions != nil {
+		clone.Regions = make([]rm.RegionRef, len(m.Regions))
+		for i, v := range m.Regions {
+			clone.Regions[i] = *v.Clone()
+		}
+	}
 	clone.Source = *m.Source.Clone()
 	if m.Activity != nil {
 		cloneActivity := *m.Activity
@@ -156,6 +184,12 @@ func (m *ImageSpecRequest) Clone() *ImageSpecRequest {
 func (m *ImageSpecRequest) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	for index := range m.Regions {
+		if err := m.Regions[index].Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Regions"+fmt.Sprint("[", index, "]"), err)
+		}
 	}
 
 	if err := m.Source.Parse(ctx); err != nil {

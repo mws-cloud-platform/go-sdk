@@ -113,6 +113,25 @@ func (m *AuthClientID) Clone() *AuthClientID {
 	return &clone
 }
 
+func (m *AuthClientID) AsRef() *AuthClientRef {
+	if m == nil {
+		return nil
+	}
+	return &AuthClientRef{
+		id: *m,
+	}
+}
+
+func (m *AuthClientID) Equal(other *AuthClientID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.clientId == other.clientId
+}
+
 func (m AuthClientID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *AuthClientRef) Clone() *AuthClientRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *AuthClientRef) Equal(other *AuthClientRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.clientId == other.id.clientId
 }
 
 func (m AuthClientRef) MarshalJSON() ([]byte, error) {

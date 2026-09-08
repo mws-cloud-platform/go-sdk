@@ -113,6 +113,25 @@ func (m *RegionID) Clone() *RegionID {
 	return &clone
 }
 
+func (m *RegionID) AsRef() *RegionRef {
+	if m == nil {
+		return nil
+	}
+	return &RegionRef{
+		id: *m,
+	}
+}
+
+func (m *RegionID) Equal(other *RegionID) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.region == other.region
+}
+
 func (m RegionID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
@@ -269,6 +288,16 @@ func (m *RegionRef) Clone() *RegionRef {
 	}
 	clone := *m
 	return &clone
+}
+
+func (m *RegionRef) Equal(other *RegionRef) bool {
+	if m == other {
+		return true
+	}
+	if m == nil || other == nil {
+		return false
+	}
+	return m.id.region == other.id.region
 }
 
 func (m RegionRef) MarshalJSON() ([]byte, error) {

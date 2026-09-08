@@ -9,20 +9,20 @@ import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
-	common "go.mws.cloud/go-sdk/service/common/model"
+	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 // Real OAPI model name: ClickhouseBackupStatus
 type ClickhouseBackupStatusResponse struct {
-	common.ResourceStatusResponse `yaml:"-,inline"`
-	Backup                        *ClickhouseBackupStatusBackupResponse `json:"backup,omitempty" yaml:"backup,omitempty"`
+	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	Backup                             *ClickhouseBackupStatusBackupResponse `json:"backup,omitempty" yaml:"backup,omitempty"`
 }
 
-func (m *ClickhouseBackupStatusResponse) GetReady() common.ResourceStatusReadyResponse {
+func (m *ClickhouseBackupStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
 	if m != nil {
 		return m.ResourceStatusResponse.GetReady()
 	}
-	return common.ResourceStatusReadyResponse{}
+	return commonmodel.ResourceStatusReadyResponse{}
 }
 
 func (m *ClickhouseBackupStatusResponse) GetBackup() *ClickhouseBackupStatusBackupResponse {
