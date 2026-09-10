@@ -11,28 +11,28 @@ import (
 )
 
 type Mk8sNodeGroup interface {
-	// ListMk8sNodeGroups получение списка managed k8s node groups.
+	// ListMk8sNodeGroups позволяет получить список групп узлов Managed Kubernetes.
 	//
 	// Путь: GET /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups
 	ListMk8sNodeGroups(context.Context, ListMk8sNodeGroupsRequest) (*ListMk8sNodeGroupsResponse, error)
-	// DeleteMk8sNodeGroup удаление managed k8s node group.
+	// DeleteMk8sNodeGroup позволяет удалить группу узлов Managed Kubernetes.
 	//
 	// Путь: DELETE /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}
 	DeleteMk8sNodeGroup(context.Context, DeleteMk8sNodeGroupRequest) (*DeleteMk8sNodeGroupResponse, error)
-	// GetMk8sNodeGroup получение managed k8s node group по имени.
+	// GetMk8sNodeGroup позволяет получить группу узлов Managed Kubernetes по имени.
 	//
 	// Путь: GET /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}
 	GetMk8sNodeGroup(context.Context, GetMk8sNodeGroupRequest) (*GetMk8sNodeGroupResponse, error)
-	// UpsertMk8sNodeGroup создание или обновление managed k8s node group.
+	// UpsertMk8sNodeGroup позволяет создать или обновить группу узлов Managed Kubernetes.
 	//
 	// Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}
 	UpsertMk8sNodeGroup(context.Context, UpsertMk8sNodeGroupRequest) (*UpsertMk8sNodeGroupResponse, error)
-	// CreateMk8sNodeGroup создание или обновление managed k8s node group.
+	// CreateMk8sNodeGroup позволяет создать или обновить группу узлов Managed Kubernetes.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}?createOnly=true
 	CreateMk8sNodeGroup(context.Context, UpsertMk8sNodeGroupRequest) (*UpsertMk8sNodeGroupResponse, error)
-	// UpdateMk8sNodeGroup создание или обновление managed k8s node group.
+	// UpdateMk8sNodeGroup позволяет создать или обновить группу узлов Managed Kubernetes.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}?updateOnly=true
@@ -44,7 +44,7 @@ type ListMk8sNodeGroupsRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Имя Cluster
+	// Имя кластера
 	ClusterName string // path: "clusterName"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
@@ -125,9 +125,9 @@ type DeleteMk8sNodeGroupRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Имя Cluster
+	// Имя кластера
 	ClusterName string // path: "clusterName"
-	// Имя Node-группы
+	// Имя группы узлов
 	NodeGroupName string // path: "nodeGroupName"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
@@ -201,9 +201,9 @@ type GetMk8sNodeGroupRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Имя Cluster
+	// Имя кластера
 	ClusterName string // path: "clusterName"
-	// Имя Node-группы
+	// Имя группы узлов
 	NodeGroupName string // path: "nodeGroupName"
 }
 
@@ -266,13 +266,13 @@ type UpsertMk8sNodeGroupRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Имя Cluster
+	// Имя кластера
 	ClusterName string // path: "clusterName"
-	// Имя Node-группы
+	// Имя группы узлов
 	NodeGroupName string // path: "nodeGroupName"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// managed k8s node group object
+	// Конфигурация группы узлов Managed Kubernetes
 	Body model.NodeGroupRequest // body
 }
 
@@ -302,13 +302,13 @@ type UpdateMk8sNodeGroupRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Имя Cluster
+	// Имя кластера
 	ClusterName string // path: "clusterName"
-	// Имя Node-группы
+	// Имя группы узлов
 	NodeGroupName string // path: "nodeGroupName"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// managed k8s node group object
+	// Конфигурация группы узлов Managed Kubernetes
 	Body model.UpdateNodeGroupRequest // body
 }
 

@@ -168,6 +168,7 @@ func (m *DeleteAuthorizedKeyV2Request) getAuthorizedKeyV2Request() GetAuthorized
 		ServiceAccount: m.ServiceAccount,
 		AuthorizedKey:  m.AuthorizedKey,
 		Project:        m.Project,
+		Authorization:  m.Authorization,
 	}
 }
 
@@ -218,6 +219,12 @@ type GetAuthorizedKeyV2Request struct {
 	AuthorizedKey  string // path: "authorizedKey"
 	// Путь к проекту.
 	Project string // path: "project"
+	// Токен авторизации IAM
+	Authorization string // header: "Authorization"
+}
+
+func (m *GetAuthorizedKeyV2Request) SetAuthorization(authorization string) {
+	m.Authorization = authorization
 }
 
 func (m GetAuthorizedKeyV2Request) GetProject() string {

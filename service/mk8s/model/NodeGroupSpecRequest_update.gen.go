@@ -24,24 +24,24 @@ type UpdateNodeGroupSpecRequest struct {
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Subnet optional.Optional[UpdateNodeGroupSpecSubnetRequest] `json:"subnet" yaml:"subnet"`
-	// тип VM
+	// Тип ВМ
 	VmType optional.Optional[UpdateNodeGroupSpecVmTypeRequest] `json:"vmType" yaml:"vmType"`
-	// Размер хранилища для образов и контейнеров, в Gb.
+	// Размер хранилища для образов и контейнеров, в Gb
 	ImageStorageSize optional.Optional[bytesize.ByteSize] `json:"imageStorageSize" yaml:"imageStorageSize"`
-	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров.
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров
 	ImageStorageIops optional.Optional[int64] `json:"imageStorageIops" yaml:"imageStorageIops"`
 	// Параметры локальных дисков для каждого узла в группе узлов
 	LocalDisks optional.OptionalNil[[]UpdateLocalDiskSpecRequest] `json:"localDisks" yaml:"localDisks"`
-	// Необходимо заполнить одно из полей — "fixed" или "autoscaling".
+	// Режим скалирования группы узлов. Необходимо заполнить одно из полей — "fixed" или "autoscaling"
 	Scale          optional.Optional[UpdateNodeGroupSpecScaleRequest]          `json:"scale" yaml:"scale"`
 	Labels         optional.OptionalNil[[]UpdateNodeLabelSpecRequest]          `json:"labels" yaml:"labels"`
 	Taints         optional.OptionalNil[[]UpdateNodeTaintSpecRequest]          `json:"taints" yaml:"taints"`
 	VersionControl optional.Optional[UpdateNodeGroupVersionControlSpecRequest] `json:"versionControl" yaml:"versionControl"`
-	// Стратегия обновления (rollout) узлов в группе узлов.
+	// Стратегия обновления (rollout) узлов в группе узлов
 	RolloutStrategy optional.Optional[UpdateNodeGroupSpecRolloutStrategyRequest] `json:"rolloutStrategy" yaml:"rolloutStrategy"`
 	// Сервисный аккаунт для выполнения функций:
 	// - скачивание образов из Artifact Registry (требуются права на чтение образов);
-	// - сбор системных метрик с узлов (требуются права на чтение статусов узлов).
+	// - сбор системных метрик с узлов (требуются права на чтение статусов узлов)
 	ServiceAccount optional.Optional[UpdateNodeGroupSpecServiceAccountRequest] `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
@@ -392,7 +392,7 @@ func (m *NodeGroupSpecRolloutStrategyRequest) diffMaxUnavailable(src *NodeGroupS
 }
 
 type UpdateNodeGroupSpecScaleRequest struct {
-	// Количество узлов в группе узлов.
+	// Количество узлов в группе узлов
 	Fixed       optional.OptionalNil[int]                                        `json:"fixed" yaml:"fixed"`
 	Autoscaling optional.OptionalNil[UpdateNodeGroupSpecScaleAutoscalingRequest] `json:"autoscaling" yaml:"autoscaling"`
 }
@@ -460,9 +460,9 @@ func (m *NodeGroupSpecScaleRequest) diffAutoscaling(src *NodeGroupSpecScaleReque
 }
 
 type UpdateNodeGroupSpecScaleAutoscalingRequest struct {
-	// Минимально количество узлов в группе узлов.
+	// Минимальное количество узлов в группе узлов
 	Min optional.Optional[int] `json:"min" yaml:"min"`
-	// Максимальное количество узлов в группе узлов.
+	// Максимальное количество узлов в группе узлов
 	Max optional.Optional[int] `json:"max" yaml:"max"`
 }
 

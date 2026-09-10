@@ -15,7 +15,7 @@ import (
 )
 
 type Mk8sReleaseChannel interface {
-	// ListMk8sReleaseChannels получение списка доступных релизных каналов.
+	// ListMk8sReleaseChannels позволяет получить список доступных релизных каналов.
 	//
 	// Путь: GET /mk8s/v1/projects/{project}/releaseChannels
 	ListMk8sReleaseChannels(context.Context, ListMk8sReleaseChannelsRequest) (*ListMk8sReleaseChannelsResponse, error)

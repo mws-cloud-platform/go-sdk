@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateClusterPublicEndpointSpecRequest struct {
-	// Версия IP протокола.
+	// Версия протокола IP
 	Version optional.Optional[ClusterPublicEndpointSpecVersionRequest] `json:"version" yaml:"version"`
 }
 

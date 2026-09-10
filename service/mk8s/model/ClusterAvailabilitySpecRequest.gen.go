@@ -4,11 +4,11 @@ package model
 
 // Real OAPI model name: ClusterAvailabilitySpec
 type ClusterAvailabilitySpecRequest struct {
-	// Кластер с одним мастером.
+	// Кластер с одним мастером
 	Standalone *ClusterAvailabilitySpecStandaloneRequest `json:"standalone,omitempty" yaml:"standalone,omitempty"`
-	// Зональный высокодоступный кластер с несколькими мастерами в одной зоне доступности.
+	// Зональный высокодоступный кластер с несколькими мастерами в одной зоне доступности
 	ZonalHa *ClusterAvailabilitySpecZonalHaRequest `json:"zonalHa,omitempty" yaml:"zonalHa,omitempty"`
-	// Высокодоступный кластер с несколькими мастерами в разных зонах доступности одного региона.
+	// Высокодоступный кластер с несколькими мастерами в разных зонах доступности одного региона
 	Regional *ClusterAvailabilitySpecRegionalRequest `json:"regional,omitempty" yaml:"regional,omitempty"`
 }
 
@@ -81,7 +81,7 @@ func (m *ClusterAvailabilitySpecRequest) Clone() *ClusterAvailabilitySpecRequest
 // Представление поля Regional анонимного типа структуры ClusterAvailabilitySpec
 // Real OAPI model name: ClusterAvailabilitySpecRegional
 type ClusterAvailabilitySpecRegionalRequest struct {
-	// Имена зон для размещения кластера. Должно быть ровно три зоны.
+	// Имена зон для размещения кластера. Должно быть ровно три зоны
 	Zones []string `json:"zones" yaml:"zones"`
 }
 
@@ -114,7 +114,7 @@ func (m *ClusterAvailabilitySpecRegionalRequest) Clone() *ClusterAvailabilitySpe
 // Представление поля Standalone анонимного типа структуры ClusterAvailabilitySpec
 // Real OAPI model name: ClusterAvailabilitySpecStandalone
 type ClusterAvailabilitySpecStandaloneRequest struct {
-	// Имя зоны для размещения кластера.
+	// Имя зоны для размещения кластера
 	Zone string `json:"zone" yaml:"zone"`
 }
 
@@ -141,7 +141,7 @@ func (m *ClusterAvailabilitySpecStandaloneRequest) Clone() *ClusterAvailabilityS
 // Представление поля ZonalHa анонимного типа структуры ClusterAvailabilitySpec
 // Real OAPI model name: ClusterAvailabilitySpecZonalHa
 type ClusterAvailabilitySpecZonalHaRequest struct {
-	// Имя зоны для размещения кластера.
+	// Имя зоны для размещения кластера
 	Zone string `json:"zone" yaml:"zone"`
 }
 

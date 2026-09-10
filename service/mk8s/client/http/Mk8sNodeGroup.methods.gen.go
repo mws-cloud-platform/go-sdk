@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/mk8s/client"
 )
 
-// ListMk8sNodeGroups получение списка managed k8s node groups.
+// ListMk8sNodeGroups позволяет получить список групп узлов Managed Kubernetes.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups
@@ -111,7 +111,7 @@ func (c *Mk8sNodeGroup) headerListMk8sNodeGroups(req *http.Request, request *cli
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// DeleteMk8sNodeGroup удаление managed k8s node group.
+// DeleteMk8sNodeGroup позволяет удалить группу узлов Managed Kubernetes.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: DELETE /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}
@@ -188,7 +188,7 @@ func (c *Mk8sNodeGroup) headerDeleteMk8sNodeGroup(req *http.Request, request *cl
 	}
 }
 
-// GetMk8sNodeGroup получение managed k8s node group по имени.
+// GetMk8sNodeGroup позволяет получить группу узлов Managed Kubernetes по имени.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}
@@ -266,7 +266,7 @@ func (c *Mk8sNodeGroup) headerGetMk8sNodeGroup(req *http.Request, request *clien
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpsertMk8sNodeGroup создание или обновление managed k8s node group.
+// UpsertMk8sNodeGroup позволяет создать или обновить группу узлов Managed Kubernetes.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}
@@ -359,7 +359,7 @@ func (c *Mk8sNodeGroup) headerUpsertMk8sNodeGroup(req *http.Request, request *cl
 	}
 }
 
-// CreateMk8sNodeGroup создание или обновление managed k8s node group.
+// CreateMk8sNodeGroup позволяет создать или обновить группу узлов Managed Kubernetes.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -454,7 +454,7 @@ func (c *Mk8sNodeGroup) headerCreateMk8sNodeGroup(req *http.Request, request *cl
 	}
 }
 
-// UpdateMk8sNodeGroup создание или обновление managed k8s node group.
+// UpdateMk8sNodeGroup позволяет создать или обновить группу узлов Managed Kubernetes.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

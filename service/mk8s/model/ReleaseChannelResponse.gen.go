@@ -4,10 +4,10 @@ package model
 
 // Real OAPI model name: ReleaseChannel
 type ReleaseChannelResponse struct {
-	// Если release channel name не указан, то будет проставлено default значение stable
+	// Имя релизного канала. По умолчанию — stable
 	Name        string  `json:"name" yaml:"name"`
 	Description *string `json:"description,omitempty" yaml:"description,omitempty"`
-	// Если false, то релизный канал не доступен для выбора
+	// Доступность релизного канала. Если значение равно false, то канал недоступен для выбора
 	Enabled bool `json:"enabled" yaml:"enabled"`
 }
 

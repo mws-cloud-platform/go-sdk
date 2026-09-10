@@ -15,7 +15,7 @@ import (
 	"go.mws.cloud/go-sdk/service/mk8s/client"
 )
 
-// GetProjectStats получение статистики managed k8s в проекте.
+// GetProjectStats позволяет получить статистику Managed Kubernetes в проекте.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mk8s/v1/projects/{project}/stats

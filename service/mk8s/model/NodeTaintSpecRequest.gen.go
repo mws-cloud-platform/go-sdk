@@ -12,11 +12,11 @@ import (
 type NodeTaintSpecRequest struct {
 	// Ключ может состоять из двух частей: необязательный префикс и ключ, разделенные "/".
 	// Максимальная длина префикса 253 символа.
-	// Максимальная длина ключа 63 символа.
+	// Максимальная длина ключа 63 символа
 	Key string `json:"key" yaml:"key"`
-	// Значение taint на node. Если строка пустая, то value нет.
+	// Значение taint на узле
 	Value string `json:"value" yaml:"value"`
-	// Эффект taint на node, влияющий на pod scheduling, которые под него попадают.
+	// Эффект taint на узле, влияющий на планирование подов, которые под него попадают
 	Effect NodeTaintSpecEffectRequest `json:"effect" yaml:"effect"`
 }
 

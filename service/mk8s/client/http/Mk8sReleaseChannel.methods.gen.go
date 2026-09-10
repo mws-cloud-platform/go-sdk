@@ -15,7 +15,7 @@ import (
 	"go.mws.cloud/go-sdk/service/mk8s/client"
 )
 
-// ListMk8sReleaseChannels получение списка доступных релизных каналов.
+// ListMk8sReleaseChannels позволяет получить список доступных релизных каналов.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mk8s/v1/projects/{project}/releaseChannels

@@ -26,7 +26,7 @@ func (x *Mk8sClusterSugared) Impl() Mk8sCluster {
 	return x.impl
 }
 
-// ListMk8sClusters получение списка managed k8s cluster.
+// ListMk8sClusters позволяет получить список кластеров Managed Kubernetes.
 //
 // Путь: GET /mk8s/v1/projects/{project}/clusters
 func (x *Mk8sClusterSugared) ListMk8sClusters(ctx context.Context, request ListMk8sClustersRequest) (*model.ClusterListOptionalResponse, error) {
@@ -50,7 +50,7 @@ func (x *Mk8sClusterSugared) respHandlerListMk8sClusters(resp *ListMk8sClustersR
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// DeleteMk8sCluster удаление managed k8s cluster.
+// DeleteMk8sCluster позволяет удалить кластер Managed Kubernetes.
 //
 // Путь: DELETE /mk8s/v1/projects/{project}/clusters/{clusterName}
 func (x *Mk8sClusterSugared) DeleteMk8sCluster(ctx context.Context, request DeleteMk8sClusterRequest, opts ...Option) error {
@@ -98,7 +98,7 @@ func (x *Mk8sClusterSugared) waitDeleteMk8sCluster(ctx context.Context, request 
 	return err
 }
 
-// GetMk8sCluster получение cluster по имени.
+// GetMk8sCluster позволяет получить конфигурацию кластера по имени.
 //
 // Путь: GET /mk8s/v1/projects/{project}/clusters/{clusterName}
 func (x *Mk8sClusterSugared) GetMk8sCluster(ctx context.Context, request GetMk8sClusterRequest, opts ...Option) (*model.ClusterOptionalResponse, error) {
@@ -143,7 +143,7 @@ func (x *Mk8sClusterSugared) waitGetMk8sCluster(ctx context.Context, request Get
 	return waiter.Wait(ctx)
 }
 
-// UpsertMk8sCluster создание или обновление managed k8s cluster-а.
+// UpsertMk8sCluster позволяет создать или обновить кластер Managed Kubernetes.
 //
 // Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}
 func (x *Mk8sClusterSugared) UpsertMk8sCluster(ctx context.Context, request UpsertMk8sClusterRequest, opts ...Option) (*model.ClusterOptionalResponse, error) {
@@ -188,7 +188,7 @@ func (x *Mk8sClusterSugared) waitUpsertMk8sCluster(ctx context.Context, request 
 	return waiter.Wait(ctx)
 }
 
-// CreateMk8sCluster создание или обновление managed k8s cluster-а.
+// CreateMk8sCluster позволяет создать или обновить кластер Managed Kubernetes.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}?createOnly=true
@@ -212,7 +212,7 @@ func (x *Mk8sClusterSugared) CreateMk8sCluster(ctx context.Context, request Upse
 	return x.waitUpsertMk8sCluster(ctx, request.getMk8sClusterRequest(), config.waitOptions...)
 }
 
-// UpdateMk8sCluster создание или обновление managed k8s cluster-а.
+// UpdateMk8sCluster позволяет создать или обновить кластер Managed Kubernetes.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}?updateOnly=true

@@ -22,7 +22,7 @@ func (x *Mk8sVersionSugared) Impl() Mk8sVersion {
 	return x.impl
 }
 
-// ListMk8sVersions получение списка доступных managed k8s версий.
+// ListMk8sVersions позволяет получить список доступных версий Kubernetes.
 //
 // Путь: GET /mk8s/v1/projects/{project}/releaseChannels/{releaseChannelName}/versions
 func (x *Mk8sVersionSugared) ListMk8sVersions(ctx context.Context, request ListMk8sVersionsRequest) (*ListMk8sVersionsResponse200, error) {

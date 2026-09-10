@@ -11,7 +11,7 @@ import (
 type LocalDiskStatusResponse struct {
 	// Уникальное имя диска в рамках виртуальной машины
 	Name *string `json:"name,omitempty" yaml:"name,omitempty"`
-	// Имя устройства в `/dev/disk/by-id/mws-*`. Если не указано — `mws-{name}`.
+	// Имя устройства в `/dev/disk/by-id/mws-*`. Если не указано — `mws-{name}`
 	DeviceName *string `json:"deviceName,omitempty" yaml:"deviceName,omitempty"`
 	// Размер диска
 	Size *bytesize.ByteSize `json:"size,omitempty" yaml:"size,omitempty"`

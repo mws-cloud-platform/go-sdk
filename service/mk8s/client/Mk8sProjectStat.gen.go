@@ -11,7 +11,7 @@ import (
 )
 
 type Mk8sProjectStat interface {
-	// GetProjectStats получение статистики managed k8s в проекте.
+	// GetProjectStats позволяет получить статистику Managed Kubernetes в проекте.
 	//
 	// Путь: GET /mk8s/v1/projects/{project}/stats
 	GetProjectStats(context.Context, GetProjectStatsRequest) (*GetProjectStatsResponse, error)

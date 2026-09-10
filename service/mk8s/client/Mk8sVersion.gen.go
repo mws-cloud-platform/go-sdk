@@ -15,7 +15,7 @@ import (
 )
 
 type Mk8sVersion interface {
-	// ListMk8sVersions получение списка доступных managed k8s версий.
+	// ListMk8sVersions позволяет получить список доступных версий Kubernetes.
 	//
 	// Путь: GET /mk8s/v1/projects/{project}/releaseChannels/{releaseChannelName}/versions
 	ListMk8sVersions(context.Context, ListMk8sVersionsRequest) (*ListMk8sVersionsResponse, error)
@@ -26,13 +26,15 @@ type ListMk8sVersionsRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Имя Release Channel
+	// Имя релизного канала
 	ReleaseChannelName string // path: "releaseChannelName"
-	// Объект получения версий, возможные варианты значений cluster или nodeGroup
+	// Объект, для которого запрашиваются доступные версии Kubernetes:
+	// - `cluster` — версии Control Plane кластера;
+	// - `nodeGroup` — версии группы узлов
 	Subject *string // query: "subject"
-	// Имя Cluster
+	// Имя кластера
 	ClusterName *string // query: "clusterName"
-	// Имя Node Group-ы
+	// Имя группы узлов
 	NodeGroupName *string // query: "nodeGroupName"
 }
 

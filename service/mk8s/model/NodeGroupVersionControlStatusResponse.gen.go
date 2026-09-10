@@ -8,7 +8,7 @@ import (
 
 // Real OAPI model name: NodeGroupVersionControlStatus
 type NodeGroupVersionControlStatusResponse struct {
-	// Текущая версия NodeGroup
+	// Текущая версия группы узлов
 	Version           *string                                `json:"version,omitempty" yaml:"version,omitempty"`
 	AutoUpdate        *bool                                  `json:"autoUpdate,omitempty" yaml:"autoUpdate,omitempty"`
 	MaintenanceWindow *commonmodel.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`

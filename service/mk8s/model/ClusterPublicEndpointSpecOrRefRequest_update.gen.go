@@ -15,7 +15,8 @@ import (
 
 type UpdateClusterPublicEndpointSpecOrRefRequest struct {
 	Ref optional.OptionalNil[vpc.ExternalAddressRef] `json:"ref" yaml:"ref"`
-	// Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
+	// Конфигурация публичного эндпоинта кластера.
+	// При автоматическом выделении внешнего IP-адреса ожидается пустой объект
 	Spec optional.OptionalNil[UpdateClusterPublicEndpointSpecRequest] `json:"spec" yaml:"spec"`
 }
 

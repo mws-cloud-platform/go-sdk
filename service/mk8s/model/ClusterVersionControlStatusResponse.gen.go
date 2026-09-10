@@ -8,9 +8,9 @@ import (
 
 // Real OAPI model name: ClusterVersionControlStatus
 type ClusterVersionControlStatusResponse struct {
-	// Cluster обновляется всегда до default версии, поэтому необходимо выбрать релизный канал и настроить окно обслуживания
+	// Релизный канал кластера
 	ReleaseChannel *string `json:"releaseChannel,omitempty" yaml:"releaseChannel,omitempty"`
-	// Текущая версия Cluster
+	// Текущая версия кластера
 	Version           *string                                `json:"version,omitempty" yaml:"version,omitempty"`
 	MaintenanceWindow *commonmodel.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 }

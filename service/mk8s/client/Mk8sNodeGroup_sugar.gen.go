@@ -26,7 +26,7 @@ func (x *Mk8sNodeGroupSugared) Impl() Mk8sNodeGroup {
 	return x.impl
 }
 
-// ListMk8sNodeGroups получение списка managed k8s node groups.
+// ListMk8sNodeGroups позволяет получить список групп узлов Managed Kubernetes.
 //
 // Путь: GET /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups
 func (x *Mk8sNodeGroupSugared) ListMk8sNodeGroups(ctx context.Context, request ListMk8sNodeGroupsRequest) (*model.NodeGroupListOptionalResponse, error) {
@@ -50,7 +50,7 @@ func (x *Mk8sNodeGroupSugared) respHandlerListMk8sNodeGroups(resp *ListMk8sNodeG
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-// DeleteMk8sNodeGroup удаление managed k8s node group.
+// DeleteMk8sNodeGroup позволяет удалить группу узлов Managed Kubernetes.
 //
 // Путь: DELETE /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}
 func (x *Mk8sNodeGroupSugared) DeleteMk8sNodeGroup(ctx context.Context, request DeleteMk8sNodeGroupRequest, opts ...Option) error {
@@ -98,7 +98,7 @@ func (x *Mk8sNodeGroupSugared) waitDeleteMk8sNodeGroup(ctx context.Context, requ
 	return err
 }
 
-// GetMk8sNodeGroup получение managed k8s node group по имени.
+// GetMk8sNodeGroup позволяет получить группу узлов Managed Kubernetes по имени.
 //
 // Путь: GET /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}
 func (x *Mk8sNodeGroupSugared) GetMk8sNodeGroup(ctx context.Context, request GetMk8sNodeGroupRequest, opts ...Option) (*model.NodeGroupOptionalResponse, error) {
@@ -143,7 +143,7 @@ func (x *Mk8sNodeGroupSugared) waitGetMk8sNodeGroup(ctx context.Context, request
 	return waiter.Wait(ctx)
 }
 
-// UpsertMk8sNodeGroup создание или обновление managed k8s node group.
+// UpsertMk8sNodeGroup позволяет создать или обновить группу узлов Managed Kubernetes.
 //
 // Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}
 func (x *Mk8sNodeGroupSugared) UpsertMk8sNodeGroup(ctx context.Context, request UpsertMk8sNodeGroupRequest, opts ...Option) (*model.NodeGroupOptionalResponse, error) {
@@ -188,7 +188,7 @@ func (x *Mk8sNodeGroupSugared) waitUpsertMk8sNodeGroup(ctx context.Context, requ
 	return waiter.Wait(ctx)
 }
 
-// CreateMk8sNodeGroup создание или обновление managed k8s node group.
+// CreateMk8sNodeGroup позволяет создать или обновить группу узлов Managed Kubernetes.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}?createOnly=true
@@ -212,7 +212,7 @@ func (x *Mk8sNodeGroupSugared) CreateMk8sNodeGroup(ctx context.Context, request 
 	return x.waitUpsertMk8sNodeGroup(ctx, request.getMk8sNodeGroupRequest(), config.waitOptions...)
 }
 
-// UpdateMk8sNodeGroup создание или обновление managed k8s node group.
+// UpdateMk8sNodeGroup позволяет создать или обновить группу узлов Managed Kubernetes.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}/nodeGroups/{nodeGroupName}?updateOnly=true

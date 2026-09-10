@@ -10,10 +10,12 @@ import (
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
-// Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
+// Конфигурация публичного эндпоинта кластера.
+// При автоматическом выделении внешнего IP-адреса ожидается пустой объект
+//
 // Real OAPI model name: ClusterPublicEndpointSpec
 type ClusterPublicEndpointSpecOptionalResponse struct {
-	// Версия IP протокола.
+	// Версия протокола IP
 	Version optional.Optional[ClusterPublicEndpointSpecVersionOptionalResponse] `json:"version,omitempty" yaml:"version,omitempty"`
 }
 

@@ -10,9 +10,9 @@ import (
 type UpdateNodeLabelSpecRequest struct {
 	// Ключ может состоять из двух частей: необязательный префикс и ключ, разделенные '/'
 	// Максимальная длина префикса 253 символа.
-	// Максимальная длина ключа 63 символа.
+	// Максимальная длина ключа 63 символа
 	Key optional.Optional[string] `json:"key" yaml:"key"`
-	// Значение метки на узле.
+	// Значение метки на узле
 	Value optional.Optional[string] `json:"value" yaml:"value"`
 }
 

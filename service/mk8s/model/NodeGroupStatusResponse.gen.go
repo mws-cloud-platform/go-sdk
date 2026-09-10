@@ -15,26 +15,26 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
-// Описывает статусную модель групп узлов Kubernetes.
+// Описывает статусную модель групп узлов Kubernetes
 // Real OAPI model name: NodeGroupStatus
 type NodeGroupStatusResponse struct {
 	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
 	VmType                             *NodeGroupStatusVmTypeResponse `json:"vmType,omitempty" yaml:"vmType,omitempty"`
-	// Количество ядер vCPU на узле.
+	// Количество ядер vCPU на узле
 	Cpu *string `json:"cpu,omitempty" yaml:"cpu,omitempty"`
-	// Объем оперативной памяти на узле.
+	// Объем оперативной памяти на узле
 	Memory           *bytesize.ByteSize `json:"memory,omitempty" yaml:"memory,omitempty"`
 	ImageStorageSize *bytesize.ByteSize `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
-	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров.
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров
 	ImageStorageIops *int64 `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
-	// Параметры локальных дисков для каждого узла в группе узлов.
+	// Параметры локальных дисков для каждого узла в группе узлов
 	LocalDisks []LocalDiskStatusResponse     `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
 	Scale      *NodeGroupStatusScaleResponse `json:"scale,omitempty" yaml:"scale,omitempty"`
-	// Текущее количество узлов, готовых для работы.
+	// Текущее количество узлов, готовых для работы
 	NodesReady *int                    `json:"nodesReady,omitempty" yaml:"nodesReady,omitempty"`
 	Labels     []NodeLabelSpecResponse `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Taints     []NodeTaintSpecResponse `json:"taints,omitempty" yaml:"taints,omitempty"`
-	// Стратегия обновления (rollout) узлов в группе узлов.
+	// Стратегия обновления (rollout) узлов в группе узлов
 	RolloutStrategy *NodeGroupStatusRolloutStrategyResponse `json:"rolloutStrategy,omitempty" yaml:"rolloutStrategy,omitempty"`
 	VersionControl  *NodeGroupVersionControlStatusResponse  `json:"versionControl,omitempty" yaml:"versionControl,omitempty"`
 	ServiceAccount  *NodeGroupStatusServiceAccountResponse  `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
@@ -312,7 +312,7 @@ func (m *NodeGroupStatusResponse) Parse(ctx context.Context) error {
 // Представление поля NodeGroupStatus анонимного типа структуры NodeGroupStatus
 // Real OAPI model name: NodeGroupStatusNodeGroupStatus
 type NodeGroupStatusNodeGroupStatusResponse struct {
-	// Текущий статус группы узлов.
+	// Текущий статус группы узлов
 	State   *NodeGroupStatusNodeGroupStatusStateResponse `json:"state,omitempty" yaml:"state,omitempty"`
 	Message *string                                      `json:"message,omitempty" yaml:"message,omitempty"`
 }
@@ -522,9 +522,9 @@ func (m *NodeGroupStatusScaleResponse) Clone() *NodeGroupStatusScaleResponse {
 // Представление поля Autoscaling анонимного типа структуры NodeGroupStatusScale
 // Real OAPI model name: NodeGroupStatusScaleAutoscaling
 type NodeGroupStatusScaleAutoscalingResponse struct {
-	// Минимальное количество узлов в группе узлов.
+	// Минимальное количество узлов в группе узлов
 	Min int `json:"min" yaml:"min"`
-	// Максимальное количество узлов в группе узлов.
+	// Максимальное количество узлов в группе узлов
 	Max int `json:"max" yaml:"max"`
 }
 

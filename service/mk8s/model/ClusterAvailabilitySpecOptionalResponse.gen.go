@@ -8,11 +8,11 @@ import (
 
 // Real OAPI model name: ClusterAvailabilitySpec
 type ClusterAvailabilitySpecOptionalResponse struct {
-	// Кластер с одним мастером.
+	// Кластер с одним мастером
 	Standalone optional.OptionalNil[ClusterAvailabilitySpecStandaloneOptionalResponse] `json:"standalone,omitempty" yaml:"standalone,omitempty"`
-	// Зональный высокодоступный кластер с несколькими мастерами в одной зоне доступности.
+	// Зональный высокодоступный кластер с несколькими мастерами в одной зоне доступности
 	ZonalHa optional.OptionalNil[ClusterAvailabilitySpecZonalHaOptionalResponse] `json:"zonalHa,omitempty" yaml:"zonalHa,omitempty"`
-	// Высокодоступный кластер с несколькими мастерами в разных зонах доступности одного региона.
+	// Высокодоступный кластер с несколькими мастерами в разных зонах доступности одного региона
 	Regional optional.OptionalNil[ClusterAvailabilitySpecRegionalOptionalResponse] `json:"regional,omitempty" yaml:"regional,omitempty"`
 }
 
@@ -79,7 +79,7 @@ func (m *ClusterAvailabilitySpecOptionalResponse) Clone() *ClusterAvailabilitySp
 // Представление поля Regional анонимного типа структуры ClusterAvailabilitySpec
 // Real OAPI model name: ClusterAvailabilitySpecRegional
 type ClusterAvailabilitySpecRegionalOptionalResponse struct {
-	// Имена зон для размещения кластера. Должно быть ровно три зоны.
+	// Имена зон для размещения кластера. Должно быть ровно три зоны
 	Zones []string `json:"zones" yaml:"zones"`
 }
 
@@ -112,7 +112,7 @@ func (m *ClusterAvailabilitySpecRegionalOptionalResponse) Clone() *ClusterAvaila
 // Представление поля Standalone анонимного типа структуры ClusterAvailabilitySpec
 // Real OAPI model name: ClusterAvailabilitySpecStandalone
 type ClusterAvailabilitySpecStandaloneOptionalResponse struct {
-	// Имя зоны для размещения кластера.
+	// Имя зоны для размещения кластера
 	Zone string `json:"zone" yaml:"zone"`
 }
 
@@ -139,7 +139,7 @@ func (m *ClusterAvailabilitySpecStandaloneOptionalResponse) Clone() *ClusterAvai
 // Представление поля ZonalHa анонимного типа структуры ClusterAvailabilitySpec
 // Real OAPI model name: ClusterAvailabilitySpecZonalHa
 type ClusterAvailabilitySpecZonalHaOptionalResponse struct {
-	// Имя зоны для размещения кластера.
+	// Имя зоны для размещения кластера
 	Zone string `json:"zone" yaml:"zone"`
 }
 

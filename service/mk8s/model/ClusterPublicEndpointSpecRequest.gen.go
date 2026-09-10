@@ -8,10 +8,12 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 )
 
-// Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
+// Конфигурация публичного эндпоинта кластера.
+// При автоматическом выделении внешнего IP-адреса ожидается пустой объект
+//
 // Real OAPI model name: ClusterPublicEndpointSpec
 type ClusterPublicEndpointSpecRequest struct {
-	// Версия IP протокола.
+	// Версия протокола IP
 	Version *ClusterPublicEndpointSpecVersionRequest `json:"version,omitempty" yaml:"version,omitempty"`
 }
 

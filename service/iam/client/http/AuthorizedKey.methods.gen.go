@@ -241,6 +241,7 @@ func (c *AuthorizedKey) getAuthorizedKeyV2Invoker(ctx context.Context, anyReq an
 	}
 
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerGetAuthorizedKeyV2(httpReq, request)
 
 	httpResp, err := c.client.Do(httpReq)
 	if err != nil {
@@ -263,6 +264,10 @@ func (c *AuthorizedKey) getAuthorizedKeyV2Invoker(ctx context.Context, anyReq an
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *AuthorizedKey) headerGetAuthorizedKeyV2(req *http.Request, request *client.GetAuthorizedKeyV2Request) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
 // UpsertAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.

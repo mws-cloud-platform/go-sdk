@@ -9,11 +9,11 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// ip-адрес внутри vpc.
+// Конфигурация primary-эндпоинта кластера — подсеть или идентификатор внутреннего IP-адреса
 // Real OAPI model name: ClusterPrimaryEndpointSpecOrRef
 type ClusterPrimaryEndpointSpecOrRefRequest struct {
 	Ref *vpc.AddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
-	// Описание subnet пользователя, из которого будет выделен ip-адрес
+	// Конфигурация подсети, из которой будет выделен IP-адрес
 	Spec *ClusterPrimaryEndpointSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 

@@ -14,11 +14,11 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// Описывает статусную модель k8s cluster.
+// Статусная модель кластера Kubernetes
 // Real OAPI model name: ClusterStatus
 type ClusterStatusResponse struct {
 	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
-	// root сертификат кластера
+	// Корневой сертификат кластера
 	ClusterCaCertificate []byte                               `json:"clusterCaCertificate,omitempty" yaml:"clusterCaCertificate,omitempty"` // base64
 	Network              *ClusterStatusNetworkResponse        `json:"network,omitempty" yaml:"network,omitempty"`
 	VersionControl       *ClusterVersionControlStatusResponse `json:"versionControl,omitempty" yaml:"versionControl,omitempty"`
@@ -156,7 +156,7 @@ func (m *ClusterStatusResponse) Parse(ctx context.Context) error {
 // Представление поля ClusterStatus анонимного типа структуры ClusterStatus
 // Real OAPI model name: ClusterStatusClusterStatus
 type ClusterStatusClusterStatusResponse struct {
-	// текущий статус cluster
+	// Текущий статус кластера
 	State   *ClusterStatusClusterStatusStateResponse `json:"state,omitempty" yaml:"state,omitempty"`
 	Message *string                                  `json:"message,omitempty" yaml:"message,omitempty"`
 }
@@ -267,10 +267,10 @@ func (m ClusterStatusClusterStatusStateResponse) IsValid() bool {
 type ClusterStatusNetworkResponse struct {
 	VpcNetwork *ClusterStatusNetworkVpcNetworkResponse `json:"vpcNetwork,omitempty" yaml:"vpcNetwork,omitempty"`
 	Subnet     *ClusterStatusNetworkSubnetResponse     `json:"subnet,omitempty" yaml:"subnet,omitempty"`
-	// внутренний ip-адрес
+	// Внутренний IP-адрес
 	PrimaryEndpoint *ClusterStatusNetworkPrimaryEndpointResponse `json:"primaryEndpoint,omitempty" yaml:"primaryEndpoint,omitempty"`
 	PrimaryAddress  *ipaddress.IP4Address                        `json:"primaryAddress,omitempty" yaml:"primaryAddress,omitempty"`
-	// внешний ip-адрес
+	// Внешний IP-адрес
 	PublicEndpoint *ClusterStatusNetworkPublicEndpointResponse `json:"publicEndpoint,omitempty" yaml:"publicEndpoint,omitempty"`
 	PublicAddress  *ipaddress.IP4Address                       `json:"publicAddress,omitempty" yaml:"publicAddress,omitempty"`
 }

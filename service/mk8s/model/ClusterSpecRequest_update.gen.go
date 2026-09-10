@@ -154,19 +154,19 @@ func (m *ClusterSpecRequest) diffSecurityPosture(src *ClusterSpecRequest) option
 }
 
 type UpdateClusterSpecNetworkRequest struct {
-	// ip-адрес внутри vpc
+	// IP-адрес внутри VPC
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	PrimaryEndpoint optional.Optional[UpdateClusterPrimaryEndpointSpecOrRefRequest] `json:"primaryEndpoint" yaml:"primaryEndpoint"`
-	// внешний ip-адрес
+	// Внешний IP-адрес
 	PublicEndpoint optional.OptionalNil[UpdateClusterPublicEndpointSpecOrRefRequest] `json:"publicEndpoint" yaml:"publicEndpoint"`
-	// необходим ip-range v4
+	// CIDR IPv4-адресов
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	PodsCidr optional.Optional[cidraddress.CIDR4Address] `json:"podsCidr" yaml:"podsCidr"`
-	// необходим ip-range v4
+	// CIDR IPv4-адресов
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.

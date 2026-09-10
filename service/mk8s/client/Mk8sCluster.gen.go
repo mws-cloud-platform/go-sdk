@@ -11,28 +11,28 @@ import (
 )
 
 type Mk8sCluster interface {
-	// ListMk8sClusters получение списка managed k8s cluster.
+	// ListMk8sClusters позволяет получить список кластеров Managed Kubernetes.
 	//
 	// Путь: GET /mk8s/v1/projects/{project}/clusters
 	ListMk8sClusters(context.Context, ListMk8sClustersRequest) (*ListMk8sClustersResponse, error)
-	// DeleteMk8sCluster удаление managed k8s cluster.
+	// DeleteMk8sCluster позволяет удалить кластер Managed Kubernetes.
 	//
 	// Путь: DELETE /mk8s/v1/projects/{project}/clusters/{clusterName}
 	DeleteMk8sCluster(context.Context, DeleteMk8sClusterRequest) (*DeleteMk8sClusterResponse, error)
-	// GetMk8sCluster получение cluster по имени.
+	// GetMk8sCluster позволяет получить конфигурацию кластера по имени.
 	//
 	// Путь: GET /mk8s/v1/projects/{project}/clusters/{clusterName}
 	GetMk8sCluster(context.Context, GetMk8sClusterRequest) (*GetMk8sClusterResponse, error)
-	// UpsertMk8sCluster создание или обновление managed k8s cluster-а.
+	// UpsertMk8sCluster позволяет создать или обновить кластер Managed Kubernetes.
 	//
 	// Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}
 	UpsertMk8sCluster(context.Context, UpsertMk8sClusterRequest) (*UpsertMk8sClusterResponse, error)
-	// CreateMk8sCluster создание или обновление managed k8s cluster-а.
+	// CreateMk8sCluster позволяет создать или обновить кластер Managed Kubernetes.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}?createOnly=true
 	CreateMk8sCluster(context.Context, UpsertMk8sClusterRequest) (*UpsertMk8sClusterResponse, error)
-	// UpdateMk8sCluster создание или обновление managed k8s cluster-а.
+	// UpdateMk8sCluster позволяет создать или обновить кластер Managed Kubernetes.
 	// Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 	//
 	// Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}?updateOnly=true
@@ -123,7 +123,7 @@ type DeleteMk8sClusterRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Имя Cluster
+	// Имя кластера
 	ClusterName string // path: "clusterName"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
@@ -196,7 +196,7 @@ type GetMk8sClusterRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Имя Cluster
+	// Имя кластера
 	ClusterName string // path: "clusterName"
 }
 
@@ -259,11 +259,11 @@ type UpsertMk8sClusterRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Имя Cluster
+	// Имя кластера
 	ClusterName string // path: "clusterName"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// managed k8s cluster object
+	// Конфигурация кластера Managed Kubernetes
 	Body model.ClusterRequest // body
 }
 
@@ -292,11 +292,11 @@ type UpdateMk8sClusterRequest struct {
 	Authorization string // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Имя Cluster
+	// Имя кластера
 	ClusterName string // path: "clusterName"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
-	// managed k8s cluster object
+	// Конфигурация кластера Managed Kubernetes
 	Body model.UpdateClusterRequest // body
 }
 

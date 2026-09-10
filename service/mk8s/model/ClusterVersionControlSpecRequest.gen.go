@@ -8,11 +8,11 @@ import (
 
 // Real OAPI model name: ClusterVersionControlSpec
 type ClusterVersionControlSpecRequest struct {
-	// Cluster обновляется всегда до default версии, поэтому необходимо выбрать релизный канал и настроить окно обслуживания
+	// Релизный канал кластера
 	ReleaseChannel string `json:"releaseChannel" yaml:"releaseChannel"`
-	// Минимальная версия Cluster. Автоматически обновляется до версии default в окно обслуживания. При указании версии выше default обновление запускается немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе Cluster
+	// Минимальная версия кластера. Автоматически обновляется до версии default в окно обслуживания. При указании версии выше default обновление запускается немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе Cluster
 	Version *string `json:"version,omitempty" yaml:"version,omitempty"`
-	// Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration нельзя указывать, так как обновление мастер нод не прерывается
+	// Окно обслуживания кластера.  Если окно не задано, то время проведения работ не ограничено. Продолжительность (duration) не указывается, так как обновление master-узлов не прерывается
 	MaintenanceWindow *commonmodel.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 }
 

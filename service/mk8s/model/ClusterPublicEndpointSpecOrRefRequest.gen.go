@@ -9,11 +9,12 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
 
-// ip-адрес внутри vpc.
+// Конфигурация публичного эндпоинта кластера — подсеть или идентификатор внешнего IP-адреса
 // Real OAPI model name: ClusterPublicEndpointSpecOrRef
 type ClusterPublicEndpointSpecOrRefRequest struct {
 	Ref *vpc.ExternalAddressRef `json:"ref,omitempty" yaml:"ref,omitempty"`
-	// Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
+	// Конфигурация публичного эндпоинта кластера.
+	// При автоматическом выделении внешнего IP-адреса ожидается пустой объект
 	Spec *ClusterPublicEndpointSpecRequest `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 

@@ -118,13 +118,13 @@ func (m *ClusterSpecRequest) Parse(ctx context.Context) error {
 // Представление поля Network анонимного типа структуры ClusterSpec
 // Real OAPI model name: ClusterSpecNetwork
 type ClusterSpecNetworkRequest struct {
-	// ip-адрес внутри vpc
+	// IP-адрес внутри VPC
 	PrimaryEndpoint ClusterPrimaryEndpointSpecOrRefRequest `json:"primaryEndpoint" yaml:"primaryEndpoint"`
-	// внешний ip-адрес
+	// Внешний IP-адрес
 	PublicEndpoint *ClusterPublicEndpointSpecOrRefRequest `json:"publicEndpoint,omitempty" yaml:"publicEndpoint,omitempty"`
-	// необходим ip-range v4
+	// CIDR IPv4-адресов
 	PodsCidr cidraddress.CIDR4Address `json:"podsCidr" yaml:"podsCidr"`
-	// необходим ip-range v4
+	// CIDR IPv4-адресов
 	ServicesCidr cidraddress.CIDR4Address `json:"servicesCidr" yaml:"servicesCidr"`
 }
 

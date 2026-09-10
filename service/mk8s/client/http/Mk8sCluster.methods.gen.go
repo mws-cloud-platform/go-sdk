@@ -16,7 +16,7 @@ import (
 	"go.mws.cloud/go-sdk/service/mk8s/client"
 )
 
-// ListMk8sClusters получение списка managed k8s cluster.
+// ListMk8sClusters позволяет получить список кластеров Managed Kubernetes.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mk8s/v1/projects/{project}/clusters
@@ -108,7 +108,7 @@ func (c *Mk8sCluster) headerListMk8sClusters(req *http.Request, request *client.
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// DeleteMk8sCluster удаление managed k8s cluster.
+// DeleteMk8sCluster позволяет удалить кластер Managed Kubernetes.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: DELETE /mk8s/v1/projects/{project}/clusters/{clusterName}
@@ -183,7 +183,7 @@ func (c *Mk8sCluster) headerDeleteMk8sCluster(req *http.Request, request *client
 	}
 }
 
-// GetMk8sCluster получение cluster по имени.
+// GetMk8sCluster позволяет получить конфигурацию кластера по имени.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mk8s/v1/projects/{project}/clusters/{clusterName}
@@ -258,7 +258,7 @@ func (c *Mk8sCluster) headerGetMk8sCluster(req *http.Request, request *client.Ge
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
 }
 
-// UpsertMk8sCluster создание или обновление managed k8s cluster-а.
+// UpsertMk8sCluster позволяет создать или обновить кластер Managed Kubernetes.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /mk8s/v1/projects/{project}/clusters/{clusterName}
@@ -348,7 +348,7 @@ func (c *Mk8sCluster) headerUpsertMk8sCluster(req *http.Request, request *client
 	}
 }
 
-// CreateMk8sCluster создание или обновление managed k8s cluster-а.
+// CreateMk8sCluster позволяет создать или обновить кластер Managed Kubernetes.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -440,7 +440,7 @@ func (c *Mk8sCluster) headerCreateMk8sCluster(req *http.Request, request *client
 	}
 }
 
-// UpdateMk8sCluster создание или обновление managed k8s cluster-а.
+// UpdateMk8sCluster позволяет создать или обновить кластер Managed Kubernetes.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

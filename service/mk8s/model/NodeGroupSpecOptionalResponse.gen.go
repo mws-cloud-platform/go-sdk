@@ -18,24 +18,24 @@ import (
 type NodeGroupSpecOptionalResponse struct {
 	Zone   string                              `json:"zone" yaml:"zone"`
 	Subnet NodeGroupSpecSubnetOptionalResponse `json:"subnet" yaml:"subnet"`
-	// тип VM
+	// Тип ВМ
 	VmType NodeGroupSpecVmTypeOptionalResponse `json:"vmType" yaml:"vmType"`
-	// Размер хранилища для образов и контейнеров, в Gb.
+	// Размер хранилища для образов и контейнеров, в Gb
 	ImageStorageSize optional.Optional[bytesize.ByteSize] `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
-	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров.
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров
 	ImageStorageIops optional.Optional[int64] `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
 	// Параметры локальных дисков для каждого узла в группе узлов
 	LocalDisks optional.OptionalNil[[]LocalDiskSpecOptionalResponse] `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
-	// Необходимо заполнить одно из полей — "fixed" или "autoscaling".
+	// Режим скалирования группы узлов. Необходимо заполнить одно из полей — "fixed" или "autoscaling"
 	Scale          NodeGroupSpecScaleOptionalResponse                    `json:"scale" yaml:"scale"`
 	Labels         optional.OptionalNil[[]NodeLabelSpecOptionalResponse] `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Taints         optional.OptionalNil[[]NodeTaintSpecOptionalResponse] `json:"taints,omitempty" yaml:"taints,omitempty"`
 	VersionControl NodeGroupVersionControlSpecOptionalResponse           `json:"versionControl" yaml:"versionControl"`
-	// Стратегия обновления (rollout) узлов в группе узлов.
+	// Стратегия обновления (rollout) узлов в группе узлов
 	RolloutStrategy NodeGroupSpecRolloutStrategyOptionalResponse `json:"rolloutStrategy" yaml:"rolloutStrategy"`
 	// Сервисный аккаунт для выполнения функций:
 	// - скачивание образов из Artifact Registry (требуются права на чтение образов);
-	// - сбор системных метрик с узлов (требуются права на чтение статусов узлов).
+	// - сбор системных метрик с узлов (требуются права на чтение статусов узлов)
 	ServiceAccount NodeGroupSpecServiceAccountOptionalResponse `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
@@ -289,7 +289,7 @@ func (m *NodeGroupSpecRolloutStrategyOptionalResponse) Clone() *NodeGroupSpecRol
 // Представление поля Scale анонимного типа структуры NodeGroupSpec
 // Real OAPI model name: NodeGroupSpecScale
 type NodeGroupSpecScaleOptionalResponse struct {
-	// Количество узлов в группе узлов.
+	// Количество узлов в группе узлов
 	Fixed       optional.OptionalNil[int]                                           `json:"fixed,omitempty" yaml:"fixed,omitempty"`
 	Autoscaling optional.OptionalNil[NodeGroupSpecScaleAutoscalingOptionalResponse] `json:"autoscaling,omitempty" yaml:"autoscaling,omitempty"`
 }
@@ -337,9 +337,9 @@ func (m *NodeGroupSpecScaleOptionalResponse) Clone() *NodeGroupSpecScaleOptional
 // Представление поля Autoscaling анонимного типа структуры NodeGroupSpecScale
 // Real OAPI model name: NodeGroupSpecScaleAutoscaling
 type NodeGroupSpecScaleAutoscalingOptionalResponse struct {
-	// Минимально количество узлов в группе узлов.
+	// Минимальное количество узлов в группе узлов
 	Min int `json:"min" yaml:"min"`
-	// Максимальное количество узлов в группе узлов.
+	// Максимальное количество узлов в группе узлов
 	Max int `json:"max" yaml:"max"`
 }
 

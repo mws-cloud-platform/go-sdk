@@ -20,7 +20,7 @@ type ClusterOptionalResponse struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 	Metadata optional.OptionalNil[commonmodel.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Spec     ClusterSpecOptionalResponse                                                   `json:"spec" yaml:"spec"`
-	// Описывает статусную модель k8s cluster.
+	// Статусная модель кластера Kubernetes
 	Status *ClusterStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 

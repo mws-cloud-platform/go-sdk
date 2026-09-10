@@ -23,7 +23,7 @@ func (x *Mk8sProjectStatSugared) Impl() Mk8sProjectStat {
 	return x.impl
 }
 
-// GetProjectStats получение статистики managed k8s в проекте.
+// GetProjectStats позволяет получить статистику Managed Kubernetes в проекте.
 //
 // Путь: GET /mk8s/v1/projects/{project}/stats
 func (x *Mk8sProjectStatSugared) GetProjectStats(ctx context.Context, request GetProjectStatsRequest) (*model.ProjectStatisticsResponse, error) {

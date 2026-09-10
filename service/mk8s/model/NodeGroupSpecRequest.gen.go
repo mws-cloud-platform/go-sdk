@@ -17,24 +17,24 @@ import (
 type NodeGroupSpecRequest struct {
 	Zone   string                     `json:"zone" yaml:"zone"`
 	Subnet NodeGroupSpecSubnetRequest `json:"subnet" yaml:"subnet"`
-	// тип VM
+	// Тип ВМ
 	VmType NodeGroupSpecVmTypeRequest `json:"vmType" yaml:"vmType"`
-	// Размер хранилища для образов и контейнеров, в Gb.
+	// Размер хранилища для образов и контейнеров, в Gb
 	ImageStorageSize *bytesize.ByteSize `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
-	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров.
+	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров
 	ImageStorageIops *int64 `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
 	// Параметры локальных дисков для каждого узла в группе узлов
 	LocalDisks []LocalDiskSpecRequest `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
-	// Необходимо заполнить одно из полей — "fixed" или "autoscaling".
+	// Режим скалирования группы узлов. Необходимо заполнить одно из полей — "fixed" или "autoscaling"
 	Scale          NodeGroupSpecScaleRequest          `json:"scale" yaml:"scale"`
 	Labels         []NodeLabelSpecRequest             `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Taints         []NodeTaintSpecRequest             `json:"taints,omitempty" yaml:"taints,omitempty"`
 	VersionControl NodeGroupVersionControlSpecRequest `json:"versionControl" yaml:"versionControl"`
-	// Стратегия обновления (rollout) узлов в группе узлов.
+	// Стратегия обновления (rollout) узлов в группе узлов
 	RolloutStrategy NodeGroupSpecRolloutStrategyRequest `json:"rolloutStrategy" yaml:"rolloutStrategy"`
 	// Сервисный аккаунт для выполнения функций:
 	// - скачивание образов из Artifact Registry (требуются права на чтение образов);
-	// - сбор системных метрик с узлов (требуются права на чтение статусов узлов).
+	// - сбор системных метрик с узлов (требуются права на чтение статусов узлов)
 	ServiceAccount NodeGroupSpecServiceAccountRequest `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
@@ -326,7 +326,7 @@ func (m *NodeGroupSpecRolloutStrategyRequest) Clone() *NodeGroupSpecRolloutStrat
 // Представление поля Scale анонимного типа структуры NodeGroupSpec
 // Real OAPI model name: NodeGroupSpecScale
 type NodeGroupSpecScaleRequest struct {
-	// Количество узлов в группе узлов.
+	// Количество узлов в группе узлов
 	Fixed       *int                                  `json:"fixed,omitempty" yaml:"fixed,omitempty"`
 	Autoscaling *NodeGroupSpecScaleAutoscalingRequest `json:"autoscaling,omitempty" yaml:"autoscaling,omitempty"`
 }
@@ -384,9 +384,9 @@ func (m *NodeGroupSpecScaleRequest) Clone() *NodeGroupSpecScaleRequest {
 // Представление поля Autoscaling анонимного типа структуры NodeGroupSpecScale
 // Real OAPI model name: NodeGroupSpecScaleAutoscaling
 type NodeGroupSpecScaleAutoscalingRequest struct {
-	// Минимально количество узлов в группе узлов.
+	// Минимальное количество узлов в группе узлов
 	Min int `json:"min" yaml:"min"`
-	// Максимальное количество узлов в группе узлов.
+	// Максимальное количество узлов в группе узлов
 	Max int `json:"max" yaml:"max"`
 }
 

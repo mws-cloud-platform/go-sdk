@@ -22,7 +22,7 @@ func (x *Mk8sReleaseChannelSugared) Impl() Mk8sReleaseChannel {
 	return x.impl
 }
 
-// ListMk8sReleaseChannels получение списка доступных релизных каналов.
+// ListMk8sReleaseChannels позволяет получить список доступных релизных каналов.
 //
 // Путь: GET /mk8s/v1/projects/{project}/releaseChannels
 func (x *Mk8sReleaseChannelSugared) ListMk8sReleaseChannels(ctx context.Context, request ListMk8sReleaseChannelsRequest) (*ListMk8sReleaseChannelsResponse200, error) {

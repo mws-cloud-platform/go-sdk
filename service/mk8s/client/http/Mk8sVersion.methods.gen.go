@@ -15,7 +15,7 @@ import (
 	"go.mws.cloud/go-sdk/service/mk8s/client"
 )
 
-// ListMk8sVersions получение списка доступных managed k8s версий.
+// ListMk8sVersions позволяет получить список доступных версий Kubernetes.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mk8s/v1/projects/{project}/releaseChannels/{releaseChannelName}/versions
