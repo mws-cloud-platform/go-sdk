@@ -16,6 +16,7 @@ Available examples:
 * [CRUD Secret](./secret_test.go): Demonstrates how to perform Create, Read, Update, Activate, Deactivate, and Delete operations on secret resources.
 * [Secret Version](./secret_versions_test.go): Demonstrates how to perform Create, Read, Update, Activate, Deactivate, and Delete operations on secret version resources.
 * [Enable Service](./enable_service_test.go): Demonstrates how to enable a service in a project.
+* [GPT Model Hub Deployment and Chat Completions](./gpt_test.go): Demonstrates how to create, delete and use a GPT Model Hub deployment.
 
 ## Environment Setup
 
