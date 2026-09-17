@@ -28,8 +28,10 @@ type NodeGroupStatusResponse struct {
 	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров
 	ImageStorageIops *int64 `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
 	// Параметры локальных дисков для каждого узла в группе узлов
-	LocalDisks []LocalDiskStatusResponse     `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
-	Scale      *NodeGroupStatusScaleResponse `json:"scale,omitempty" yaml:"scale,omitempty"`
+	LocalDisks []LocalDiskStatusResponse `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
+	// Включено ли кэширование данных для группы узлов. Принимает значение false, если пользователь не задавал значение для кэширования при создании диска в Managed Kubernetes
+	DataCache *bool                         `json:"dataCache,omitempty" yaml:"dataCache,omitempty"`
+	Scale     *NodeGroupStatusScaleResponse `json:"scale,omitempty" yaml:"scale,omitempty"`
 	// Текущее количество узлов, готовых для работы
 	NodesReady *int                    `json:"nodesReady,omitempty" yaml:"nodesReady,omitempty"`
 	Labels     []NodeLabelSpecResponse `json:"labels,omitempty" yaml:"labels,omitempty"`
@@ -128,6 +130,20 @@ func (m *NodeGroupStatusResponse) GetLocalDisks() []LocalDiskStatusResponse {
 func (m *NodeGroupStatusResponse) GetLocalDisksOr(val []LocalDiskStatusResponse) []LocalDiskStatusResponse {
 	if m != nil && m.LocalDisks != nil {
 		return m.LocalDisks
+	}
+	return val
+}
+
+func (m *NodeGroupStatusResponse) GetDataCache() *bool {
+	if m != nil {
+		return m.DataCache
+	}
+	return nil
+}
+
+func (m *NodeGroupStatusResponse) GetDataCacheOr(val bool) bool {
+	if m != nil && m.DataCache != nil {
+		return *m.DataCache
 	}
 	return val
 }
@@ -267,6 +283,10 @@ func (m *NodeGroupStatusResponse) Clone() *NodeGroupStatusResponse {
 		for i, v := range m.LocalDisks {
 			clone.LocalDisks[i] = *v.Clone()
 		}
+	}
+	if m.DataCache != nil {
+		cloneDataCache := *m.DataCache
+		clone.DataCache = &cloneDataCache
 	}
 	clone.Scale = m.Scale.Clone()
 	if m.NodesReady != nil {

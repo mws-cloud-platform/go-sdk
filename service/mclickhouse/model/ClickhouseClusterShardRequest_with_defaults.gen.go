@@ -12,9 +12,6 @@ func (m *ClickhouseClusterShardRequest) WithDefaults() ClickhouseClusterShardReq
 		out = *m
 	}
 
-	if out.Count == nil {
-		out.Count = ptr.Get(1)
-	}
 	if out.Weight == nil {
 		out.Weight = ptr.Get(1)
 	}

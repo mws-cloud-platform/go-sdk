@@ -35,11 +35,6 @@ func (m *ClickhouseClusterShardRequest) encodeFields(e *jx.Encoder) error {
 	e.FieldStart("name")
 	e.Str(m.Name)
 
-	if m.Count != nil {
-		e.FieldStart("count")
-		e.Int(*m.Count)
-	}
-
 	e.FieldStart("resources")
 	if err := m.Resources.Encode(e); err != nil {
 		return err
@@ -96,14 +91,6 @@ func (m *ClickhouseClusterShardRequest) Decode(d *jx.Decoder) error {
 
 			m.Name = v
 			requiredFilled["name"] = true
-			return nil
-		case "count":
-			v, err := decode.Int(d)
-			if err != nil {
-				return err
-			}
-
-			m.Count = &v
 			return nil
 		case "resources":
 			var v ClickhouseInstanceHWResourcesRequest

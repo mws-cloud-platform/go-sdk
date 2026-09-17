@@ -37,11 +37,6 @@ func (m *UpdateClickhouseClusterShardRequest) encodeFields(e *jx.Encoder) error 
 		e.Str(m.Name.Value)
 	}
 
-	if m.Count.IsSet() {
-		e.FieldStart("count")
-		e.Int(m.Count.Value)
-	}
-
 	if m.Resources.IsSet() {
 		e.FieldStart("resources")
 		if err := m.Resources.Value.Encode(e); err != nil {
@@ -96,14 +91,6 @@ func (m *UpdateClickhouseClusterShardRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Name.SetTo(v)
-			return nil
-		case "count":
-			v, err := decode.Int(d)
-			if err != nil {
-				return err
-			}
-
-			m.Count.SetTo(v)
 			return nil
 		case "resources":
 			var v UpdateClickhouseInstanceHWResourcesRequest

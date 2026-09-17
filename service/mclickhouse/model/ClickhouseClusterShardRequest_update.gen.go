@@ -20,8 +20,6 @@ type UpdateClickhouseClusterShardRequest struct {
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Name optional.Optional[string] `json:"name" yaml:"name"`
-	// Количество шардов, которые будут созданы.
-	Count optional.Optional[int] `json:"count" yaml:"count"`
 	// Ресурсы одного узла ClickHouse.
 	Resources optional.Optional[UpdateClickhouseInstanceHWResourcesRequest] `json:"resources" yaml:"resources"`
 	// Вес шарда.
@@ -34,9 +32,6 @@ type UpdateClickhouseClusterShardRequest struct {
 func (m *ClickhouseClusterShardRequest) AsUpdateModel() UpdateClickhouseClusterShardRequest {
 	var u UpdateClickhouseClusterShardRequest
 	u.Name = optional.NewOptional(m.GetName())
-	if m.Count != nil {
-		u.Count = optional.NewOptional(m.GetCountOr(0))
-	}
 	u.Resources = optional.NewOptional(m.Resources.AsUpdateModel())
 	if m.Weight != nil {
 		u.Weight = optional.NewOptional(m.GetWeightOr(0))
@@ -73,7 +68,6 @@ func (m *ClickhouseClusterShardRequest) Diff(src *ClickhouseClusterShardRequest)
 	upd := UpdateClickhouseClusterShardRequest{}
 	if !nilDiffers {
 		upd.Name = m.diffName(src)
-		upd.Count = m.diffCount(src)
 		upd.Resources = m.diffResources(src)
 		upd.Weight = m.diffWeight(src)
 		upd.Endpoints = m.diffEndpoints(src)
@@ -94,9 +88,6 @@ func (m *ClickhouseClusterShardRequest) WithChanges(u UpdateClickhouseClusterSha
 	if u.Name.IsSet() {
 		out.Name = u.Name.Value
 	}
-	if u.Count.IsSet() {
-		out.Count = ptr.Get(u.Count.Value)
-	}
 	if u.Resources.IsSet() {
 		out.Resources = out.Resources.WithChanges(u.Resources.Value)
 	}
@@ -115,7 +106,6 @@ func (m *ClickhouseClusterShardRequest) WithChanges(u UpdateClickhouseClusterSha
 // HasChanges returns true if any field has Set == true
 func (m UpdateClickhouseClusterShardRequest) HasChanges() bool {
 	return m.Name.Set ||
-		m.Count.Set ||
 		m.Resources.Set ||
 		m.Weight.Set ||
 		m.Endpoints.Set ||
@@ -168,11 +158,6 @@ func (m *UpdateClickhouseClusterShardRequest) Parse(ctx context.Context) error {
 func (m *ClickhouseClusterShardRequest) diffName(src *ClickhouseClusterShardRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
-}
-
-func (m *ClickhouseClusterShardRequest) diffCount(src *ClickhouseClusterShardRequest) optional.Optional[int] {
-	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNonRequired(src.GetCount(), m.GetCount(), nilDiffers)
 }
 
 func (m *ClickhouseClusterShardRequest) diffResources(src *ClickhouseClusterShardRequest) optional.Optional[UpdateClickhouseInstanceHWResourcesRequest] {

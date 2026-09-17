@@ -35,6 +35,9 @@ func NodeGroupSpecRequestToOptionalResponse(request *NodeGroupSpecRequest) (*Nod
 		}
 		response.LocalDisks.SetTo(append(response.LocalDisks.Value, *tmp))
 	}
+	if request.DataCache != nil {
+		response.DataCache = optional.NewOptional(*request.DataCache)
+	}
 	tmpScale, err := NodeGroupSpecScaleRequestToOptionalResponse(&request.Scale)
 	if err != nil {
 		return nil, err

@@ -32,6 +32,8 @@ type UpdateNodeGroupSpecRequest struct {
 	ImageStorageIops optional.Optional[int64] `json:"imageStorageIops" yaml:"imageStorageIops"`
 	// Параметры локальных дисков для каждого узла в группе узлов
 	LocalDisks optional.OptionalNil[[]UpdateLocalDiskSpecRequest] `json:"localDisks" yaml:"localDisks"`
+	// Признак того, что группа узлов предназначена для кэширования данных. При значении true оператор устанавливает метку csi.mws.ru/data-cache=true на узлы группы (дополнительно требуется заполнение поля localDisks)
+	DataCache optional.Optional[bool] `json:"dataCache" yaml:"dataCache"`
 	// Режим скалирования группы узлов. Необходимо заполнить одно из полей — "fixed" или "autoscaling"
 	Scale          optional.Optional[UpdateNodeGroupSpecScaleRequest]          `json:"scale" yaml:"scale"`
 	Labels         optional.OptionalNil[[]UpdateNodeLabelSpecRequest]          `json:"labels" yaml:"labels"`
@@ -67,6 +69,9 @@ func (m *NodeGroupSpecRequest) AsUpdateModel() UpdateNodeGroupSpecRequest {
 			}
 			return tmp
 		}())
+	}
+	if m.DataCache != nil {
+		u.DataCache = optional.NewOptional(m.GetDataCacheOr(false))
 	}
 	u.Scale = optional.NewOptional(m.Scale.AsUpdateModel())
 	if m.Labels != nil {
@@ -110,6 +115,7 @@ func (m *NodeGroupSpecRequest) Diff(src *NodeGroupSpecRequest) UpdateNodeGroupSp
 		upd.ImageStorageSize = m.diffImageStorageSize(src)
 		upd.ImageStorageIops = m.diffImageStorageIops(src)
 		upd.LocalDisks = m.diffLocalDisks(src)
+		upd.DataCache = m.diffDataCache(src)
 		upd.Scale = m.diffScale(src)
 		upd.Labels = m.diffLabels(src)
 		upd.Taints = m.diffTaints(src)
@@ -146,6 +152,9 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 	} else if u.LocalDisks.IsNull() {
 		out.LocalDisks = nil
 	}
+	if u.DataCache.IsSet() {
+		out.DataCache = ptr.Get(u.DataCache.Value)
+	}
 	if u.Scale.IsSet() {
 		out.Scale = out.Scale.WithChanges(u.Scale.Value)
 	}
@@ -179,6 +188,7 @@ func (m UpdateNodeGroupSpecRequest) HasChanges() bool {
 		m.ImageStorageSize.Set ||
 		m.ImageStorageIops.Set ||
 		m.LocalDisks.Set ||
+		m.DataCache.Set ||
 		m.Scale.Set ||
 		m.Labels.Set ||
 		m.Taints.Set ||
@@ -261,6 +271,11 @@ func (m *NodeGroupSpecRequest) diffLocalDisks(src *NodeGroupSpecRequest) optiona
 		Set:   hasChanges,
 		Null:  value == nil,
 	}
+}
+
+func (m *NodeGroupSpecRequest) diffDataCache(src *NodeGroupSpecRequest) optional.Optional[bool] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetDataCache(), m.GetDataCache(), nilDiffers)
 }
 
 func (m *NodeGroupSpecRequest) diffScale(src *NodeGroupSpecRequest) optional.Optional[UpdateNodeGroupSpecScaleRequest] {

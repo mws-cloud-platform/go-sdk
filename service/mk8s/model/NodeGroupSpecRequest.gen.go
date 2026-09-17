@@ -25,6 +25,8 @@ type NodeGroupSpecRequest struct {
 	ImageStorageIops *int64 `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
 	// Параметры локальных дисков для каждого узла в группе узлов
 	LocalDisks []LocalDiskSpecRequest `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
+	// Признак того, что группа узлов предназначена для кэширования данных. При значении true оператор устанавливает метку csi.mws.ru/data-cache=true на узлы группы (дополнительно требуется заполнение поля localDisks)
+	DataCache *bool `json:"dataCache,omitempty" yaml:"dataCache,omitempty"`
 	// Режим скалирования группы узлов. Необходимо заполнить одно из полей — "fixed" или "autoscaling"
 	Scale          NodeGroupSpecScaleRequest          `json:"scale" yaml:"scale"`
 	Labels         []NodeLabelSpecRequest             `json:"labels,omitempty" yaml:"labels,omitempty"`
@@ -121,6 +123,24 @@ func (m *NodeGroupSpecRequest) SetLocalDisks(val []LocalDiskSpecRequest) {
 func (m *NodeGroupSpecRequest) GetLocalDisksOr(val []LocalDiskSpecRequest) []LocalDiskSpecRequest {
 	if m != nil && m.LocalDisks != nil {
 		return m.LocalDisks
+	}
+	return val
+}
+
+func (m *NodeGroupSpecRequest) GetDataCache() *bool {
+	if m != nil {
+		return m.DataCache
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecRequest) SetDataCache(val *bool) {
+	m.DataCache = val
+}
+
+func (m *NodeGroupSpecRequest) GetDataCacheOr(val bool) bool {
+	if m != nil && m.DataCache != nil {
+		return *m.DataCache
 	}
 	return val
 }
@@ -223,6 +243,10 @@ func (m *NodeGroupSpecRequest) Clone() *NodeGroupSpecRequest {
 		for i, v := range m.LocalDisks {
 			clone.LocalDisks[i] = *v.Clone()
 		}
+	}
+	if m.DataCache != nil {
+		cloneDataCache := *m.DataCache
+		clone.DataCache = &cloneDataCache
 	}
 	clone.Scale = *m.Scale.Clone()
 	if m.Labels != nil {

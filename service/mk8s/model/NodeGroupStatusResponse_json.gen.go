@@ -78,6 +78,11 @@ func (m *NodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.ArrEnd()
 	}
 
+	if m.DataCache != nil {
+		e.FieldStart("dataCache")
+		e.Bool(*m.DataCache)
+	}
+
 	if m.Scale != nil {
 		e.FieldStart("scale")
 		if err := m.Scale.Encode(e); err != nil {
@@ -239,6 +244,18 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.LocalDisks = c
+			return nil
+		case "dataCache":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.DataCache = &v
 			return nil
 		case "scale":
 			if d.Next() == jx.Null {

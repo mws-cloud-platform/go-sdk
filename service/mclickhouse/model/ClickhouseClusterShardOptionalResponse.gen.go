@@ -15,8 +15,6 @@ import (
 type ClickhouseClusterShardOptionalResponse struct {
 	// -> Имя шарда, которому будут принадлежать узлы. В случае с несколькими шардами имя формируется как `name-{shardIndex}`.
 	Name string `json:"name" yaml:"name"`
-	// Количество шардов, которые будут созданы.
-	Count optional.Optional[int] `json:"count,omitempty" yaml:"count,omitempty"`
 	// Ресурсы одного узла ClickHouse.
 	Resources ClickhouseInstanceHWResourcesOptionalResponse `json:"resources" yaml:"resources"`
 	// Вес шарда.
@@ -35,20 +33,6 @@ func (m *ClickhouseClusterShardOptionalResponse) GetName() string {
 
 func (m *ClickhouseClusterShardOptionalResponse) SetName(val string) {
 	m.Name = val
-}
-
-func (m *ClickhouseClusterShardOptionalResponse) GetCount() *int {
-	if m != nil && m.Count.IsSet() {
-		return &m.Count.Value
-	}
-	return nil
-}
-
-func (m *ClickhouseClusterShardOptionalResponse) GetCountOr(val int) int {
-	if m != nil && m.Count.IsSet() {
-		return m.Count.Value
-	}
-	return val
 }
 
 func (m *ClickhouseClusterShardOptionalResponse) GetResources() ClickhouseInstanceHWResourcesOptionalResponse {

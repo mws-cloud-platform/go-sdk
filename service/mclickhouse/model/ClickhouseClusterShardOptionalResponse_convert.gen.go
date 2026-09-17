@@ -12,9 +12,6 @@ func ClickhouseClusterShardRequestToOptionalResponse(request *ClickhouseClusterS
 	}
 	var response ClickhouseClusterShardOptionalResponse
 	response.Name = request.Name
-	if request.Count != nil {
-		response.Count = optional.NewOptional(*request.Count)
-	}
 	tmpResources, err := ClickhouseInstanceHWResourcesRequestToOptionalResponse(&request.Resources)
 	if err != nil {
 		return nil, err

@@ -74,6 +74,11 @@ func (m *NodeGroupSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		}
 	}
 
+	if m.DataCache.IsSet() {
+		e.FieldStart("dataCache")
+		e.Bool(m.DataCache.Value)
+	}
+
 	e.FieldStart("scale")
 	if err := m.Scale.Encode(e); err != nil {
 		return err
@@ -196,6 +201,14 @@ func (m *NodeGroupSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.LocalDisks.SetTo(c)
+			return nil
+		case "dataCache":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.DataCache.SetTo(v)
 			return nil
 		case "scale":
 			var v NodeGroupSpecScaleOptionalResponse

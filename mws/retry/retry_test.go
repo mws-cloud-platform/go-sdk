@@ -75,6 +75,14 @@ func TestStandardRetry(t *testing.T) {
 			outErr: nil,
 		},
 		{
+			err:    mwserrors.NewInvalidContentTypeError("text/html"),
+			outErr: nil,
+		},
+		{
+			err:    mwserrors.NewDecodeBodyError("application/json", errors.New("invalid json")),
+			outErr: nil,
+		},
+		{
 			err:    errors.New("some error"),
 			outErr: clienterrors.ErrNoRetry,
 		},

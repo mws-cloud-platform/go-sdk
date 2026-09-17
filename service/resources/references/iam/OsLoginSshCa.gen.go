@@ -25,7 +25,7 @@ var (
 			SearchAfter: false,
 		},
 		{
-			Value:       "sshCAs",
+			Value:       "osLoginSshCAs",
 			IsConstant:  true,
 			SearchAfter: false,
 		},
@@ -120,7 +120,7 @@ func (m *OsLoginSshCaID) ID() string {
 		return ""
 	}
 
-	return m.ServiceSlug() + "/organizations/" + m.organization + "/sshCAs/" + m.sshCa
+	return m.ServiceSlug() + "/organizations/" + m.organization + "/osLoginSshCAs/" + m.sshCa
 }
 
 func (m *OsLoginSshCaID) String() string {
@@ -407,5 +407,5 @@ func (m *OsLoginSshCaRef) absolutePath() string {
 		return ""
 	}
 
-	return "organizations/" + m.id.organization + "/sshCAs/" + m.id.sshCa
+	return "organizations/" + m.id.organization + "/osLoginSshCAs/" + m.id.sshCa
 }

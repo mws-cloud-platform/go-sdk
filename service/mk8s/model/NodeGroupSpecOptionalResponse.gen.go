@@ -26,6 +26,8 @@ type NodeGroupSpecOptionalResponse struct {
 	ImageStorageIops optional.Optional[int64] `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
 	// Параметры локальных дисков для каждого узла в группе узлов
 	LocalDisks optional.OptionalNil[[]LocalDiskSpecOptionalResponse] `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
+	// Признак того, что группа узлов предназначена для кэширования данных. При значении true оператор устанавливает метку csi.mws.ru/data-cache=true на узлы группы (дополнительно требуется заполнение поля localDisks)
+	DataCache optional.Optional[bool] `json:"dataCache,omitempty" yaml:"dataCache,omitempty"`
 	// Режим скалирования группы узлов. Необходимо заполнить одно из полей — "fixed" или "autoscaling"
 	Scale          NodeGroupSpecScaleOptionalResponse                    `json:"scale" yaml:"scale"`
 	Labels         optional.OptionalNil[[]NodeLabelSpecOptionalResponse] `json:"labels,omitempty" yaml:"labels,omitempty"`
@@ -110,6 +112,20 @@ func (m *NodeGroupSpecOptionalResponse) GetLocalDisks() []LocalDiskSpecOptionalR
 func (m *NodeGroupSpecOptionalResponse) GetLocalDisksOr(val []LocalDiskSpecOptionalResponse) []LocalDiskSpecOptionalResponse {
 	if m != nil && m.LocalDisks.IsSet() && !m.LocalDisks.IsNull() {
 		return m.LocalDisks.Value
+	}
+	return val
+}
+
+func (m *NodeGroupSpecOptionalResponse) GetDataCache() *bool {
+	if m != nil && m.DataCache.IsSet() {
+		return &m.DataCache.Value
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecOptionalResponse) GetDataCacheOr(val bool) bool {
+	if m != nil && m.DataCache.IsSet() {
+		return m.DataCache.Value
 	}
 	return val
 }

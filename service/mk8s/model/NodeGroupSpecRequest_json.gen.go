@@ -70,6 +70,11 @@ func (m *NodeGroupSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.ArrEnd()
 	}
 
+	if m.DataCache != nil {
+		e.FieldStart("dataCache")
+		e.Bool(*m.DataCache)
+	}
+
 	e.FieldStart("scale")
 	if err := m.Scale.Encode(e); err != nil {
 		return err
@@ -195,6 +200,14 @@ func (m *NodeGroupSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.LocalDisks = c
+			return nil
+		case "dataCache":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.DataCache = &v
 			return nil
 		case "scale":
 			var v NodeGroupSpecScaleRequest

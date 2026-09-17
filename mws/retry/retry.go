@@ -94,6 +94,8 @@ func (s *StandardRetry) IsRetryable(err error) bool {
 		return s.codeIsRetryable(unexpectedStatusCodeErr.StatusCode)
 	case mwserrors.IsTransportError(err):
 		return true
+	case mwserrors.IsInvalidContentTypeError(err), mwserrors.IsDecodeBodyError(err):
+		return true
 	default:
 		return false
 	}

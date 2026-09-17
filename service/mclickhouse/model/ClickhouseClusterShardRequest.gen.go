@@ -14,8 +14,6 @@ import (
 type ClickhouseClusterShardRequest struct {
 	// -> Имя шарда, которому будут принадлежать узлы. В случае с несколькими шардами имя формируется как `name-{shardIndex}`.
 	Name string `json:"name" yaml:"name"`
-	// Количество шардов, которые будут созданы.
-	Count *int `json:"count,omitempty" yaml:"count,omitempty"`
 	// Ресурсы одного узла ClickHouse.
 	Resources ClickhouseInstanceHWResourcesRequest `json:"resources" yaml:"resources"`
 	// Вес шарда.
@@ -34,24 +32,6 @@ func (m *ClickhouseClusterShardRequest) GetName() string {
 
 func (m *ClickhouseClusterShardRequest) SetName(val string) {
 	m.Name = val
-}
-
-func (m *ClickhouseClusterShardRequest) GetCount() *int {
-	if m != nil {
-		return m.Count
-	}
-	return nil
-}
-
-func (m *ClickhouseClusterShardRequest) SetCount(val *int) {
-	m.Count = val
-}
-
-func (m *ClickhouseClusterShardRequest) GetCountOr(val int) int {
-	if m != nil && m.Count != nil {
-		return *m.Count
-	}
-	return val
 }
 
 func (m *ClickhouseClusterShardRequest) GetResources() ClickhouseInstanceHWResourcesRequest {
@@ -118,10 +98,6 @@ func (m *ClickhouseClusterShardRequest) Clone() *ClickhouseClusterShardRequest {
 	}
 
 	clone := *m
-	if m.Count != nil {
-		cloneCount := *m.Count
-		clone.Count = &cloneCount
-	}
 	clone.Resources = *m.Resources.Clone()
 	if m.Weight != nil {
 		cloneWeight := *m.Weight
