@@ -3,8 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -82,4 +86,97 @@ func (m *RetryPolicyOptionalResponse) Clone() *RetryPolicyOptionalResponse {
 		clone.MaxRetryTimeout.Value = *m.MaxRetryTimeout.Value.Clone()
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m RetryPolicyOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *RetryPolicyOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *RetryPolicyOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("retryCount")
+	e.Int(m.RetryCount)
+
+	e.FieldStart("retryTimeout")
+	m.RetryTimeout.Encode(e)
+
+	if m.RetryTimeoutScale.IsSet() {
+		e.FieldStart("retryTimeoutScale")
+		if err := m.RetryTimeoutScale.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.MaxRetryTimeout.IsSet() {
+		e.FieldStart("maxRetryTimeout")
+		m.MaxRetryTimeout.Value.Encode(e)
+	}
+	return nil
+}
+
+func (m *RetryPolicyOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *RetryPolicyOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("RetryPolicyOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "retryCount":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.RetryCount = v
+			return nil
+		case "retryTimeout":
+			var v duration.Duration
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RetryTimeout = v
+			return nil
+		case "retryTimeoutScale":
+			var v RetryTimeoutScale
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RetryTimeoutScale.SetTo(v)
+			return nil
+		case "maxRetryTimeout":
+			var v duration.Duration
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.MaxRetryTimeout.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

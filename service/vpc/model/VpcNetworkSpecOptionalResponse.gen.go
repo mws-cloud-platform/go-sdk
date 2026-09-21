@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -47,4 +52,73 @@ func (m *VpcNetworkSpecOptionalResponse) Clone() *VpcNetworkSpecOptionalResponse
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m VpcNetworkSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *VpcNetworkSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *VpcNetworkSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Mtu.IsSet() {
+		e.FieldStart("mtu")
+		e.Int32(m.Mtu.Value)
+	}
+
+	if m.InternetAccess.IsSet() {
+		e.FieldStart("internetAccess")
+		e.Bool(m.InternetAccess.Value)
+	}
+	return nil
+}
+
+func (m *VpcNetworkSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *VpcNetworkSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("VpcNetworkSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "mtu":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.Mtu.SetTo(v)
+			return nil
+		case "internetAccess":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.InternetAccess.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

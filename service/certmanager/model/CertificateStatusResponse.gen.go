@@ -5,6 +5,11 @@ package model
 import (
 	"time"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -149,4 +154,182 @@ func (m *CertificateStatusResponse) Clone() *CertificateStatusResponse {
 	}
 
 	return &clone
+}
+
+// JSON methods
+
+func (m CertificateStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CertificateStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CertificateStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.Details != nil {
+		e.FieldStart("details")
+		if err := m.Details.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("valid")
+	e.Bool(m.Valid)
+
+	e.FieldStart("reason")
+	if err := m.Reason.Encode(e); err != nil {
+		return err
+	}
+
+	if m.RenewalStatus != nil {
+		e.FieldStart("renewalStatus")
+		if err := m.RenewalStatus.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("managementType")
+	if err := m.ManagementType.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Challenges != nil {
+		e.FieldStart("challenges")
+		e.ArrStart()
+		for _, elem := range m.Challenges {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.RenewalAt != nil {
+		e.FieldStart("renewalAt")
+		conv.EncodeDateTimeUTC(e, *m.RenewalAt)
+	}
+
+	if m.ChallengesDeadline != nil {
+		e.FieldStart("challengesDeadline")
+		conv.EncodeDateTimeUTC(e, *m.ChallengesDeadline)
+	}
+	return nil
+}
+
+func (m *CertificateStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CertificateStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CertificateStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "details":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CertificateStatusDetailsResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Details = &v
+			return nil
+		case "valid":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Valid = v
+			return nil
+		case "reason":
+			var v CertificateStatusReason
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Reason = v
+			return nil
+		case "renewalStatus":
+			var v CertificateRenewalStatus
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RenewalStatus = &v
+			return nil
+		case "managementType":
+			var v CertificateManagementType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ManagementType = v
+			return nil
+		case "challenges":
+			c := make([]CertificateChallengeResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v CertificateChallengeResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Challenges = c
+			return nil
+		case "renewalAt":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.RenewalAt = &v
+			return nil
+		case "challengesDeadline":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.ChallengesDeadline = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

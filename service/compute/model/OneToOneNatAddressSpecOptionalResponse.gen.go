@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+)
+
 // NAT правило для связи внутреннего адреса с внешним адресом.
 //
 // Real OAPI model name: OneToOneNatAddressSpec
@@ -15,4 +21,43 @@ func (m *OneToOneNatAddressSpecOptionalResponse) Clone() *OneToOneNatAddressSpec
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m OneToOneNatAddressSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *OneToOneNatAddressSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *OneToOneNatAddressSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	return nil
+}
+
+func (m *OneToOneNatAddressSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *OneToOneNatAddressSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("OneToOneNatAddressSpecOptionalResponse")
+	}
+
+	return d.Skip()
 }

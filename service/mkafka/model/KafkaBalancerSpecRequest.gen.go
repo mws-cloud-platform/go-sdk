@@ -2,6 +2,15 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Конфигурация балансировщика
 // Real OAPI model name: KafkaBalancerSpec
 type KafkaBalancerSpecRequest struct {
@@ -62,4 +71,90 @@ func (m *KafkaBalancerSpecRequest) Clone() *KafkaBalancerSpecRequest {
 		clone.AutoRebalance = &cloneAutoRebalance
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m KafkaBalancerSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaBalancerSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaBalancerSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Enabled != nil {
+		e.FieldStart("enabled")
+		e.Bool(*m.Enabled)
+	}
+
+	if m.AutoRebalance != nil {
+		e.FieldStart("autoRebalance")
+		e.Bool(*m.AutoRebalance)
+	}
+	return nil
+}
+
+func (m *KafkaBalancerSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaBalancerSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaBalancerSpecRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "enabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Enabled = &v
+			return nil
+		case "autoRebalance":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.AutoRebalance = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *KafkaBalancerSpecRequest) WithDefaults() KafkaBalancerSpecRequest {
+	var out KafkaBalancerSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Enabled == nil {
+		out.Enabled = ptr.Get(false)
+	}
+	if out.AutoRebalance == nil {
+		out.AutoRebalance = ptr.Get(false)
+	}
+	return out
 }

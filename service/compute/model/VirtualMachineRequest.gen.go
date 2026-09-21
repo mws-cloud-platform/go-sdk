@@ -5,6 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -139,4 +143,194 @@ func (m *VirtualMachineMetadataRequest) Clone() *VirtualMachineMetadataRequest {
 	clone.TypedResourceMetadataRequest = *m.TypedResourceMetadataRequest.Clone()
 
 	return &clone
+}
+
+// JSON methods
+
+func (m VirtualMachineRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *VirtualMachineRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *VirtualMachineRequest) encodeFields(e *jx.Encoder) error {
+	if m.Metadata != nil {
+		e.FieldStart("metadata")
+		if err := m.Metadata.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("spec")
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *VirtualMachineRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *VirtualMachineRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("VirtualMachineRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"spec": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "metadata":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v VirtualMachineMetadataRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Metadata = &v
+			return nil
+		case "spec":
+			var v VirtualMachineSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Spec = v
+			requiredFilled["spec"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+func (m VirtualMachineMetadataRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *VirtualMachineMetadataRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *VirtualMachineMetadataRequest) encodeFields(e *jx.Encoder) error {
+	if m.DisplayName != nil {
+		e.FieldStart("displayName")
+		e.Str(*m.DisplayName)
+	}
+
+	if m.Usages != nil {
+		e.FieldStart("usages")
+		e.ArrStart()
+		for _, elem := range m.Usages {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.Etag != nil {
+		e.FieldStart("etag")
+		e.Str(*m.Etag)
+	}
+
+	if m.Description != nil {
+		e.FieldStart("description")
+		e.Str(*m.Description)
+	}
+	return nil
+}
+
+func (m *VirtualMachineMetadataRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *VirtualMachineMetadataRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("VirtualMachineMetadataRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "displayName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DisplayName = &v
+			return nil
+		case "usages":
+			c := make([]commonmodel.TypedUsageRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v commonmodel.TypedUsageRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Usages = c
+			return nil
+		case "etag":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Etag = &v
+			return nil
+		case "description":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Description = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

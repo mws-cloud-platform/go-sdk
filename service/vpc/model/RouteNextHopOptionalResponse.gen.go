@@ -6,6 +6,9 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
@@ -143,4 +146,162 @@ func (m *RouteNextHopAddressOptionalResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m RouteNextHopOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *RouteNextHopOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *RouteNextHopOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.NetworkLocal != nil {
+		e.FieldStart("networkLocal")
+		e.Raw(m.NetworkLocal)
+	}
+
+	if m.NatGateway.IsSet() {
+		e.FieldStart("natGateway")
+		if m.NatGateway.IsNull() {
+			e.Null()
+		} else {
+			if err := m.NatGateway.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if m.Address.IsSet() {
+		e.FieldStart("address")
+		if m.Address.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Address.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (m *RouteNextHopOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *RouteNextHopOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("RouteNextHopOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "networkLocal":
+			v, err := d.Raw()
+			if err != nil {
+				return err
+			}
+
+			m.NetworkLocal = json.RawMessage(v)
+			return nil
+		case "natGateway":
+			if d.Next() == jx.Null {
+				m.NatGateway.SetToNull()
+				return d.Null()
+			}
+
+			var v vpc.NatGatewayRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.NatGateway.SetTo(v)
+			return nil
+		case "address":
+			if d.Next() == jx.Null {
+				m.Address.SetToNull()
+				return d.Null()
+			}
+
+			var v RouteNextHopAddressOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Address.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m RouteNextHopAddressOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *RouteNextHopAddressOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *RouteNextHopAddressOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ref")
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *RouteNextHopAddressOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *RouteNextHopAddressOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("RouteNextHopAddressOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ref":
+			var v vpc.AddressRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

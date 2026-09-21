@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
@@ -81,4 +84,77 @@ func (m *VpcExternalAddressSpecOptionalResponse) Parse(ctx context.Context) erro
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m VpcExternalAddressSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *VpcExternalAddressSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *VpcExternalAddressSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Region.IsSet() {
+		e.FieldStart("region")
+		if err := m.Region.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.NatGateway.IsSet() {
+		e.FieldStart("natGateway")
+		if err := m.NatGateway.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *VpcExternalAddressSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *VpcExternalAddressSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("VpcExternalAddressSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region.SetTo(v)
+			return nil
+		case "natGateway":
+			var v vpc.NatGatewayRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.NatGateway.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

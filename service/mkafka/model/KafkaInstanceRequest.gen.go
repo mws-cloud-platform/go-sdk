@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -64,4 +67,97 @@ func (m *KafkaInstanceRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m KafkaInstanceRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaInstanceRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaInstanceRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("broker")
+	if err := m.Broker.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("controller")
+	if err := m.Controller.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *KafkaInstanceRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaInstanceRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaInstanceRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"broker":     false,
+		"controller": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "broker":
+			var v KafkaInstanceSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Broker = v
+			requiredFilled["broker"] = true
+			return nil
+		case "controller":
+			var v KafkaControllerInstanceSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Controller = v
+			requiredFilled["controller"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+// Defaults
+
+func (m *KafkaInstanceRequest) WithDefaults() KafkaInstanceRequest {
+	var out KafkaInstanceRequest
+	if m != nil {
+		out = *m
+	}
+
+	out.Broker = out.Broker.WithDefaults()
+	out.Controller = out.Controller.WithDefaults()
+	return out
 }

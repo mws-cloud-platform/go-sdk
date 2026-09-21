@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: InputModalities
 type InputModalitiesResponse struct {
 	Text  bool `json:"text" yaml:"text"`
@@ -61,4 +69,91 @@ func (m *InputModalitiesResponse) Clone() *InputModalitiesResponse {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m InputModalitiesResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *InputModalitiesResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *InputModalitiesResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("text")
+	e.Bool(m.Text)
+
+	e.FieldStart("image")
+	e.Bool(m.Image)
+
+	e.FieldStart("file")
+	e.Bool(m.File)
+
+	e.FieldStart("audio")
+	e.Bool(m.Audio)
+	return nil
+}
+
+func (m *InputModalitiesResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *InputModalitiesResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("InputModalitiesResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "text":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Text = v
+			return nil
+		case "image":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Image = v
+			return nil
+		case "file":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.File = v
+			return nil
+		case "audio":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Audio = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

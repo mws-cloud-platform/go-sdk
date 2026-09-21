@@ -6,6 +6,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -88,4 +91,99 @@ func (m *ClickhouseClusterCoordinatorOptionalResponse) Parse(ctx context.Context
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ClickhouseClusterCoordinatorOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseClusterCoordinatorOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseClusterCoordinatorOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Type.IsSet() {
+		e.FieldStart("type")
+		if err := m.Type.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("resources")
+	if err := m.Resources.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("instances")
+	e.ArrStart()
+	for _, elem := range m.Instances {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+	return nil
+}
+
+func (m *ClickhouseClusterCoordinatorOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseClusterCoordinatorOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseClusterCoordinatorOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			var v ClickhouseCoordinatorType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Type.SetTo(v)
+			return nil
+		case "resources":
+			var v ClickhouseCoordinatorHWResourcesOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Resources = v
+			return nil
+		case "instances":
+			c := make([]ClickhouseClusterCoordinatorInstanceOptionalResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v ClickhouseClusterCoordinatorInstanceOptionalResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Instances = c
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -6,6 +6,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
@@ -222,4 +227,222 @@ func (m *KafkaClusterSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m KafkaClusterSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaClusterSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaClusterSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Active != nil {
+		e.FieldStart("active")
+		e.Bool(*m.Active)
+	}
+
+	e.FieldStart("version")
+	e.Str(m.Version)
+
+	if m.Region != nil {
+		e.FieldStart("region")
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("endpoints")
+	e.ArrStart()
+	for _, elem := range m.Endpoints {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+
+	e.FieldStart("instances")
+	if err := m.Instances.Encode(e); err != nil {
+		return err
+	}
+
+	if m.ProductConfig != nil {
+		e.FieldStart("productConfig")
+		e.Str(*m.ProductConfig)
+	}
+
+	if m.MaintenanceWindow != nil {
+		e.FieldStart("maintenanceWindow")
+		if err := m.MaintenanceWindow.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.SchemaRegistry != nil {
+		e.FieldStart("schemaRegistry")
+		if err := m.SchemaRegistry.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Balancer != nil {
+		e.FieldStart("balancer")
+		if err := m.Balancer.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *KafkaClusterSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaClusterSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaClusterSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"version":   false,
+		"endpoints": false,
+		"instances": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = &v
+			return nil
+		case "version":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Version = v
+			requiredFilled["version"] = true
+			return nil
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
+			return nil
+		case "endpoints":
+			c := make([]KafkaEndpointRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v KafkaEndpointRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Endpoints = c
+			requiredFilled["endpoints"] = true
+			return nil
+		case "instances":
+			var v KafkaInstanceRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Instances = v
+			requiredFilled["instances"] = true
+			return nil
+		case "productConfig":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.ProductConfig = &v
+			return nil
+		case "maintenanceWindow":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v commonmodel.MaintenanceWindowRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.MaintenanceWindow = &v
+			return nil
+		case "schemaRegistry":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v KafkaSchemaRegistrySpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SchemaRegistry = &v
+			return nil
+		case "balancer":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v KafkaBalancerSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Balancer = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+// Defaults
+
+func (m *KafkaClusterSpecRequest) WithDefaults() KafkaClusterSpecRequest {
+	var out KafkaClusterSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Active == nil {
+		out.Active = ptr.Get(true)
+	}
+	out.Instances = out.Instances.WithDefaults()
+	out.Balancer = ptr.Get(out.Balancer.WithDefaults())
+	return out
 }

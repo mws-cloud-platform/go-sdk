@@ -4,6 +4,13 @@ package model
 
 import (
 	"time"
+
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Спецификация API-ключа
@@ -62,4 +69,87 @@ func (m *ApiKeySpecRequest) Clone() *ApiKeySpecRequest {
 		clone.Active = &cloneActive
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m ApiKeySpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ApiKeySpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ApiKeySpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.ExpireTime != nil {
+		e.FieldStart("expireTime")
+		conv.EncodeDateTimeUTC(e, *m.ExpireTime)
+	}
+
+	if m.Active != nil {
+		e.FieldStart("active")
+		e.Bool(*m.Active)
+	}
+	return nil
+}
+
+func (m *ApiKeySpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ApiKeySpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ApiKeySpecRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "expireTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.ExpireTime = &v
+			return nil
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *ApiKeySpecRequest) WithDefaults() ApiKeySpecRequest {
+	var out ApiKeySpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Active == nil {
+		out.Active = ptr.Get(true)
+	}
+	return out
 }

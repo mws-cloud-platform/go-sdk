@@ -4,6 +4,12 @@ package model
 
 import (
 	"time"
+
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Real OAPI model name: HmacKeySpec
@@ -37,4 +43,60 @@ func (m *HmacKeySpecResponse) Clone() *HmacKeySpecResponse {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m HmacKeySpecResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *HmacKeySpecResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *HmacKeySpecResponse) encodeFields(e *jx.Encoder) error {
+	if m.ExpirationTime != nil {
+		e.FieldStart("expirationTime")
+		conv.EncodeDateTimeUTC(e, *m.ExpirationTime)
+	}
+	return nil
+}
+
+func (m *HmacKeySpecResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *HmacKeySpecResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("HmacKeySpecResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "expirationTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.ExpirationTime = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

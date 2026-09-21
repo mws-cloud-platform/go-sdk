@@ -3,8 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -39,4 +42,60 @@ func (m *VmTypeMemorySpecOptionalResponse) Clone() *VmTypeMemorySpecOptionalResp
 		clone.Capacity.Value = *m.Capacity.Value.Clone()
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m VmTypeMemorySpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *VmTypeMemorySpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *VmTypeMemorySpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Capacity.IsSet() {
+		e.FieldStart("capacity")
+		m.Capacity.Value.Encode(e)
+	}
+	return nil
+}
+
+func (m *VmTypeMemorySpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *VmTypeMemorySpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("VmTypeMemorySpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "capacity":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Capacity.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

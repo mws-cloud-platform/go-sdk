@@ -5,6 +5,12 @@ package model
 import (
 	"time"
 
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
@@ -134,4 +140,112 @@ func (m *SuccessSessionTokenResponse) Clone() *SuccessSessionTokenResponse {
 		clone.Version = &cloneVersion
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m SuccessSessionTokenResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SuccessSessionTokenResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SuccessSessionTokenResponse) encodeFields(e *jx.Encoder) error {
+	if m.SessionToken != nil {
+		e.FieldStart("SessionToken")
+		e.Str(m.SessionToken.Value())
+	}
+
+	if m.Expiration != nil {
+		e.FieldStart("Expiration")
+		conv.EncodeDateTimeUTC(e, *m.Expiration)
+	}
+
+	if m.AccessKeyId != nil {
+		e.FieldStart("AccessKeyId")
+		e.Str(*m.AccessKeyId)
+	}
+
+	if m.SecretAccessKey != nil {
+		e.FieldStart("SecretAccessKey")
+		e.Str(m.SecretAccessKey.Value())
+	}
+
+	if m.Version != nil {
+		e.FieldStart("Version")
+		e.Int(*m.Version)
+	}
+	return nil
+}
+
+func (m *SuccessSessionTokenResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SuccessSessionTokenResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SuccessSessionTokenResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "SessionToken":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.SessionToken = ptr.Get(sensitive.New(v))
+			return nil
+		case "Expiration":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.Expiration = &v
+			return nil
+		case "AccessKeyId":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.AccessKeyId = &v
+			return nil
+		case "SecretAccessKey":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.SecretAccessKey = ptr.Get(sensitive.New(v))
+			return nil
+		case "Version":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Version = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

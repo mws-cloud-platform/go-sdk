@@ -5,8 +5,11 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
@@ -505,4 +508,659 @@ func (m *NodeGroupSpecVmTypeOptionalResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m NodeGroupSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("zone")
+	e.Str(m.Zone)
+
+	e.FieldStart("subnet")
+	if err := m.Subnet.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("vmType")
+	if err := m.VmType.Encode(e); err != nil {
+		return err
+	}
+
+	if m.ImageStorageSize.IsSet() {
+		e.FieldStart("imageStorageSize")
+		m.ImageStorageSize.Value.Encode(e)
+	}
+
+	if m.ImageStorageIops.IsSet() {
+		e.FieldStart("imageStorageIops")
+		e.Int64(m.ImageStorageIops.Value)
+	}
+
+	if m.LocalDisks.IsSet() {
+		e.FieldStart("localDisks")
+		if m.LocalDisks.IsNull() {
+			e.Null()
+		} else {
+			e.ArrStart()
+			for _, elem := range m.LocalDisks.Value {
+				if err := elem.Encode(e); err != nil {
+					return err
+				}
+			}
+			e.ArrEnd()
+		}
+	}
+
+	if m.DataCache.IsSet() {
+		e.FieldStart("dataCache")
+		e.Bool(m.DataCache.Value)
+	}
+
+	e.FieldStart("scale")
+	if err := m.Scale.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Labels.IsSet() {
+		e.FieldStart("labels")
+		if m.Labels.IsNull() {
+			e.Null()
+		} else {
+			e.ArrStart()
+			for _, elem := range m.Labels.Value {
+				if err := elem.Encode(e); err != nil {
+					return err
+				}
+			}
+			e.ArrEnd()
+		}
+	}
+
+	if m.Taints.IsSet() {
+		e.FieldStart("taints")
+		if m.Taints.IsNull() {
+			e.Null()
+		} else {
+			e.ArrStart()
+			for _, elem := range m.Taints.Value {
+				if err := elem.Encode(e); err != nil {
+					return err
+				}
+			}
+			e.ArrEnd()
+		}
+	}
+
+	e.FieldStart("versionControl")
+	if err := m.VersionControl.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("rolloutStrategy")
+	if err := m.RolloutStrategy.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("serviceAccount")
+	if err := m.ServiceAccount.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "zone":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Zone = v
+			return nil
+		case "subnet":
+			var v NodeGroupSpecSubnetOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Subnet = v
+			return nil
+		case "vmType":
+			var v NodeGroupSpecVmTypeOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.VmType = v
+			return nil
+		case "imageStorageSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ImageStorageSize.SetTo(v)
+			return nil
+		case "imageStorageIops":
+			v, err := decode.Int64(d)
+			if err != nil {
+				return err
+			}
+
+			m.ImageStorageIops.SetTo(v)
+			return nil
+		case "localDisks":
+			if d.Next() == jx.Null {
+				m.LocalDisks.SetToNull()
+				return d.Null()
+			}
+
+			c := make([]LocalDiskSpecOptionalResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v LocalDiskSpecOptionalResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.LocalDisks.SetTo(c)
+			return nil
+		case "dataCache":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.DataCache.SetTo(v)
+			return nil
+		case "scale":
+			var v NodeGroupSpecScaleOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Scale = v
+			return nil
+		case "labels":
+			if d.Next() == jx.Null {
+				m.Labels.SetToNull()
+				return d.Null()
+			}
+
+			c := make([]NodeLabelSpecOptionalResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v NodeLabelSpecOptionalResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Labels.SetTo(c)
+			return nil
+		case "taints":
+			if d.Next() == jx.Null {
+				m.Taints.SetToNull()
+				return d.Null()
+			}
+
+			c := make([]NodeTaintSpecOptionalResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v NodeTaintSpecOptionalResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Taints.SetTo(c)
+			return nil
+		case "versionControl":
+			var v NodeGroupVersionControlSpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.VersionControl = v
+			return nil
+		case "rolloutStrategy":
+			var v NodeGroupSpecRolloutStrategyOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RolloutStrategy = v
+			return nil
+		case "serviceAccount":
+			var v NodeGroupSpecServiceAccountOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ServiceAccount = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupSpecRolloutStrategyOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupSpecRolloutStrategyOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupSpecRolloutStrategyOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.MaxSurge.IsSet() {
+		e.FieldStart("maxSurge")
+		e.Int(m.MaxSurge.Value)
+	}
+
+	if m.MaxUnavailable.IsSet() {
+		e.FieldStart("maxUnavailable")
+		e.Int(m.MaxUnavailable.Value)
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecRolloutStrategyOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupSpecRolloutStrategyOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupSpecRolloutStrategyOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "maxSurge":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.MaxSurge.SetTo(v)
+			return nil
+		case "maxUnavailable":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.MaxUnavailable.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupSpecScaleOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupSpecScaleOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupSpecScaleOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Fixed.IsSet() {
+		e.FieldStart("fixed")
+		if m.Fixed.IsNull() {
+			e.Null()
+		} else {
+			e.Int(m.Fixed.Value)
+		}
+	}
+
+	if m.Autoscaling.IsSet() {
+		e.FieldStart("autoscaling")
+		if m.Autoscaling.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Autoscaling.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecScaleOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupSpecScaleOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupSpecScaleOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "fixed":
+			if d.Next() == jx.Null {
+				m.Fixed.SetToNull()
+				return d.Null()
+			}
+
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Fixed.SetTo(v)
+			return nil
+		case "autoscaling":
+			if d.Next() == jx.Null {
+				m.Autoscaling.SetToNull()
+				return d.Null()
+			}
+
+			var v NodeGroupSpecScaleAutoscalingOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Autoscaling.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupSpecScaleAutoscalingOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupSpecScaleAutoscalingOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupSpecScaleAutoscalingOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("min")
+	e.Int(m.Min)
+
+	e.FieldStart("max")
+	e.Int(m.Max)
+	return nil
+}
+
+func (m *NodeGroupSpecScaleAutoscalingOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupSpecScaleAutoscalingOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupSpecScaleAutoscalingOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "min":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Min = v
+			return nil
+		case "max":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Max = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupSpecServiceAccountOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupSpecServiceAccountOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupSpecServiceAccountOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ref")
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecServiceAccountOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupSpecServiceAccountOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupSpecServiceAccountOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ref":
+			var v iam.ServiceAccountRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupSpecSubnetOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupSpecSubnetOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupSpecSubnetOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ref")
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecSubnetOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupSpecSubnetOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupSpecSubnetOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ref":
+			var v vpc.SubnetRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupSpecVmTypeOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupSpecVmTypeOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupSpecVmTypeOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ref")
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecVmTypeOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupSpecVmTypeOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupSpecVmTypeOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ref":
+			var v compute.VmTypeRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

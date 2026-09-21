@@ -5,6 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/gpt"
 )
@@ -77,4 +81,75 @@ func (m *DeploymentSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m DeploymentSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *DeploymentSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *DeploymentSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.IsActive != nil {
+		e.FieldStart("isActive")
+		e.Bool(*m.IsActive)
+	}
+
+	if m.Model != nil {
+		e.FieldStart("model")
+		if err := m.Model.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *DeploymentSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *DeploymentSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("DeploymentSpecRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "isActive":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.IsActive = &v
+			return nil
+		case "model":
+			var v gpt.ModelRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Model = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+)
+
 // Описание шаблона внешнего адреса, который будет использоваться при выделении адресов.
 // Real OAPI model name: ClickhouseEndpointExternalAddressSpec
 type ClickhouseEndpointExternalAddressSpecRequest struct {
@@ -14,4 +20,43 @@ func (m *ClickhouseEndpointExternalAddressSpecRequest) Clone() *ClickhouseEndpoi
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m ClickhouseEndpointExternalAddressSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseEndpointExternalAddressSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseEndpointExternalAddressSpecRequest) encodeFields(e *jx.Encoder) error {
+	return nil
+}
+
+func (m *ClickhouseEndpointExternalAddressSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseEndpointExternalAddressSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseEndpointExternalAddressSpecRequest")
+	}
+
+	return d.Skip()
 }

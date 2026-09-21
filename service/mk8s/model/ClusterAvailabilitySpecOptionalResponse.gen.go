@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -161,4 +166,287 @@ func (m *ClusterAvailabilitySpecZonalHaOptionalResponse) Clone() *ClusterAvailab
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m ClusterAvailabilitySpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClusterAvailabilitySpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Standalone.IsSet() {
+		e.FieldStart("standalone")
+		if m.Standalone.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Standalone.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if m.ZonalHa.IsSet() {
+		e.FieldStart("zonalHa")
+		if m.ZonalHa.IsNull() {
+			e.Null()
+		} else {
+			if err := m.ZonalHa.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if m.Regional.IsSet() {
+		e.FieldStart("regional")
+		if m.Regional.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Regional.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClusterAvailabilitySpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClusterAvailabilitySpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "standalone":
+			if d.Next() == jx.Null {
+				m.Standalone.SetToNull()
+				return d.Null()
+			}
+
+			var v ClusterAvailabilitySpecStandaloneOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Standalone.SetTo(v)
+			return nil
+		case "zonalHa":
+			if d.Next() == jx.Null {
+				m.ZonalHa.SetToNull()
+				return d.Null()
+			}
+
+			var v ClusterAvailabilitySpecZonalHaOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ZonalHa.SetTo(v)
+			return nil
+		case "regional":
+			if d.Next() == jx.Null {
+				m.Regional.SetToNull()
+				return d.Null()
+			}
+
+			var v ClusterAvailabilitySpecRegionalOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Regional.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m ClusterAvailabilitySpecRegionalOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClusterAvailabilitySpecRegionalOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecRegionalOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("zones")
+	e.ArrStart()
+	for _, elem := range m.Zones {
+		e.Str(elem)
+	}
+	e.ArrEnd()
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecRegionalOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClusterAvailabilitySpecRegionalOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClusterAvailabilitySpecRegionalOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "zones":
+			c := make([]string, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				v, err := decode.Str(d)
+				if err != nil {
+					return err
+				}
+
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Zones = c
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m ClusterAvailabilitySpecStandaloneOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClusterAvailabilitySpecStandaloneOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecStandaloneOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("zone")
+	e.Str(m.Zone)
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecStandaloneOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClusterAvailabilitySpecStandaloneOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClusterAvailabilitySpecStandaloneOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "zone":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Zone = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m ClusterAvailabilitySpecZonalHaOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClusterAvailabilitySpecZonalHaOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecZonalHaOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("zone")
+	e.Str(m.Zone)
+	return nil
+}
+
+func (m *ClusterAvailabilitySpecZonalHaOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClusterAvailabilitySpecZonalHaOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClusterAvailabilitySpecZonalHaOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "zone":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Zone = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

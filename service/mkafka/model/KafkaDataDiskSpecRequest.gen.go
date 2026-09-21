@@ -3,7 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Параметры диска с данными на узле кластера.
@@ -81,4 +86,111 @@ func (m *KafkaDataDiskSpecRequest) Clone() *KafkaDataDiskSpecRequest {
 		clone.Iops = &cloneIops
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m KafkaDataDiskSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaDataDiskSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaDataDiskSpecRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("size")
+	m.Size.Encode(e)
+
+	if m.Type != nil {
+		e.FieldStart("type")
+		if err := m.Type.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Iops != nil {
+		e.FieldStart("iops")
+		if err := m.Iops.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *KafkaDataDiskSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaDataDiskSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaDataDiskSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"size": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "size":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Size = v
+			requiredFilled["size"] = true
+			return nil
+		case "type":
+			var v KafkaDataDiskType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Type = &v
+			return nil
+		case "iops":
+			var v KafkaDataDiskIops
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Iops = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+// Defaults
+
+func (m *KafkaDataDiskSpecRequest) WithDefaults() KafkaDataDiskSpecRequest {
+	var out KafkaDataDiskSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Type == nil {
+		out.Type = ptr.Get(KafkaDataDiskType_NETWORK_STANDARD_SSD)
+	}
+	return out
 }

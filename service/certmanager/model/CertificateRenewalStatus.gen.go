@@ -5,7 +5,11 @@ package model
 import (
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 )
 
 // Статус обновления сертификата.
@@ -38,4 +42,41 @@ func (m CertificateRenewalStatus) IsValid() bool {
 		return true
 	}
 	return false
+}
+
+// JSON methods
+
+func (m CertificateRenewalStatus) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CertificateRenewalStatus) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *CertificateRenewalStatus) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CertificateRenewalStatus) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CertificateRenewalStatus")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = CertificateRenewalStatus(v)
+	return nil
 }

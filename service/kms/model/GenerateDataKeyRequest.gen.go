@@ -3,8 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
@@ -110,4 +114,120 @@ func (m *GenerateDataKeyRequest) Clone() *GenerateDataKeyRequest {
 		clone.CiphertextOnly = &cloneCiphertextOnly
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m GenerateDataKeyRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *GenerateDataKeyRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *GenerateDataKeyRequest) encodeFields(e *jx.Encoder) error {
+	if m.Version != nil {
+		e.FieldStart("version")
+		e.Int32(*m.Version)
+	}
+
+	e.FieldStart("bits")
+	e.Int32(m.Bits)
+
+	if m.AssociatedData != nil {
+		e.FieldStart("associatedData")
+		e.Base64(m.AssociatedData.Value())
+	}
+
+	if m.CiphertextOnly != nil {
+		e.FieldStart("ciphertextOnly")
+		e.Bool(*m.CiphertextOnly)
+	}
+	return nil
+}
+
+func (m *GenerateDataKeyRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *GenerateDataKeyRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("GenerateDataKeyRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"bits": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "version":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.Version = &v
+			return nil
+		case "bits":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.Bits = v
+			requiredFilled["bits"] = true
+			return nil
+		case "associatedData":
+			v, err := d.Base64()
+			if err != nil {
+				return err
+			}
+
+			m.AssociatedData = ptr.Get(sensitive.New(v))
+			return nil
+		case "ciphertextOnly":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.CiphertextOnly = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+// Defaults
+
+func (m *GenerateDataKeyRequest) WithDefaults() GenerateDataKeyRequest {
+	var out GenerateDataKeyRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.CiphertextOnly == nil {
+		out.CiphertextOnly = ptr.Get(false)
+	}
+	return out
 }

@@ -5,6 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -89,4 +93,97 @@ func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) Parse(ctx context.
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m StorageDiskSpecOrRefWithAttachmentsOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	if m.Boot.IsSet() {
+		e.FieldStart("boot")
+		e.Bool(m.Boot.Value)
+	}
+
+	if m.DeviceName.IsSet() {
+		e.FieldStart("deviceName")
+		e.Str(m.DeviceName.Value)
+	}
+
+	e.FieldStart("disk")
+	if err := m.Disk.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *StorageDiskSpecOrRefWithAttachmentsOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("StorageDiskSpecOrRefWithAttachmentsOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			return nil
+		case "boot":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Boot.SetTo(v)
+			return nil
+		case "deviceName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DeviceName.SetTo(v)
+			return nil
+		case "disk":
+			var v StorageDiskSpecOrRefOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Disk = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

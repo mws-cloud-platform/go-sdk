@@ -5,8 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
@@ -62,4 +64,82 @@ func (m *ResourceAddressStatus) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ResourceAddressStatus) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ResourceAddressStatus) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ResourceAddressStatus) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ref")
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("ipAddress")
+	m.IpAddress.Encode(e)
+	return nil
+}
+
+func (m *ResourceAddressStatus) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ResourceAddressStatus) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ResourceAddressStatus")
+	}
+
+	requiredFilled := map[string]bool{
+		"ref":       false,
+		"ipAddress": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ref":
+			var v vpc.AddressRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref = v
+			requiredFilled["ref"] = true
+			return nil
+		case "ipAddress":
+			var v ipaddress.IPAddress
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.IpAddress = v
+			requiredFilled["ipAddress"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

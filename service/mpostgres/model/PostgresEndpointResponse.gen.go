@@ -6,6 +6,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
@@ -147,4 +151,147 @@ func (m *PostgresEndpointResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m PostgresEndpointResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresEndpointResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *PostgresEndpointResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	e.FieldStart("network")
+	if err := m.Network.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("primaryAddresses")
+	e.ArrStart()
+	for _, elem := range m.PrimaryAddresses {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+
+	if m.ReadOnlyAddresses != nil {
+		e.FieldStart("readOnlyAddresses")
+		e.ArrStart()
+		for _, elem := range m.ReadOnlyAddresses {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.DirectAddresses != nil {
+		e.FieldStart("directAddresses")
+		e.ArrStart()
+		for _, elem := range m.DirectAddresses {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+	return nil
+}
+
+func (m *PostgresEndpointResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresEndpointResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresEndpointResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			return nil
+		case "network":
+			var v vpc.NetworkRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Network = v
+			return nil
+		case "primaryAddresses":
+			c := make([]PostgresNetworkAddressResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v PostgresNetworkAddressResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.PrimaryAddresses = c
+			return nil
+		case "readOnlyAddresses":
+			c := make([]PostgresNetworkAddressResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v PostgresNetworkAddressResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.ReadOnlyAddresses = c
+			return nil
+		case "directAddresses":
+			c := make([]PostgresNetworkDirectAddressResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v PostgresNetworkDirectAddressResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.DirectAddresses = c
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
@@ -109,4 +114,127 @@ func (m *PostgresClusterUserSpecRequest) Clone() *PostgresClusterUserSpecRequest
 		clone.AccessControlPolicy = &cloneAccessControlPolicy
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m PostgresClusterUserSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresClusterUserSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *PostgresClusterUserSpecRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("password")
+	e.Str(m.Password.Value())
+
+	if m.Role != nil {
+		e.FieldStart("role")
+		if err := m.Role.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.AdditionalRoles != nil {
+		e.FieldStart("additionalRoles")
+		e.ArrStart()
+		for _, elem := range m.AdditionalRoles {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.AccessControlPolicy != nil {
+		e.FieldStart("accessControlPolicy")
+		if err := m.AccessControlPolicy.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *PostgresClusterUserSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresClusterUserSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresClusterUserSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"password": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "password":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Password = sensitive.New(v)
+			requiredFilled["password"] = true
+			return nil
+		case "role":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v PostgresUserRole
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Role = &v
+			return nil
+		case "additionalRoles":
+			c := make([]PostgresUserAdditionalRoleRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v PostgresUserAdditionalRoleRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.AdditionalRoles = c
+			return nil
+		case "accessControlPolicy":
+			var v PostgresUserAccessControlPolicy
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.AccessControlPolicy = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

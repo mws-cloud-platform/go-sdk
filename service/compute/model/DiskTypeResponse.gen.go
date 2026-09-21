@@ -5,6 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -92,4 +96,92 @@ func (m *DiskTypeResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m DiskTypeResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *DiskTypeResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *DiskTypeResponse) encodeFields(e *jx.Encoder) error {
+	if m.Kind != nil {
+		e.FieldStart("kind")
+		e.Str(*m.Kind)
+	}
+
+	if m.Metadata != nil {
+		e.FieldStart("metadata")
+		if err := m.Metadata.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("spec")
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DiskTypeResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *DiskTypeResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("DiskTypeResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "kind":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Kind = &v
+			return nil
+		case "metadata":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v commonmodel.CommonTypedResourceMetadataResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Metadata = &v
+			return nil
+		case "spec":
+			var v DiskTypeSpecResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Spec = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

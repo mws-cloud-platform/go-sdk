@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Спецификация процессора, который доступен для ВМ указанного типа.
 // Real OAPI model name: VmTypeCpuSpec
 type VmTypeCpuSpecResponse struct {
@@ -38,4 +46,60 @@ func (m *VmTypeCpuSpecResponse) Clone() *VmTypeCpuSpecResponse {
 		clone.VcpuCount = &cloneVcpuCount
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m VmTypeCpuSpecResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *VmTypeCpuSpecResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *VmTypeCpuSpecResponse) encodeFields(e *jx.Encoder) error {
+	if m.VcpuCount != nil {
+		e.FieldStart("vcpuCount")
+		conv.EncodeStringInt(e, *m.VcpuCount)
+	}
+	return nil
+}
+
+func (m *VmTypeCpuSpecResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *VmTypeCpuSpecResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("VmTypeCpuSpecResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "vcpuCount":
+			v, err := decode.StringInt32(d)
+			if err != nil {
+				return err
+			}
+
+			m.VcpuCount = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -69,4 +74,85 @@ func (m *NetworkStatusResponse) Clone() *NetworkStatusResponse {
 	}
 
 	return &clone
+}
+
+// JSON methods
+
+func (m NetworkStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NetworkStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NetworkStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.Mtu != nil {
+		e.FieldStart("mtu")
+		e.Int32(*m.Mtu)
+	}
+
+	if m.InternetAccess != nil {
+		e.FieldStart("internetAccess")
+		e.Bool(*m.InternetAccess)
+	}
+	return nil
+}
+
+func (m *NetworkStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NetworkStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NetworkStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "mtu":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.Mtu = &v
+			return nil
+		case "internetAccess":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.InternetAccess = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

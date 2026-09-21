@@ -2,6 +2,15 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Конфигурация проверки работоспособности по протоколу HTTPS.
 // Real OAPI model name: NlbHealthCheckHttps
 type NlbHealthCheckHttpsRequest struct {
@@ -64,4 +73,107 @@ func (m *NlbHealthCheckHttpsRequest) Clone() *NlbHealthCheckHttpsRequest {
 		clone.ExpectedCode = &cloneExpectedCode
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m NlbHealthCheckHttpsRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NlbHealthCheckHttpsRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NlbHealthCheckHttpsRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("port")
+	e.Int(m.Port)
+
+	e.FieldStart("path")
+	e.Str(m.Path)
+
+	if m.ExpectedCode != nil {
+		e.FieldStart("expectedCode")
+		e.Int(*m.ExpectedCode)
+	}
+	return nil
+}
+
+func (m *NlbHealthCheckHttpsRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NlbHealthCheckHttpsRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NlbHealthCheckHttpsRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"port": false,
+		"path": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "port":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Port = v
+			requiredFilled["port"] = true
+			return nil
+		case "path":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Path = v
+			requiredFilled["path"] = true
+			return nil
+		case "expectedCode":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.ExpectedCode = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+// Defaults
+
+func (m *NlbHealthCheckHttpsRequest) WithDefaults() NlbHealthCheckHttpsRequest {
+	var out NlbHealthCheckHttpsRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.ExpectedCode == nil {
+		out.ExpectedCode = ptr.Get(200)
+	}
+	return out
 }

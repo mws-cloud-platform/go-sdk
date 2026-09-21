@@ -2,5 +2,49 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+)
+
 // Количество дисковых операций в секунду.
 type KafkaDataDiskIops int32
+
+// JSON methods
+
+func (m KafkaDataDiskIops) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaDataDiskIops) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Int32(int32(*m))
+	return nil
+}
+
+func (m *KafkaDataDiskIops) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaDataDiskIops) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaDataDiskIops")
+	}
+
+	v, err := decode.Int32(d)
+	if err != nil {
+		return err
+	}
+
+	*m = KafkaDataDiskIops(v)
+	return nil
+}

@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -64,4 +67,73 @@ func (m *KafkaInstanceResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m KafkaInstanceResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaInstanceResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaInstanceResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("broker")
+	if err := m.Broker.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("controller")
+	if err := m.Controller.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *KafkaInstanceResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaInstanceResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaInstanceResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "broker":
+			var v KafkaInstanceSpecResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Broker = v
+			return nil
+		case "controller":
+			var v KafkaControllerInstanceSpecResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Controller = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

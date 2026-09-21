@@ -5,6 +5,12 @@ package model
 import (
 	"slices"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	"go.mws.cloud/go-sdk/internal/encode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 )
 
@@ -22,4 +28,68 @@ func (m AvailableConfigParametersSchema) Clone() AvailableConfigParametersSchema
 	}
 
 	return clone
+}
+
+// JSON methods
+
+func (m AvailableConfigParametersSchema) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *AvailableConfigParametersSchema) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *AvailableConfigParametersSchema) encodeFields(e *jx.Encoder) error {
+	for key, elem := range *m {
+		e.FieldStart(key)
+		if elem == nil || string(elem) == "null" {
+			return encode.ErrRawDataNull
+		}
+		e.Raw(elem)
+	}
+	return nil
+}
+
+func (m *AvailableConfigParametersSchema) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *AvailableConfigParametersSchema) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("AvailableConfigParametersSchema")
+	}
+
+	c := make(map[string]jsonapimodels.RawMessageNotNull)
+	if err := d.ObjBytes(reserrors.PathAccumulatorErrorAsIndexObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		v, err := d.Raw()
+		if err != nil {
+			return err
+		}
+
+		if string(v) == "null" {
+			return decode.ErrRawDataNull
+		}
+
+		c[string(k)] = jsonapimodels.RawMessageNotNull(v)
+		return nil
+	})); err != nil {
+		return err
+	}
+
+	*m = AvailableConfigParametersSchema(c)
+	return nil
 }

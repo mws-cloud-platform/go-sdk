@@ -6,6 +6,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -112,4 +117,136 @@ func (m *NetworkInterfaceSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m NetworkInterfaceSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NetworkInterfaceSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NetworkInterfaceSpecRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	if m.Primary != nil {
+		e.FieldStart("primary")
+		e.Bool(*m.Primary)
+	}
+
+	if m.IpForwardingEnabled != nil {
+		e.FieldStart("ipForwardingEnabled")
+		e.Bool(*m.IpForwardingEnabled)
+	}
+
+	e.FieldStart("addresses")
+	e.ArrStart()
+	for _, elem := range m.Addresses {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+	return nil
+}
+
+func (m *NetworkInterfaceSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NetworkInterfaceSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NetworkInterfaceSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"name":      false,
+		"addresses": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			requiredFilled["name"] = true
+			return nil
+		case "primary":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Primary = &v
+			return nil
+		case "ipForwardingEnabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.IpForwardingEnabled = &v
+			return nil
+		case "addresses":
+			c := make([]AddressSpecOrRefWithAttachmentsRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v AddressSpecOrRefWithAttachmentsRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Addresses = c
+			requiredFilled["addresses"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+// Defaults
+
+func (m *NetworkInterfaceSpecRequest) WithDefaults() NetworkInterfaceSpecRequest {
+	var out NetworkInterfaceSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Primary == nil {
+		out.Primary = ptr.Get(true)
+	}
+	if out.IpForwardingEnabled == nil {
+		out.IpForwardingEnabled = ptr.Get(false)
+	}
+	return out
 }

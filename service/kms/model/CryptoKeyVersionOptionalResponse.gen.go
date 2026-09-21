@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -69,4 +74,97 @@ func (m *CryptoKeyVersionOptionalResponse) Clone() *CryptoKeyVersionOptionalResp
 	clone.Spec = *m.Spec.Clone()
 	clone.Status = *m.Status.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m CryptoKeyVersionOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CryptoKeyVersionOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CryptoKeyVersionOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("kind")
+	e.Str(m.Kind)
+
+	e.FieldStart("metadata")
+	if err := m.Metadata.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("spec")
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("status")
+	if err := m.Status.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *CryptoKeyVersionOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CryptoKeyVersionOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CryptoKeyVersionOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "kind":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Kind = v
+			return nil
+		case "metadata":
+			var v commonmodel.CommonTypedResourceMetadataOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Metadata = v
+			return nil
+		case "spec":
+			var v CryptoKeyVersionSpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Spec = v
+			return nil
+		case "status":
+			var v CryptoKeyVersionStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Status = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
@@ -49,4 +54,69 @@ func (m *ReEncryptResponse) Clone() *ReEncryptResponse {
 		}
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m ReEncryptResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ReEncryptResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ReEncryptResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ciphertext")
+	e.Base64(m.Ciphertext.Value())
+
+	e.FieldStart("version")
+	e.Int32(m.Version)
+	return nil
+}
+
+func (m *ReEncryptResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ReEncryptResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ReEncryptResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ciphertext":
+			v, err := d.Base64()
+			if err != nil {
+				return err
+			}
+
+			m.Ciphertext = sensitive.New(v)
+			return nil
+		case "version":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.Version = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

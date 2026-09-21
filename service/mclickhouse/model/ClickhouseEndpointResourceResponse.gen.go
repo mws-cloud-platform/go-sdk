@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -71,4 +74,79 @@ func (m *ClickhouseEndpointResourceResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ClickhouseEndpointResourceResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseEndpointResourceResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseEndpointResourceResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("address")
+	if err := m.Address.Encode(e); err != nil {
+		return err
+	}
+
+	if m.ExternalAddress != nil {
+		e.FieldStart("externalAddress")
+		if err := m.ExternalAddress.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *ClickhouseEndpointResourceResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseEndpointResourceResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseEndpointResourceResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "address":
+			var v ClickhouseEndpointAddressResourceResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Address = v
+			return nil
+		case "externalAddress":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v ClickhouseEndpointExternalAddressResourceResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ExternalAddress = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

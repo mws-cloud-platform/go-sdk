@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -53,4 +58,84 @@ func (m *CommonRoleBindingFederationContextOptionalResponse) Clone() *CommonRole
 		clone.Attribute.Value = *m.Attribute.Value.Clone()
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m CommonRoleBindingFederationContextOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CommonRoleBindingFederationContextOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CommonRoleBindingFederationContextOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Subject.IsSet() {
+		e.FieldStart("subject")
+		e.Str(m.Subject.Value)
+	}
+
+	if m.Attribute.IsSet() {
+		e.FieldStart("attribute")
+		if m.Attribute.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Attribute.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingFederationContextOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CommonRoleBindingFederationContextOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CommonRoleBindingFederationContextOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "subject":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Subject.SetTo(v)
+			return nil
+		case "attribute":
+			if d.Next() == jx.Null {
+				m.Attribute.SetToNull()
+				return d.Null()
+			}
+
+			var v CommonRoleBindingFederationContextAttributeOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Attribute.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

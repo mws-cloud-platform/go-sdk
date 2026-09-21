@@ -6,6 +6,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -72,4 +75,95 @@ func (m *NlbSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m NlbSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NlbSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NlbSpecRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("listener")
+	if err := m.Listener.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("rules")
+	e.ArrStart()
+	for _, elem := range m.Rules {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+	return nil
+}
+
+func (m *NlbSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NlbSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NlbSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"listener": false,
+		"rules":    false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "listener":
+			var v NlbListenerRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Listener = v
+			requiredFilled["listener"] = true
+			return nil
+		case "rules":
+			c := make([]NlbRuleRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v NlbRuleRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Rules = c
+			requiredFilled["rules"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

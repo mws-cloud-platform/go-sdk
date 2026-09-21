@@ -5,6 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
@@ -58,4 +62,80 @@ func (m *LinkedVmInfo) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m LinkedVmInfo) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *LinkedVmInfo) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *LinkedVmInfo) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("id")
+	if err := m.Id.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("name")
+	e.Str(m.Name)
+	return nil
+}
+
+func (m *LinkedVmInfo) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *LinkedVmInfo) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("LinkedVmInfo")
+	}
+
+	requiredFilled := map[string]bool{
+		"name": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			var v compute.VirtualMachineRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Id = v
+			return nil
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			requiredFilled["name"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

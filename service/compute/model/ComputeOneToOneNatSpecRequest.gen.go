@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -84,4 +87,132 @@ func (m *ComputeOneToOneNatSpecExternalRequest) Parse(ctx context.Context) error
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ComputeOneToOneNatSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ComputeOneToOneNatSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ComputeOneToOneNatSpecRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("external")
+	if err := m.External.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ComputeOneToOneNatSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ComputeOneToOneNatSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ComputeOneToOneNatSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"external": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "external":
+			var v ComputeOneToOneNatSpecExternalRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.External = v
+			requiredFilled["external"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+func (m ComputeOneToOneNatSpecExternalRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ComputeOneToOneNatSpecExternalRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ComputeOneToOneNatSpecExternalRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("address")
+	if err := m.Address.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ComputeOneToOneNatSpecExternalRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ComputeOneToOneNatSpecExternalRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ComputeOneToOneNatSpecExternalRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"address": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "address":
+			var v OneToOneNatAddressSpecOrRefRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Address = v
+			requiredFilled["address"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

@@ -3,7 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Параметры диска.
@@ -70,4 +74,86 @@ func (m *ClickhouseInstanceDiskSpecResponse) Clone() *ClickhouseInstanceDiskSpec
 		clone.Iops = &cloneIops
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m ClickhouseInstanceDiskSpecResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseInstanceDiskSpecResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseInstanceDiskSpecResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("size")
+	m.Size.Encode(e)
+
+	e.FieldStart("type")
+	if err := m.Type.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Iops != nil {
+		e.FieldStart("iops")
+		if err := m.Iops.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *ClickhouseInstanceDiskSpecResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseInstanceDiskSpecResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseInstanceDiskSpecResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "size":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Size = v
+			return nil
+		case "type":
+			var v ClickhouseDataDiskType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Type = v
+			return nil
+		case "iops":
+			var v Iops
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Iops = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Фактические параметры для автоматического бэкапирования.
 // Real OAPI model name: PostgresClusterStatusBackup
 type PostgresClusterStatusBackupResponse struct {
@@ -41,4 +49,71 @@ func (m *PostgresClusterStatusBackupResponse) Clone() *PostgresClusterStatusBack
 	clone := *m
 	clone.Daily = *m.Daily.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m PostgresClusterStatusBackupResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresClusterStatusBackupResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *PostgresClusterStatusBackupResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("daily")
+	if err := m.Daily.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("retainPeriodDays")
+	e.Int(m.RetainPeriodDays)
+	return nil
+}
+
+func (m *PostgresClusterStatusBackupResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresClusterStatusBackupResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresClusterStatusBackupResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "daily":
+			var v PostgresClusterStatusBackupDailyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Daily = v
+			return nil
+		case "retainPeriodDays":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.RetainPeriodDays = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

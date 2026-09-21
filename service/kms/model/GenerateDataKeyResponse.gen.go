@@ -3,8 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
@@ -81,4 +85,82 @@ func (m *GenerateDataKeyResponse) Clone() *GenerateDataKeyResponse {
 		}
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m GenerateDataKeyResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *GenerateDataKeyResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *GenerateDataKeyResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("version")
+	e.Int32(m.Version)
+
+	e.FieldStart("dataKeyCiphertext")
+	e.Base64(m.DataKeyCiphertext.Value())
+
+	if m.DataKeyPlaintext != nil {
+		e.FieldStart("dataKeyPlaintext")
+		e.Base64(m.DataKeyPlaintext.Value())
+	}
+	return nil
+}
+
+func (m *GenerateDataKeyResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *GenerateDataKeyResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("GenerateDataKeyResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "version":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.Version = v
+			return nil
+		case "dataKeyCiphertext":
+			v, err := d.Base64()
+			if err != nil {
+				return err
+			}
+
+			m.DataKeyCiphertext = sensitive.New(v)
+			return nil
+		case "dataKeyPlaintext":
+			v, err := d.Base64()
+			if err != nil {
+				return err
+			}
+
+			m.DataKeyPlaintext = ptr.Get(sensitive.New(v))
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

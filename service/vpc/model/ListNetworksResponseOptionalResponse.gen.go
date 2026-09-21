@@ -3,6 +3,10 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -52,4 +56,86 @@ func (m *ListNetworksResponseOptionalResponse) Clone() *ListNetworksResponseOpti
 		}
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m ListNetworksResponseOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ListNetworksResponseOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ListNetworksResponseOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("items")
+	e.ArrStart()
+	for _, elem := range m.Items {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+
+	if m.NextPageToken.IsSet() {
+		e.FieldStart("nextPageToken")
+		if err := m.NextPageToken.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *ListNetworksResponseOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ListNetworksResponseOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ListNetworksResponseOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "items":
+			c := make([]NetworkOptionalResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v NetworkOptionalResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Items = c
+			return nil
+		case "nextPageToken":
+			var v commonmodel.NextPageToken
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.NextPageToken.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

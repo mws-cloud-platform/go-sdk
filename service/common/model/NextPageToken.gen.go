@@ -2,5 +2,49 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+)
+
 // Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
 type NextPageToken string
+
+// JSON methods
+
+func (m NextPageToken) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NextPageToken) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *NextPageToken) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NextPageToken) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NextPageToken")
+	}
+
+	v, err := decode.Str(d)
+	if err != nil {
+		return err
+	}
+
+	*m = NextPageToken(v)
+	return nil
+}

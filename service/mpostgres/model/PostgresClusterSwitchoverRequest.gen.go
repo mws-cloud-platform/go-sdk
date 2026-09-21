@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Тело запроса для выполнения switchover в кластере managed postgres
 // Real OAPI model name: PostgresClusterSwitchover
 type PostgresClusterSwitchoverRequest struct {
@@ -27,4 +35,67 @@ func (m *PostgresClusterSwitchoverRequest) Clone() *PostgresClusterSwitchoverReq
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m PostgresClusterSwitchoverRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresClusterSwitchoverRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *PostgresClusterSwitchoverRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("candidate")
+	e.Str(m.Candidate)
+	return nil
+}
+
+func (m *PostgresClusterSwitchoverRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresClusterSwitchoverRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresClusterSwitchoverRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"candidate": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "candidate":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Candidate = v
+			requiredFilled["candidate"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

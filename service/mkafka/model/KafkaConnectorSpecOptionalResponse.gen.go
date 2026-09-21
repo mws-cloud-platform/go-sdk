@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -53,4 +58,84 @@ func (m *KafkaConnectorSpecOptionalResponse) Clone() *KafkaConnectorSpecOptional
 		clone.S3SinkConnector.Value = *m.S3SinkConnector.Value.Clone()
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m KafkaConnectorSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaConnectorSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaConnectorSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Active.IsSet() {
+		e.FieldStart("active")
+		e.Bool(m.Active.Value)
+	}
+
+	if m.S3SinkConnector.IsSet() {
+		e.FieldStart("s3SinkConnector")
+		if m.S3SinkConnector.IsNull() {
+			e.Null()
+		} else {
+			if err := m.S3SinkConnector.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (m *KafkaConnectorSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaConnectorSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaConnectorSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active.SetTo(v)
+			return nil
+		case "s3SinkConnector":
+			if d.Next() == jx.Null {
+				m.S3SinkConnector.SetToNull()
+				return d.Null()
+			}
+
+			var v KafkaS3SinkConnectorOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.S3SinkConnector.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

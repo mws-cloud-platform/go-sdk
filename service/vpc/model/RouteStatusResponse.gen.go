@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -76,4 +79,97 @@ func (m *RouteStatusResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m RouteStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *RouteStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *RouteStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.NextHop != nil {
+		e.FieldStart("nextHop")
+		if err := m.NextHop.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Destination != nil {
+		e.FieldStart("destination")
+		if err := m.Destination.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *RouteStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *RouteStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("RouteStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "nextHop":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v RouteStatusNextHopResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.NextHop = &v
+			return nil
+		case "destination":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v RouteStatusDestinationResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Destination = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

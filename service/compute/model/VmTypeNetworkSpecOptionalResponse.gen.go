@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+)
+
 // Спецификация сети, которая доступна для ВМ указанного типа.
 // Real OAPI model name: VmTypeNetworkSpec
 type VmTypeNetworkSpecOptionalResponse struct {
@@ -14,4 +20,43 @@ func (m *VmTypeNetworkSpecOptionalResponse) Clone() *VmTypeNetworkSpecOptionalRe
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m VmTypeNetworkSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *VmTypeNetworkSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *VmTypeNetworkSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	return nil
+}
+
+func (m *VmTypeNetworkSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *VmTypeNetworkSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("VmTypeNetworkSpecOptionalResponse")
+	}
+
+	return d.Skip()
 }

@@ -5,8 +5,11 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
@@ -174,4 +177,160 @@ func (m *DiskBackupStatusResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m DiskBackupStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *DiskBackupStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *DiskBackupStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.StorageSize != nil {
+		e.FieldStart("storageSize")
+		m.StorageSize.Encode(e)
+	}
+
+	if m.Progress != nil {
+		e.FieldStart("progress")
+		e.Str(*m.Progress)
+	}
+
+	if m.SourceExists != nil {
+		e.FieldStart("sourceExists")
+		e.Bool(*m.SourceExists)
+	}
+
+	if m.MinDiskSize != nil {
+		e.FieldStart("minDiskSize")
+		m.MinDiskSize.Encode(e)
+	}
+
+	if m.InitialSourceImage != nil {
+		e.FieldStart("initialSourceImage")
+		if err := m.InitialSourceImage.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.OsType != nil {
+		e.FieldStart("osType")
+		if err := m.OsType.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Encryption != nil {
+		e.FieldStart("encryption")
+		if err := m.Encryption.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *DiskBackupStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *DiskBackupStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("DiskBackupStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "storageSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.StorageSize = &v
+			return nil
+		case "progress":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Progress = &v
+			return nil
+		case "sourceExists":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.SourceExists = &v
+			return nil
+		case "minDiskSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.MinDiskSize = &v
+			return nil
+		case "initialSourceImage":
+			var v compute.ImageID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.InitialSourceImage = &v
+			return nil
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType = &v
+			return nil
+		case "encryption":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v EncryptionStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Encryption = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

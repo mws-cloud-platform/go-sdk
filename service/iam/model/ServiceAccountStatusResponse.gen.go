@@ -5,6 +5,11 @@ package model
 import (
 	"time"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -44,4 +49,72 @@ func (m *ServiceAccountStatusResponse) Clone() *ServiceAccountStatusResponse {
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
 
 	return &clone
+}
+
+// JSON methods
+
+func (m ServiceAccountStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ServiceAccountStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ServiceAccountStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.LastAuthDateTime != nil {
+		e.FieldStart("lastAuthDateTime")
+		conv.EncodeDateTimeUTC(e, *m.LastAuthDateTime)
+	}
+	return nil
+}
+
+func (m *ServiceAccountStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ServiceAccountStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ServiceAccountStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "lastAuthDateTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.LastAuthDateTime = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

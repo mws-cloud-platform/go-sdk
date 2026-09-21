@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -115,4 +120,177 @@ func (m *OsSpecMetadataOptionalResponse) Clone() *OsSpecMetadataOptionalResponse
 		}
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m OsSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *OsSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *OsSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Hostname.IsSet() {
+		e.FieldStart("hostname")
+		e.Str(m.Hostname.Value)
+	}
+
+	if m.LocalDomain.IsSet() {
+		e.FieldStart("localDomain")
+		e.Str(m.LocalDomain.Value)
+	}
+
+	if m.StandardDnsRecords.IsSet() {
+		e.FieldStart("standardDnsRecords")
+		e.Bool(m.StandardDnsRecords.Value)
+	}
+
+	if m.Metadata.IsSet() {
+		e.FieldStart("metadata")
+		if m.Metadata.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Metadata.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (m *OsSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *OsSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("OsSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "hostname":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Hostname.SetTo(v)
+			return nil
+		case "localDomain":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.LocalDomain.SetTo(v)
+			return nil
+		case "standardDnsRecords":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.StandardDnsRecords.SetTo(v)
+			return nil
+		case "metadata":
+			if d.Next() == jx.Null {
+				m.Metadata.SetToNull()
+				return d.Null()
+			}
+
+			var v OsSpecMetadataOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Metadata.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m OsSpecMetadataOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *OsSpecMetadataOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *OsSpecMetadataOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Attributes.IsSet() {
+		e.FieldStart("attributes")
+		e.ObjStart()
+		for key, elem := range m.Attributes.Value {
+			e.FieldStart(key)
+			e.Str(elem)
+		}
+		e.ObjEnd()
+	}
+	return nil
+}
+
+func (m *OsSpecMetadataOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *OsSpecMetadataOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("OsSpecMetadataOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "attributes":
+			c := make(map[string]string)
+			if err := d.ObjBytes(reserrors.PathAccumulatorErrorAsIndexObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+				v, err := decode.Str(d)
+				if err != nil {
+					return err
+				}
+
+				c[string(k)] = v
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Attributes.SetTo(c)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

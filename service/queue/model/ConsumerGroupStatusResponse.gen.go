@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -131,4 +136,139 @@ func (m *ConsumerGroupStatusResponse) Clone() *ConsumerGroupStatusResponse {
 	}
 
 	return &clone
+}
+
+// JSON methods
+
+func (m ConsumerGroupStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ConsumerGroupStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ConsumerGroupStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.State != nil {
+		e.FieldStart("state")
+		if err := m.State.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.GenerationId != nil {
+		e.FieldStart("generationId")
+		e.Int32(*m.GenerationId)
+	}
+
+	if m.ProtocolType != nil {
+		e.FieldStart("protocolType")
+		e.Str(*m.ProtocolType)
+	}
+
+	if m.ProtocolData != nil {
+		e.FieldStart("protocolData")
+		e.Str(*m.ProtocolData)
+	}
+
+	if m.Members != nil {
+		e.FieldStart("members")
+		e.ArrStart()
+		for _, elem := range m.Members {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+	return nil
+}
+
+func (m *ConsumerGroupStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ConsumerGroupStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ConsumerGroupStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "state":
+			var v ConsumerGroupState
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.State = &v
+			return nil
+		case "generationId":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.GenerationId = &v
+			return nil
+		case "protocolType":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.ProtocolType = &v
+			return nil
+		case "protocolData":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.ProtocolData = &v
+			return nil
+		case "members":
+			c := make([]ConsumerGroupMemberResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v ConsumerGroupMemberResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Members = c
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

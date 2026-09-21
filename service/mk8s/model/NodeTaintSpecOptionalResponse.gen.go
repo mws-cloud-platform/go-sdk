@@ -5,7 +5,12 @@ package model
 import (
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Real OAPI model name: NodeTaintSpec
@@ -96,4 +101,117 @@ func (m NodeTaintSpecEffectOptionalResponse) IsValid() bool {
 		return true
 	}
 	return false
+}
+
+// JSON methods
+
+func (m NodeTaintSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeTaintSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeTaintSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("key")
+	e.Str(m.Key)
+
+	e.FieldStart("value")
+	e.Str(m.Value)
+
+	e.FieldStart("effect")
+	if err := m.Effect.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *NodeTaintSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeTaintSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeTaintSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "key":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Key = v
+			return nil
+		case "value":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Value = v
+			return nil
+		case "effect":
+			var v NodeTaintSpecEffectOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Effect = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeTaintSpecEffectOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeTaintSpecEffectOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *NodeTaintSpecEffectOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeTaintSpecEffectOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeTaintSpecEffectOptionalResponse")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = NodeTaintSpecEffectOptionalResponse(v)
+	return nil
 }

@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -69,4 +72,88 @@ func (m *AddressSpecOrRefWithAttachmentsRequest) Parse(ctx context.Context) erro
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m AddressSpecOrRefWithAttachmentsRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *AddressSpecOrRefWithAttachmentsRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *AddressSpecOrRefWithAttachmentsRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("address")
+	if err := m.Address.Encode(e); err != nil {
+		return err
+	}
+
+	if m.OneToOneNat != nil {
+		e.FieldStart("oneToOneNat")
+		if err := m.OneToOneNat.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *AddressSpecOrRefWithAttachmentsRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *AddressSpecOrRefWithAttachmentsRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("AddressSpecOrRefWithAttachmentsRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"address": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "address":
+			var v AddressSpecOrRefRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Address = v
+			requiredFilled["address"] = true
+			return nil
+		case "oneToOneNat":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v ComputeOneToOneNatSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OneToOneNat = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

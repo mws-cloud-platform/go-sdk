@@ -4,6 +4,12 @@ package model
 
 import (
 	"time"
+
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Real OAPI model name: SuccessToken
@@ -49,4 +55,71 @@ func (m *SuccessTokenResponse) Clone() *SuccessTokenResponse {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m SuccessTokenResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SuccessTokenResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SuccessTokenResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("accessToken")
+	e.Str(m.AccessToken)
+
+	if m.ExpirationTs != nil {
+		e.FieldStart("expirationTs")
+		conv.EncodeDateTimeUTC(e, *m.ExpirationTs)
+	}
+	return nil
+}
+
+func (m *SuccessTokenResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SuccessTokenResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SuccessTokenResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "accessToken":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.AccessToken = v
+			return nil
+		case "expirationTs":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.ExpirationTs = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

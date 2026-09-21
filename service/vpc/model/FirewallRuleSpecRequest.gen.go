@@ -5,7 +5,13 @@ package model
 import (
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Описывает спецификацию правила файрвола.
@@ -214,4 +220,253 @@ func (m FirewallRuleSpecDirectionRequest) IsValid() bool {
 		return true
 	}
 	return false
+}
+
+// JSON methods
+
+func (m FirewallRuleSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *FirewallRuleSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *FirewallRuleSpecRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("direction")
+	if err := m.Direction.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Priority != nil {
+		e.FieldStart("priority")
+		e.Int32(*m.Priority)
+	}
+
+	e.FieldStart("action")
+	if err := m.Action.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Active != nil {
+		e.FieldStart("active")
+		e.Bool(*m.Active)
+	}
+
+	e.FieldStart("source")
+	if err := m.Source.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("destination")
+	if err := m.Destination.Encode(e); err != nil {
+		return err
+	}
+
+	if m.ProtoPorts != nil {
+		e.FieldStart("protoPorts")
+		e.ArrStart()
+		for _, elem := range m.ProtoPorts {
+			e.Str(elem)
+		}
+		e.ArrEnd()
+	}
+	return nil
+}
+
+func (m *FirewallRuleSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *FirewallRuleSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("FirewallRuleSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"direction":   false,
+		"action":      false,
+		"source":      false,
+		"destination": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "direction":
+			var v FirewallRuleSpecDirectionRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Direction = v
+			requiredFilled["direction"] = true
+			return nil
+		case "priority":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.Priority = &v
+			return nil
+		case "action":
+			var v FirewallRuleSpecActionRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Action = v
+			requiredFilled["action"] = true
+			return nil
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = &v
+			return nil
+		case "source":
+			var v FirewallRuleSourceRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Source = v
+			requiredFilled["source"] = true
+			return nil
+		case "destination":
+			var v FirewallRuleDestinationRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Destination = v
+			requiredFilled["destination"] = true
+			return nil
+		case "protoPorts":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			c := make([]string, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				v, err := decode.Str(d)
+				if err != nil {
+					return err
+				}
+
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.ProtoPorts = c
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+func (m FirewallRuleSpecActionRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *FirewallRuleSpecActionRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *FirewallRuleSpecActionRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *FirewallRuleSpecActionRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("FirewallRuleSpecActionRequest")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = FirewallRuleSpecActionRequest(v)
+	return nil
+}
+
+func (m FirewallRuleSpecDirectionRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *FirewallRuleSpecDirectionRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *FirewallRuleSpecDirectionRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *FirewallRuleSpecDirectionRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("FirewallRuleSpecDirectionRequest")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = FirewallRuleSpecDirectionRequest(v)
+	return nil
+}
+
+// Defaults
+
+func (m *FirewallRuleSpecRequest) WithDefaults() FirewallRuleSpecRequest {
+	var out FirewallRuleSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Active == nil {
+		out.Active = ptr.Get(true)
+	}
+	return out
 }

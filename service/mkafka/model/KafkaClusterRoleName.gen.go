@@ -5,7 +5,11 @@ package model
 import (
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 )
 
 // Название роли.
@@ -50,4 +54,41 @@ func (m KafkaClusterRoleName) IsValid() bool {
 		return true
 	}
 	return false
+}
+
+// JSON methods
+
+func (m KafkaClusterRoleName) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaClusterRoleName) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *KafkaClusterRoleName) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaClusterRoleName) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaClusterRoleName")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = KafkaClusterRoleName(v)
+	return nil
 }

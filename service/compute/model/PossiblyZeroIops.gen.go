@@ -2,5 +2,49 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+)
+
 // Количество операций ввода-вывода в секунду (IOPS). Может быть 0.
 type PossiblyZeroIops int64
+
+// JSON methods
+
+func (m PossiblyZeroIops) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PossiblyZeroIops) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Int64(int64(*m))
+	return nil
+}
+
+func (m *PossiblyZeroIops) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PossiblyZeroIops) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PossiblyZeroIops")
+	}
+
+	v, err := decode.Int64(d)
+	if err != nil {
+		return err
+	}
+
+	*m = PossiblyZeroIops(v)
+	return nil
+}

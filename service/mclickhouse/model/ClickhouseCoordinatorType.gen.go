@@ -5,7 +5,11 @@ package model
 import (
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 )
 
 // Тип координатора. Если не указано, то при наличии более одного узла, используется ClickHouse Keeper.
@@ -38,4 +42,41 @@ func (m ClickhouseCoordinatorType) IsValid() bool {
 		return true
 	}
 	return false
+}
+
+// JSON methods
+
+func (m ClickhouseCoordinatorType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseCoordinatorType) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *ClickhouseCoordinatorType) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseCoordinatorType) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseCoordinatorType")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = ClickhouseCoordinatorType(v)
+	return nil
 }

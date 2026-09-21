@@ -5,6 +5,11 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -78,4 +83,107 @@ func (m *CreateSecretWithSecretVersionRequest) Parse(ctx context.Context) error 
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m CreateSecretWithSecretVersionRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CreateSecretWithSecretVersionRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CreateSecretWithSecretVersionRequest) encodeFields(e *jx.Encoder) error {
+	if m.Active != nil {
+		e.FieldStart("active")
+		e.Bool(*m.Active)
+	}
+
+	if m.Data != nil {
+		e.FieldStart("data")
+		if err := m.Data.Encode(e); err != nil {
+			return err
+		}
+	}
+	if m.Encryption != nil {
+		e.FieldStart("encryption")
+		if err := m.Encryption.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *CreateSecretWithSecretVersionRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CreateSecretWithSecretVersionRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CreateSecretWithSecretVersionRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = &v
+			return nil
+		case "data":
+			var v SecretVersionDataSpec
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Data = v
+			return nil
+		case "encryption":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v EncryptionSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Encryption = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *CreateSecretWithSecretVersionRequest) WithDefaults() CreateSecretWithSecretVersionRequest {
+	var out CreateSecretWithSecretVersionRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Active == nil {
+		out.Active = ptr.Get(true)
+	}
+	return out
 }

@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
@@ -44,4 +49,80 @@ func (m *ClickhouseClusterBootstrapAdminSpecRequest) Clone() *ClickhouseClusterB
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m ClickhouseClusterBootstrapAdminSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseClusterBootstrapAdminSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseClusterBootstrapAdminSpecRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("username")
+	e.Str(m.Username)
+
+	e.FieldStart("password")
+	e.Str(m.Password.Value())
+	return nil
+}
+
+func (m *ClickhouseClusterBootstrapAdminSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseClusterBootstrapAdminSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseClusterBootstrapAdminSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"username": false,
+		"password": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "username":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Username = v
+			requiredFilled["username"] = true
+			return nil
+		case "password":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Password = sensitive.New(v)
+			requiredFilled["password"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

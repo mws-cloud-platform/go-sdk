@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -34,4 +39,60 @@ func (m *VmTypeCpuSpecOptionalResponse) Clone() *VmTypeCpuSpecOptionalResponse {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m VmTypeCpuSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *VmTypeCpuSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *VmTypeCpuSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.VcpuCount.IsSet() {
+		e.FieldStart("vcpuCount")
+		conv.EncodeStringInt(e, m.VcpuCount.Value)
+	}
+	return nil
+}
+
+func (m *VmTypeCpuSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *VmTypeCpuSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("VmTypeCpuSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "vcpuCount":
+			v, err := decode.StringInt32(d)
+			if err != nil {
+				return err
+			}
+
+			m.VcpuCount.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

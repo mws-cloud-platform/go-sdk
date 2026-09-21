@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: LinkedVmInfo
 type LinkedVmInfoRequest struct {
 	// Имя виртуальной машины
@@ -26,4 +34,67 @@ func (m *LinkedVmInfoRequest) Clone() *LinkedVmInfoRequest {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m LinkedVmInfoRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *LinkedVmInfoRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *LinkedVmInfoRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+	return nil
+}
+
+func (m *LinkedVmInfoRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *LinkedVmInfoRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("LinkedVmInfoRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"name": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			requiredFilled["name"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

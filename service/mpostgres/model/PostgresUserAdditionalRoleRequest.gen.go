@@ -6,7 +6,12 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Real OAPI model name: PostgresUserAdditionalRole
@@ -94,4 +99,110 @@ func (m PostgresUserAdditionalRoleNameRequest) IsValid() bool {
 		return true
 	}
 	return false
+}
+
+// JSON methods
+
+func (m PostgresUserAdditionalRoleRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresUserAdditionalRoleRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *PostgresUserAdditionalRoleRequest) encodeFields(e *jx.Encoder) error {
+	if m.Name != nil {
+		e.FieldStart("name")
+		if err := m.Name.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.ExpiresAt != nil {
+		e.FieldStart("expiresAt")
+		conv.EncodeDateTimeUTC(e, *m.ExpiresAt)
+	}
+	return nil
+}
+
+func (m *PostgresUserAdditionalRoleRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresUserAdditionalRoleRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresUserAdditionalRoleRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			var v PostgresUserAdditionalRoleNameRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Name = &v
+			return nil
+		case "expiresAt":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.ExpiresAt = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m PostgresUserAdditionalRoleNameRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresUserAdditionalRoleNameRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *PostgresUserAdditionalRoleNameRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresUserAdditionalRoleNameRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresUserAdditionalRoleNameRequest")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = PostgresUserAdditionalRoleNameRequest(v)
+	return nil
 }

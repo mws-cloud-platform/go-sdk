@@ -2,6 +2,13 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Спецификация источника траффика, к которому будет применено Firewall правило.
 // Real OAPI model name: FirewallRuleSource
 type FirewallRuleSourceRequest struct {
@@ -35,4 +42,66 @@ func (m *FirewallRuleSourceRequest) Clone() *FirewallRuleSourceRequest {
 	clone := *m
 	clone.Spec = m.Spec.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m FirewallRuleSourceRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *FirewallRuleSourceRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *FirewallRuleSourceRequest) encodeFields(e *jx.Encoder) error {
+	if m.Spec != nil {
+		e.FieldStart("spec")
+		if err := m.Spec.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *FirewallRuleSourceRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *FirewallRuleSourceRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("FirewallRuleSourceRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "spec":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v FirewallRuleSourceSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Spec = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

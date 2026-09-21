@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/org"
@@ -78,4 +81,77 @@ func (m *EventSourceSpecOptionalResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m EventSourceSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *EventSourceSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *EventSourceSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Project.IsSet() {
+		e.FieldStart("project")
+		if err := m.Project.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Organization.IsSet() {
+		e.FieldStart("organization")
+		if err := m.Organization.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *EventSourceSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *EventSourceSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("EventSourceSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "project":
+			var v rm.ProjectRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Project.SetTo(v)
+			return nil
+		case "organization":
+			var v org.OrganizationRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Organization.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

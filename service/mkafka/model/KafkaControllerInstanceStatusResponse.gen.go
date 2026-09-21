@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Параметры узла-контроллера кластера Managed Kafka.
 // Real OAPI model name: KafkaControllerInstanceStatus
 type KafkaControllerInstanceStatusResponse struct {
@@ -48,4 +56,77 @@ func (m *KafkaControllerInstanceStatusResponse) Clone() *KafkaControllerInstance
 	clone := *m
 	clone.Disk = m.Disk.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m KafkaControllerInstanceStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaControllerInstanceStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaControllerInstanceStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("combinedWithBroker")
+	e.Bool(m.CombinedWithBroker)
+
+	if m.Disk != nil {
+		e.FieldStart("disk")
+		if err := m.Disk.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *KafkaControllerInstanceStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaControllerInstanceStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaControllerInstanceStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "combinedWithBroker":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.CombinedWithBroker = v
+			return nil
+		case "disk":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v KafkaDataDiskStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Disk = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

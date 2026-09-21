@@ -3,7 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Группа CIDR-ов, выступающая в качестве перечня получателей траффика, к которому будет применено Firewall правило.
@@ -37,4 +41,69 @@ func (m *FirewallRuleDestinationSpecOptionalResponse) Clone() *FirewallRuleDesti
 		}
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m FirewallRuleDestinationSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *FirewallRuleDestinationSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *FirewallRuleDestinationSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("cidrs")
+	e.ArrStart()
+	for _, elem := range m.Cidrs {
+		elem.Encode(e)
+	}
+	e.ArrEnd()
+	return nil
+}
+
+func (m *FirewallRuleDestinationSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *FirewallRuleDestinationSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("FirewallRuleDestinationSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "cidrs":
+			c := make([]cidraddress.CIDR4Address, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v cidraddress.CIDR4Address
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Cidrs = c
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

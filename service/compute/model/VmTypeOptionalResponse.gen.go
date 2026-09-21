@@ -5,6 +5,11 @@ package model
 import (
 	"time"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
@@ -239,4 +244,286 @@ func (m *VmTypeMetadataOptionalResponse) Clone() *VmTypeMetadataOptionalResponse
 	clone.Id = *m.Id.Clone()
 
 	return &clone
+}
+
+// JSON methods
+
+func (m VmTypeOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *VmTypeOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *VmTypeOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Kind != nil {
+		e.FieldStart("kind")
+		e.Str(*m.Kind)
+	}
+
+	if m.Metadata.IsSet() {
+		e.FieldStart("metadata")
+		if m.Metadata.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Metadata.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+
+	e.FieldStart("spec")
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Status != nil {
+		e.FieldStart("status")
+		if err := m.Status.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *VmTypeOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *VmTypeOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("VmTypeOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "kind":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Kind = &v
+			return nil
+		case "metadata":
+			if d.Next() == jx.Null {
+				m.Metadata.SetToNull()
+				return d.Null()
+			}
+
+			var v VmTypeMetadataOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Metadata.SetTo(v)
+			return nil
+		case "spec":
+			var v VmTypeSpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Spec = v
+			return nil
+		case "status":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v VmTypeStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Status = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m VmTypeMetadataOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *VmTypeMetadataOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *VmTypeMetadataOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.DisplayName.IsSet() {
+		e.FieldStart("displayName")
+		e.Str(m.DisplayName.Value)
+	}
+
+	if m.CreateTime != nil {
+		e.FieldStart("createTime")
+		conv.EncodeDateTimeUTC(e, *m.CreateTime)
+	}
+
+	if m.UpdateTime != nil {
+		e.FieldStart("updateTime")
+		conv.EncodeDateTimeUTC(e, *m.UpdateTime)
+	}
+
+	if m.DeleteTime != nil {
+		e.FieldStart("deleteTime")
+		conv.EncodeDateTimeUTC(e, *m.DeleteTime)
+	}
+
+	if m.PurgeTime != nil {
+		e.FieldStart("purgeTime")
+		conv.EncodeDateTimeUTC(e, *m.PurgeTime)
+	}
+
+	if m.Usages.IsSet() {
+		e.FieldStart("usages")
+		e.ArrStart()
+		for _, elem := range m.Usages.Value {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.Etag.IsSet() {
+		e.FieldStart("etag")
+		e.Str(m.Etag.Value)
+	}
+
+	if m.Description.IsSet() {
+		e.FieldStart("description")
+		e.Str(m.Description.Value)
+	}
+	e.FieldStart("id")
+	if err := m.Id.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *VmTypeMetadataOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *VmTypeMetadataOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("VmTypeMetadataOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "displayName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DisplayName.SetTo(v)
+			return nil
+		case "createTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.CreateTime = &v
+			return nil
+		case "updateTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.UpdateTime = &v
+			return nil
+		case "deleteTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.DeleteTime = &v
+			return nil
+		case "purgeTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.PurgeTime = &v
+			return nil
+		case "usages":
+			c := make([]commonmodel.TypedUsageOptionalResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v commonmodel.TypedUsageOptionalResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Usages.SetTo(c)
+			return nil
+		case "etag":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Etag.SetTo(v)
+			return nil
+		case "description":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Description.SetTo(v)
+			return nil
+		case "id":
+			var v compute.VmTypeID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Id = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Общие свойства топика
 // Real OAPI model name: TopicItemCommon
 type TopicItemCommonResponse struct {
@@ -62,4 +70,73 @@ func (m *TopicItemCommonResponse) Clone() *TopicItemCommonResponse {
 		clone.TopicId = &cloneTopicId
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m TopicItemCommonResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *TopicItemCommonResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *TopicItemCommonResponse) encodeFields(e *jx.Encoder) error {
+	if m.PartitionCount != nil {
+		e.FieldStart("partitionCount")
+		e.Int32(*m.PartitionCount)
+	}
+
+	if m.TopicId != nil {
+		e.FieldStart("topicId")
+		e.Str(*m.TopicId)
+	}
+	return nil
+}
+
+func (m *TopicItemCommonResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *TopicItemCommonResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("TopicItemCommonResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "partitionCount":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.PartitionCount = &v
+			return nil
+		case "topicId":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.TopicId = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

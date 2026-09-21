@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: ModelSpec
 type ModelSpecResponse struct {
 	// Размер контекстного окна модели в токенах.
@@ -153,4 +161,151 @@ func (m *ModelSpecResponse) Clone() *ModelSpecResponse {
 		clone.Developer = &cloneDeveloper
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m ModelSpecResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ModelSpecResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ModelSpecResponse) encodeFields(e *jx.Encoder) error {
+	if m.ContextWindowSize != nil {
+		e.FieldStart("contextWindowSize")
+		e.UInt(*m.ContextWindowSize)
+	}
+
+	e.FieldStart("inputModalities")
+	if err := m.InputModalities.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("outputModalities")
+	if err := m.OutputModalities.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("modalities")
+	if err := m.Modalities.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("capabilities")
+	if err := m.Capabilities.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("deprecation")
+	if err := m.Deprecation.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Size != nil {
+		e.FieldStart("size")
+		e.Float32(*m.Size)
+	}
+
+	if m.Developer != nil {
+		e.FieldStart("developer")
+		e.Str(*m.Developer)
+	}
+	return nil
+}
+
+func (m *ModelSpecResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ModelSpecResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ModelSpecResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "contextWindowSize":
+			v, err := decode.UInt(d)
+			if err != nil {
+				return err
+			}
+
+			m.ContextWindowSize = &v
+			return nil
+		case "inputModalities":
+			var v InputModalitiesResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.InputModalities = v
+			return nil
+		case "outputModalities":
+			var v OutputModalitiesResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OutputModalities = v
+			return nil
+		case "modalities":
+			var v ModalitiesResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Modalities = v
+			return nil
+		case "capabilities":
+			var v CapabilitiesResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Capabilities = v
+			return nil
+		case "deprecation":
+			var v DeprecationResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Deprecation = v
+			return nil
+		case "size":
+			v, err := decode.Float32(d)
+			if err != nil {
+				return err
+			}
+
+			m.Size = &v
+			return nil
+		case "developer":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Developer = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

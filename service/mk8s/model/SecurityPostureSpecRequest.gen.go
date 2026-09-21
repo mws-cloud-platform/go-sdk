@@ -2,6 +2,15 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Настройка KSP для кластера
 // Real OAPI model name: SecurityPostureSpec
 type SecurityPostureSpecRequest struct {
@@ -38,4 +47,74 @@ func (m *SecurityPostureSpecRequest) Clone() *SecurityPostureSpecRequest {
 		clone.Enabled = &cloneEnabled
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m SecurityPostureSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SecurityPostureSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SecurityPostureSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Enabled != nil {
+		e.FieldStart("enabled")
+		e.Bool(*m.Enabled)
+	}
+	return nil
+}
+
+func (m *SecurityPostureSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SecurityPostureSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SecurityPostureSpecRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "enabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Enabled = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *SecurityPostureSpecRequest) WithDefaults() SecurityPostureSpecRequest {
+	var out SecurityPostureSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Enabled == nil {
+		out.Enabled = ptr.Get(true)
+	}
+	return out
 }

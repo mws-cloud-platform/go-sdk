@@ -5,8 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
@@ -68,4 +70,82 @@ func (m *ClusterPrimaryEndpointSpecOptionalResponse) Parse(ctx context.Context) 
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ClusterPrimaryEndpointSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClusterPrimaryEndpointSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClusterPrimaryEndpointSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.IpAddress.IsSet() {
+		e.FieldStart("ipAddress")
+		if m.IpAddress.IsNull() {
+			e.Null()
+		} else {
+			m.IpAddress.Value.Encode(e)
+		}
+	}
+
+	e.FieldStart("subnet")
+	if err := m.Subnet.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ClusterPrimaryEndpointSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClusterPrimaryEndpointSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClusterPrimaryEndpointSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ipAddress":
+			if d.Next() == jx.Null {
+				m.IpAddress.SetToNull()
+				return d.Null()
+			}
+
+			var v ipaddress.IP4Address
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.IpAddress.SetTo(v)
+			return nil
+		case "subnet":
+			var v vpc.SubnetRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Subnet = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

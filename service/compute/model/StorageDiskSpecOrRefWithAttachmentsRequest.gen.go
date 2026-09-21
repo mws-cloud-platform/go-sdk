@@ -5,6 +5,11 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -104,4 +109,122 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) Parse(ctx context.Context) 
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m StorageDiskSpecOrRefWithAttachmentsRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *StorageDiskSpecOrRefWithAttachmentsRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *StorageDiskSpecOrRefWithAttachmentsRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	if m.Boot != nil {
+		e.FieldStart("boot")
+		e.Bool(*m.Boot)
+	}
+
+	if m.DeviceName != nil {
+		e.FieldStart("deviceName")
+		e.Str(*m.DeviceName)
+	}
+
+	e.FieldStart("disk")
+	if err := m.Disk.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *StorageDiskSpecOrRefWithAttachmentsRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *StorageDiskSpecOrRefWithAttachmentsRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("StorageDiskSpecOrRefWithAttachmentsRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"name": false,
+		"disk": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			requiredFilled["name"] = true
+			return nil
+		case "boot":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Boot = &v
+			return nil
+		case "deviceName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DeviceName = &v
+			return nil
+		case "disk":
+			var v StorageDiskSpecOrRefRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Disk = v
+			requiredFilled["disk"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+// Defaults
+
+func (m *StorageDiskSpecOrRefWithAttachmentsRequest) WithDefaults() StorageDiskSpecOrRefWithAttachmentsRequest {
+	var out StorageDiskSpecOrRefWithAttachmentsRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Boot == nil {
+		out.Boot = ptr.Get(false)
+	}
+	return out
 }

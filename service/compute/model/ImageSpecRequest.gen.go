@@ -6,8 +6,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
@@ -297,4 +300,254 @@ func (m *ImageSpecSourceRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ImageSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ImageSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ImageSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Family != nil {
+		e.FieldStart("family")
+		e.Str(*m.Family)
+	}
+
+	if m.Regions != nil {
+		e.FieldStart("regions")
+		e.ArrStart()
+		for _, elem := range m.Regions {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	e.FieldStart("source")
+	if err := m.Source.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Activity != nil {
+		e.FieldStart("activity")
+		if err := m.Activity.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.MinDiskSize != nil {
+		e.FieldStart("minDiskSize")
+		m.MinDiskSize.Encode(e)
+	}
+
+	if m.OsType != nil {
+		e.FieldStart("osType")
+		if err := m.OsType.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Encryption != nil {
+		e.FieldStart("encryption")
+		if err := m.Encryption.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *ImageSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ImageSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ImageSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"source": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "family":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Family = &v
+			return nil
+		case "regions":
+			c := make([]rm.RegionRef, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v rm.RegionRef
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Regions = c
+			return nil
+		case "source":
+			var v ImageSpecSourceRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Source = v
+			requiredFilled["source"] = true
+			return nil
+		case "activity":
+			var v ImageActivity
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Activity = &v
+			return nil
+		case "minDiskSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.MinDiskSize = &v
+			return nil
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType = &v
+			return nil
+		case "encryption":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v EncryptionSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Encryption = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+func (m ImageSpecSourceRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ImageSpecSourceRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ImageSpecSourceRequest) encodeFields(e *jx.Encoder) error {
+	if m.ExternalUrl != nil {
+		e.FieldStart("externalUrl")
+		e.Str(*m.ExternalUrl)
+	}
+
+	if m.DiskId != nil {
+		e.FieldStart("diskId")
+		if err := m.DiskId.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.ImageId != nil {
+		e.FieldStart("imageId")
+		if err := m.ImageId.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *ImageSpecSourceRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ImageSpecSourceRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ImageSpecSourceRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "externalUrl":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.ExternalUrl = &v
+			return nil
+		case "diskId":
+			var v compute.DiskRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.DiskId = &v
+			return nil
+		case "imageId":
+			var v compute.ImageRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ImageId = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

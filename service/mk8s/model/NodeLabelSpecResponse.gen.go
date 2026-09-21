@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: NodeLabelSpec
 type NodeLabelSpecResponse struct {
 	// Ключ может состоять из двух частей: необязательный префикс и ключ, разделенные '/'
@@ -41,4 +49,69 @@ func (m *NodeLabelSpecResponse) Clone() *NodeLabelSpecResponse {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m NodeLabelSpecResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeLabelSpecResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeLabelSpecResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("key")
+	e.Str(m.Key)
+
+	e.FieldStart("value")
+	e.Str(m.Value)
+	return nil
+}
+
+func (m *NodeLabelSpecResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeLabelSpecResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeLabelSpecResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "key":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Key = v
+			return nil
+		case "value":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Value = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

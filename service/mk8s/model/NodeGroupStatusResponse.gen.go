@@ -6,9 +6,12 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
@@ -655,4 +658,788 @@ func (m *NodeGroupStatusVmTypeResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m NodeGroupStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.VmType != nil {
+		e.FieldStart("vmType")
+		if err := m.VmType.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Cpu != nil {
+		e.FieldStart("cpu")
+		e.Str(*m.Cpu)
+	}
+
+	if m.Memory != nil {
+		e.FieldStart("memory")
+		m.Memory.Encode(e)
+	}
+
+	if m.ImageStorageSize != nil {
+		e.FieldStart("imageStorageSize")
+		m.ImageStorageSize.Encode(e)
+	}
+
+	if m.ImageStorageIops != nil {
+		e.FieldStart("imageStorageIops")
+		e.Int64(*m.ImageStorageIops)
+	}
+
+	if m.LocalDisks != nil {
+		e.FieldStart("localDisks")
+		e.ArrStart()
+		for _, elem := range m.LocalDisks {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.DataCache != nil {
+		e.FieldStart("dataCache")
+		e.Bool(*m.DataCache)
+	}
+
+	if m.Scale != nil {
+		e.FieldStart("scale")
+		if err := m.Scale.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.NodesReady != nil {
+		e.FieldStart("nodesReady")
+		e.Int(*m.NodesReady)
+	}
+
+	if m.Labels != nil {
+		e.FieldStart("labels")
+		e.ArrStart()
+		for _, elem := range m.Labels {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.Taints != nil {
+		e.FieldStart("taints")
+		e.ArrStart()
+		for _, elem := range m.Taints {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.RolloutStrategy != nil {
+		e.FieldStart("rolloutStrategy")
+		if err := m.RolloutStrategy.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.VersionControl != nil {
+		e.FieldStart("versionControl")
+		if err := m.VersionControl.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.ServiceAccount != nil {
+		e.FieldStart("serviceAccount")
+		if err := m.ServiceAccount.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.NodeGroupStatus != nil {
+		e.FieldStart("nodeGroupStatus")
+		if err := m.NodeGroupStatus.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *NodeGroupStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "vmType":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NodeGroupStatusVmTypeResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.VmType = &v
+			return nil
+		case "cpu":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Cpu = &v
+			return nil
+		case "memory":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Memory = &v
+			return nil
+		case "imageStorageSize":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ImageStorageSize = &v
+			return nil
+		case "imageStorageIops":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			v, err := decode.Int64(d)
+			if err != nil {
+				return err
+			}
+
+			m.ImageStorageIops = &v
+			return nil
+		case "localDisks":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			c := make([]LocalDiskStatusResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v LocalDiskStatusResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.LocalDisks = c
+			return nil
+		case "dataCache":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.DataCache = &v
+			return nil
+		case "scale":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NodeGroupStatusScaleResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Scale = &v
+			return nil
+		case "nodesReady":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.NodesReady = &v
+			return nil
+		case "labels":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			c := make([]NodeLabelSpecResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v NodeLabelSpecResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Labels = c
+			return nil
+		case "taints":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			c := make([]NodeTaintSpecResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v NodeTaintSpecResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Taints = c
+			return nil
+		case "rolloutStrategy":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NodeGroupStatusRolloutStrategyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RolloutStrategy = &v
+			return nil
+		case "versionControl":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NodeGroupVersionControlStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.VersionControl = &v
+			return nil
+		case "serviceAccount":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NodeGroupStatusServiceAccountResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ServiceAccount = &v
+			return nil
+		case "nodeGroupStatus":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NodeGroupStatusNodeGroupStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.NodeGroupStatus = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupStatusNodeGroupStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupStatusNodeGroupStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupStatusNodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
+	if m.State != nil {
+		e.FieldStart("state")
+		if err := m.State.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Message != nil {
+		e.FieldStart("message")
+		e.Str(*m.Message)
+	}
+	return nil
+}
+
+func (m *NodeGroupStatusNodeGroupStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupStatusNodeGroupStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupStatusNodeGroupStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "state":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NodeGroupStatusNodeGroupStatusStateResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.State = &v
+			return nil
+		case "message":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Message = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupStatusNodeGroupStatusStateResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupStatusNodeGroupStatusStateResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *NodeGroupStatusNodeGroupStatusStateResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupStatusNodeGroupStatusStateResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupStatusNodeGroupStatusStateResponse")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = NodeGroupStatusNodeGroupStatusStateResponse(v)
+	return nil
+}
+
+func (m NodeGroupStatusRolloutStrategyResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupStatusRolloutStrategyResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupStatusRolloutStrategyResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("maxSurge")
+	e.Int(m.MaxSurge)
+
+	e.FieldStart("maxUnavailable")
+	e.Int(m.MaxUnavailable)
+	return nil
+}
+
+func (m *NodeGroupStatusRolloutStrategyResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupStatusRolloutStrategyResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupStatusRolloutStrategyResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "maxSurge":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.MaxSurge = v
+			return nil
+		case "maxUnavailable":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.MaxUnavailable = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupStatusScaleResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupStatusScaleResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupStatusScaleResponse) encodeFields(e *jx.Encoder) error {
+	if m.Fixed != nil {
+		e.FieldStart("fixed")
+		e.Int(*m.Fixed)
+	}
+
+	if m.Autoscaling != nil {
+		e.FieldStart("autoscaling")
+		if err := m.Autoscaling.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *NodeGroupStatusScaleResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupStatusScaleResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupStatusScaleResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "fixed":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Fixed = &v
+			return nil
+		case "autoscaling":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NodeGroupStatusScaleAutoscalingResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Autoscaling = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupStatusScaleAutoscalingResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupStatusScaleAutoscalingResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupStatusScaleAutoscalingResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("min")
+	e.Int(m.Min)
+
+	e.FieldStart("max")
+	e.Int(m.Max)
+	return nil
+}
+
+func (m *NodeGroupStatusScaleAutoscalingResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupStatusScaleAutoscalingResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupStatusScaleAutoscalingResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "min":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Min = v
+			return nil
+		case "max":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Max = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupStatusServiceAccountResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupStatusServiceAccountResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupStatusServiceAccountResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ref")
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *NodeGroupStatusServiceAccountResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupStatusServiceAccountResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupStatusServiceAccountResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ref":
+			var v iam.ServiceAccountRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m NodeGroupStatusVmTypeResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupStatusVmTypeResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupStatusVmTypeResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ref")
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *NodeGroupStatusVmTypeResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupStatusVmTypeResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupStatusVmTypeResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ref":
+			var v compute.VmTypeRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

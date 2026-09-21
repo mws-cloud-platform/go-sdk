@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Контекст федерации, уточняющий субъекта: конкретный пользователь федерации или атрибут, которым он должен обладать. Должно быть заполнено ровно одно из полей
 // Real OAPI model name: CommonRoleBindingFederationContext
 type CommonRoleBindingFederationContextRequest struct {
@@ -59,4 +67,79 @@ func (m *CommonRoleBindingFederationContextRequest) Clone() *CommonRoleBindingFe
 	}
 	clone.Attribute = m.Attribute.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m CommonRoleBindingFederationContextRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CommonRoleBindingFederationContextRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CommonRoleBindingFederationContextRequest) encodeFields(e *jx.Encoder) error {
+	if m.Subject != nil {
+		e.FieldStart("subject")
+		e.Str(*m.Subject)
+	}
+
+	if m.Attribute != nil {
+		e.FieldStart("attribute")
+		if err := m.Attribute.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingFederationContextRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CommonRoleBindingFederationContextRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CommonRoleBindingFederationContextRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "subject":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Subject = &v
+			return nil
+		case "attribute":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CommonRoleBindingFederationContextAttributeRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Attribute = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

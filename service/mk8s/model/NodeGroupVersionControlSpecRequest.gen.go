@@ -3,6 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -86,4 +92,106 @@ func (m *NodeGroupVersionControlSpecRequest) Clone() *NodeGroupVersionControlSpe
 	}
 	clone.MaintenanceWindow = m.MaintenanceWindow.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m NodeGroupVersionControlSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NodeGroupVersionControlSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NodeGroupVersionControlSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Version != nil {
+		e.FieldStart("version")
+		e.Str(*m.Version)
+	}
+
+	if m.AutoUpdate != nil {
+		e.FieldStart("autoUpdate")
+		e.Bool(*m.AutoUpdate)
+	}
+
+	if m.MaintenanceWindow != nil {
+		e.FieldStart("maintenanceWindow")
+		if err := m.MaintenanceWindow.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *NodeGroupVersionControlSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NodeGroupVersionControlSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NodeGroupVersionControlSpecRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "version":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Version = &v
+			return nil
+		case "autoUpdate":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.AutoUpdate = &v
+			return nil
+		case "maintenanceWindow":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v commonmodel.MaintenanceWindowRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.MaintenanceWindow = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *NodeGroupVersionControlSpecRequest) WithDefaults() NodeGroupVersionControlSpecRequest {
+	var out NodeGroupVersionControlSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.AutoUpdate == nil {
+		out.AutoUpdate = ptr.Get(true)
+	}
+	return out
 }

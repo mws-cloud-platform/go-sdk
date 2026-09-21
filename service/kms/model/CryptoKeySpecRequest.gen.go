@@ -5,6 +5,11 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/kms"
 )
@@ -285,4 +290,366 @@ func (m *CryptoKeySpecUsagePolicyRequest) Clone() *CryptoKeySpecUsagePolicyReque
 		clone.Enabled = &cloneEnabled
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m CryptoKeySpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CryptoKeySpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CryptoKeySpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.DefaultAlgorithm != nil {
+		e.FieldStart("defaultAlgorithm")
+		if err := m.DefaultAlgorithm.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.DestructionPolicy != nil {
+		e.FieldStart("destructionPolicy")
+		if err := m.DestructionPolicy.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.UsagePolicy != nil {
+		e.FieldStart("usagePolicy")
+		if err := m.UsagePolicy.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.RotationPolicy != nil {
+		e.FieldStart("rotationPolicy")
+		if err := m.RotationPolicy.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.PrimaryKeyVersionRef != nil {
+		e.FieldStart("primaryKeyVersionRef")
+		if err := m.PrimaryKeyVersionRef.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *CryptoKeySpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CryptoKeySpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CryptoKeySpecRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "defaultAlgorithm":
+			var v CryptoKeyAlgorithm
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.DefaultAlgorithm = &v
+			return nil
+		case "destructionPolicy":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CryptoKeySpecDestructionPolicyRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.DestructionPolicy = &v
+			return nil
+		case "usagePolicy":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CryptoKeySpecUsagePolicyRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.UsagePolicy = &v
+			return nil
+		case "rotationPolicy":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CryptoKeySpecRotationPolicyRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RotationPolicy = &v
+			return nil
+		case "primaryKeyVersionRef":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v kms.CryptoKeyVersionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.PrimaryKeyVersionRef = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m CryptoKeySpecDestructionPolicyRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CryptoKeySpecDestructionPolicyRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CryptoKeySpecDestructionPolicyRequest) encodeFields(e *jx.Encoder) error {
+	if m.DefaultDestructionIntervalDays != nil {
+		e.FieldStart("defaultDestructionIntervalDays")
+		e.Int32(*m.DefaultDestructionIntervalDays)
+	}
+	return nil
+}
+
+func (m *CryptoKeySpecDestructionPolicyRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CryptoKeySpecDestructionPolicyRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CryptoKeySpecDestructionPolicyRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "defaultDestructionIntervalDays":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.DefaultDestructionIntervalDays = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m CryptoKeySpecRotationPolicyRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CryptoKeySpecRotationPolicyRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CryptoKeySpecRotationPolicyRequest) encodeFields(e *jx.Encoder) error {
+	if m.Enabled != nil {
+		e.FieldStart("enabled")
+		e.Bool(*m.Enabled)
+	}
+
+	if m.RotationIntervalDays != nil {
+		e.FieldStart("rotationIntervalDays")
+		e.Int32(*m.RotationIntervalDays)
+	}
+	return nil
+}
+
+func (m *CryptoKeySpecRotationPolicyRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CryptoKeySpecRotationPolicyRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CryptoKeySpecRotationPolicyRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "enabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Enabled = &v
+			return nil
+		case "rotationIntervalDays":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.RotationIntervalDays = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m CryptoKeySpecUsagePolicyRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CryptoKeySpecUsagePolicyRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CryptoKeySpecUsagePolicyRequest) encodeFields(e *jx.Encoder) error {
+	if m.Enabled != nil {
+		e.FieldStart("enabled")
+		e.Bool(*m.Enabled)
+	}
+	return nil
+}
+
+func (m *CryptoKeySpecUsagePolicyRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CryptoKeySpecUsagePolicyRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CryptoKeySpecUsagePolicyRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "enabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Enabled = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *CryptoKeySpecRequest) WithDefaults() CryptoKeySpecRequest {
+	var out CryptoKeySpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.DefaultAlgorithm == nil {
+		out.DefaultAlgorithm = ptr.Get(CryptoKeyAlgorithm_AES_256_GCM)
+	}
+	out.DestructionPolicy = ptr.Get(out.DestructionPolicy.WithDefaults())
+	out.UsagePolicy = ptr.Get(out.UsagePolicy.WithDefaults())
+	out.RotationPolicy = ptr.Get(out.RotationPolicy.WithDefaults())
+	return out
+}
+
+func (m *CryptoKeySpecDestructionPolicyRequest) WithDefaults() CryptoKeySpecDestructionPolicyRequest {
+	var out CryptoKeySpecDestructionPolicyRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.DefaultDestructionIntervalDays == nil {
+		out.DefaultDestructionIntervalDays = ptr.Get(int32(1))
+	}
+	return out
+}
+
+func (m *CryptoKeySpecRotationPolicyRequest) WithDefaults() CryptoKeySpecRotationPolicyRequest {
+	var out CryptoKeySpecRotationPolicyRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Enabled == nil {
+		out.Enabled = ptr.Get(true)
+	}
+	return out
+}
+
+func (m *CryptoKeySpecUsagePolicyRequest) WithDefaults() CryptoKeySpecUsagePolicyRequest {
+	var out CryptoKeySpecUsagePolicyRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Enabled == nil {
+		out.Enabled = ptr.Get(true)
+	}
+	return out
 }

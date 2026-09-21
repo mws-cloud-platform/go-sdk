@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
@@ -99,4 +102,112 @@ func (m *OneToOneNatStatusResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m OneToOneNatStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *OneToOneNatStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *OneToOneNatStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.Internal != nil {
+		e.FieldStart("internal")
+		if err := m.Internal.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.External != nil {
+		e.FieldStart("external")
+		if err := m.External.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Region != nil {
+		e.FieldStart("region")
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *OneToOneNatStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *OneToOneNatStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("OneToOneNatStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "internal":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v OneToOneNatStatusInternalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Internal = &v
+			return nil
+		case "external":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v OneToOneNatStatusExternalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.External = &v
+			return nil
+		case "region":
+			var v rm.RegionID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

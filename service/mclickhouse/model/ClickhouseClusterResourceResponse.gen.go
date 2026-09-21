@@ -7,6 +7,11 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	"go.mws.cloud/go-sdk/internal/encode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	jsonapimodels "go.mws.cloud/go-sdk/pkg/apimodels/json"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
@@ -229,4 +234,229 @@ func (m *ClickhouseClusterResourceResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ClickhouseClusterResourceResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseClusterResourceResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseClusterResourceResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("active")
+	e.Bool(m.Active)
+
+	e.FieldStart("version")
+	e.Str(m.Version)
+
+	e.FieldStart("region")
+	if err := m.Region.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Endpoints != nil {
+		e.FieldStart("endpoints")
+		e.ArrStart()
+		for _, elem := range m.Endpoints {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.Coordinator != nil {
+		e.FieldStart("coordinator")
+		if err := m.Coordinator.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("shards")
+	e.ArrStart()
+	for _, elem := range m.Shards {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+
+	if m.Config != nil {
+		e.FieldStart("config")
+		e.ObjStart()
+		for key, elem := range m.Config {
+			e.FieldStart(key)
+			if elem == nil || string(elem) == "null" {
+				return fmt.Errorf("config: %w", encode.ErrRawDataNull)
+			}
+			e.Raw(elem)
+		}
+		e.ObjEnd()
+	}
+
+	if m.Storage != nil {
+		e.FieldStart("storage")
+		if err := m.Storage.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("maintenanceWindow")
+	if err := m.MaintenanceWindow.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("backup")
+	if err := m.Backup.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ClickhouseClusterResourceResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseClusterResourceResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseClusterResourceResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = v
+			return nil
+		case "version":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Version = v
+			return nil
+		case "region":
+			var v rm.RegionID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = v
+			return nil
+		case "endpoints":
+			c := make([]ClickhouseEndpointResourceResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v ClickhouseEndpointResourceResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Endpoints = c
+			return nil
+		case "coordinator":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v ClickhouseClusterCoordinatorResourceResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Coordinator = &v
+			return nil
+		case "shards":
+			c := make([]ClickhouseClusterShardResourceResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v ClickhouseClusterShardResourceResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Shards = c
+			return nil
+		case "config":
+			c := make(map[string]jsonapimodels.RawMessageNotNull)
+			if err := d.ObjBytes(reserrors.PathAccumulatorErrorAsIndexObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+				v, err := d.Raw()
+				if err != nil {
+					return err
+				}
+
+				if string(v) == "null" {
+					return decode.ErrRawDataNull
+				}
+
+				c[string(k)] = jsonapimodels.RawMessageNotNull(v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Config = c
+			return nil
+		case "storage":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v ClickhouseStorageConfigurationResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Storage = &v
+			return nil
+		case "maintenanceWindow":
+			var v commonmodel.MaintenanceWindowResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.MaintenanceWindow = v
+			return nil
+		case "backup":
+			var v ClickhouseClusterBackupResourceResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Backup = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

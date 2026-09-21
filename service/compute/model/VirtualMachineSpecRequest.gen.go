@@ -5,6 +5,11 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
@@ -157,4 +162,182 @@ func (m *VirtualMachineSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m VirtualMachineSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *VirtualMachineSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *VirtualMachineSpecRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("zone")
+	e.Str(m.Zone)
+
+	e.FieldStart("vmType")
+	if err := m.VmType.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Hardware != nil {
+		e.FieldStart("hardware")
+		if err := m.Hardware.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Os != nil {
+		e.FieldStart("os")
+		if err := m.Os.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("storage")
+	if err := m.Storage.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("network")
+	if err := m.Network.Encode(e); err != nil {
+		return err
+	}
+
+	if m.ServiceAccount != nil {
+		e.FieldStart("serviceAccount")
+		if err := m.ServiceAccount.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *VirtualMachineSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *VirtualMachineSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("VirtualMachineSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"zone":    false,
+		"vmType":  false,
+		"storage": false,
+		"network": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "zone":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Zone = v
+			requiredFilled["zone"] = true
+			return nil
+		case "vmType":
+			var v compute.VmTypeRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.VmType = v
+			requiredFilled["vmType"] = true
+			return nil
+		case "hardware":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v HardwareSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Hardware = &v
+			return nil
+		case "os":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v OsSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Os = &v
+			return nil
+		case "storage":
+			var v StorageSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Storage = v
+			requiredFilled["storage"] = true
+			return nil
+		case "network":
+			var v NetworkSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Network = v
+			requiredFilled["network"] = true
+			return nil
+		case "serviceAccount":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v iam.ServiceAccountRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ServiceAccount = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+// Defaults
+
+func (m *VirtualMachineSpecRequest) WithDefaults() VirtualMachineSpecRequest {
+	var out VirtualMachineSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	out.Hardware = ptr.Get(out.Hardware.WithDefaults())
+	out.Os = ptr.Get(out.Os.WithDefaults())
+	return out
 }

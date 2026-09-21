@@ -3,7 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 type WeeklyMaintenanceWindow struct {
@@ -69,4 +74,110 @@ func (m *WeeklyMaintenanceWindow) Clone() *WeeklyMaintenanceWindow {
 	}
 	clone.Duration = m.Duration.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m WeeklyMaintenanceWindow) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *WeeklyMaintenanceWindow) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *WeeklyMaintenanceWindow) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("days")
+	e.ArrStart()
+	for _, elem := range m.Days {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+
+	e.FieldStart("hour")
+	e.Int(m.Hour)
+
+	if m.Duration != nil {
+		e.FieldStart("duration")
+		m.Duration.Encode(e)
+	}
+	return nil
+}
+
+func (m *WeeklyMaintenanceWindow) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *WeeklyMaintenanceWindow) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("WeeklyMaintenanceWindow")
+	}
+
+	requiredFilled := map[string]bool{
+		"days": false,
+		"hour": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "days":
+			c := make([]DayOfWeek, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v DayOfWeek
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Days = c
+			requiredFilled["days"] = true
+			return nil
+		case "hour":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Hour = v
+			requiredFilled["hour"] = true
+			return nil
+		case "duration":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v duration.Duration
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Duration = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

@@ -5,8 +5,11 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/service/resources/references/kms"
@@ -160,4 +163,121 @@ func (m *ReEncryptRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ReEncryptRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ReEncryptRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ReEncryptRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ciphertext")
+	e.Base64(m.Ciphertext.Value())
+
+	if m.SourceKeyRef != nil {
+		e.FieldStart("sourceKeyRef")
+		if err := m.SourceKeyRef.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.SourceAssociatedData != nil {
+		e.FieldStart("sourceAssociatedData")
+		e.Base64(m.SourceAssociatedData.Value())
+	}
+
+	if m.DestinationAssociatedData != nil {
+		e.FieldStart("destinationAssociatedData")
+		e.Base64(m.DestinationAssociatedData.Value())
+	}
+
+	if m.DestinationVersion != nil {
+		e.FieldStart("destinationVersion")
+		e.Int32(*m.DestinationVersion)
+	}
+	return nil
+}
+
+func (m *ReEncryptRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ReEncryptRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ReEncryptRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"ciphertext": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ciphertext":
+			v, err := d.Base64()
+			if err != nil {
+				return err
+			}
+
+			m.Ciphertext = sensitive.New(v)
+			requiredFilled["ciphertext"] = true
+			return nil
+		case "sourceKeyRef":
+			var v kms.CryptoKeyRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SourceKeyRef = &v
+			return nil
+		case "sourceAssociatedData":
+			v, err := d.Base64()
+			if err != nil {
+				return err
+			}
+
+			m.SourceAssociatedData = ptr.Get(sensitive.New(v))
+			return nil
+		case "destinationAssociatedData":
+			v, err := d.Base64()
+			if err != nil {
+				return err
+			}
+
+			m.DestinationAssociatedData = ptr.Get(sensitive.New(v))
+			return nil
+		case "destinationVersion":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.DestinationVersion = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

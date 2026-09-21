@@ -3,8 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Real OAPI model name: AuditLogsStorageSpec
@@ -80,4 +84,125 @@ func (m *AuditLogsStorageSpecRetentionResponse) Clone() *AuditLogsStorageSpecRet
 	clone.Size = m.Size.Clone()
 	clone.Period = *m.Period.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m AuditLogsStorageSpecResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *AuditLogsStorageSpecResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *AuditLogsStorageSpecResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("retention")
+	if err := m.Retention.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *AuditLogsStorageSpecResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *AuditLogsStorageSpecResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("AuditLogsStorageSpecResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "retention":
+			var v AuditLogsStorageSpecRetentionResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Retention = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m AuditLogsStorageSpecRetentionResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *AuditLogsStorageSpecRetentionResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *AuditLogsStorageSpecRetentionResponse) encodeFields(e *jx.Encoder) error {
+	if m.Size != nil {
+		e.FieldStart("size")
+		m.Size.Encode(e)
+	}
+
+	e.FieldStart("period")
+	m.Period.Encode(e)
+	return nil
+}
+
+func (m *AuditLogsStorageSpecRetentionResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *AuditLogsStorageSpecRetentionResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("AuditLogsStorageSpecRetentionResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "size":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Size = &v
+			return nil
+		case "period":
+			var v duration.Duration
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Period = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

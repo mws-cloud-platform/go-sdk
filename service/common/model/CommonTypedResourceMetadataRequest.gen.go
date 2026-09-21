@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.
 // Real OAPI model name: CommonTypedResourceMetadata
 type CommonTypedResourceMetadataRequest struct {
@@ -141,4 +149,125 @@ func (m *CommonTypedResourceMetadataRequest) Clone() *CommonTypedResourceMetadat
 		clone.Description = &cloneDescription
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m CommonTypedResourceMetadataRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CommonTypedResourceMetadataRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CommonTypedResourceMetadataRequest) encodeFields(e *jx.Encoder) error {
+	if m.Name != nil {
+		e.FieldStart("name")
+		e.Str(*m.Name)
+	}
+
+	if m.DisplayName != nil {
+		e.FieldStart("displayName")
+		e.Str(*m.DisplayName)
+	}
+
+	if m.Usages != nil {
+		e.FieldStart("usages")
+		e.ArrStart()
+		for _, elem := range m.Usages {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.Etag != nil {
+		e.FieldStart("etag")
+		e.Str(*m.Etag)
+	}
+
+	if m.Description != nil {
+		e.FieldStart("description")
+		e.Str(*m.Description)
+	}
+	return nil
+}
+
+func (m *CommonTypedResourceMetadataRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CommonTypedResourceMetadataRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CommonTypedResourceMetadataRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = &v
+			return nil
+		case "displayName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DisplayName = &v
+			return nil
+		case "usages":
+			c := make([]UsageRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v UsageRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Usages = c
+			return nil
+		case "etag":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Etag = &v
+			return nil
+		case "description":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Description = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: ObjectStorage
 type ObjectStorageResponse struct {
 	Bucket   string  `json:"bucket" yaml:"bucket"`
@@ -48,4 +56,71 @@ func (m *ObjectStorageResponse) Clone() *ObjectStorageResponse {
 		clone.BasePath = &cloneBasePath
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m ObjectStorageResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ObjectStorageResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ObjectStorageResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("bucket")
+	e.Str(m.Bucket)
+
+	if m.BasePath != nil {
+		e.FieldStart("basePath")
+		e.Str(*m.BasePath)
+	}
+	return nil
+}
+
+func (m *ObjectStorageResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ObjectStorageResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ObjectStorageResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "bucket":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Bucket = v
+			return nil
+		case "basePath":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.BasePath = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: ReleaseChannel
 type ReleaseChannelResponse struct {
 	// Имя релизного канала. По умолчанию — stable
@@ -62,4 +70,86 @@ func (m *ReleaseChannelResponse) Clone() *ReleaseChannelResponse {
 		clone.Description = &cloneDescription
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m ReleaseChannelResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ReleaseChannelResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ReleaseChannelResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	if m.Description != nil {
+		e.FieldStart("description")
+		e.Str(*m.Description)
+	}
+
+	e.FieldStart("enabled")
+	e.Bool(m.Enabled)
+	return nil
+}
+
+func (m *ReleaseChannelResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ReleaseChannelResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ReleaseChannelResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			return nil
+		case "description":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Description = &v
+			return nil
+		case "enabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Enabled = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: CollectorService
 type CollectorServiceResponse struct {
 	Service string                     `json:"service" yaml:"service"`
@@ -38,4 +46,71 @@ func (m *CollectorServiceResponse) Clone() *CollectorServiceResponse {
 	clone := *m
 	clone.Filter = *m.Filter.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m CollectorServiceResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CollectorServiceResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CollectorServiceResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("service")
+	e.Str(m.Service)
+
+	e.FieldStart("filter")
+	if err := m.Filter.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *CollectorServiceResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CollectorServiceResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CollectorServiceResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "service":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Service = v
+			return nil
+		case "filter":
+			var v ServiceEventFilterResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Filter = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

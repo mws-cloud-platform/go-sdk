@@ -4,6 +4,12 @@ package model
 
 import (
 	"time"
+
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Real OAPI model name: CertificateChallenge
@@ -166,4 +172,159 @@ func (m *CertificateChallengeResponse) Clone() *CertificateChallengeResponse {
 	clone.HttpChallenge = m.HttpChallenge.Clone()
 	clone.DnsChallenge = m.DnsChallenge.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m CertificateChallengeResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CertificateChallengeResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CertificateChallengeResponse) encodeFields(e *jx.Encoder) error {
+	if m.Domain != nil {
+		e.FieldStart("domain")
+		e.Str(*m.Domain)
+	}
+
+	e.FieldStart("createdAt")
+	conv.EncodeDateTimeUTC(e, m.CreatedAt)
+
+	e.FieldStart("updatedAt")
+	conv.EncodeDateTimeUTC(e, m.UpdatedAt)
+
+	if m.LastValidatedAt != nil {
+		e.FieldStart("lastValidatedAt")
+		conv.EncodeDateTimeUTC(e, *m.LastValidatedAt)
+	}
+
+	e.FieldStart("status")
+	if err := m.Status.Encode(e); err != nil {
+		return err
+	}
+
+	if m.StatusReason != nil {
+		e.FieldStart("statusReason")
+		e.Str(*m.StatusReason)
+	}
+
+	if m.HttpChallenge != nil {
+		e.FieldStart("httpChallenge")
+		if err := m.HttpChallenge.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.DnsChallenge != nil {
+		e.FieldStart("dnsChallenge")
+		if err := m.DnsChallenge.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *CertificateChallengeResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CertificateChallengeResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CertificateChallengeResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "domain":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Domain = &v
+			return nil
+		case "createdAt":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.CreatedAt = v
+			return nil
+		case "updatedAt":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.UpdatedAt = v
+			return nil
+		case "lastValidatedAt":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.LastValidatedAt = &v
+			return nil
+		case "status":
+			var v CertificateChallengeStatus
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Status = v
+			return nil
+		case "statusReason":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.StatusReason = &v
+			return nil
+		case "httpChallenge":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v Http01ChallengeResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.HttpChallenge = &v
+			return nil
+		case "dnsChallenge":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v Dns01ChallengeResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.DnsChallenge = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

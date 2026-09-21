@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Атрибут пользователя федерации в виде пары «имя — значение».
 type CommonRoleBindingFederationContextAttribute struct {
 	// Имя атрибута
@@ -39,4 +47,80 @@ func (m *CommonRoleBindingFederationContextAttribute) Clone() *CommonRoleBinding
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m CommonRoleBindingFederationContextAttribute) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CommonRoleBindingFederationContextAttribute) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CommonRoleBindingFederationContextAttribute) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	e.FieldStart("value")
+	e.Str(m.Value)
+	return nil
+}
+
+func (m *CommonRoleBindingFederationContextAttribute) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CommonRoleBindingFederationContextAttribute) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CommonRoleBindingFederationContextAttribute")
+	}
+
+	requiredFilled := map[string]bool{
+		"name":  false,
+		"value": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			requiredFilled["name"] = true
+			return nil
+		case "value":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Value = v
+			requiredFilled["value"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

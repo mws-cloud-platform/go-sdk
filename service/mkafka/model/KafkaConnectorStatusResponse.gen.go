@@ -3,6 +3,10 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -80,4 +84,89 @@ func (m *KafkaConnectorStatusResponse) Clone() *KafkaConnectorStatusResponse {
 	}
 
 	return &clone
+}
+
+// JSON methods
+
+func (m KafkaConnectorStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaConnectorStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaConnectorStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.State != nil {
+		e.FieldStart("state")
+		if err := m.State.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Health != nil {
+		e.FieldStart("health")
+		if err := m.Health.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *KafkaConnectorStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaConnectorStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaConnectorStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "state":
+			var v KafkaConnectorState
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.State = &v
+			return nil
+		case "health":
+			var v ConnectorHealth
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Health = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

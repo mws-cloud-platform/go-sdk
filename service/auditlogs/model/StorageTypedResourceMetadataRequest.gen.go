@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -76,4 +81,112 @@ func (m *StorageTypedResourceMetadataRequest) Clone() *StorageTypedResourceMetad
 	clone.TypedResourceMetadataRequest = *m.TypedResourceMetadataRequest.Clone()
 
 	return &clone
+}
+
+// JSON methods
+
+func (m StorageTypedResourceMetadataRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *StorageTypedResourceMetadataRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *StorageTypedResourceMetadataRequest) encodeFields(e *jx.Encoder) error {
+	if m.DisplayName != nil {
+		e.FieldStart("displayName")
+		e.Str(*m.DisplayName)
+	}
+
+	if m.Usages != nil {
+		e.FieldStart("usages")
+		e.ArrStart()
+		for _, elem := range m.Usages {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.Etag != nil {
+		e.FieldStart("etag")
+		e.Str(*m.Etag)
+	}
+
+	if m.Description != nil {
+		e.FieldStart("description")
+		e.Str(*m.Description)
+	}
+	return nil
+}
+
+func (m *StorageTypedResourceMetadataRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *StorageTypedResourceMetadataRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("StorageTypedResourceMetadataRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "displayName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DisplayName = &v
+			return nil
+		case "usages":
+			c := make([]commonmodel.TypedUsageRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v commonmodel.TypedUsageRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Usages = c
+			return nil
+		case "etag":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Etag = &v
+			return nil
+		case "description":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Description = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

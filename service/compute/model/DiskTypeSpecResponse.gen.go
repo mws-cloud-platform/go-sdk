@@ -6,8 +6,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
@@ -167,4 +169,227 @@ func (m *DiskTypeSpecLimitsIopsResponse) Clone() *DiskTypeSpecLimitsIopsResponse
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m DiskTypeSpecResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *DiskTypeSpecResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *DiskTypeSpecResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("zones")
+	e.ArrStart()
+	for _, elem := range m.Zones {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+
+	e.FieldStart("limits")
+	if err := m.Limits.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DiskTypeSpecResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *DiskTypeSpecResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("DiskTypeSpecResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "zones":
+			c := make([]rm.ZoneRef, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v rm.ZoneRef
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Zones = c
+			return nil
+		case "limits":
+			var v DiskTypeSpecLimitsResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Limits = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m DiskTypeSpecLimitsResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *DiskTypeSpecLimitsResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *DiskTypeSpecLimitsResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("iops")
+	if err := m.Iops.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("minDiskSize")
+	m.MinDiskSize.Encode(e)
+
+	e.FieldStart("maxDiskSize")
+	m.MaxDiskSize.Encode(e)
+	return nil
+}
+
+func (m *DiskTypeSpecLimitsResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *DiskTypeSpecLimitsResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("DiskTypeSpecLimitsResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "iops":
+			var v DiskTypeSpecLimitsIopsResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Iops = v
+			return nil
+		case "minDiskSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.MinDiskSize = v
+			return nil
+		case "maxDiskSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.MaxDiskSize = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m DiskTypeSpecLimitsIopsResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *DiskTypeSpecLimitsIopsResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *DiskTypeSpecLimitsIopsResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("base")
+	if err := m.Base.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("max")
+	if err := m.Max.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DiskTypeSpecLimitsIopsResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *DiskTypeSpecLimitsIopsResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("DiskTypeSpecLimitsIopsResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "base":
+			var v Iops
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Base = v
+			return nil
+		case "max":
+			var v Iops
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Max = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

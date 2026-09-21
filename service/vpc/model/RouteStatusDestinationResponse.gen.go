@@ -3,7 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Real OAPI model name: RouteStatusDestination
@@ -43,4 +47,71 @@ func (m *RouteStatusDestinationResponse) Clone() *RouteStatusDestinationResponse
 		}
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m RouteStatusDestinationResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *RouteStatusDestinationResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *RouteStatusDestinationResponse) encodeFields(e *jx.Encoder) error {
+	if m.Cidrs != nil {
+		e.FieldStart("cidrs")
+		e.ArrStart()
+		for _, elem := range m.Cidrs {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	return nil
+}
+
+func (m *RouteStatusDestinationResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *RouteStatusDestinationResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("RouteStatusDestinationResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "cidrs":
+			c := make([]cidraddress.CIDRAddress, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v cidraddress.CIDRAddress
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Cidrs = c
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

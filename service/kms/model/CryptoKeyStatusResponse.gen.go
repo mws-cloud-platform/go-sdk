@@ -7,8 +7,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/kms"
@@ -312,4 +315,309 @@ func (m *CryptoKeyStatusRotationResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m CryptoKeyStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CryptoKeyStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CryptoKeyStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.Rotation != nil {
+		e.FieldStart("rotation")
+		if err := m.Rotation.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Destruction != nil {
+		e.FieldStart("destruction")
+		if err := m.Destruction.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *CryptoKeyStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CryptoKeyStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CryptoKeyStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "rotation":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CryptoKeyStatusRotationResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Rotation = &v
+			return nil
+		case "destruction":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CryptoKeyStatusDestructionResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Destruction = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m CryptoKeyStatusDestructionResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CryptoKeyStatusDestructionResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CryptoKeyStatusDestructionResponse) encodeFields(e *jx.Encoder) error {
+	if m.Status != nil {
+		e.FieldStart("status")
+		if err := m.Status.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.ScheduledDestructionTime != nil {
+		e.FieldStart("scheduledDestructionTime")
+		conv.EncodeDateTimeUTC(e, *m.ScheduledDestructionTime)
+	}
+
+	if m.DestroyedAt != nil {
+		e.FieldStart("destroyedAt")
+		conv.EncodeDateTimeUTC(e, *m.DestroyedAt)
+	}
+
+	if m.DestroyTime != nil {
+		e.FieldStart("destroyTime")
+		conv.EncodeDateTimeUTC(e, *m.DestroyTime)
+	}
+	return nil
+}
+
+func (m *CryptoKeyStatusDestructionResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CryptoKeyStatusDestructionResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CryptoKeyStatusDestructionResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "status":
+			var v CryptoKeyStatusDestructionStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Status = &v
+			return nil
+		case "scheduledDestructionTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.ScheduledDestructionTime = &v
+			return nil
+		case "destroyedAt":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.DestroyedAt = &v
+			return nil
+		case "destroyTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.DestroyTime = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m CryptoKeyStatusDestructionStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CryptoKeyStatusDestructionStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *CryptoKeyStatusDestructionStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CryptoKeyStatusDestructionStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CryptoKeyStatusDestructionStatusResponse")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = CryptoKeyStatusDestructionStatusResponse(v)
+	return nil
+}
+
+func (m CryptoKeyStatusRotationResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CryptoKeyStatusRotationResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CryptoKeyStatusRotationResponse) encodeFields(e *jx.Encoder) error {
+	if m.LastTime != nil {
+		e.FieldStart("lastTime")
+		conv.EncodeDateTimeUTC(e, *m.LastTime)
+	}
+
+	if m.NextTime != nil {
+		e.FieldStart("nextTime")
+		conv.EncodeDateTimeUTC(e, *m.NextTime)
+	}
+
+	if m.PrimaryKeyVersionRef != nil {
+		e.FieldStart("primaryKeyVersionRef")
+		if err := m.PrimaryKeyVersionRef.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *CryptoKeyStatusRotationResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CryptoKeyStatusRotationResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CryptoKeyStatusRotationResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "lastTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.LastTime = &v
+			return nil
+		case "nextTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.NextTime = &v
+			return nil
+		case "primaryKeyVersionRef":
+			var v kms.CryptoKeyVersionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.PrimaryKeyVersionRef = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -2,6 +2,15 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Параметры коннектора.
 // Real OAPI model name: KafkaConnectorSpec
 type KafkaConnectorSpecRequest struct {
@@ -59,4 +68,94 @@ func (m *KafkaConnectorSpecRequest) Clone() *KafkaConnectorSpecRequest {
 	}
 	clone.S3SinkConnector = m.S3SinkConnector.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m KafkaConnectorSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaConnectorSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaConnectorSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Active != nil {
+		e.FieldStart("active")
+		e.Bool(*m.Active)
+	}
+
+	if m.S3SinkConnector != nil {
+		e.FieldStart("s3SinkConnector")
+		if err := m.S3SinkConnector.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *KafkaConnectorSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaConnectorSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaConnectorSpecRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = &v
+			return nil
+		case "s3SinkConnector":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v KafkaS3SinkConnectorRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.S3SinkConnector = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *KafkaConnectorSpecRequest) WithDefaults() KafkaConnectorSpecRequest {
+	var out KafkaConnectorSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Active == nil {
+		out.Active = ptr.Get(true)
+	}
+	out.S3SinkConnector = ptr.Get(out.S3SinkConnector.WithDefaults())
+	return out
 }

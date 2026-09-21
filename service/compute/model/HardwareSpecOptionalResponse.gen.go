@@ -5,9 +5,13 @@ package model
 import (
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -96,4 +100,110 @@ func (m HardwareSpecPowerOptionalResponse) IsValid() bool {
 		return true
 	}
 	return false
+}
+
+// JSON methods
+
+func (m HardwareSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *HardwareSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *HardwareSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Power.IsSet() {
+		e.FieldStart("power")
+		if err := m.Power.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.GracefulShutdownTimeout.IsSet() {
+		e.FieldStart("gracefulShutdownTimeout")
+		m.GracefulShutdownTimeout.Value.Encode(e)
+	}
+	return nil
+}
+
+func (m *HardwareSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *HardwareSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("HardwareSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "power":
+			var v HardwareSpecPowerOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Power.SetTo(v)
+			return nil
+		case "gracefulShutdownTimeout":
+			var v duration.Duration
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.GracefulShutdownTimeout.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m HardwareSpecPowerOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *HardwareSpecPowerOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *HardwareSpecPowerOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *HardwareSpecPowerOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("HardwareSpecPowerOptionalResponse")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = HardwareSpecPowerOptionalResponse(v)
+	return nil
 }

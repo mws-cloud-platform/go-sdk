@@ -2,6 +2,13 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Запрашиваемое базовое и дополнительное количество операций ввода-вывода в секунду (IOPS)
 // Real OAPI model name: DiskStatusIops
 type DiskStatusIopsResponse struct {
@@ -53,4 +60,86 @@ func (m *DiskStatusIopsResponse) Clone() *DiskStatusIopsResponse {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m DiskStatusIopsResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *DiskStatusIopsResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *DiskStatusIopsResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("base")
+	if err := m.Base.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("extra")
+	if err := m.Extra.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("total")
+	if err := m.Total.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DiskStatusIopsResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *DiskStatusIopsResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("DiskStatusIopsResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "base":
+			var v Iops
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Base = v
+			return nil
+		case "extra":
+			var v PossiblyZeroIops
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Extra = v
+			return nil
+		case "total":
+			var v Iops
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Total = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Настройка Schema Registry для кластера.
 // Real OAPI model name: KafkaSchemaRegistrySpec
 type KafkaSchemaRegistrySpecResponse struct {
@@ -38,4 +46,60 @@ func (m *KafkaSchemaRegistrySpecResponse) Clone() *KafkaSchemaRegistrySpecRespon
 		clone.Enabled = &cloneEnabled
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m KafkaSchemaRegistrySpecResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaSchemaRegistrySpecResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaSchemaRegistrySpecResponse) encodeFields(e *jx.Encoder) error {
+	if m.Enabled != nil {
+		e.FieldStart("enabled")
+		e.Bool(*m.Enabled)
+	}
+	return nil
+}
+
+func (m *KafkaSchemaRegistrySpecResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaSchemaRegistrySpecResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaSchemaRegistrySpecResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "enabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Enabled = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

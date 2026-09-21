@@ -3,8 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -79,4 +83,135 @@ func (m *SubnetDhcpOptionsOptionalResponse) Clone() *SubnetDhcpOptionsOptionalRe
 		}
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m SubnetDhcpOptionsOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SubnetDhcpOptionsOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SubnetDhcpOptionsOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.DomainName.IsSet() {
+		e.FieldStart("domainName")
+		if m.DomainName.IsNull() {
+			e.Null()
+		} else {
+			e.Str(m.DomainName.Value)
+		}
+	}
+
+	if m.DomainNameServers.IsSet() {
+		e.FieldStart("domainNameServers")
+		if m.DomainNameServers.IsNull() {
+			e.Null()
+		} else {
+			e.ArrStart()
+			for _, elem := range m.DomainNameServers.Value {
+				elem.Encode(e)
+			}
+			e.ArrEnd()
+		}
+	}
+
+	if m.NtpServers.IsSet() {
+		e.FieldStart("ntpServers")
+		if m.NtpServers.IsNull() {
+			e.Null()
+		} else {
+			e.ArrStart()
+			for _, elem := range m.NtpServers.Value {
+				elem.Encode(e)
+			}
+			e.ArrEnd()
+		}
+	}
+	return nil
+}
+
+func (m *SubnetDhcpOptionsOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SubnetDhcpOptionsOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SubnetDhcpOptionsOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "domainName":
+			if d.Next() == jx.Null {
+				m.DomainName.SetToNull()
+				return d.Null()
+			}
+
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DomainName.SetTo(v)
+			return nil
+		case "domainNameServers":
+			if d.Next() == jx.Null {
+				m.DomainNameServers.SetToNull()
+				return d.Null()
+			}
+
+			c := make([]ipaddress.IP4Address, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v ipaddress.IP4Address
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.DomainNameServers.SetTo(c)
+			return nil
+		case "ntpServers":
+			if d.Next() == jx.Null {
+				m.NtpServers.SetToNull()
+				return d.Null()
+			}
+
+			c := make([]ipaddress.IP4Address, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v ipaddress.IP4Address
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.NtpServers.SetTo(c)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

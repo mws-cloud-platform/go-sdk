@@ -2,6 +2,15 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: SecretVersionSpec
 type SecretVersionSpecRequest struct {
 	// Версия секрета активна/неактивна
@@ -58,4 +67,89 @@ func (m *SecretVersionSpecRequest) Clone() *SecretVersionSpecRequest {
 	}
 	clone.Data = m.Data.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m SecretVersionSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SecretVersionSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SecretVersionSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Active != nil {
+		e.FieldStart("active")
+		e.Bool(*m.Active)
+	}
+
+	if m.Data != nil {
+		e.FieldStart("data")
+		if err := m.Data.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *SecretVersionSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SecretVersionSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SecretVersionSpecRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = &v
+			return nil
+		case "data":
+			var v SecretVersionDataSpec
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Data = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *SecretVersionSpecRequest) WithDefaults() SecretVersionSpecRequest {
+	var out SecretVersionSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Active == nil {
+		out.Active = ptr.Get(true)
+	}
+	return out
 }

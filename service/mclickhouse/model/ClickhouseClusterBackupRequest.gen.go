@@ -2,6 +2,15 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Спецификация работы автоматического резервного копирования.
 // Real OAPI model name: ClickhouseClusterBackup
 type ClickhouseClusterBackupRequest struct {
@@ -62,4 +71,90 @@ func (m *ClickhouseClusterBackupRequest) Clone() *ClickhouseClusterBackupRequest
 		clone.RetainPeriodDays = &cloneRetainPeriodDays
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m ClickhouseClusterBackupRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseClusterBackupRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseClusterBackupRequest) encodeFields(e *jx.Encoder) error {
+	if m.Hour != nil {
+		e.FieldStart("hour")
+		e.Int(*m.Hour)
+	}
+
+	if m.RetainPeriodDays != nil {
+		e.FieldStart("retainPeriodDays")
+		e.Int(*m.RetainPeriodDays)
+	}
+	return nil
+}
+
+func (m *ClickhouseClusterBackupRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseClusterBackupRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseClusterBackupRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "hour":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Hour = &v
+			return nil
+		case "retainPeriodDays":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.RetainPeriodDays = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *ClickhouseClusterBackupRequest) WithDefaults() ClickhouseClusterBackupRequest {
+	var out ClickhouseClusterBackupRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Hour == nil {
+		out.Hour = ptr.Get(1)
+	}
+	if out.RetainPeriodDays == nil {
+		out.RetainPeriodDays = ptr.Get(7)
+	}
+	return out
 }

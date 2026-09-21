@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Конфигурация проверки работоспособности виртуальных машин.
 // Real OAPI model name: NlbHealthCheckProtocol
 type NlbHealthCheckProtocolRequest struct {
@@ -77,4 +85,117 @@ func (m *NlbHealthCheckProtocolRequest) Clone() *NlbHealthCheckProtocolRequest {
 	clone.Https = m.Https.Clone()
 	clone.Tcp = m.Tcp.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m NlbHealthCheckProtocolRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NlbHealthCheckProtocolRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NlbHealthCheckProtocolRequest) encodeFields(e *jx.Encoder) error {
+	if m.Http != nil {
+		e.FieldStart("http")
+		if err := m.Http.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Https != nil {
+		e.FieldStart("https")
+		if err := m.Https.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Tcp != nil {
+		e.FieldStart("tcp")
+		if err := m.Tcp.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *NlbHealthCheckProtocolRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NlbHealthCheckProtocolRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NlbHealthCheckProtocolRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "http":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NlbHealthCheckHttpRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Http = &v
+			return nil
+		case "https":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NlbHealthCheckHttpsRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Https = &v
+			return nil
+		case "tcp":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NlbHealthCheckTcpRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Tcp = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *NlbHealthCheckProtocolRequest) WithDefaults() NlbHealthCheckProtocolRequest {
+	var out NlbHealthCheckProtocolRequest
+	if m != nil {
+		out = *m
+	}
+
+	out.Http = ptr.Get(out.Http.WithDefaults())
+	out.Https = ptr.Get(out.Https.WithDefaults())
+	return out
 }

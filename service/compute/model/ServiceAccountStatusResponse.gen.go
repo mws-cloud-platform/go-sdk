@@ -5,6 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
@@ -81,4 +85,87 @@ func (m *ServiceAccountStatusResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ServiceAccountStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ServiceAccountStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ServiceAccountStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.Ref != nil {
+		e.FieldStart("ref")
+		if err := m.Ref.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.DisplayName != nil {
+		e.FieldStart("displayName")
+		e.Str(*m.DisplayName)
+	}
+	return nil
+}
+
+func (m *ServiceAccountStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ServiceAccountStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ServiceAccountStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "ref":
+			var v iam.ServiceAccountRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref = &v
+			return nil
+		case "displayName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DisplayName = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

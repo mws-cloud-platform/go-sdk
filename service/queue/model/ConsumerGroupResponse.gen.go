@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -82,4 +87,98 @@ func (m *ConsumerGroupResponse) Clone() *ConsumerGroupResponse {
 	clone.Metadata = m.Metadata.Clone()
 	clone.Status = m.Status.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m ConsumerGroupResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ConsumerGroupResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ConsumerGroupResponse) encodeFields(e *jx.Encoder) error {
+	if m.Kind != nil {
+		e.FieldStart("kind")
+		e.Str(*m.Kind)
+	}
+
+	if m.Metadata != nil {
+		e.FieldStart("metadata")
+		if err := m.Metadata.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Status != nil {
+		e.FieldStart("status")
+		if err := m.Status.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *ConsumerGroupResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ConsumerGroupResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ConsumerGroupResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "kind":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Kind = &v
+			return nil
+		case "metadata":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v commonmodel.CommonTypedResourceMetadataResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Metadata = &v
+			return nil
+		case "status":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v ConsumerGroupStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Status = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

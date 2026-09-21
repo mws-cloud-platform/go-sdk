@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Атрибут пользователя федерации в виде пары «имя — значение».
 // Real OAPI model name: CommonRoleBindingFederationContextAttribute
 type CommonRoleBindingFederationContextAttributeOptionalResponse struct {
@@ -40,4 +48,69 @@ func (m *CommonRoleBindingFederationContextAttributeOptionalResponse) Clone() *C
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m CommonRoleBindingFederationContextAttributeOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CommonRoleBindingFederationContextAttributeOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CommonRoleBindingFederationContextAttributeOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	e.FieldStart("value")
+	e.Str(m.Value)
+	return nil
+}
+
+func (m *CommonRoleBindingFederationContextAttributeOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CommonRoleBindingFederationContextAttributeOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CommonRoleBindingFederationContextAttributeOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			return nil
+		case "value":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Value = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

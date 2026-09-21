@@ -6,6 +6,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -113,4 +118,141 @@ func (m *NlbRuleRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m NlbRuleRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NlbRuleRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NlbRuleRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("protoPort")
+	e.Str(m.ProtoPort)
+
+	if m.TargetPort != nil {
+		e.FieldStart("targetPort")
+		e.Int32(*m.TargetPort)
+	}
+
+	e.FieldStart("targetAddressGroups")
+	e.ArrStart()
+	for _, elem := range m.TargetAddressGroups {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+
+	if m.HealthCheck != nil {
+		e.FieldStart("healthCheck")
+		if err := m.HealthCheck.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *NlbRuleRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NlbRuleRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NlbRuleRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"protoPort":           false,
+		"targetAddressGroups": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "protoPort":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.ProtoPort = v
+			requiredFilled["protoPort"] = true
+			return nil
+		case "targetPort":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.TargetPort = &v
+			return nil
+		case "targetAddressGroups":
+			c := make([]commonmodel.VpcAddressGroupSpecOrRefRequest, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v commonmodel.VpcAddressGroupSpecOrRefRequest
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.TargetAddressGroups = c
+			requiredFilled["targetAddressGroups"] = true
+			return nil
+		case "healthCheck":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NlbHealthCheckRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.HealthCheck = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
+}
+
+// Defaults
+
+func (m *NlbRuleRequest) WithDefaults() NlbRuleRequest {
+	var out NlbRuleRequest
+	if m != nil {
+		out = *m
+	}
+
+	out.HealthCheck = ptr.Get(out.HealthCheck.WithDefaults())
+	return out
 }

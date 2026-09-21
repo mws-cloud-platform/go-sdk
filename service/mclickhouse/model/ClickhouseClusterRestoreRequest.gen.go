@@ -2,6 +2,13 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: ClickhouseClusterRestore
 type ClickhouseClusterRestoreRequest struct {
 	// Параметры восстанавливаемого кластера.
@@ -27,4 +34,69 @@ func (m *ClickhouseClusterRestoreRequest) Clone() *ClickhouseClusterRestoreReque
 	clone := *m
 	clone.Spec = *m.Spec.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m ClickhouseClusterRestoreRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseClusterRestoreRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseClusterRestoreRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("spec")
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ClickhouseClusterRestoreRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseClusterRestoreRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseClusterRestoreRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"spec": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "spec":
+			var v ClickhouseClusterRestoreSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Spec = v
+			requiredFilled["spec"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

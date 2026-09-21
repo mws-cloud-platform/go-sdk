@@ -2,6 +2,13 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Текущее состояние привязки роли, вычисляемое системой.
 // Real OAPI model name: CommonRoleBindingStatus
 type CommonRoleBindingStatusRequest struct {
@@ -24,4 +31,69 @@ func (m *CommonRoleBindingStatusRequest) Clone() *CommonRoleBindingStatusRequest
 	clone.ResourceStatusRequest = *m.ResourceStatusRequest.Clone()
 
 	return &clone
+}
+
+// JSON methods
+
+func (m CommonRoleBindingStatusRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CommonRoleBindingStatusRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CommonRoleBindingStatusRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingStatusRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CommonRoleBindingStatusRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CommonRoleBindingStatusRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"ready": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v ResourceStatusReadyRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			requiredFilled["ready"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

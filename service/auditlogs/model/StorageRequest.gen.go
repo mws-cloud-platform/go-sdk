@@ -2,6 +2,13 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: Storage
 type StorageRequest struct {
 	Metadata *StorageTypedResourceMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`
@@ -46,4 +53,88 @@ func (m *StorageRequest) Clone() *StorageRequest {
 	clone.Metadata = m.Metadata.Clone()
 	clone.Spec = *m.Spec.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m StorageRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *StorageRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *StorageRequest) encodeFields(e *jx.Encoder) error {
+	if m.Metadata != nil {
+		e.FieldStart("metadata")
+		if err := m.Metadata.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("spec")
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *StorageRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *StorageRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("StorageRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"spec": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "metadata":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v StorageTypedResourceMetadataRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Metadata = &v
+			return nil
+		case "spec":
+			var v AuditLogsStorageSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Spec = v
+			requiredFilled["spec"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

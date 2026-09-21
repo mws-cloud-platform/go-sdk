@@ -5,7 +5,11 @@ package model
 import (
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 )
 
 // - `SCOPE_BASED`: Роли пользователя управляются в зависимости от области видимости роли.
@@ -38,4 +42,41 @@ func (m PostgresUserAccessControlPolicy) IsValid() bool {
 		return true
 	}
 	return false
+}
+
+// JSON methods
+
+func (m PostgresUserAccessControlPolicy) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresUserAccessControlPolicy) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *PostgresUserAccessControlPolicy) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresUserAccessControlPolicy) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresUserAccessControlPolicy")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = PostgresUserAccessControlPolicy(v)
+	return nil
 }

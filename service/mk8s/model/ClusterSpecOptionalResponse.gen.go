@@ -5,8 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -203,4 +205,234 @@ func (m *ClusterSpecNetworkOptionalResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ClusterSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClusterSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClusterSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("availability")
+	if err := m.Availability.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("network")
+	if err := m.Network.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("versionControl")
+	if err := m.VersionControl.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Plugins.IsSet() {
+		e.FieldStart("plugins")
+		if m.Plugins.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Plugins.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if m.SecurityPosture.IsSet() {
+		e.FieldStart("securityPosture")
+		if m.SecurityPosture.IsNull() {
+			e.Null()
+		} else {
+			if err := m.SecurityPosture.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (m *ClusterSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClusterSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClusterSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "availability":
+			var v ClusterAvailabilitySpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Availability = v
+			return nil
+		case "network":
+			var v ClusterSpecNetworkOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Network = v
+			return nil
+		case "versionControl":
+			var v ClusterVersionControlSpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.VersionControl = v
+			return nil
+		case "plugins":
+			if d.Next() == jx.Null {
+				m.Plugins.SetToNull()
+				return d.Null()
+			}
+
+			var v PluginsSpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Plugins.SetTo(v)
+			return nil
+		case "securityPosture":
+			if d.Next() == jx.Null {
+				m.SecurityPosture.SetToNull()
+				return d.Null()
+			}
+
+			var v SecurityPostureSpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SecurityPosture.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m ClusterSpecNetworkOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClusterSpecNetworkOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClusterSpecNetworkOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("primaryEndpoint")
+	if err := m.PrimaryEndpoint.Encode(e); err != nil {
+		return err
+	}
+
+	if m.PublicEndpoint.IsSet() {
+		e.FieldStart("publicEndpoint")
+		if m.PublicEndpoint.IsNull() {
+			e.Null()
+		} else {
+			if err := m.PublicEndpoint.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+
+	e.FieldStart("podsCidr")
+	m.PodsCidr.Encode(e)
+
+	e.FieldStart("servicesCidr")
+	m.ServicesCidr.Encode(e)
+	return nil
+}
+
+func (m *ClusterSpecNetworkOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClusterSpecNetworkOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClusterSpecNetworkOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "primaryEndpoint":
+			var v ClusterPrimaryEndpointSpecOrRefOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.PrimaryEndpoint = v
+			return nil
+		case "publicEndpoint":
+			if d.Next() == jx.Null {
+				m.PublicEndpoint.SetToNull()
+				return d.Null()
+			}
+
+			var v ClusterPublicEndpointSpecOrRefOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.PublicEndpoint.SetTo(v)
+			return nil
+		case "podsCidr":
+			var v cidraddress.CIDR4Address
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.PodsCidr = v
+			return nil
+		case "servicesCidr":
+			var v cidraddress.CIDR4Address
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ServicesCidr = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

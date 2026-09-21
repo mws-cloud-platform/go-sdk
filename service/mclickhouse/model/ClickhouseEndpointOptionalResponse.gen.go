@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -72,4 +75,84 @@ func (m *ClickhouseEndpointOptionalResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ClickhouseEndpointOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseEndpointOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseEndpointOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("address")
+	if err := m.Address.Encode(e); err != nil {
+		return err
+	}
+
+	if m.ExternalAddress.IsSet() {
+		e.FieldStart("externalAddress")
+		if m.ExternalAddress.IsNull() {
+			e.Null()
+		} else {
+			if err := m.ExternalAddress.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (m *ClickhouseEndpointOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseEndpointOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseEndpointOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "address":
+			var v ClickhouseEndpointAddressSpecOrRefOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Address = v
+			return nil
+		case "externalAddress":
+			if d.Next() == jx.Null {
+				m.ExternalAddress.SetToNull()
+				return d.Null()
+			}
+
+			var v ClickhouseEndpointExternalAddressSpecOrRefOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ExternalAddress.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

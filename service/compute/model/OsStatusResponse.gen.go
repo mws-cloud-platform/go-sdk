@@ -5,7 +5,12 @@ package model
 import (
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Real OAPI model name: OsStatus
@@ -114,4 +119,121 @@ func (m OsStatusOsTypeResponse) IsValid() bool {
 		return true
 	}
 	return false
+}
+
+// JSON methods
+
+func (m OsStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *OsStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *OsStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("fqdn")
+	e.Str(m.Fqdn)
+
+	if m.StandardDnsRecords != nil {
+		e.FieldStart("standardDnsRecords")
+		e.Bool(*m.StandardDnsRecords)
+	}
+
+	if m.OsType != nil {
+		e.FieldStart("osType")
+		if err := m.OsType.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *OsStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *OsStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("OsStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "fqdn":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Fqdn = v
+			return nil
+		case "standardDnsRecords":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.StandardDnsRecords = &v
+			return nil
+		case "osType":
+			var v OsStatusOsTypeResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m OsStatusOsTypeResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *OsStatusOsTypeResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *OsStatusOsTypeResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *OsStatusOsTypeResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("OsStatusOsTypeResponse")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = OsStatusOsTypeResponse(v)
+	return nil
 }

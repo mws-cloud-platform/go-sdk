@@ -3,7 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Real OAPI model name: AddressDnsSpec
@@ -57,4 +62,80 @@ func (m *AddressDnsSpecOptionalResponse) Clone() *AddressDnsSpecOptionalResponse
 	clone := *m
 	clone.Ttl = *m.Ttl.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m AddressDnsSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *AddressDnsSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *AddressDnsSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	e.FieldStart("ttl")
+	m.Ttl.Encode(e)
+
+	e.FieldStart("ptr")
+	e.Bool(m.Ptr)
+	return nil
+}
+
+func (m *AddressDnsSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *AddressDnsSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("AddressDnsSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			return nil
+		case "ttl":
+			var v duration.Duration
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ttl = v
+			return nil
+		case "ptr":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Ptr = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

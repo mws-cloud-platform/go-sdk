@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -67,4 +72,86 @@ func (m *GlobalRoleV2Response) Clone() *GlobalRoleV2Response {
 	clone.Metadata = *m.Metadata.Clone()
 	clone.Status = *m.Status.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m GlobalRoleV2Response) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *GlobalRoleV2Response) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *GlobalRoleV2Response) encodeFields(e *jx.Encoder) error {
+	if m.Kind != nil {
+		e.FieldStart("kind")
+		e.Str(*m.Kind)
+	}
+
+	e.FieldStart("metadata")
+	if err := m.Metadata.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("status")
+	if err := m.Status.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalRoleV2Response) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *GlobalRoleV2Response) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("GlobalRoleV2Response")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "kind":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Kind = &v
+			return nil
+		case "metadata":
+			var v commonmodel.CommonTypedResourceMetadataResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Metadata = v
+			return nil
+		case "status":
+			var v RoleStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Status = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

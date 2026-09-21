@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -47,4 +50,60 @@ func (m *OneToOneNatSpecInternalOptionalResponse) Parse(ctx context.Context) err
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m OneToOneNatSpecInternalOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *OneToOneNatSpecInternalOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *OneToOneNatSpecInternalOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("address")
+	if err := m.Address.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *OneToOneNatSpecInternalOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *OneToOneNatSpecInternalOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("OneToOneNatSpecInternalOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "address":
+			var v commonmodel.ResourceAddressSpecOrRefOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Address = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
@@ -19,4 +24,61 @@ func (m SecretVersionDataSpec) Clone() SecretVersionDataSpec {
 	}
 
 	return clone
+}
+
+// JSON methods
+
+func (m SecretVersionDataSpec) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SecretVersionDataSpec) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SecretVersionDataSpec) encodeFields(e *jx.Encoder) error {
+	for key, elem := range *m {
+		e.FieldStart(key)
+		e.Str(elem.Value())
+	}
+	return nil
+}
+
+func (m *SecretVersionDataSpec) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SecretVersionDataSpec) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SecretVersionDataSpec")
+	}
+
+	c := make(map[string]sensitive.Sensitive[string])
+	if err := d.ObjBytes(reserrors.PathAccumulatorErrorAsIndexObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		v, err := decode.Str(d)
+		if err != nil {
+			return err
+		}
+
+		c[string(k)] = sensitive.New(v)
+		return nil
+	})); err != nil {
+		return err
+	}
+
+	*m = SecretVersionDataSpec(c)
+	return nil
 }

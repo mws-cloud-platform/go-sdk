@@ -5,8 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
@@ -88,4 +90,101 @@ func (m *SubnetSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m SubnetSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SubnetSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SubnetSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Region != nil {
+		e.FieldStart("region")
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("cidr")
+	m.Cidr.Encode(e)
+
+	if m.DhcpOptions != nil {
+		e.FieldStart("dhcpOptions")
+		if err := m.DhcpOptions.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *SubnetSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SubnetSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SubnetSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"cidr": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
+			return nil
+		case "cidr":
+			var v cidraddress.CIDR4Address
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Cidr = v
+			requiredFilled["cidr"] = true
+			return nil
+		case "dhcpOptions":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v SubnetDhcpOptionsRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.DhcpOptions = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

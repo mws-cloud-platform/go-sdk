@@ -5,6 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
@@ -64,4 +68,73 @@ func (m *ClickhouseClusterCoordinatorInstanceOptionalResponse) Parse(ctx context
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ClickhouseClusterCoordinatorInstanceOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseClusterCoordinatorInstanceOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseClusterCoordinatorInstanceOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Count.IsSet() {
+		e.FieldStart("count")
+		e.Int(m.Count.Value)
+	}
+
+	e.FieldStart("zone")
+	if err := m.Zone.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ClickhouseClusterCoordinatorInstanceOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseClusterCoordinatorInstanceOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseClusterCoordinatorInstanceOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "count":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Count.SetTo(v)
+			return nil
+		case "zone":
+			var v rm.ZoneRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Zone = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

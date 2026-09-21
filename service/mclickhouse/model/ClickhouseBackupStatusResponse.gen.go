@@ -6,9 +6,13 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -237,4 +241,267 @@ func (m ClickhouseBackupStatusBackupTypeResponse) IsValid() bool {
 		return true
 	}
 	return false
+}
+
+// JSON methods
+
+func (m ClickhouseBackupStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseBackupStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseBackupStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.Backup != nil {
+		e.FieldStart("backup")
+		if err := m.Backup.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *ClickhouseBackupStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseBackupStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseBackupStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "backup":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v ClickhouseBackupStatusBackupResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Backup = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m ClickhouseBackupStatusBackupResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseBackupStatusBackupResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseBackupStatusBackupResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("trigger")
+	if err := m.Trigger.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("type")
+	if err := m.Type.Encode(e); err != nil {
+		return err
+	}
+
+	if m.StartTime != nil {
+		e.FieldStart("startTime")
+		conv.EncodeDateTimeUTC(e, *m.StartTime)
+	}
+
+	if m.EndTime != nil {
+		e.FieldStart("endTime")
+		conv.EncodeDateTimeUTC(e, *m.EndTime)
+	}
+
+	if m.Size != nil {
+		e.FieldStart("size")
+		m.Size.Encode(e)
+	}
+
+	if m.TotalSize != nil {
+		e.FieldStart("totalSize")
+		m.TotalSize.Encode(e)
+	}
+	return nil
+}
+
+func (m *ClickhouseBackupStatusBackupResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseBackupStatusBackupResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseBackupStatusBackupResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "trigger":
+			var v ClickhouseBackupStatusBackupTriggerResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Trigger = v
+			return nil
+		case "type":
+			var v ClickhouseBackupStatusBackupTypeResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Type = v
+			return nil
+		case "startTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.StartTime = &v
+			return nil
+		case "endTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.EndTime = &v
+			return nil
+		case "size":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Size = &v
+			return nil
+		case "totalSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.TotalSize = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m ClickhouseBackupStatusBackupTriggerResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseBackupStatusBackupTriggerResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *ClickhouseBackupStatusBackupTriggerResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseBackupStatusBackupTriggerResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseBackupStatusBackupTriggerResponse")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = ClickhouseBackupStatusBackupTriggerResponse(v)
+	return nil
+}
+
+func (m ClickhouseBackupStatusBackupTypeResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseBackupStatusBackupTypeResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.Str(string(*m))
+	return nil
+}
+
+func (m *ClickhouseBackupStatusBackupTypeResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseBackupStatusBackupTypeResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseBackupStatusBackupTypeResponse")
+	}
+
+	v, err := decode.StrBytes(d)
+	if err != nil {
+		return err
+	}
+
+	*m = ClickhouseBackupStatusBackupTypeResponse(v)
+	return nil
 }

@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -64,4 +67,84 @@ func (m *OneToOneNatSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m OneToOneNatSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *OneToOneNatSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *OneToOneNatSpecRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("internal")
+	if err := m.Internal.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("external")
+	if err := m.External.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *OneToOneNatSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *OneToOneNatSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("OneToOneNatSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"internal": false,
+		"external": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "internal":
+			var v OneToOneNatSpecInternalRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Internal = v
+			requiredFilled["internal"] = true
+			return nil
+		case "external":
+			var v OneToOneNatSpecExternalRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.External = v
+			requiredFilled["external"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

@@ -3,8 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/largenumber"
 	unitsrange "go.mws.cloud/go-sdk/pkg/apimodels/units/range"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Описывает настройки управления портами.
@@ -33,4 +37,67 @@ func (m *EgressNatSpecPortAllocationRequest) Clone() *EgressNatSpecPortAllocatio
 	clone := *m
 	clone.PortsPerClient = *m.PortsPerClient.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m EgressNatSpecPortAllocationRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *EgressNatSpecPortAllocationRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *EgressNatSpecPortAllocationRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("portsPerClient")
+	m.PortsPerClient.Encode(e)
+	return nil
+}
+
+func (m *EgressNatSpecPortAllocationRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *EgressNatSpecPortAllocationRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("EgressNatSpecPortAllocationRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"portsPerClient": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "portsPerClient":
+			var v unitsrange.Range[largenumber.LargeNumber]
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.PortsPerClient = v
+			requiredFilled["portsPerClient"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

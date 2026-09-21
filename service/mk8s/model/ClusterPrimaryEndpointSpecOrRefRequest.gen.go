@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
@@ -78,4 +81,85 @@ func (m *ClusterPrimaryEndpointSpecOrRefRequest) Parse(ctx context.Context) erro
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ClusterPrimaryEndpointSpecOrRefRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClusterPrimaryEndpointSpecOrRefRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClusterPrimaryEndpointSpecOrRefRequest) encodeFields(e *jx.Encoder) error {
+	if m.Ref != nil {
+		e.FieldStart("ref")
+		if err := m.Ref.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Spec != nil {
+		e.FieldStart("spec")
+		if err := m.Spec.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *ClusterPrimaryEndpointSpecOrRefRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClusterPrimaryEndpointSpecOrRefRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClusterPrimaryEndpointSpecOrRefRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ref":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v vpc.AddressRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref = &v
+			return nil
+		case "spec":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v ClusterPrimaryEndpointSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Spec = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

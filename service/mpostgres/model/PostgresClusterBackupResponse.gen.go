@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Спецификация автоматического бэкапирования.
 // Real OAPI model name: PostgresClusterBackup
 type PostgresClusterBackupResponse struct {
@@ -59,4 +67,79 @@ func (m *PostgresClusterBackupResponse) Clone() *PostgresClusterBackupResponse {
 		clone.RetainPeriodDays = &cloneRetainPeriodDays
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m PostgresClusterBackupResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresClusterBackupResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *PostgresClusterBackupResponse) encodeFields(e *jx.Encoder) error {
+	if m.Daily != nil {
+		e.FieldStart("daily")
+		if err := m.Daily.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.RetainPeriodDays != nil {
+		e.FieldStart("retainPeriodDays")
+		e.Int(*m.RetainPeriodDays)
+	}
+	return nil
+}
+
+func (m *PostgresClusterBackupResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresClusterBackupResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresClusterBackupResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "daily":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v PostgresClusterBackupDailyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Daily = &v
+			return nil
+		case "retainPeriodDays":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.RetainPeriodDays = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

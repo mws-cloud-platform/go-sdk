@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
@@ -54,4 +57,62 @@ func (m *ResourceExternalAddressSpecResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ResourceExternalAddressSpecResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ResourceExternalAddressSpecResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ResourceExternalAddressSpecResponse) encodeFields(e *jx.Encoder) error {
+	if m.NatGateway != nil {
+		e.FieldStart("natGateway")
+		if err := m.NatGateway.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *ResourceExternalAddressSpecResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ResourceExternalAddressSpecResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ResourceExternalAddressSpecResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "natGateway":
+			var v vpc.NatGatewayRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.NatGateway = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

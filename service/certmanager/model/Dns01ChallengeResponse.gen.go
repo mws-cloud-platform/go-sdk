@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: Dns01Challenge
 type Dns01ChallengeResponse struct {
 	// Указывает, настроена ли делегация корректно.
@@ -50,4 +58,71 @@ func (m *Dns01ChallengeResponse) Clone() *Dns01ChallengeResponse {
 		clone.CnameTarget = &cloneCnameTarget
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m Dns01ChallengeResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *Dns01ChallengeResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *Dns01ChallengeResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("delegated")
+	e.Bool(m.Delegated)
+
+	if m.CnameTarget != nil {
+		e.FieldStart("cnameTarget")
+		e.Str(*m.CnameTarget)
+	}
+	return nil
+}
+
+func (m *Dns01ChallengeResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *Dns01ChallengeResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("Dns01ChallengeResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "delegated":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Delegated = v
+			return nil
+		case "cnameTarget":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.CnameTarget = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
@@ -60,4 +63,73 @@ func (m *PostgresInstanceTemplateResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m PostgresInstanceTemplateResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresInstanceTemplateResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *PostgresInstanceTemplateResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("vmType")
+	if err := m.VmType.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("disk")
+	if err := m.Disk.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *PostgresInstanceTemplateResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresInstanceTemplateResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresInstanceTemplateResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "vmType":
+			var v compute.VmTypeRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.VmType = v
+			return nil
+		case "disk":
+			var v DataDiskSpecResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Disk = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

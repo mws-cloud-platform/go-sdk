@@ -5,8 +5,12 @@ package model
 import (
 	"time"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
@@ -112,4 +116,126 @@ func (m *PostgresBackupStatusResponse) Clone() *PostgresBackupStatusResponse {
 	}
 
 	return &clone
+}
+
+// JSON methods
+
+func (m PostgresBackupStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresBackupStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *PostgresBackupStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.StartTime != nil {
+		e.FieldStart("startTime")
+		conv.EncodeDateTimeUTC(e, *m.StartTime)
+	}
+
+	if m.FinishTime != nil {
+		e.FieldStart("finishTime")
+		conv.EncodeDateTimeUTC(e, *m.FinishTime)
+	}
+
+	if m.UncompressedSize != nil {
+		e.FieldStart("uncompressedSize")
+		m.UncompressedSize.Encode(e)
+	}
+
+	if m.CompressedSize != nil {
+		e.FieldStart("compressedSize")
+		m.CompressedSize.Encode(e)
+	}
+
+	if m.BackupTrigger != nil {
+		e.FieldStart("backupTrigger")
+		if err := m.BackupTrigger.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *PostgresBackupStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresBackupStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresBackupStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "startTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.StartTime = &v
+			return nil
+		case "finishTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.FinishTime = &v
+			return nil
+		case "uncompressedSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.UncompressedSize = &v
+			return nil
+		case "compressedSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.CompressedSize = &v
+			return nil
+		case "backupTrigger":
+			var v BackupTrigger
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.BackupTrigger = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

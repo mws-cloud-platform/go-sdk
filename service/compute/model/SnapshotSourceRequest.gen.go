@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
 )
@@ -94,4 +97,129 @@ func (m *SnapshotSourceDiskRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m SnapshotSourceRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SnapshotSourceRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SnapshotSourceRequest) encodeFields(e *jx.Encoder) error {
+	if m.Disk != nil {
+		e.FieldStart("disk")
+		if err := m.Disk.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *SnapshotSourceRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SnapshotSourceRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SnapshotSourceRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "disk":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v SnapshotSourceDiskRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Disk = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m SnapshotSourceDiskRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SnapshotSourceDiskRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SnapshotSourceDiskRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("id")
+	if err := m.Id.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *SnapshotSourceDiskRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SnapshotSourceDiskRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SnapshotSourceDiskRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"id": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			var v compute.DiskRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Id = v
+			requiredFilled["id"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

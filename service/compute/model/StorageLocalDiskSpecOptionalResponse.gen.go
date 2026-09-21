@@ -3,8 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -62,4 +66,82 @@ func (m *StorageLocalDiskSpecOptionalResponse) Clone() *StorageLocalDiskSpecOpti
 	clone := *m
 	clone.Size = *m.Size.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m StorageLocalDiskSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *StorageLocalDiskSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *StorageLocalDiskSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	if m.DeviceName.IsSet() {
+		e.FieldStart("deviceName")
+		e.Str(m.DeviceName.Value)
+	}
+
+	e.FieldStart("size")
+	m.Size.Encode(e)
+	return nil
+}
+
+func (m *StorageLocalDiskSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *StorageLocalDiskSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("StorageLocalDiskSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			return nil
+		case "deviceName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DeviceName.SetTo(v)
+			return nil
+		case "size":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Size = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

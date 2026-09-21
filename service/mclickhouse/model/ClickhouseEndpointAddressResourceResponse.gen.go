@@ -5,8 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
@@ -100,4 +102,108 @@ func (m *ClickhouseEndpointAddressResourceResponse) Parse(ctx context.Context) e
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ClickhouseEndpointAddressResourceResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseEndpointAddressResourceResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseEndpointAddressResourceResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ref")
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("subnet")
+	if err := m.Subnet.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("ipAddress")
+	m.IpAddress.Encode(e)
+
+	e.FieldStart("dns")
+	e.ArrStart()
+	for _, elem := range m.Dns {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+	return nil
+}
+
+func (m *ClickhouseEndpointAddressResourceResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseEndpointAddressResourceResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseEndpointAddressResourceResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ref":
+			var v vpc.AddressRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref = v
+			return nil
+		case "subnet":
+			var v vpc.SubnetRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Subnet = v
+			return nil
+		case "ipAddress":
+			var v ipaddress.IPAddress
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.IpAddress = v
+			return nil
+		case "dns":
+			c := make([]ClickhouseEndpointAddressDnsResourceResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v ClickhouseEndpointAddressDnsResourceResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Dns = c
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

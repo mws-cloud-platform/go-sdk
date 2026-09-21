@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Статус экземпляра postgres
 // Real OAPI model name: PostgresStatusInstance
 type PostgresStatusInstanceResponse struct {
@@ -53,4 +61,84 @@ func (m *PostgresStatusInstanceResponse) Clone() *PostgresStatusInstanceResponse
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m PostgresStatusInstanceResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresStatusInstanceResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *PostgresStatusInstanceResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	e.FieldStart("role")
+	if err := m.Role.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("health")
+	if err := m.Health.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *PostgresStatusInstanceResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresStatusInstanceResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresStatusInstanceResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			return nil
+		case "role":
+			var v PostgresInstanceRole
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Role = v
+			return nil
+		case "health":
+			var v PostgresInstanceHealth
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Health = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

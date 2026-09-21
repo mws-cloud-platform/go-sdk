@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
@@ -70,4 +75,106 @@ func (m *KafkaS3PropertiesRequest) Clone() *KafkaS3PropertiesRequest {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m KafkaS3PropertiesRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaS3PropertiesRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaS3PropertiesRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("bucketName")
+	e.Str(m.BucketName)
+
+	e.FieldStart("accessKeyId")
+	e.Str(m.AccessKeyId)
+
+	e.FieldStart("secretAccessKey")
+	e.Str(m.SecretAccessKey.Value())
+
+	e.FieldStart("endpoint")
+	e.Str(m.Endpoint)
+	return nil
+}
+
+func (m *KafkaS3PropertiesRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaS3PropertiesRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaS3PropertiesRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"bucketName":      false,
+		"accessKeyId":     false,
+		"secretAccessKey": false,
+		"endpoint":        false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "bucketName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.BucketName = v
+			requiredFilled["bucketName"] = true
+			return nil
+		case "accessKeyId":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.AccessKeyId = v
+			requiredFilled["accessKeyId"] = true
+			return nil
+		case "secretAccessKey":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.SecretAccessKey = sensitive.New(v)
+			requiredFilled["secretAccessKey"] = true
+			return nil
+		case "endpoint":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Endpoint = v
+			requiredFilled["endpoint"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

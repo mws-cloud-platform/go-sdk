@@ -5,8 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
 
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
@@ -87,4 +89,97 @@ func (m *SubnetSpecOptionalResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m SubnetSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SubnetSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SubnetSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Region.IsSet() {
+		e.FieldStart("region")
+		if err := m.Region.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("cidr")
+	m.Cidr.Encode(e)
+
+	if m.DhcpOptions.IsSet() {
+		e.FieldStart("dhcpOptions")
+		if m.DhcpOptions.IsNull() {
+			e.Null()
+		} else {
+			if err := m.DhcpOptions.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (m *SubnetSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SubnetSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SubnetSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region.SetTo(v)
+			return nil
+		case "cidr":
+			var v cidraddress.CIDR4Address
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Cidr = v
+			return nil
+		case "dhcpOptions":
+			if d.Next() == jx.Null {
+				m.DhcpOptions.SetToNull()
+				return d.Null()
+			}
+
+			var v SubnetDhcpOptionsOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.DhcpOptions.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

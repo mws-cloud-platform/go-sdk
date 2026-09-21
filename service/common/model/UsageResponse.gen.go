@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Связь ресурса с другим ресурсом. В зависимости от типа связи операции над ресурсом могут быть ограничены
 // Real OAPI model name: Usage
 type UsageResponse struct {
@@ -53,4 +61,80 @@ func (m *UsageResponse) Clone() *UsageResponse {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m UsageResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *UsageResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *UsageResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("usageType")
+	e.Str(m.UsageType)
+
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	e.FieldStart("resource")
+	e.Str(m.Resource)
+	return nil
+}
+
+func (m *UsageResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *UsageResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("UsageResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "usageType":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.UsageType = v
+			return nil
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			return nil
+		case "resource":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Resource = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

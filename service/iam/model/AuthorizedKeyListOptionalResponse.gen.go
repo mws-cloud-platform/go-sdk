@@ -3,6 +3,10 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -52,4 +56,86 @@ func (m *AuthorizedKeyListOptionalResponse) Clone() *AuthorizedKeyListOptionalRe
 		}
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m AuthorizedKeyListOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *AuthorizedKeyListOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *AuthorizedKeyListOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.NextPageToken.IsSet() {
+		e.FieldStart("nextPageToken")
+		if err := m.NextPageToken.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("items")
+	e.ArrStart()
+	for _, elem := range m.Items {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+	return nil
+}
+
+func (m *AuthorizedKeyListOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *AuthorizedKeyListOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("AuthorizedKeyListOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "nextPageToken":
+			var v commonmodel.NextPageToken
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.NextPageToken.SetTo(v)
+			return nil
+		case "items":
+			c := make([]AuthorizedKeyOptionalResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v AuthorizedKeyOptionalResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Items = c
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

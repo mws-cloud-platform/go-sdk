@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+)
+
 // Real OAPI model name: RegionalStatus
 type RegionalStatusResponse struct {
 }
@@ -13,4 +19,43 @@ func (m *RegionalStatusResponse) Clone() *RegionalStatusResponse {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m RegionalStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *RegionalStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *RegionalStatusResponse) encodeFields(e *jx.Encoder) error {
+	return nil
+}
+
+func (m *RegionalStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *RegionalStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("RegionalStatusResponse")
+	}
+
+	return d.Skip()
 }

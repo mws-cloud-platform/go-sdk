@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
@@ -180,4 +183,146 @@ func (m *CommonRoleBindingSpecSubjectOptionalResponse) Parse(ctx context.Context
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m CommonRoleBindingSpecSubjectOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CommonRoleBindingSpecSubjectOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CommonRoleBindingSpecSubjectOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.User.IsSet() {
+		e.FieldStart("user")
+		if err := m.User.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.ServiceAccount.IsSet() {
+		e.FieldStart("serviceAccount")
+		if err := m.ServiceAccount.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.ServiceAgent.IsSet() {
+		e.FieldStart("serviceAgent")
+		if err := m.ServiceAgent.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.UserFederation.IsSet() {
+		e.FieldStart("userFederation")
+		if m.UserFederation.IsNull() {
+			e.Null()
+		} else {
+			if err := m.UserFederation.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if m.UserGroup.IsSet() {
+		e.FieldStart("userGroup")
+		if err := m.UserGroup.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Employee.IsSet() {
+		e.FieldStart("employee")
+		if err := m.Employee.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpecSubjectOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CommonRoleBindingSpecSubjectOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CommonRoleBindingSpecSubjectOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "user":
+			var v iam.UserRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.User.SetTo(v)
+			return nil
+		case "serviceAccount":
+			var v iam.ServiceAccountRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ServiceAccount.SetTo(v)
+			return nil
+		case "serviceAgent":
+			var v iam.ServiceAgentRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.ServiceAgent.SetTo(v)
+			return nil
+		case "userFederation":
+			if d.Next() == jx.Null {
+				m.UserFederation.SetToNull()
+				return d.Null()
+			}
+
+			var v CommonRoleBindingFederationOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.UserFederation.SetTo(v)
+			return nil
+		case "userGroup":
+			var v iam.UserGroupRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.UserGroup.SetTo(v)
+			return nil
+		case "employee":
+			var v iam.EmployeeRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Employee.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

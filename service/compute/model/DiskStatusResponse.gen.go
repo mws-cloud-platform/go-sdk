@@ -6,8 +6,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
@@ -231,4 +234,218 @@ func (m *DiskStatusResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m DiskStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *DiskStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *DiskStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ready")
+	if err := m.Ready.Encode(e); err != nil {
+		return err
+	}
+	if m.SourceExists != nil {
+		e.FieldStart("sourceExists")
+		e.Bool(*m.SourceExists)
+	}
+
+	if m.Size != nil {
+		e.FieldStart("size")
+		m.Size.Encode(e)
+	}
+
+	if m.Iops != nil {
+		e.FieldStart("iops")
+		if err := m.Iops.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Throughput != nil {
+		e.FieldStart("throughput")
+		m.Throughput.Encode(e)
+	}
+
+	if m.DiskType != nil {
+		e.FieldStart("diskType")
+		if err := m.DiskType.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.BlockSize != nil {
+		e.FieldStart("blockSize")
+		m.BlockSize.Encode(e)
+	}
+
+	e.FieldStart("linkedVms")
+	e.ArrStart()
+	for _, elem := range m.LinkedVms {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+
+	if m.InitialSourceImage != nil {
+		e.FieldStart("initialSourceImage")
+		if err := m.InitialSourceImage.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.OsType != nil {
+		e.FieldStart("osType")
+		if err := m.OsType.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Encryption != nil {
+		e.FieldStart("encryption")
+		if err := m.Encryption.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *DiskStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *DiskStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("DiskStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ready":
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = v
+			return nil
+		case "sourceExists":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.SourceExists = &v
+			return nil
+		case "size":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Size = &v
+			return nil
+		case "iops":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v DiskStatusIopsResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Iops = &v
+			return nil
+		case "throughput":
+			var v Throughput
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Throughput = &v
+			return nil
+		case "diskType":
+			var v compute.DiskTypeRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.DiskType = &v
+			return nil
+		case "blockSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.BlockSize = &v
+			return nil
+		case "linkedVms":
+			c := make([]commonmodel.LinkedVmInfoResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v commonmodel.LinkedVmInfoResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.LinkedVms = c
+			return nil
+		case "initialSourceImage":
+			var v compute.ImageID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.InitialSourceImage = &v
+			return nil
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType = &v
+			return nil
+		case "encryption":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v EncryptionStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Encryption = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

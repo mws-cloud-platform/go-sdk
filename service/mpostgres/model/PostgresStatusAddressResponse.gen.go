@@ -5,8 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
@@ -124,4 +126,109 @@ func (m *PostgresStatusAddressResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m PostgresStatusAddressResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresStatusAddressResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *PostgresStatusAddressResponse) encodeFields(e *jx.Encoder) error {
+	if m.Address != nil {
+		e.FieldStart("address")
+		if err := m.Address.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Subnet != nil {
+		e.FieldStart("subnet")
+		if err := m.Subnet.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Ip != nil {
+		e.FieldStart("ip")
+		m.Ip.Encode(e)
+	}
+
+	if m.External != nil {
+		e.FieldStart("external")
+		if err := m.External.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *PostgresStatusAddressResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresStatusAddressResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresStatusAddressResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "address":
+			var v vpc.AddressRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Address = &v
+			return nil
+		case "subnet":
+			var v vpc.SubnetRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Subnet = &v
+			return nil
+		case "ip":
+			var v ipaddress.IPAddress
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ip = &v
+			return nil
+		case "external":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v PostgresStatusExternalAddressResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.External = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

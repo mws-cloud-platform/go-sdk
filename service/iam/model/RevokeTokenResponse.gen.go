@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Запрос для отзыва токена
 // Real OAPI model name: RevokeToken
 type RevokeTokenResponse struct {
@@ -27,4 +35,58 @@ func (m *RevokeTokenResponse) Clone() *RevokeTokenResponse {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m RevokeTokenResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *RevokeTokenResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *RevokeTokenResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("subject")
+	e.Str(m.Subject)
+	return nil
+}
+
+func (m *RevokeTokenResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *RevokeTokenResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("RevokeTokenResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "subject":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Subject = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -4,6 +4,10 @@ package model
 
 import (
 	"encoding/json"
+
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 )
 
 // Спецификация региона
@@ -16,4 +20,45 @@ func (m RegionSpec) Clone() RegionSpec {
 
 	clone := append([]byte{}, m...)
 	return clone
+}
+
+// JSON methods
+
+func (m RegionSpec) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *RegionSpec) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	if *m == nil {
+		e.Null()
+		return nil
+	}
+	e.Raw(*m)
+	return nil
+}
+
+func (m *RegionSpec) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *RegionSpec) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("RegionSpec")
+	}
+
+	v, err := d.Raw()
+	if err != nil {
+		return err
+	}
+
+	*m = append((*m)[0:0], v...)
+	return nil
 }

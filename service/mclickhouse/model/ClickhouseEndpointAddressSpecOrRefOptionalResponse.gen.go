@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
@@ -80,4 +83,86 @@ func (m *ClickhouseEndpointAddressSpecOrRefOptionalResponse) Parse(ctx context.C
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ClickhouseEndpointAddressSpecOrRefOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseEndpointAddressSpecOrRefOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseEndpointAddressSpecOrRefOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.Ref.IsSet() {
+		e.FieldStart("ref")
+		if err := m.Ref.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Spec.IsSet() {
+		e.FieldStart("spec")
+		if m.Spec.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Spec.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (m *ClickhouseEndpointAddressSpecOrRefOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseEndpointAddressSpecOrRefOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseEndpointAddressSpecOrRefOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ref":
+			var v vpc.AddressRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref.SetTo(v)
+			return nil
+		case "spec":
+			if d.Next() == jx.Null {
+				m.Spec.SetToNull()
+				return d.Null()
+			}
+
+			var v ClickhouseEndpointAddressSpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Spec.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

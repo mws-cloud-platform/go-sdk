@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
@@ -92,4 +95,88 @@ func (m *CommonRoleBindingSpecOptionalResponse) Parse(ctx context.Context) error
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m CommonRoleBindingSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CommonRoleBindingSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CommonRoleBindingSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("subject")
+	if err := m.Subject.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("role")
+	if err := m.Role.Encode(e); err != nil {
+		return err
+	}
+
+	if m.SupportRequestId.IsSet() {
+		e.FieldStart("supportRequestId")
+		if err := m.SupportRequestId.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CommonRoleBindingSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CommonRoleBindingSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "subject":
+			var v CommonRoleBindingSpecSubjectOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Subject = v
+			return nil
+		case "role":
+			var v iam.RoleRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Role = v
+			return nil
+		case "supportRequestId":
+			var v support.RequestIDRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SupportRequestId.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

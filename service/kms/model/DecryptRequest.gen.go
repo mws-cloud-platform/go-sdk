@@ -3,8 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
@@ -68,4 +71,80 @@ func (m *DecryptRequest) Clone() *DecryptRequest {
 		}
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m DecryptRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *DecryptRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *DecryptRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("ciphertext")
+	e.Base64(m.Ciphertext.Value())
+
+	if m.AssociatedData != nil {
+		e.FieldStart("associatedData")
+		e.Base64(m.AssociatedData.Value())
+	}
+	return nil
+}
+
+func (m *DecryptRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *DecryptRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("DecryptRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"ciphertext": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "ciphertext":
+			v, err := d.Base64()
+			if err != nil {
+				return err
+			}
+
+			m.Ciphertext = sensitive.New(v)
+			requiredFilled["ciphertext"] = true
+			return nil
+		case "associatedData":
+			v, err := d.Base64()
+			if err != nil {
+				return err
+			}
+
+			m.AssociatedData = ptr.Get(sensitive.New(v))
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

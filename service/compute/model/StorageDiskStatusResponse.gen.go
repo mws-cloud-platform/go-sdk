@@ -5,8 +5,11 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/compute"
@@ -153,4 +156,140 @@ func (m *StorageDiskStatusResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m StorageDiskStatusResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *StorageDiskStatusResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *StorageDiskStatusResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("name")
+	e.Str(m.Name)
+
+	e.FieldStart("boot")
+	e.Bool(m.Boot)
+
+	e.FieldStart("deviceName")
+	e.Str(m.DeviceName)
+
+	e.FieldStart("ref")
+	if err := m.Ref.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Ready != nil {
+		e.FieldStart("ready")
+		if err := m.Ready.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Iops != nil {
+		e.FieldStart("iops")
+		if err := m.Iops.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Size != nil {
+		e.FieldStart("size")
+		m.Size.Encode(e)
+	}
+	return nil
+}
+
+func (m *StorageDiskStatusResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *StorageDiskStatusResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("StorageDiskStatusResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = v
+			return nil
+		case "boot":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Boot = v
+			return nil
+		case "deviceName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DeviceName = v
+			return nil
+		case "ref":
+			var v compute.DiskRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ref = v
+			return nil
+		case "ready":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v commonmodel.ResourceStatusReadyResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Ready = &v
+			return nil
+		case "iops":
+			var v Iops
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Iops = &v
+			return nil
+		case "size":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Size = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

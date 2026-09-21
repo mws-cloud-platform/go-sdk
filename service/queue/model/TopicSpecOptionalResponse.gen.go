@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -74,4 +79,98 @@ func (m *TopicSpecOptionalResponse) Clone() *TopicSpecOptionalResponse {
 	}
 
 	return &clone
+}
+
+// JSON methods
+
+func (m TopicSpecOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *TopicSpecOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *TopicSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.PartitionCount.IsSet() {
+		e.FieldStart("partitionCount")
+		e.Int32(m.PartitionCount.Value)
+	}
+
+	if m.TopicId != nil {
+		e.FieldStart("topicId")
+		e.Str(*m.TopicId)
+	}
+	if m.Config.IsSet() {
+		e.FieldStart("config")
+		e.ObjStart()
+		for key, elem := range m.Config.Value {
+			e.FieldStart(key)
+			e.Str(elem)
+		}
+		e.ObjEnd()
+	}
+	return nil
+}
+
+func (m *TopicSpecOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *TopicSpecOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("TopicSpecOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "partitionCount":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.PartitionCount.SetTo(v)
+			return nil
+		case "topicId":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.TopicId = &v
+			return nil
+		case "config":
+			c := make(map[string]string)
+			if err := d.ObjBytes(reserrors.PathAccumulatorErrorAsIndexObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+				v, err := decode.Str(d)
+				if err != nil {
+					return err
+				}
+
+				c[string(k)] = v
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Config.SetTo(c)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

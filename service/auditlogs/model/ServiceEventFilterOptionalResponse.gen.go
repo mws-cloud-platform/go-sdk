@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -38,4 +43,72 @@ func (m *ServiceEventFilterOptionalResponse) Clone() *ServiceEventFilterOptional
 		}
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m ServiceEventFilterOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ServiceEventFilterOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ServiceEventFilterOptionalResponse) encodeFields(e *jx.Encoder) error {
+	if m.IncludedEvents.IsSet() {
+		e.FieldStart("includedEvents")
+		e.ArrStart()
+		for _, elem := range m.IncludedEvents.Value {
+			e.Str(elem)
+		}
+		e.ArrEnd()
+	}
+	return nil
+}
+
+func (m *ServiceEventFilterOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ServiceEventFilterOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ServiceEventFilterOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "includedEvents":
+			c := make([]string, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				v, err := decode.Str(d)
+				if err != nil {
+					return err
+				}
+
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.IncludedEvents.SetTo(c)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

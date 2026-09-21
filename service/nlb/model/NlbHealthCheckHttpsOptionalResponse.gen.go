@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -60,4 +65,82 @@ func (m *NlbHealthCheckHttpsOptionalResponse) Clone() *NlbHealthCheckHttpsOption
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m NlbHealthCheckHttpsOptionalResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *NlbHealthCheckHttpsOptionalResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *NlbHealthCheckHttpsOptionalResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("port")
+	e.Int(m.Port)
+
+	e.FieldStart("path")
+	e.Str(m.Path)
+
+	if m.ExpectedCode.IsSet() {
+		e.FieldStart("expectedCode")
+		e.Int(m.ExpectedCode.Value)
+	}
+	return nil
+}
+
+func (m *NlbHealthCheckHttpsOptionalResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *NlbHealthCheckHttpsOptionalResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("NlbHealthCheckHttpsOptionalResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "port":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.Port = v
+			return nil
+		case "path":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Path = v
+			return nil
+		case "expectedCode":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.ExpectedCode.SetTo(v)
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

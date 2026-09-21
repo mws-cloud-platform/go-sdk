@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
@@ -72,4 +75,84 @@ func (m *SnapshotSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m SnapshotSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SnapshotSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SnapshotSpecRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("source")
+	if err := m.Source.Encode(e); err != nil {
+		return err
+	}
+
+	if m.OsType != nil {
+		e.FieldStart("osType")
+		if err := m.OsType.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *SnapshotSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SnapshotSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SnapshotSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"source": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "source":
+			var v SnapshotSourceRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Source = v
+			requiredFilled["source"] = true
+			return nil
+		case "osType":
+			var v OsType
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.OsType = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

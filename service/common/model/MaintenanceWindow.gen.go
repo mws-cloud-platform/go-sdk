@@ -2,6 +2,13 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 type MaintenanceWindow struct {
 	Weekly WeeklyMaintenanceWindow `json:"weekly" yaml:"weekly"`
 }
@@ -25,4 +32,69 @@ func (m *MaintenanceWindow) Clone() *MaintenanceWindow {
 	clone := *m
 	clone.Weekly = *m.Weekly.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m MaintenanceWindow) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *MaintenanceWindow) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *MaintenanceWindow) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("weekly")
+	if err := m.Weekly.Encode(e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *MaintenanceWindow) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *MaintenanceWindow) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("MaintenanceWindow")
+	}
+
+	requiredFilled := map[string]bool{
+		"weekly": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "weekly":
+			var v WeeklyMaintenanceWindow
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Weekly = v
+			requiredFilled["weekly"] = true
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+)
+
 // Real OAPI model name: PostgresBackupSpec
 type PostgresBackupSpecRequest struct {
 }
@@ -13,4 +19,43 @@ func (m *PostgresBackupSpecRequest) Clone() *PostgresBackupSpecRequest {
 
 	clone := *m
 	return &clone
+}
+
+// JSON methods
+
+func (m PostgresBackupSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *PostgresBackupSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *PostgresBackupSpecRequest) encodeFields(e *jx.Encoder) error {
+	return nil
+}
+
+func (m *PostgresBackupSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *PostgresBackupSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("PostgresBackupSpecRequest")
+	}
+
+	return d.Skip()
 }

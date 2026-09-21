@@ -3,7 +3,13 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Конфигурация схемы хранилищ ClickHouse.
@@ -133,4 +139,138 @@ func (m *ClickhouseStorageConfigurationRequest) Clone() *ClickhouseStorageConfig
 	clone.CacheMaxSize = m.CacheMaxSize.Clone()
 	clone.MaxDataPartSizeSsd = m.MaxDataPartSizeSsd.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m ClickhouseStorageConfigurationRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ClickhouseStorageConfigurationRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ClickhouseStorageConfigurationRequest) encodeFields(e *jx.Encoder) error {
+	if m.HybridStorageEnabled != nil {
+		e.FieldStart("hybridStorageEnabled")
+		e.Bool(*m.HybridStorageEnabled)
+	}
+
+	if m.MoveFactor != nil {
+		e.FieldStart("moveFactor")
+		e.Float64(*m.MoveFactor)
+	}
+
+	if m.DataCachingEnabled != nil {
+		e.FieldStart("dataCachingEnabled")
+		e.Bool(*m.DataCachingEnabled)
+	}
+
+	if m.CacheMaxSize != nil {
+		e.FieldStart("cacheMaxSize")
+		m.CacheMaxSize.Encode(e)
+	}
+
+	if m.MaxDataPartSizeSsd != nil {
+		e.FieldStart("maxDataPartSizeSsd")
+		m.MaxDataPartSizeSsd.Encode(e)
+	}
+	return nil
+}
+
+func (m *ClickhouseStorageConfigurationRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ClickhouseStorageConfigurationRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ClickhouseStorageConfigurationRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "hybridStorageEnabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.HybridStorageEnabled = &v
+			return nil
+		case "moveFactor":
+			v, err := decode.Float64(d)
+			if err != nil {
+				return err
+			}
+
+			m.MoveFactor = &v
+			return nil
+		case "dataCachingEnabled":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.DataCachingEnabled = &v
+			return nil
+		case "cacheMaxSize":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.CacheMaxSize = &v
+			return nil
+		case "maxDataPartSizeSsd":
+			var v bytesize.ByteSize
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.MaxDataPartSizeSsd = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *ClickhouseStorageConfigurationRequest) WithDefaults() ClickhouseStorageConfigurationRequest {
+	var out ClickhouseStorageConfigurationRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.HybridStorageEnabled == nil {
+		out.HybridStorageEnabled = ptr.Get(false)
+	}
+	if out.MoveFactor == nil {
+		out.MoveFactor = ptr.Get(float64(0.1))
+	}
+	if out.DataCachingEnabled == nil {
+		out.DataCachingEnabled = ptr.Get(false)
+	}
+	if out.CacheMaxSize == nil {
+		out.CacheMaxSize = ptr.Get(bytesize.MustParseString("1Gb"))
+	}
+	if out.MaxDataPartSizeSsd == nil {
+		out.MaxDataPartSizeSsd = ptr.Get(bytesize.MustParseString("10Gb"))
+	}
+	return out
 }

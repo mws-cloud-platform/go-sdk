@@ -3,7 +3,12 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
 // Правила выполнения повторных попыток в случае ошибки
@@ -89,4 +94,108 @@ func (m *RetryPolicy) Clone() *RetryPolicy {
 	}
 	clone.MaxRetryTimeout = m.MaxRetryTimeout.Clone()
 	return &clone
+}
+
+// JSON methods
+
+func (m RetryPolicy) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *RetryPolicy) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *RetryPolicy) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("retryCount")
+	e.Int(m.RetryCount)
+
+	e.FieldStart("retryTimeout")
+	m.RetryTimeout.Encode(e)
+
+	if m.RetryTimeoutScale != nil {
+		e.FieldStart("retryTimeoutScale")
+		if err := m.RetryTimeoutScale.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.MaxRetryTimeout != nil {
+		e.FieldStart("maxRetryTimeout")
+		m.MaxRetryTimeout.Encode(e)
+	}
+	return nil
+}
+
+func (m *RetryPolicy) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *RetryPolicy) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("RetryPolicy")
+	}
+
+	requiredFilled := map[string]bool{
+		"retryCount":   false,
+		"retryTimeout": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "retryCount":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.RetryCount = v
+			requiredFilled["retryCount"] = true
+			return nil
+		case "retryTimeout":
+			var v duration.Duration
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RetryTimeout = v
+			requiredFilled["retryTimeout"] = true
+			return nil
+		case "retryTimeoutScale":
+			var v RetryTimeoutScale
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RetryTimeoutScale = &v
+			return nil
+		case "maxRetryTimeout":
+			var v duration.Duration
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.MaxRetryTimeout = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

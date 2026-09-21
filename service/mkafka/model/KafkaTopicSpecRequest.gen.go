@@ -2,6 +2,15 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Параметры топика.
 // Real OAPI model name: KafkaTopicSpec
 type KafkaTopicSpecRequest struct {
@@ -86,4 +95,103 @@ func (m *KafkaTopicSpecRequest) Clone() *KafkaTopicSpecRequest {
 		clone.Config = &cloneConfig
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m KafkaTopicSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaTopicSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaTopicSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Partitions != nil {
+		e.FieldStart("partitions")
+		e.Int32(*m.Partitions)
+	}
+
+	if m.ReplicationFactor != nil {
+		e.FieldStart("replicationFactor")
+		e.Int32(*m.ReplicationFactor)
+	}
+
+	if m.Config != nil {
+		e.FieldStart("config")
+		e.Str(*m.Config)
+	}
+	return nil
+}
+
+func (m *KafkaTopicSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaTopicSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaTopicSpecRequest")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "partitions":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.Partitions = &v
+			return nil
+		case "replicationFactor":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.ReplicationFactor = &v
+			return nil
+		case "config":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Config = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+// Defaults
+
+func (m *KafkaTopicSpecRequest) WithDefaults() KafkaTopicSpecRequest {
+	var out KafkaTopicSpecRequest
+	if m != nil {
+		out = *m
+	}
+
+	if out.Partitions == nil {
+		out.Partitions = ptr.Get(int32(-1))
+	}
+	if out.ReplicationFactor == nil {
+		out.ReplicationFactor = ptr.Get(int32(-1))
+	}
+	return out
 }

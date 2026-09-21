@@ -5,6 +5,11 @@ package model
 import (
 	"time"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 )
 
@@ -247,4 +252,192 @@ func (m *CommonTypedResourceMetadata) Clone() *CommonTypedResourceMetadata {
 		clone.Description = &cloneDescription
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m CommonTypedResourceMetadata) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CommonTypedResourceMetadata) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CommonTypedResourceMetadata) encodeFields(e *jx.Encoder) error {
+	if m.Id != nil {
+		e.FieldStart("id")
+		if err := m.Id.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Name != nil {
+		e.FieldStart("name")
+		e.Str(*m.Name)
+	}
+
+	if m.DisplayName != nil {
+		e.FieldStart("displayName")
+		e.Str(*m.DisplayName)
+	}
+
+	if m.CreateTime != nil {
+		e.FieldStart("createTime")
+		conv.EncodeDateTime(e, *m.CreateTime)
+	}
+
+	if m.UpdateTime != nil {
+		e.FieldStart("updateTime")
+		conv.EncodeDateTime(e, *m.UpdateTime)
+	}
+
+	if m.DeleteTime != nil {
+		e.FieldStart("deleteTime")
+		conv.EncodeDateTime(e, *m.DeleteTime)
+	}
+
+	if m.PurgeTime != nil {
+		e.FieldStart("purgeTime")
+		conv.EncodeDateTime(e, *m.PurgeTime)
+	}
+
+	if m.Usages != nil {
+		e.FieldStart("usages")
+		e.ArrStart()
+		for _, elem := range m.Usages {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.Etag != nil {
+		e.FieldStart("etag")
+		e.Str(*m.Etag)
+	}
+
+	if m.Description != nil {
+		e.FieldStart("description")
+		e.Str(*m.Description)
+	}
+	return nil
+}
+
+func (m *CommonTypedResourceMetadata) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CommonTypedResourceMetadata) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CommonTypedResourceMetadata")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			var v resmodels.AnyResourceID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Id = &v
+			return nil
+		case "name":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Name = &v
+			return nil
+		case "displayName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DisplayName = &v
+			return nil
+		case "createTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.CreateTime = &v
+			return nil
+		case "updateTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.UpdateTime = &v
+			return nil
+		case "deleteTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.DeleteTime = &v
+			return nil
+		case "purgeTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.PurgeTime = &v
+			return nil
+		case "usages":
+			c := make([]Usage, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v Usage
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Usages = c
+			return nil
+		case "etag":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Etag = &v
+			return nil
+		case "description":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Description = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

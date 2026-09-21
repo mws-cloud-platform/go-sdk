@@ -3,6 +3,11 @@
 package model
 
 import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
@@ -67,4 +72,93 @@ func (m *SelfManagedSpecRequest) Clone() *SelfManagedSpecRequest {
 		clone.ChainedCert = &cloneChainedCert
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m SelfManagedSpecRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *SelfManagedSpecRequest) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *SelfManagedSpecRequest) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("certificate")
+	e.Str(m.Certificate)
+
+	e.FieldStart("privateKey")
+	e.Str(m.PrivateKey.Value())
+
+	if m.ChainedCert != nil {
+		e.FieldStart("chainedCert")
+		e.Str(*m.ChainedCert)
+	}
+	return nil
+}
+
+func (m *SelfManagedSpecRequest) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *SelfManagedSpecRequest) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("SelfManagedSpecRequest")
+	}
+
+	requiredFilled := map[string]bool{
+		"certificate": false,
+		"privateKey":  false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "certificate":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Certificate = v
+			requiredFilled["certificate"] = true
+			return nil
+		case "privateKey":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.PrivateKey = sensitive.New(v)
+			requiredFilled["privateKey"] = true
+			return nil
+		case "chainedCert":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.ChainedCert = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

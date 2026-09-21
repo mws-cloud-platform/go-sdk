@@ -6,6 +6,10 @@ import (
 	"context"
 	"time"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/resources/references/gpt"
@@ -259,4 +263,283 @@ func (m *DeploymentMetadataResponse) Clone() *DeploymentMetadataResponse {
 	clone.Id = m.Id.Clone()
 
 	return &clone
+}
+
+// JSON methods
+
+func (m DeploymentResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *DeploymentResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *DeploymentResponse) encodeFields(e *jx.Encoder) error {
+	if m.Kind != nil {
+		e.FieldStart("kind")
+		e.Str(*m.Kind)
+	}
+
+	if m.Metadata != nil {
+		e.FieldStart("metadata")
+		if err := m.Metadata.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	e.FieldStart("spec")
+	if err := m.Spec.Encode(e); err != nil {
+		return err
+	}
+
+	if m.Status != nil {
+		e.FieldStart("status")
+		if err := m.Status.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *DeploymentResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *DeploymentResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("DeploymentResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "kind":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Kind = &v
+			return nil
+		case "metadata":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v DeploymentMetadataResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Metadata = &v
+			return nil
+		case "spec":
+			var v DeploymentSpecResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Spec = v
+			return nil
+		case "status":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v DeploymentStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Status = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+}
+
+func (m DeploymentMetadataResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *DeploymentMetadataResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *DeploymentMetadataResponse) encodeFields(e *jx.Encoder) error {
+	if m.DisplayName != nil {
+		e.FieldStart("displayName")
+		e.Str(*m.DisplayName)
+	}
+
+	if m.CreateTime != nil {
+		e.FieldStart("createTime")
+		conv.EncodeDateTimeUTC(e, *m.CreateTime)
+	}
+
+	if m.UpdateTime != nil {
+		e.FieldStart("updateTime")
+		conv.EncodeDateTimeUTC(e, *m.UpdateTime)
+	}
+
+	if m.DeleteTime != nil {
+		e.FieldStart("deleteTime")
+		conv.EncodeDateTimeUTC(e, *m.DeleteTime)
+	}
+
+	if m.PurgeTime != nil {
+		e.FieldStart("purgeTime")
+		conv.EncodeDateTimeUTC(e, *m.PurgeTime)
+	}
+
+	if m.Usages != nil {
+		e.FieldStart("usages")
+		e.ArrStart()
+		for _, elem := range m.Usages {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+
+	if m.Etag != nil {
+		e.FieldStart("etag")
+		e.Str(*m.Etag)
+	}
+
+	if m.Description != nil {
+		e.FieldStart("description")
+		e.Str(*m.Description)
+	}
+	if m.Id != nil {
+		e.FieldStart("id")
+		if err := m.Id.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *DeploymentMetadataResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *DeploymentMetadataResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("DeploymentMetadataResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "displayName":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.DisplayName = &v
+			return nil
+		case "createTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.CreateTime = &v
+			return nil
+		case "updateTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.UpdateTime = &v
+			return nil
+		case "deleteTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.DeleteTime = &v
+			return nil
+		case "purgeTime":
+			v, err := decode.DateTime(d)
+			if err != nil {
+				return err
+			}
+
+			m.PurgeTime = &v
+			return nil
+		case "usages":
+			c := make([]commonmodel.TypedUsageResponse, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v commonmodel.TypedUsageResponse
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Usages = c
+			return nil
+		case "etag":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Etag = &v
+			return nil
+		case "description":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Description = &v
+			return nil
+		case "id":
+			var v gpt.DeploymentID
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Id = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

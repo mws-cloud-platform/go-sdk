@@ -5,6 +5,9 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/iam"
 	"go.mws.cloud/go-sdk/service/resources/references/support"
@@ -91,4 +94,88 @@ func (m *CommonRoleBindingSpecResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m CommonRoleBindingSpecResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *CommonRoleBindingSpecResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *CommonRoleBindingSpecResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("subject")
+	if err := m.Subject.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("role")
+	if err := m.Role.Encode(e); err != nil {
+		return err
+	}
+
+	if m.SupportRequestId != nil {
+		e.FieldStart("supportRequestId")
+		if err := m.SupportRequestId.Encode(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingSpecResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *CommonRoleBindingSpecResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("CommonRoleBindingSpecResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "subject":
+			var v CommonRoleBindingSpecSubjectResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Subject = v
+			return nil
+		case "role":
+			var v iam.RoleRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Role = v
+			return nil
+		case "supportRequestId":
+			var v support.RequestIDRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.SupportRequestId = &v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -5,6 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
@@ -60,4 +64,71 @@ func (m *KafkaAllocationResponse) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m KafkaAllocationResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *KafkaAllocationResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *KafkaAllocationResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("zone")
+	if err := m.Zone.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("count")
+	e.Int32(m.Count)
+	return nil
+}
+
+func (m *KafkaAllocationResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *KafkaAllocationResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("KafkaAllocationResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "zone":
+			var v rm.ZoneRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Zone = v
+			return nil
+		case "count":
+			v, err := decode.Int32(d)
+			if err != nil {
+				return err
+			}
+
+			m.Count = v
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }

@@ -5,8 +5,10 @@ package model
 import (
 	"context"
 
+	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
 
+	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/service/resources/references/vpc"
 )
@@ -95,4 +97,112 @@ func (m *ResourceAddressSpec) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// JSON methods
+
+func (m ResourceAddressSpec) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ResourceAddressSpec) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ResourceAddressSpec) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("subnet")
+	if err := m.Subnet.Encode(e); err != nil {
+		return err
+	}
+
+	if m.IpAddress != nil {
+		e.FieldStart("ipAddress")
+		m.IpAddress.Encode(e)
+	}
+
+	if m.Dns != nil {
+		e.FieldStart("dns")
+		e.ArrStart()
+		for _, elem := range m.Dns {
+			if err := elem.Encode(e); err != nil {
+				return err
+			}
+		}
+		e.ArrEnd()
+	}
+	return nil
+}
+
+func (m *ResourceAddressSpec) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ResourceAddressSpec) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ResourceAddressSpec")
+	}
+
+	requiredFilled := map[string]bool{
+		"subnet": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "subnet":
+			var v vpc.SubnetRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Subnet = v
+			requiredFilled["subnet"] = true
+			return nil
+		case "ipAddress":
+			var v ipaddress.IPAddress
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.IpAddress = &v
+			return nil
+		case "dns":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			c := make([]VpcAddressDnsSpec, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v VpcAddressDnsSpec
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.Dns = c
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }

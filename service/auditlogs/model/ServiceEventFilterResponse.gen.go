@@ -2,6 +2,14 @@
 
 package model
 
+import (
+	"github.com/go-faster/jx"
+
+	"go.mws.cloud/go-sdk/internal/conv"
+	"go.mws.cloud/go-sdk/internal/decode"
+	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+)
+
 // Real OAPI model name: ServiceEventFilter
 type ServiceEventFilterResponse struct {
 	IncludedEvents []string `json:"includedEvents,omitempty" yaml:"includedEvents,omitempty"`
@@ -38,4 +46,72 @@ func (m *ServiceEventFilterResponse) Clone() *ServiceEventFilterResponse {
 		}
 	}
 	return &clone
+}
+
+// JSON methods
+
+func (m ServiceEventFilterResponse) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	if err := m.Encode(&e); err != nil {
+		return nil, err
+	}
+	return e.Bytes(), nil
+}
+
+func (m *ServiceEventFilterResponse) Encode(e *jx.Encoder) error {
+	if m == nil {
+		e.Null()
+		return nil
+	}
+	e.ObjStart()
+	if err := m.encodeFields(e); err != nil {
+		return err
+	}
+	e.ObjEnd()
+	return nil
+}
+
+func (m *ServiceEventFilterResponse) encodeFields(e *jx.Encoder) error {
+	if m.IncludedEvents != nil {
+		e.FieldStart("includedEvents")
+		e.ArrStart()
+		for _, elem := range m.IncludedEvents {
+			e.Str(elem)
+		}
+		e.ArrEnd()
+	}
+	return nil
+}
+
+func (m *ServiceEventFilterResponse) UnmarshalJSON(b []byte) error {
+	return m.Decode(jx.DecodeBytes(b))
+}
+
+func (m *ServiceEventFilterResponse) Decode(d *jx.Decoder) error {
+	if m == nil {
+		return conv.NewDecodeToNilError("ServiceEventFilterResponse")
+	}
+
+	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "includedEvents":
+			c := make([]string, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				v, err := decode.Str(d)
+				if err != nil {
+					return err
+				}
+
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.IncludedEvents = c
+			return nil
+		default:
+			return d.Skip()
+		}
+	}))
 }
