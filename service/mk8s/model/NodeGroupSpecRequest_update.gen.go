@@ -24,6 +24,8 @@ type UpdateNodeGroupSpecRequest struct {
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Subnet optional.Optional[UpdateNodeGroupSpecSubnetRequest] `json:"subnet" yaml:"subnet"`
+	// Настройки сети группы узлов.
+	Network optional.OptionalNil[UpdateNodeGroupSpecNetworkRequest] `json:"network" yaml:"network"`
 	// Тип ВМ
 	VmType optional.Optional[UpdateNodeGroupSpecVmTypeRequest] `json:"vmType" yaml:"vmType"`
 	// Размер хранилища для образов и контейнеров, в Gb
@@ -51,6 +53,9 @@ func (m *NodeGroupSpecRequest) AsUpdateModel() UpdateNodeGroupSpecRequest {
 	var u UpdateNodeGroupSpecRequest
 	u.Zone = optional.NewOptional(m.GetZone())
 	u.Subnet = optional.NewOptional(m.Subnet.AsUpdateModel())
+	if m.Network != nil {
+		u.Network = optional.NewOptionalNil(m.Network.AsUpdateModel())
+	}
 	u.VmType = optional.NewOptional(m.VmType.AsUpdateModel())
 	if m.ImageStorageSize != nil {
 		u.ImageStorageSize = optional.NewOptional(m.GetImageStorageSizeOr(bytesize.ByteSize{}))
@@ -111,6 +116,7 @@ func (m *NodeGroupSpecRequest) Diff(src *NodeGroupSpecRequest) UpdateNodeGroupSp
 	if !nilDiffers {
 		upd.Zone = m.diffZone(src)
 		upd.Subnet = m.diffSubnet(src)
+		upd.Network = m.diffNetwork(src)
 		upd.VmType = m.diffVmType(src)
 		upd.ImageStorageSize = m.diffImageStorageSize(src)
 		upd.ImageStorageIops = m.diffImageStorageIops(src)
@@ -137,6 +143,11 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 	}
 	if u.Subnet.IsSet() {
 		out.Subnet = out.Subnet.WithChanges(u.Subnet.Value)
+	}
+	if u.Network.IsSet() {
+		out.Network = ptr.Get(out.Network.WithChanges(u.Network.Value))
+	} else if u.Network.IsNull() {
+		out.Network = nil
 	}
 	if u.VmType.IsSet() {
 		out.VmType = out.VmType.WithChanges(u.VmType.Value)
@@ -184,6 +195,7 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 func (m UpdateNodeGroupSpecRequest) HasChanges() bool {
 	return m.Zone.Set ||
 		m.Subnet.Set ||
+		m.Network.Set ||
 		m.VmType.Set ||
 		m.ImageStorageSize.Set ||
 		m.ImageStorageIops.Set ||
@@ -235,6 +247,16 @@ func (m *NodeGroupSpecRequest) diffSubnet(src *NodeGroupSpecRequest) optional.Op
 	return optional.Optional[UpdateNodeGroupSpecSubnetRequest]{
 		Value: value,
 		Set:   value.HasChanges(),
+	}
+}
+
+func (m *NodeGroupSpecRequest) diffNetwork(src *NodeGroupSpecRequest) optional.OptionalNil[UpdateNodeGroupSpecNetworkRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetNetwork().Diff(src.GetNetwork())
+	return optional.OptionalNil[UpdateNodeGroupSpecNetworkRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
 	}
 }
 

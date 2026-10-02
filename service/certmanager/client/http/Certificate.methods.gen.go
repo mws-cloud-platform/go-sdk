@@ -105,7 +105,7 @@ func (c *Certificate) queryListCertificates(request *client.ListCertificatesRequ
 }
 
 func (c *Certificate) headerListCertificates(req *http.Request, request *client.ListCertificatesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetCertificateContent позволяет скачать содержимое сертификата.
@@ -177,7 +177,7 @@ func (c *Certificate) getCertificateContentInvoker(ctx context.Context, anyReq a
 }
 
 func (c *Certificate) headerGetCertificateContent(req *http.Request, request *client.GetCertificateContentRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteCertificate позволяет удалить сертификаты.
@@ -259,7 +259,7 @@ func (c *Certificate) queryDeleteCertificate(request *client.DeleteCertificateRe
 }
 
 func (c *Certificate) headerDeleteCertificate(req *http.Request, request *client.DeleteCertificateRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -337,7 +337,7 @@ func (c *Certificate) getCertificateInvoker(ctx context.Context, anyReq any, res
 }
 
 func (c *Certificate) headerGetCertificate(req *http.Request, request *client.GetCertificateRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertCertificate позволяет обновить (или создать) сертификат.
@@ -427,7 +427,7 @@ func (c *Certificate) queryUpsertCertificate(request *client.UpsertCertificateRe
 }
 
 func (c *Certificate) headerUpsertCertificate(req *http.Request, request *client.UpsertCertificateRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -522,7 +522,7 @@ func (c *Certificate) queryCreateCertificate(request *client.UpsertCertificateRe
 }
 
 func (c *Certificate) headerCreateCertificate(req *http.Request, request *client.UpsertCertificateRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -617,7 +617,7 @@ func (c *Certificate) queryUpdateCertificate(request *client.UpdateCertificateRe
 }
 
 func (c *Certificate) headerUpdateCertificate(req *http.Request, request *client.UpdateCertificateRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

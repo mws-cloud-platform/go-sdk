@@ -6,6 +6,7 @@ import (
 
 	"go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/mws/credentials"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func New(provider credentials.Provider) client.Interceptor {
@@ -15,8 +16,8 @@ func New(provider credentials.Provider) client.Interceptor {
 			if err != nil {
 				return fmt.Errorf("provide credentials: %w", err)
 			}
-			if creds.AccessToken != "" {
-				req.SetAuthorization("Bearer " + creds.AccessToken)
+			if v := creds.AccessToken.Value(); v != "" {
+				req.SetAuthorization(sensitive.New("Bearer " + v))
 			}
 		}
 
@@ -25,5 +26,5 @@ func New(provider credentials.Provider) client.Interceptor {
 }
 
 type authorizedRequest interface {
-	SetAuthorization(string)
+	SetAuthorization(sensitive.Sensitive[string])
 }

@@ -111,7 +111,7 @@ func (c *ClickhouseClusterBackup) queryListClickhouseClusterBackups(request *cli
 }
 
 func (c *ClickhouseClusterBackup) headerListClickhouseClusterBackups(req *http.Request, request *client.ListClickhouseClusterBackupsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteClickhouseClusterBackup удаляет указанную резервную копию кластера ClickHouse.
@@ -195,7 +195,7 @@ func (c *ClickhouseClusterBackup) queryDeleteClickhouseClusterBackup(request *cl
 }
 
 func (c *ClickhouseClusterBackup) headerDeleteClickhouseClusterBackup(req *http.Request, request *client.DeleteClickhouseClusterBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -276,7 +276,7 @@ func (c *ClickhouseClusterBackup) getClickhouseClusterBackupInvoker(ctx context.
 }
 
 func (c *ClickhouseClusterBackup) headerGetClickhouseClusterBackup(req *http.Request, request *client.GetClickhouseClusterBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertClickhouseClusterBackup создаёт новую резервную копию кластера ClickHouse.
@@ -366,7 +366,7 @@ func (c *ClickhouseClusterBackup) queryUpsertClickhouseClusterBackup(request *cl
 }
 
 func (c *ClickhouseClusterBackup) headerUpsertClickhouseClusterBackup(req *http.Request, request *client.UpsertClickhouseClusterBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -461,7 +461,7 @@ func (c *ClickhouseClusterBackup) queryCreateClickhouseClusterBackup(request *cl
 }
 
 func (c *ClickhouseClusterBackup) headerCreateClickhouseClusterBackup(req *http.Request, request *client.UpsertClickhouseClusterBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -556,7 +556,7 @@ func (c *ClickhouseClusterBackup) queryUpdateClickhouseClusterBackup(request *cl
 }
 
 func (c *ClickhouseClusterBackup) headerUpdateClickhouseClusterBackup(req *http.Request, request *client.UpdateClickhouseClusterBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

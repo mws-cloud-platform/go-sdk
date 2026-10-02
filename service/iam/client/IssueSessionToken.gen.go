@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
@@ -18,11 +19,11 @@ type IssueSessionToken interface {
 }
 
 type IssueSessionTokenRequest struct {
-	// IAM-ный токен доступа.
-	Authorization string // header: "Authorization"
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 }
 
-func (m *IssueSessionTokenRequest) SetAuthorization(authorization string) {
+func (m *IssueSessionTokenRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

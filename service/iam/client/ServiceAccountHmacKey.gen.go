@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
@@ -40,12 +41,12 @@ type ServiceAccountHmacKey interface {
 }
 
 type ListHmacKeyRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
@@ -61,7 +62,7 @@ type ListHmacKeyRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListHmacKeyRequest) SetAuthorization(authorization string) {
+func (m *ListHmacKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -121,12 +122,12 @@ func (m *ListHmacKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type DeleteHmacKeyRequest struct {
-	ServiceAccount string // path: "serviceAccount"
-	KeyName        string // path: "keyName"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
+	KeyName        string                      // path: "keyName"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
 	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
 	IfExist *bool // query: "ifExist"
@@ -136,7 +137,7 @@ type DeleteHmacKeyRequest struct {
 	Cascade *bool // query: "cascade"
 }
 
-func (m *DeleteHmacKeyRequest) SetAuthorization(authorization string) {
+func (m *DeleteHmacKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -150,10 +151,10 @@ func (m *DeleteHmacKeyRequest) SetProject(project string) {
 
 func (m *DeleteHmacKeyRequest) getHmacKeyRequest() GetHmacKeyRequest {
 	return GetHmacKeyRequest{
+		Authorization:  m.Authorization,
 		ServiceAccount: m.ServiceAccount,
 		KeyName:        m.KeyName,
 		Project:        m.Project,
-		Authorization:  m.Authorization,
 	}
 }
 
@@ -200,15 +201,15 @@ func (m *DeleteHmacKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type GetHmacKeyRequest struct {
-	ServiceAccount string // path: "serviceAccount"
-	KeyName        string // path: "keyName"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
+	KeyName        string                      // path: "keyName"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 }
 
-func (m *GetHmacKeyRequest) SetAuthorization(authorization string) {
+func (m *GetHmacKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -263,12 +264,12 @@ func (m *GetHmacKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type UpsertHmacKeyRequest struct {
-	ServiceAccount string // path: "serviceAccount"
-	KeyName        string // path: "keyName"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
+	KeyName        string                      // path: "keyName"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
@@ -276,7 +277,7 @@ type UpsertHmacKeyRequest struct {
 	Body         model.HmacKeyRequest // body
 }
 
-func (m *UpsertHmacKeyRequest) SetAuthorization(authorization string) {
+func (m *UpsertHmacKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -289,12 +290,12 @@ func (m *UpsertHmacKeyRequest) SetProject(project string) {
 }
 
 type UpdateHmacKeyRequest struct {
-	ServiceAccount string // path: "serviceAccount"
-	KeyName        string // path: "keyName"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
+	KeyName        string                      // path: "keyName"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
@@ -302,7 +303,7 @@ type UpdateHmacKeyRequest struct {
 	Body         model.UpdateHmacKeyRequest // body
 }
 
-func (m *UpdateHmacKeyRequest) SetAuthorization(authorization string) {
+func (m *UpdateHmacKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

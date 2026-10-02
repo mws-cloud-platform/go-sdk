@@ -105,7 +105,7 @@ func (c *Deployment) queryListDeployments(request *client.ListDeploymentsRequest
 }
 
 func (c *Deployment) headerListDeployments(req *http.Request, request *client.ListDeploymentsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteDeployment удаляет указанный деплоймент модели.
@@ -190,7 +190,7 @@ func (c *Deployment) queryDeleteDeployment(request *client.DeleteDeploymentReque
 }
 
 func (c *Deployment) headerDeleteDeployment(req *http.Request, request *client.DeleteDeploymentRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -268,7 +268,7 @@ func (c *Deployment) getDeploymentInvoker(ctx context.Context, anyReq any, respo
 }
 
 func (c *Deployment) headerGetDeployment(req *http.Request, request *client.GetDeploymentRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertDeployment создает новый деплоймент модели с предоставленной спецификацией или обновляет существующий.
@@ -355,7 +355,7 @@ func (c *Deployment) queryUpsertDeployment(request *client.UpsertDeploymentReque
 }
 
 func (c *Deployment) headerUpsertDeployment(req *http.Request, request *client.UpsertDeploymentRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -447,7 +447,7 @@ func (c *Deployment) queryCreateDeployment(request *client.UpsertDeploymentReque
 }
 
 func (c *Deployment) headerCreateDeployment(req *http.Request, request *client.UpsertDeploymentRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -539,7 +539,7 @@ func (c *Deployment) queryUpdateDeployment(request *client.UpdateDeploymentReque
 }
 
 func (c *Deployment) headerUpdateDeployment(req *http.Request, request *client.UpdateDeploymentRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

@@ -109,5 +109,5 @@ func (c *Project) queryListProjectsV3(request *client.ListProjectsV3Request) str
 }
 
 func (c *Project) headerListProjectsV3(req *http.Request, request *client.ListProjectsV3Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

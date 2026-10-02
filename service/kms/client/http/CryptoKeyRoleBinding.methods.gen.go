@@ -105,7 +105,7 @@ func (c *CryptoKeyRoleBinding) queryListCryptoKeyRoleBindings(request *client.Li
 }
 
 func (c *CryptoKeyRoleBinding) headerListCryptoKeyRoleBindings(req *http.Request, request *client.ListCryptoKeyRoleBindingsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteCryptoKeyRoleBinding позволяет удалить роль для доступа к ключу KMS.
@@ -179,7 +179,7 @@ func (c *CryptoKeyRoleBinding) deleteCryptoKeyRoleBindingInvoker(ctx context.Con
 }
 
 func (c *CryptoKeyRoleBinding) headerDeleteCryptoKeyRoleBinding(req *http.Request, request *client.DeleteCryptoKeyRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetCryptoKeyRoleBinding возвращает назначенную роль для доступа к ключу KMS.
@@ -257,7 +257,7 @@ func (c *CryptoKeyRoleBinding) getCryptoKeyRoleBindingInvoker(ctx context.Contex
 }
 
 func (c *CryptoKeyRoleBinding) headerGetCryptoKeyRoleBinding(req *http.Request, request *client.GetCryptoKeyRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertCryptoKeyRoleBinding позволяет назначить роль для доступа к KMS ключу.
@@ -347,7 +347,7 @@ func (c *CryptoKeyRoleBinding) queryUpsertCryptoKeyRoleBinding(request *client.U
 }
 
 func (c *CryptoKeyRoleBinding) headerUpsertCryptoKeyRoleBinding(req *http.Request, request *client.UpsertCryptoKeyRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -442,7 +442,7 @@ func (c *CryptoKeyRoleBinding) queryCreateCryptoKeyRoleBinding(request *client.U
 }
 
 func (c *CryptoKeyRoleBinding) headerCreateCryptoKeyRoleBinding(req *http.Request, request *client.UpsertCryptoKeyRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -537,7 +537,7 @@ func (c *CryptoKeyRoleBinding) queryUpdateCryptoKeyRoleBinding(request *client.U
 }
 
 func (c *CryptoKeyRoleBinding) headerUpdateCryptoKeyRoleBinding(req *http.Request, request *client.UpdateCryptoKeyRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

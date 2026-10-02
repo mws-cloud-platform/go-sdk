@@ -14,6 +14,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/gpt"
 )
 
+// Модель – это набор числовых параметров (весов) и архитектура нейронной сети, полученных в результате обучения. При каждом запросе вычисляет наиболее вероятный результат, используя знания, заложенные в этих параметрах, и конфигурацию, переданную на вход
 // Real OAPI model name: Model
 type ModelResponse struct {
 	Kind     *string                `json:"kind,omitempty" yaml:"kind,omitempty"`

@@ -48,6 +48,17 @@ func (m *UpdateNodeGroupSpecRequest) encodeFields(e *jx.Encoder) error {
 		}
 	}
 
+	if m.Network.IsSet() {
+		e.FieldStart("network")
+		if m.Network.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Network.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+
 	if m.VmType.IsSet() {
 		e.FieldStart("vmType")
 		if err := m.VmType.Value.Encode(e); err != nil {
@@ -171,6 +182,19 @@ func (m *UpdateNodeGroupSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Subnet.SetTo(v)
+			return nil
+		case "network":
+			if d.Next() == jx.Null {
+				m.Network.SetToNull()
+				return d.Null()
+			}
+
+			var v UpdateNodeGroupSpecNetworkRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Network.SetTo(v)
 			return nil
 		case "vmType":
 			var v UpdateNodeGroupSpecVmTypeRequest

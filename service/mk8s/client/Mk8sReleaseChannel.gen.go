@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
@@ -23,12 +24,12 @@ type Mk8sReleaseChannel interface {
 
 type ListMk8sReleaseChannelsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 }
 
-func (m *ListMk8sReleaseChannelsRequest) SetAuthorization(authorization string) {
+func (m *ListMk8sReleaseChannelsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

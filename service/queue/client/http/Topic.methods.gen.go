@@ -105,7 +105,7 @@ func (c *Topic) queryListTopics(request *client.ListTopicsRequest) string {
 }
 
 func (c *Topic) headerListTopics(req *http.Request, request *client.ListTopicsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteTopic позволяет удалить топик.
@@ -177,7 +177,7 @@ func (c *Topic) deleteTopicInvoker(ctx context.Context, anyReq any, response com
 }
 
 func (c *Topic) headerDeleteTopic(req *http.Request, request *client.DeleteTopicRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetTopic позволяет получить информацию по топику.
@@ -252,7 +252,7 @@ func (c *Topic) getTopicInvoker(ctx context.Context, anyReq any, response common
 }
 
 func (c *Topic) headerGetTopic(req *http.Request, request *client.GetTopicRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertTopic обновление (или создание) топика.
@@ -339,7 +339,7 @@ func (c *Topic) queryUpsertTopic(request *client.UpsertTopicRequest) string {
 }
 
 func (c *Topic) headerUpsertTopic(req *http.Request, request *client.UpsertTopicRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -431,7 +431,7 @@ func (c *Topic) queryCreateTopic(request *client.UpsertTopicRequest) string {
 }
 
 func (c *Topic) headerCreateTopic(req *http.Request, request *client.UpsertTopicRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -523,7 +523,7 @@ func (c *Topic) queryUpdateTopic(request *client.UpdateTopicRequest) string {
 }
 
 func (c *Topic) headerUpdateTopic(req *http.Request, request *client.UpdateTopicRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

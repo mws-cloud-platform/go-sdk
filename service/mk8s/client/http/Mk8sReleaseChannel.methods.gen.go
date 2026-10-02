@@ -83,5 +83,5 @@ func (c *Mk8sReleaseChannel) listMk8sReleaseChannelsInvoker(ctx context.Context,
 }
 
 func (c *Mk8sReleaseChannel) headerListMk8sReleaseChannels(req *http.Request, request *client.ListMk8sReleaseChannelsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

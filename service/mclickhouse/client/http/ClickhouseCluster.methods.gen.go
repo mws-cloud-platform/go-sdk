@@ -108,7 +108,7 @@ func (c *ClickhouseCluster) queryListClickhouseClusters(request *client.ListClic
 }
 
 func (c *ClickhouseCluster) headerListClickhouseClusters(req *http.Request, request *client.ListClickhouseClustersRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // StopCluster позволяет остановить кластер ClickHouse.
@@ -183,7 +183,7 @@ func (c *ClickhouseCluster) stopClusterInvoker(ctx context.Context, anyReq any, 
 }
 
 func (c *ClickhouseCluster) headerStopCluster(req *http.Request, request *client.StopClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -261,7 +261,7 @@ func (c *ClickhouseCluster) startClusterInvoker(ctx context.Context, anyReq any,
 }
 
 func (c *ClickhouseCluster) headerStartCluster(req *http.Request, request *client.StartClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -346,7 +346,7 @@ func (c *ClickhouseCluster) queryDeleteClickhouseCluster(request *client.DeleteC
 }
 
 func (c *ClickhouseCluster) headerDeleteClickhouseCluster(req *http.Request, request *client.DeleteClickhouseClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -424,7 +424,7 @@ func (c *ClickhouseCluster) getClickhouseClusterInvoker(ctx context.Context, any
 }
 
 func (c *ClickhouseCluster) headerGetClickhouseCluster(req *http.Request, request *client.GetClickhouseClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertClickhouseCluster создаёт новый кластер ClickHouse или изменяет существующий (upsert).
@@ -513,7 +513,7 @@ func (c *ClickhouseCluster) queryUpsertClickhouseCluster(request *client.UpsertC
 }
 
 func (c *ClickhouseCluster) headerUpsertClickhouseCluster(req *http.Request, request *client.UpsertClickhouseClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -607,7 +607,7 @@ func (c *ClickhouseCluster) queryCreateClickhouseCluster(request *client.UpsertC
 }
 
 func (c *ClickhouseCluster) headerCreateClickhouseCluster(req *http.Request, request *client.UpsertClickhouseClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -701,7 +701,7 @@ func (c *ClickhouseCluster) queryUpdateClickhouseCluster(request *client.UpdateC
 }
 
 func (c *ClickhouseCluster) headerUpdateClickhouseCluster(req *http.Request, request *client.UpdateClickhouseClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

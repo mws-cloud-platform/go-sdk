@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
@@ -41,7 +42,7 @@ type ServiceAccount interface {
 
 type ListServiceAccountRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -61,7 +62,7 @@ type ListServiceAccountRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListServiceAccountRequest) SetAuthorization(authorization string) {
+func (m *ListServiceAccountRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -118,7 +119,7 @@ func (m *ListServiceAccountResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteServiceAccountRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -131,7 +132,7 @@ type DeleteServiceAccountRequest struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteServiceAccountRequest) SetAuthorization(authorization string) {
+func (m *DeleteServiceAccountRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -191,13 +192,13 @@ func (m *DeleteServiceAccountResponse) SetErrorWrapper(f func(err error) error) 
 
 type GetServiceAccountRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project        string // path: "project"
 	ServiceAccount string // path: "serviceAccount"
 }
 
-func (m *GetServiceAccountRequest) SetAuthorization(authorization string) {
+func (m *GetServiceAccountRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -249,7 +250,7 @@ func (m *GetServiceAccountResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertServiceAccountRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -260,7 +261,7 @@ type UpsertServiceAccountRequest struct {
 	Body         model.ServiceAccountRequest // body
 }
 
-func (m *UpsertServiceAccountRequest) SetAuthorization(authorization string) {
+func (m *UpsertServiceAccountRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -282,7 +283,7 @@ func (m *UpsertServiceAccountRequest) getServiceAccountRequest() GetServiceAccou
 
 type UpdateServiceAccountRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -293,7 +294,7 @@ type UpdateServiceAccountRequest struct {
 	Body         model.UpdateServiceAccountRequest // body
 }
 
-func (m *UpdateServiceAccountRequest) SetAuthorization(authorization string) {
+func (m *UpdateServiceAccountRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

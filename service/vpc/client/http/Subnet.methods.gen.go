@@ -108,7 +108,7 @@ func (c *Subnet) queryListSubnets(request *client.ListSubnetsRequest) string {
 }
 
 func (c *Subnet) headerListSubnets(req *http.Request, request *client.ListSubnetsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteSubnet позволяет удалить подсеть.
@@ -192,7 +192,7 @@ func (c *Subnet) queryDeleteSubnet(request *client.DeleteSubnetRequest) string {
 }
 
 func (c *Subnet) headerDeleteSubnet(req *http.Request, request *client.DeleteSubnetRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -273,7 +273,7 @@ func (c *Subnet) getSubnetInvoker(ctx context.Context, anyReq any, response comm
 }
 
 func (c *Subnet) headerGetSubnet(req *http.Request, request *client.GetSubnetRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertSubnet позволяет создать или изменить подсеть.
@@ -366,7 +366,7 @@ func (c *Subnet) queryUpsertSubnet(request *client.UpsertSubnetRequest) string {
 }
 
 func (c *Subnet) headerUpsertSubnet(req *http.Request, request *client.UpsertSubnetRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -464,7 +464,7 @@ func (c *Subnet) queryCreateSubnet(request *client.UpsertSubnetRequest) string {
 }
 
 func (c *Subnet) headerCreateSubnet(req *http.Request, request *client.UpsertSubnetRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -562,7 +562,7 @@ func (c *Subnet) queryUpdateSubnet(request *client.UpdateSubnetRequest) string {
 }
 
 func (c *Subnet) headerUpdateSubnet(req *http.Request, request *client.UpdateSubnetRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

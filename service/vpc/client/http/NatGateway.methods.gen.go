@@ -105,5 +105,5 @@ func (c *NatGateway) queryListNatGateways(request *client.ListNatGatewaysRequest
 }
 
 func (c *NatGateway) headerListNatGateways(req *http.Request, request *client.ListNatGatewaysRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

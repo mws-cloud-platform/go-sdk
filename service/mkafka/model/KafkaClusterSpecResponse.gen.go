@@ -29,7 +29,8 @@ type KafkaClusterSpecResponse struct {
 	// Описание ресурсов хостов брокеров и контроллеров.
 	Instances KafkaInstanceResponse `json:"instances" yaml:"instances"`
 	// Настройки Kafka. Если не указаны, будут использованы настройки по умолчанию
-	ProductConfig     *string                                `json:"productConfig,omitempty" yaml:"productConfig,omitempty"`
+	ProductConfig *string `json:"productConfig,omitempty" yaml:"productConfig,omitempty"`
+	// Сервисное окно Maintenance API.
 	MaintenanceWindow *commonmodel.MaintenanceWindowResponse `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry *KafkaSchemaRegistrySpecResponse `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`

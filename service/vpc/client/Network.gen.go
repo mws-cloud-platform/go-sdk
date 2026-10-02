@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
@@ -41,7 +42,7 @@ type Network interface {
 
 type ListNetworksRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -59,7 +60,7 @@ type ListNetworksRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListNetworksRequest) SetAuthorization(authorization string) {
+func (m *ListNetworksRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -132,7 +133,7 @@ func (m *ListNetworksResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteNetworkRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -143,7 +144,7 @@ type DeleteNetworkRequest struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteNetworkRequest) SetAuthorization(authorization string) {
+func (m *DeleteNetworkRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -219,14 +220,14 @@ func (m *DeleteNetworkResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetNetworkRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
 	Network string // path: "network"
 }
 
-func (m *GetNetworkRequest) SetAuthorization(authorization string) {
+func (m *GetNetworkRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -294,7 +295,7 @@ func (m *GetNetworkResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertNetworkRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -307,7 +308,7 @@ type UpsertNetworkRequest struct {
 	Body model.NetworkRequest // body
 }
 
-func (m *UpsertNetworkRequest) SetAuthorization(authorization string) {
+func (m *UpsertNetworkRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -329,7 +330,7 @@ func (m *UpsertNetworkRequest) getNetworkRequest() GetNetworkRequest {
 
 type UpdateNetworkRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -342,7 +343,7 @@ type UpdateNetworkRequest struct {
 	Body model.UpdateNetworkRequest // body
 }
 
-func (m *UpdateNetworkRequest) SetAuthorization(authorization string) {
+func (m *UpdateNetworkRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

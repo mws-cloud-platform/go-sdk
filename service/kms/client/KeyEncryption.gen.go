@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/kms/model"
 )
@@ -31,7 +32,7 @@ type KeyEncryption interface {
 
 type GenerateDataKeyRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
@@ -39,7 +40,7 @@ type GenerateDataKeyRequest struct {
 	Body *model.GenerateDataKeyRequest // body
 }
 
-func (m *GenerateDataKeyRequest) SetAuthorization(authorization string) {
+func (m *GenerateDataKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -99,7 +100,7 @@ func (m *GenerateDataKeyResponse) SetErrorWrapper(f func(err error) error) {
 
 type EncryptRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
@@ -107,7 +108,7 @@ type EncryptRequest struct {
 	Body *model.EncryptRequest // body
 }
 
-func (m *EncryptRequest) SetAuthorization(authorization string) {
+func (m *EncryptRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -167,7 +168,7 @@ func (m *EncryptResponse) SetErrorWrapper(f func(err error) error) {
 
 type DecryptRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
@@ -175,7 +176,7 @@ type DecryptRequest struct {
 	Body *model.DecryptRequest // body
 }
 
-func (m *DecryptRequest) SetAuthorization(authorization string) {
+func (m *DecryptRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -235,14 +236,14 @@ func (m *DecryptResponse) SetErrorWrapper(f func(err error) error) {
 
 type ReEncryptRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project        string                  // path: "project"
 	DestinationKey string                  // path: "destinationKey"
 	Body           *model.ReEncryptRequest // body
 }
 
-func (m *ReEncryptRequest) SetAuthorization(authorization string) {
+func (m *ReEncryptRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

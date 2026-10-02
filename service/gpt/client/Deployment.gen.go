@@ -11,6 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/gpt/model"
 )
@@ -46,7 +47,7 @@ type Deployment interface {
 
 type ListDeploymentsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -64,7 +65,7 @@ type ListDeploymentsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListDeploymentsRequest) SetAuthorization(authorization string) {
+func (m *ListDeploymentsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -275,7 +276,7 @@ func (m *ListDeploymentsResponse200) Decode(d *jx.Decoder) error {
 
 type DeleteDeploymentRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
@@ -290,7 +291,7 @@ type DeleteDeploymentRequest struct {
 	DeploymentName string // path: "deploymentName"
 }
 
-func (m *DeleteDeploymentRequest) SetAuthorization(authorization string) {
+func (m *DeleteDeploymentRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -354,14 +355,14 @@ func (m *DeleteDeploymentResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetDeploymentRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Параметр пути для имени деплоймента, уникальный в рамках проекта.
 	DeploymentName string // path: "deploymentName"
 }
 
-func (m *GetDeploymentRequest) SetAuthorization(authorization string) {
+func (m *GetDeploymentRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -417,7 +418,7 @@ func (m *GetDeploymentResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertDeploymentRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
@@ -428,7 +429,7 @@ type UpsertDeploymentRequest struct {
 	Body model.DeploymentRequest // body
 }
 
-func (m *UpsertDeploymentRequest) SetAuthorization(authorization string) {
+func (m *UpsertDeploymentRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -450,7 +451,7 @@ func (m *UpsertDeploymentRequest) getDeploymentRequest() GetDeploymentRequest {
 
 type UpdateDeploymentRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Ключ идемпотентности
@@ -461,7 +462,7 @@ type UpdateDeploymentRequest struct {
 	Body model.UpdateDeploymentRequest // body
 }
 
-func (m *UpdateDeploymentRequest) SetAuthorization(authorization string) {
+func (m *UpdateDeploymentRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

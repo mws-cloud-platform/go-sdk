@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/serialconsole/model"
 )
@@ -23,13 +24,13 @@ type SerialPort interface {
 
 type GetSerialPortOutputRequest struct {
 	// Токен авторизации IAM
-	Authorization  string // header: "Authorization"
-	Project        string // query: "project"
-	VirtualMachine string // query: "virtualMachine"
-	SerialPort     int    // query: "serialPort"
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	Project        string                      // query: "project"
+	VirtualMachine string                      // query: "virtualMachine"
+	SerialPort     int                         // query: "serialPort"
 }
 
-func (m *GetSerialPortOutputRequest) SetAuthorization(authorization string) {
+func (m *GetSerialPortOutputRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -93,14 +94,14 @@ func (m *GetSerialPortOutputResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetComputeSerialPortOutputRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project        string // path: "project"
 	VirtualMachine string // path: "virtualMachine"
 	SerialPort     int    // query: "serialPort"
 }
 
-func (m *GetComputeSerialPortOutputRequest) SetAuthorization(authorization string) {
+func (m *GetComputeSerialPortOutputRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

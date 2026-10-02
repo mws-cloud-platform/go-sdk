@@ -31,7 +31,8 @@ type UpdateKafkaClusterSpecRequest struct {
 	// Описание ресурсов хостов брокеров и контроллеров.
 	Instances optional.Optional[UpdateKafkaInstanceRequest] `json:"instances" yaml:"instances"`
 	// Настройки Kafka. Если не указаны, будут использованы настройки по умолчанию
-	ProductConfig     optional.Optional[string]                                        `json:"productConfig" yaml:"productConfig"`
+	ProductConfig optional.Optional[string] `json:"productConfig" yaml:"productConfig"`
+	// Сервисное окно Maintenance API.
 	MaintenanceWindow optional.OptionalNil[commonmodel.UpdateMaintenanceWindowRequest] `json:"maintenanceWindow" yaml:"maintenanceWindow"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry optional.OptionalNil[UpdateKafkaSchemaRegistrySpecRequest] `json:"schemaRegistry" yaml:"schemaRegistry"`

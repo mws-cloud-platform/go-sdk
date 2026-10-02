@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
+
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 const (
@@ -19,6 +21,17 @@ const (
 	// DefaultTokenExpirationDelta is the default token expiration delta.
 	DefaultTokenExpirationDelta = 5 * time.Minute
 )
+
+// AccessToken represents a sensitive access token.
+type AccessToken struct {
+	accessTokenValue
+}
+
+// NewAccessToken creates a new access token from the given string.
+func NewAccessToken(token string) AccessToken {
+	v := sensitive.New(token, sensitive.WithFormat(accessTokenFormat))
+	return AccessToken{accessTokenValue: v}
+}
 
 // Provider represents a provider of credentials for service clients.
 type Provider interface {
@@ -41,7 +54,7 @@ func (f ProviderFunc) Provide(ctx context.Context) (Credentials, error) {
 
 // Credentials contains credentials for service clients.
 type Credentials struct {
-	AccessToken string
+	AccessToken AccessToken
 	ExpiresAt   time.Time
 }
 
@@ -57,4 +70,18 @@ func AnonymousProvider() Provider {
 	return ProviderFunc(func(context.Context) (Credentials, error) {
 		return Credentials{}, nil
 	})
+}
+
+type accessTokenValue = sensitive.Sensitive[string]
+
+func accessTokenFormat(token string) string {
+	const (
+		visiblePrefixLength = 8
+		minSafeLength       = 3 * visiblePrefixLength // So we don't show more than 33% of the secret.
+		mask                = "*******"
+	)
+	if len(token) <= minSafeLength {
+		return mask
+	}
+	return token[:visiblePrefixLength] + mask
 }

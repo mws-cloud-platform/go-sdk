@@ -10,6 +10,7 @@ import (
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Версия секрета, содержащая одну или несколько пар «ключ-значение»
 // Real OAPI model name: SecretVersion
 type SecretVersionRequest struct {
 	// Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров.

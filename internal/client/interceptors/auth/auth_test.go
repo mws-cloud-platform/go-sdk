@@ -10,6 +10,7 @@ import (
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/client/interceptors/auth"
 	"go.mws.cloud/go-sdk/mws/credentials"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
 func TestAuth(t *testing.T) {
@@ -21,8 +22,10 @@ func TestAuth(t *testing.T) {
 		Error         error
 	}{
 		{
-			Name:          "authorized request",
-			Provider:      credentials.StaticProvider(credentials.Credentials{AccessToken: "other token"}),
+			Name: "authorized request",
+			Provider: credentials.StaticProvider(credentials.Credentials{
+				AccessToken: credentials.NewAccessToken("other token"),
+			}),
 			RequestBefore: &requestWithAuthorization{},
 			RequestAfter:  &requestWithAuthorization{token: "Bearer other token"},
 		},
@@ -77,6 +80,6 @@ type requestWithAuthorization struct {
 	token string
 }
 
-func (r *requestWithAuthorization) SetAuthorization(token string) {
-	r.token = token
+func (r *requestWithAuthorization) SetAuthorization(token sensitive.Sensitive[string]) {
+	r.token = token.Value()
 }

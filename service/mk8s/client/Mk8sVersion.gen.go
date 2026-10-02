@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
@@ -23,7 +24,7 @@ type Mk8sVersion interface {
 
 type ListMk8sVersionsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя релизного канала
@@ -38,7 +39,7 @@ type ListMk8sVersionsRequest struct {
 	NodeGroupName *string // query: "nodeGroupName"
 }
 
-func (m *ListMk8sVersionsRequest) SetAuthorization(authorization string) {
+func (m *ListMk8sVersionsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

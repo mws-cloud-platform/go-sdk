@@ -101,7 +101,7 @@ func (c *DiskType) queryListDiskTypes(request *client.ListDiskTypesRequest) stri
 }
 
 func (c *DiskType) headerListDiskTypes(req *http.Request, request *client.ListDiskTypesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetDiskType позволяет получить информацию о типе диска.
@@ -183,5 +183,5 @@ func (c *DiskType) queryGetDiskType(request *client.GetDiskTypeRequest) string {
 }
 
 func (c *DiskType) headerGetDiskType(req *http.Request, request *client.GetDiskTypeRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

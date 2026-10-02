@@ -108,7 +108,7 @@ func (c *PostgresCluster) queryListPostgresClusters(request *client.ListPostgres
 }
 
 func (c *PostgresCluster) headerListPostgresClusters(req *http.Request, request *client.ListPostgresClustersRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // StopCluster позволяет запросить выполнение остановки кластера managed postgres.
@@ -183,7 +183,7 @@ func (c *PostgresCluster) stopClusterInvoker(ctx context.Context, anyReq any, re
 }
 
 func (c *PostgresCluster) headerStopCluster(req *http.Request, request *client.StopClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -261,7 +261,7 @@ func (c *PostgresCluster) startClusterInvoker(ctx context.Context, anyReq any, r
 }
 
 func (c *PostgresCluster) headerStartCluster(req *http.Request, request *client.StartClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -344,7 +344,7 @@ func (c *PostgresCluster) restorePostgresClusterInvoker(ctx context.Context, any
 }
 
 func (c *PostgresCluster) headerRestorePostgresCluster(req *http.Request, request *client.RestorePostgresClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -419,13 +419,13 @@ func (c *PostgresCluster) deletePostgresClusterInvoker(ctx context.Context, anyR
 }
 
 func (c *PostgresCluster) headerDeletePostgresCluster(req *http.Request, request *client.DeletePostgresClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
 }
 
-// GetPostgresCluster returns info about the specified cluster.
+// GetPostgresCluster возвращает информацию об указанном кластере.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mpostgres/v1/projects/{project}/clusters/{cluster}
@@ -497,7 +497,7 @@ func (c *PostgresCluster) getPostgresClusterInvoker(ctx context.Context, anyReq 
 }
 
 func (c *PostgresCluster) headerGetPostgresCluster(req *http.Request, request *client.GetPostgresClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertPostgresCluster upsert Postgres cluster.
@@ -584,7 +584,7 @@ func (c *PostgresCluster) queryUpsertPostgresCluster(request *client.UpsertPostg
 }
 
 func (c *PostgresCluster) headerUpsertPostgresCluster(req *http.Request, request *client.UpsertPostgresClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -676,7 +676,7 @@ func (c *PostgresCluster) queryCreatePostgresCluster(request *client.UpsertPostg
 }
 
 func (c *PostgresCluster) headerCreatePostgresCluster(req *http.Request, request *client.UpsertPostgresClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -768,7 +768,7 @@ func (c *PostgresCluster) queryUpdatePostgresCluster(request *client.UpdatePostg
 }
 
 func (c *PostgresCluster) headerUpdatePostgresCluster(req *http.Request, request *client.UpdatePostgresClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

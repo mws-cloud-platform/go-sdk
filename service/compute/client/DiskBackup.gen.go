@@ -11,6 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
@@ -47,7 +48,7 @@ type DiskBackup interface {
 
 type ListDiskBackupsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -65,7 +66,7 @@ type ListDiskBackupsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListDiskBackupsRequest) SetAuthorization(authorization string) {
+func (m *ListDiskBackupsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -259,7 +260,7 @@ func (m *ListDiskBackupsResponse200) Decode(d *jx.Decoder) error {
 
 type DeleteDiskBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к резервной копии диска
@@ -272,7 +273,7 @@ type DeleteDiskBackupRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
 
-func (m *DeleteDiskBackupRequest) SetAuthorization(authorization string) {
+func (m *DeleteDiskBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -336,7 +337,7 @@ func (m *DeleteDiskBackupResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetDiskBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к резервной копии диска
@@ -345,7 +346,7 @@ type GetDiskBackupRequest struct {
 	WaitNew *string // query: "waitNew"
 }
 
-func (m *GetDiskBackupRequest) SetAuthorization(authorization string) {
+func (m *GetDiskBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -401,7 +402,7 @@ func (m *GetDiskBackupResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertDiskBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к резервной копии диска
@@ -414,7 +415,7 @@ type UpsertDiskBackupRequest struct {
 	Body model.DiskBackupRequest // body
 }
 
-func (m *UpsertDiskBackupRequest) SetAuthorization(authorization string) {
+func (m *UpsertDiskBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -436,7 +437,7 @@ func (m *UpsertDiskBackupRequest) getDiskBackupRequest() GetDiskBackupRequest {
 
 type UpdateDiskBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к резервной копии диска
@@ -449,7 +450,7 @@ type UpdateDiskBackupRequest struct {
 	Body model.UpdateDiskBackupRequest // body
 }
 
-func (m *UpdateDiskBackupRequest) SetAuthorization(authorization string) {
+func (m *UpdateDiskBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

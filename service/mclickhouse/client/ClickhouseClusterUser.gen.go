@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
@@ -33,7 +34,7 @@ type ClickhouseClusterUser interface {
 
 type ListClickhouseClusterUsersRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -55,7 +56,7 @@ type ListClickhouseClusterUsersRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListClickhouseClusterUsersRequest) SetAuthorization(authorization string) {
+func (m *ListClickhouseClusterUsersRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -112,7 +113,7 @@ func (m *ListClickhouseClusterUsersResponse) SetErrorWrapper(f func(err error) e
 
 type UpdateClickhouseClusterUserRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -125,7 +126,7 @@ type UpdateClickhouseClusterUserRequest struct {
 	Body model.ClickhouseClusterUserRequest // body
 }
 
-func (m *UpdateClickhouseClusterUserRequest) SetAuthorization(authorization string) {
+func (m *UpdateClickhouseClusterUserRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -139,7 +140,7 @@ func (m *UpdateClickhouseClusterUserRequest) SetProject(project string) {
 
 type UpdateUpdateClickhouseClusterUserRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -152,7 +153,7 @@ type UpdateUpdateClickhouseClusterUserRequest struct {
 	Body model.UpdateClickhouseClusterUserRequest // body
 }
 
-func (m *UpdateUpdateClickhouseClusterUserRequest) SetAuthorization(authorization string) {
+func (m *UpdateUpdateClickhouseClusterUserRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

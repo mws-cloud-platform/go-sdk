@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
@@ -41,7 +42,7 @@ type Route interface {
 
 type ListRoutesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -61,7 +62,7 @@ type ListRoutesRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListRoutesRequest) SetAuthorization(authorization string) {
+func (m *ListRoutesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -134,7 +135,7 @@ func (m *ListRoutesResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteRouteRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -147,7 +148,7 @@ type DeleteRouteRequest struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteRouteRequest) SetAuthorization(authorization string) {
+func (m *DeleteRouteRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -224,7 +225,7 @@ func (m *DeleteRouteResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetRouteRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -233,7 +234,7 @@ type GetRouteRequest struct {
 	Route string // path: "route"
 }
 
-func (m *GetRouteRequest) SetAuthorization(authorization string) {
+func (m *GetRouteRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -301,7 +302,7 @@ func (m *GetRouteResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertRouteRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -316,7 +317,7 @@ type UpsertRouteRequest struct {
 	Body model.RouteRequest // body
 }
 
-func (m *UpsertRouteRequest) SetAuthorization(authorization string) {
+func (m *UpsertRouteRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -339,7 +340,7 @@ func (m *UpsertRouteRequest) getRouteRequest() GetRouteRequest {
 
 type UpdateRouteRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -354,7 +355,7 @@ type UpdateRouteRequest struct {
 	Body model.UpdateRouteRequest // body
 }
 
-func (m *UpdateRouteRequest) SetAuthorization(authorization string) {
+func (m *UpdateRouteRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

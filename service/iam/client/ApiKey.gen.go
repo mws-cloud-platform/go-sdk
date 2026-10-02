@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
@@ -40,12 +41,12 @@ type ApiKey interface {
 }
 
 type ListApiKeyRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
@@ -59,9 +60,11 @@ type ListApiKeyRequest struct {
 	// Указывается перечислением полей с направлением сортировки (asc, desc) через запятую.
 	// По умолчанию используется сортировка по возрастанию (asc)
 	OrderBy *string // query: "orderBy"
+	// Вывод удаленных объектов для ресурсов, поддерживающих soft delete
+	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListApiKeyRequest) SetAuthorization(authorization string) {
+func (m *ListApiKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -121,14 +124,14 @@ func (m *ListApiKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type DeleteApiKeyRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
 	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
 	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
 	IfExist *bool // query: "ifExist"
@@ -138,7 +141,7 @@ type DeleteApiKeyRequest struct {
 	Cascade *bool // query: "cascade"
 }
 
-func (m *DeleteApiKeyRequest) SetAuthorization(authorization string) {
+func (m *DeleteApiKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -152,10 +155,10 @@ func (m *DeleteApiKeyRequest) SetProject(project string) {
 
 func (m *DeleteApiKeyRequest) getApiKeyRequest() GetApiKeyRequest {
 	return GetApiKeyRequest{
+		Authorization:  m.Authorization,
 		ServiceAccount: m.ServiceAccount,
 		ApiKey:         m.ApiKey,
 		Project:        m.Project,
-		Authorization:  m.Authorization,
 	}
 }
 
@@ -202,17 +205,17 @@ func (m *DeleteApiKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type GetApiKeyRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
 	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 }
 
-func (m *GetApiKeyRequest) SetAuthorization(authorization string) {
+func (m *GetApiKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -267,14 +270,14 @@ func (m *GetApiKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type UpsertApiKeyRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
 	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
@@ -282,7 +285,7 @@ type UpsertApiKeyRequest struct {
 	Body         model.ApiKeyRequest // body
 }
 
-func (m *UpsertApiKeyRequest) SetAuthorization(authorization string) {
+func (m *UpsertApiKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -295,14 +298,14 @@ func (m *UpsertApiKeyRequest) SetProject(project string) {
 }
 
 type UpdateApiKeyRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Идентификатор сервисного аккаунта.
 	ServiceAccount string // path: "serviceAccount"
 	// Идентификатор API-ключа
 	ApiKey string // path: "apiKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
@@ -310,7 +313,7 @@ type UpdateApiKeyRequest struct {
 	Body         model.UpdateApiKeyRequest // body
 }
 
-func (m *UpdateApiKeyRequest) SetAuthorization(authorization string) {
+func (m *UpdateApiKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

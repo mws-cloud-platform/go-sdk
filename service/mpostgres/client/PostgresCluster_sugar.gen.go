@@ -171,7 +171,7 @@ func (x *PostgresClusterSugared) waitDeletePostgresCluster(ctx context.Context, 
 	return err
 }
 
-// GetPostgresCluster returns info about the specified cluster.
+// GetPostgresCluster возвращает информацию об указанном кластере.
 //
 // Путь: GET /mpostgres/v1/projects/{project}/clusters/{cluster}
 func (x *PostgresClusterSugared) GetPostgresCluster(ctx context.Context, request GetPostgresClusterRequest, opts ...Option) (*model.PostgresClusterResponse, error) {

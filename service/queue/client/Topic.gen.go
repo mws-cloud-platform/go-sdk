@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/queue/model"
 )
@@ -40,10 +41,10 @@ type Topic interface {
 }
 
 type ListTopicsRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -59,7 +60,7 @@ type ListTopicsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListTopicsRequest) SetAuthorization(authorization string) {
+func (m *ListTopicsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -120,14 +121,14 @@ func (m *ListTopicsResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteTopicRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя топика
 	Topic string // path: "topic"
 }
 
-func (m *DeleteTopicRequest) SetAuthorization(authorization string) {
+func (m *DeleteTopicRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -191,14 +192,14 @@ func (m *DeleteTopicResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetTopicRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя топика
 	Topic string // path: "topic"
 }
 
-func (m *GetTopicRequest) SetAuthorization(authorization string) {
+func (m *GetTopicRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -254,7 +255,7 @@ func (m *GetTopicResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertTopicRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -264,7 +265,7 @@ type UpsertTopicRequest struct {
 	Body  model.TopicRequest // body
 }
 
-func (m *UpsertTopicRequest) SetAuthorization(authorization string) {
+func (m *UpsertTopicRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -286,7 +287,7 @@ func (m *UpsertTopicRequest) getTopicRequest() GetTopicRequest {
 
 type UpdateTopicRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -296,7 +297,7 @@ type UpdateTopicRequest struct {
 	Body  model.UpdateTopicRequest // body
 }
 
-func (m *UpdateTopicRequest) SetAuthorization(authorization string) {
+func (m *UpdateTopicRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

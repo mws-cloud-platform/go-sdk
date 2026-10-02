@@ -92,7 +92,7 @@ func (c *KeyEncryption) generateDataKeyInvoker(ctx context.Context, anyReq any, 
 }
 
 func (c *KeyEncryption) headerGenerateDataKey(req *http.Request, request *client.GenerateDataKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // Encrypt позволяет зашифровать данные с использованием указанного KMS ключа.
@@ -171,7 +171,7 @@ func (c *KeyEncryption) encryptInvoker(ctx context.Context, anyReq any, response
 }
 
 func (c *KeyEncryption) headerEncrypt(req *http.Request, request *client.EncryptRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // Decrypt позволяет расшифровать заданный шифротекст с использованием указанного KMS ключа.
@@ -250,7 +250,7 @@ func (c *KeyEncryption) decryptInvoker(ctx context.Context, anyReq any, response
 }
 
 func (c *KeyEncryption) headerDecrypt(req *http.Request, request *client.DecryptRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // ReEncrypt позволяет расшифровать заданный шифротекст и повторно зашифровать его с помощью ключа KMS.
@@ -332,5 +332,5 @@ func (c *KeyEncryption) reEncryptInvoker(ctx context.Context, anyReq any, respon
 }
 
 func (c *KeyEncryption) headerReEncrypt(req *http.Request, request *client.ReEncryptRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

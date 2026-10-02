@@ -111,7 +111,7 @@ func (c *PostgresBackup) queryListPostgresBackup(request *client.ListPostgresBac
 }
 
 func (c *PostgresBackup) headerListPostgresBackup(req *http.Request, request *client.ListPostgresBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeletePostgresBackup delete Postgres backup.
@@ -185,13 +185,13 @@ func (c *PostgresBackup) deletePostgresBackupInvoker(ctx context.Context, anyReq
 }
 
 func (c *PostgresBackup) headerDeletePostgresBackup(req *http.Request, request *client.DeletePostgresBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
 }
 
-// GetPostgresBackup returns info about the specified backup.
+// GetPostgresBackup возвращает информацию об указанной резервной копии.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mpostgres/v1/projects/{project}/clusters/{cluster}/backups/{backup}
@@ -266,7 +266,7 @@ func (c *PostgresBackup) getPostgresBackupInvoker(ctx context.Context, anyReq an
 }
 
 func (c *PostgresBackup) headerGetPostgresBackup(req *http.Request, request *client.GetPostgresBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertPostgresBackup upsert Postgres backup.
@@ -356,7 +356,7 @@ func (c *PostgresBackup) queryUpsertPostgresBackup(request *client.UpsertPostgre
 }
 
 func (c *PostgresBackup) headerUpsertPostgresBackup(req *http.Request, request *client.UpsertPostgresBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -451,7 +451,7 @@ func (c *PostgresBackup) queryCreatePostgresBackup(request *client.UpsertPostgre
 }
 
 func (c *PostgresBackup) headerCreatePostgresBackup(req *http.Request, request *client.UpsertPostgresBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -546,7 +546,7 @@ func (c *PostgresBackup) queryUpdatePostgresBackup(request *client.UpdatePostgre
 }
 
 func (c *PostgresBackup) headerUpdatePostgresBackup(req *http.Request, request *client.UpdatePostgresBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

@@ -122,7 +122,7 @@ func (m *StorageDiskSpecOptionalResponse) Parse(ctx context.Context) error {
 // Представление поля Source анонимного типа структуры StorageDiskSpec
 // Real OAPI model name: StorageDiskSpecSource
 type StorageDiskSpecSourceOptionalResponse struct {
-	// Ссылка на образ
+	// Ссылка на образ. Образы из каталога MWS находятся в системных проектах mws-<os>, например, mws-ubuntu, mws-debian.
 	Image optional.Optional[compute.ImageRef] `json:"image,omitempty" yaml:"image,omitempty"`
 	// Ссылка на резервную копию диска
 	DiskBackup optional.Optional[compute.DiskBackupRef] `json:"diskBackup,omitempty" yaml:"diskBackup,omitempty"`

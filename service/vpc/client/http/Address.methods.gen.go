@@ -108,7 +108,7 @@ func (c *Address) queryListAddresses(request *client.ListAddressesRequest) strin
 }
 
 func (c *Address) headerListAddresses(req *http.Request, request *client.ListAddressesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteAddress позволяет удалить IP-адрес.
@@ -192,7 +192,7 @@ func (c *Address) queryDeleteAddress(request *client.DeleteAddressRequest) strin
 }
 
 func (c *Address) headerDeleteAddress(req *http.Request, request *client.DeleteAddressRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -273,7 +273,7 @@ func (c *Address) getAddressInvoker(ctx context.Context, anyReq any, response co
 }
 
 func (c *Address) headerGetAddress(req *http.Request, request *client.GetAddressRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertAddress позволяет создать или изменить IP-адрес.
@@ -368,7 +368,7 @@ func (c *Address) queryUpsertAddress(request *client.UpsertAddressRequest) strin
 }
 
 func (c *Address) headerUpsertAddress(req *http.Request, request *client.UpsertAddressRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -468,7 +468,7 @@ func (c *Address) queryCreateAddress(request *client.UpsertAddressRequest) strin
 }
 
 func (c *Address) headerCreateAddress(req *http.Request, request *client.UpsertAddressRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -568,7 +568,7 @@ func (c *Address) queryUpdateAddress(request *client.UpdateAddressRequest) strin
 }
 
 func (c *Address) headerUpdateAddress(req *http.Request, request *client.UpdateAddressRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

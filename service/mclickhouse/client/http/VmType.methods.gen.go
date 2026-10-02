@@ -96,5 +96,5 @@ func (c *VmType) queryGetClickhouseClusterVmTypes(request *client.GetClickhouseC
 }
 
 func (c *VmType) headerGetClickhouseClusterVmTypes(req *http.Request, request *client.GetClickhouseClusterVmTypesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

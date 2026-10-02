@@ -11,6 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
@@ -28,7 +29,7 @@ type DiskType interface {
 
 type ListDiskTypesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
@@ -44,7 +45,7 @@ type ListDiskTypesRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListDiskTypesRequest) SetAuthorization(authorization string) {
+func (m *ListDiskTypesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -238,14 +239,14 @@ func (m *ListDiskTypesResponse200) Decode(d *jx.Decoder) error {
 
 type GetDiskTypeRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к типу диска
 	Type string // path: "type"
 	// Текущее значение ETag. При передаче параметра сервис будет ждать изменений в ресурсе до тех пор, пока значение ETag не будет изменено
 	WaitNew *string // query: "waitNew"
 }
 
-func (m *GetDiskTypeRequest) SetAuthorization(authorization string) {
+func (m *GetDiskTypeRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
@@ -41,7 +42,7 @@ type FirewallRule interface {
 
 type ListFirewallRulesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -61,7 +62,7 @@ type ListFirewallRulesRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListFirewallRulesRequest) SetAuthorization(authorization string) {
+func (m *ListFirewallRulesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -134,7 +135,7 @@ func (m *ListFirewallRulesResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteFirewallRuleRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -147,7 +148,7 @@ type DeleteFirewallRuleRequest struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteFirewallRuleRequest) SetAuthorization(authorization string) {
+func (m *DeleteFirewallRuleRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -224,7 +225,7 @@ func (m *DeleteFirewallRuleResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetFirewallRuleRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -233,7 +234,7 @@ type GetFirewallRuleRequest struct {
 	FirewallRule string // path: "firewallRule"
 }
 
-func (m *GetFirewallRuleRequest) SetAuthorization(authorization string) {
+func (m *GetFirewallRuleRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -301,7 +302,7 @@ func (m *GetFirewallRuleResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertFirewallRuleRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -316,7 +317,7 @@ type UpsertFirewallRuleRequest struct {
 	Body model.FirewallRuleRequest // body
 }
 
-func (m *UpsertFirewallRuleRequest) SetAuthorization(authorization string) {
+func (m *UpsertFirewallRuleRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -339,7 +340,7 @@ func (m *UpsertFirewallRuleRequest) getFirewallRuleRequest() GetFirewallRuleRequ
 
 type UpdateFirewallRuleRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -354,7 +355,7 @@ type UpdateFirewallRuleRequest struct {
 	Body model.UpdateFirewallRuleRequest // body
 }
 
-func (m *UpdateFirewallRuleRequest) SetAuthorization(authorization string) {
+func (m *UpdateFirewallRuleRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

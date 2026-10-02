@@ -104,7 +104,7 @@ func (c *Collector) queryDeleteCollector(request *client.DeleteCollectorRequest)
 }
 
 func (c *Collector) headerDeleteCollector(req *http.Request, request *client.DeleteCollectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -182,7 +182,7 @@ func (c *Collector) getCollectorInvoker(ctx context.Context, anyReq any, respons
 }
 
 func (c *Collector) headerGetCollector(req *http.Request, request *client.GetCollectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertCollector создание и изменение коллектора.
@@ -272,7 +272,7 @@ func (c *Collector) queryUpsertCollector(request *client.UpsertCollectorRequest)
 }
 
 func (c *Collector) headerUpsertCollector(req *http.Request, request *client.UpsertCollectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -367,7 +367,7 @@ func (c *Collector) queryCreateCollector(request *client.UpsertCollectorRequest)
 }
 
 func (c *Collector) headerCreateCollector(req *http.Request, request *client.UpsertCollectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -462,7 +462,7 @@ func (c *Collector) queryUpdateCollector(request *client.UpdateCollectorRequest)
 }
 
 func (c *Collector) headerUpdateCollector(req *http.Request, request *client.UpdateCollectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -557,5 +557,5 @@ func (c *Collector) queryListCollectors(request *client.ListCollectorsRequest) s
 }
 
 func (c *Collector) headerListCollectors(req *http.Request, request *client.ListCollectorsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/secretmanager/model"
 )
@@ -41,7 +42,7 @@ type SecretRoleBinding interface {
 
 type ListRoleBindingsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
@@ -61,7 +62,7 @@ type ListRoleBindingsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListRoleBindingsRequest) SetAuthorization(authorization string) {
+func (m *ListRoleBindingsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -122,7 +123,7 @@ func (m *ListRoleBindingsResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteRoleBindingRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
@@ -130,7 +131,7 @@ type DeleteRoleBindingRequest struct {
 	RoleBinding string // path: "roleBinding"
 }
 
-func (m *DeleteRoleBindingRequest) SetAuthorization(authorization string) {
+func (m *DeleteRoleBindingRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -195,7 +196,7 @@ func (m *DeleteRoleBindingResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetRoleBindingRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
@@ -203,7 +204,7 @@ type GetRoleBindingRequest struct {
 	RoleBinding string // path: "roleBinding"
 }
 
-func (m *GetRoleBindingRequest) SetAuthorization(authorization string) {
+func (m *GetRoleBindingRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -259,7 +260,7 @@ func (m *GetRoleBindingResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertRoleBindingRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
@@ -270,7 +271,7 @@ type UpsertRoleBindingRequest struct {
 	Body           model.SecretRoleBindingRequest // body
 }
 
-func (m *UpsertRoleBindingRequest) SetAuthorization(authorization string) {
+func (m *UpsertRoleBindingRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -293,7 +294,7 @@ func (m *UpsertRoleBindingRequest) getRoleBindingRequest() GetRoleBindingRequest
 
 type UpdateRoleBindingRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
@@ -304,7 +305,7 @@ type UpdateRoleBindingRequest struct {
 	Body           model.UpdateSecretRoleBindingRequest // body
 }
 
-func (m *UpdateRoleBindingRequest) SetAuthorization(authorization string) {
+func (m *UpdateRoleBindingRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

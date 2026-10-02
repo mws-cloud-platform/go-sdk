@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mkafka/model"
 )
@@ -41,7 +42,7 @@ type KafkaUser interface {
 
 type ListKafkaUsersRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -63,7 +64,7 @@ type ListKafkaUsersRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListKafkaUsersRequest) SetAuthorization(authorization string) {
+func (m *ListKafkaUsersRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -120,7 +121,7 @@ func (m *ListKafkaUsersResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteKafkaUserRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -133,7 +134,7 @@ type DeleteKafkaUserRequest struct {
 	Purge *bool // query: "purge"
 }
 
-func (m *DeleteKafkaUserRequest) SetAuthorization(authorization string) {
+func (m *DeleteKafkaUserRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -202,7 +203,7 @@ func (m *DeleteKafkaUserResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetKafkaUserRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -211,7 +212,7 @@ type GetKafkaUserRequest struct {
 	User string // path: "user"
 }
 
-func (m *GetKafkaUserRequest) SetAuthorization(authorization string) {
+func (m *GetKafkaUserRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -267,7 +268,7 @@ func (m *GetKafkaUserResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertKafkaUserRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -280,7 +281,7 @@ type UpsertKafkaUserRequest struct {
 	Body model.KafkaUserRequest // body
 }
 
-func (m *UpsertKafkaUserRequest) SetAuthorization(authorization string) {
+func (m *UpsertKafkaUserRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -303,7 +304,7 @@ func (m *UpsertKafkaUserRequest) getKafkaUserRequest() GetKafkaUserRequest {
 
 type UpdateKafkaUserRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -316,7 +317,7 @@ type UpdateKafkaUserRequest struct {
 	Body model.UpdateKafkaUserRequest // body
 }
 
-func (m *UpdateKafkaUserRequest) SetAuthorization(authorization string) {
+func (m *UpdateKafkaUserRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

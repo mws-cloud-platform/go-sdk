@@ -10,6 +10,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/gpt/model"
 )
@@ -27,7 +28,7 @@ type Model interface {
 
 type ListModelsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -47,7 +48,7 @@ type ListModelsRequest struct {
 	ShowDeprecated *bool // query: "showDeprecated"
 }
 
-func (m *ListModelsRequest) SetAuthorization(authorization string) {
+func (m *ListModelsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -244,14 +245,14 @@ func (m *ListModelsResponse200) Decode(d *jx.Decoder) error {
 
 type GetModelRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Параметр пути для имени модели, уникальный в рамках проекта.
 	ModelName string // path: "modelName"
 }
 
-func (m *GetModelRequest) SetAuthorization(authorization string) {
+func (m *GetModelRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

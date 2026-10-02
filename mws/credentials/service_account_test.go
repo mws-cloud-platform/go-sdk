@@ -35,10 +35,10 @@ func TestServiceAccountProvider(t *testing.T) {
 			PrivateKey: getTestPrivateKey(t),
 		},
 	}
-	token := sensitive.New("token")
+	token := credentials.NewAccessToken("token")
 	now := time.Date(2024, 1, 2, 3, 4, 5, 0, time.UTC)
 	expected := credentials.Credentials{
-		AccessToken: token.Value(),
+		AccessToken: token,
 		ExpiresAt:   now.Add(credentials.DefaultTokenTTL),
 	}
 
@@ -50,7 +50,7 @@ func TestServiceAccountProvider(t *testing.T) {
 		).
 		Return(&client.IssueServiceAccountTokenV2Response{
 			Code:        http.StatusOK,
-			Response200: &model.SuccessTokenV2Response{AccessToken: token},
+			Response200: &model.SuccessTokenV2Response{AccessToken: sensitive.New(token.Value())},
 		}, nil)
 
 	clock := fakeclock.NewFake(fakeclock.WithStartAt(now))
@@ -63,7 +63,7 @@ func TestServiceAccountProvider(t *testing.T) {
 
 	actual, err := provider.Provide(t.Context())
 	require.NoError(t, err)
-	require.Equal(t, expected, actual)
+	requireCredentialsEqual(t, expected, actual)
 }
 
 func matchIssueServiceAccountTokenRequest(serviceAccount string) func(any) bool {
@@ -72,7 +72,7 @@ func matchIssueServiceAccountTokenRequest(serviceAccount string) func(any) bool 
 		if !ok {
 			return false
 		}
-		return req.Authorization != nil && *req.Authorization != "" &&
+		return req.Authorization != nil && req.Authorization.Value() != "" &&
 			*req.ServiceAccount == serviceAccount
 	}
 }

@@ -105,7 +105,7 @@ func (c *Nlb) queryListNlbsByProjectId(request *client.ListNlbsByProjectIdReques
 }
 
 func (c *Nlb) headerListNlbsByProjectId(req *http.Request, request *client.ListNlbsByProjectIdRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // ListNlbsV2 позволяет получить список сетевых балансировщиков нагрузки.
@@ -200,7 +200,7 @@ func (c *Nlb) queryListNlbsV2(request *client.ListNlbsV2Request) string {
 }
 
 func (c *Nlb) headerListNlbsV2(req *http.Request, request *client.ListNlbsV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteNlbV2 позволяет удалить сетевой балансировщик нагрузки.
@@ -284,7 +284,7 @@ func (c *Nlb) queryDeleteNlbV2(request *client.DeleteNlbV2Request) string {
 }
 
 func (c *Nlb) headerDeleteNlbV2(req *http.Request, request *client.DeleteNlbV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -365,7 +365,7 @@ func (c *Nlb) getNlbV2Invoker(ctx context.Context, anyReq any, response commoncl
 }
 
 func (c *Nlb) headerGetNlbV2(req *http.Request, request *client.GetNlbV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertNlbV2 позволяет создать или изменить сетевой балансировщик нагрузки.
@@ -458,7 +458,7 @@ func (c *Nlb) queryUpsertNlbV2(request *client.UpsertNlbV2Request) string {
 }
 
 func (c *Nlb) headerUpsertNlbV2(req *http.Request, request *client.UpsertNlbV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -556,7 +556,7 @@ func (c *Nlb) queryCreateNlbV2(request *client.UpsertNlbV2Request) string {
 }
 
 func (c *Nlb) headerCreateNlbV2(req *http.Request, request *client.UpsertNlbV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -654,7 +654,7 @@ func (c *Nlb) queryUpdateNlbV2(request *client.UpdateNlbV2Request) string {
 }
 
 func (c *Nlb) headerUpdateNlbV2(req *http.Request, request *client.UpdateNlbV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

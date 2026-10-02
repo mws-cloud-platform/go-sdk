@@ -17,6 +17,13 @@ func NodeGroupSpecRequestToOptionalResponse(request *NodeGroupSpecRequest) (*Nod
 		return nil, err
 	}
 	response.Subnet = *tmpSubnet
+	if request.Network != nil {
+		tmpNetwork, err := NodeGroupSpecNetworkRequestToOptionalResponse(request.Network)
+		if err != nil {
+			return nil, err
+		}
+		response.Network = optional.NewOptionalNil(*tmpNetwork)
+	}
 	tmpVmType, err := NodeGroupSpecVmTypeRequestToOptionalResponse(&request.VmType)
 	if err != nil {
 		return nil, err

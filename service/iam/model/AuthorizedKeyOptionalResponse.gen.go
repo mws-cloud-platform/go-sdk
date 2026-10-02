@@ -15,6 +15,7 @@ import (
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Авторизованный ключ (authorized key) — это ключ с алгоритмом шифрования ES256, применяемый для аутентификации во всех сервисах MWS (исключая Object Storage, Artifact Registry и GPT)
 // Real OAPI model name: AuthorizedKey
 type AuthorizedKeyOptionalResponse struct {
 	Kind     *string                                                     `json:"kind,omitempty" yaml:"kind,omitempty"`

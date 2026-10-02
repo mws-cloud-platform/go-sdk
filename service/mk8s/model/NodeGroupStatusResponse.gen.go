@@ -22,7 +22,9 @@ import (
 // Real OAPI model name: NodeGroupStatus
 type NodeGroupStatusResponse struct {
 	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
-	VmType                             *NodeGroupStatusVmTypeResponse `json:"vmType,omitempty" yaml:"vmType,omitempty"`
+	// Сетевые настройки группы узлов
+	Network *NodeGroupStatusNetworkResponse `json:"network,omitempty" yaml:"network,omitempty"`
+	VmType  *NodeGroupStatusVmTypeResponse  `json:"vmType,omitempty" yaml:"vmType,omitempty"`
 	// Количество ядер vCPU на узле
 	Cpu *string `json:"cpu,omitempty" yaml:"cpu,omitempty"`
 	// Объем оперативной памяти на узле
@@ -51,6 +53,20 @@ func (m *NodeGroupStatusResponse) GetReady() commonmodel.ResourceStatusReadyResp
 		return m.ResourceStatusResponse.GetReady()
 	}
 	return commonmodel.ResourceStatusReadyResponse{}
+}
+
+func (m *NodeGroupStatusResponse) GetNetwork() *NodeGroupStatusNetworkResponse {
+	if m != nil {
+		return m.Network
+	}
+	return nil
+}
+
+func (m *NodeGroupStatusResponse) GetNetworkOr(val NodeGroupStatusNetworkResponse) NodeGroupStatusNetworkResponse {
+	if m != nil && m.Network != nil {
+		return *m.Network
+	}
+	return val
 }
 
 func (m *NodeGroupStatusResponse) GetVmType() *NodeGroupStatusVmTypeResponse {
@@ -270,6 +286,7 @@ func (m *NodeGroupStatusResponse) Clone() *NodeGroupStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
+	clone.Network = m.Network.Clone()
 	clone.VmType = m.VmType.Clone()
 	if m.Cpu != nil {
 		cloneCpu := *m.Cpu
@@ -688,6 +705,13 @@ func (m *NodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 	if err := m.Ready.Encode(e); err != nil {
 		return err
 	}
+	if m.Network != nil {
+		e.FieldStart("network")
+		if err := m.Network.Encode(e); err != nil {
+			return err
+		}
+	}
+
 	if m.VmType != nil {
 		e.FieldStart("vmType")
 		if err := m.VmType.Encode(e); err != nil {
@@ -813,6 +837,18 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Ready = v
+			return nil
+		case "network":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NodeGroupStatusNetworkResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Network = &v
 			return nil
 		case "vmType":
 			if d.Next() == jx.Null {

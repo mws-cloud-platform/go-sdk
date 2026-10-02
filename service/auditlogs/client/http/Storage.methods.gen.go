@@ -104,7 +104,7 @@ func (c *Storage) queryDeleteStorage(request *client.DeleteStorageRequest) strin
 }
 
 func (c *Storage) headerDeleteStorage(req *http.Request, request *client.DeleteStorageRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -182,7 +182,7 @@ func (c *Storage) getStorageInvoker(ctx context.Context, anyReq any, response co
 }
 
 func (c *Storage) headerGetStorage(req *http.Request, request *client.GetStorageRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertStorage создание и изменение хранилища.
@@ -272,7 +272,7 @@ func (c *Storage) queryUpsertStorage(request *client.UpsertStorageRequest) strin
 }
 
 func (c *Storage) headerUpsertStorage(req *http.Request, request *client.UpsertStorageRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -367,7 +367,7 @@ func (c *Storage) queryCreateStorage(request *client.UpsertStorageRequest) strin
 }
 
 func (c *Storage) headerCreateStorage(req *http.Request, request *client.UpsertStorageRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -462,7 +462,7 @@ func (c *Storage) queryUpdateStorage(request *client.UpdateStorageRequest) strin
 }
 
 func (c *Storage) headerUpdateStorage(req *http.Request, request *client.UpdateStorageRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -557,5 +557,5 @@ func (c *Storage) queryListStorages(request *client.ListStoragesRequest) string 
 }
 
 func (c *Storage) headerListStorages(req *http.Request, request *client.ListStoragesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

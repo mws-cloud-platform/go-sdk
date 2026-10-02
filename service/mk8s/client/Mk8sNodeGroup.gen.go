@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
@@ -41,7 +42,7 @@ type Mk8sNodeGroup interface {
 
 type ListMk8sNodeGroupsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя кластера
@@ -61,7 +62,7 @@ type ListMk8sNodeGroupsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListMk8sNodeGroupsRequest) SetAuthorization(authorization string) {
+func (m *ListMk8sNodeGroupsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -122,7 +123,7 @@ func (m *ListMk8sNodeGroupsResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteMk8sNodeGroupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя кластера
@@ -133,7 +134,7 @@ type DeleteMk8sNodeGroupRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
 
-func (m *DeleteMk8sNodeGroupRequest) SetAuthorization(authorization string) {
+func (m *DeleteMk8sNodeGroupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -198,7 +199,7 @@ func (m *DeleteMk8sNodeGroupResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetMk8sNodeGroupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя кластера
@@ -207,7 +208,7 @@ type GetMk8sNodeGroupRequest struct {
 	NodeGroupName string // path: "nodeGroupName"
 }
 
-func (m *GetMk8sNodeGroupRequest) SetAuthorization(authorization string) {
+func (m *GetMk8sNodeGroupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -263,7 +264,7 @@ func (m *GetMk8sNodeGroupResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertMk8sNodeGroupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя кластера
@@ -276,7 +277,7 @@ type UpsertMk8sNodeGroupRequest struct {
 	Body model.NodeGroupRequest // body
 }
 
-func (m *UpsertMk8sNodeGroupRequest) SetAuthorization(authorization string) {
+func (m *UpsertMk8sNodeGroupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -299,7 +300,7 @@ func (m *UpsertMk8sNodeGroupRequest) getMk8sNodeGroupRequest() GetMk8sNodeGroupR
 
 type UpdateMk8sNodeGroupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя кластера
@@ -312,7 +313,7 @@ type UpdateMk8sNodeGroupRequest struct {
 	Body model.UpdateNodeGroupRequest // body
 }
 
-func (m *UpdateMk8sNodeGroupRequest) SetAuthorization(authorization string) {
+func (m *UpdateMk8sNodeGroupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

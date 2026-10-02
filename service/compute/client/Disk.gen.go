@@ -11,6 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
@@ -47,7 +48,7 @@ type Disk interface {
 
 type ListDisksRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -65,7 +66,7 @@ type ListDisksRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListDisksRequest) SetAuthorization(authorization string) {
+func (m *ListDisksRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -259,7 +260,7 @@ func (m *ListDisksResponse200) Decode(d *jx.Decoder) error {
 
 type DeleteDiskRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к диску
@@ -272,7 +273,7 @@ type DeleteDiskRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
 
-func (m *DeleteDiskRequest) SetAuthorization(authorization string) {
+func (m *DeleteDiskRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -336,7 +337,7 @@ func (m *DeleteDiskResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetDiskRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к диску
@@ -345,7 +346,7 @@ type GetDiskRequest struct {
 	WaitNew *string // query: "waitNew"
 }
 
-func (m *GetDiskRequest) SetAuthorization(authorization string) {
+func (m *GetDiskRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -401,7 +402,7 @@ func (m *GetDiskResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertDiskRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к диску
@@ -414,7 +415,7 @@ type UpsertDiskRequest struct {
 	Body model.DiskRequest // body
 }
 
-func (m *UpsertDiskRequest) SetAuthorization(authorization string) {
+func (m *UpsertDiskRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -436,7 +437,7 @@ func (m *UpsertDiskRequest) getDiskRequest() GetDiskRequest {
 
 type UpdateDiskRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к диску
@@ -449,7 +450,7 @@ type UpdateDiskRequest struct {
 	Body model.UpdateDiskRequest // body
 }
 
-func (m *UpdateDiskRequest) SetAuthorization(authorization string) {
+func (m *UpdateDiskRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

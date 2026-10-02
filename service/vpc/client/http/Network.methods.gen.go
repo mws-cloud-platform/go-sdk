@@ -105,7 +105,7 @@ func (c *Network) queryListNetworks(request *client.ListNetworksRequest) string 
 }
 
 func (c *Network) headerListNetworks(req *http.Request, request *client.ListNetworksRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteNetwork позволяет удалить сеть.
@@ -187,7 +187,7 @@ func (c *Network) queryDeleteNetwork(request *client.DeleteNetworkRequest) strin
 }
 
 func (c *Network) headerDeleteNetwork(req *http.Request, request *client.DeleteNetworkRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -265,7 +265,7 @@ func (c *Network) getNetworkInvoker(ctx context.Context, anyReq any, response co
 }
 
 func (c *Network) headerGetNetwork(req *http.Request, request *client.GetNetworkRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertNetwork позволяет создать или изменить сеть.
@@ -355,7 +355,7 @@ func (c *Network) queryUpsertNetwork(request *client.UpsertNetworkRequest) strin
 }
 
 func (c *Network) headerUpsertNetwork(req *http.Request, request *client.UpsertNetworkRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -450,7 +450,7 @@ func (c *Network) queryCreateNetwork(request *client.UpsertNetworkRequest) strin
 }
 
 func (c *Network) headerCreateNetwork(req *http.Request, request *client.UpsertNetworkRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -545,7 +545,7 @@ func (c *Network) queryUpdateNetwork(request *client.UpdateNetworkRequest) strin
 }
 
 func (c *Network) headerUpdateNetwork(req *http.Request, request *client.UpdateNetworkRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

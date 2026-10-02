@@ -21,6 +21,8 @@ import (
 type NodeGroupSpecOptionalResponse struct {
 	Zone   string                              `json:"zone" yaml:"zone"`
 	Subnet NodeGroupSpecSubnetOptionalResponse `json:"subnet" yaml:"subnet"`
+	// Настройки сети группы узлов.
+	Network optional.OptionalNil[NodeGroupSpecNetworkOptionalResponse] `json:"network,omitempty" yaml:"network,omitempty"`
 	// Тип ВМ
 	VmType NodeGroupSpecVmTypeOptionalResponse `json:"vmType" yaml:"vmType"`
 	// Размер хранилища для образов и контейнеров, в Gb
@@ -64,6 +66,20 @@ func (m *NodeGroupSpecOptionalResponse) GetSubnet() NodeGroupSpecSubnetOptionalR
 
 func (m *NodeGroupSpecOptionalResponse) SetSubnet(val NodeGroupSpecSubnetOptionalResponse) {
 	m.Subnet = val
+}
+
+func (m *NodeGroupSpecOptionalResponse) GetNetwork() *NodeGroupSpecNetworkOptionalResponse {
+	if m != nil && m.Network.IsSet() && !m.Network.IsNull() {
+		return &m.Network.Value
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecOptionalResponse) GetNetworkOr(val NodeGroupSpecNetworkOptionalResponse) NodeGroupSpecNetworkOptionalResponse {
+	if m != nil && m.Network.IsSet() && !m.Network.IsNull() {
+		return m.Network.Value
+	}
+	return val
 }
 
 func (m *NodeGroupSpecOptionalResponse) GetVmType() NodeGroupSpecVmTypeOptionalResponse {
@@ -212,6 +228,9 @@ func (m *NodeGroupSpecOptionalResponse) Clone() *NodeGroupSpecOptionalResponse {
 
 	clone := *m
 	clone.Subnet = *m.Subnet.Clone()
+	if clone.Network.IsSet() {
+		clone.Network.Value = *m.Network.Value.Clone()
+	}
 	clone.VmType = *m.VmType.Clone()
 	if clone.ImageStorageSize.IsSet() {
 		clone.ImageStorageSize.Value = *m.ImageStorageSize.Value.Clone()
@@ -542,6 +561,17 @@ func (m *NodeGroupSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		return err
 	}
 
+	if m.Network.IsSet() {
+		e.FieldStart("network")
+		if m.Network.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Network.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+
 	e.FieldStart("vmType")
 	if err := m.VmType.Encode(e); err != nil {
 		return err
@@ -655,6 +685,19 @@ func (m *NodeGroupSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Subnet = v
+			return nil
+		case "network":
+			if d.Next() == jx.Null {
+				m.Network.SetToNull()
+				return d.Null()
+			}
+
+			var v NodeGroupSpecNetworkOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Network.SetTo(v)
 			return nil
 		case "vmType":
 			var v NodeGroupSpecVmTypeOptionalResponse

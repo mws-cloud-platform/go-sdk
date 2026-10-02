@@ -13,6 +13,7 @@ import (
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Деплоймент модели – это выделенный доступ к модели у пользователя, имеющий собственную конфигурацию
 // Real OAPI model name: Deployment
 type DeploymentRequest struct {
 	Metadata *DeploymentMetadataRequest `json:"metadata,omitempty" yaml:"metadata,omitempty"`

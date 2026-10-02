@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/rm/model"
 )
@@ -23,7 +24,7 @@ type Region interface {
 
 type ListRegionsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
@@ -41,7 +42,7 @@ type ListRegionsRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListRegionsRequest) SetAuthorization(authorization string) {
+func (m *ListRegionsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -98,12 +99,12 @@ func (m *ListRegionsResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetRegionRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Регион.
 	Region string // path: "region"
 }
 
-func (m *GetRegionRequest) SetAuthorization(authorization string) {
+func (m *GetRegionRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

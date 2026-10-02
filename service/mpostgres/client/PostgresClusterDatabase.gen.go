@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mpostgres/model"
 )
@@ -19,7 +20,7 @@ type PostgresClusterDatabase interface {
 	//
 	// Путь: DELETE /mpostgres/v1/projects/{project}/clusters/{cluster}/databases/{database}
 	DeletePostgresClusterDatabase(context.Context, DeletePostgresClusterDatabaseRequest) (*DeletePostgresClusterDatabaseResponse, error)
-	// GetPostgresClusterDatabase returns info about the specified cluster database.
+	// GetPostgresClusterDatabase возвращает информацию об указанной базе данных кластера.
 	//
 	// Путь: GET /mpostgres/v1/projects/{project}/clusters/{cluster}/databases/{database}
 	GetPostgresClusterDatabase(context.Context, GetPostgresClusterDatabaseRequest) (*GetPostgresClusterDatabaseResponse, error)
@@ -41,7 +42,7 @@ type PostgresClusterDatabase interface {
 
 type ListPostgresClusterDatabasesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -63,7 +64,7 @@ type ListPostgresClusterDatabasesRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListPostgresClusterDatabasesRequest) SetAuthorization(authorization string) {
+func (m *ListPostgresClusterDatabasesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -120,7 +121,7 @@ func (m *ListPostgresClusterDatabasesResponse) SetErrorWrapper(f func(err error)
 
 type DeletePostgresClusterDatabaseRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -131,7 +132,7 @@ type DeletePostgresClusterDatabaseRequest struct {
 	Database string // path: "database"
 }
 
-func (m *DeletePostgresClusterDatabaseRequest) SetAuthorization(authorization string) {
+func (m *DeletePostgresClusterDatabaseRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -196,7 +197,7 @@ func (m *DeletePostgresClusterDatabaseResponse) SetErrorWrapper(f func(err error
 
 type GetPostgresClusterDatabaseRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -205,7 +206,7 @@ type GetPostgresClusterDatabaseRequest struct {
 	Database string // path: "database"
 }
 
-func (m *GetPostgresClusterDatabaseRequest) SetAuthorization(authorization string) {
+func (m *GetPostgresClusterDatabaseRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -261,7 +262,7 @@ func (m *GetPostgresClusterDatabaseResponse) SetErrorWrapper(f func(err error) e
 
 type UpsertPostgresClusterDatabaseRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -274,7 +275,7 @@ type UpsertPostgresClusterDatabaseRequest struct {
 	Body model.PostgresClusterDatabaseRequest // body
 }
 
-func (m *UpsertPostgresClusterDatabaseRequest) SetAuthorization(authorization string) {
+func (m *UpsertPostgresClusterDatabaseRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -297,7 +298,7 @@ func (m *UpsertPostgresClusterDatabaseRequest) getPostgresClusterDatabaseRequest
 
 type UpdatePostgresClusterDatabaseRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -310,7 +311,7 @@ type UpdatePostgresClusterDatabaseRequest struct {
 	Body model.UpdatePostgresClusterDatabaseRequest // body
 }
 
-func (m *UpdatePostgresClusterDatabaseRequest) SetAuthorization(authorization string) {
+func (m *UpdatePostgresClusterDatabaseRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

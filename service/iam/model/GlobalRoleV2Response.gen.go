@@ -11,6 +11,7 @@ import (
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Роль — это конкретный набор разрешений, который регламентирует, какие действия аккаунт может выполнять с организацией, каталогом, проектом или ресурсом
 // Real OAPI model name: GlobalRoleV2
 type GlobalRoleV2Response struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`

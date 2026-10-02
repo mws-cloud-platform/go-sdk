@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
@@ -19,7 +20,7 @@ type NatGateway interface {
 
 type ListNatGatewaysRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -37,7 +38,7 @@ type ListNatGatewaysRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListNatGatewaysRequest) SetAuthorization(authorization string) {
+func (m *ListNatGatewaysRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

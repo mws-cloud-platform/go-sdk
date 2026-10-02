@@ -105,7 +105,7 @@ func (c *VirtualMachine) queryListVirtualMachines(request *client.ListVirtualMac
 }
 
 func (c *VirtualMachine) headerListVirtualMachines(req *http.Request, request *client.ListVirtualMachinesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteVirtualMachine позволяет удалить виртуальную машину.
@@ -177,7 +177,7 @@ func (c *VirtualMachine) deleteVirtualMachineInvoker(ctx context.Context, anyReq
 }
 
 func (c *VirtualMachine) headerDeleteVirtualMachine(req *http.Request, request *client.DeleteVirtualMachineRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -255,7 +255,7 @@ func (c *VirtualMachine) getVirtualMachineInvoker(ctx context.Context, anyReq an
 }
 
 func (c *VirtualMachine) headerGetVirtualMachine(req *http.Request, request *client.GetVirtualMachineRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertVirtualMachine позволяет создать или изменить виртуальную машину.
@@ -345,7 +345,7 @@ func (c *VirtualMachine) queryUpsertVirtualMachine(request *client.UpsertVirtual
 }
 
 func (c *VirtualMachine) headerUpsertVirtualMachine(req *http.Request, request *client.UpsertVirtualMachineRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -440,7 +440,7 @@ func (c *VirtualMachine) queryCreateVirtualMachine(request *client.UpsertVirtual
 }
 
 func (c *VirtualMachine) headerCreateVirtualMachine(req *http.Request, request *client.UpsertVirtualMachineRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -535,7 +535,7 @@ func (c *VirtualMachine) queryUpdateVirtualMachine(request *client.UpdateVirtual
 }
 
 func (c *VirtualMachine) headerUpdateVirtualMachine(req *http.Request, request *client.UpdateVirtualMachineRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

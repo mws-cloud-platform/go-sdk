@@ -108,7 +108,7 @@ func (c *ServiceAccount) queryListServiceAccount(request *client.ListServiceAcco
 }
 
 func (c *ServiceAccount) headerListServiceAccount(req *http.Request, request *client.ListServiceAccountRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteServiceAccount удаление сервисного аккаунта.
@@ -193,7 +193,7 @@ func (c *ServiceAccount) queryDeleteServiceAccount(request *client.DeleteService
 }
 
 func (c *ServiceAccount) headerDeleteServiceAccount(req *http.Request, request *client.DeleteServiceAccountRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -271,7 +271,7 @@ func (c *ServiceAccount) getServiceAccountInvoker(ctx context.Context, anyReq an
 }
 
 func (c *ServiceAccount) headerGetServiceAccount(req *http.Request, request *client.GetServiceAccountRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertServiceAccount позволяет создать или обновить сервисный аккаунт.
@@ -361,7 +361,7 @@ func (c *ServiceAccount) queryUpsertServiceAccount(request *client.UpsertService
 }
 
 func (c *ServiceAccount) headerUpsertServiceAccount(req *http.Request, request *client.UpsertServiceAccountRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -456,7 +456,7 @@ func (c *ServiceAccount) queryCreateServiceAccount(request *client.UpsertService
 }
 
 func (c *ServiceAccount) headerCreateServiceAccount(req *http.Request, request *client.UpsertServiceAccountRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -551,7 +551,7 @@ func (c *ServiceAccount) queryUpdateServiceAccount(request *client.UpdateService
 }
 
 func (c *ServiceAccount) headerUpdateServiceAccount(req *http.Request, request *client.UpdateServiceAccountRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

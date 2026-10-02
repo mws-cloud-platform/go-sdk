@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
@@ -41,7 +42,7 @@ type Subnet interface {
 
 type ListSubnetsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -61,7 +62,7 @@ type ListSubnetsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListSubnetsRequest) SetAuthorization(authorization string) {
+func (m *ListSubnetsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -134,7 +135,7 @@ func (m *ListSubnetsResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteSubnetRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -147,7 +148,7 @@ type DeleteSubnetRequest struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteSubnetRequest) SetAuthorization(authorization string) {
+func (m *DeleteSubnetRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -224,7 +225,7 @@ func (m *DeleteSubnetResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetSubnetRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -233,7 +234,7 @@ type GetSubnetRequest struct {
 	Subnet string // path: "subnet"
 }
 
-func (m *GetSubnetRequest) SetAuthorization(authorization string) {
+func (m *GetSubnetRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -301,7 +302,7 @@ func (m *GetSubnetResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertSubnetRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -316,7 +317,7 @@ type UpsertSubnetRequest struct {
 	Body model.SubnetRequest // body
 }
 
-func (m *UpsertSubnetRequest) SetAuthorization(authorization string) {
+func (m *UpsertSubnetRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -339,7 +340,7 @@ func (m *UpsertSubnetRequest) getSubnetRequest() GetSubnetRequest {
 
 type UpdateSubnetRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -354,7 +355,7 @@ type UpdateSubnetRequest struct {
 	Body model.UpdateSubnetRequest // body
 }
 
-func (m *UpdateSubnetRequest) SetAuthorization(authorization string) {
+func (m *UpdateSubnetRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

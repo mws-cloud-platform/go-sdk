@@ -83,5 +83,5 @@ func (c *Mk8sProjectStat) getProjectStatsInvoker(ctx context.Context, anyReq any
 }
 
 func (c *Mk8sProjectStat) headerGetProjectStats(req *http.Request, request *client.GetProjectStatsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

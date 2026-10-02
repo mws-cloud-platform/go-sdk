@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mpostgres/model"
 )
@@ -31,7 +32,7 @@ type PostgresCluster interface {
 	//
 	// Путь: DELETE /mpostgres/v1/projects/{project}/clusters/{cluster}
 	DeletePostgresCluster(context.Context, DeletePostgresClusterRequest) (*DeletePostgresClusterResponse, error)
-	// GetPostgresCluster returns info about the specified cluster.
+	// GetPostgresCluster возвращает информацию об указанном кластере.
 	//
 	// Путь: GET /mpostgres/v1/projects/{project}/clusters/{cluster}
 	GetPostgresCluster(context.Context, GetPostgresClusterRequest) (*GetPostgresClusterResponse, error)
@@ -53,7 +54,7 @@ type PostgresCluster interface {
 
 type ListPostgresClustersRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -73,7 +74,7 @@ type ListPostgresClustersRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListPostgresClustersRequest) SetAuthorization(authorization string) {
+func (m *ListPostgresClustersRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -130,7 +131,7 @@ func (m *ListPostgresClustersResponse) SetErrorWrapper(f func(err error) error) 
 
 type StopClusterRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -139,7 +140,7 @@ type StopClusterRequest struct {
 	Cluster string // path: "cluster"
 }
 
-func (m *StopClusterRequest) SetAuthorization(authorization string) {
+func (m *StopClusterRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -203,7 +204,7 @@ func (m *StopClusterResponse) SetErrorWrapper(f func(err error) error) {
 
 type StartClusterRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -212,7 +213,7 @@ type StartClusterRequest struct {
 	Cluster string // path: "cluster"
 }
 
-func (m *StartClusterRequest) SetAuthorization(authorization string) {
+func (m *StartClusterRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -276,7 +277,7 @@ func (m *StartClusterResponse) SetErrorWrapper(f func(err error) error) {
 
 type RestorePostgresClusterRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -287,7 +288,7 @@ type RestorePostgresClusterRequest struct {
 	Body model.PostgresClusterRestoreRequest // body
 }
 
-func (m *RestorePostgresClusterRequest) SetAuthorization(authorization string) {
+func (m *RestorePostgresClusterRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -351,7 +352,7 @@ func (m *RestorePostgresClusterResponse) SetErrorWrapper(f func(err error) error
 
 type DeletePostgresClusterRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -360,7 +361,7 @@ type DeletePostgresClusterRequest struct {
 	Cluster string // path: "cluster"
 }
 
-func (m *DeletePostgresClusterRequest) SetAuthorization(authorization string) {
+func (m *DeletePostgresClusterRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -428,14 +429,14 @@ func (m *DeletePostgresClusterResponse) SetErrorWrapper(f func(err error) error)
 
 type GetPostgresClusterRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
 }
 
-func (m *GetPostgresClusterRequest) SetAuthorization(authorization string) {
+func (m *GetPostgresClusterRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -491,7 +492,7 @@ func (m *GetPostgresClusterResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertPostgresClusterRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -502,7 +503,7 @@ type UpsertPostgresClusterRequest struct {
 	Body model.PostgresClusterRequest // body
 }
 
-func (m *UpsertPostgresClusterRequest) SetAuthorization(authorization string) {
+func (m *UpsertPostgresClusterRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -524,7 +525,7 @@ func (m *UpsertPostgresClusterRequest) getPostgresClusterRequest() GetPostgresCl
 
 type UpdatePostgresClusterRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -535,7 +536,7 @@ type UpdatePostgresClusterRequest struct {
 	Body model.UpdatePostgresClusterRequest // body
 }
 
-func (m *UpdatePostgresClusterRequest) SetAuthorization(authorization string) {
+func (m *UpdatePostgresClusterRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

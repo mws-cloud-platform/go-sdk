@@ -99,7 +99,7 @@ func (x *PostgresClusterUserSugared) waitDeletePostgresClusterUser(ctx context.C
 	return err
 }
 
-// GetPostgresClusterUser returns info about the specified cluster user.
+// GetPostgresClusterUser возвращает информацию об указанном пользователе кластера.
 //
 // Путь: GET /mpostgres/v1/projects/{project}/clusters/{cluster}/users/{user}
 func (x *PostgresClusterUserSugared) GetPostgresClusterUser(ctx context.Context, request GetPostgresClusterUserRequest, opts ...Option) (*model.PostgresClusterUserResponse, error) {

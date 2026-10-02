@@ -43,7 +43,7 @@ func TestTTLCache_StoreAndLoad(t *testing.T) {
 			for key, cred := range creds {
 				loadedCreds, err := cache.Load(key)
 				require.NoError(t, err)
-				require.Equal(t, cred, loadedCreds)
+				requireCredentialsEqual(t, cred, loadedCreds)
 			}
 		})
 	}
@@ -102,7 +102,7 @@ func TestTTLCache_Remove(t *testing.T) {
 				} else {
 					loadedCreds, err := cache.Load(key)
 					require.NoError(t, err)
-					require.Equal(t, cred, loadedCreds)
+					requireCredentialsEqual(t, cred, loadedCreds)
 				}
 				i++
 			}
@@ -145,7 +145,7 @@ func TestTTLCache_ExpireTTL(t *testing.T) {
 				for key, cred := range credsTTL { // Проверяем креды с TTL, должны не истечь
 					loadedCreds, err := cache.Load(key)
 					require.NoError(t, err)
-					require.Equal(t, cred, loadedCreds)
+					requireCredentialsEqual(t, cred, loadedCreds)
 				}
 				t.Log("1 hour sleep complete, sleeping for another minute to ensure entries expulsion", time.Now())
 				time.Sleep(time.Minute) // Ждем истечения TTL для части кредов
@@ -153,7 +153,7 @@ func TestTTLCache_ExpireTTL(t *testing.T) {
 				for key, cred := range creds { // Проверяем обычные креды
 					loadedCreds, err := cache.Load(key)
 					require.NoError(t, err)
-					require.Equal(t, cred, loadedCreds)
+					requireCredentialsEqual(t, cred, loadedCreds)
 				}
 				for key := range credsTTL { // Проверяем гарантировано истекшие креды
 					_, err := cache.Load(key)
@@ -169,7 +169,7 @@ func generateCredentials(ttl time.Duration) map[string]credentials.Credentials {
 	expires := time.Now().Add(ttl)
 	for range cacheItemCount {
 		strUUID := uuid.NewString()
-		res[strUUID] = credentials.Credentials{AccessToken: strUUID, ExpiresAt: expires}
+		res[strUUID] = credentials.Credentials{AccessToken: credentials.NewAccessToken(strUUID), ExpiresAt: expires}
 	}
 	return res
 }

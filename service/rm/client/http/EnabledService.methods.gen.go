@@ -99,7 +99,7 @@ func (c *EnabledService) queryBatchEnableServicesV2(request *client.BatchEnableS
 }
 
 func (c *EnabledService) headerBatchEnableServicesV2(req *http.Request, request *client.BatchEnableServicesV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -197,7 +197,7 @@ func (c *EnabledService) queryListEnabledServices(request *client.ListEnabledSer
 }
 
 func (c *EnabledService) headerListEnabledServices(req *http.Request, request *client.ListEnabledServicesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // EnableService подключение сервиса в проекте.
@@ -282,7 +282,7 @@ func (c *EnabledService) queryEnableService(request *client.EnableServiceRequest
 }
 
 func (c *EnabledService) headerEnableService(req *http.Request, request *client.EnableServiceRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -360,5 +360,5 @@ func (c *EnabledService) getEnabledServiceInvoker(ctx context.Context, anyReq an
 }
 
 func (c *EnabledService) headerGetEnabledService(req *http.Request, request *client.GetEnabledServiceRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

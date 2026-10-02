@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/queue/model"
 )
@@ -22,10 +23,10 @@ type ConsumerGroup interface {
 }
 
 type ListGroupsRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -41,7 +42,7 @@ type ListGroupsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListGroupsRequest) SetAuthorization(authorization string) {
+func (m *ListGroupsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -102,14 +103,14 @@ func (m *ListGroupsResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetConsumerGroupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя группы потребителей
 	ConsumerGroup string // path: "consumerGroup"
 }
 
-func (m *GetConsumerGroupRequest) SetAuthorization(authorization string) {
+func (m *GetConsumerGroupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

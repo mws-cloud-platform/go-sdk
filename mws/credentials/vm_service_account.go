@@ -85,7 +85,7 @@ func (p *VMServiceAccountProvider) provide(ctx context.Context) (Credentials, er
 	p.logger.Info("token received", zap.Int64("access_token_expires_in", token.ExpiresIn))
 
 	return Credentials{
-		AccessToken: token.AccessToken,
+		AccessToken: NewAccessToken(token.AccessToken),
 		ExpiresAt:   p.clock.Now().Add(time.Duration(token.ExpiresIn) * time.Second),
 	}, nil
 }

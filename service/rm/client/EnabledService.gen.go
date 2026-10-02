@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/rm/model"
 )
@@ -31,7 +32,7 @@ type EnabledService interface {
 
 type BatchEnableServicesV2Request struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
@@ -41,7 +42,7 @@ type BatchEnableServicesV2Request struct {
 	Body    model.BatchEnabledServicesRequest // body
 }
 
-func (m *BatchEnableServicesV2Request) SetAuthorization(authorization string) {
+func (m *BatchEnableServicesV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -101,10 +102,10 @@ func (m *BatchEnableServicesV2Response) SetErrorWrapper(f func(err error) error)
 }
 
 type ListEnabledServicesRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
@@ -122,7 +123,7 @@ type ListEnabledServicesRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListEnabledServicesRequest) SetAuthorization(authorization string) {
+func (m *ListEnabledServicesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -178,18 +179,18 @@ func (m *ListEnabledServicesResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type EnableServiceRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	Service string // path: "service"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *EnableServiceRequest) SetAuthorization(authorization string) {
+func (m *EnableServiceRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -249,14 +250,14 @@ func (m *EnableServiceResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type GetEnabledServiceRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	Service string // path: "service"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 }
 
-func (m *GetEnabledServiceRequest) SetAuthorization(authorization string) {
+func (m *GetEnabledServiceRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

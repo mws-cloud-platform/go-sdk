@@ -21,6 +21,8 @@ import (
 type NodeGroupSpecRequest struct {
 	Zone   string                     `json:"zone" yaml:"zone"`
 	Subnet NodeGroupSpecSubnetRequest `json:"subnet" yaml:"subnet"`
+	// Настройки сети группы узлов.
+	Network *NodeGroupSpecNetworkRequest `json:"network,omitempty" yaml:"network,omitempty"`
 	// Тип ВМ
 	VmType NodeGroupSpecVmTypeRequest `json:"vmType" yaml:"vmType"`
 	// Размер хранилища для образов и контейнеров, в Gb
@@ -64,6 +66,24 @@ func (m *NodeGroupSpecRequest) GetSubnet() NodeGroupSpecSubnetRequest {
 
 func (m *NodeGroupSpecRequest) SetSubnet(val NodeGroupSpecSubnetRequest) {
 	m.Subnet = val
+}
+
+func (m *NodeGroupSpecRequest) GetNetwork() *NodeGroupSpecNetworkRequest {
+	if m != nil {
+		return m.Network
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecRequest) SetNetwork(val *NodeGroupSpecNetworkRequest) {
+	m.Network = val
+}
+
+func (m *NodeGroupSpecRequest) GetNetworkOr(val NodeGroupSpecNetworkRequest) NodeGroupSpecNetworkRequest {
+	if m != nil && m.Network != nil {
+		return *m.Network
+	}
+	return val
 }
 
 func (m *NodeGroupSpecRequest) GetVmType() NodeGroupSpecVmTypeRequest {
@@ -236,6 +256,7 @@ func (m *NodeGroupSpecRequest) Clone() *NodeGroupSpecRequest {
 
 	clone := *m
 	clone.Subnet = *m.Subnet.Clone()
+	clone.Network = m.Network.Clone()
 	clone.VmType = *m.VmType.Clone()
 	clone.ImageStorageSize = m.ImageStorageSize.Clone()
 	if m.ImageStorageIops != nil {
@@ -598,6 +619,13 @@ func (m *NodeGroupSpecRequest) encodeFields(e *jx.Encoder) error {
 		return err
 	}
 
+	if m.Network != nil {
+		e.FieldStart("network")
+		if err := m.Network.Encode(e); err != nil {
+			return err
+		}
+	}
+
 	e.FieldStart("vmType")
 	if err := m.VmType.Encode(e); err != nil {
 		return err
@@ -710,6 +738,18 @@ func (m *NodeGroupSpecRequest) Decode(d *jx.Decoder) error {
 
 			m.Subnet = v
 			requiredFilled["subnet"] = true
+			return nil
+		case "network":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v NodeGroupSpecNetworkRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Network = &v
 			return nil
 		case "vmType":
 			var v NodeGroupSpecVmTypeRequest

@@ -42,7 +42,7 @@ func TestVMServiceAccountProvider(t *testing.T) {
 				p.EXPECT().GetWithContext(gomock.Any(), gomock.Any()).Return(`{"access_token": "token", "token_type": "Bearer", "expires_in": 3600}`, nil)
 			},
 			Expected: credentials.Credentials{
-				AccessToken: "token",
+				AccessToken: credentials.NewAccessToken("token"),
 				ExpiresAt:   clock.Now().Add(time.Hour),
 			},
 		},
@@ -67,7 +67,7 @@ func TestVMServiceAccountProvider(t *testing.T) {
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, v.Expected, actual)
+			requireCredentialsEqual(t, v.Expected, actual)
 		})
 	}
 }
@@ -90,7 +90,7 @@ func TestVMServiceAccountProviderCached(t *testing.T) {
 	for range times {
 		creds, err := provider.Provide(t.Context())
 		require.NoError(t, err)
-		require.Equal(t, "token", creds.AccessToken)
+		require.Equal(t, "token", creds.AccessToken.Value())
 	}
 
 	clock.Advance(time.Hour)
@@ -99,7 +99,7 @@ func TestVMServiceAccountProviderCached(t *testing.T) {
 	for range times {
 		creds, err := provider.Provide(t.Context())
 		require.NoError(t, err)
-		require.Equal(t, "new_token", creds.AccessToken)
+		require.Equal(t, "new_token", creds.AccessToken.Value())
 	}
 }
 
@@ -121,7 +121,7 @@ func TestVMServiceAccountProviderNotCached(t *testing.T) {
 	for range times {
 		creds, err := provider.Provide(t.Context())
 		require.NoError(t, err)
-		require.Equal(t, "token", creds.AccessToken)
+		require.Equal(t, "token", creds.AccessToken.Value())
 	}
 }
 

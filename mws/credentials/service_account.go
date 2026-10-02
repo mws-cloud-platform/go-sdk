@@ -7,6 +7,7 @@ import (
 	"go.uber.org/zap"
 
 	"go.mws.cloud/go-sdk/mws/iam"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/clock"
 	"go.mws.cloud/go-sdk/service/iam/client"
 )
@@ -65,7 +66,7 @@ func (p *ServiceAccountProvider) provide(ctx context.Context, id string) (Creden
 	}
 
 	req := client.IssueServiceAccountTokenV2Request{
-		Authorization:  &signed,
+		Authorization:  new(sensitive.New(signed)),
 		ServiceAccount: &id,
 	}
 	token, err := p.tokenIssuer.IssueServiceAccountTokenV2(ctx, req)
@@ -74,7 +75,7 @@ func (p *ServiceAccountProvider) provide(ctx context.Context, id string) (Creden
 	}
 
 	return Credentials{
-		AccessToken: token.GetAccessToken().Value(),
+		AccessToken: NewAccessToken(token.GetAccessToken().Value()),
 		ExpiresAt:   token.GetExpirationTsOr(p.clock.Now().Add(DefaultTokenTTL)),
 	}, nil
 }

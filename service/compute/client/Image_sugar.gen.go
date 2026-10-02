@@ -71,7 +71,7 @@ func (x *ImageSugared) waitLatestImage(ctx context.Context, request LatestImageR
 	return waiter.Wait(ctx)
 }
 
-// ListImages позволяет получить список образов.
+// ListImages позволяет получить список образов. Образы из каталога MWS находятся в системных проектах mws-<os>, например, mws-ubuntu, mws-debian.
 //
 // Путь: GET /compute/v1/projects/{project}/images
 func (x *ImageSugared) ListImages(ctx context.Context, request ListImagesRequest) (*ListImagesResponse200, error) {

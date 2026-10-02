@@ -11,6 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
@@ -53,7 +54,7 @@ type Snapshot interface {
 
 type ListSnapshotsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -71,7 +72,7 @@ type ListSnapshotsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListSnapshotsRequest) SetAuthorization(authorization string) {
+func (m *ListSnapshotsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -265,7 +266,7 @@ func (m *ListSnapshotsResponse200) Decode(d *jx.Decoder) error {
 
 type DeleteSnapshotRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к снимку
@@ -278,7 +279,7 @@ type DeleteSnapshotRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
 
-func (m *DeleteSnapshotRequest) SetAuthorization(authorization string) {
+func (m *DeleteSnapshotRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -342,7 +343,7 @@ func (m *DeleteSnapshotResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetSnapshotRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к снимку
@@ -351,7 +352,7 @@ type GetSnapshotRequest struct {
 	WaitNew *string // query: "waitNew"
 }
 
-func (m *GetSnapshotRequest) SetAuthorization(authorization string) {
+func (m *GetSnapshotRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -407,7 +408,7 @@ func (m *GetSnapshotResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertSnapshotRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к снимку
@@ -420,7 +421,7 @@ type UpsertSnapshotRequest struct {
 	Body model.SnapshotRequest // body
 }
 
-func (m *UpsertSnapshotRequest) SetAuthorization(authorization string) {
+func (m *UpsertSnapshotRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -442,7 +443,7 @@ func (m *UpsertSnapshotRequest) getSnapshotRequest() GetSnapshotRequest {
 
 type UpdateSnapshotRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к снимку
@@ -455,7 +456,7 @@ type UpdateSnapshotRequest struct {
 	Body model.UpdateSnapshotRequest // body
 }
 
-func (m *UpdateSnapshotRequest) SetAuthorization(authorization string) {
+func (m *UpdateSnapshotRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

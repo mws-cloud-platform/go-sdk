@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
@@ -41,7 +42,7 @@ type ClickhouseClusterBackup interface {
 
 type ListClickhouseClusterBackupsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -63,7 +64,7 @@ type ListClickhouseClusterBackupsRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListClickhouseClusterBackupsRequest) SetAuthorization(authorization string) {
+func (m *ListClickhouseClusterBackupsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -124,7 +125,7 @@ func (m *ListClickhouseClusterBackupsResponse) SetErrorWrapper(f func(err error)
 
 type DeleteClickhouseClusterBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -137,7 +138,7 @@ type DeleteClickhouseClusterBackupRequest struct {
 	Purge *bool // query: "purge"
 }
 
-func (m *DeleteClickhouseClusterBackupRequest) SetAuthorization(authorization string) {
+func (m *DeleteClickhouseClusterBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -202,7 +203,7 @@ func (m *DeleteClickhouseClusterBackupResponse) SetErrorWrapper(f func(err error
 
 type GetClickhouseClusterBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -211,7 +212,7 @@ type GetClickhouseClusterBackupRequest struct {
 	Backup string // path: "backup"
 }
 
-func (m *GetClickhouseClusterBackupRequest) SetAuthorization(authorization string) {
+func (m *GetClickhouseClusterBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -267,7 +268,7 @@ func (m *GetClickhouseClusterBackupResponse) SetErrorWrapper(f func(err error) e
 
 type UpsertClickhouseClusterBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -280,7 +281,7 @@ type UpsertClickhouseClusterBackupRequest struct {
 	Body model.ClickhouseBackupRequest // body
 }
 
-func (m *UpsertClickhouseClusterBackupRequest) SetAuthorization(authorization string) {
+func (m *UpsertClickhouseClusterBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -303,7 +304,7 @@ func (m *UpsertClickhouseClusterBackupRequest) getClickhouseClusterBackupRequest
 
 type UpdateClickhouseClusterBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -316,7 +317,7 @@ type UpdateClickhouseClusterBackupRequest struct {
 	Body model.UpdateClickhouseBackupRequest // body
 }
 
-func (m *UpdateClickhouseClusterBackupRequest) SetAuthorization(authorization string) {
+func (m *UpdateClickhouseClusterBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

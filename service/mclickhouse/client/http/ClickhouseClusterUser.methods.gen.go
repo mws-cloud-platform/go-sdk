@@ -111,7 +111,7 @@ func (c *ClickhouseClusterUser) queryListClickhouseClusterUsers(request *client.
 }
 
 func (c *ClickhouseClusterUser) headerListClickhouseClusterUsers(req *http.Request, request *client.ListClickhouseClusterUsersRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpdateClickhouseClusterUser создаёт нового пользователя кластера ClickHouse или изменяет существующего (upsert).
@@ -201,7 +201,7 @@ func (c *ClickhouseClusterUser) queryUpdateClickhouseClusterUser(request *client
 }
 
 func (c *ClickhouseClusterUser) headerUpdateClickhouseClusterUser(req *http.Request, request *client.UpdateClickhouseClusterUserRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -296,7 +296,7 @@ func (c *ClickhouseClusterUser) queryCreateUpdateClickhouseClusterUser(request *
 }
 
 func (c *ClickhouseClusterUser) headerCreateUpdateClickhouseClusterUser(req *http.Request, request *client.UpdateClickhouseClusterUserRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -391,7 +391,7 @@ func (c *ClickhouseClusterUser) queryUpdateUpdateClickhouseClusterUser(request *
 }
 
 func (c *ClickhouseClusterUser) headerUpdateUpdateClickhouseClusterUser(req *http.Request, request *client.UpdateUpdateClickhouseClusterUserRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

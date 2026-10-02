@@ -100,14 +100,12 @@ func (c *Role) queryListGlobalRoleV2(request *client.ListGlobalRoleV2Request) st
 	if request.ShowDeleted != nil {
 		q.Add("showDeleted", conv.StringToString(*request.ShowDeleted))
 	}
-	if request.Type != nil {
-		q.Add("type", conv.StringToString(*request.Type))
-	}
+	q.Add("type", conv.StringToString(request.Type))
 	return q.Encode()
 }
 
 func (c *Role) headerListGlobalRoleV2(req *http.Request, request *client.ListGlobalRoleV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetGlobalRoleV2 получение информации о роли.
@@ -179,5 +177,5 @@ func (c *Role) getGlobalRoleV2Invoker(ctx context.Context, anyReq any, response 
 }
 
 func (c *Role) headerGetGlobalRoleV2(req *http.Request, request *client.GetGlobalRoleV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

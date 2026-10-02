@@ -82,5 +82,5 @@ func (c *IssueSessionToken) issueSessionTokenInvoker(ctx context.Context, anyReq
 }
 
 func (c *IssueSessionToken) headerIssueSessionToken(req *http.Request, request *client.IssueSessionTokenRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

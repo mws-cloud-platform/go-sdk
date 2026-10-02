@@ -108,7 +108,7 @@ func (c *Kafka) queryListKafkaClusters(request *client.ListKafkaClustersRequest)
 }
 
 func (c *Kafka) headerListKafkaClusters(req *http.Request, request *client.ListKafkaClustersRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // StopCluster request stopping Kafka cluster.
@@ -183,7 +183,7 @@ func (c *Kafka) stopClusterInvoker(ctx context.Context, anyReq any, response com
 }
 
 func (c *Kafka) headerStopCluster(req *http.Request, request *client.StopClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -261,7 +261,7 @@ func (c *Kafka) startClusterInvoker(ctx context.Context, anyReq any, response co
 }
 
 func (c *Kafka) headerStartCluster(req *http.Request, request *client.StartClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -346,7 +346,7 @@ func (c *Kafka) queryDeleteKafkaCluster(request *client.DeleteKafkaClusterReques
 }
 
 func (c *Kafka) headerDeleteKafkaCluster(req *http.Request, request *client.DeleteKafkaClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -424,7 +424,7 @@ func (c *Kafka) getKafkaClusterInvoker(ctx context.Context, anyReq any, response
 }
 
 func (c *Kafka) headerGetKafkaCluster(req *http.Request, request *client.GetKafkaClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertKafkaCluster upsert Kafka cluster.
@@ -511,7 +511,7 @@ func (c *Kafka) queryUpsertKafkaCluster(request *client.UpsertKafkaClusterReques
 }
 
 func (c *Kafka) headerUpsertKafkaCluster(req *http.Request, request *client.UpsertKafkaClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -603,7 +603,7 @@ func (c *Kafka) queryCreateKafkaCluster(request *client.UpsertKafkaClusterReques
 }
 
 func (c *Kafka) headerCreateKafkaCluster(req *http.Request, request *client.UpsertKafkaClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -695,7 +695,7 @@ func (c *Kafka) queryUpdateKafkaCluster(request *client.UpdateKafkaClusterReques
 }
 
 func (c *Kafka) headerUpdateKafkaCluster(req *http.Request, request *client.UpdateKafkaClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

@@ -108,7 +108,7 @@ func (c *OneToOneNat) queryListOneToOneNats(request *client.ListOneToOneNatsRequ
 }
 
 func (c *OneToOneNat) headerListOneToOneNats(req *http.Request, request *client.ListOneToOneNatsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteOneToOneNat позволяет удалить One-to-One NAT.
@@ -192,7 +192,7 @@ func (c *OneToOneNat) queryDeleteOneToOneNat(request *client.DeleteOneToOneNatRe
 }
 
 func (c *OneToOneNat) headerDeleteOneToOneNat(req *http.Request, request *client.DeleteOneToOneNatRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -273,7 +273,7 @@ func (c *OneToOneNat) getOneToOneNatInvoker(ctx context.Context, anyReq any, res
 }
 
 func (c *OneToOneNat) headerGetOneToOneNat(req *http.Request, request *client.GetOneToOneNatRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertOneToOneNat позволяет создать или изменить One-to-One NAT.
@@ -366,7 +366,7 @@ func (c *OneToOneNat) queryUpsertOneToOneNat(request *client.UpsertOneToOneNatRe
 }
 
 func (c *OneToOneNat) headerUpsertOneToOneNat(req *http.Request, request *client.UpsertOneToOneNatRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -464,7 +464,7 @@ func (c *OneToOneNat) queryCreateOneToOneNat(request *client.UpsertOneToOneNatRe
 }
 
 func (c *OneToOneNat) headerCreateOneToOneNat(req *http.Request, request *client.UpsertOneToOneNatRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -562,7 +562,7 @@ func (c *OneToOneNat) queryUpdateOneToOneNat(request *client.UpdateOneToOneNatRe
 }
 
 func (c *OneToOneNat) headerUpdateOneToOneNat(req *http.Request, request *client.UpdateOneToOneNatRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

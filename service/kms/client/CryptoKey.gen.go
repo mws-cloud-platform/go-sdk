@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/kms/model"
 )
@@ -48,10 +49,10 @@ type CryptoKey interface {
 }
 
 type ListCryptoKeysRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -67,7 +68,7 @@ type ListCryptoKeysRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListCryptoKeysRequest) SetAuthorization(authorization string) {
+func (m *ListCryptoKeysRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -127,17 +128,17 @@ func (m *ListCryptoKeysResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type ScheduleDestructionOfCryptoKeyRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Название крипто-ключа
 	Key string // path: "key"
 	// Количество дней, через которое крипто-материал будет безвозвратно удалён
 	DestructionIntervalDays *int32 // query: "destructionIntervalDays"
 }
 
-func (m *ScheduleDestructionOfCryptoKeyRequest) SetAuthorization(authorization string) {
+func (m *ScheduleDestructionOfCryptoKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -196,15 +197,15 @@ func (m *ScheduleDestructionOfCryptoKeyResponse) SetErrorWrapper(f func(err erro
 }
 
 type RotateCryptoKeyRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Название крипто-ключа
 	Key string // path: "key"
 }
 
-func (m *RotateCryptoKeyRequest) SetAuthorization(authorization string) {
+func (m *RotateCryptoKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -263,15 +264,15 @@ func (m *RotateCryptoKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type CancelScheduledDestructionOfCryptoKeyRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Название крипто-ключа
 	Key string // path: "key"
 }
 
-func (m *CancelScheduledDestructionOfCryptoKeyRequest) SetAuthorization(authorization string) {
+func (m *CancelScheduledDestructionOfCryptoKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -331,14 +332,14 @@ func (m *CancelScheduledDestructionOfCryptoKeyResponse) SetErrorWrapper(f func(e
 
 type GetCryptoKeyRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название крипто-ключа
 	Key string // path: "key"
 }
 
-func (m *GetCryptoKeyRequest) SetAuthorization(authorization string) {
+func (m *GetCryptoKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -394,7 +395,7 @@ func (m *GetCryptoKeyResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertCryptoKeyRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -404,7 +405,7 @@ type UpsertCryptoKeyRequest struct {
 	Body model.CryptoKeyRequest // body
 }
 
-func (m *UpsertCryptoKeyRequest) SetAuthorization(authorization string) {
+func (m *UpsertCryptoKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -426,7 +427,7 @@ func (m *UpsertCryptoKeyRequest) getCryptoKeyRequest() GetCryptoKeyRequest {
 
 type UpdateCryptoKeyRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -436,7 +437,7 @@ type UpdateCryptoKeyRequest struct {
 	Body model.UpdateCryptoKeyRequest // body
 }
 
-func (m *UpdateCryptoKeyRequest) SetAuthorization(authorization string) {
+func (m *UpdateCryptoKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

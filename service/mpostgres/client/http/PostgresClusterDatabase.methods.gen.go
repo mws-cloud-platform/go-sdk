@@ -111,7 +111,7 @@ func (c *PostgresClusterDatabase) queryListPostgresClusterDatabases(request *cli
 }
 
 func (c *PostgresClusterDatabase) headerListPostgresClusterDatabases(req *http.Request, request *client.ListPostgresClusterDatabasesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeletePostgresClusterDatabase delete Postgres cluster database.
@@ -185,13 +185,13 @@ func (c *PostgresClusterDatabase) deletePostgresClusterDatabaseInvoker(ctx conte
 }
 
 func (c *PostgresClusterDatabase) headerDeletePostgresClusterDatabase(req *http.Request, request *client.DeletePostgresClusterDatabaseRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
 }
 
-// GetPostgresClusterDatabase returns info about the specified cluster database.
+// GetPostgresClusterDatabase возвращает информацию об указанной базе данных кластера.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /mpostgres/v1/projects/{project}/clusters/{cluster}/databases/{database}
@@ -266,7 +266,7 @@ func (c *PostgresClusterDatabase) getPostgresClusterDatabaseInvoker(ctx context.
 }
 
 func (c *PostgresClusterDatabase) headerGetPostgresClusterDatabase(req *http.Request, request *client.GetPostgresClusterDatabaseRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertPostgresClusterDatabase upsert Postgres cluster database.
@@ -356,7 +356,7 @@ func (c *PostgresClusterDatabase) queryUpsertPostgresClusterDatabase(request *cl
 }
 
 func (c *PostgresClusterDatabase) headerUpsertPostgresClusterDatabase(req *http.Request, request *client.UpsertPostgresClusterDatabaseRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -451,7 +451,7 @@ func (c *PostgresClusterDatabase) queryCreatePostgresClusterDatabase(request *cl
 }
 
 func (c *PostgresClusterDatabase) headerCreatePostgresClusterDatabase(req *http.Request, request *client.UpsertPostgresClusterDatabaseRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -546,7 +546,7 @@ func (c *PostgresClusterDatabase) queryUpdatePostgresClusterDatabase(request *cl
 }
 
 func (c *PostgresClusterDatabase) headerUpdatePostgresClusterDatabase(req *http.Request, request *client.UpdatePostgresClusterDatabaseRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

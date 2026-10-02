@@ -137,7 +137,7 @@ func (m *StorageDiskSpecRequest) diffIops(src *StorageDiskSpecRequest) optional.
 }
 
 type UpdateStorageDiskSpecSourceRequest struct {
-	// Ссылка на образ
+	// Ссылка на образ. Образы из каталога MWS находятся в системных проектах mws-<os>, например, mws-ubuntu, mws-debian.
 	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.

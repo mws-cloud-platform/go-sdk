@@ -15,6 +15,7 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/gpt"
 )
 
+// Деплоймент модели – это выделенный доступ к модели у пользователя, имеющий собственную конфигурацию
 // Real OAPI model name: Deployment
 type DeploymentResponse struct {
 	// Указание на тип ресурса.

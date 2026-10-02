@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/service/certmanager/model"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -41,7 +42,7 @@ type CertificateRoleBinding interface {
 
 type ListCertificateRoleBindingsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
@@ -61,7 +62,7 @@ type ListCertificateRoleBindingsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListCertificateRoleBindingsRequest) SetAuthorization(authorization string) {
+func (m *ListCertificateRoleBindingsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -122,7 +123,7 @@ func (m *ListCertificateRoleBindingsResponse) SetErrorWrapper(f func(err error) 
 
 type DeleteCertificateRoleBindingRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
@@ -131,7 +132,7 @@ type DeleteCertificateRoleBindingRequest struct {
 	RoleBinding string // path: "roleBinding"
 }
 
-func (m *DeleteCertificateRoleBindingRequest) SetAuthorization(authorization string) {
+func (m *DeleteCertificateRoleBindingRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -196,7 +197,7 @@ func (m *DeleteCertificateRoleBindingResponse) SetErrorWrapper(f func(err error)
 
 type GetCertificateRoleBindingRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
@@ -205,7 +206,7 @@ type GetCertificateRoleBindingRequest struct {
 	RoleBinding string // path: "roleBinding"
 }
 
-func (m *GetCertificateRoleBindingRequest) SetAuthorization(authorization string) {
+func (m *GetCertificateRoleBindingRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -261,7 +262,7 @@ func (m *GetCertificateRoleBindingResponse) SetErrorWrapper(f func(err error) er
 
 type UpsertCertificateRoleBindingRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -273,7 +274,7 @@ type UpsertCertificateRoleBindingRequest struct {
 	Body        model.CertificateRoleBindingRequest // body
 }
 
-func (m *UpsertCertificateRoleBindingRequest) SetAuthorization(authorization string) {
+func (m *UpsertCertificateRoleBindingRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -296,7 +297,7 @@ func (m *UpsertCertificateRoleBindingRequest) getCertificateRoleBindingRequest()
 
 type UpdateCertificateRoleBindingRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -308,7 +309,7 @@ type UpdateCertificateRoleBindingRequest struct {
 	Body        model.UpdateCertificateRoleBindingRequest // body
 }
 
-func (m *UpdateCertificateRoleBindingRequest) SetAuthorization(authorization string) {
+func (m *UpdateCertificateRoleBindingRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

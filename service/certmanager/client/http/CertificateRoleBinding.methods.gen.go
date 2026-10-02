@@ -108,7 +108,7 @@ func (c *CertificateRoleBinding) queryListCertificateRoleBindings(request *clien
 }
 
 func (c *CertificateRoleBinding) headerListCertificateRoleBindings(req *http.Request, request *client.ListCertificateRoleBindingsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteCertificateRoleBinding позволяет удалить привязку ролей сертификата.
@@ -182,7 +182,7 @@ func (c *CertificateRoleBinding) deleteCertificateRoleBindingInvoker(ctx context
 }
 
 func (c *CertificateRoleBinding) headerDeleteCertificateRoleBinding(req *http.Request, request *client.DeleteCertificateRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetCertificateRoleBinding позволяет получить указанную привязку ролей сертификата.
@@ -260,7 +260,7 @@ func (c *CertificateRoleBinding) getCertificateRoleBindingInvoker(ctx context.Co
 }
 
 func (c *CertificateRoleBinding) headerGetCertificateRoleBinding(req *http.Request, request *client.GetCertificateRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertCertificateRoleBinding позволяет создать или обновить привязку ролей сертификата.
@@ -350,7 +350,7 @@ func (c *CertificateRoleBinding) queryUpsertCertificateRoleBinding(request *clie
 }
 
 func (c *CertificateRoleBinding) headerUpsertCertificateRoleBinding(req *http.Request, request *client.UpsertCertificateRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -445,7 +445,7 @@ func (c *CertificateRoleBinding) queryCreateCertificateRoleBinding(request *clie
 }
 
 func (c *CertificateRoleBinding) headerCreateCertificateRoleBinding(req *http.Request, request *client.UpsertCertificateRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -540,7 +540,7 @@ func (c *CertificateRoleBinding) queryUpdateCertificateRoleBinding(request *clie
 }
 
 func (c *CertificateRoleBinding) headerUpdateCertificateRoleBinding(req *http.Request, request *client.UpdateCertificateRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

@@ -99,7 +99,7 @@ func (x *PostgresClusterDatabaseSugared) waitDeletePostgresClusterDatabase(ctx c
 	return err
 }
 
-// GetPostgresClusterDatabase returns info about the specified cluster database.
+// GetPostgresClusterDatabase возвращает информацию об указанной базе данных кластера.
 //
 // Путь: GET /mpostgres/v1/projects/{project}/clusters/{cluster}/databases/{database}
 func (x *PostgresClusterDatabaseSugared) GetPostgresClusterDatabase(ctx context.Context, request GetPostgresClusterDatabaseRequest, opts ...Option) (*model.PostgresClusterDatabaseResponse, error) {

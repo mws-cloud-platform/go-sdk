@@ -106,7 +106,7 @@ func (c *Snapshot) queryListSnapshots(request *client.ListSnapshotsRequest) stri
 }
 
 func (c *Snapshot) headerListSnapshots(req *http.Request, request *client.ListSnapshotsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // Deprecated: Отказываемся в пользу deleteDiskBackup.
@@ -192,7 +192,7 @@ func (c *Snapshot) queryDeleteSnapshot(request *client.DeleteSnapshotRequest) st
 }
 
 func (c *Snapshot) headerDeleteSnapshot(req *http.Request, request *client.DeleteSnapshotRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -281,7 +281,7 @@ func (c *Snapshot) queryGetSnapshot(request *client.GetSnapshotRequest) string {
 }
 
 func (c *Snapshot) headerGetSnapshot(req *http.Request, request *client.GetSnapshotRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // Deprecated: Отказываемся в пользу upsertDiskBackup.
@@ -372,7 +372,7 @@ func (c *Snapshot) queryUpsertSnapshot(request *client.UpsertSnapshotRequest) st
 }
 
 func (c *Snapshot) headerUpsertSnapshot(req *http.Request, request *client.UpsertSnapshotRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -468,7 +468,7 @@ func (c *Snapshot) queryCreateSnapshot(request *client.UpsertSnapshotRequest) st
 }
 
 func (c *Snapshot) headerCreateSnapshot(req *http.Request, request *client.UpsertSnapshotRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -564,7 +564,7 @@ func (c *Snapshot) queryUpdateSnapshot(request *client.UpdateSnapshotRequest) st
 }
 
 func (c *Snapshot) headerUpdateSnapshot(req *http.Request, request *client.UpdateSnapshotRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

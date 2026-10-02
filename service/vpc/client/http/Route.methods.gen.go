@@ -108,7 +108,7 @@ func (c *Route) queryListRoutes(request *client.ListRoutesRequest) string {
 }
 
 func (c *Route) headerListRoutes(req *http.Request, request *client.ListRoutesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteRoute позволяет удалить маршрут.
@@ -192,7 +192,7 @@ func (c *Route) queryDeleteRoute(request *client.DeleteRouteRequest) string {
 }
 
 func (c *Route) headerDeleteRoute(req *http.Request, request *client.DeleteRouteRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -273,7 +273,7 @@ func (c *Route) getRouteInvoker(ctx context.Context, anyReq any, response common
 }
 
 func (c *Route) headerGetRoute(req *http.Request, request *client.GetRouteRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertRoute позволяет создать или изменить маршрут.
@@ -366,7 +366,7 @@ func (c *Route) queryUpsertRoute(request *client.UpsertRouteRequest) string {
 }
 
 func (c *Route) headerUpsertRoute(req *http.Request, request *client.UpsertRouteRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -464,7 +464,7 @@ func (c *Route) queryCreateRoute(request *client.UpsertRouteRequest) string {
 }
 
 func (c *Route) headerCreateRoute(req *http.Request, request *client.UpsertRouteRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -562,7 +562,7 @@ func (c *Route) queryUpdateRoute(request *client.UpdateRouteRequest) string {
 }
 
 func (c *Route) headerUpdateRoute(req *http.Request, request *client.UpdateRouteRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

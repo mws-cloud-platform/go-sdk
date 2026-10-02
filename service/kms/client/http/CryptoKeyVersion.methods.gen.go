@@ -108,7 +108,7 @@ func (c *CryptoKeyVersion) queryListCryptoKeyVersions(request *client.ListCrypto
 }
 
 func (c *CryptoKeyVersion) headerListCryptoKeyVersions(req *http.Request, request *client.ListCryptoKeyVersionsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // ScheduleDestructionOfCryptoKeyVersion позволяет запланировать удаление указанной версии KMS ключа.
@@ -196,7 +196,7 @@ func (c *CryptoKeyVersion) queryScheduleDestructionOfCryptoKeyVersion(request *c
 }
 
 func (c *CryptoKeyVersion) headerScheduleDestructionOfCryptoKeyVersion(req *http.Request, request *client.ScheduleDestructionOfCryptoKeyVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // CancelScheduledDestructionOfCryptoKeyVersion позволяет отменить запланированное удаление указанной версии KMS ключа.
@@ -274,7 +274,7 @@ func (c *CryptoKeyVersion) cancelScheduledDestructionOfCryptoKeyVersionInvoker(c
 }
 
 func (c *CryptoKeyVersion) headerCancelScheduledDestructionOfCryptoKeyVersion(req *http.Request, request *client.CancelScheduledDestructionOfCryptoKeyVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetCryptoKeyVersion позволяет получить указанную версию KMS ключа.
@@ -352,7 +352,7 @@ func (c *CryptoKeyVersion) getCryptoKeyVersionInvoker(ctx context.Context, anyRe
 }
 
 func (c *CryptoKeyVersion) headerGetCryptoKeyVersion(req *http.Request, request *client.GetCryptoKeyVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertCryptoKeyVersion обновляет указанную версию ключа KMS (для создания используйте операцию rotateCryptoKey).
@@ -442,7 +442,7 @@ func (c *CryptoKeyVersion) queryUpsertCryptoKeyVersion(request *client.UpsertCry
 }
 
 func (c *CryptoKeyVersion) headerUpsertCryptoKeyVersion(req *http.Request, request *client.UpsertCryptoKeyVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -537,7 +537,7 @@ func (c *CryptoKeyVersion) queryCreateCryptoKeyVersion(request *client.UpsertCry
 }
 
 func (c *CryptoKeyVersion) headerCreateCryptoKeyVersion(req *http.Request, request *client.UpsertCryptoKeyVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -632,7 +632,7 @@ func (c *CryptoKeyVersion) queryUpdateCryptoKeyVersion(request *client.UpdateCry
 }
 
 func (c *CryptoKeyVersion) headerUpdateCryptoKeyVersion(req *http.Request, request *client.UpdateCryptoKeyVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

@@ -104,7 +104,7 @@ func (c *Region) queryListRegions(request *client.ListRegionsRequest) string {
 }
 
 func (c *Region) headerListRegions(req *http.Request, request *client.ListRegionsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetRegion get region.
@@ -176,5 +176,5 @@ func (c *Region) getRegionInvoker(ctx context.Context, anyReq any, response comm
 }
 
 func (c *Region) headerGetRegion(req *http.Request, request *client.GetRegionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

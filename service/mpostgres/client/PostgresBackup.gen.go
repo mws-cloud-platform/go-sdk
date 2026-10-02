@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mpostgres/model"
 )
@@ -19,7 +20,7 @@ type PostgresBackup interface {
 	//
 	// Путь: DELETE /mpostgres/v1/projects/{project}/clusters/{cluster}/backups/{backup}
 	DeletePostgresBackup(context.Context, DeletePostgresBackupRequest) (*DeletePostgresBackupResponse, error)
-	// GetPostgresBackup returns info about the specified backup.
+	// GetPostgresBackup возвращает информацию об указанной резервной копии.
 	//
 	// Путь: GET /mpostgres/v1/projects/{project}/clusters/{cluster}/backups/{backup}
 	GetPostgresBackup(context.Context, GetPostgresBackupRequest) (*GetPostgresBackupResponse, error)
@@ -41,7 +42,7 @@ type PostgresBackup interface {
 
 type ListPostgresBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -63,7 +64,7 @@ type ListPostgresBackupRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListPostgresBackupRequest) SetAuthorization(authorization string) {
+func (m *ListPostgresBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -120,18 +121,18 @@ func (m *ListPostgresBackupResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeletePostgresBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
-	// Backup базы данных.
+	// Резервная копия базы данных.
 	Backup string // path: "backup"
 }
 
-func (m *DeletePostgresBackupRequest) SetAuthorization(authorization string) {
+func (m *DeletePostgresBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -200,16 +201,16 @@ func (m *DeletePostgresBackupResponse) SetErrorWrapper(f func(err error) error) 
 
 type GetPostgresBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
-	// Backup базы данных.
+	// Резервная копия базы данных.
 	Backup string // path: "backup"
 }
 
-func (m *GetPostgresBackupRequest) SetAuthorization(authorization string) {
+func (m *GetPostgresBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -265,20 +266,20 @@ func (m *GetPostgresBackupResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertPostgresBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
-	// Backup базы данных.
+	// Резервная копия базы данных.
 	Backup string // path: "backup"
 	// Upsert Postgres backup
 	Body model.PostgresBackupRequest // body
 }
 
-func (m *UpsertPostgresBackupRequest) SetAuthorization(authorization string) {
+func (m *UpsertPostgresBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -301,20 +302,20 @@ func (m *UpsertPostgresBackupRequest) getPostgresBackupRequest() GetPostgresBack
 
 type UpdatePostgresBackupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
 	Cluster string // path: "cluster"
-	// Backup базы данных.
+	// Резервная копия базы данных.
 	Backup string // path: "backup"
 	// Upsert Postgres backup
 	Body model.UpdatePostgresBackupRequest // body
 }
 
-func (m *UpdatePostgresBackupRequest) SetAuthorization(authorization string) {
+func (m *UpdatePostgresBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

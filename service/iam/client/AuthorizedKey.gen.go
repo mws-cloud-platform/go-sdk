@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
@@ -67,18 +68,20 @@ type AuthorizedKey interface {
 }
 
 type ListAuthorizedKeyRequest struct {
-	ServiceAccount string // path: "serviceAccount"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
 	PageToken *string // query: "pageToken"
+	// Вывод удаленных объектов для ресурсов, поддерживающих soft delete
+	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListAuthorizedKeyRequest) SetAuthorization(authorization string) {
+func (m *ListAuthorizedKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -138,12 +141,12 @@ func (m *ListAuthorizedKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type DeleteAuthorizedKeyV2Request struct {
-	ServiceAccount string // path: "serviceAccount"
-	AuthorizedKey  string // path: "authorizedKey"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
+	AuthorizedKey  string                      // path: "authorizedKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
 	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
 	IfExist *bool // query: "ifExist"
@@ -151,7 +154,7 @@ type DeleteAuthorizedKeyV2Request struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteAuthorizedKeyV2Request) SetAuthorization(authorization string) {
+func (m *DeleteAuthorizedKeyV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -165,10 +168,10 @@ func (m *DeleteAuthorizedKeyV2Request) SetProject(project string) {
 
 func (m *DeleteAuthorizedKeyV2Request) getAuthorizedKeyV2Request() GetAuthorizedKeyV2Request {
 	return GetAuthorizedKeyV2Request{
+		Authorization:  m.Authorization,
 		ServiceAccount: m.ServiceAccount,
 		AuthorizedKey:  m.AuthorizedKey,
 		Project:        m.Project,
-		Authorization:  m.Authorization,
 	}
 }
 
@@ -215,15 +218,15 @@ func (m *DeleteAuthorizedKeyV2Response) SetErrorWrapper(f func(err error) error)
 }
 
 type GetAuthorizedKeyV2Request struct {
-	ServiceAccount string // path: "serviceAccount"
-	AuthorizedKey  string // path: "authorizedKey"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
+	AuthorizedKey  string                      // path: "authorizedKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 }
 
-func (m *GetAuthorizedKeyV2Request) SetAuthorization(authorization string) {
+func (m *GetAuthorizedKeyV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -278,12 +281,12 @@ func (m *GetAuthorizedKeyV2Response) SetErrorWrapper(f func(err error) error) {
 }
 
 type UpsertAuthorizedKeyV2Request struct {
-	ServiceAccount string // path: "serviceAccount"
-	AuthorizedKey  string // path: "authorizedKey"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
+	AuthorizedKey  string                      // path: "authorizedKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
@@ -291,7 +294,7 @@ type UpsertAuthorizedKeyV2Request struct {
 	Body         model.AuthorizedKeyRequest // body
 }
 
-func (m *UpsertAuthorizedKeyV2Request) SetAuthorization(authorization string) {
+func (m *UpsertAuthorizedKeyV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -304,12 +307,12 @@ func (m *UpsertAuthorizedKeyV2Request) SetProject(project string) {
 }
 
 type UpdateAuthorizedKeyV2Request struct {
-	ServiceAccount string // path: "serviceAccount"
-	AuthorizedKey  string // path: "authorizedKey"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
+	AuthorizedKey  string                      // path: "authorizedKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
@@ -317,7 +320,7 @@ type UpdateAuthorizedKeyV2Request struct {
 	Body         model.UpdateAuthorizedKeyRequest // body
 }
 
-func (m *UpdateAuthorizedKeyV2Request) SetAuthorization(authorization string) {
+func (m *UpdateAuthorizedKeyV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -377,12 +380,12 @@ func (m *UpsertAuthorizedKeyV2Response) SetErrorWrapper(f func(err error) error)
 }
 
 type DeleteAuthorizedKeyRequest struct {
-	ServiceAccount string // path: "serviceAccount"
-	AuthorizedKey  string // path: "authorizedKey"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
+	AuthorizedKey  string                      // path: "authorizedKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
 	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
 	IfExist *bool // query: "ifExist"
@@ -390,7 +393,7 @@ type DeleteAuthorizedKeyRequest struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteAuthorizedKeyRequest) SetAuthorization(authorization string) {
+func (m *DeleteAuthorizedKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -510,12 +513,12 @@ func (m *GetAuthorizedKeyResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type UpsertAuthorizedKeyRequest struct {
-	ServiceAccount string // path: "serviceAccount"
-	AuthorizedKey  string // path: "authorizedKey"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
+	AuthorizedKey  string                      // path: "authorizedKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
@@ -523,7 +526,7 @@ type UpsertAuthorizedKeyRequest struct {
 	Body         model.AuthorizedKeyRequest // body
 }
 
-func (m *UpsertAuthorizedKeyRequest) SetAuthorization(authorization string) {
+func (m *UpsertAuthorizedKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -536,12 +539,12 @@ func (m *UpsertAuthorizedKeyRequest) SetProject(project string) {
 }
 
 type UpdateAuthorizedKeyRequest struct {
-	ServiceAccount string // path: "serviceAccount"
-	AuthorizedKey  string // path: "authorizedKey"
+	// Токен авторизации IAM
+	Authorization  sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount string                      // path: "serviceAccount"
+	AuthorizedKey  string                      // path: "authorizedKey"
 	// Путь к проекту.
 	Project string // path: "project"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
@@ -549,7 +552,7 @@ type UpdateAuthorizedKeyRequest struct {
 	Body         model.UpdateAuthorizedKeyRequest // body
 }
 
-func (m *UpdateAuthorizedKeyRequest) SetAuthorization(authorization string) {
+func (m *UpdateAuthorizedKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

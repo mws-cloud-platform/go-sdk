@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
@@ -41,7 +42,7 @@ type Mk8sCluster interface {
 
 type ListMk8sClustersRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -59,7 +60,7 @@ type ListMk8sClustersRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListMk8sClustersRequest) SetAuthorization(authorization string) {
+func (m *ListMk8sClustersRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -120,7 +121,7 @@ func (m *ListMk8sClustersResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteMk8sClusterRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя кластера
@@ -129,7 +130,7 @@ type DeleteMk8sClusterRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
 
-func (m *DeleteMk8sClusterRequest) SetAuthorization(authorization string) {
+func (m *DeleteMk8sClusterRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -193,14 +194,14 @@ func (m *DeleteMk8sClusterResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetMk8sClusterRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя кластера
 	ClusterName string // path: "clusterName"
 }
 
-func (m *GetMk8sClusterRequest) SetAuthorization(authorization string) {
+func (m *GetMk8sClusterRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -256,7 +257,7 @@ func (m *GetMk8sClusterResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertMk8sClusterRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя кластера
@@ -267,7 +268,7 @@ type UpsertMk8sClusterRequest struct {
 	Body model.ClusterRequest // body
 }
 
-func (m *UpsertMk8sClusterRequest) SetAuthorization(authorization string) {
+func (m *UpsertMk8sClusterRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -289,7 +290,7 @@ func (m *UpsertMk8sClusterRequest) getMk8sClusterRequest() GetMk8sClusterRequest
 
 type UpdateMk8sClusterRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя кластера
@@ -300,7 +301,7 @@ type UpdateMk8sClusterRequest struct {
 	Body model.UpdateClusterRequest // body
 }
 
-func (m *UpdateMk8sClusterRequest) SetAuthorization(authorization string) {
+func (m *UpdateMk8sClusterRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

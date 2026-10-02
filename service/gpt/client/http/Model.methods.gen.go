@@ -108,7 +108,7 @@ func (c *Model) queryListModels(request *client.ListModelsRequest) string {
 }
 
 func (c *Model) headerListModels(req *http.Request, request *client.ListModelsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetModel позволяет получить одну модель по ее имени в рамках указанного проекта.
@@ -183,5 +183,5 @@ func (c *Model) getModelInvoker(ctx context.Context, anyReq any, response common
 }
 
 func (c *Model) headerGetModel(req *http.Request, request *client.GetModelRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

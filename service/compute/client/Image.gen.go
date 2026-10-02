@@ -11,6 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
@@ -21,7 +22,7 @@ type Image interface {
 	//
 	// Путь: GET /compute/v1/projects/{project}/images:latest
 	LatestImage(context.Context, LatestImageRequest) (*LatestImageResponse, error)
-	// ListImages позволяет получить список образов.
+	// ListImages позволяет получить список образов. Образы из каталога MWS находятся в системных проектах mws-<os>, например, mws-ubuntu, mws-debian.
 	//
 	// Путь: GET /compute/v1/projects/{project}/images
 	ListImages(context.Context, ListImagesRequest) (*ListImagesResponse, error)
@@ -51,14 +52,14 @@ type Image interface {
 
 type LatestImageRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Семейство образа
 	Family string // query: "family"
 }
 
-func (m *LatestImageRequest) SetAuthorization(authorization string) {
+func (m *LatestImageRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -114,7 +115,7 @@ func (m *LatestImageResponse) SetErrorWrapper(f func(err error) error) {
 
 type ListImagesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -132,7 +133,7 @@ type ListImagesRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListImagesRequest) SetAuthorization(authorization string) {
+func (m *ListImagesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -326,7 +327,7 @@ func (m *ListImagesResponse200) Decode(d *jx.Decoder) error {
 
 type DeleteImageRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к образу
@@ -339,7 +340,7 @@ type DeleteImageRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
 
-func (m *DeleteImageRequest) SetAuthorization(authorization string) {
+func (m *DeleteImageRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -403,7 +404,7 @@ func (m *DeleteImageResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetImageRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к образу
@@ -412,7 +413,7 @@ type GetImageRequest struct {
 	WaitNew *string // query: "waitNew"
 }
 
-func (m *GetImageRequest) SetAuthorization(authorization string) {
+func (m *GetImageRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -468,7 +469,7 @@ func (m *GetImageResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertImageRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к образу
@@ -481,7 +482,7 @@ type UpsertImageRequest struct {
 	Body model.ImageRequest // body
 }
 
-func (m *UpsertImageRequest) SetAuthorization(authorization string) {
+func (m *UpsertImageRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -503,7 +504,7 @@ func (m *UpsertImageRequest) getImageRequest() GetImageRequest {
 
 type UpdateImageRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Путь к образу
@@ -516,7 +517,7 @@ type UpdateImageRequest struct {
 	Body model.UpdateImageRequest // body
 }
 
-func (m *UpdateImageRequest) SetAuthorization(authorization string) {
+func (m *UpdateImageRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

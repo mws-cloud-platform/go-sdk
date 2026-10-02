@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
@@ -41,7 +42,7 @@ type EgressNat interface {
 
 type ListEgressNatsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -61,7 +62,7 @@ type ListEgressNatsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListEgressNatsRequest) SetAuthorization(authorization string) {
+func (m *ListEgressNatsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -134,7 +135,7 @@ func (m *ListEgressNatsResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteEgressNatRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -147,7 +148,7 @@ type DeleteEgressNatRequest struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteEgressNatRequest) SetAuthorization(authorization string) {
+func (m *DeleteEgressNatRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -224,7 +225,7 @@ func (m *DeleteEgressNatResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetEgressNatRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -233,7 +234,7 @@ type GetEgressNatRequest struct {
 	EgressNat string // path: "egressNat"
 }
 
-func (m *GetEgressNatRequest) SetAuthorization(authorization string) {
+func (m *GetEgressNatRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -301,7 +302,7 @@ func (m *GetEgressNatResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertEgressNatRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -316,7 +317,7 @@ type UpsertEgressNatRequest struct {
 	Body model.EgressNatRequest // body
 }
 
-func (m *UpsertEgressNatRequest) SetAuthorization(authorization string) {
+func (m *UpsertEgressNatRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -339,7 +340,7 @@ func (m *UpsertEgressNatRequest) getEgressNatRequest() GetEgressNatRequest {
 
 type UpdateEgressNatRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -354,7 +355,7 @@ type UpdateEgressNatRequest struct {
 	Body model.UpdateEgressNatRequest // body
 }
 
-func (m *UpdateEgressNatRequest) SetAuthorization(authorization string) {
+func (m *UpdateEgressNatRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

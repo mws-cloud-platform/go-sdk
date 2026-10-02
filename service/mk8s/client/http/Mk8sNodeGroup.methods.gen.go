@@ -108,7 +108,7 @@ func (c *Mk8sNodeGroup) queryListMk8sNodeGroups(request *client.ListMk8sNodeGrou
 }
 
 func (c *Mk8sNodeGroup) headerListMk8sNodeGroups(req *http.Request, request *client.ListMk8sNodeGroupsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteMk8sNodeGroup позволяет удалить группу узлов Managed Kubernetes.
@@ -182,7 +182,7 @@ func (c *Mk8sNodeGroup) deleteMk8sNodeGroupInvoker(ctx context.Context, anyReq a
 }
 
 func (c *Mk8sNodeGroup) headerDeleteMk8sNodeGroup(req *http.Request, request *client.DeleteMk8sNodeGroupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -263,7 +263,7 @@ func (c *Mk8sNodeGroup) getMk8sNodeGroupInvoker(ctx context.Context, anyReq any,
 }
 
 func (c *Mk8sNodeGroup) headerGetMk8sNodeGroup(req *http.Request, request *client.GetMk8sNodeGroupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertMk8sNodeGroup позволяет создать или обновить группу узлов Managed Kubernetes.
@@ -353,7 +353,7 @@ func (c *Mk8sNodeGroup) queryUpsertMk8sNodeGroup(request *client.UpsertMk8sNodeG
 }
 
 func (c *Mk8sNodeGroup) headerUpsertMk8sNodeGroup(req *http.Request, request *client.UpsertMk8sNodeGroupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -448,7 +448,7 @@ func (c *Mk8sNodeGroup) queryCreateMk8sNodeGroup(request *client.UpsertMk8sNodeG
 }
 
 func (c *Mk8sNodeGroup) headerCreateMk8sNodeGroup(req *http.Request, request *client.UpsertMk8sNodeGroupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -543,7 +543,7 @@ func (c *Mk8sNodeGroup) queryUpdateMk8sNodeGroup(request *client.UpdateMk8sNodeG
 }
 
 func (c *Mk8sNodeGroup) headerUpdateMk8sNodeGroup(req *http.Request, request *client.UpdateMk8sNodeGroupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

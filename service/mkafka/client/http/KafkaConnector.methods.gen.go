@@ -111,7 +111,7 @@ func (c *KafkaConnector) queryListKafkaConnectors(request *client.ListKafkaConne
 }
 
 func (c *KafkaConnector) headerListKafkaConnectors(req *http.Request, request *client.ListKafkaConnectorsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // StopConnector request stopping Kafka Connector.
@@ -189,7 +189,7 @@ func (c *KafkaConnector) stopConnectorInvoker(ctx context.Context, anyReq any, r
 }
 
 func (c *KafkaConnector) headerStopConnector(req *http.Request, request *client.StopConnectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -270,7 +270,7 @@ func (c *KafkaConnector) startConnectorInvoker(ctx context.Context, anyReq any, 
 }
 
 func (c *KafkaConnector) headerStartConnector(req *http.Request, request *client.StartConnectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -357,7 +357,7 @@ func (c *KafkaConnector) queryDeleteKafkaConnector(request *client.DeleteKafkaCo
 }
 
 func (c *KafkaConnector) headerDeleteKafkaConnector(req *http.Request, request *client.DeleteKafkaConnectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -438,7 +438,7 @@ func (c *KafkaConnector) getKafkaConnectorInvoker(ctx context.Context, anyReq an
 }
 
 func (c *KafkaConnector) headerGetKafkaConnector(req *http.Request, request *client.GetKafkaConnectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertKafkaConnector upsert Kafka Connector.
@@ -528,7 +528,7 @@ func (c *KafkaConnector) queryUpsertKafkaConnector(request *client.UpsertKafkaCo
 }
 
 func (c *KafkaConnector) headerUpsertKafkaConnector(req *http.Request, request *client.UpsertKafkaConnectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -623,7 +623,7 @@ func (c *KafkaConnector) queryCreateKafkaConnector(request *client.UpsertKafkaCo
 }
 
 func (c *KafkaConnector) headerCreateKafkaConnector(req *http.Request, request *client.UpsertKafkaConnectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -718,7 +718,7 @@ func (c *KafkaConnector) queryUpdateKafkaConnector(request *client.UpdateKafkaCo
 }
 
 func (c *KafkaConnector) headerUpdateKafkaConnector(req *http.Request, request *client.UpdateKafkaConnectorRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

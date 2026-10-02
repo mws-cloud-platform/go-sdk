@@ -30,7 +30,8 @@ type KafkaClusterSpecRequest struct {
 	// Описание ресурсов хостов брокеров и контроллеров.
 	Instances KafkaInstanceRequest `json:"instances" yaml:"instances"`
 	// Настройки Kafka. Если не указаны, будут использованы настройки по умолчанию
-	ProductConfig     *string                               `json:"productConfig,omitempty" yaml:"productConfig,omitempty"`
+	ProductConfig *string `json:"productConfig,omitempty" yaml:"productConfig,omitempty"`
+	// Сервисное окно Maintenance API.
 	MaintenanceWindow *commonmodel.MaintenanceWindowRequest `json:"maintenanceWindow,omitempty" yaml:"maintenanceWindow,omitempty"`
 	// Настройка Schema Registry для кластера.
 	SchemaRegistry *KafkaSchemaRegistrySpecRequest `json:"schemaRegistry,omitempty" yaml:"schemaRegistry,omitempty"`

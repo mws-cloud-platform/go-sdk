@@ -111,7 +111,7 @@ func (c *TopicRoleBinding) queryListTopicRoleBindings(request *client.ListTopicR
 }
 
 func (c *TopicRoleBinding) headerListTopicRoleBindings(req *http.Request, request *client.ListTopicRoleBindingsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteTopicRoleBinding позволяет удалить назначение роли для топика Queue.
@@ -185,7 +185,7 @@ func (c *TopicRoleBinding) deleteTopicRoleBindingInvoker(ctx context.Context, an
 }
 
 func (c *TopicRoleBinding) headerDeleteTopicRoleBinding(req *http.Request, request *client.DeleteTopicRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetTopicRoleBinding возвращает назначенную роль для доступа к топику Queue.
@@ -263,7 +263,7 @@ func (c *TopicRoleBinding) getTopicRoleBindingInvoker(ctx context.Context, anyRe
 }
 
 func (c *TopicRoleBinding) headerGetTopicRoleBinding(req *http.Request, request *client.GetTopicRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertTopicRoleBinding позволяет назначить роль для доступа к топику Queue.
@@ -353,7 +353,7 @@ func (c *TopicRoleBinding) queryUpsertTopicRoleBinding(request *client.UpsertTop
 }
 
 func (c *TopicRoleBinding) headerUpsertTopicRoleBinding(req *http.Request, request *client.UpsertTopicRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -448,7 +448,7 @@ func (c *TopicRoleBinding) queryCreateTopicRoleBinding(request *client.UpsertTop
 }
 
 func (c *TopicRoleBinding) headerCreateTopicRoleBinding(req *http.Request, request *client.UpsertTopicRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -543,7 +543,7 @@ func (c *TopicRoleBinding) queryUpdateTopicRoleBinding(request *client.UpdateTop
 }
 
 func (c *TopicRoleBinding) headerUpdateTopicRoleBinding(req *http.Request, request *client.UpdateTopicRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

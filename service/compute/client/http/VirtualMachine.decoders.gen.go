@@ -129,6 +129,23 @@ func decodeListVirtualMachinesResponse(resp *http.Response) (*client.ListVirtual
 			_, _ = io.Copy(io.Discard, resp.Body)
 			return nil, clienterrors.InvalidContentType(ct)
 		}
+	case 429:
+		switch ct {
+		case "application/json":
+			result := &client.ListVirtualMachinesResponse{
+				Code:        resp.StatusCode,
+				Response429: &commonmodel.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response429); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
 	case 499:
 		switch ct {
 		case "application/json":
@@ -292,6 +309,23 @@ func decodeDeleteVirtualMachineResponse(resp *http.Response) (*client.DeleteVirt
 			_, _ = io.Copy(io.Discard, resp.Body)
 			return nil, clienterrors.InvalidContentType(ct)
 		}
+	case 429:
+		switch ct {
+		case "application/json":
+			result := &client.DeleteVirtualMachineResponse{
+				Code:        resp.StatusCode,
+				Response429: &commonmodel.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response429); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
 	case 499:
 		switch ct {
 		case "application/json":
@@ -437,6 +471,23 @@ func decodeGetVirtualMachineResponse(resp *http.Response) (*client.GetVirtualMac
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response412); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 429:
+		switch ct {
+		case "application/json":
+			result := &client.GetVirtualMachineResponse{
+				Code:        resp.StatusCode,
+				Response429: &commonmodel.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response429); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 
@@ -624,6 +675,23 @@ func decodeUpsertVirtualMachineResponse(resp *http.Response) (*client.UpsertVirt
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response422); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 429:
+		switch ct {
+		case "application/json":
+			result := &client.UpsertVirtualMachineResponse{
+				Code:        resp.StatusCode,
+				Response429: &commonmodel.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response429); err != nil {
 				return nil, clienterrors.NewDecodeBodyError(ct, err)
 			}
 

@@ -12,6 +12,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/service/auditlogs/model"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -47,7 +48,7 @@ type Collector interface {
 
 type DeleteCollectorRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project       string // path: "project"
 	CollectorName string // path: "collectorName"
@@ -64,7 +65,7 @@ type DeleteCollectorRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
 
-func (m *DeleteCollectorRequest) SetAuthorization(authorization string) {
+func (m *DeleteCollectorRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -136,13 +137,13 @@ func (m *DeleteCollectorResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetCollectorRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project       string // path: "project"
 	CollectorName string // path: "collectorName"
 }
 
-func (m *GetCollectorRequest) SetAuthorization(authorization string) {
+func (m *GetCollectorRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -198,7 +199,7 @@ func (m *GetCollectorResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertCollectorRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
@@ -209,7 +210,7 @@ type UpsertCollectorRequest struct {
 	Body           model.CollectorRequest // body
 }
 
-func (m *UpsertCollectorRequest) SetAuthorization(authorization string) {
+func (m *UpsertCollectorRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -231,7 +232,7 @@ func (m *UpsertCollectorRequest) getCollectorRequest() GetCollectorRequest {
 
 type UpdateCollectorRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
@@ -242,7 +243,7 @@ type UpdateCollectorRequest struct {
 	Body           model.UpdateCollectorRequest // body
 }
 
-func (m *UpdateCollectorRequest) SetAuthorization(authorization string) {
+func (m *UpdateCollectorRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -318,7 +319,7 @@ func (m *UpsertCollectorResponse) SetErrorWrapper(f func(err error) error) {
 
 type ListCollectorsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -336,7 +337,7 @@ type ListCollectorsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListCollectorsRequest) SetAuthorization(authorization string) {
+func (m *ListCollectorsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

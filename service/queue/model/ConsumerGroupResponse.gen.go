@@ -11,6 +11,7 @@ import (
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Группа потребителей — это потребители, которые совместно обрабатывают сообщения из топика
 // Real OAPI model name: ConsumerGroup
 type ConsumerGroupResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`

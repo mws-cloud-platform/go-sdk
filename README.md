@@ -172,7 +172,7 @@ Alternatively, this can be done directly in code:
 ```go
 sdk, err := mws.Load(ctx, mws.WithCredentials(
 	credentials.StaticProvider(credentials.Credentials{
-		AccessToken: "mws-iam-token",
+		AccessToken: credentials.NewAccessToken("mws-iam-token"),
 	})
 ))
 ```

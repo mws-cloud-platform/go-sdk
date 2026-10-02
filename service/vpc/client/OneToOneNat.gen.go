@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
@@ -41,7 +42,7 @@ type OneToOneNat interface {
 
 type ListOneToOneNatsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -61,7 +62,7 @@ type ListOneToOneNatsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListOneToOneNatsRequest) SetAuthorization(authorization string) {
+func (m *ListOneToOneNatsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -134,7 +135,7 @@ func (m *ListOneToOneNatsResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteOneToOneNatRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -147,7 +148,7 @@ type DeleteOneToOneNatRequest struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteOneToOneNatRequest) SetAuthorization(authorization string) {
+func (m *DeleteOneToOneNatRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -224,7 +225,7 @@ func (m *DeleteOneToOneNatResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetOneToOneNatRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -233,7 +234,7 @@ type GetOneToOneNatRequest struct {
 	OneToOneNat string // path: "oneToOneNat"
 }
 
-func (m *GetOneToOneNatRequest) SetAuthorization(authorization string) {
+func (m *GetOneToOneNatRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -301,7 +302,7 @@ func (m *GetOneToOneNatResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertOneToOneNatRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -316,7 +317,7 @@ type UpsertOneToOneNatRequest struct {
 	Body model.OneToOneNatRequest // body
 }
 
-func (m *UpsertOneToOneNatRequest) SetAuthorization(authorization string) {
+func (m *UpsertOneToOneNatRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -339,7 +340,7 @@ func (m *UpsertOneToOneNatRequest) getOneToOneNatRequest() GetOneToOneNatRequest
 
 type UpdateOneToOneNatRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -354,7 +355,7 @@ type UpdateOneToOneNatRequest struct {
 	Body model.UpdateOneToOneNatRequest // body
 }
 
-func (m *UpdateOneToOneNatRequest) SetAuthorization(authorization string) {
+func (m *UpdateOneToOneNatRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

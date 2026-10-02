@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
@@ -24,11 +25,11 @@ type IssueServiceAccountToken interface {
 
 type IssueServiceAccountTokenV2Request struct {
 	// Токен авторизации IAM
-	Authorization  *string // header: "Authorization"
-	ServiceAccount *string // query: "serviceAccount"
+	Authorization  *sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount *string                      // query: "serviceAccount"
 }
 
-func (m *IssueServiceAccountTokenV2Request) SetAuthorization(authorization string) {
+func (m *IssueServiceAccountTokenV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = &authorization
 }
 
@@ -76,11 +77,11 @@ func (m *IssueServiceAccountTokenV2Response) SetErrorWrapper(f func(err error) e
 
 type IssueServiceAccountTokenRequest struct {
 	// Токен авторизации IAM
-	Authorization  *string // header: "Authorization"
-	ServiceAccount *string // query: "serviceAccount"
+	Authorization  *sensitive.Sensitive[string] // header: "Authorization"
+	ServiceAccount *string                      // query: "serviceAccount"
 }
 
-func (m *IssueServiceAccountTokenRequest) SetAuthorization(authorization string) {
+func (m *IssueServiceAccountTokenRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = &authorization
 }
 

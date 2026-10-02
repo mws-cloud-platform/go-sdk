@@ -105,7 +105,7 @@ func (c *CryptoKey) queryListCryptoKeys(request *client.ListCryptoKeysRequest) s
 }
 
 func (c *CryptoKey) headerListCryptoKeys(req *http.Request, request *client.ListCryptoKeysRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // ScheduleDestructionOfCryptoKey позволяет запланировать уничтожение выбранного KMS ключа.
@@ -190,7 +190,7 @@ func (c *CryptoKey) queryScheduleDestructionOfCryptoKey(request *client.Schedule
 }
 
 func (c *CryptoKey) headerScheduleDestructionOfCryptoKey(req *http.Request, request *client.ScheduleDestructionOfCryptoKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // RotateCryptoKey позволяет ротировать выбранный KMS ключ.
@@ -265,7 +265,7 @@ func (c *CryptoKey) rotateCryptoKeyInvoker(ctx context.Context, anyReq any, resp
 }
 
 func (c *CryptoKey) headerRotateCryptoKey(req *http.Request, request *client.RotateCryptoKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // CancelScheduledDestructionOfCryptoKey отмена запланированного уничтожение выбранного KMS ключа.
@@ -340,7 +340,7 @@ func (c *CryptoKey) cancelScheduledDestructionOfCryptoKeyInvoker(ctx context.Con
 }
 
 func (c *CryptoKey) headerCancelScheduledDestructionOfCryptoKey(req *http.Request, request *client.CancelScheduledDestructionOfCryptoKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetCryptoKey позволяет получить выбранный KMS ключ.
@@ -415,7 +415,7 @@ func (c *CryptoKey) getCryptoKeyInvoker(ctx context.Context, anyReq any, respons
 }
 
 func (c *CryptoKey) headerGetCryptoKey(req *http.Request, request *client.GetCryptoKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertCryptoKey обновление (или создание) выбранного KMS ключа.
@@ -502,7 +502,7 @@ func (c *CryptoKey) queryUpsertCryptoKey(request *client.UpsertCryptoKeyRequest)
 }
 
 func (c *CryptoKey) headerUpsertCryptoKey(req *http.Request, request *client.UpsertCryptoKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -594,7 +594,7 @@ func (c *CryptoKey) queryCreateCryptoKey(request *client.UpsertCryptoKeyRequest)
 }
 
 func (c *CryptoKey) headerCreateCryptoKey(req *http.Request, request *client.UpsertCryptoKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -686,7 +686,7 @@ func (c *CryptoKey) queryUpdateCryptoKey(request *client.UpdateCryptoKeyRequest)
 }
 
 func (c *CryptoKey) headerUpdateCryptoKey(req *http.Request, request *client.UpdateCryptoKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

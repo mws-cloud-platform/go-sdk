@@ -37,6 +37,8 @@ type KafkaClusterStatusResponse struct {
 	Message *string        `json:"message,omitempty" yaml:"message,omitempty"`
 	// Регион, которому принадлежит кластер.
 	Region *rm.RegionID `json:"region,omitempty" yaml:"region,omitempty"`
+	// Версия Kafka.
+	Version *string `json:"version,omitempty" yaml:"version,omitempty"`
 	// Конфигурация параметров кластера после валидации и преобразования из пользовательского ввода
 	EffectiveKafkaConfig map[string]string `json:"effectiveKafkaConfig,omitempty" yaml:"effectiveKafkaConfig,omitempty"`
 	// Описание ресурсов хостов брокеров и контроллеров.
@@ -109,6 +111,20 @@ func (m *KafkaClusterStatusResponse) GetRegion() *rm.RegionID {
 func (m *KafkaClusterStatusResponse) GetRegionOr(val rm.RegionID) rm.RegionID {
 	if m != nil && m.Region != nil {
 		return *m.Region
+	}
+	return val
+}
+
+func (m *KafkaClusterStatusResponse) GetVersion() *string {
+	if m != nil {
+		return m.Version
+	}
+	return nil
+}
+
+func (m *KafkaClusterStatusResponse) GetVersionOr(val string) string {
+	if m != nil && m.Version != nil {
+		return *m.Version
 	}
 	return val
 }
@@ -217,6 +233,10 @@ func (m *KafkaClusterStatusResponse) Clone() *KafkaClusterStatusResponse {
 		clone.Message = &cloneMessage
 	}
 	clone.Region = m.Region.Clone()
+	if m.Version != nil {
+		cloneVersion := *m.Version
+		clone.Version = &cloneVersion
+	}
 	if m.EffectiveKafkaConfig != nil {
 		clone.EffectiveKafkaConfig = make(map[string]string, len(m.EffectiveKafkaConfig))
 		for k, v := range m.EffectiveKafkaConfig {
@@ -289,6 +309,11 @@ func (m *KafkaClusterStatusResponse) encodeFields(e *jx.Encoder) error {
 		if err := m.Region.Encode(e); err != nil {
 			return err
 		}
+	}
+
+	if m.Version != nil {
+		e.FieldStart("version")
+		e.Str(*m.Version)
 	}
 
 	if m.EffectiveKafkaConfig != nil {
@@ -392,6 +417,14 @@ func (m *KafkaClusterStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Region = &v
+			return nil
+		case "version":
+			v, err := decode.Str(d)
+			if err != nil {
+				return err
+			}
+
+			m.Version = &v
 			return nil
 		case "effectiveKafkaConfig":
 			c := make(map[string]string)

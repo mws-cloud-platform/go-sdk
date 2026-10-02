@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mkafka/model"
 )
@@ -41,7 +42,7 @@ type Topic interface {
 
 type ListKafkaTopicsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -63,7 +64,7 @@ type ListKafkaTopicsRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListKafkaTopicsRequest) SetAuthorization(authorization string) {
+func (m *ListKafkaTopicsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -120,7 +121,7 @@ func (m *ListKafkaTopicsResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteKafkaTopicRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -133,7 +134,7 @@ type DeleteKafkaTopicRequest struct {
 	Purge *bool // query: "purge"
 }
 
-func (m *DeleteKafkaTopicRequest) SetAuthorization(authorization string) {
+func (m *DeleteKafkaTopicRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -202,7 +203,7 @@ func (m *DeleteKafkaTopicResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetKafkaTopicRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -211,7 +212,7 @@ type GetKafkaTopicRequest struct {
 	Topic string // path: "topic"
 }
 
-func (m *GetKafkaTopicRequest) SetAuthorization(authorization string) {
+func (m *GetKafkaTopicRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -267,7 +268,7 @@ func (m *GetKafkaTopicResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertKafkaTopicRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -280,7 +281,7 @@ type UpsertKafkaTopicRequest struct {
 	Body model.KafkaTopicRequest // body
 }
 
-func (m *UpsertKafkaTopicRequest) SetAuthorization(authorization string) {
+func (m *UpsertKafkaTopicRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -303,7 +304,7 @@ func (m *UpsertKafkaTopicRequest) getKafkaTopicRequest() GetKafkaTopicRequest {
 
 type UpdateKafkaTopicRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -316,7 +317,7 @@ type UpdateKafkaTopicRequest struct {
 	Body model.UpdateKafkaTopicRequest // body
 }
 
-func (m *UpdateKafkaTopicRequest) SetAuthorization(authorization string) {
+func (m *UpdateKafkaTopicRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

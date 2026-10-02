@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
@@ -19,14 +20,14 @@ type VmType interface {
 
 type GetClickhouseClusterVmTypesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Регион, для которого вернуть доступные типы ВМ.
 	Region *string // query: "region"
 }
 
-func (m *GetClickhouseClusterVmTypesRequest) SetAuthorization(authorization string) {
+func (m *GetClickhouseClusterVmTypesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

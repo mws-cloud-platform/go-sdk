@@ -98,7 +98,7 @@ func (c *ClickhouseBackupRestore) restoreClickhouseBackupInvoker(ctx context.Con
 }
 
 func (c *ClickhouseBackupRestore) headerRestoreClickhouseBackup(req *http.Request, request *client.RestoreClickhouseBackupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

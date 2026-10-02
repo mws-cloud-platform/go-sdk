@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
@@ -41,7 +42,7 @@ type AddressGroup interface {
 
 type ListAddressGroupsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -61,7 +62,7 @@ type ListAddressGroupsRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListAddressGroupsRequest) SetAuthorization(authorization string) {
+func (m *ListAddressGroupsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -134,7 +135,7 @@ func (m *ListAddressGroupsResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteAddressGroupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -147,7 +148,7 @@ type DeleteAddressGroupRequest struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteAddressGroupRequest) SetAuthorization(authorization string) {
+func (m *DeleteAddressGroupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -224,7 +225,7 @@ func (m *DeleteAddressGroupResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetAddressGroupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -233,7 +234,7 @@ type GetAddressGroupRequest struct {
 	AddressGroup string // path: "addressGroup"
 }
 
-func (m *GetAddressGroupRequest) SetAuthorization(authorization string) {
+func (m *GetAddressGroupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -301,7 +302,7 @@ func (m *GetAddressGroupResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertAddressGroupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -316,7 +317,7 @@ type UpsertAddressGroupRequest struct {
 	Body *model.VpcAddressGroupRequest // body
 }
 
-func (m *UpsertAddressGroupRequest) SetAuthorization(authorization string) {
+func (m *UpsertAddressGroupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -339,7 +340,7 @@ func (m *UpsertAddressGroupRequest) getAddressGroupRequest() GetAddressGroupRequ
 
 type UpdateAddressGroupRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -354,7 +355,7 @@ type UpdateAddressGroupRequest struct {
 	Body *model.UpdateVpcAddressGroupRequest // body
 }
 
-func (m *UpdateAddressGroupRequest) SetAuthorization(authorization string) {
+func (m *UpdateAddressGroupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

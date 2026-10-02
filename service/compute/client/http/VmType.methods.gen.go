@@ -101,7 +101,7 @@ func (c *VmType) queryListVmTypes(request *client.ListVmTypesRequest) string {
 }
 
 func (c *VmType) headerListVmTypes(req *http.Request, request *client.ListVmTypesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetVmType позволяет получить информацию о типе виртуальных машин.
@@ -173,5 +173,5 @@ func (c *VmType) getVmTypeInvoker(ctx context.Context, anyReq any, response comm
 }
 
 func (c *VmType) headerGetVmType(req *http.Request, request *client.GetVmTypeRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
@@ -41,7 +42,7 @@ type ExternalAddress interface {
 
 type ListExternalAddressesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -59,7 +60,7 @@ type ListExternalAddressesRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListExternalAddressesRequest) SetAuthorization(authorization string) {
+func (m *ListExternalAddressesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -132,7 +133,7 @@ func (m *ListExternalAddressesResponse) SetErrorWrapper(f func(err error) error)
 
 type DeleteExternalAddressRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -143,7 +144,7 @@ type DeleteExternalAddressRequest struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteExternalAddressRequest) SetAuthorization(authorization string) {
+func (m *DeleteExternalAddressRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -219,14 +220,14 @@ func (m *DeleteExternalAddressResponse) SetErrorWrapper(f func(err error) error)
 
 type GetExternalAddressRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя внешнего IP-адреса
 	ExternalAddress string // path: "externalAddress"
 }
 
-func (m *GetExternalAddressRequest) SetAuthorization(authorization string) {
+func (m *GetExternalAddressRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -294,7 +295,7 @@ func (m *GetExternalAddressResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertExternalAddressRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -307,7 +308,7 @@ type UpsertExternalAddressRequest struct {
 	Body *model.ExternalAddressRequest // body
 }
 
-func (m *UpsertExternalAddressRequest) SetAuthorization(authorization string) {
+func (m *UpsertExternalAddressRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -329,7 +330,7 @@ func (m *UpsertExternalAddressRequest) getExternalAddressRequest() GetExternalAd
 
 type UpdateExternalAddressRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -342,7 +343,7 @@ type UpdateExternalAddressRequest struct {
 	Body *model.UpdateExternalAddressRequest // body
 }
 
-func (m *UpdateExternalAddressRequest) SetAuthorization(authorization string) {
+func (m *UpdateExternalAddressRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

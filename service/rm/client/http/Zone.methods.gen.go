@@ -107,7 +107,7 @@ func (c *Zone) queryListZones(request *client.ListZonesRequest) string {
 }
 
 func (c *Zone) headerListZones(req *http.Request, request *client.ListZonesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetZone get zone.
@@ -179,5 +179,5 @@ func (c *Zone) getZoneInvoker(ctx context.Context, anyReq any, response commoncl
 }
 
 func (c *Zone) headerGetZone(req *http.Request, request *client.GetZoneRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

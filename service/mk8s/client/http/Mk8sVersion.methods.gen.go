@@ -101,5 +101,5 @@ func (c *Mk8sVersion) queryListMk8sVersions(request *client.ListMk8sVersionsRequ
 }
 
 func (c *Mk8sVersion) headerListMk8sVersions(req *http.Request, request *client.ListMk8sVersionsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

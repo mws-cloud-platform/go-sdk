@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
@@ -19,11 +20,11 @@ type RevokeSubjectToken interface {
 
 type RevokeRequest struct {
 	// Токен авторизации IAM
-	Authorization string                   // header: "Authorization"
-	Body          model.RevokeTokenRequest // body
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
+	Body          model.RevokeTokenRequest    // body
 }
 
-func (m *RevokeRequest) SetAuthorization(authorization string) {
+func (m *RevokeRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

@@ -308,7 +308,7 @@ func (o *loadSDKOptions) buildCredentials(ctx context.Context, sdk *SDK) (creden
 		return o.buildServiceAccountAuthorizedKeyCredentials(ctx, sdk, *o.serviceAccountAuthorizedKey)
 	case o.config.Token != "":
 		return credentials.StaticProvider(credentials.Credentials{
-			AccessToken: o.config.Token,
+			AccessToken: credentials.NewAccessToken(o.config.Token),
 		}), nil
 	case o.config.ServiceAccountAuthorizedKeyPath != "":
 		key, err := iam.ServiceAccountAuthorizedKeyFromFile(o.config.ServiceAccountAuthorizedKeyPath)

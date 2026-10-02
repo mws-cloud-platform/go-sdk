@@ -11,6 +11,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/service/auditlogs/model"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -46,7 +47,7 @@ type Storage interface {
 
 type DeleteStorageRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название хранилища
@@ -64,7 +65,7 @@ type DeleteStorageRequest struct {
 	IdempotencyKey *string // header: "Idempotency-Key"
 }
 
-func (m *DeleteStorageRequest) SetAuthorization(authorization string) {
+func (m *DeleteStorageRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -136,14 +137,14 @@ func (m *DeleteStorageResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetStorageRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название хранилища
 	StorageName string // path: "storageName"
 }
 
-func (m *GetStorageRequest) SetAuthorization(authorization string) {
+func (m *GetStorageRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -199,7 +200,7 @@ func (m *GetStorageResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertStorageRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
@@ -211,7 +212,7 @@ type UpsertStorageRequest struct {
 	Body        model.StorageRequest // body
 }
 
-func (m *UpsertStorageRequest) SetAuthorization(authorization string) {
+func (m *UpsertStorageRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -233,7 +234,7 @@ func (m *UpsertStorageRequest) getStorageRequest() GetStorageRequest {
 
 type UpdateStorageRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
@@ -245,7 +246,7 @@ type UpdateStorageRequest struct {
 	Body        model.UpdateStorageRequest // body
 }
 
-func (m *UpdateStorageRequest) SetAuthorization(authorization string) {
+func (m *UpdateStorageRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -321,7 +322,7 @@ func (m *UpsertStorageResponse) SetErrorWrapper(f func(err error) error) {
 
 type ListStoragesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -339,7 +340,7 @@ type ListStoragesRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListStoragesRequest) SetAuthorization(authorization string) {
+func (m *ListStoragesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

@@ -93,7 +93,7 @@ func (c *SecretVersion) addSecretVersionInvoker(ctx context.Context, anyReq any,
 }
 
 func (c *SecretVersion) headerAddSecretVersion(req *http.Request, request *client.AddSecretVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // ListSecretVersions извлечь все версии секрета.
@@ -188,7 +188,7 @@ func (c *SecretVersion) queryListSecretVersions(request *client.ListSecretVersio
 }
 
 func (c *SecretVersion) headerListSecretVersions(req *http.Request, request *client.ListSecretVersionsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetData извлечь содержимое секрета указанной версии.
@@ -262,7 +262,7 @@ func (c *SecretVersion) getDataInvoker(ctx context.Context, anyReq any, response
 }
 
 func (c *SecretVersion) headerGetData(req *http.Request, request *client.GetDataRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteSecretVersion позволяет удалить указанную версию секрета.
@@ -349,7 +349,7 @@ func (c *SecretVersion) queryDeleteSecretVersion(request *client.DeleteSecretVer
 }
 
 func (c *SecretVersion) headerDeleteSecretVersion(req *http.Request, request *client.DeleteSecretVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -430,7 +430,7 @@ func (c *SecretVersion) getSecretVersionInvoker(ctx context.Context, anyReq any,
 }
 
 func (c *SecretVersion) headerGetSecretVersion(req *http.Request, request *client.GetSecretVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertSecretVersion позволяет изменить версию секрета.
@@ -523,7 +523,7 @@ func (c *SecretVersion) queryUpsertSecretVersion(request *client.UpsertSecretVer
 }
 
 func (c *SecretVersion) headerUpsertSecretVersion(req *http.Request, request *client.UpsertSecretVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -621,7 +621,7 @@ func (c *SecretVersion) queryCreateSecretVersion(request *client.UpsertSecretVer
 }
 
 func (c *SecretVersion) headerCreateSecretVersion(req *http.Request, request *client.UpsertSecretVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -719,7 +719,7 @@ func (c *SecretVersion) queryUpdateSecretVersion(request *client.UpdateSecretVer
 }
 
 func (c *SecretVersion) headerUpdateSecretVersion(req *http.Request, request *client.UpdateSecretVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

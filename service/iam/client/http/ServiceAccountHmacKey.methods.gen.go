@@ -108,7 +108,7 @@ func (c *ServiceAccountHmacKey) queryListHmacKey(request *client.ListHmacKeyRequ
 }
 
 func (c *ServiceAccountHmacKey) headerListHmacKey(req *http.Request, request *client.ListHmacKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteHmacKey позволяет удалить HMAC-ключ.
@@ -198,7 +198,7 @@ func (c *ServiceAccountHmacKey) queryDeleteHmacKey(request *client.DeleteHmacKey
 }
 
 func (c *ServiceAccountHmacKey) headerDeleteHmacKey(req *http.Request, request *client.DeleteHmacKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetHmacKey позволяет получить HMAC-ключ.
@@ -276,7 +276,7 @@ func (c *ServiceAccountHmacKey) getHmacKeyInvoker(ctx context.Context, anyReq an
 }
 
 func (c *ServiceAccountHmacKey) headerGetHmacKey(req *http.Request, request *client.GetHmacKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertHmacKey позволяет создать или обновить HMAC-ключ.
@@ -369,7 +369,7 @@ func (c *ServiceAccountHmacKey) queryUpsertHmacKey(request *client.UpsertHmacKey
 }
 
 func (c *ServiceAccountHmacKey) headerUpsertHmacKey(req *http.Request, request *client.UpsertHmacKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -467,7 +467,7 @@ func (c *ServiceAccountHmacKey) queryCreateHmacKey(request *client.UpsertHmacKey
 }
 
 func (c *ServiceAccountHmacKey) headerCreateHmacKey(req *http.Request, request *client.UpsertHmacKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -565,7 +565,7 @@ func (c *ServiceAccountHmacKey) queryUpdateHmacKey(request *client.UpdateHmacKey
 }
 
 func (c *ServiceAccountHmacKey) headerUpdateHmacKey(req *http.Request, request *client.UpdateHmacKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

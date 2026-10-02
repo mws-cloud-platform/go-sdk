@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mpostgres/model"
 )
@@ -19,7 +20,7 @@ type PostgresClusterSwitchover interface {
 
 type RequestSwitchoverRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -30,7 +31,7 @@ type RequestSwitchoverRequest struct {
 	Body model.PostgresClusterSwitchoverRequest // body
 }
 
-func (m *RequestSwitchoverRequest) SetAuthorization(authorization string) {
+func (m *RequestSwitchoverRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

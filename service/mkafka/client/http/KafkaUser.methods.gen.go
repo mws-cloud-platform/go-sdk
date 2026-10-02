@@ -111,7 +111,7 @@ func (c *KafkaUser) queryListKafkaUsers(request *client.ListKafkaUsersRequest) s
 }
 
 func (c *KafkaUser) headerListKafkaUsers(req *http.Request, request *client.ListKafkaUsersRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteKafkaUser deletes the specified user.
@@ -195,7 +195,7 @@ func (c *KafkaUser) queryDeleteKafkaUser(request *client.DeleteKafkaUserRequest)
 }
 
 func (c *KafkaUser) headerDeleteKafkaUser(req *http.Request, request *client.DeleteKafkaUserRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -276,7 +276,7 @@ func (c *KafkaUser) getKafkaUserInvoker(ctx context.Context, anyReq any, respons
 }
 
 func (c *KafkaUser) headerGetKafkaUser(req *http.Request, request *client.GetKafkaUserRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertKafkaUser creates or updates the cluster user.
@@ -366,7 +366,7 @@ func (c *KafkaUser) queryUpsertKafkaUser(request *client.UpsertKafkaUserRequest)
 }
 
 func (c *KafkaUser) headerUpsertKafkaUser(req *http.Request, request *client.UpsertKafkaUserRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -461,7 +461,7 @@ func (c *KafkaUser) queryCreateKafkaUser(request *client.UpsertKafkaUserRequest)
 }
 
 func (c *KafkaUser) headerCreateKafkaUser(req *http.Request, request *client.UpsertKafkaUserRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -556,7 +556,7 @@ func (c *KafkaUser) queryUpdateKafkaUser(request *client.UpdateKafkaUserRequest)
 }
 
 func (c *KafkaUser) headerUpdateKafkaUser(req *http.Request, request *client.UpdateKafkaUserRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

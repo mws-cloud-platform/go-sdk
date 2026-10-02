@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/rm/model"
 )
@@ -22,10 +23,10 @@ type Zone interface {
 }
 
 type ListZonesRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Регион
 	Region *string // query: "region"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
@@ -43,7 +44,7 @@ type ListZonesRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListZonesRequest) SetAuthorization(authorization string) {
+func (m *ListZonesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -100,12 +101,12 @@ func (m *ListZonesResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetZoneRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Зона (ЦОД).
 	Zone string // path: "zone"
 }
 
-func (m *GetZoneRequest) SetAuthorization(authorization string) {
+func (m *GetZoneRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

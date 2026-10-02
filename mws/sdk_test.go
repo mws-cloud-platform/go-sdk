@@ -17,7 +17,7 @@ func ExampleSDK_staticCredentials() {
 
 	sdk, err := mws.Load(ctx, mws.WithCredentials(
 		credentials.StaticProvider(credentials.Credentials{
-			AccessToken: "example-token",
+			AccessToken: credentials.NewAccessToken("example-token"),
 		}),
 	))
 	if err != nil {
@@ -30,7 +30,7 @@ func ExampleSDK_staticCredentials() {
 		log.Panic(err)
 	}
 
-	fmt.Println(creds.AccessToken)
+	fmt.Println(creds.AccessToken.Value())
 	// Output: example-token
 }
 

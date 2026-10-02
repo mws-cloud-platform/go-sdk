@@ -104,11 +104,14 @@ func (c *ApiKey) queryListApiKey(request *client.ListApiKeyRequest) string {
 	if request.OrderBy != nil {
 		q.Add("orderBy", conv.StringToString(*request.OrderBy))
 	}
+	if request.ShowDeleted != nil {
+		q.Add("showDeleted", conv.StringToString(*request.ShowDeleted))
+	}
 	return q.Encode()
 }
 
 func (c *ApiKey) headerListApiKey(req *http.Request, request *client.ListApiKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteApiKey позволяет удалить API-ключ.
@@ -198,7 +201,7 @@ func (c *ApiKey) queryDeleteApiKey(request *client.DeleteApiKeyRequest) string {
 }
 
 func (c *ApiKey) headerDeleteApiKey(req *http.Request, request *client.DeleteApiKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetApiKey позволяет получить информацию об API-ключе.
@@ -276,7 +279,7 @@ func (c *ApiKey) getApiKeyInvoker(ctx context.Context, anyReq any, response comm
 }
 
 func (c *ApiKey) headerGetApiKey(req *http.Request, request *client.GetApiKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertApiKey позволяет создать или обновить API-ключ.
@@ -369,7 +372,7 @@ func (c *ApiKey) queryUpsertApiKey(request *client.UpsertApiKeyRequest) string {
 }
 
 func (c *ApiKey) headerUpsertApiKey(req *http.Request, request *client.UpsertApiKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -467,7 +470,7 @@ func (c *ApiKey) queryCreateApiKey(request *client.UpsertApiKeyRequest) string {
 }
 
 func (c *ApiKey) headerCreateApiKey(req *http.Request, request *client.UpsertApiKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -565,7 +568,7 @@ func (c *ApiKey) queryUpdateApiKey(request *client.UpdateApiKeyRequest) string {
 }
 
 func (c *ApiKey) headerUpdateApiKey(req *http.Request, request *client.UpdateApiKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

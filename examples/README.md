@@ -10,6 +10,7 @@ Available examples:
 * [CRUD Disk](./disk_test.go): Demonstrates how to perform Create, Read, Update, and Delete operations on disk resources.
 * [CRUD Virtual Machine](./vm_test.go): Demonstrates how to perform Create, Read, Update, and Delete operations on virtual machine resources.
 * [List Virtual Machines](./vm_list_test.go): Demonstrates how to list virtual machines.
+* [SSH Into Virtual Machine](./vm_ssh_test.go): Demonstrates how to generate an SSH key pair, create a virtual machine with the public key in its cloud-config, allow SSH access to it with a firewall rule, connect to it over SSH, execute a command, and clean up.
 * [Disk Backup](./disk_backup_test.go): Demonstrates how to create a disk, a disk backup of it, and how to create a copy of the disk from that disk backup.
 * [CRUD MWS-Managed Certificate](./cert_mws_managed_test.go): Demonstrates how to perform Create, Read, Update, and Delete operations on MWS-managed certificate resources.
 * [CRUD Self-Hosted Certificate](./cert_self_hosted_test.go): Demonstrates how to perform Create, Read, Update, and Delete operations on self-managed certificate resources.

@@ -90,7 +90,7 @@ func (c *SerialPort) queryGetSerialPortOutput(request *client.GetSerialPortOutpu
 }
 
 func (c *SerialPort) headerGetSerialPortOutput(req *http.Request, request *client.GetSerialPortOutputRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetComputeSerialPortOutput get serial console output from virtual machine.
@@ -170,5 +170,5 @@ func (c *SerialPort) queryGetComputeSerialPortOutput(request *client.GetComputeS
 }
 
 func (c *SerialPort) headerGetComputeSerialPortOutput(req *http.Request, request *client.GetComputeSerialPortOutputRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

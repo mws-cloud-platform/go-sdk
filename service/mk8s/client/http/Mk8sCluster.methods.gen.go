@@ -105,7 +105,7 @@ func (c *Mk8sCluster) queryListMk8sClusters(request *client.ListMk8sClustersRequ
 }
 
 func (c *Mk8sCluster) headerListMk8sClusters(req *http.Request, request *client.ListMk8sClustersRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteMk8sCluster позволяет удалить кластер Managed Kubernetes.
@@ -177,7 +177,7 @@ func (c *Mk8sCluster) deleteMk8sClusterInvoker(ctx context.Context, anyReq any, 
 }
 
 func (c *Mk8sCluster) headerDeleteMk8sCluster(req *http.Request, request *client.DeleteMk8sClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -255,7 +255,7 @@ func (c *Mk8sCluster) getMk8sClusterInvoker(ctx context.Context, anyReq any, res
 }
 
 func (c *Mk8sCluster) headerGetMk8sCluster(req *http.Request, request *client.GetMk8sClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertMk8sCluster позволяет создать или обновить кластер Managed Kubernetes.
@@ -342,7 +342,7 @@ func (c *Mk8sCluster) queryUpsertMk8sCluster(request *client.UpsertMk8sClusterRe
 }
 
 func (c *Mk8sCluster) headerUpsertMk8sCluster(req *http.Request, request *client.UpsertMk8sClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -434,7 +434,7 @@ func (c *Mk8sCluster) queryCreateMk8sCluster(request *client.UpsertMk8sClusterRe
 }
 
 func (c *Mk8sCluster) headerCreateMk8sCluster(req *http.Request, request *client.UpsertMk8sClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -526,7 +526,7 @@ func (c *Mk8sCluster) queryUpdateMk8sCluster(request *client.UpdateMk8sClusterRe
 }
 
 func (c *Mk8sCluster) headerUpdateMk8sCluster(req *http.Request, request *client.UpdateMk8sClusterRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

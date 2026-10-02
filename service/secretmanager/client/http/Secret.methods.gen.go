@@ -105,7 +105,7 @@ func (c *Secret) queryListSecrets(request *client.ListSecretsRequest) string {
 }
 
 func (c *Secret) headerListSecrets(req *http.Request, request *client.ListSecretsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // CreateSecretWithSecretVersion позволяет создать секрет с версией секрета.
@@ -185,7 +185,7 @@ func (c *Secret) createSecretWithSecretVersionInvoker(ctx context.Context, anyRe
 }
 
 func (c *Secret) headerCreateSecretWithSecretVersion(req *http.Request, request *client.CreateSecretWithSecretVersionRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteSecret позволяет удалить указанный секрет.
@@ -273,7 +273,7 @@ func (c *Secret) queryDeleteSecret(request *client.DeleteSecretRequest) string {
 }
 
 func (c *Secret) headerDeleteSecret(req *http.Request, request *client.DeleteSecretRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -351,7 +351,7 @@ func (c *Secret) getSecretInvoker(ctx context.Context, anyReq any, response comm
 }
 
 func (c *Secret) headerGetSecret(req *http.Request, request *client.GetSecretRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertSecret позволяет создать или изменить секрет.
@@ -441,7 +441,7 @@ func (c *Secret) queryUpsertSecret(request *client.UpsertSecretRequest) string {
 }
 
 func (c *Secret) headerUpsertSecret(req *http.Request, request *client.UpsertSecretRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -536,7 +536,7 @@ func (c *Secret) queryCreateSecret(request *client.UpsertSecretRequest) string {
 }
 
 func (c *Secret) headerCreateSecret(req *http.Request, request *client.UpsertSecretRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -631,7 +631,7 @@ func (c *Secret) queryUpdateSecret(request *client.UpdateSecretRequest) string {
 }
 
 func (c *Secret) headerUpdateSecret(req *http.Request, request *client.UpdateSecretRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

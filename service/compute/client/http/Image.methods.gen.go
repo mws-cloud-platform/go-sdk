@@ -94,10 +94,10 @@ func (c *Image) queryLatestImage(request *client.LatestImageRequest) string {
 }
 
 func (c *Image) headerLatestImage(req *http.Request, request *client.LatestImageRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
-// ListImages позволяет получить список образов.
+// ListImages позволяет получить список образов. Образы из каталога MWS находятся в системных проектах mws-<os>, например, mws-ubuntu, mws-debian.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: GET /compute/v1/projects/{project}/images
@@ -186,7 +186,7 @@ func (c *Image) queryListImages(request *client.ListImagesRequest) string {
 }
 
 func (c *Image) headerListImages(req *http.Request, request *client.ListImagesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteImage позволяет удалить образ.
@@ -271,7 +271,7 @@ func (c *Image) queryDeleteImage(request *client.DeleteImageRequest) string {
 }
 
 func (c *Image) headerDeleteImage(req *http.Request, request *client.DeleteImageRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -359,7 +359,7 @@ func (c *Image) queryGetImage(request *client.GetImageRequest) string {
 }
 
 func (c *Image) headerGetImage(req *http.Request, request *client.GetImageRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertImage позволяет создать или изменить образ.
@@ -449,7 +449,7 @@ func (c *Image) queryUpsertImage(request *client.UpsertImageRequest) string {
 }
 
 func (c *Image) headerUpsertImage(req *http.Request, request *client.UpsertImageRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -544,7 +544,7 @@ func (c *Image) queryCreateImage(request *client.UpsertImageRequest) string {
 }
 
 func (c *Image) headerCreateImage(req *http.Request, request *client.UpsertImageRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -639,7 +639,7 @@ func (c *Image) queryUpdateImage(request *client.UpdateImageRequest) string {
 }
 
 func (c *Image) headerUpdateImage(req *http.Request, request *client.UpdateImageRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

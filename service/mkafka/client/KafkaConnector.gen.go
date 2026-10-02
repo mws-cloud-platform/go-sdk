@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mkafka/model"
 )
@@ -49,7 +50,7 @@ type KafkaConnector interface {
 
 type ListKafkaConnectorsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -71,7 +72,7 @@ type ListKafkaConnectorsRequest struct {
 	ShowDeleted *string // query: "showDeleted"
 }
 
-func (m *ListKafkaConnectorsRequest) SetAuthorization(authorization string) {
+func (m *ListKafkaConnectorsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -128,7 +129,7 @@ func (m *ListKafkaConnectorsResponse) SetErrorWrapper(f func(err error) error) {
 
 type StopConnectorRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -139,7 +140,7 @@ type StopConnectorRequest struct {
 	Connector string // path: "connector"
 }
 
-func (m *StopConnectorRequest) SetAuthorization(authorization string) {
+func (m *StopConnectorRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -203,7 +204,7 @@ func (m *StopConnectorResponse) SetErrorWrapper(f func(err error) error) {
 
 type StartConnectorRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -214,7 +215,7 @@ type StartConnectorRequest struct {
 	Connector string // path: "connector"
 }
 
-func (m *StartConnectorRequest) SetAuthorization(authorization string) {
+func (m *StartConnectorRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -278,7 +279,7 @@ func (m *StartConnectorResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteKafkaConnectorRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -291,7 +292,7 @@ type DeleteKafkaConnectorRequest struct {
 	Purge *bool // query: "purge"
 }
 
-func (m *DeleteKafkaConnectorRequest) SetAuthorization(authorization string) {
+func (m *DeleteKafkaConnectorRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -360,7 +361,7 @@ func (m *DeleteKafkaConnectorResponse) SetErrorWrapper(f func(err error) error) 
 
 type GetKafkaConnectorRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Название или идентификатор кластера.
@@ -369,7 +370,7 @@ type GetKafkaConnectorRequest struct {
 	Connector string // path: "connector"
 }
 
-func (m *GetKafkaConnectorRequest) SetAuthorization(authorization string) {
+func (m *GetKafkaConnectorRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -425,7 +426,7 @@ func (m *GetKafkaConnectorResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertKafkaConnectorRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -438,7 +439,7 @@ type UpsertKafkaConnectorRequest struct {
 	Body model.KafkaConnectorRequest // body
 }
 
-func (m *UpsertKafkaConnectorRequest) SetAuthorization(authorization string) {
+func (m *UpsertKafkaConnectorRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -461,7 +462,7 @@ func (m *UpsertKafkaConnectorRequest) getKafkaConnectorRequest() GetKafkaConnect
 
 type UpdateKafkaConnectorRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -474,7 +475,7 @@ type UpdateKafkaConnectorRequest struct {
 	Body model.UpdateKafkaConnectorRequest // body
 }
 
-func (m *UpdateKafkaConnectorRequest) SetAuthorization(authorization string) {
+func (m *UpdateKafkaConnectorRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

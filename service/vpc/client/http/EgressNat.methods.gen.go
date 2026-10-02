@@ -108,7 +108,7 @@ func (c *EgressNat) queryListEgressNats(request *client.ListEgressNatsRequest) s
 }
 
 func (c *EgressNat) headerListEgressNats(req *http.Request, request *client.ListEgressNatsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteEgressNat позволяет удалить Egress NAT.
@@ -192,7 +192,7 @@ func (c *EgressNat) queryDeleteEgressNat(request *client.DeleteEgressNatRequest)
 }
 
 func (c *EgressNat) headerDeleteEgressNat(req *http.Request, request *client.DeleteEgressNatRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -273,7 +273,7 @@ func (c *EgressNat) getEgressNatInvoker(ctx context.Context, anyReq any, respons
 }
 
 func (c *EgressNat) headerGetEgressNat(req *http.Request, request *client.GetEgressNatRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertEgressNat позволяет создать или изменить Egress NAT.
@@ -366,7 +366,7 @@ func (c *EgressNat) queryUpsertEgressNat(request *client.UpsertEgressNatRequest)
 }
 
 func (c *EgressNat) headerUpsertEgressNat(req *http.Request, request *client.UpsertEgressNatRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -464,7 +464,7 @@ func (c *EgressNat) queryCreateEgressNat(request *client.UpsertEgressNatRequest)
 }
 
 func (c *EgressNat) headerCreateEgressNat(req *http.Request, request *client.UpsertEgressNatRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -562,7 +562,7 @@ func (c *EgressNat) queryUpdateEgressNat(request *client.UpdateEgressNatRequest)
 }
 
 func (c *EgressNat) headerUpdateEgressNat(req *http.Request, request *client.UpdateEgressNatRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

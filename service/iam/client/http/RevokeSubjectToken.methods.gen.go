@@ -87,5 +87,5 @@ func (c *RevokeSubjectToken) revokeInvoker(ctx context.Context, anyReq any, resp
 }
 
 func (c *RevokeSubjectToken) headerRevoke(req *http.Request, request *client.RevokeRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

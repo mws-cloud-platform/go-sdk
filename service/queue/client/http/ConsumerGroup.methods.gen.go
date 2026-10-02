@@ -105,7 +105,7 @@ func (c *ConsumerGroup) queryListGroups(request *client.ListGroupsRequest) strin
 }
 
 func (c *ConsumerGroup) headerListGroups(req *http.Request, request *client.ListGroupsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetConsumerGroup позволяет получить информацию о группе потребителей.
@@ -180,5 +180,5 @@ func (c *ConsumerGroup) getConsumerGroupInvoker(ctx context.Context, anyReq any,
 }
 
 func (c *ConsumerGroup) headerGetConsumerGroup(req *http.Request, request *client.GetConsumerGroupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

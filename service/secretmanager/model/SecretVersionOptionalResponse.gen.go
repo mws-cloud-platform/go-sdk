@@ -11,6 +11,7 @@ import (
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Версия секрета, содержащая одну или несколько пар «ключ-значение»
 // Real OAPI model name: SecretVersion
 type SecretVersionOptionalResponse struct {
 	Kind string `json:"kind" yaml:"kind"`

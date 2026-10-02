@@ -105,7 +105,7 @@ func (c *ExternalAddress) queryListExternalAddresses(request *client.ListExterna
 }
 
 func (c *ExternalAddress) headerListExternalAddresses(req *http.Request, request *client.ListExternalAddressesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteExternalAddress позволяет удалить внешний IP-адрес.
@@ -187,7 +187,7 @@ func (c *ExternalAddress) queryDeleteExternalAddress(request *client.DeleteExter
 }
 
 func (c *ExternalAddress) headerDeleteExternalAddress(req *http.Request, request *client.DeleteExternalAddressRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -265,7 +265,7 @@ func (c *ExternalAddress) getExternalAddressInvoker(ctx context.Context, anyReq 
 }
 
 func (c *ExternalAddress) headerGetExternalAddress(req *http.Request, request *client.GetExternalAddressRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertExternalAddress позволяет создать или изменить внешний IP-адрес.
@@ -357,7 +357,7 @@ func (c *ExternalAddress) queryUpsertExternalAddress(request *client.UpsertExter
 }
 
 func (c *ExternalAddress) headerUpsertExternalAddress(req *http.Request, request *client.UpsertExternalAddressRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -454,7 +454,7 @@ func (c *ExternalAddress) queryCreateExternalAddress(request *client.UpsertExter
 }
 
 func (c *ExternalAddress) headerCreateExternalAddress(req *http.Request, request *client.UpsertExternalAddressRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -551,7 +551,7 @@ func (c *ExternalAddress) queryUpdateExternalAddress(request *client.UpdateExter
 }
 
 func (c *ExternalAddress) headerUpdateExternalAddress(req *http.Request, request *client.UpdateExternalAddressRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

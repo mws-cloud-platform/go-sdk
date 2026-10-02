@@ -108,7 +108,7 @@ func (c *SecretRoleBinding) queryListRoleBindings(request *client.ListRoleBindin
 }
 
 func (c *SecretRoleBinding) headerListRoleBindings(req *http.Request, request *client.ListRoleBindingsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteRoleBinding позволяет удалить привязку ролей секрета.
@@ -182,7 +182,7 @@ func (c *SecretRoleBinding) deleteRoleBindingInvoker(ctx context.Context, anyReq
 }
 
 func (c *SecretRoleBinding) headerDeleteRoleBinding(req *http.Request, request *client.DeleteRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetRoleBinding позволяет получить указанную привязку ролей секрета.
@@ -260,7 +260,7 @@ func (c *SecretRoleBinding) getRoleBindingInvoker(ctx context.Context, anyReq an
 }
 
 func (c *SecretRoleBinding) headerGetRoleBinding(req *http.Request, request *client.GetRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertRoleBinding позволяет создать или обновить привязку ролей секрета.
@@ -350,7 +350,7 @@ func (c *SecretRoleBinding) queryUpsertRoleBinding(request *client.UpsertRoleBin
 }
 
 func (c *SecretRoleBinding) headerUpsertRoleBinding(req *http.Request, request *client.UpsertRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -445,7 +445,7 @@ func (c *SecretRoleBinding) queryCreateRoleBinding(request *client.UpsertRoleBin
 }
 
 func (c *SecretRoleBinding) headerCreateRoleBinding(req *http.Request, request *client.UpsertRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -540,7 +540,7 @@ func (c *SecretRoleBinding) queryUpdateRoleBinding(request *client.UpdateRoleBin
 }
 
 func (c *SecretRoleBinding) headerUpdateRoleBinding(req *http.Request, request *client.UpdateRoleBindingRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

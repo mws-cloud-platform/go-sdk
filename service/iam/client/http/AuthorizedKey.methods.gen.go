@@ -98,11 +98,14 @@ func (c *AuthorizedKey) queryListAuthorizedKey(request *client.ListAuthorizedKey
 	if request.PageToken != nil {
 		q.Add("pageToken", conv.StringToString(*request.PageToken))
 	}
+	if request.ShowDeleted != nil {
+		q.Add("showDeleted", conv.StringToString(*request.ShowDeleted))
+	}
 	return q.Encode()
 }
 
 func (c *AuthorizedKey) headerListAuthorizedKey(req *http.Request, request *client.ListAuthorizedKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteAuthorizedKeyV2 позволяет удалить авторизованный ключ.
@@ -189,7 +192,7 @@ func (c *AuthorizedKey) queryDeleteAuthorizedKeyV2(request *client.DeleteAuthori
 }
 
 func (c *AuthorizedKey) headerDeleteAuthorizedKeyV2(req *http.Request, request *client.DeleteAuthorizedKeyV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // GetAuthorizedKeyV2 позволяет получить авторизованный ключ.
@@ -267,7 +270,7 @@ func (c *AuthorizedKey) getAuthorizedKeyV2Invoker(ctx context.Context, anyReq an
 }
 
 func (c *AuthorizedKey) headerGetAuthorizedKeyV2(req *http.Request, request *client.GetAuthorizedKeyV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertAuthorizedKeyV2 самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey.
@@ -360,7 +363,7 @@ func (c *AuthorizedKey) queryUpsertAuthorizedKeyV2(request *client.UpsertAuthori
 }
 
 func (c *AuthorizedKey) headerUpsertAuthorizedKeyV2(req *http.Request, request *client.UpsertAuthorizedKeyV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -458,7 +461,7 @@ func (c *AuthorizedKey) queryCreateAuthorizedKeyV2(request *client.UpsertAuthori
 }
 
 func (c *AuthorizedKey) headerCreateAuthorizedKeyV2(req *http.Request, request *client.UpsertAuthorizedKeyV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -556,7 +559,7 @@ func (c *AuthorizedKey) queryUpdateAuthorizedKeyV2(request *client.UpdateAuthori
 }
 
 func (c *AuthorizedKey) headerUpdateAuthorizedKeyV2(req *http.Request, request *client.UpdateAuthorizedKeyV2Request) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -647,7 +650,7 @@ func (c *AuthorizedKey) queryDeleteAuthorizedKey(request *client.DeleteAuthorize
 }
 
 func (c *AuthorizedKey) headerDeleteAuthorizedKey(req *http.Request, request *client.DeleteAuthorizedKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // Deprecated: Use v2 version instead. v2 version provides proper handling of spec related fields according to API-design.
@@ -815,7 +818,7 @@ func (c *AuthorizedKey) queryUpsertAuthorizedKey(request *client.UpsertAuthorize
 }
 
 func (c *AuthorizedKey) headerUpsertAuthorizedKey(req *http.Request, request *client.UpsertAuthorizedKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -914,7 +917,7 @@ func (c *AuthorizedKey) queryCreateAuthorizedKey(request *client.UpsertAuthorize
 }
 
 func (c *AuthorizedKey) headerCreateAuthorizedKey(req *http.Request, request *client.UpsertAuthorizedKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -1013,7 +1016,7 @@ func (c *AuthorizedKey) queryUpdateAuthorizedKey(request *client.UpdateAuthorize
 }
 
 func (c *AuthorizedKey) headerUpdateAuthorizedKey(req *http.Request, request *client.UpdateAuthorizedKeyRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

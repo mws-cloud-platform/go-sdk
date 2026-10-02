@@ -108,7 +108,7 @@ func (c *FirewallRule) queryListFirewallRules(request *client.ListFirewallRulesR
 }
 
 func (c *FirewallRule) headerListFirewallRules(req *http.Request, request *client.ListFirewallRulesRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteFirewallRule позволяет удалить правило файрвола.
@@ -192,7 +192,7 @@ func (c *FirewallRule) queryDeleteFirewallRule(request *client.DeleteFirewallRul
 }
 
 func (c *FirewallRule) headerDeleteFirewallRule(req *http.Request, request *client.DeleteFirewallRuleRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -273,7 +273,7 @@ func (c *FirewallRule) getFirewallRuleInvoker(ctx context.Context, anyReq any, r
 }
 
 func (c *FirewallRule) headerGetFirewallRule(req *http.Request, request *client.GetFirewallRuleRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertFirewallRule позволяет создать или изменить правило файрвола.
@@ -366,7 +366,7 @@ func (c *FirewallRule) queryUpsertFirewallRule(request *client.UpsertFirewallRul
 }
 
 func (c *FirewallRule) headerUpsertFirewallRule(req *http.Request, request *client.UpsertFirewallRuleRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -464,7 +464,7 @@ func (c *FirewallRule) queryCreateFirewallRule(request *client.UpsertFirewallRul
 }
 
 func (c *FirewallRule) headerCreateFirewallRule(req *http.Request, request *client.UpsertFirewallRuleRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -562,7 +562,7 @@ func (c *FirewallRule) queryUpdateFirewallRule(request *client.UpdateFirewallRul
 }
 
 func (c *FirewallRule) headerUpdateFirewallRule(req *http.Request, request *client.UpdateFirewallRuleRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

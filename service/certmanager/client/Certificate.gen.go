@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/service/certmanager/model"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -45,7 +46,7 @@ type Certificate interface {
 
 type ListCertificatesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -63,7 +64,7 @@ type ListCertificatesRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListCertificatesRequest) SetAuthorization(authorization string) {
+func (m *ListCertificatesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -123,15 +124,15 @@ func (m *ListCertificatesResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type GetCertificateContentRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата, содержимое которого нужно получить
 	Name string // path: "name"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 }
 
-func (m *GetCertificateContentRequest) SetAuthorization(authorization string) {
+func (m *GetCertificateContentRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -186,19 +187,19 @@ func (m *GetCertificateContentResponse) SetErrorWrapper(f func(err error) error)
 }
 
 type DeleteCertificateRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteCertificateRequest) SetAuthorization(authorization string) {
+func (m *DeleteCertificateRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -212,9 +213,9 @@ func (m *DeleteCertificateRequest) SetProject(project string) {
 
 func (m *DeleteCertificateRequest) getCertificateRequest() GetCertificateRequest {
 	return GetCertificateRequest{
+		Authorization: m.Authorization,
 		Project:       m.Project,
 		Name:          m.Name,
-		Authorization: m.Authorization,
 	}
 }
 
@@ -266,15 +267,15 @@ func (m *DeleteCertificateResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type GetCertificateRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 }
 
-func (m *GetCertificateRequest) SetAuthorization(authorization string) {
+func (m *GetCertificateRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -329,12 +330,12 @@ func (m *GetCertificateResponse) SetErrorWrapper(f func(err error) error) {
 }
 
 type UpsertCertificateRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
@@ -342,7 +343,7 @@ type UpsertCertificateRequest struct {
 	Body         model.CertificateRequest // body
 }
 
-func (m *UpsertCertificateRequest) SetAuthorization(authorization string) {
+func (m *UpsertCertificateRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -356,19 +357,19 @@ func (m *UpsertCertificateRequest) SetProject(project string) {
 
 func (m *UpsertCertificateRequest) getCertificateRequest() GetCertificateRequest {
 	return GetCertificateRequest{
+		Authorization: m.Authorization,
 		Project:       m.Project,
 		Name:          m.Name,
-		Authorization: m.Authorization,
 	}
 }
 
 type UpdateCertificateRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сертификата
 	Name string // path: "name"
-	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
@@ -376,7 +377,7 @@ type UpdateCertificateRequest struct {
 	Body         model.UpdateCertificateRequest // body
 }
 
-func (m *UpdateCertificateRequest) SetAuthorization(authorization string) {
+func (m *UpdateCertificateRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -390,9 +391,9 @@ func (m *UpdateCertificateRequest) SetProject(project string) {
 
 func (m *UpdateCertificateRequest) getCertificateRequest() GetCertificateRequest {
 	return GetCertificateRequest{
+		Authorization: m.Authorization,
 		Project:       m.Project,
 		Name:          m.Name,
-		Authorization: m.Authorization,
 	}
 }
 

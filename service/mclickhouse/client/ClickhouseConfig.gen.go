@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
@@ -19,14 +20,14 @@ type ClickhouseConfig interface {
 
 type GetAvailableConfigParametersRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Версия продукта.
 	Version string // query: "version"
 }
 
-func (m *GetAvailableConfigParametersRequest) SetAuthorization(authorization string) {
+func (m *GetAvailableConfigParametersRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

@@ -93,7 +93,7 @@ func (c *IssueServiceAccountToken) queryIssueServiceAccountTokenV2(request *clie
 
 func (c *IssueServiceAccountToken) headerIssueServiceAccountTokenV2(req *http.Request, request *client.IssueServiceAccountTokenV2Request) {
 	if request.Authorization != nil {
-		req.Header.Add("Authorization", conv.StringToString(*request.Authorization))
+		req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	}
 }
 
@@ -176,6 +176,6 @@ func (c *IssueServiceAccountToken) queryIssueServiceAccountToken(request *client
 
 func (c *IssueServiceAccountToken) headerIssueServiceAccountToken(req *http.Request, request *client.IssueServiceAccountTokenRequest) {
 	if request.Authorization != nil {
-		req.Header.Add("Authorization", conv.StringToString(*request.Authorization))
+		req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	}
 }

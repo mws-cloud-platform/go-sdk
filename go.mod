@@ -27,6 +27,7 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
+	golang.org/x/crypto v0.57.0
 )
 
 require (

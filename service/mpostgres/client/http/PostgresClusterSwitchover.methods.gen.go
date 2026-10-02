@@ -89,7 +89,7 @@ func (c *PostgresClusterSwitchover) requestSwitchoverInvoker(ctx context.Context
 }
 
 func (c *PostgresClusterSwitchover) headerRequestSwitchover(req *http.Request, request *client.RequestSwitchoverRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

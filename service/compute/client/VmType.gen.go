@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
@@ -23,7 +24,7 @@ type VmType interface {
 
 type ListVmTypesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
@@ -39,7 +40,7 @@ type ListVmTypesRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListVmTypesRequest) SetAuthorization(authorization string) {
+func (m *ListVmTypesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -56,6 +57,7 @@ type ListVmTypesResponse struct {
 	Response404 *commonmodel.ApiError
 	Response408 *commonmodel.ApiError
 	Response412 *commonmodel.ApiError
+	Response429 *commonmodel.ApiError
 	Response499 *commonmodel.ApiError
 	Response500 *commonmodel.ApiError
 
@@ -87,6 +89,9 @@ func (m *ListVmTypesResponse) GetErr() (err error) {
 	if m.Response412 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
 	}
+	if m.Response429 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response429)
+	}
 	if m.Response499 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
@@ -104,11 +109,11 @@ func (m *ListVmTypesResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetVmTypeRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
-	VmType        string // path: "vmType"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
+	VmType        string                      // path: "vmType"
 }
 
-func (m *GetVmTypeRequest) SetAuthorization(authorization string) {
+func (m *GetVmTypeRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -120,6 +125,7 @@ type GetVmTypeResponse struct {
 	Response404 *commonmodel.ApiError
 	Response408 *commonmodel.ApiError
 	Response412 *commonmodel.ApiError
+	Response429 *commonmodel.ApiError
 	Response499 *commonmodel.ApiError
 	Response500 *commonmodel.ApiError
 
@@ -150,6 +156,9 @@ func (m *GetVmTypeResponse) GetErr() (err error) {
 	}
 	if m.Response412 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
+	}
+	if m.Response429 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response429)
 	}
 	if m.Response499 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)

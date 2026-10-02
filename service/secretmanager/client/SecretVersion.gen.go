@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/secretmanager/model"
 )
@@ -49,7 +50,7 @@ type SecretVersion interface {
 
 type AddSecretVersionRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
@@ -57,7 +58,7 @@ type AddSecretVersionRequest struct {
 	Body model.AddSecretVersionRequest // body
 }
 
-func (m *AddSecretVersionRequest) SetAuthorization(authorization string) {
+func (m *AddSecretVersionRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -121,7 +122,7 @@ func (m *AddSecretVersionResponse) SetErrorWrapper(f func(err error) error) {
 
 type ListSecretVersionsRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -141,7 +142,7 @@ type ListSecretVersionsRequest struct {
 	Name string // path: "name"
 }
 
-func (m *ListSecretVersionsRequest) SetAuthorization(authorization string) {
+func (m *ListSecretVersionsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -206,7 +207,7 @@ func (m *ListSecretVersionsResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetDataRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
@@ -215,7 +216,7 @@ type GetDataRequest struct {
 	Version string // path: "version"
 }
 
-func (m *GetDataRequest) SetAuthorization(authorization string) {
+func (m *GetDataRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -279,7 +280,7 @@ func (m *GetDataResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteSecretVersionRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
 	// Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
 	IfExist *bool // query: "ifExist"
@@ -295,7 +296,7 @@ type DeleteSecretVersionRequest struct {
 	Version string // path: "version"
 }
 
-func (m *DeleteSecretVersionRequest) SetAuthorization(authorization string) {
+func (m *DeleteSecretVersionRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -364,7 +365,7 @@ func (m *DeleteSecretVersionResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetSecretVersionRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя секрета.
@@ -373,7 +374,7 @@ type GetSecretVersionRequest struct {
 	Version string // path: "version"
 }
 
-func (m *GetSecretVersionRequest) SetAuthorization(authorization string) {
+func (m *GetSecretVersionRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -433,7 +434,7 @@ func (m *GetSecretVersionResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertSecretVersionRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
@@ -447,7 +448,7 @@ type UpsertSecretVersionRequest struct {
 	Body    model.SecretVersionRequest // body
 }
 
-func (m *UpsertSecretVersionRequest) SetAuthorization(authorization string) {
+func (m *UpsertSecretVersionRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -470,7 +471,7 @@ func (m *UpsertSecretVersionRequest) getSecretVersionRequest() GetSecretVersionR
 
 type UpdateSecretVersionRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 	// Путь к проекту.
@@ -484,7 +485,7 @@ type UpdateSecretVersionRequest struct {
 	Body    model.UpdateSecretVersionRequest // body
 }
 
-func (m *UpdateSecretVersionRequest) SetAuthorization(authorization string) {
+func (m *UpdateSecretVersionRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

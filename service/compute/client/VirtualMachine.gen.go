@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
@@ -41,7 +42,7 @@ type VirtualMachine interface {
 
 type ListVirtualMachinesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -59,7 +60,7 @@ type ListVirtualMachinesRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListVirtualMachinesRequest) SetAuthorization(authorization string) {
+func (m *ListVirtualMachinesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -84,6 +85,7 @@ type ListVirtualMachinesResponse struct {
 	Response404 *commonmodel.ApiError
 	Response408 *commonmodel.ApiError
 	Response412 *commonmodel.ApiError
+	Response429 *commonmodel.ApiError
 	Response499 *commonmodel.ApiError
 	Response500 *commonmodel.ApiError
 
@@ -115,6 +117,9 @@ func (m *ListVirtualMachinesResponse) GetErr() (err error) {
 	if m.Response412 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
 	}
+	if m.Response429 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response429)
+	}
 	if m.Response499 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
@@ -132,7 +137,7 @@ func (m *ListVirtualMachinesResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteVirtualMachineRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -140,7 +145,7 @@ type DeleteVirtualMachineRequest struct {
 	VirtualMachine string // path: "virtualMachine"
 }
 
-func (m *DeleteVirtualMachineRequest) SetAuthorization(authorization string) {
+func (m *DeleteVirtualMachineRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -170,6 +175,7 @@ type DeleteVirtualMachineResponse struct {
 	Response408 *commonmodel.ApiError
 	Response412 *commonmodel.ApiError
 	Response422 *commonmodel.ApiError
+	Response429 *commonmodel.ApiError
 	Response499 *commonmodel.ApiError
 	Response500 *commonmodel.ApiError
 
@@ -204,6 +210,9 @@ func (m *DeleteVirtualMachineResponse) GetErr() (err error) {
 	if m.Response422 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response422)
 	}
+	if m.Response429 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response429)
+	}
 	if m.Response499 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
@@ -221,13 +230,13 @@ func (m *DeleteVirtualMachineResponse) SetErrorWrapper(f func(err error) error) 
 
 type GetVirtualMachineRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project        string // path: "project"
 	VirtualMachine string // path: "virtualMachine"
 }
 
-func (m *GetVirtualMachineRequest) SetAuthorization(authorization string) {
+func (m *GetVirtualMachineRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -247,6 +256,7 @@ type GetVirtualMachineResponse struct {
 	Response404 *commonmodel.ApiError
 	Response408 *commonmodel.ApiError
 	Response412 *commonmodel.ApiError
+	Response429 *commonmodel.ApiError
 	Response499 *commonmodel.ApiError
 	Response500 *commonmodel.ApiError
 
@@ -278,6 +288,9 @@ func (m *GetVirtualMachineResponse) GetErr() (err error) {
 	if m.Response412 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
 	}
+	if m.Response429 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response429)
+	}
 	if m.Response499 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)
 	}
@@ -295,7 +308,7 @@ func (m *GetVirtualMachineResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertVirtualMachineRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
@@ -307,7 +320,7 @@ type UpsertVirtualMachineRequest struct {
 	Body model.VirtualMachineRequest // body
 }
 
-func (m *UpsertVirtualMachineRequest) SetAuthorization(authorization string) {
+func (m *UpsertVirtualMachineRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -329,7 +342,7 @@ func (m *UpsertVirtualMachineRequest) getVirtualMachineRequest() GetVirtualMachi
 
 type UpdateVirtualMachineRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 	// Ключ идемпотентности
@@ -341,7 +354,7 @@ type UpdateVirtualMachineRequest struct {
 	Body model.UpdateVirtualMachineRequest // body
 }
 
-func (m *UpdateVirtualMachineRequest) SetAuthorization(authorization string) {
+func (m *UpdateVirtualMachineRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -371,6 +384,7 @@ type UpsertVirtualMachineResponse struct {
 	Response409 *commonmodel.ApiError
 	Response412 *commonmodel.ApiError
 	Response422 *commonmodel.ApiError
+	Response429 *commonmodel.ApiError
 	Response499 *commonmodel.ApiError
 	Response500 *commonmodel.ApiError
 
@@ -407,6 +421,9 @@ func (m *UpsertVirtualMachineResponse) GetErr() (err error) {
 	}
 	if m.Response422 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response422)
+	}
+	if m.Response429 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response429)
 	}
 	if m.Response499 != nil {
 		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response499)

@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/vpc/model"
 )
@@ -41,7 +42,7 @@ type Address interface {
 
 type ListAddressesRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -61,7 +62,7 @@ type ListAddressesRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListAddressesRequest) SetAuthorization(authorization string) {
+func (m *ListAddressesRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -134,7 +135,7 @@ func (m *ListAddressesResponse) SetErrorWrapper(f func(err error) error) {
 
 type DeleteAddressRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -147,7 +148,7 @@ type DeleteAddressRequest struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteAddressRequest) SetAuthorization(authorization string) {
+func (m *DeleteAddressRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -224,7 +225,7 @@ func (m *DeleteAddressResponse) SetErrorWrapper(f func(err error) error) {
 
 type GetAddressRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -233,7 +234,7 @@ type GetAddressRequest struct {
 	Address string // path: "address"
 }
 
-func (m *GetAddressRequest) SetAuthorization(authorization string) {
+func (m *GetAddressRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -301,7 +302,7 @@ func (m *GetAddressResponse) SetErrorWrapper(f func(err error) error) {
 
 type UpsertAddressRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -316,7 +317,7 @@ type UpsertAddressRequest struct {
 	Body *model.AddressRequest // body
 }
 
-func (m *UpsertAddressRequest) SetAuthorization(authorization string) {
+func (m *UpsertAddressRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -339,7 +340,7 @@ func (m *UpsertAddressRequest) getAddressRequest() GetAddressRequest {
 
 type UpdateAddressRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -354,7 +355,7 @@ type UpdateAddressRequest struct {
 	Body *model.UpdateAddressRequest // body
 }
 
-func (m *UpdateAddressRequest) SetAuthorization(authorization string) {
+func (m *UpdateAddressRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

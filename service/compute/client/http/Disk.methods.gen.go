@@ -105,7 +105,7 @@ func (c *Disk) queryListDisks(request *client.ListDisksRequest) string {
 }
 
 func (c *Disk) headerListDisks(req *http.Request, request *client.ListDisksRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteDisk позволяет удалить диск.
@@ -190,7 +190,7 @@ func (c *Disk) queryDeleteDisk(request *client.DeleteDiskRequest) string {
 }
 
 func (c *Disk) headerDeleteDisk(req *http.Request, request *client.DeleteDiskRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -278,7 +278,7 @@ func (c *Disk) queryGetDisk(request *client.GetDiskRequest) string {
 }
 
 func (c *Disk) headerGetDisk(req *http.Request, request *client.GetDiskRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertDisk позволяет создать или изменить диск.
@@ -368,7 +368,7 @@ func (c *Disk) queryUpsertDisk(request *client.UpsertDiskRequest) string {
 }
 
 func (c *Disk) headerUpsertDisk(req *http.Request, request *client.UpsertDiskRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -463,7 +463,7 @@ func (c *Disk) queryCreateDisk(request *client.UpsertDiskRequest) string {
 }
 
 func (c *Disk) headerCreateDisk(req *http.Request, request *client.UpsertDiskRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -558,7 +558,7 @@ func (c *Disk) queryUpdateDisk(request *client.UpdateDiskRequest) string {
 }
 
 func (c *Disk) headerUpdateDisk(req *http.Request, request *client.UpdateDiskRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

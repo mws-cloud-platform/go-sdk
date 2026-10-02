@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
@@ -23,7 +24,7 @@ type Role interface {
 
 type ListGlobalRoleV2Request struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
 	PageSize *int // query: "pageSize"
 	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
@@ -40,10 +41,10 @@ type ListGlobalRoleV2Request struct {
 	// Вывод удаленных объектов для ресурсов, поддерживающих soft delete
 	ShowDeleted *string // query: "showDeleted"
 	// Тип ролей
-	Type *string // query: "type"
+	Type string // query: "type"
 }
 
-func (m *ListGlobalRoleV2Request) SetAuthorization(authorization string) {
+func (m *ListGlobalRoleV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -91,12 +92,12 @@ func (m *ListGlobalRoleV2Response) SetErrorWrapper(f func(err error) error) {
 }
 
 type GetGlobalRoleV2Request struct {
-	Role string // path: "role"
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
+	Role          string                      // path: "role"
 }
 
-func (m *GetGlobalRoleV2Request) SetAuthorization(authorization string) {
+func (m *GetGlobalRoleV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

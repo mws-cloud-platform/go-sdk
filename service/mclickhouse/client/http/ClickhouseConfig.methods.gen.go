@@ -91,5 +91,5 @@ func (c *ClickhouseConfig) queryGetAvailableConfigParameters(request *client.Get
 }
 
 func (c *ClickhouseConfig) headerGetAvailableConfigParameters(req *http.Request, request *client.GetAvailableConfigParametersRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }

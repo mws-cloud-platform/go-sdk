@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/nlb/model"
 )
@@ -45,7 +46,7 @@ type Nlb interface {
 
 type ListNlbsByProjectIdRequest struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -63,7 +64,7 @@ type ListNlbsByProjectIdRequest struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListNlbsByProjectIdRequest) SetAuthorization(authorization string) {
+func (m *ListNlbsByProjectIdRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -136,7 +137,7 @@ func (m *ListNlbsByProjectIdResponse) SetErrorWrapper(f func(err error) error) {
 
 type ListNlbsV2Request struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -156,7 +157,7 @@ type ListNlbsV2Request struct {
 	OrderBy *string // query: "orderBy"
 }
 
-func (m *ListNlbsV2Request) SetAuthorization(authorization string) {
+func (m *ListNlbsV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -229,7 +230,7 @@ func (m *ListNlbsV2Response) SetErrorWrapper(f func(err error) error) {
 
 type DeleteNlbV2Request struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -242,7 +243,7 @@ type DeleteNlbV2Request struct {
 	ValidateOnly *bool // query: "validateOnly"
 }
 
-func (m *DeleteNlbV2Request) SetAuthorization(authorization string) {
+func (m *DeleteNlbV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -319,7 +320,7 @@ func (m *DeleteNlbV2Response) SetErrorWrapper(f func(err error) error) {
 
 type GetNlbV2Request struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Путь к проекту.
 	Project string // path: "project"
 	// Имя сети
@@ -328,7 +329,7 @@ type GetNlbV2Request struct {
 	Nlb string // path: "nlb"
 }
 
-func (m *GetNlbV2Request) SetAuthorization(authorization string) {
+func (m *GetNlbV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -396,7 +397,7 @@ func (m *GetNlbV2Response) SetErrorWrapper(f func(err error) error) {
 
 type UpsertNlbV2Request struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -411,7 +412,7 @@ type UpsertNlbV2Request struct {
 	Body model.NlbRequest // body
 }
 
-func (m *UpsertNlbV2Request) SetAuthorization(authorization string) {
+func (m *UpsertNlbV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 
@@ -434,7 +435,7 @@ func (m *UpsertNlbV2Request) getNlbV2Request() GetNlbV2Request {
 
 type UpdateNlbV2Request struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Ключ идемпотентности
 	IdempotencyKey *string // header: "Idempotency-Key"
 	// Путь к проекту.
@@ -449,7 +450,7 @@ type UpdateNlbV2Request struct {
 	Body model.UpdateNlbRequest // body
 }
 
-func (m *UpdateNlbV2Request) SetAuthorization(authorization string) {
+func (m *UpdateNlbV2Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

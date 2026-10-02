@@ -99,7 +99,7 @@ func (x *PostgresBackupSugared) waitDeletePostgresBackup(ctx context.Context, re
 	return err
 }
 
-// GetPostgresBackup returns info about the specified backup.
+// GetPostgresBackup возвращает информацию об указанной резервной копии.
 //
 // Путь: GET /mpostgres/v1/projects/{project}/clusters/{cluster}/backups/{backup}
 func (x *PostgresBackupSugared) GetPostgresBackup(ctx context.Context, request GetPostgresBackupRequest, opts ...Option) (*model.PostgresBackupResponse, error) {

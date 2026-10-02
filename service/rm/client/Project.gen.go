@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
+	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/rm/model"
 )
@@ -19,7 +20,7 @@ type Project interface {
 
 type ListProjectsV3Request struct {
 	// Токен авторизации IAM
-	Authorization string // header: "Authorization"
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
 	// Фильтр проектов по организации
 	Organization *string // query: "organization"
 	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
@@ -41,7 +42,7 @@ type ListProjectsV3Request struct {
 	OnlyAvailableProjects *bool // query: "onlyAvailableProjects"
 }
 
-func (m *ListProjectsV3Request) SetAuthorization(authorization string) {
+func (m *ListProjectsV3Request) SetAuthorization(authorization sensitive.Sensitive[string]) {
 	m.Authorization = authorization
 }
 

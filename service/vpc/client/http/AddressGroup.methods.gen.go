@@ -108,7 +108,7 @@ func (c *AddressGroup) queryListAddressGroups(request *client.ListAddressGroupsR
 }
 
 func (c *AddressGroup) headerListAddressGroups(req *http.Request, request *client.ListAddressGroupsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteAddressGroup позволяет удалить группу адресов.
@@ -192,7 +192,7 @@ func (c *AddressGroup) queryDeleteAddressGroup(request *client.DeleteAddressGrou
 }
 
 func (c *AddressGroup) headerDeleteAddressGroup(req *http.Request, request *client.DeleteAddressGroupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -273,7 +273,7 @@ func (c *AddressGroup) getAddressGroupInvoker(ctx context.Context, anyReq any, r
 }
 
 func (c *AddressGroup) headerGetAddressGroup(req *http.Request, request *client.GetAddressGroupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertAddressGroup позволяет создать или изменить группу адресов.
@@ -368,7 +368,7 @@ func (c *AddressGroup) queryUpsertAddressGroup(request *client.UpsertAddressGrou
 }
 
 func (c *AddressGroup) headerUpsertAddressGroup(req *http.Request, request *client.UpsertAddressGroupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -468,7 +468,7 @@ func (c *AddressGroup) queryCreateAddressGroup(request *client.UpsertAddressGrou
 }
 
 func (c *AddressGroup) headerCreateAddressGroup(req *http.Request, request *client.UpsertAddressGroupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -568,7 +568,7 @@ func (c *AddressGroup) queryUpdateAddressGroup(request *client.UpdateAddressGrou
 }
 
 func (c *AddressGroup) headerUpdateAddressGroup(req *http.Request, request *client.UpdateAddressGroupRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

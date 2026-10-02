@@ -111,7 +111,7 @@ func (c *Topic) queryListKafkaTopics(request *client.ListKafkaTopicsRequest) str
 }
 
 func (c *Topic) headerListKafkaTopics(req *http.Request, request *client.ListKafkaTopicsRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // DeleteKafkaTopic delete Kafka topic.
@@ -195,7 +195,7 @@ func (c *Topic) queryDeleteKafkaTopic(request *client.DeleteKafkaTopicRequest) s
 }
 
 func (c *Topic) headerDeleteKafkaTopic(req *http.Request, request *client.DeleteKafkaTopicRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -276,7 +276,7 @@ func (c *Topic) getKafkaTopicInvoker(ctx context.Context, anyReq any, response c
 }
 
 func (c *Topic) headerGetKafkaTopic(req *http.Request, request *client.GetKafkaTopicRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
 // UpsertKafkaTopic upsert Kafka topic.
@@ -366,7 +366,7 @@ func (c *Topic) queryUpsertKafkaTopic(request *client.UpsertKafkaTopicRequest) s
 }
 
 func (c *Topic) headerUpsertKafkaTopic(req *http.Request, request *client.UpsertKafkaTopicRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -461,7 +461,7 @@ func (c *Topic) queryCreateKafkaTopic(request *client.UpsertKafkaTopicRequest) s
 }
 
 func (c *Topic) headerCreateKafkaTopic(req *http.Request, request *client.UpsertKafkaTopicRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}
@@ -556,7 +556,7 @@ func (c *Topic) queryUpdateKafkaTopic(request *client.UpdateKafkaTopicRequest) s
 }
 
 func (c *Topic) headerUpdateKafkaTopic(req *http.Request, request *client.UpdateKafkaTopicRequest) {
-	req.Header.Add("Authorization", conv.StringToString(request.Authorization))
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 	if request.IdempotencyKey != nil {
 		req.Header.Add("Idempotency-Key", conv.StringToString(*request.IdempotencyKey))
 	}

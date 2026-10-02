@@ -12,6 +12,7 @@ import (
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Топик — это логический поток сообщений, который создается пользователем и обеспечивает группировку сообщений по темам
 // Real OAPI model name: Topic
 type TopicOptionalResponse struct {
 	Kind *string `json:"kind,omitempty" yaml:"kind,omitempty"`
@@ -19,8 +20,8 @@ type TopicOptionalResponse struct {
 	Metadata optional.OptionalNil[commonmodel.CommonTypedResourceMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация топика
 	Spec TopicSpecOptionalResponse `json:"spec" yaml:"spec"`
-	// Текущее состояние ресурса, вычисляемое системой.
-	Status *commonmodel.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
+	// Наблюдаемое состояние топика
+	Status *TopicStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *TopicOptionalResponse) GetKind() *string {
@@ -66,18 +67,18 @@ func (m *TopicOptionalResponse) SetSpec(val TopicSpecOptionalResponse) {
 	m.Spec = val
 }
 
-func (m *TopicOptionalResponse) GetStatus() *commonmodel.ResourceStatusResponse {
+func (m *TopicOptionalResponse) GetStatus() *TopicStatusResponse {
 	if m != nil {
 		return m.Status
 	}
 	return nil
 }
 
-func (m *TopicOptionalResponse) SetStatus(val *commonmodel.ResourceStatusResponse) {
+func (m *TopicOptionalResponse) SetStatus(val *TopicStatusResponse) {
 	m.Status = val
 }
 
-func (m *TopicOptionalResponse) GetStatusOr(val commonmodel.ResourceStatusResponse) commonmodel.ResourceStatusResponse {
+func (m *TopicOptionalResponse) GetStatusOr(val TopicStatusResponse) TopicStatusResponse {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
@@ -201,7 +202,7 @@ func (m *TopicOptionalResponse) Decode(d *jx.Decoder) error {
 				return d.Null()
 			}
 
-			var v commonmodel.ResourceStatusResponse
+			var v TopicStatusResponse
 			if err := v.Decode(d); err != nil {
 				return err
 			}
