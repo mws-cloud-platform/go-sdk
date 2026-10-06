@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	QuestionIDRefTemplate = resparsers.Template{
+	QuestionRefTemplate = resparsers.Template{
 		{
 			Value:       "questionName",
 			IsConstant:  false,
@@ -37,63 +37,63 @@ var (
 	}
 )
 
-func NewQuestionIDID(questionName string) (QuestionIDID, error) {
+func NewQuestionID(questionName string) (QuestionID, error) {
 	if questionName == "" {
-		return QuestionIDID{}, reserrors.NewFieldIsEmptyError("questionName")
+		return QuestionID{}, reserrors.NewFieldIsEmptyError("questionName")
 	}
-	m := QuestionIDID{
+	m := QuestionID{
 		questionName: questionName,
 	}
 	m.path = m.ID()
 	return m, nil
 }
 
-func NewMustQuestionIDID(questionName string) QuestionIDID {
-	m, err := NewQuestionIDID(questionName)
+func NewMustQuestionID(questionName string) QuestionID {
+	m, err := NewQuestionID(questionName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseQuestionIDID(path string) (QuestionIDID, error) {
-	m := QuestionIDID{
+func ParseQuestionID(path string) (QuestionID, error) {
+	m := QuestionID{
 		path: path,
 	}
 	if err := m.parse(); err != nil {
-		return QuestionIDID{}, err
+		return QuestionID{}, err
 	}
 	return m, nil
 }
 
-func NewQuestionIDIDFromAnyID(resource resmodels.AnyResourceID) (QuestionIDID, error) {
-	return ParseQuestionIDID(resource.ID())
+func NewQuestionIDFromAnyID(resource resmodels.AnyResourceID) (QuestionID, error) {
+	return ParseQuestionID(resource.ID())
 }
 
-type QuestionIDID struct {
+type QuestionID struct {
 	questionName string
 	path         string
 }
 
-func (m *QuestionIDID) ResourceName() resifaces.ResourceName {
+func (m *QuestionID) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return resifaces.ResourceName(m.questionName)
 }
 
-func (m *QuestionIDID) GetQuestionName() string {
+func (m *QuestionID) GetQuestionName() string {
 	if m == nil {
 		return ""
 	}
 	return m.questionName
 }
 
-func (m *QuestionIDID) ServiceSlug() string {
+func (m *QuestionID) ServiceSlug() string {
 	return "support"
 }
 
-func (m *QuestionIDID) ID() string {
+func (m *QuestionID) ID() string {
 	if m == nil || m.questionName == "" {
 		return ""
 	}
@@ -101,11 +101,11 @@ func (m *QuestionIDID) ID() string {
 	return m.ServiceSlug() + "/questions/" + m.questionName
 }
 
-func (m *QuestionIDID) String() string {
+func (m *QuestionID) String() string {
 	return m.ID()
 }
 
-func (m *QuestionIDID) Clone() *QuestionIDID {
+func (m *QuestionID) Clone() *QuestionID {
 	if m == nil {
 		return nil
 	}
@@ -113,16 +113,16 @@ func (m *QuestionIDID) Clone() *QuestionIDID {
 	return &clone
 }
 
-func (m *QuestionIDID) AsRef() *QuestionIDRef {
+func (m *QuestionID) AsRef() *QuestionRef {
 	if m == nil {
 		return nil
 	}
-	return &QuestionIDRef{
+	return &QuestionRef{
 		id: *m,
 	}
 }
 
-func (m *QuestionIDID) Equal(other *QuestionIDID) bool {
+func (m *QuestionID) Equal(other *QuestionID) bool {
 	if m == other {
 		return true
 	}
@@ -132,7 +132,7 @@ func (m *QuestionIDID) Equal(other *QuestionIDID) bool {
 	return m.questionName == other.questionName
 }
 
-func (m QuestionIDID) MarshalJSON() ([]byte, error) {
+func (m QuestionID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -140,7 +140,7 @@ func (m QuestionIDID) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *QuestionIDID) Encode(e *jx.Encoder) error {
+func (m *QuestionID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -153,13 +153,13 @@ func (m *QuestionIDID) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *QuestionIDID) UnmarshalJSON(b []byte) error {
+func (m *QuestionID) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *QuestionIDID) Decode(d *jx.Decoder) error {
+func (m *QuestionID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("QuestionIDID")
+		return conv.NewDecodeToNilError("QuestionID")
 	}
 
 	v, err := decode.Str(d)
@@ -174,11 +174,11 @@ func (m *QuestionIDID) Decode(d *jx.Decoder) error {
 // Deprecated: Parse method is no longer required.
 // Internal fields are populated automatically during decoding.
 // This method will be removed in the next SDK release.
-func (m *QuestionIDID) Parse(ctx context.Context) error {
+func (m *QuestionID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *QuestionIDID) parse() error {
+func (m *QuestionID) parse() error {
 	if m == nil {
 		return nil
 	}
@@ -187,7 +187,7 @@ func (m *QuestionIDID) parse() error {
 		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
 	}
 
-	result, err := resparsers.Reference(context.Background(), m.path, QuestionIDRefTemplate.AsID())
+	result, err := resparsers.Reference(context.Background(), m.path, QuestionRefTemplate.AsID())
 	if err != nil {
 		return reserrors.NewParseIDError(m.path, err)
 	}
@@ -197,12 +197,12 @@ func (m *QuestionIDID) parse() error {
 	return nil
 }
 
-func NewQuestionIDRef(questionName string) (QuestionIDRef, error) {
+func NewQuestionRef(questionName string) (QuestionRef, error) {
 	if questionName == "" {
-		return QuestionIDRef{}, reserrors.NewFieldIsEmptyError("questionName")
+		return QuestionRef{}, reserrors.NewFieldIsEmptyError("questionName")
 	}
-	m := QuestionIDRef{
-		id: QuestionIDID{
+	m := QuestionRef{
+		id: QuestionID{
 			questionName: questionName,
 		},
 	}
@@ -210,61 +210,61 @@ func NewQuestionIDRef(questionName string) (QuestionIDRef, error) {
 	return m, nil
 }
 
-func NewMustQuestionIDRef(questionName string) QuestionIDRef {
-	m, err := NewQuestionIDRef(questionName)
+func NewMustQuestionRef(questionName string) QuestionRef {
+	m, err := NewQuestionRef(questionName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseQuestionIDRef(ctx context.Context, path string) (QuestionIDRef, error) {
-	m := QuestionIDRef{
-		id: QuestionIDID{
+func ParseQuestionRef(ctx context.Context, path string) (QuestionRef, error) {
+	m := QuestionRef{
+		id: QuestionID{
 			path: path,
 		},
 	}
 	if err := m.Parse(ctx); err != nil {
-		return QuestionIDRef{}, err
+		return QuestionRef{}, err
 	}
 	return m, nil
 }
 
-func NewQuestionIDRefFromAnyRef(ref resmodels.AnyResourceRef) (QuestionIDRef, error) {
+func NewQuestionRefFromAnyRef(ref resmodels.AnyResourceRef) (QuestionRef, error) {
 	ctx := valuesctx.WithValuesStore(context.Background(), ref.GetPathValues())
-	return ParseQuestionIDRef(ctx, ref.Path())
+	return ParseQuestionRef(ctx, ref.Path())
 }
 
-type QuestionIDRef struct {
-	id QuestionIDID
+type QuestionRef struct {
+	id QuestionID
 }
 
-func (m *QuestionIDRef) ResourceName() resifaces.ResourceName {
+func (m *QuestionRef) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return m.id.ResourceName()
 }
 
-func (m *QuestionIDRef) GetQuestionName() string {
+func (m *QuestionRef) GetQuestionName() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.GetQuestionName()
 }
 
-func (m *QuestionIDRef) ServiceSlug() string {
+func (m *QuestionRef) ServiceSlug() string {
 	return "support"
 }
 
-func (m *QuestionIDRef) IDPath() string {
+func (m *QuestionRef) IDPath() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.ID()
 }
 
-func (m *QuestionIDRef) Path() string {
+func (m *QuestionRef) Path() string {
 	if m == nil {
 		return ""
 	}
@@ -274,15 +274,15 @@ func (m *QuestionIDRef) Path() string {
 	return m.id.path
 }
 
-func (m *QuestionIDRef) String() string {
+func (m *QuestionRef) String() string {
 	return m.IDPath()
 }
 
-func (m *QuestionIDRef) Parse(ctx context.Context) error {
+func (m *QuestionRef) Parse(ctx context.Context) error {
 	return m.parse(ctx, false)
 }
 
-func (m *QuestionIDRef) Clone() *QuestionIDRef {
+func (m *QuestionRef) Clone() *QuestionRef {
 	if m == nil {
 		return nil
 	}
@@ -290,7 +290,7 @@ func (m *QuestionIDRef) Clone() *QuestionIDRef {
 	return &clone
 }
 
-func (m *QuestionIDRef) Equal(other *QuestionIDRef) bool {
+func (m *QuestionRef) Equal(other *QuestionRef) bool {
 	if m == other {
 		return true
 	}
@@ -300,7 +300,7 @@ func (m *QuestionIDRef) Equal(other *QuestionIDRef) bool {
 	return m.id.questionName == other.id.questionName
 }
 
-func (m QuestionIDRef) MarshalJSON() ([]byte, error) {
+func (m QuestionRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -308,7 +308,7 @@ func (m QuestionIDRef) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *QuestionIDRef) Encode(e *jx.Encoder) error {
+func (m *QuestionRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -321,13 +321,13 @@ func (m *QuestionIDRef) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *QuestionIDRef) UnmarshalJSON(b []byte) error {
+func (m *QuestionRef) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *QuestionIDRef) Decode(d *jx.Decoder) error {
+func (m *QuestionRef) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("QuestionIDRef")
+		return conv.NewDecodeToNilError("QuestionRef")
 	}
 
 	v, err := decode.Str(d)
@@ -339,7 +339,7 @@ func (m *QuestionIDRef) Decode(d *jx.Decoder) error {
 	return m.parse(context.Background(), true)
 }
 
-func (m *QuestionIDRef) parse(ctx context.Context, allowPartial bool) error {
+func (m *QuestionRef) parse(ctx context.Context, allowPartial bool) error {
 	if m == nil || m.isParsed() {
 		return nil
 	}
@@ -353,7 +353,7 @@ func (m *QuestionIDRef) parse(ctx context.Context, allowPartial bool) error {
 		options = append(options, resparsers.AllowPartial())
 	}
 
-	result, err := resparsers.Reference(ctx, m.id.path, QuestionIDRefTemplate, options...)
+	result, err := resparsers.Reference(ctx, m.id.path, QuestionRefTemplate, options...)
 	if err != nil {
 		return reserrors.NewParseReferenceError(m.id.path, err)
 	}
@@ -363,11 +363,11 @@ func (m *QuestionIDRef) parse(ctx context.Context, allowPartial bool) error {
 	return nil
 }
 
-func (m *QuestionIDRef) isParsed() bool {
+func (m *QuestionRef) isParsed() bool {
 	return m != nil && m.id.questionName != ""
 }
 
-func (m *QuestionIDRef) absolutePath() string {
+func (m *QuestionRef) absolutePath() string {
 	if m == nil || m.id.questionName == "" {
 		return ""
 	}

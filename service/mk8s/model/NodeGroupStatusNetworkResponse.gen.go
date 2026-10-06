@@ -49,23 +49,23 @@ func (m *NodeGroupStatusNetworkResponse) Clone() *NodeGroupStatusNetworkResponse
 // Real OAPI model name: NodeGroupStatusNetworkPrimaryInterface
 type NodeGroupStatusNetworkPrimaryInterfaceResponse struct {
 	// Состояние внешнего IPv4-адреса
-	ExternalIPv4 *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response `json:"externalIPv4,omitempty" yaml:"externalIPv4,omitempty"`
+	ExternalIpv4 *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response `json:"externalIpv4,omitempty" yaml:"externalIpv4,omitempty"`
 }
 
-func (m *NodeGroupStatusNetworkPrimaryInterfaceResponse) GetExternalIPv4() *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response {
+func (m *NodeGroupStatusNetworkPrimaryInterfaceResponse) GetExternalIpv4() *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response {
 	if m != nil {
-		return m.ExternalIPv4
+		return m.ExternalIpv4
 	}
 	return nil
 }
 
-func (m *NodeGroupStatusNetworkPrimaryInterfaceResponse) SetExternalIPv4(val *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) {
-	m.ExternalIPv4 = val
+func (m *NodeGroupStatusNetworkPrimaryInterfaceResponse) SetExternalIpv4(val *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response) {
+	m.ExternalIpv4 = val
 }
 
-func (m *NodeGroupStatusNetworkPrimaryInterfaceResponse) GetExternalIPv4Or(val NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response {
-	if m != nil && m.ExternalIPv4 != nil {
-		return *m.ExternalIPv4
+func (m *NodeGroupStatusNetworkPrimaryInterfaceResponse) GetExternalIpv4Or(val NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response) NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response {
+	if m != nil && m.ExternalIpv4 != nil {
+		return *m.ExternalIpv4
 	}
 	return val
 }
@@ -76,36 +76,36 @@ func (m *NodeGroupStatusNetworkPrimaryInterfaceResponse) Clone() *NodeGroupStatu
 	}
 
 	clone := *m
-	clone.ExternalIPv4 = m.ExternalIPv4.Clone()
+	clone.ExternalIpv4 = m.ExternalIpv4.Clone()
 	return &clone
 }
 
-// Представление поля ExternalIPv4 анонимного типа структуры NodeGroupStatusNetworkPrimaryInterface
-// Real OAPI model name: NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4
-type NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response struct {
+// Представление поля ExternalIpv4 анонимного типа структуры NodeGroupStatusNetworkPrimaryInterface
+// Real OAPI model name: NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4
+type NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response struct {
 	// Состояние внешнего IPv4-адреса
 	Enabled *bool `json:"enabled,omitempty" yaml:"enabled,omitempty"`
 }
 
-func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) GetEnabled() *bool {
+func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response) GetEnabled() *bool {
 	if m != nil {
 		return m.Enabled
 	}
 	return nil
 }
 
-func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) SetEnabled(val *bool) {
+func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response) SetEnabled(val *bool) {
 	m.Enabled = val
 }
 
-func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) GetEnabledOr(val bool) bool {
+func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response) GetEnabledOr(val bool) bool {
 	if m != nil && m.Enabled != nil {
 		return *m.Enabled
 	}
 	return val
 }
 
-func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) Clone() *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response {
+func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response) Clone() *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response {
 	if m == nil {
 		return nil
 	}
@@ -202,9 +202,9 @@ func (m *NodeGroupStatusNetworkPrimaryInterfaceResponse) Encode(e *jx.Encoder) e
 }
 
 func (m *NodeGroupStatusNetworkPrimaryInterfaceResponse) encodeFields(e *jx.Encoder) error {
-	if m.ExternalIPv4 != nil {
-		e.FieldStart("externalIPv4")
-		if err := m.ExternalIPv4.Encode(e); err != nil {
+	if m.ExternalIpv4 != nil {
+		e.FieldStart("externalIpv4")
+		if err := m.ExternalIpv4.Encode(e); err != nil {
 			return err
 		}
 	}
@@ -222,17 +222,17 @@ func (m *NodeGroupStatusNetworkPrimaryInterfaceResponse) Decode(d *jx.Decoder) e
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "externalIPv4":
+		case "externalIpv4":
 			if d.Next() == jx.Null {
 				return d.Null()
 			}
 
-			var v NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response
+			var v NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.ExternalIPv4 = &v
+			m.ExternalIpv4 = &v
 			return nil
 		default:
 			return d.Skip()
@@ -240,7 +240,7 @@ func (m *NodeGroupStatusNetworkPrimaryInterfaceResponse) Decode(d *jx.Decoder) e
 	}))
 }
 
-func (m NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) MarshalJSON() ([]byte, error) {
+func (m NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -248,7 +248,7 @@ func (m NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) MarshalJSON(
 	return e.Bytes(), nil
 }
 
-func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) Encode(e *jx.Encoder) error {
+func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -261,7 +261,7 @@ func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) Encode(e *j
 	return nil
 }
 
-func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) encodeFields(e *jx.Encoder) error {
+func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response) encodeFields(e *jx.Encoder) error {
 	if m.Enabled != nil {
 		e.FieldStart("enabled")
 		e.Bool(*m.Enabled)
@@ -269,13 +269,13 @@ func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) encodeField
 	return nil
 }
 
-func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) UnmarshalJSON(b []byte) error {
+func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response) Decode(d *jx.Decoder) error {
+func (m *NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("NodeGroupStatusNetworkPrimaryInterfaceExternalIPv4Response")
+		return conv.NewDecodeToNilError("NodeGroupStatusNetworkPrimaryInterfaceExternalIpv4Response")
 	}
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {

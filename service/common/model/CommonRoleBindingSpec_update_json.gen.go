@@ -84,7 +84,7 @@ func (m *UpdateCommonRoleBindingSpec) Decode(d *jx.Decoder) error {
 			m.Role.SetTo(v)
 			return nil
 		case "supportRequestId":
-			var v support.RequestIDRef
+			var v support.RequestRef
 			if err := v.Decode(d); err != nil {
 				return err
 			}

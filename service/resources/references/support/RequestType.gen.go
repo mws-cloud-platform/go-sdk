@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	RequestTypeIDRefTemplate = resparsers.Template{
+	RequestTypeRefTemplate = resparsers.Template{
 		{
 			Value:       "requestTypeName",
 			IsConstant:  false,
@@ -37,63 +37,63 @@ var (
 	}
 )
 
-func NewRequestTypeIDID(requestTypeName string) (RequestTypeIDID, error) {
+func NewRequestTypeID(requestTypeName string) (RequestTypeID, error) {
 	if requestTypeName == "" {
-		return RequestTypeIDID{}, reserrors.NewFieldIsEmptyError("requestTypeName")
+		return RequestTypeID{}, reserrors.NewFieldIsEmptyError("requestTypeName")
 	}
-	m := RequestTypeIDID{
+	m := RequestTypeID{
 		requestTypeName: requestTypeName,
 	}
 	m.path = m.ID()
 	return m, nil
 }
 
-func NewMustRequestTypeIDID(requestTypeName string) RequestTypeIDID {
-	m, err := NewRequestTypeIDID(requestTypeName)
+func NewMustRequestTypeID(requestTypeName string) RequestTypeID {
+	m, err := NewRequestTypeID(requestTypeName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseRequestTypeIDID(path string) (RequestTypeIDID, error) {
-	m := RequestTypeIDID{
+func ParseRequestTypeID(path string) (RequestTypeID, error) {
+	m := RequestTypeID{
 		path: path,
 	}
 	if err := m.parse(); err != nil {
-		return RequestTypeIDID{}, err
+		return RequestTypeID{}, err
 	}
 	return m, nil
 }
 
-func NewRequestTypeIDIDFromAnyID(resource resmodels.AnyResourceID) (RequestTypeIDID, error) {
-	return ParseRequestTypeIDID(resource.ID())
+func NewRequestTypeIDFromAnyID(resource resmodels.AnyResourceID) (RequestTypeID, error) {
+	return ParseRequestTypeID(resource.ID())
 }
 
-type RequestTypeIDID struct {
+type RequestTypeID struct {
 	requestTypeName string
 	path            string
 }
 
-func (m *RequestTypeIDID) ResourceName() resifaces.ResourceName {
+func (m *RequestTypeID) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return resifaces.ResourceName(m.requestTypeName)
 }
 
-func (m *RequestTypeIDID) GetRequestTypeName() string {
+func (m *RequestTypeID) GetRequestTypeName() string {
 	if m == nil {
 		return ""
 	}
 	return m.requestTypeName
 }
 
-func (m *RequestTypeIDID) ServiceSlug() string {
+func (m *RequestTypeID) ServiceSlug() string {
 	return "support"
 }
 
-func (m *RequestTypeIDID) ID() string {
+func (m *RequestTypeID) ID() string {
 	if m == nil || m.requestTypeName == "" {
 		return ""
 	}
@@ -101,11 +101,11 @@ func (m *RequestTypeIDID) ID() string {
 	return m.ServiceSlug() + "/requestTypes/" + m.requestTypeName
 }
 
-func (m *RequestTypeIDID) String() string {
+func (m *RequestTypeID) String() string {
 	return m.ID()
 }
 
-func (m *RequestTypeIDID) Clone() *RequestTypeIDID {
+func (m *RequestTypeID) Clone() *RequestTypeID {
 	if m == nil {
 		return nil
 	}
@@ -113,16 +113,16 @@ func (m *RequestTypeIDID) Clone() *RequestTypeIDID {
 	return &clone
 }
 
-func (m *RequestTypeIDID) AsRef() *RequestTypeIDRef {
+func (m *RequestTypeID) AsRef() *RequestTypeRef {
 	if m == nil {
 		return nil
 	}
-	return &RequestTypeIDRef{
+	return &RequestTypeRef{
 		id: *m,
 	}
 }
 
-func (m *RequestTypeIDID) Equal(other *RequestTypeIDID) bool {
+func (m *RequestTypeID) Equal(other *RequestTypeID) bool {
 	if m == other {
 		return true
 	}
@@ -132,7 +132,7 @@ func (m *RequestTypeIDID) Equal(other *RequestTypeIDID) bool {
 	return m.requestTypeName == other.requestTypeName
 }
 
-func (m RequestTypeIDID) MarshalJSON() ([]byte, error) {
+func (m RequestTypeID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -140,7 +140,7 @@ func (m RequestTypeIDID) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *RequestTypeIDID) Encode(e *jx.Encoder) error {
+func (m *RequestTypeID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -153,13 +153,13 @@ func (m *RequestTypeIDID) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *RequestTypeIDID) UnmarshalJSON(b []byte) error {
+func (m *RequestTypeID) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *RequestTypeIDID) Decode(d *jx.Decoder) error {
+func (m *RequestTypeID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("RequestTypeIDID")
+		return conv.NewDecodeToNilError("RequestTypeID")
 	}
 
 	v, err := decode.Str(d)
@@ -174,11 +174,11 @@ func (m *RequestTypeIDID) Decode(d *jx.Decoder) error {
 // Deprecated: Parse method is no longer required.
 // Internal fields are populated automatically during decoding.
 // This method will be removed in the next SDK release.
-func (m *RequestTypeIDID) Parse(ctx context.Context) error {
+func (m *RequestTypeID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *RequestTypeIDID) parse() error {
+func (m *RequestTypeID) parse() error {
 	if m == nil {
 		return nil
 	}
@@ -187,7 +187,7 @@ func (m *RequestTypeIDID) parse() error {
 		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
 	}
 
-	result, err := resparsers.Reference(context.Background(), m.path, RequestTypeIDRefTemplate.AsID())
+	result, err := resparsers.Reference(context.Background(), m.path, RequestTypeRefTemplate.AsID())
 	if err != nil {
 		return reserrors.NewParseIDError(m.path, err)
 	}
@@ -197,12 +197,12 @@ func (m *RequestTypeIDID) parse() error {
 	return nil
 }
 
-func NewRequestTypeIDRef(requestTypeName string) (RequestTypeIDRef, error) {
+func NewRequestTypeRef(requestTypeName string) (RequestTypeRef, error) {
 	if requestTypeName == "" {
-		return RequestTypeIDRef{}, reserrors.NewFieldIsEmptyError("requestTypeName")
+		return RequestTypeRef{}, reserrors.NewFieldIsEmptyError("requestTypeName")
 	}
-	m := RequestTypeIDRef{
-		id: RequestTypeIDID{
+	m := RequestTypeRef{
+		id: RequestTypeID{
 			requestTypeName: requestTypeName,
 		},
 	}
@@ -210,61 +210,61 @@ func NewRequestTypeIDRef(requestTypeName string) (RequestTypeIDRef, error) {
 	return m, nil
 }
 
-func NewMustRequestTypeIDRef(requestTypeName string) RequestTypeIDRef {
-	m, err := NewRequestTypeIDRef(requestTypeName)
+func NewMustRequestTypeRef(requestTypeName string) RequestTypeRef {
+	m, err := NewRequestTypeRef(requestTypeName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseRequestTypeIDRef(ctx context.Context, path string) (RequestTypeIDRef, error) {
-	m := RequestTypeIDRef{
-		id: RequestTypeIDID{
+func ParseRequestTypeRef(ctx context.Context, path string) (RequestTypeRef, error) {
+	m := RequestTypeRef{
+		id: RequestTypeID{
 			path: path,
 		},
 	}
 	if err := m.Parse(ctx); err != nil {
-		return RequestTypeIDRef{}, err
+		return RequestTypeRef{}, err
 	}
 	return m, nil
 }
 
-func NewRequestTypeIDRefFromAnyRef(ref resmodels.AnyResourceRef) (RequestTypeIDRef, error) {
+func NewRequestTypeRefFromAnyRef(ref resmodels.AnyResourceRef) (RequestTypeRef, error) {
 	ctx := valuesctx.WithValuesStore(context.Background(), ref.GetPathValues())
-	return ParseRequestTypeIDRef(ctx, ref.Path())
+	return ParseRequestTypeRef(ctx, ref.Path())
 }
 
-type RequestTypeIDRef struct {
-	id RequestTypeIDID
+type RequestTypeRef struct {
+	id RequestTypeID
 }
 
-func (m *RequestTypeIDRef) ResourceName() resifaces.ResourceName {
+func (m *RequestTypeRef) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return m.id.ResourceName()
 }
 
-func (m *RequestTypeIDRef) GetRequestTypeName() string {
+func (m *RequestTypeRef) GetRequestTypeName() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.GetRequestTypeName()
 }
 
-func (m *RequestTypeIDRef) ServiceSlug() string {
+func (m *RequestTypeRef) ServiceSlug() string {
 	return "support"
 }
 
-func (m *RequestTypeIDRef) IDPath() string {
+func (m *RequestTypeRef) IDPath() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.ID()
 }
 
-func (m *RequestTypeIDRef) Path() string {
+func (m *RequestTypeRef) Path() string {
 	if m == nil {
 		return ""
 	}
@@ -274,15 +274,15 @@ func (m *RequestTypeIDRef) Path() string {
 	return m.id.path
 }
 
-func (m *RequestTypeIDRef) String() string {
+func (m *RequestTypeRef) String() string {
 	return m.IDPath()
 }
 
-func (m *RequestTypeIDRef) Parse(ctx context.Context) error {
+func (m *RequestTypeRef) Parse(ctx context.Context) error {
 	return m.parse(ctx, false)
 }
 
-func (m *RequestTypeIDRef) Clone() *RequestTypeIDRef {
+func (m *RequestTypeRef) Clone() *RequestTypeRef {
 	if m == nil {
 		return nil
 	}
@@ -290,7 +290,7 @@ func (m *RequestTypeIDRef) Clone() *RequestTypeIDRef {
 	return &clone
 }
 
-func (m *RequestTypeIDRef) Equal(other *RequestTypeIDRef) bool {
+func (m *RequestTypeRef) Equal(other *RequestTypeRef) bool {
 	if m == other {
 		return true
 	}
@@ -300,7 +300,7 @@ func (m *RequestTypeIDRef) Equal(other *RequestTypeIDRef) bool {
 	return m.id.requestTypeName == other.id.requestTypeName
 }
 
-func (m RequestTypeIDRef) MarshalJSON() ([]byte, error) {
+func (m RequestTypeRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -308,7 +308,7 @@ func (m RequestTypeIDRef) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *RequestTypeIDRef) Encode(e *jx.Encoder) error {
+func (m *RequestTypeRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -321,13 +321,13 @@ func (m *RequestTypeIDRef) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *RequestTypeIDRef) UnmarshalJSON(b []byte) error {
+func (m *RequestTypeRef) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *RequestTypeIDRef) Decode(d *jx.Decoder) error {
+func (m *RequestTypeRef) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("RequestTypeIDRef")
+		return conv.NewDecodeToNilError("RequestTypeRef")
 	}
 
 	v, err := decode.Str(d)
@@ -339,7 +339,7 @@ func (m *RequestTypeIDRef) Decode(d *jx.Decoder) error {
 	return m.parse(context.Background(), true)
 }
 
-func (m *RequestTypeIDRef) parse(ctx context.Context, allowPartial bool) error {
+func (m *RequestTypeRef) parse(ctx context.Context, allowPartial bool) error {
 	if m == nil || m.isParsed() {
 		return nil
 	}
@@ -353,7 +353,7 @@ func (m *RequestTypeIDRef) parse(ctx context.Context, allowPartial bool) error {
 		options = append(options, resparsers.AllowPartial())
 	}
 
-	result, err := resparsers.Reference(ctx, m.id.path, RequestTypeIDRefTemplate, options...)
+	result, err := resparsers.Reference(ctx, m.id.path, RequestTypeRefTemplate, options...)
 	if err != nil {
 		return reserrors.NewParseReferenceError(m.id.path, err)
 	}
@@ -363,11 +363,11 @@ func (m *RequestTypeIDRef) parse(ctx context.Context, allowPartial bool) error {
 	return nil
 }
 
-func (m *RequestTypeIDRef) isParsed() bool {
+func (m *RequestTypeRef) isParsed() bool {
 	return m != nil && m.id.requestTypeName != ""
 }
 
-func (m *RequestTypeIDRef) absolutePath() string {
+func (m *RequestTypeRef) absolutePath() string {
 	if m == nil || m.id.requestTypeName == "" {
 		return ""
 	}

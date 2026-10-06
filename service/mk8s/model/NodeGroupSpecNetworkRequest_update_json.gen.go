@@ -97,12 +97,12 @@ func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceRequest) Encode(e *jx.Encoder
 }
 
 func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceRequest) encodeFields(e *jx.Encoder) error {
-	if m.ExternalIPv4.IsSet() {
-		e.FieldStart("externalIPv4")
-		if m.ExternalIPv4.IsNull() {
+	if m.ExternalIpv4.IsSet() {
+		e.FieldStart("externalIpv4")
+		if m.ExternalIpv4.IsNull() {
 			e.Null()
 		} else {
-			if err := m.ExternalIPv4.Value.Encode(e); err != nil {
+			if err := m.ExternalIpv4.Value.Encode(e); err != nil {
 				return err
 			}
 		}
@@ -121,18 +121,18 @@ func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceRequest) Decode(d *jx.Decoder
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "externalIPv4":
+		case "externalIpv4":
 			if d.Next() == jx.Null {
-				m.ExternalIPv4.SetToNull()
+				m.ExternalIpv4.SetToNull()
 				return d.Null()
 			}
 
-			var v UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request
+			var v UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.ExternalIPv4.SetTo(v)
+			m.ExternalIpv4.SetTo(v)
 			return nil
 		default:
 			return d.Skip()
@@ -140,7 +140,7 @@ func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceRequest) Decode(d *jx.Decoder
 	}))
 }
 
-func (m UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) MarshalJSON() ([]byte, error) {
+func (m UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -148,7 +148,7 @@ func (m UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) MarshalJS
 	return e.Bytes(), nil
 }
 
-func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) Encode(e *jx.Encoder) error {
+func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -161,7 +161,7 @@ func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) Encode(e
 	return nil
 }
 
-func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) encodeFields(e *jx.Encoder) error {
+func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) encodeFields(e *jx.Encoder) error {
 	if m.Enabled.IsSet() {
 		e.FieldStart("enabled")
 		e.Bool(m.Enabled.Value)
@@ -169,13 +169,13 @@ func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) encodeFi
 	return nil
 }
 
-func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) UnmarshalJSON(b []byte) error {
+func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) Decode(d *jx.Decoder) error {
+func (m *UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request")
+		return conv.NewDecodeToNilError("UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request")
 	}
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {

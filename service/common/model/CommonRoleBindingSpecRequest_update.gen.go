@@ -20,7 +20,7 @@ type UpdateCommonRoleBindingSpecRequest struct {
 	// Роль, определяющая права субъекта на ресурс
 	Role optional.Optional[iam.RoleRef] `json:"role" yaml:"role"`
 	// Идентификатор запроса в службу поддержки, в рамках которого был создан биндинг
-	SupportRequestId optional.Optional[support.RequestIDRef] `json:"supportRequestId" yaml:"supportRequestId"`
+	SupportRequestId optional.Optional[support.RequestRef] `json:"supportRequestId" yaml:"supportRequestId"`
 }
 
 func (m *CommonRoleBindingSpecRequest) AsUpdateModel() UpdateCommonRoleBindingSpecRequest {
@@ -28,7 +28,7 @@ func (m *CommonRoleBindingSpecRequest) AsUpdateModel() UpdateCommonRoleBindingSp
 	u.Subject = optional.NewOptional(m.Subject.AsUpdateModel())
 	u.Role = optional.NewOptional(m.GetRole())
 	if m.SupportRequestId != nil {
-		u.SupportRequestId = optional.NewOptional(m.GetSupportRequestIdOr(support.RequestIDRef{}))
+		u.SupportRequestId = optional.NewOptional(m.GetSupportRequestIdOr(support.RequestRef{}))
 	}
 	return u
 }
@@ -111,7 +111,7 @@ func (m *CommonRoleBindingSpecRequest) diffRole(src *CommonRoleBindingSpecReques
 	return commonclient.DiffPrimitiveRequired(src.GetRole(), m.GetRole(), nilDiffers)
 }
 
-func (m *CommonRoleBindingSpecRequest) diffSupportRequestId(src *CommonRoleBindingSpecRequest) optional.Optional[support.RequestIDRef] {
+func (m *CommonRoleBindingSpecRequest) diffSupportRequestId(src *CommonRoleBindingSpecRequest) optional.Optional[support.RequestRef] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetSupportRequestId(), m.GetSupportRequestId(), nilDiffers)
 }

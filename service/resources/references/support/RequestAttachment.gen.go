@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	RequestAttachmentIDRefTemplate = resparsers.Template{
+	RequestAttachmentRefTemplate = resparsers.Template{
 		{
 			Value:       "attachmentName",
 			IsConstant:  false,
@@ -47,14 +47,14 @@ var (
 	}
 )
 
-func NewRequestAttachmentIDID(requestName, attachmentName string) (RequestAttachmentIDID, error) {
+func NewRequestAttachmentID(requestName, attachmentName string) (RequestAttachmentID, error) {
 	if attachmentName == "" {
-		return RequestAttachmentIDID{}, reserrors.NewFieldIsEmptyError("attachmentName")
+		return RequestAttachmentID{}, reserrors.NewFieldIsEmptyError("attachmentName")
 	}
 	if requestName == "" {
-		return RequestAttachmentIDID{}, reserrors.NewFieldIsEmptyError("requestName")
+		return RequestAttachmentID{}, reserrors.NewFieldIsEmptyError("requestName")
 	}
-	m := RequestAttachmentIDID{
+	m := RequestAttachmentID{
 		attachmentName: attachmentName,
 		requestName:    requestName,
 	}
@@ -62,60 +62,60 @@ func NewRequestAttachmentIDID(requestName, attachmentName string) (RequestAttach
 	return m, nil
 }
 
-func NewMustRequestAttachmentIDID(requestName, attachmentName string) RequestAttachmentIDID {
-	m, err := NewRequestAttachmentIDID(requestName, attachmentName)
+func NewMustRequestAttachmentID(requestName, attachmentName string) RequestAttachmentID {
+	m, err := NewRequestAttachmentID(requestName, attachmentName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseRequestAttachmentIDID(path string) (RequestAttachmentIDID, error) {
-	m := RequestAttachmentIDID{
+func ParseRequestAttachmentID(path string) (RequestAttachmentID, error) {
+	m := RequestAttachmentID{
 		path: path,
 	}
 	if err := m.parse(); err != nil {
-		return RequestAttachmentIDID{}, err
+		return RequestAttachmentID{}, err
 	}
 	return m, nil
 }
 
-func NewRequestAttachmentIDIDFromAnyID(resource resmodels.AnyResourceID) (RequestAttachmentIDID, error) {
-	return ParseRequestAttachmentIDID(resource.ID())
+func NewRequestAttachmentIDFromAnyID(resource resmodels.AnyResourceID) (RequestAttachmentID, error) {
+	return ParseRequestAttachmentID(resource.ID())
 }
 
-type RequestAttachmentIDID struct {
+type RequestAttachmentID struct {
 	attachmentName string
 	requestName    string
 	path           string
 }
 
-func (m *RequestAttachmentIDID) ResourceName() resifaces.ResourceName {
+func (m *RequestAttachmentID) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return resifaces.ResourceName(m.attachmentName)
 }
 
-func (m *RequestAttachmentIDID) GetAttachmentName() string {
+func (m *RequestAttachmentID) GetAttachmentName() string {
 	if m == nil {
 		return ""
 	}
 	return m.attachmentName
 }
 
-func (m *RequestAttachmentIDID) GetRequestName() string {
+func (m *RequestAttachmentID) GetRequestName() string {
 	if m == nil {
 		return ""
 	}
 	return m.requestName
 }
 
-func (m *RequestAttachmentIDID) ServiceSlug() string {
+func (m *RequestAttachmentID) ServiceSlug() string {
 	return "support"
 }
 
-func (m *RequestAttachmentIDID) ID() string {
+func (m *RequestAttachmentID) ID() string {
 	if m == nil || m.attachmentName == "" || m.requestName == "" {
 		return ""
 	}
@@ -123,11 +123,11 @@ func (m *RequestAttachmentIDID) ID() string {
 	return m.ServiceSlug() + "/requests/" + m.requestName + "/attachments/" + m.attachmentName
 }
 
-func (m *RequestAttachmentIDID) String() string {
+func (m *RequestAttachmentID) String() string {
 	return m.ID()
 }
 
-func (m *RequestAttachmentIDID) Clone() *RequestAttachmentIDID {
+func (m *RequestAttachmentID) Clone() *RequestAttachmentID {
 	if m == nil {
 		return nil
 	}
@@ -135,16 +135,16 @@ func (m *RequestAttachmentIDID) Clone() *RequestAttachmentIDID {
 	return &clone
 }
 
-func (m *RequestAttachmentIDID) AsRef() *RequestAttachmentIDRef {
+func (m *RequestAttachmentID) AsRef() *RequestAttachmentRef {
 	if m == nil {
 		return nil
 	}
-	return &RequestAttachmentIDRef{
+	return &RequestAttachmentRef{
 		id: *m,
 	}
 }
 
-func (m *RequestAttachmentIDID) Equal(other *RequestAttachmentIDID) bool {
+func (m *RequestAttachmentID) Equal(other *RequestAttachmentID) bool {
 	if m == other {
 		return true
 	}
@@ -154,7 +154,7 @@ func (m *RequestAttachmentIDID) Equal(other *RequestAttachmentIDID) bool {
 	return m.attachmentName == other.attachmentName && m.requestName == other.requestName
 }
 
-func (m RequestAttachmentIDID) MarshalJSON() ([]byte, error) {
+func (m RequestAttachmentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -162,7 +162,7 @@ func (m RequestAttachmentIDID) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *RequestAttachmentIDID) Encode(e *jx.Encoder) error {
+func (m *RequestAttachmentID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -175,13 +175,13 @@ func (m *RequestAttachmentIDID) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *RequestAttachmentIDID) UnmarshalJSON(b []byte) error {
+func (m *RequestAttachmentID) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *RequestAttachmentIDID) Decode(d *jx.Decoder) error {
+func (m *RequestAttachmentID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("RequestAttachmentIDID")
+		return conv.NewDecodeToNilError("RequestAttachmentID")
 	}
 
 	v, err := decode.Str(d)
@@ -196,11 +196,11 @@ func (m *RequestAttachmentIDID) Decode(d *jx.Decoder) error {
 // Deprecated: Parse method is no longer required.
 // Internal fields are populated automatically during decoding.
 // This method will be removed in the next SDK release.
-func (m *RequestAttachmentIDID) Parse(ctx context.Context) error {
+func (m *RequestAttachmentID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *RequestAttachmentIDID) parse() error {
+func (m *RequestAttachmentID) parse() error {
 	if m == nil {
 		return nil
 	}
@@ -209,7 +209,7 @@ func (m *RequestAttachmentIDID) parse() error {
 		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
 	}
 
-	result, err := resparsers.Reference(context.Background(), m.path, RequestAttachmentIDRefTemplate.AsID())
+	result, err := resparsers.Reference(context.Background(), m.path, RequestAttachmentRefTemplate.AsID())
 	if err != nil {
 		return reserrors.NewParseIDError(m.path, err)
 	}
@@ -220,15 +220,15 @@ func (m *RequestAttachmentIDID) parse() error {
 	return nil
 }
 
-func NewRequestAttachmentIDRef(requestName, attachmentName string) (RequestAttachmentIDRef, error) {
+func NewRequestAttachmentRef(requestName, attachmentName string) (RequestAttachmentRef, error) {
 	if attachmentName == "" {
-		return RequestAttachmentIDRef{}, reserrors.NewFieldIsEmptyError("attachmentName")
+		return RequestAttachmentRef{}, reserrors.NewFieldIsEmptyError("attachmentName")
 	}
 	if requestName == "" {
-		return RequestAttachmentIDRef{}, reserrors.NewFieldIsEmptyError("requestName")
+		return RequestAttachmentRef{}, reserrors.NewFieldIsEmptyError("requestName")
 	}
-	m := RequestAttachmentIDRef{
-		id: RequestAttachmentIDID{
+	m := RequestAttachmentRef{
+		id: RequestAttachmentID{
 			attachmentName: attachmentName,
 			requestName:    requestName,
 		},
@@ -237,68 +237,68 @@ func NewRequestAttachmentIDRef(requestName, attachmentName string) (RequestAttac
 	return m, nil
 }
 
-func NewMustRequestAttachmentIDRef(requestName, attachmentName string) RequestAttachmentIDRef {
-	m, err := NewRequestAttachmentIDRef(requestName, attachmentName)
+func NewMustRequestAttachmentRef(requestName, attachmentName string) RequestAttachmentRef {
+	m, err := NewRequestAttachmentRef(requestName, attachmentName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseRequestAttachmentIDRef(ctx context.Context, path string) (RequestAttachmentIDRef, error) {
-	m := RequestAttachmentIDRef{
-		id: RequestAttachmentIDID{
+func ParseRequestAttachmentRef(ctx context.Context, path string) (RequestAttachmentRef, error) {
+	m := RequestAttachmentRef{
+		id: RequestAttachmentID{
 			path: path,
 		},
 	}
 	if err := m.Parse(ctx); err != nil {
-		return RequestAttachmentIDRef{}, err
+		return RequestAttachmentRef{}, err
 	}
 	return m, nil
 }
 
-func NewRequestAttachmentIDRefFromAnyRef(ref resmodels.AnyResourceRef) (RequestAttachmentIDRef, error) {
+func NewRequestAttachmentRefFromAnyRef(ref resmodels.AnyResourceRef) (RequestAttachmentRef, error) {
 	ctx := valuesctx.WithValuesStore(context.Background(), ref.GetPathValues())
-	return ParseRequestAttachmentIDRef(ctx, ref.Path())
+	return ParseRequestAttachmentRef(ctx, ref.Path())
 }
 
-type RequestAttachmentIDRef struct {
-	id RequestAttachmentIDID
+type RequestAttachmentRef struct {
+	id RequestAttachmentID
 }
 
-func (m *RequestAttachmentIDRef) ResourceName() resifaces.ResourceName {
+func (m *RequestAttachmentRef) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return m.id.ResourceName()
 }
 
-func (m *RequestAttachmentIDRef) GetAttachmentName() string {
+func (m *RequestAttachmentRef) GetAttachmentName() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.GetAttachmentName()
 }
 
-func (m *RequestAttachmentIDRef) GetRequestName() string {
+func (m *RequestAttachmentRef) GetRequestName() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.GetRequestName()
 }
 
-func (m *RequestAttachmentIDRef) ServiceSlug() string {
+func (m *RequestAttachmentRef) ServiceSlug() string {
 	return "support"
 }
 
-func (m *RequestAttachmentIDRef) IDPath() string {
+func (m *RequestAttachmentRef) IDPath() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.ID()
 }
 
-func (m *RequestAttachmentIDRef) Path() string {
+func (m *RequestAttachmentRef) Path() string {
 	if m == nil {
 		return ""
 	}
@@ -308,15 +308,15 @@ func (m *RequestAttachmentIDRef) Path() string {
 	return m.id.path
 }
 
-func (m *RequestAttachmentIDRef) String() string {
+func (m *RequestAttachmentRef) String() string {
 	return m.IDPath()
 }
 
-func (m *RequestAttachmentIDRef) Parse(ctx context.Context) error {
+func (m *RequestAttachmentRef) Parse(ctx context.Context) error {
 	return m.parse(ctx, false)
 }
 
-func (m *RequestAttachmentIDRef) Clone() *RequestAttachmentIDRef {
+func (m *RequestAttachmentRef) Clone() *RequestAttachmentRef {
 	if m == nil {
 		return nil
 	}
@@ -324,7 +324,7 @@ func (m *RequestAttachmentIDRef) Clone() *RequestAttachmentIDRef {
 	return &clone
 }
 
-func (m *RequestAttachmentIDRef) Equal(other *RequestAttachmentIDRef) bool {
+func (m *RequestAttachmentRef) Equal(other *RequestAttachmentRef) bool {
 	if m == other {
 		return true
 	}
@@ -334,7 +334,7 @@ func (m *RequestAttachmentIDRef) Equal(other *RequestAttachmentIDRef) bool {
 	return m.id.attachmentName == other.id.attachmentName && m.id.requestName == other.id.requestName
 }
 
-func (m RequestAttachmentIDRef) MarshalJSON() ([]byte, error) {
+func (m RequestAttachmentRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -342,7 +342,7 @@ func (m RequestAttachmentIDRef) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *RequestAttachmentIDRef) Encode(e *jx.Encoder) error {
+func (m *RequestAttachmentRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -355,13 +355,13 @@ func (m *RequestAttachmentIDRef) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *RequestAttachmentIDRef) UnmarshalJSON(b []byte) error {
+func (m *RequestAttachmentRef) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *RequestAttachmentIDRef) Decode(d *jx.Decoder) error {
+func (m *RequestAttachmentRef) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("RequestAttachmentIDRef")
+		return conv.NewDecodeToNilError("RequestAttachmentRef")
 	}
 
 	v, err := decode.Str(d)
@@ -373,7 +373,7 @@ func (m *RequestAttachmentIDRef) Decode(d *jx.Decoder) error {
 	return m.parse(context.Background(), true)
 }
 
-func (m *RequestAttachmentIDRef) parse(ctx context.Context, allowPartial bool) error {
+func (m *RequestAttachmentRef) parse(ctx context.Context, allowPartial bool) error {
 	if m == nil || m.isParsed() {
 		return nil
 	}
@@ -387,7 +387,7 @@ func (m *RequestAttachmentIDRef) parse(ctx context.Context, allowPartial bool) e
 		options = append(options, resparsers.AllowPartial())
 	}
 
-	result, err := resparsers.Reference(ctx, m.id.path, RequestAttachmentIDRefTemplate, options...)
+	result, err := resparsers.Reference(ctx, m.id.path, RequestAttachmentRefTemplate, options...)
 	if err != nil {
 		return reserrors.NewParseReferenceError(m.id.path, err)
 	}
@@ -398,11 +398,11 @@ func (m *RequestAttachmentIDRef) parse(ctx context.Context, allowPartial bool) e
 	return nil
 }
 
-func (m *RequestAttachmentIDRef) isParsed() bool {
+func (m *RequestAttachmentRef) isParsed() bool {
 	return m != nil && m.id.attachmentName != "" && m.id.requestName != ""
 }
 
-func (m *RequestAttachmentIDRef) absolutePath() string {
+func (m *RequestAttachmentRef) absolutePath() string {
 	if m == nil || m.id.attachmentName == "" || m.id.requestName == "" {
 		return ""
 	}

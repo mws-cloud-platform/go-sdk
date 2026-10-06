@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	RequestCommentIDRefTemplate = resparsers.Template{
+	RequestCommentRefTemplate = resparsers.Template{
 		{
 			Value:       "commentName",
 			IsConstant:  false,
@@ -47,14 +47,14 @@ var (
 	}
 )
 
-func NewRequestCommentIDID(requestName, commentName string) (RequestCommentIDID, error) {
+func NewRequestCommentID(requestName, commentName string) (RequestCommentID, error) {
 	if commentName == "" {
-		return RequestCommentIDID{}, reserrors.NewFieldIsEmptyError("commentName")
+		return RequestCommentID{}, reserrors.NewFieldIsEmptyError("commentName")
 	}
 	if requestName == "" {
-		return RequestCommentIDID{}, reserrors.NewFieldIsEmptyError("requestName")
+		return RequestCommentID{}, reserrors.NewFieldIsEmptyError("requestName")
 	}
-	m := RequestCommentIDID{
+	m := RequestCommentID{
 		commentName: commentName,
 		requestName: requestName,
 	}
@@ -62,60 +62,60 @@ func NewRequestCommentIDID(requestName, commentName string) (RequestCommentIDID,
 	return m, nil
 }
 
-func NewMustRequestCommentIDID(requestName, commentName string) RequestCommentIDID {
-	m, err := NewRequestCommentIDID(requestName, commentName)
+func NewMustRequestCommentID(requestName, commentName string) RequestCommentID {
+	m, err := NewRequestCommentID(requestName, commentName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseRequestCommentIDID(path string) (RequestCommentIDID, error) {
-	m := RequestCommentIDID{
+func ParseRequestCommentID(path string) (RequestCommentID, error) {
+	m := RequestCommentID{
 		path: path,
 	}
 	if err := m.parse(); err != nil {
-		return RequestCommentIDID{}, err
+		return RequestCommentID{}, err
 	}
 	return m, nil
 }
 
-func NewRequestCommentIDIDFromAnyID(resource resmodels.AnyResourceID) (RequestCommentIDID, error) {
-	return ParseRequestCommentIDID(resource.ID())
+func NewRequestCommentIDFromAnyID(resource resmodels.AnyResourceID) (RequestCommentID, error) {
+	return ParseRequestCommentID(resource.ID())
 }
 
-type RequestCommentIDID struct {
+type RequestCommentID struct {
 	commentName string
 	requestName string
 	path        string
 }
 
-func (m *RequestCommentIDID) ResourceName() resifaces.ResourceName {
+func (m *RequestCommentID) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return resifaces.ResourceName(m.commentName)
 }
 
-func (m *RequestCommentIDID) GetCommentName() string {
+func (m *RequestCommentID) GetCommentName() string {
 	if m == nil {
 		return ""
 	}
 	return m.commentName
 }
 
-func (m *RequestCommentIDID) GetRequestName() string {
+func (m *RequestCommentID) GetRequestName() string {
 	if m == nil {
 		return ""
 	}
 	return m.requestName
 }
 
-func (m *RequestCommentIDID) ServiceSlug() string {
+func (m *RequestCommentID) ServiceSlug() string {
 	return "support"
 }
 
-func (m *RequestCommentIDID) ID() string {
+func (m *RequestCommentID) ID() string {
 	if m == nil || m.commentName == "" || m.requestName == "" {
 		return ""
 	}
@@ -123,11 +123,11 @@ func (m *RequestCommentIDID) ID() string {
 	return m.ServiceSlug() + "/requests/" + m.requestName + "/comments/" + m.commentName
 }
 
-func (m *RequestCommentIDID) String() string {
+func (m *RequestCommentID) String() string {
 	return m.ID()
 }
 
-func (m *RequestCommentIDID) Clone() *RequestCommentIDID {
+func (m *RequestCommentID) Clone() *RequestCommentID {
 	if m == nil {
 		return nil
 	}
@@ -135,16 +135,16 @@ func (m *RequestCommentIDID) Clone() *RequestCommentIDID {
 	return &clone
 }
 
-func (m *RequestCommentIDID) AsRef() *RequestCommentIDRef {
+func (m *RequestCommentID) AsRef() *RequestCommentRef {
 	if m == nil {
 		return nil
 	}
-	return &RequestCommentIDRef{
+	return &RequestCommentRef{
 		id: *m,
 	}
 }
 
-func (m *RequestCommentIDID) Equal(other *RequestCommentIDID) bool {
+func (m *RequestCommentID) Equal(other *RequestCommentID) bool {
 	if m == other {
 		return true
 	}
@@ -154,7 +154,7 @@ func (m *RequestCommentIDID) Equal(other *RequestCommentIDID) bool {
 	return m.commentName == other.commentName && m.requestName == other.requestName
 }
 
-func (m RequestCommentIDID) MarshalJSON() ([]byte, error) {
+func (m RequestCommentID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -162,7 +162,7 @@ func (m RequestCommentIDID) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *RequestCommentIDID) Encode(e *jx.Encoder) error {
+func (m *RequestCommentID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -175,13 +175,13 @@ func (m *RequestCommentIDID) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *RequestCommentIDID) UnmarshalJSON(b []byte) error {
+func (m *RequestCommentID) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *RequestCommentIDID) Decode(d *jx.Decoder) error {
+func (m *RequestCommentID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("RequestCommentIDID")
+		return conv.NewDecodeToNilError("RequestCommentID")
 	}
 
 	v, err := decode.Str(d)
@@ -196,11 +196,11 @@ func (m *RequestCommentIDID) Decode(d *jx.Decoder) error {
 // Deprecated: Parse method is no longer required.
 // Internal fields are populated automatically during decoding.
 // This method will be removed in the next SDK release.
-func (m *RequestCommentIDID) Parse(ctx context.Context) error {
+func (m *RequestCommentID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *RequestCommentIDID) parse() error {
+func (m *RequestCommentID) parse() error {
 	if m == nil {
 		return nil
 	}
@@ -209,7 +209,7 @@ func (m *RequestCommentIDID) parse() error {
 		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
 	}
 
-	result, err := resparsers.Reference(context.Background(), m.path, RequestCommentIDRefTemplate.AsID())
+	result, err := resparsers.Reference(context.Background(), m.path, RequestCommentRefTemplate.AsID())
 	if err != nil {
 		return reserrors.NewParseIDError(m.path, err)
 	}
@@ -220,15 +220,15 @@ func (m *RequestCommentIDID) parse() error {
 	return nil
 }
 
-func NewRequestCommentIDRef(requestName, commentName string) (RequestCommentIDRef, error) {
+func NewRequestCommentRef(requestName, commentName string) (RequestCommentRef, error) {
 	if commentName == "" {
-		return RequestCommentIDRef{}, reserrors.NewFieldIsEmptyError("commentName")
+		return RequestCommentRef{}, reserrors.NewFieldIsEmptyError("commentName")
 	}
 	if requestName == "" {
-		return RequestCommentIDRef{}, reserrors.NewFieldIsEmptyError("requestName")
+		return RequestCommentRef{}, reserrors.NewFieldIsEmptyError("requestName")
 	}
-	m := RequestCommentIDRef{
-		id: RequestCommentIDID{
+	m := RequestCommentRef{
+		id: RequestCommentID{
 			commentName: commentName,
 			requestName: requestName,
 		},
@@ -237,68 +237,68 @@ func NewRequestCommentIDRef(requestName, commentName string) (RequestCommentIDRe
 	return m, nil
 }
 
-func NewMustRequestCommentIDRef(requestName, commentName string) RequestCommentIDRef {
-	m, err := NewRequestCommentIDRef(requestName, commentName)
+func NewMustRequestCommentRef(requestName, commentName string) RequestCommentRef {
+	m, err := NewRequestCommentRef(requestName, commentName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseRequestCommentIDRef(ctx context.Context, path string) (RequestCommentIDRef, error) {
-	m := RequestCommentIDRef{
-		id: RequestCommentIDID{
+func ParseRequestCommentRef(ctx context.Context, path string) (RequestCommentRef, error) {
+	m := RequestCommentRef{
+		id: RequestCommentID{
 			path: path,
 		},
 	}
 	if err := m.Parse(ctx); err != nil {
-		return RequestCommentIDRef{}, err
+		return RequestCommentRef{}, err
 	}
 	return m, nil
 }
 
-func NewRequestCommentIDRefFromAnyRef(ref resmodels.AnyResourceRef) (RequestCommentIDRef, error) {
+func NewRequestCommentRefFromAnyRef(ref resmodels.AnyResourceRef) (RequestCommentRef, error) {
 	ctx := valuesctx.WithValuesStore(context.Background(), ref.GetPathValues())
-	return ParseRequestCommentIDRef(ctx, ref.Path())
+	return ParseRequestCommentRef(ctx, ref.Path())
 }
 
-type RequestCommentIDRef struct {
-	id RequestCommentIDID
+type RequestCommentRef struct {
+	id RequestCommentID
 }
 
-func (m *RequestCommentIDRef) ResourceName() resifaces.ResourceName {
+func (m *RequestCommentRef) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return m.id.ResourceName()
 }
 
-func (m *RequestCommentIDRef) GetCommentName() string {
+func (m *RequestCommentRef) GetCommentName() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.GetCommentName()
 }
 
-func (m *RequestCommentIDRef) GetRequestName() string {
+func (m *RequestCommentRef) GetRequestName() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.GetRequestName()
 }
 
-func (m *RequestCommentIDRef) ServiceSlug() string {
+func (m *RequestCommentRef) ServiceSlug() string {
 	return "support"
 }
 
-func (m *RequestCommentIDRef) IDPath() string {
+func (m *RequestCommentRef) IDPath() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.ID()
 }
 
-func (m *RequestCommentIDRef) Path() string {
+func (m *RequestCommentRef) Path() string {
 	if m == nil {
 		return ""
 	}
@@ -308,15 +308,15 @@ func (m *RequestCommentIDRef) Path() string {
 	return m.id.path
 }
 
-func (m *RequestCommentIDRef) String() string {
+func (m *RequestCommentRef) String() string {
 	return m.IDPath()
 }
 
-func (m *RequestCommentIDRef) Parse(ctx context.Context) error {
+func (m *RequestCommentRef) Parse(ctx context.Context) error {
 	return m.parse(ctx, false)
 }
 
-func (m *RequestCommentIDRef) Clone() *RequestCommentIDRef {
+func (m *RequestCommentRef) Clone() *RequestCommentRef {
 	if m == nil {
 		return nil
 	}
@@ -324,7 +324,7 @@ func (m *RequestCommentIDRef) Clone() *RequestCommentIDRef {
 	return &clone
 }
 
-func (m *RequestCommentIDRef) Equal(other *RequestCommentIDRef) bool {
+func (m *RequestCommentRef) Equal(other *RequestCommentRef) bool {
 	if m == other {
 		return true
 	}
@@ -334,7 +334,7 @@ func (m *RequestCommentIDRef) Equal(other *RequestCommentIDRef) bool {
 	return m.id.commentName == other.id.commentName && m.id.requestName == other.id.requestName
 }
 
-func (m RequestCommentIDRef) MarshalJSON() ([]byte, error) {
+func (m RequestCommentRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -342,7 +342,7 @@ func (m RequestCommentIDRef) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *RequestCommentIDRef) Encode(e *jx.Encoder) error {
+func (m *RequestCommentRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -355,13 +355,13 @@ func (m *RequestCommentIDRef) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *RequestCommentIDRef) UnmarshalJSON(b []byte) error {
+func (m *RequestCommentRef) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *RequestCommentIDRef) Decode(d *jx.Decoder) error {
+func (m *RequestCommentRef) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("RequestCommentIDRef")
+		return conv.NewDecodeToNilError("RequestCommentRef")
 	}
 
 	v, err := decode.Str(d)
@@ -373,7 +373,7 @@ func (m *RequestCommentIDRef) Decode(d *jx.Decoder) error {
 	return m.parse(context.Background(), true)
 }
 
-func (m *RequestCommentIDRef) parse(ctx context.Context, allowPartial bool) error {
+func (m *RequestCommentRef) parse(ctx context.Context, allowPartial bool) error {
 	if m == nil || m.isParsed() {
 		return nil
 	}
@@ -387,7 +387,7 @@ func (m *RequestCommentIDRef) parse(ctx context.Context, allowPartial bool) erro
 		options = append(options, resparsers.AllowPartial())
 	}
 
-	result, err := resparsers.Reference(ctx, m.id.path, RequestCommentIDRefTemplate, options...)
+	result, err := resparsers.Reference(ctx, m.id.path, RequestCommentRefTemplate, options...)
 	if err != nil {
 		return reserrors.NewParseReferenceError(m.id.path, err)
 	}
@@ -398,11 +398,11 @@ func (m *RequestCommentIDRef) parse(ctx context.Context, allowPartial bool) erro
 	return nil
 }
 
-func (m *RequestCommentIDRef) isParsed() bool {
+func (m *RequestCommentRef) isParsed() bool {
 	return m != nil && m.id.commentName != "" && m.id.requestName != ""
 }
 
-func (m *RequestCommentIDRef) absolutePath() string {
+func (m *RequestCommentRef) absolutePath() string {
 	if m == nil || m.id.commentName == "" || m.id.requestName == "" {
 		return ""
 	}

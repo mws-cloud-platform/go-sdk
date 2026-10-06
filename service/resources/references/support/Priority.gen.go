@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	PriorityIDRefTemplate = resparsers.Template{
+	PriorityRefTemplate = resparsers.Template{
 		{
 			Value:       "priorityName",
 			IsConstant:  false,
@@ -37,63 +37,63 @@ var (
 	}
 )
 
-func NewPriorityIDID(priorityName string) (PriorityIDID, error) {
+func NewPriorityID(priorityName string) (PriorityID, error) {
 	if priorityName == "" {
-		return PriorityIDID{}, reserrors.NewFieldIsEmptyError("priorityName")
+		return PriorityID{}, reserrors.NewFieldIsEmptyError("priorityName")
 	}
-	m := PriorityIDID{
+	m := PriorityID{
 		priorityName: priorityName,
 	}
 	m.path = m.ID()
 	return m, nil
 }
 
-func NewMustPriorityIDID(priorityName string) PriorityIDID {
-	m, err := NewPriorityIDID(priorityName)
+func NewMustPriorityID(priorityName string) PriorityID {
+	m, err := NewPriorityID(priorityName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParsePriorityIDID(path string) (PriorityIDID, error) {
-	m := PriorityIDID{
+func ParsePriorityID(path string) (PriorityID, error) {
+	m := PriorityID{
 		path: path,
 	}
 	if err := m.parse(); err != nil {
-		return PriorityIDID{}, err
+		return PriorityID{}, err
 	}
 	return m, nil
 }
 
-func NewPriorityIDIDFromAnyID(resource resmodels.AnyResourceID) (PriorityIDID, error) {
-	return ParsePriorityIDID(resource.ID())
+func NewPriorityIDFromAnyID(resource resmodels.AnyResourceID) (PriorityID, error) {
+	return ParsePriorityID(resource.ID())
 }
 
-type PriorityIDID struct {
+type PriorityID struct {
 	priorityName string
 	path         string
 }
 
-func (m *PriorityIDID) ResourceName() resifaces.ResourceName {
+func (m *PriorityID) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return resifaces.ResourceName(m.priorityName)
 }
 
-func (m *PriorityIDID) GetPriorityName() string {
+func (m *PriorityID) GetPriorityName() string {
 	if m == nil {
 		return ""
 	}
 	return m.priorityName
 }
 
-func (m *PriorityIDID) ServiceSlug() string {
+func (m *PriorityID) ServiceSlug() string {
 	return "support"
 }
 
-func (m *PriorityIDID) ID() string {
+func (m *PriorityID) ID() string {
 	if m == nil || m.priorityName == "" {
 		return ""
 	}
@@ -101,11 +101,11 @@ func (m *PriorityIDID) ID() string {
 	return m.ServiceSlug() + "/priorities/" + m.priorityName
 }
 
-func (m *PriorityIDID) String() string {
+func (m *PriorityID) String() string {
 	return m.ID()
 }
 
-func (m *PriorityIDID) Clone() *PriorityIDID {
+func (m *PriorityID) Clone() *PriorityID {
 	if m == nil {
 		return nil
 	}
@@ -113,16 +113,16 @@ func (m *PriorityIDID) Clone() *PriorityIDID {
 	return &clone
 }
 
-func (m *PriorityIDID) AsRef() *PriorityIDRef {
+func (m *PriorityID) AsRef() *PriorityRef {
 	if m == nil {
 		return nil
 	}
-	return &PriorityIDRef{
+	return &PriorityRef{
 		id: *m,
 	}
 }
 
-func (m *PriorityIDID) Equal(other *PriorityIDID) bool {
+func (m *PriorityID) Equal(other *PriorityID) bool {
 	if m == other {
 		return true
 	}
@@ -132,7 +132,7 @@ func (m *PriorityIDID) Equal(other *PriorityIDID) bool {
 	return m.priorityName == other.priorityName
 }
 
-func (m PriorityIDID) MarshalJSON() ([]byte, error) {
+func (m PriorityID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -140,7 +140,7 @@ func (m PriorityIDID) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *PriorityIDID) Encode(e *jx.Encoder) error {
+func (m *PriorityID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -153,13 +153,13 @@ func (m *PriorityIDID) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *PriorityIDID) UnmarshalJSON(b []byte) error {
+func (m *PriorityID) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *PriorityIDID) Decode(d *jx.Decoder) error {
+func (m *PriorityID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("PriorityIDID")
+		return conv.NewDecodeToNilError("PriorityID")
 	}
 
 	v, err := decode.Str(d)
@@ -174,11 +174,11 @@ func (m *PriorityIDID) Decode(d *jx.Decoder) error {
 // Deprecated: Parse method is no longer required.
 // Internal fields are populated automatically during decoding.
 // This method will be removed in the next SDK release.
-func (m *PriorityIDID) Parse(ctx context.Context) error {
+func (m *PriorityID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *PriorityIDID) parse() error {
+func (m *PriorityID) parse() error {
 	if m == nil {
 		return nil
 	}
@@ -187,7 +187,7 @@ func (m *PriorityIDID) parse() error {
 		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
 	}
 
-	result, err := resparsers.Reference(context.Background(), m.path, PriorityIDRefTemplate.AsID())
+	result, err := resparsers.Reference(context.Background(), m.path, PriorityRefTemplate.AsID())
 	if err != nil {
 		return reserrors.NewParseIDError(m.path, err)
 	}
@@ -197,12 +197,12 @@ func (m *PriorityIDID) parse() error {
 	return nil
 }
 
-func NewPriorityIDRef(priorityName string) (PriorityIDRef, error) {
+func NewPriorityRef(priorityName string) (PriorityRef, error) {
 	if priorityName == "" {
-		return PriorityIDRef{}, reserrors.NewFieldIsEmptyError("priorityName")
+		return PriorityRef{}, reserrors.NewFieldIsEmptyError("priorityName")
 	}
-	m := PriorityIDRef{
-		id: PriorityIDID{
+	m := PriorityRef{
+		id: PriorityID{
 			priorityName: priorityName,
 		},
 	}
@@ -210,61 +210,61 @@ func NewPriorityIDRef(priorityName string) (PriorityIDRef, error) {
 	return m, nil
 }
 
-func NewMustPriorityIDRef(priorityName string) PriorityIDRef {
-	m, err := NewPriorityIDRef(priorityName)
+func NewMustPriorityRef(priorityName string) PriorityRef {
+	m, err := NewPriorityRef(priorityName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParsePriorityIDRef(ctx context.Context, path string) (PriorityIDRef, error) {
-	m := PriorityIDRef{
-		id: PriorityIDID{
+func ParsePriorityRef(ctx context.Context, path string) (PriorityRef, error) {
+	m := PriorityRef{
+		id: PriorityID{
 			path: path,
 		},
 	}
 	if err := m.Parse(ctx); err != nil {
-		return PriorityIDRef{}, err
+		return PriorityRef{}, err
 	}
 	return m, nil
 }
 
-func NewPriorityIDRefFromAnyRef(ref resmodels.AnyResourceRef) (PriorityIDRef, error) {
+func NewPriorityRefFromAnyRef(ref resmodels.AnyResourceRef) (PriorityRef, error) {
 	ctx := valuesctx.WithValuesStore(context.Background(), ref.GetPathValues())
-	return ParsePriorityIDRef(ctx, ref.Path())
+	return ParsePriorityRef(ctx, ref.Path())
 }
 
-type PriorityIDRef struct {
-	id PriorityIDID
+type PriorityRef struct {
+	id PriorityID
 }
 
-func (m *PriorityIDRef) ResourceName() resifaces.ResourceName {
+func (m *PriorityRef) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return m.id.ResourceName()
 }
 
-func (m *PriorityIDRef) GetPriorityName() string {
+func (m *PriorityRef) GetPriorityName() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.GetPriorityName()
 }
 
-func (m *PriorityIDRef) ServiceSlug() string {
+func (m *PriorityRef) ServiceSlug() string {
 	return "support"
 }
 
-func (m *PriorityIDRef) IDPath() string {
+func (m *PriorityRef) IDPath() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.ID()
 }
 
-func (m *PriorityIDRef) Path() string {
+func (m *PriorityRef) Path() string {
 	if m == nil {
 		return ""
 	}
@@ -274,15 +274,15 @@ func (m *PriorityIDRef) Path() string {
 	return m.id.path
 }
 
-func (m *PriorityIDRef) String() string {
+func (m *PriorityRef) String() string {
 	return m.IDPath()
 }
 
-func (m *PriorityIDRef) Parse(ctx context.Context) error {
+func (m *PriorityRef) Parse(ctx context.Context) error {
 	return m.parse(ctx, false)
 }
 
-func (m *PriorityIDRef) Clone() *PriorityIDRef {
+func (m *PriorityRef) Clone() *PriorityRef {
 	if m == nil {
 		return nil
 	}
@@ -290,7 +290,7 @@ func (m *PriorityIDRef) Clone() *PriorityIDRef {
 	return &clone
 }
 
-func (m *PriorityIDRef) Equal(other *PriorityIDRef) bool {
+func (m *PriorityRef) Equal(other *PriorityRef) bool {
 	if m == other {
 		return true
 	}
@@ -300,7 +300,7 @@ func (m *PriorityIDRef) Equal(other *PriorityIDRef) bool {
 	return m.id.priorityName == other.id.priorityName
 }
 
-func (m PriorityIDRef) MarshalJSON() ([]byte, error) {
+func (m PriorityRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -308,7 +308,7 @@ func (m PriorityIDRef) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *PriorityIDRef) Encode(e *jx.Encoder) error {
+func (m *PriorityRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -321,13 +321,13 @@ func (m *PriorityIDRef) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *PriorityIDRef) UnmarshalJSON(b []byte) error {
+func (m *PriorityRef) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *PriorityIDRef) Decode(d *jx.Decoder) error {
+func (m *PriorityRef) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("PriorityIDRef")
+		return conv.NewDecodeToNilError("PriorityRef")
 	}
 
 	v, err := decode.Str(d)
@@ -339,7 +339,7 @@ func (m *PriorityIDRef) Decode(d *jx.Decoder) error {
 	return m.parse(context.Background(), true)
 }
 
-func (m *PriorityIDRef) parse(ctx context.Context, allowPartial bool) error {
+func (m *PriorityRef) parse(ctx context.Context, allowPartial bool) error {
 	if m == nil || m.isParsed() {
 		return nil
 	}
@@ -353,7 +353,7 @@ func (m *PriorityIDRef) parse(ctx context.Context, allowPartial bool) error {
 		options = append(options, resparsers.AllowPartial())
 	}
 
-	result, err := resparsers.Reference(ctx, m.id.path, PriorityIDRefTemplate, options...)
+	result, err := resparsers.Reference(ctx, m.id.path, PriorityRefTemplate, options...)
 	if err != nil {
 		return reserrors.NewParseReferenceError(m.id.path, err)
 	}
@@ -363,11 +363,11 @@ func (m *PriorityIDRef) parse(ctx context.Context, allowPartial bool) error {
 	return nil
 }
 
-func (m *PriorityIDRef) isParsed() bool {
+func (m *PriorityRef) isParsed() bool {
 	return m != nil && m.id.priorityName != ""
 }
 
-func (m *PriorityIDRef) absolutePath() string {
+func (m *PriorityRef) absolutePath() string {
 	if m == nil || m.id.priorityName == "" {
 		return ""
 	}

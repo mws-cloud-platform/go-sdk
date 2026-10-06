@@ -63,13 +63,13 @@ func (m *NodeGroupSpecNetworkRequest) diffPrimaryInterface(src *NodeGroupSpecNet
 
 type UpdateNodeGroupSpecNetworkPrimaryInterfaceRequest struct {
 	// Настройка внешнего IPv4-адреса
-	ExternalIPv4 optional.OptionalNil[UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request] `json:"externalIPv4" yaml:"externalIPv4"`
+	ExternalIpv4 optional.OptionalNil[UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request] `json:"externalIpv4" yaml:"externalIpv4"`
 }
 
 func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) AsUpdateModel() UpdateNodeGroupSpecNetworkPrimaryInterfaceRequest {
 	var u UpdateNodeGroupSpecNetworkPrimaryInterfaceRequest
-	if m.ExternalIPv4 != nil {
-		u.ExternalIPv4 = optional.NewOptionalNil(m.ExternalIPv4.AsUpdateModel())
+	if m.ExternalIpv4 != nil {
+		u.ExternalIpv4 = optional.NewOptionalNil(m.ExternalIpv4.AsUpdateModel())
 	}
 	return u
 }
@@ -79,7 +79,7 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) Diff(src *NodeGroupSpecNet
 	nilDiffers := src != nil && m == nil
 	upd := UpdateNodeGroupSpecNetworkPrimaryInterfaceRequest{}
 	if !nilDiffers {
-		upd.ExternalIPv4 = m.diffExternalIPv4(src)
+		upd.ExternalIpv4 = m.diffExternalIpv4(src)
 	}
 	return upd
 }
@@ -90,36 +90,36 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) WithChanges(u UpdateNodeGr
 		out = *m
 	}
 
-	if u.ExternalIPv4.IsSet() {
-		out.ExternalIPv4 = ptr.Get(out.ExternalIPv4.WithChanges(u.ExternalIPv4.Value))
-	} else if u.ExternalIPv4.IsNull() {
-		out.ExternalIPv4 = nil
+	if u.ExternalIpv4.IsSet() {
+		out.ExternalIpv4 = ptr.Get(out.ExternalIpv4.WithChanges(u.ExternalIpv4.Value))
+	} else if u.ExternalIpv4.IsNull() {
+		out.ExternalIpv4 = nil
 	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateNodeGroupSpecNetworkPrimaryInterfaceRequest) HasChanges() bool {
-	return m.ExternalIPv4.Set
+	return m.ExternalIpv4.Set
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) diffExternalIPv4(src *NodeGroupSpecNetworkPrimaryInterfaceRequest) optional.OptionalNil[UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request] {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) diffExternalIpv4(src *NodeGroupSpecNetworkPrimaryInterfaceRequest) optional.OptionalNil[UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request] {
 	nilDiffers := src != nil && m == nil
-	value := m.GetExternalIPv4().Diff(src.GetExternalIPv4())
-	return optional.OptionalNil[UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request]{
+	value := m.GetExternalIpv4().Diff(src.GetExternalIpv4())
+	return optional.OptionalNil[UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request]{
 		Value: value,
 		Set:   nilDiffers || value.HasChanges(),
 		Null:  nilDiffers,
 	}
 }
 
-type UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request struct {
+type UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request struct {
 	// Признак включения внешнего IPv4-адреса
 	Enabled optional.Optional[bool] `json:"enabled" yaml:"enabled"`
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) AsUpdateModel() UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request {
-	var u UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) AsUpdateModel() UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request {
+	var u UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request
 	if m.Enabled != nil {
 		u.Enabled = optional.NewOptional(m.GetEnabledOr(false))
 	}
@@ -127,17 +127,17 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) AsUpdateModel(
 }
 
 // Diff creates an object that can be used in Update methods. This object represents changes from src to the current state
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) Diff(src *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) Diff(src *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request {
 	nilDiffers := src != nil && m == nil
-	upd := UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request{}
+	upd := UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request{}
 	if !nilDiffers {
 		upd.Enabled = m.diffEnabled(src)
 	}
 	return upd
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) WithChanges(u UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request {
-	var out NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) WithChanges(u UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request {
+	var out NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request
 	if m != nil {
 		out = *m
 	}
@@ -149,11 +149,11 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) WithChanges(u 
 }
 
 // HasChanges returns true if any field has Set == true
-func (m UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) HasChanges() bool {
+func (m UpdateNodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) HasChanges() bool {
 	return m.Enabled.Set
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) diffEnabled(src *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) optional.Optional[bool] {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) diffEnabled(src *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) optional.Optional[bool] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetEnabled(), m.GetEnabled(), nilDiffers)
 }

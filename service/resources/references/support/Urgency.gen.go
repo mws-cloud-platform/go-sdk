@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	UrgencyIDRefTemplate = resparsers.Template{
+	UrgencyRefTemplate = resparsers.Template{
 		{
 			Value:       "urgencyName",
 			IsConstant:  false,
@@ -37,63 +37,63 @@ var (
 	}
 )
 
-func NewUrgencyIDID(urgencyName string) (UrgencyIDID, error) {
+func NewUrgencyID(urgencyName string) (UrgencyID, error) {
 	if urgencyName == "" {
-		return UrgencyIDID{}, reserrors.NewFieldIsEmptyError("urgencyName")
+		return UrgencyID{}, reserrors.NewFieldIsEmptyError("urgencyName")
 	}
-	m := UrgencyIDID{
+	m := UrgencyID{
 		urgencyName: urgencyName,
 	}
 	m.path = m.ID()
 	return m, nil
 }
 
-func NewMustUrgencyIDID(urgencyName string) UrgencyIDID {
-	m, err := NewUrgencyIDID(urgencyName)
+func NewMustUrgencyID(urgencyName string) UrgencyID {
+	m, err := NewUrgencyID(urgencyName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseUrgencyIDID(path string) (UrgencyIDID, error) {
-	m := UrgencyIDID{
+func ParseUrgencyID(path string) (UrgencyID, error) {
+	m := UrgencyID{
 		path: path,
 	}
 	if err := m.parse(); err != nil {
-		return UrgencyIDID{}, err
+		return UrgencyID{}, err
 	}
 	return m, nil
 }
 
-func NewUrgencyIDIDFromAnyID(resource resmodels.AnyResourceID) (UrgencyIDID, error) {
-	return ParseUrgencyIDID(resource.ID())
+func NewUrgencyIDFromAnyID(resource resmodels.AnyResourceID) (UrgencyID, error) {
+	return ParseUrgencyID(resource.ID())
 }
 
-type UrgencyIDID struct {
+type UrgencyID struct {
 	urgencyName string
 	path        string
 }
 
-func (m *UrgencyIDID) ResourceName() resifaces.ResourceName {
+func (m *UrgencyID) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return resifaces.ResourceName(m.urgencyName)
 }
 
-func (m *UrgencyIDID) GetUrgencyName() string {
+func (m *UrgencyID) GetUrgencyName() string {
 	if m == nil {
 		return ""
 	}
 	return m.urgencyName
 }
 
-func (m *UrgencyIDID) ServiceSlug() string {
+func (m *UrgencyID) ServiceSlug() string {
 	return "support"
 }
 
-func (m *UrgencyIDID) ID() string {
+func (m *UrgencyID) ID() string {
 	if m == nil || m.urgencyName == "" {
 		return ""
 	}
@@ -101,11 +101,11 @@ func (m *UrgencyIDID) ID() string {
 	return m.ServiceSlug() + "/urgencies/" + m.urgencyName
 }
 
-func (m *UrgencyIDID) String() string {
+func (m *UrgencyID) String() string {
 	return m.ID()
 }
 
-func (m *UrgencyIDID) Clone() *UrgencyIDID {
+func (m *UrgencyID) Clone() *UrgencyID {
 	if m == nil {
 		return nil
 	}
@@ -113,16 +113,16 @@ func (m *UrgencyIDID) Clone() *UrgencyIDID {
 	return &clone
 }
 
-func (m *UrgencyIDID) AsRef() *UrgencyIDRef {
+func (m *UrgencyID) AsRef() *UrgencyRef {
 	if m == nil {
 		return nil
 	}
-	return &UrgencyIDRef{
+	return &UrgencyRef{
 		id: *m,
 	}
 }
 
-func (m *UrgencyIDID) Equal(other *UrgencyIDID) bool {
+func (m *UrgencyID) Equal(other *UrgencyID) bool {
 	if m == other {
 		return true
 	}
@@ -132,7 +132,7 @@ func (m *UrgencyIDID) Equal(other *UrgencyIDID) bool {
 	return m.urgencyName == other.urgencyName
 }
 
-func (m UrgencyIDID) MarshalJSON() ([]byte, error) {
+func (m UrgencyID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -140,7 +140,7 @@ func (m UrgencyIDID) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *UrgencyIDID) Encode(e *jx.Encoder) error {
+func (m *UrgencyID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -153,13 +153,13 @@ func (m *UrgencyIDID) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *UrgencyIDID) UnmarshalJSON(b []byte) error {
+func (m *UrgencyID) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *UrgencyIDID) Decode(d *jx.Decoder) error {
+func (m *UrgencyID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("UrgencyIDID")
+		return conv.NewDecodeToNilError("UrgencyID")
 	}
 
 	v, err := decode.Str(d)
@@ -174,11 +174,11 @@ func (m *UrgencyIDID) Decode(d *jx.Decoder) error {
 // Deprecated: Parse method is no longer required.
 // Internal fields are populated automatically during decoding.
 // This method will be removed in the next SDK release.
-func (m *UrgencyIDID) Parse(ctx context.Context) error {
+func (m *UrgencyID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *UrgencyIDID) parse() error {
+func (m *UrgencyID) parse() error {
 	if m == nil {
 		return nil
 	}
@@ -187,7 +187,7 @@ func (m *UrgencyIDID) parse() error {
 		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
 	}
 
-	result, err := resparsers.Reference(context.Background(), m.path, UrgencyIDRefTemplate.AsID())
+	result, err := resparsers.Reference(context.Background(), m.path, UrgencyRefTemplate.AsID())
 	if err != nil {
 		return reserrors.NewParseIDError(m.path, err)
 	}
@@ -197,12 +197,12 @@ func (m *UrgencyIDID) parse() error {
 	return nil
 }
 
-func NewUrgencyIDRef(urgencyName string) (UrgencyIDRef, error) {
+func NewUrgencyRef(urgencyName string) (UrgencyRef, error) {
 	if urgencyName == "" {
-		return UrgencyIDRef{}, reserrors.NewFieldIsEmptyError("urgencyName")
+		return UrgencyRef{}, reserrors.NewFieldIsEmptyError("urgencyName")
 	}
-	m := UrgencyIDRef{
-		id: UrgencyIDID{
+	m := UrgencyRef{
+		id: UrgencyID{
 			urgencyName: urgencyName,
 		},
 	}
@@ -210,61 +210,61 @@ func NewUrgencyIDRef(urgencyName string) (UrgencyIDRef, error) {
 	return m, nil
 }
 
-func NewMustUrgencyIDRef(urgencyName string) UrgencyIDRef {
-	m, err := NewUrgencyIDRef(urgencyName)
+func NewMustUrgencyRef(urgencyName string) UrgencyRef {
+	m, err := NewUrgencyRef(urgencyName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseUrgencyIDRef(ctx context.Context, path string) (UrgencyIDRef, error) {
-	m := UrgencyIDRef{
-		id: UrgencyIDID{
+func ParseUrgencyRef(ctx context.Context, path string) (UrgencyRef, error) {
+	m := UrgencyRef{
+		id: UrgencyID{
 			path: path,
 		},
 	}
 	if err := m.Parse(ctx); err != nil {
-		return UrgencyIDRef{}, err
+		return UrgencyRef{}, err
 	}
 	return m, nil
 }
 
-func NewUrgencyIDRefFromAnyRef(ref resmodels.AnyResourceRef) (UrgencyIDRef, error) {
+func NewUrgencyRefFromAnyRef(ref resmodels.AnyResourceRef) (UrgencyRef, error) {
 	ctx := valuesctx.WithValuesStore(context.Background(), ref.GetPathValues())
-	return ParseUrgencyIDRef(ctx, ref.Path())
+	return ParseUrgencyRef(ctx, ref.Path())
 }
 
-type UrgencyIDRef struct {
-	id UrgencyIDID
+type UrgencyRef struct {
+	id UrgencyID
 }
 
-func (m *UrgencyIDRef) ResourceName() resifaces.ResourceName {
+func (m *UrgencyRef) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return m.id.ResourceName()
 }
 
-func (m *UrgencyIDRef) GetUrgencyName() string {
+func (m *UrgencyRef) GetUrgencyName() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.GetUrgencyName()
 }
 
-func (m *UrgencyIDRef) ServiceSlug() string {
+func (m *UrgencyRef) ServiceSlug() string {
 	return "support"
 }
 
-func (m *UrgencyIDRef) IDPath() string {
+func (m *UrgencyRef) IDPath() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.ID()
 }
 
-func (m *UrgencyIDRef) Path() string {
+func (m *UrgencyRef) Path() string {
 	if m == nil {
 		return ""
 	}
@@ -274,15 +274,15 @@ func (m *UrgencyIDRef) Path() string {
 	return m.id.path
 }
 
-func (m *UrgencyIDRef) String() string {
+func (m *UrgencyRef) String() string {
 	return m.IDPath()
 }
 
-func (m *UrgencyIDRef) Parse(ctx context.Context) error {
+func (m *UrgencyRef) Parse(ctx context.Context) error {
 	return m.parse(ctx, false)
 }
 
-func (m *UrgencyIDRef) Clone() *UrgencyIDRef {
+func (m *UrgencyRef) Clone() *UrgencyRef {
 	if m == nil {
 		return nil
 	}
@@ -290,7 +290,7 @@ func (m *UrgencyIDRef) Clone() *UrgencyIDRef {
 	return &clone
 }
 
-func (m *UrgencyIDRef) Equal(other *UrgencyIDRef) bool {
+func (m *UrgencyRef) Equal(other *UrgencyRef) bool {
 	if m == other {
 		return true
 	}
@@ -300,7 +300,7 @@ func (m *UrgencyIDRef) Equal(other *UrgencyIDRef) bool {
 	return m.id.urgencyName == other.id.urgencyName
 }
 
-func (m UrgencyIDRef) MarshalJSON() ([]byte, error) {
+func (m UrgencyRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -308,7 +308,7 @@ func (m UrgencyIDRef) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *UrgencyIDRef) Encode(e *jx.Encoder) error {
+func (m *UrgencyRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -321,13 +321,13 @@ func (m *UrgencyIDRef) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *UrgencyIDRef) UnmarshalJSON(b []byte) error {
+func (m *UrgencyRef) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *UrgencyIDRef) Decode(d *jx.Decoder) error {
+func (m *UrgencyRef) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("UrgencyIDRef")
+		return conv.NewDecodeToNilError("UrgencyRef")
 	}
 
 	v, err := decode.Str(d)
@@ -339,7 +339,7 @@ func (m *UrgencyIDRef) Decode(d *jx.Decoder) error {
 	return m.parse(context.Background(), true)
 }
 
-func (m *UrgencyIDRef) parse(ctx context.Context, allowPartial bool) error {
+func (m *UrgencyRef) parse(ctx context.Context, allowPartial bool) error {
 	if m == nil || m.isParsed() {
 		return nil
 	}
@@ -353,7 +353,7 @@ func (m *UrgencyIDRef) parse(ctx context.Context, allowPartial bool) error {
 		options = append(options, resparsers.AllowPartial())
 	}
 
-	result, err := resparsers.Reference(ctx, m.id.path, UrgencyIDRefTemplate, options...)
+	result, err := resparsers.Reference(ctx, m.id.path, UrgencyRefTemplate, options...)
 	if err != nil {
 		return reserrors.NewParseReferenceError(m.id.path, err)
 	}
@@ -363,11 +363,11 @@ func (m *UrgencyIDRef) parse(ctx context.Context, allowPartial bool) error {
 	return nil
 }
 
-func (m *UrgencyIDRef) isParsed() bool {
+func (m *UrgencyRef) isParsed() bool {
 	return m != nil && m.id.urgencyName != ""
 }
 
-func (m *UrgencyIDRef) absolutePath() string {
+func (m *UrgencyRef) absolutePath() string {
 	if m == nil || m.id.urgencyName == "" {
 		return ""
 	}

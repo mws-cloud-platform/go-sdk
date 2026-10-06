@@ -20,7 +20,7 @@ type CommonRoleBindingSpec struct {
 	// Роль, определяющая права субъекта на ресурс
 	Role iam.RoleRef `json:"role" yaml:"role"`
 	// Идентификатор запроса в службу поддержки, в рамках которого был создан биндинг
-	SupportRequestId *support.RequestIDRef `json:"supportRequestId,omitempty" yaml:"supportRequestId,omitempty"`
+	SupportRequestId *support.RequestRef `json:"supportRequestId,omitempty" yaml:"supportRequestId,omitempty"`
 }
 
 func (m *CommonRoleBindingSpec) GetSubject() CommonRoleBindingSpecSubject {
@@ -45,18 +45,18 @@ func (m *CommonRoleBindingSpec) SetRole(val iam.RoleRef) {
 	m.Role = val
 }
 
-func (m *CommonRoleBindingSpec) GetSupportRequestId() *support.RequestIDRef {
+func (m *CommonRoleBindingSpec) GetSupportRequestId() *support.RequestRef {
 	if m != nil {
 		return m.SupportRequestId
 	}
 	return nil
 }
 
-func (m *CommonRoleBindingSpec) SetSupportRequestId(val *support.RequestIDRef) {
+func (m *CommonRoleBindingSpec) SetSupportRequestId(val *support.RequestRef) {
 	m.SupportRequestId = val
 }
 
-func (m *CommonRoleBindingSpec) GetSupportRequestIdOr(val support.RequestIDRef) support.RequestIDRef {
+func (m *CommonRoleBindingSpec) GetSupportRequestIdOr(val support.RequestRef) support.RequestRef {
 	if m != nil && m.SupportRequestId != nil {
 		return *m.SupportRequestId
 	}
@@ -172,7 +172,7 @@ func (m *CommonRoleBindingSpec) Decode(d *jx.Decoder) error {
 			requiredFilled["role"] = true
 			return nil
 		case "supportRequestId":
-			var v support.RequestIDRef
+			var v support.RequestRef
 			if err := v.Decode(d); err != nil {
 				return err
 			}

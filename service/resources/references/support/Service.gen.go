@@ -18,14 +18,14 @@ import (
 )
 
 var (
-	StatusIDRefTemplate = resparsers.Template{
+	ServiceRefTemplate = resparsers.Template{
 		{
-			Value:       "statusName",
+			Value:       "serviceName",
 			IsConstant:  false,
 			SearchAfter: false,
 		},
 		{
-			Value:       "statuses",
+			Value:       "services",
 			IsConstant:  true,
 			SearchAfter: false,
 		},
@@ -37,75 +37,75 @@ var (
 	}
 )
 
-func NewStatusIDID(statusName string) (StatusIDID, error) {
-	if statusName == "" {
-		return StatusIDID{}, reserrors.NewFieldIsEmptyError("statusName")
+func NewServiceID(serviceName string) (ServiceID, error) {
+	if serviceName == "" {
+		return ServiceID{}, reserrors.NewFieldIsEmptyError("serviceName")
 	}
-	m := StatusIDID{
-		statusName: statusName,
+	m := ServiceID{
+		serviceName: serviceName,
 	}
 	m.path = m.ID()
 	return m, nil
 }
 
-func NewMustStatusIDID(statusName string) StatusIDID {
-	m, err := NewStatusIDID(statusName)
+func NewMustServiceID(serviceName string) ServiceID {
+	m, err := NewServiceID(serviceName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseStatusIDID(path string) (StatusIDID, error) {
-	m := StatusIDID{
+func ParseServiceID(path string) (ServiceID, error) {
+	m := ServiceID{
 		path: path,
 	}
 	if err := m.parse(); err != nil {
-		return StatusIDID{}, err
+		return ServiceID{}, err
 	}
 	return m, nil
 }
 
-func NewStatusIDIDFromAnyID(resource resmodels.AnyResourceID) (StatusIDID, error) {
-	return ParseStatusIDID(resource.ID())
+func NewServiceIDFromAnyID(resource resmodels.AnyResourceID) (ServiceID, error) {
+	return ParseServiceID(resource.ID())
 }
 
-type StatusIDID struct {
-	statusName string
-	path       string
+type ServiceID struct {
+	serviceName string
+	path        string
 }
 
-func (m *StatusIDID) ResourceName() resifaces.ResourceName {
+func (m *ServiceID) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
-	return resifaces.ResourceName(m.statusName)
+	return resifaces.ResourceName(m.serviceName)
 }
 
-func (m *StatusIDID) GetStatusName() string {
+func (m *ServiceID) GetServiceName() string {
 	if m == nil {
 		return ""
 	}
-	return m.statusName
+	return m.serviceName
 }
 
-func (m *StatusIDID) ServiceSlug() string {
+func (m *ServiceID) ServiceSlug() string {
 	return "support"
 }
 
-func (m *StatusIDID) ID() string {
-	if m == nil || m.statusName == "" {
+func (m *ServiceID) ID() string {
+	if m == nil || m.serviceName == "" {
 		return ""
 	}
 
-	return m.ServiceSlug() + "/statuses/" + m.statusName
+	return m.ServiceSlug() + "/services/" + m.serviceName
 }
 
-func (m *StatusIDID) String() string {
+func (m *ServiceID) String() string {
 	return m.ID()
 }
 
-func (m *StatusIDID) Clone() *StatusIDID {
+func (m *ServiceID) Clone() *ServiceID {
 	if m == nil {
 		return nil
 	}
@@ -113,26 +113,26 @@ func (m *StatusIDID) Clone() *StatusIDID {
 	return &clone
 }
 
-func (m *StatusIDID) AsRef() *StatusIDRef {
+func (m *ServiceID) AsRef() *ServiceRef {
 	if m == nil {
 		return nil
 	}
-	return &StatusIDRef{
+	return &ServiceRef{
 		id: *m,
 	}
 }
 
-func (m *StatusIDID) Equal(other *StatusIDID) bool {
+func (m *ServiceID) Equal(other *ServiceID) bool {
 	if m == other {
 		return true
 	}
 	if m == nil || other == nil {
 		return false
 	}
-	return m.statusName == other.statusName
+	return m.serviceName == other.serviceName
 }
 
-func (m StatusIDID) MarshalJSON() ([]byte, error) {
+func (m ServiceID) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -140,7 +140,7 @@ func (m StatusIDID) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *StatusIDID) Encode(e *jx.Encoder) error {
+func (m *ServiceID) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -153,13 +153,13 @@ func (m *StatusIDID) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *StatusIDID) UnmarshalJSON(b []byte) error {
+func (m *ServiceID) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *StatusIDID) Decode(d *jx.Decoder) error {
+func (m *ServiceID) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("StatusIDID")
+		return conv.NewDecodeToNilError("ServiceID")
 	}
 
 	v, err := decode.Str(d)
@@ -174,11 +174,11 @@ func (m *StatusIDID) Decode(d *jx.Decoder) error {
 // Deprecated: Parse method is no longer required.
 // Internal fields are populated automatically during decoding.
 // This method will be removed in the next SDK release.
-func (m *StatusIDID) Parse(ctx context.Context) error {
+func (m *ServiceID) Parse(ctx context.Context) error {
 	return nil
 }
 
-func (m *StatusIDID) parse() error {
+func (m *ServiceID) parse() error {
 	if m == nil {
 		return nil
 	}
@@ -187,84 +187,84 @@ func (m *StatusIDID) parse() error {
 		return reserrors.NewParseIDError("", reserrors.ErrPathIsEmpty)
 	}
 
-	result, err := resparsers.Reference(context.Background(), m.path, StatusIDRefTemplate.AsID())
+	result, err := resparsers.Reference(context.Background(), m.path, ServiceRefTemplate.AsID())
 	if err != nil {
 		return reserrors.NewParseIDError(m.path, err)
 	}
 
-	m.statusName = result["statusName"]
+	m.serviceName = result["serviceName"]
 
 	return nil
 }
 
-func NewStatusIDRef(statusName string) (StatusIDRef, error) {
-	if statusName == "" {
-		return StatusIDRef{}, reserrors.NewFieldIsEmptyError("statusName")
+func NewServiceRef(serviceName string) (ServiceRef, error) {
+	if serviceName == "" {
+		return ServiceRef{}, reserrors.NewFieldIsEmptyError("serviceName")
 	}
-	m := StatusIDRef{
-		id: StatusIDID{
-			statusName: statusName,
+	m := ServiceRef{
+		id: ServiceID{
+			serviceName: serviceName,
 		},
 	}
 	m.id.path = m.absolutePath()
 	return m, nil
 }
 
-func NewMustStatusIDRef(statusName string) StatusIDRef {
-	m, err := NewStatusIDRef(statusName)
+func NewMustServiceRef(serviceName string) ServiceRef {
+	m, err := NewServiceRef(serviceName)
 	if err != nil {
 		panic(err)
 	}
 	return m
 }
 
-func ParseStatusIDRef(ctx context.Context, path string) (StatusIDRef, error) {
-	m := StatusIDRef{
-		id: StatusIDID{
+func ParseServiceRef(ctx context.Context, path string) (ServiceRef, error) {
+	m := ServiceRef{
+		id: ServiceID{
 			path: path,
 		},
 	}
 	if err := m.Parse(ctx); err != nil {
-		return StatusIDRef{}, err
+		return ServiceRef{}, err
 	}
 	return m, nil
 }
 
-func NewStatusIDRefFromAnyRef(ref resmodels.AnyResourceRef) (StatusIDRef, error) {
+func NewServiceRefFromAnyRef(ref resmodels.AnyResourceRef) (ServiceRef, error) {
 	ctx := valuesctx.WithValuesStore(context.Background(), ref.GetPathValues())
-	return ParseStatusIDRef(ctx, ref.Path())
+	return ParseServiceRef(ctx, ref.Path())
 }
 
-type StatusIDRef struct {
-	id StatusIDID
+type ServiceRef struct {
+	id ServiceID
 }
 
-func (m *StatusIDRef) ResourceName() resifaces.ResourceName {
+func (m *ServiceRef) ResourceName() resifaces.ResourceName {
 	if m == nil {
 		return ""
 	}
 	return m.id.ResourceName()
 }
 
-func (m *StatusIDRef) GetStatusName() string {
+func (m *ServiceRef) GetServiceName() string {
 	if m == nil {
 		return ""
 	}
-	return m.id.GetStatusName()
+	return m.id.GetServiceName()
 }
 
-func (m *StatusIDRef) ServiceSlug() string {
+func (m *ServiceRef) ServiceSlug() string {
 	return "support"
 }
 
-func (m *StatusIDRef) IDPath() string {
+func (m *ServiceRef) IDPath() string {
 	if m == nil {
 		return ""
 	}
 	return m.id.ID()
 }
 
-func (m *StatusIDRef) Path() string {
+func (m *ServiceRef) Path() string {
 	if m == nil {
 		return ""
 	}
@@ -274,15 +274,15 @@ func (m *StatusIDRef) Path() string {
 	return m.id.path
 }
 
-func (m *StatusIDRef) String() string {
+func (m *ServiceRef) String() string {
 	return m.IDPath()
 }
 
-func (m *StatusIDRef) Parse(ctx context.Context) error {
+func (m *ServiceRef) Parse(ctx context.Context) error {
 	return m.parse(ctx, false)
 }
 
-func (m *StatusIDRef) Clone() *StatusIDRef {
+func (m *ServiceRef) Clone() *ServiceRef {
 	if m == nil {
 		return nil
 	}
@@ -290,17 +290,17 @@ func (m *StatusIDRef) Clone() *StatusIDRef {
 	return &clone
 }
 
-func (m *StatusIDRef) Equal(other *StatusIDRef) bool {
+func (m *ServiceRef) Equal(other *ServiceRef) bool {
 	if m == other {
 		return true
 	}
 	if m == nil || other == nil {
 		return false
 	}
-	return m.id.statusName == other.id.statusName
+	return m.id.serviceName == other.id.serviceName
 }
 
-func (m StatusIDRef) MarshalJSON() ([]byte, error) {
+func (m ServiceRef) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -308,7 +308,7 @@ func (m StatusIDRef) MarshalJSON() ([]byte, error) {
 	return e.Bytes(), nil
 }
 
-func (m *StatusIDRef) Encode(e *jx.Encoder) error {
+func (m *ServiceRef) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -321,13 +321,13 @@ func (m *StatusIDRef) Encode(e *jx.Encoder) error {
 	return nil
 }
 
-func (m *StatusIDRef) UnmarshalJSON(b []byte) error {
+func (m *ServiceRef) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *StatusIDRef) Decode(d *jx.Decoder) error {
+func (m *ServiceRef) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("StatusIDRef")
+		return conv.NewDecodeToNilError("ServiceRef")
 	}
 
 	v, err := decode.Str(d)
@@ -339,7 +339,7 @@ func (m *StatusIDRef) Decode(d *jx.Decoder) error {
 	return m.parse(context.Background(), true)
 }
 
-func (m *StatusIDRef) parse(ctx context.Context, allowPartial bool) error {
+func (m *ServiceRef) parse(ctx context.Context, allowPartial bool) error {
 	if m == nil || m.isParsed() {
 		return nil
 	}
@@ -353,24 +353,24 @@ func (m *StatusIDRef) parse(ctx context.Context, allowPartial bool) error {
 		options = append(options, resparsers.AllowPartial())
 	}
 
-	result, err := resparsers.Reference(ctx, m.id.path, StatusIDRefTemplate, options...)
+	result, err := resparsers.Reference(ctx, m.id.path, ServiceRefTemplate, options...)
 	if err != nil {
 		return reserrors.NewParseReferenceError(m.id.path, err)
 	}
 
-	m.id.statusName = result["statusName"]
+	m.id.serviceName = result["serviceName"]
 
 	return nil
 }
 
-func (m *StatusIDRef) isParsed() bool {
-	return m != nil && m.id.statusName != ""
+func (m *ServiceRef) isParsed() bool {
+	return m != nil && m.id.serviceName != ""
 }
 
-func (m *StatusIDRef) absolutePath() string {
-	if m == nil || m.id.statusName == "" {
+func (m *ServiceRef) absolutePath() string {
+	if m == nil || m.id.serviceName == "" {
 		return ""
 	}
 
-	return "statuses/" + m.id.statusName
+	return "services/" + m.id.serviceName
 }

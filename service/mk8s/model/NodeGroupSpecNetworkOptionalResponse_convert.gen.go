@@ -26,21 +26,21 @@ func NodeGroupSpecNetworkPrimaryInterfaceRequestToOptionalResponse(request *Node
 		return nil, nil
 	}
 	var response NodeGroupSpecNetworkPrimaryInterfaceOptionalResponse
-	if request.ExternalIPv4 != nil {
-		tmpExternalIPv4, err := NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4RequestToOptionalResponse(request.ExternalIPv4)
+	if request.ExternalIpv4 != nil {
+		tmpExternalIpv4, err := NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4RequestToOptionalResponse(request.ExternalIpv4)
 		if err != nil {
 			return nil, err
 		}
-		response.ExternalIPv4 = optional.NewOptionalNil(*tmpExternalIPv4)
+		response.ExternalIpv4 = optional.NewOptionalNil(*tmpExternalIpv4)
 	}
 	return &response, nil
 }
 
-func NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4RequestToOptionalResponse(request *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) (*NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4OptionalResponse, error) {
+func NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4RequestToOptionalResponse(request *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) (*NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4OptionalResponse, error) {
 	if request == nil {
 		return nil, nil
 	}
-	var response NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4OptionalResponse
+	var response NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4OptionalResponse
 	if request.Enabled != nil {
 		response.Enabled = optional.NewOptional(*request.Enabled)
 	}

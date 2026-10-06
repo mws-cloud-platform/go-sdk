@@ -50,23 +50,23 @@ func (m *NodeGroupSpecNetworkRequest) Clone() *NodeGroupSpecNetworkRequest {
 // Real OAPI model name: NodeGroupSpecNetworkPrimaryInterface
 type NodeGroupSpecNetworkPrimaryInterfaceRequest struct {
 	// Настройка внешнего IPv4-адреса
-	ExternalIPv4 *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request `json:"externalIPv4,omitempty" yaml:"externalIPv4,omitempty"`
+	ExternalIpv4 *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request `json:"externalIpv4,omitempty" yaml:"externalIpv4,omitempty"`
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) GetExternalIPv4() *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) GetExternalIpv4() *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request {
 	if m != nil {
-		return m.ExternalIPv4
+		return m.ExternalIpv4
 	}
 	return nil
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) SetExternalIPv4(val *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) {
-	m.ExternalIPv4 = val
+func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) SetExternalIpv4(val *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) {
+	m.ExternalIpv4 = val
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) GetExternalIPv4Or(val NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request {
-	if m != nil && m.ExternalIPv4 != nil {
-		return *m.ExternalIPv4
+func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) GetExternalIpv4Or(val NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request {
+	if m != nil && m.ExternalIpv4 != nil {
+		return *m.ExternalIpv4
 	}
 	return val
 }
@@ -77,36 +77,36 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) Clone() *NodeGroupSpecNetw
 	}
 
 	clone := *m
-	clone.ExternalIPv4 = m.ExternalIPv4.Clone()
+	clone.ExternalIpv4 = m.ExternalIpv4.Clone()
 	return &clone
 }
 
-// Представление поля ExternalIPv4 анонимного типа структуры NodeGroupSpecNetworkPrimaryInterface
-// Real OAPI model name: NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4
-type NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request struct {
+// Представление поля ExternalIpv4 анонимного типа структуры NodeGroupSpecNetworkPrimaryInterface
+// Real OAPI model name: NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4
+type NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request struct {
 	// Признак включения внешнего IPv4-адреса
 	Enabled *bool `json:"enabled,omitempty" yaml:"enabled,omitempty"`
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) GetEnabled() *bool {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) GetEnabled() *bool {
 	if m != nil {
 		return m.Enabled
 	}
 	return nil
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) SetEnabled(val *bool) {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) SetEnabled(val *bool) {
 	m.Enabled = val
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) GetEnabledOr(val bool) bool {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) GetEnabledOr(val bool) bool {
 	if m != nil && m.Enabled != nil {
 		return *m.Enabled
 	}
 	return val
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) Clone() *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) Clone() *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request {
 	if m == nil {
 		return nil
 	}
@@ -203,9 +203,9 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) Encode(e *jx.Encoder) erro
 }
 
 func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) encodeFields(e *jx.Encoder) error {
-	if m.ExternalIPv4 != nil {
-		e.FieldStart("externalIPv4")
-		if err := m.ExternalIPv4.Encode(e); err != nil {
+	if m.ExternalIpv4 != nil {
+		e.FieldStart("externalIpv4")
+		if err := m.ExternalIpv4.Encode(e); err != nil {
 			return err
 		}
 	}
@@ -223,17 +223,17 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) Decode(d *jx.Decoder) erro
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "externalIPv4":
+		case "externalIpv4":
 			if d.Next() == jx.Null {
 				return d.Null()
 			}
 
-			var v NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request
+			var v NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.ExternalIPv4 = &v
+			m.ExternalIpv4 = &v
 			return nil
 		default:
 			return d.Skip()
@@ -241,7 +241,7 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) Decode(d *jx.Decoder) erro
 	}))
 }
 
-func (m NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) MarshalJSON() ([]byte, error) {
+func (m NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	if err := m.Encode(&e); err != nil {
 		return nil, err
@@ -249,7 +249,7 @@ func (m NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) MarshalJSON() (
 	return e.Bytes(), nil
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) Encode(e *jx.Encoder) error {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) Encode(e *jx.Encoder) error {
 	if m == nil {
 		e.Null()
 		return nil
@@ -262,7 +262,7 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) Encode(e *jx.E
 	return nil
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) encodeFields(e *jx.Encoder) error {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) encodeFields(e *jx.Encoder) error {
 	if m.Enabled != nil {
 		e.FieldStart("enabled")
 		e.Bool(*m.Enabled)
@@ -270,13 +270,13 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) encodeFields(e
 	return nil
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) UnmarshalJSON(b []byte) error {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) UnmarshalJSON(b []byte) error {
 	return m.Decode(jx.DecodeBytes(b))
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) Decode(d *jx.Decoder) error {
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) Decode(d *jx.Decoder) error {
 	if m == nil {
-		return conv.NewDecodeToNilError("NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request")
+		return conv.NewDecodeToNilError("NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request")
 	}
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
@@ -303,12 +303,12 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) WithDefaults() NodeGroupSp
 		out = *m
 	}
 
-	out.ExternalIPv4 = ptr.Get(out.ExternalIPv4.WithDefaults())
+	out.ExternalIpv4 = ptr.Get(out.ExternalIpv4.WithDefaults())
 	return out
 }
 
-func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request) WithDefaults() NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request {
-	var out NodeGroupSpecNetworkPrimaryInterfaceExternalIPv4Request
+func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) WithDefaults() NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request {
+	var out NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request
 	if m != nil {
 		out = *m
 	}

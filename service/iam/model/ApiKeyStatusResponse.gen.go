@@ -22,6 +22,8 @@ type ApiKeyStatusResponse struct {
 	ApiKey *sensitive.Sensitive[string] `json:"apiKey,omitempty" yaml:"apiKey,omitempty"`
 	// Время последней аутентификации.
 	LastAuthTime *time.Time `json:"lastAuthTime,omitempty" yaml:"lastAuthTime,omitempty"`
+	// Флаг, указывающий на текущее состояние API‑ключа. Активный ключ может использоваться для аутентификации, деактивированный — нет.
+	Active *bool `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
 func (m *ApiKeyStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse {
@@ -59,6 +61,20 @@ func (m *ApiKeyStatusResponse) GetLastAuthTimeOr(val time.Time) time.Time {
 	return val
 }
 
+func (m *ApiKeyStatusResponse) GetActive() *bool {
+	if m != nil {
+		return m.Active
+	}
+	return nil
+}
+
+func (m *ApiKeyStatusResponse) GetActiveOr(val bool) bool {
+	if m != nil && m.Active != nil {
+		return *m.Active
+	}
+	return val
+}
+
 func (m *ApiKeyStatusResponse) Clone() *ApiKeyStatusResponse {
 	if m == nil {
 		return nil
@@ -69,6 +85,10 @@ func (m *ApiKeyStatusResponse) Clone() *ApiKeyStatusResponse {
 	if m.ApiKey != nil {
 		cloneApiKey := *m.ApiKey
 		clone.ApiKey = &cloneApiKey
+	}
+	if m.Active != nil {
+		cloneActive := *m.Active
+		clone.Active = &cloneActive
 	}
 
 	return &clone
@@ -111,6 +131,11 @@ func (m *ApiKeyStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.FieldStart("lastAuthTime")
 		conv.EncodeDateTimeUTC(e, *m.LastAuthTime)
 	}
+
+	if m.Active != nil {
+		e.FieldStart("active")
+		e.Bool(*m.Active)
+	}
 	return nil
 }
 
@@ -148,6 +173,14 @@ func (m *ApiKeyStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.LastAuthTime = &v
+			return nil
+		case "active":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Active = &v
 			return nil
 		default:
 			return d.Skip()
