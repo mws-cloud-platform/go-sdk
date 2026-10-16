@@ -25,7 +25,8 @@ type UpdateClickhouseClusterShardRequest struct {
 	// Вес шарда.
 	Weight optional.Optional[int] `json:"weight" yaml:"weight"`
 	// Описание эндпоинтов шардов.
-	Endpoints optional.Optional[[]UpdateClickhouseEndpointRequest]        `json:"endpoints" yaml:"endpoints"`
+	Endpoints optional.Optional[[]UpdateClickhouseEndpointRequest] `json:"endpoints" yaml:"endpoints"`
+	// Описание узла кластера.
 	Instances optional.Optional[[]UpdateClickhouseClusterInstanceRequest] `json:"instances" yaml:"instances"`
 }
 

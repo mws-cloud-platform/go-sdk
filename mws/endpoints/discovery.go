@@ -30,8 +30,10 @@ func NewDiscoveryServiceEndpointResolver(client DiscoveryClient) ServiceEndpoint
 }
 
 // Resolve returns the service API endpoint from the discovery response.
-// Service may be in any format, but if it has slashes, e.g. "iam/authservice",
-// then only the part before the first slash will be used, in this case it will be "iam".
+// Service may be in any format. If service contains slashes, e.g.
+// "iam/tokenservice/ru-central1", then the mapping is searched by the full
+// string first and then without the last slash-separated part, i.e.
+// "iam/tokenservice", "iam", until a match is found or the string becomes empty.
 // If service is not found in the mapping, an error is returned.
 func (s DiscoveryServiceEndpointResolver) Resolve(ctx context.Context, service ServiceName) (Endpoint, error) {
 	endpoints, err := s.client.Endpoints(ctx)
@@ -39,12 +41,15 @@ func (s DiscoveryServiceEndpointResolver) Resolve(ctx context.Context, service S
 		return "", fmt.Errorf("get endpoints list: %w", err)
 	}
 
-	key, _, _ := strings.Cut(string(service), "/")
-	endpoint, ok := endpoints[key]
-	if !ok {
-		return "", errServiceEndpointNotFound(service)
+	key := string(service)
+	for key != "" {
+		endpoint, ok := endpoints[key]
+		if ok {
+			return Endpoint(endpoint.Address), nil
+		}
+		key = key[:max(strings.LastIndex(key, "/"), 0)]
 	}
-	return Endpoint(endpoint.Address), nil
+	return "", errServiceEndpointNotFound(service)
 }
 
 // DiscoveryClient represents a discovery client that can fetch endpoints

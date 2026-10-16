@@ -14,6 +14,12 @@ import (
 
 // Real OAPI model name: CertificateStatusDetails
 type CertificateStatusDetailsResponse struct {
+	// Алгоритм ключа сертификата.
+	KeyAlgorithm CertificateKeyAlgorithm `json:"keyAlgorithm" yaml:"keyAlgorithm"`
+	// Форматы экспорта закрытого ключа, доступные для параметра `privateKeyFormat` при скачивании сертификата.
+	// Для ключей `RSA`: `PKCS1` и `PKCS8`; для ключей `EC`: `SEC1` и `PKCS8`;
+	// для ключей `ED25519` и `ED448`: только `PKCS8`.
+	SupportedPrivateKeyFormats []PrivateKeyFormat `json:"supportedPrivateKeyFormats" yaml:"supportedPrivateKeyFormats"`
 	// Серийный номер сертификата.
 	Serial string `json:"serial" yaml:"serial"`
 	// Издатель сертификата.
@@ -26,6 +32,28 @@ type CertificateStatusDetailsResponse struct {
 	NotBefore time.Time `json:"notBefore" yaml:"notBefore"`
 	// Домены, к которым относится сертификат.
 	Domains []CertificateDomain `json:"domains" yaml:"domains"`
+}
+
+func (m *CertificateStatusDetailsResponse) GetKeyAlgorithm() CertificateKeyAlgorithm {
+	if m != nil {
+		return m.KeyAlgorithm
+	}
+	return ""
+}
+
+func (m *CertificateStatusDetailsResponse) SetKeyAlgorithm(val CertificateKeyAlgorithm) {
+	m.KeyAlgorithm = val
+}
+
+func (m *CertificateStatusDetailsResponse) GetSupportedPrivateKeyFormats() []PrivateKeyFormat {
+	if m != nil {
+		return m.SupportedPrivateKeyFormats
+	}
+	return nil
+}
+
+func (m *CertificateStatusDetailsResponse) SetSupportedPrivateKeyFormats(val []PrivateKeyFormat) {
+	m.SupportedPrivateKeyFormats = val
 }
 
 func (m *CertificateStatusDetailsResponse) GetSerial() string {
@@ -100,6 +128,12 @@ func (m *CertificateStatusDetailsResponse) Clone() *CertificateStatusDetailsResp
 	}
 
 	clone := *m
+	if m.SupportedPrivateKeyFormats != nil {
+		clone.SupportedPrivateKeyFormats = make([]PrivateKeyFormat, len(m.SupportedPrivateKeyFormats))
+		for i, v := range m.SupportedPrivateKeyFormats {
+			clone.SupportedPrivateKeyFormats[i] = v
+		}
+	}
 	if m.Domains != nil {
 		clone.Domains = make([]CertificateDomain, len(m.Domains))
 		for i, v := range m.Domains {
@@ -133,6 +167,20 @@ func (m *CertificateStatusDetailsResponse) Encode(e *jx.Encoder) error {
 }
 
 func (m *CertificateStatusDetailsResponse) encodeFields(e *jx.Encoder) error {
+	e.FieldStart("keyAlgorithm")
+	if err := m.KeyAlgorithm.Encode(e); err != nil {
+		return err
+	}
+
+	e.FieldStart("supportedPrivateKeyFormats")
+	e.ArrStart()
+	for _, elem := range m.SupportedPrivateKeyFormats {
+		if err := elem.Encode(e); err != nil {
+			return err
+		}
+	}
+	e.ArrEnd()
+
 	e.FieldStart("serial")
 	e.Str(m.Serial)
 
@@ -170,6 +218,29 @@ func (m *CertificateStatusDetailsResponse) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "keyAlgorithm":
+			var v CertificateKeyAlgorithm
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.KeyAlgorithm = v
+			return nil
+		case "supportedPrivateKeyFormats":
+			c := make([]PrivateKeyFormat, 0)
+			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
+				var v PrivateKeyFormat
+				if err := v.Decode(d); err != nil {
+					return err
+				}
+				c = append(c, v)
+				return nil
+			})); err != nil {
+				return err
+			}
+
+			m.SupportedPrivateKeyFormats = c
+			return nil
 		case "serial":
 			v, err := decode.Str(d)
 			if err != nil {

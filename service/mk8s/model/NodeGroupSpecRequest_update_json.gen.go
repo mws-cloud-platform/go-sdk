@@ -76,6 +76,11 @@ func (m *UpdateNodeGroupSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.Int64(m.ImageStorageIops.Value)
 	}
 
+	if m.MaxPods.IsSet() {
+		e.FieldStart("maxPods")
+		e.Int(m.MaxPods.Value)
+	}
+
 	if m.LocalDisks.IsSet() {
 		e.FieldStart("localDisks")
 		if m.LocalDisks.IsNull() {
@@ -219,6 +224,14 @@ func (m *UpdateNodeGroupSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.ImageStorageIops.SetTo(v)
+			return nil
+		case "maxPods":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.MaxPods.SetTo(v)
 			return nil
 		case "localDisks":
 			if d.Next() == jx.Null {

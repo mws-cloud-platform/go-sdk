@@ -5,6 +5,7 @@ package mclickhouse
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -18,9 +19,12 @@ import (
 )
 
 var (
-	ClickhouseClusterCoordinatorRefTemplate = resparsers.Template{
+	ClickhouseClusterCoordinatorCoordinatorValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterCoordinatorClusterValidatePattern     = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterCoordinatorRefTemplate                = resparsers.Template{
 		{
 			Value:       "coordinator",
+			Pattern:     ClickhouseClusterCoordinatorCoordinatorValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -31,6 +35,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     ClickhouseClusterCoordinatorClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -66,6 +71,12 @@ func NewClickhouseClusterCoordinatorID(project, cluster, coordinator string) (Cl
 	}
 	if project == "" {
 		return ClickhouseClusterCoordinatorID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if match := ClickhouseClusterCoordinatorCoordinatorValidatePattern.Match([]byte(coordinator)); !match {
+		return ClickhouseClusterCoordinatorID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "coordinator", coordinator)
+	}
+	if match := ClickhouseClusterCoordinatorClusterValidatePattern.Match([]byte(cluster)); !match {
+		return ClickhouseClusterCoordinatorID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
 	}
 	m := ClickhouseClusterCoordinatorID{
 		coordinator: coordinator,
@@ -244,21 +255,13 @@ func (m *ClickhouseClusterCoordinatorID) parse() error {
 }
 
 func NewClickhouseClusterCoordinatorRef(project, cluster, coordinator string) (ClickhouseClusterCoordinatorRef, error) {
-	if coordinator == "" {
-		return ClickhouseClusterCoordinatorRef{}, reserrors.NewFieldIsEmptyError("coordinator")
+	id, err := NewClickhouseClusterCoordinatorID(project, cluster, coordinator)
+	if err != nil {
+		return ClickhouseClusterCoordinatorRef{}, err
 	}
-	if cluster == "" {
-		return ClickhouseClusterCoordinatorRef{}, reserrors.NewFieldIsEmptyError("cluster")
-	}
-	if project == "" {
-		return ClickhouseClusterCoordinatorRef{}, reserrors.NewFieldIsEmptyError("project")
-	}
+
 	m := ClickhouseClusterCoordinatorRef{
-		id: ClickhouseClusterCoordinatorID{
-			coordinator: coordinator,
-			cluster:     cluster,
-			project:     project,
-		},
+		id: id,
 	}
 	m.id.path = m.absolutePath()
 	return m, nil

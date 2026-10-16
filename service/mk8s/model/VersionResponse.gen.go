@@ -13,9 +13,12 @@ import (
 // Описание версии
 // Real OAPI model name: Version
 type VersionResponse struct {
-	Name        string  `json:"name" yaml:"name"`
+	// Название версии
+	Name string `json:"name" yaml:"name"`
+	// Описание версии
 	Description *string `json:"description,omitempty" yaml:"description,omitempty"`
-	Default     bool    `json:"default" yaml:"default"`
+	// Флаг, указывающий на то, является ли данная версия версией по умолчанию
+	Default bool `json:"default" yaml:"default"`
 }
 
 func (m *VersionResponse) GetName() string {

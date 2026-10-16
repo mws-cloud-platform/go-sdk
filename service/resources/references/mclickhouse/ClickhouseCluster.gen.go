@@ -5,6 +5,7 @@ package mclickhouse
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -18,9 +19,11 @@ import (
 )
 
 var (
-	ClickhouseClusterRefTemplate = resparsers.Template{
+	ClickhouseClusterClusterValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterRefTemplate            = resparsers.Template{
 		{
 			Value:       "cluster",
+			Pattern:     ClickhouseClusterClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -53,6 +56,9 @@ func NewClickhouseClusterID(project, cluster string) (ClickhouseClusterID, error
 	}
 	if project == "" {
 		return ClickhouseClusterID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if match := ClickhouseClusterClusterValidatePattern.Match([]byte(cluster)); !match {
+		return ClickhouseClusterID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
 	}
 	m := ClickhouseClusterID{
 		cluster: cluster,
@@ -221,17 +227,13 @@ func (m *ClickhouseClusterID) parse() error {
 }
 
 func NewClickhouseClusterRef(project, cluster string) (ClickhouseClusterRef, error) {
-	if cluster == "" {
-		return ClickhouseClusterRef{}, reserrors.NewFieldIsEmptyError("cluster")
+	id, err := NewClickhouseClusterID(project, cluster)
+	if err != nil {
+		return ClickhouseClusterRef{}, err
 	}
-	if project == "" {
-		return ClickhouseClusterRef{}, reserrors.NewFieldIsEmptyError("project")
-	}
+
 	m := ClickhouseClusterRef{
-		id: ClickhouseClusterID{
-			cluster: cluster,
-			project: project,
-		},
+		id: id,
 	}
 	m.id.path = m.absolutePath()
 	return m, nil

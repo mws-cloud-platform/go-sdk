@@ -14,6 +14,20 @@ import (
 	clientmocks "go.mws.cloud/go-sdk/service/mclickhouse/client/mocks"
 )
 
+func TestClickhouseClusterBackupSugared_ListClickhouseClusterBackupsInProject(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockClickhouseClusterBackup(ctrl)
+	mockClient.EXPECT().ListClickhouseClusterBackupsInProject(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewClickhouseClusterBackupSugared(mockClient)
+
+	_, err := sugared.ListClickhouseClusterBackupsInProject(context.Background(), client.ListClickhouseClusterBackupsInProjectRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
 func TestClickhouseClusterBackupSugared_ListClickhouseClusterBackups(t *testing.T) {
 	t.Parallel()
 	ctrl := gomock.NewController(t)
@@ -25,6 +39,20 @@ func TestClickhouseClusterBackupSugared_ListClickhouseClusterBackups(t *testing.
 	sugared := client.NewClickhouseClusterBackupSugared(mockClient)
 
 	_, err := sugared.ListClickhouseClusterBackups(context.Background(), client.ListClickhouseClusterBackupsRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
+func TestClickhouseClusterBackupSugared_GetClickhouseClusterFromBackup(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockClickhouseClusterBackup(ctrl)
+	mockClient.EXPECT().GetClickhouseClusterFromBackup(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewClickhouseClusterBackupSugared(mockClient)
+
+	_, err := sugared.GetClickhouseClusterFromBackup(context.Background(), client.GetClickhouseClusterFromBackupRequest{})
 	require.True(t, mwserrors.IsDecodeBodyError(err))
 }
 

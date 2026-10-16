@@ -37,6 +37,27 @@ func (m *UpdateCommonRoleBindingStatus) encodeFields(e *jx.Encoder) error {
 			return err
 		}
 	}
+	if m.RoleBinding.IsSet() {
+		e.FieldStart("roleBinding")
+		if m.RoleBinding.IsNull() {
+			e.Null()
+		} else {
+			if err := m.RoleBinding.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if m.Active.IsSet() {
+		e.FieldStart("active")
+		if m.Active.IsNull() {
+			e.Null()
+		} else {
+			if err := m.Active.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
 
@@ -58,6 +79,32 @@ func (m *UpdateCommonRoleBindingStatus) Decode(d *jx.Decoder) error {
 			}
 
 			m.Ready.SetTo(v)
+			return nil
+		case "roleBinding":
+			if d.Next() == jx.Null {
+				m.RoleBinding.SetToNull()
+				return d.Null()
+			}
+
+			var v UpdateCommonRoleBindingStatusSpec
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RoleBinding.SetTo(v)
+			return nil
+		case "active":
+			if d.Next() == jx.Null {
+				m.Active.SetToNull()
+				return d.Null()
+			}
+
+			var v UpdateCommonRoleBindingActiveStatus
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Active.SetTo(v)
 			return nil
 		default:
 			return d.Skip()

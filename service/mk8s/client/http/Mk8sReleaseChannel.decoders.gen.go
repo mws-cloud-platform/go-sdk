@@ -13,6 +13,7 @@ import (
 	clienterrors "go.mws.cloud/go-sdk/internal/client/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mk8s/client"
+	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
 
 func decodeListMk8sReleaseChannelsResponse(resp *http.Response) (*client.ListMk8sReleaseChannelsResponse, error) {
@@ -27,7 +28,7 @@ func decodeListMk8sReleaseChannelsResponse(resp *http.Response) (*client.ListMk8
 		case "application/json":
 			result := &client.ListMk8sReleaseChannelsResponse{
 				Code:        resp.StatusCode,
-				Response200: &client.ListMk8sReleaseChannelsResponse200{},
+				Response200: &model.ReleaseChannelListResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {

@@ -12,10 +12,18 @@ import (
 )
 
 type ClickhouseClusterBackup interface {
+	// ListClickhouseClusterBackupsInProject возвращает постраничный список резервных копий кластеров ClickHouse.
+	//
+	// Путь: GET /mclickhouse/v1/projects/{project}/backups
+	ListClickhouseClusterBackupsInProject(context.Context, ListClickhouseClusterBackupsInProjectRequest) (*ListClickhouseClusterBackupsInProjectResponse, error)
 	// ListClickhouseClusterBackups возвращает постраничный список резервных копий указанного кластера ClickHouse.
 	//
 	// Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups
 	ListClickhouseClusterBackups(context.Context, ListClickhouseClusterBackupsRequest) (*ListClickhouseClusterBackupsResponse, error)
+	// GetClickhouseClusterFromBackup возвращает информацию о кластере ClickHouse по резервной копии.
+	//
+	// Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}:getCluster
+	GetClickhouseClusterFromBackup(context.Context, GetClickhouseClusterFromBackupRequest) (*GetClickhouseClusterFromBackupResponse, error)
 	// DeleteClickhouseClusterBackup удаляет указанную резервную копию кластера ClickHouse.
 	//
 	// Путь: DELETE /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}
@@ -38,6 +46,85 @@ type ClickhouseClusterBackup interface {
 	//
 	// Путь: POST /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}?updateOnly=true
 	UpdateClickhouseClusterBackup(context.Context, UpdateClickhouseClusterBackupRequest) (*UpsertClickhouseClusterBackupResponse, error)
+}
+
+type ListClickhouseClusterBackupsInProjectRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
+	// Путь к проекту.
+	Project string // path: "project"
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
+	PageSize *int // query: "pageSize"
+	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
+	PageToken *string // query: "pageToken"
+	// Строка фильтра.
+	// Для фильтрации используется ограниченная реализация AIP-160 (https://google.aip.dev/160).
+	// Она включает в себя операции =, !=, OR, AND и (), фильтрацию свойств вложенных объектов и wildcard-поиск подстрок
+	Filter *string // query: "filter"
+	// Строка сортировки.
+	// Для сортировки используется реализация AIP-132 (https://google.aip.dev/132#ordering).
+	// Указывается перечислением полей с направлением сортировки (asc, desc) через запятую.
+	// По умолчанию используется сортировка по возрастанию (asc)
+	OrderBy *string // query: "orderBy"
+}
+
+func (m *ListClickhouseClusterBackupsInProjectRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
+	m.Authorization = authorization
+}
+
+func (m ListClickhouseClusterBackupsInProjectRequest) GetProject() string {
+	return m.Project
+}
+
+func (m *ListClickhouseClusterBackupsInProjectRequest) SetProject(project string) {
+	m.Project = project
+}
+
+func (m ListClickhouseClusterBackupsInProjectRequest) WithPageToken(token *string) ListClickhouseClusterBackupsInProjectRequest {
+	m.PageToken = token
+	return m
+}
+
+type ListClickhouseClusterBackupsInProjectResponse struct {
+	Code        int
+	Response200 *model.ClickhouseBackupPageOptionalResponse
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *ListClickhouseClusterBackupsInProjectResponse) GetCode() int {
+	return m.Code
+}
+
+func (m *ListClickhouseClusterBackupsInProjectResponse) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *ListClickhouseClusterBackupsInProjectResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
 }
 
 type ListClickhouseClusterBackupsRequest struct {
@@ -118,6 +205,71 @@ func (m *ListClickhouseClusterBackupsResponse) GetErr() (err error) {
 }
 
 func (m *ListClickhouseClusterBackupsResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
+}
+
+type GetClickhouseClusterFromBackupRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
+	// Путь к проекту.
+	Project string // path: "project"
+	// Название или идентификатор кластера.
+	Cluster string // path: "cluster"
+	// Имя резервной копии.
+	Backup string // path: "backup"
+}
+
+func (m *GetClickhouseClusterFromBackupRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
+	m.Authorization = authorization
+}
+
+func (m GetClickhouseClusterFromBackupRequest) GetProject() string {
+	return m.Project
+}
+
+func (m *GetClickhouseClusterFromBackupRequest) SetProject(project string) {
+	m.Project = project
+}
+
+type GetClickhouseClusterFromBackupResponse struct {
+	Code        int
+	Response200 *model.ClickhouseClusterOptionalResponse
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *GetClickhouseClusterFromBackupResponse) GetCode() int {
+	return m.Code
+}
+
+func (m *GetClickhouseClusterFromBackupResponse) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *GetClickhouseClusterFromBackupResponse) SetErrorWrapper(f func(err error) error) {
 	if m != nil {
 		m.errorWrapper = f
 	}

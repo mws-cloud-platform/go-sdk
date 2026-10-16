@@ -79,6 +79,21 @@ func (mr *MockClickhouseClusterBackupMockRecorder) GetClickhouseClusterBackup(ar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClickhouseClusterBackup", reflect.TypeOf((*MockClickhouseClusterBackup)(nil).GetClickhouseClusterBackup), arg0, arg1)
 }
 
+// GetClickhouseClusterFromBackup mocks base method.
+func (m *MockClickhouseClusterBackup) GetClickhouseClusterFromBackup(arg0 context.Context, arg1 client.GetClickhouseClusterFromBackupRequest) (*client.GetClickhouseClusterFromBackupResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetClickhouseClusterFromBackup", arg0, arg1)
+	ret0, _ := ret[0].(*client.GetClickhouseClusterFromBackupResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetClickhouseClusterFromBackup indicates an expected call of GetClickhouseClusterFromBackup.
+func (mr *MockClickhouseClusterBackupMockRecorder) GetClickhouseClusterFromBackup(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClickhouseClusterFromBackup", reflect.TypeOf((*MockClickhouseClusterBackup)(nil).GetClickhouseClusterFromBackup), arg0, arg1)
+}
+
 // ListClickhouseClusterBackups mocks base method.
 func (m *MockClickhouseClusterBackup) ListClickhouseClusterBackups(arg0 context.Context, arg1 client.ListClickhouseClusterBackupsRequest) (*client.ListClickhouseClusterBackupsResponse, error) {
 	m.ctrl.T.Helper()
@@ -92,6 +107,21 @@ func (m *MockClickhouseClusterBackup) ListClickhouseClusterBackups(arg0 context.
 func (mr *MockClickhouseClusterBackupMockRecorder) ListClickhouseClusterBackups(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListClickhouseClusterBackups", reflect.TypeOf((*MockClickhouseClusterBackup)(nil).ListClickhouseClusterBackups), arg0, arg1)
+}
+
+// ListClickhouseClusterBackupsInProject mocks base method.
+func (m *MockClickhouseClusterBackup) ListClickhouseClusterBackupsInProject(arg0 context.Context, arg1 client.ListClickhouseClusterBackupsInProjectRequest) (*client.ListClickhouseClusterBackupsInProjectResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListClickhouseClusterBackupsInProject", arg0, arg1)
+	ret0, _ := ret[0].(*client.ListClickhouseClusterBackupsInProjectResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListClickhouseClusterBackupsInProject indicates an expected call of ListClickhouseClusterBackupsInProject.
+func (mr *MockClickhouseClusterBackupMockRecorder) ListClickhouseClusterBackupsInProject(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListClickhouseClusterBackupsInProject", reflect.TypeOf((*MockClickhouseClusterBackup)(nil).ListClickhouseClusterBackupsInProject), arg0, arg1)
 }
 
 // UpdateClickhouseClusterBackup mocks base method.

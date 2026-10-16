@@ -13,6 +13,8 @@ import (
 // Real OAPI model name: CommonRoleBindingStatus
 type CommonRoleBindingStatusRequest struct {
 	ResourceStatusRequest `yaml:"-,inline"`
+	// Состояние обработки привязки роли системой.
+	RoleBinding *CommonRoleBindingStatusSpecRequest `json:"roleBinding,omitempty" yaml:"roleBinding,omitempty"`
 }
 
 func (m *CommonRoleBindingStatusRequest) GetReady() ResourceStatusReadyRequest {
@@ -22,6 +24,20 @@ func (m *CommonRoleBindingStatusRequest) GetReady() ResourceStatusReadyRequest {
 	return ResourceStatusReadyRequest{}
 }
 
+func (m *CommonRoleBindingStatusRequest) GetRoleBinding() *CommonRoleBindingStatusSpecRequest {
+	if m != nil {
+		return m.RoleBinding
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingStatusRequest) GetRoleBindingOr(val CommonRoleBindingStatusSpecRequest) CommonRoleBindingStatusSpecRequest {
+	if m != nil && m.RoleBinding != nil {
+		return *m.RoleBinding
+	}
+	return val
+}
+
 func (m *CommonRoleBindingStatusRequest) Clone() *CommonRoleBindingStatusRequest {
 	if m == nil {
 		return nil
@@ -29,6 +45,7 @@ func (m *CommonRoleBindingStatusRequest) Clone() *CommonRoleBindingStatusRequest
 
 	clone := *m
 	clone.ResourceStatusRequest = *m.ResourceStatusRequest.Clone()
+	clone.RoleBinding = m.RoleBinding.Clone()
 
 	return &clone
 }
@@ -61,6 +78,12 @@ func (m *CommonRoleBindingStatusRequest) encodeFields(e *jx.Encoder) error {
 	if err := m.Ready.Encode(e); err != nil {
 		return err
 	}
+	if m.RoleBinding != nil {
+		e.FieldStart("roleBinding")
+		if err := m.RoleBinding.Encode(e); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -86,6 +109,18 @@ func (m *CommonRoleBindingStatusRequest) Decode(d *jx.Decoder) error {
 
 			m.Ready = v
 			requiredFilled["ready"] = true
+			return nil
+		case "roleBinding":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CommonRoleBindingStatusSpecRequest
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RoleBinding = &v
 			return nil
 		default:
 			return d.Skip()

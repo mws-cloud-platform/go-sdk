@@ -24,6 +24,7 @@ func TestCertificateStatusDetailsResponseMarshalling(t *testing.T) {
 
 func initCertificateStatusDetailsResponse() model.CertificateStatusDetailsResponse {
 	var v model.CertificateStatusDetailsResponse
+	v.SupportedPrivateKeyFormats = make([]model.PrivateKeyFormat, 0)
 	v.Domains = make([]model.CertificateDomain, 0)
 	return v
 }

@@ -26,7 +26,7 @@ func TestClickhouseClusterInstanceResourceResponseMarshalling(t *testing.T) {
 
 func initClickhouseClusterInstanceResourceResponse() model.ClickhouseClusterInstanceResourceResponse {
 	var v model.ClickhouseClusterInstanceResourceResponse
-	v.Id = mclickhouse.NewMustClickhouseClusterShardInstanceID("projectID", "clusterID", "shardID", "instanceID")
+	v.Id = mclickhouse.NewMustClickhouseClusterShardInstanceID("projectID", "c", "b", "tht1xig")
 	v.Zone = rm.NewMustZoneRef("zoneID")
 	return v
 }

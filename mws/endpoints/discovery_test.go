@@ -53,11 +53,42 @@ func TestDiscoveryEndpointResolver(t *testing.T) {
 			Expected:  "other.endpoint",
 		},
 		{
+			Name:      "longest_prefix_wins",
+			Endpoints: map[string]endpoints.DiscoveryEndpoint{"iam/tokenservice": {"tokenservice.mws.ru"}, "iam": {"iam.mws.ru"}},
+			Service:   "iam/tokenservice/ru-central1",
+			Expected:  "tokenservice.mws.ru",
+		},
+		{
+			Name:      "exists_middle_path",
+			Endpoints: map[string]endpoints.DiscoveryEndpoint{"iam/tokenservice": {"tokenservice.mws.ru"}},
+			Service:   "iam/tokenservice/ru-central1",
+			Expected:  "tokenservice.mws.ru",
+		},
+		{
+			Name:      "longer_key_wins_over_shorter",
+			Endpoints: map[string]endpoints.DiscoveryEndpoint{"vpc/ron-cpl": {"ron.mws.ru"}, "vpc": {"vpc.mws.ru"}},
+			Service:   "vpc/ron-cpl",
+			Expected:  "ron.mws.ru",
+		},
+		{
+			Name:      "trailing_slash",
+			Endpoints: map[string]endpoints.DiscoveryEndpoint{"vpc": {"vpc.mws.ru"}},
+			Service:   "vpc/",
+			Expected:  "vpc.mws.ru",
+		},
+		{
 			Name:      "nonexistent",
 			Service:   "vpc/nonexistent",
 			Endpoints: map[string]endpoints.DiscoveryEndpoint{"other": {"other.endpoint"}, "compute": {"compute.mws.ru"}},
 			Err:       endpoints.ErrEndpointNotFound,
 			ErrMsg:    "service \"vpc/nonexistent\": endpoint not found",
+		},
+		{
+			Name:      "empty service",
+			Service:   "",
+			Endpoints: map[string]endpoints.DiscoveryEndpoint{"iam": {"iam.mws.ru"}},
+			Err:       endpoints.ErrEndpointNotFound,
+			ErrMsg:    "service \"\": endpoint not found",
 		},
 	} {
 		t.Run(tt.Name, func(t *testing.T) {

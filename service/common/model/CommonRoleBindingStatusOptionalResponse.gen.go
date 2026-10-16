@@ -7,12 +7,17 @@ import (
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 // Текущее состояние привязки роли, вычисляемое системой.
 // Real OAPI model name: CommonRoleBindingStatus
 type CommonRoleBindingStatusOptionalResponse struct {
 	ResourceStatusOptionalResponse `yaml:"-,inline"`
+	// Состояние обработки привязки роли системой.
+	RoleBinding optional.OptionalNil[CommonRoleBindingStatusSpecOptionalResponse] `json:"roleBinding,omitempty" yaml:"roleBinding,omitempty"`
+	// Состояние активности привязки роли
+	Active *CommonRoleBindingActiveStatusResponse `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
 func (m *CommonRoleBindingStatusOptionalResponse) GetReady() ResourceStatusReadyOptionalResponse {
@@ -22,6 +27,34 @@ func (m *CommonRoleBindingStatusOptionalResponse) GetReady() ResourceStatusReady
 	return ResourceStatusReadyOptionalResponse{}
 }
 
+func (m *CommonRoleBindingStatusOptionalResponse) GetRoleBinding() *CommonRoleBindingStatusSpecOptionalResponse {
+	if m != nil && m.RoleBinding.IsSet() && !m.RoleBinding.IsNull() {
+		return &m.RoleBinding.Value
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingStatusOptionalResponse) GetRoleBindingOr(val CommonRoleBindingStatusSpecOptionalResponse) CommonRoleBindingStatusSpecOptionalResponse {
+	if m != nil && m.RoleBinding.IsSet() && !m.RoleBinding.IsNull() {
+		return m.RoleBinding.Value
+	}
+	return val
+}
+
+func (m *CommonRoleBindingStatusOptionalResponse) GetActive() *CommonRoleBindingActiveStatusResponse {
+	if m != nil {
+		return m.Active
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingStatusOptionalResponse) GetActiveOr(val CommonRoleBindingActiveStatusResponse) CommonRoleBindingActiveStatusResponse {
+	if m != nil && m.Active != nil {
+		return *m.Active
+	}
+	return val
+}
+
 func (m *CommonRoleBindingStatusOptionalResponse) Clone() *CommonRoleBindingStatusOptionalResponse {
 	if m == nil {
 		return nil
@@ -29,6 +62,10 @@ func (m *CommonRoleBindingStatusOptionalResponse) Clone() *CommonRoleBindingStat
 
 	clone := *m
 	clone.ResourceStatusOptionalResponse = *m.ResourceStatusOptionalResponse.Clone()
+	if clone.RoleBinding.IsSet() {
+		clone.RoleBinding.Value = *m.RoleBinding.Value.Clone()
+	}
+	clone.Active = m.Active.Clone()
 
 	return &clone
 }
@@ -61,6 +98,23 @@ func (m *CommonRoleBindingStatusOptionalResponse) encodeFields(e *jx.Encoder) er
 	if err := m.Ready.Encode(e); err != nil {
 		return err
 	}
+	if m.RoleBinding.IsSet() {
+		e.FieldStart("roleBinding")
+		if m.RoleBinding.IsNull() {
+			e.Null()
+		} else {
+			if err := m.RoleBinding.Value.Encode(e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if m.Active != nil {
+		e.FieldStart("active")
+		if err := m.Active.Encode(e); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -82,6 +136,31 @@ func (m *CommonRoleBindingStatusOptionalResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Ready = v
+			return nil
+		case "roleBinding":
+			if d.Next() == jx.Null {
+				m.RoleBinding.SetToNull()
+				return d.Null()
+			}
+
+			var v CommonRoleBindingStatusSpecOptionalResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RoleBinding.SetTo(v)
+			return nil
+		case "active":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CommonRoleBindingActiveStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Active = &v
 			return nil
 		default:
 			return d.Skip()

@@ -97,6 +97,12 @@ func (c *Mk8sVersion) queryListMk8sVersions(request *client.ListMk8sVersionsRequ
 	if request.NodeGroupName != nil {
 		q.Add("nodeGroupName", conv.StringToString(*request.NodeGroupName))
 	}
+	if request.PageSize != nil {
+		q.Add("pageSize", conv.IntToString(*request.PageSize))
+	}
+	if request.PageToken != nil {
+		q.Add("pageToken", conv.StringToString(*request.PageToken))
+	}
 	return q.Encode()
 }
 

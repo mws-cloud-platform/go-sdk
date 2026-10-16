@@ -32,6 +32,8 @@ type UpdateNodeGroupSpecRequest struct {
 	ImageStorageSize optional.Optional[bytesize.ByteSize] `json:"imageStorageSize" yaml:"imageStorageSize"`
 	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров
 	ImageStorageIops optional.Optional[int64] `json:"imageStorageIops" yaml:"imageStorageIops"`
+	// Максимальное число подов, которые могут быть запущены на каждом узле группы
+	MaxPods optional.Optional[int] `json:"maxPods" yaml:"maxPods"`
 	// Параметры локальных дисков для каждого узла в группе узлов
 	LocalDisks optional.OptionalNil[[]UpdateLocalDiskSpecRequest] `json:"localDisks" yaml:"localDisks"`
 	// Признак того, что группа узлов предназначена для кэширования данных. При значении true оператор устанавливает метку csi.mws.ru/data-cache=true на узлы группы (дополнительно требуется заполнение поля localDisks)
@@ -62,6 +64,9 @@ func (m *NodeGroupSpecRequest) AsUpdateModel() UpdateNodeGroupSpecRequest {
 	}
 	if m.ImageStorageIops != nil {
 		u.ImageStorageIops = optional.NewOptional(m.GetImageStorageIopsOr(0))
+	}
+	if m.MaxPods != nil {
+		u.MaxPods = optional.NewOptional(m.GetMaxPodsOr(0))
 	}
 	if m.LocalDisks != nil {
 		u.LocalDisks = optional.NewOptionalNil(func() []UpdateLocalDiskSpecRequest {
@@ -120,6 +125,7 @@ func (m *NodeGroupSpecRequest) Diff(src *NodeGroupSpecRequest) UpdateNodeGroupSp
 		upd.VmType = m.diffVmType(src)
 		upd.ImageStorageSize = m.diffImageStorageSize(src)
 		upd.ImageStorageIops = m.diffImageStorageIops(src)
+		upd.MaxPods = m.diffMaxPods(src)
 		upd.LocalDisks = m.diffLocalDisks(src)
 		upd.DataCache = m.diffDataCache(src)
 		upd.Scale = m.diffScale(src)
@@ -157,6 +163,9 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 	}
 	if u.ImageStorageIops.IsSet() {
 		out.ImageStorageIops = ptr.Get(u.ImageStorageIops.Value)
+	}
+	if u.MaxPods.IsSet() {
+		out.MaxPods = ptr.Get(u.MaxPods.Value)
 	}
 	if u.LocalDisks.IsSet() {
 		out.LocalDisks = merge.Slice(out.LocalDisks, u.LocalDisks.Value, (*LocalDiskSpecRequest).WithChanges, (*LocalDiskSpecRequest).GetName, (*UpdateLocalDiskSpecRequest).GetName)
@@ -199,6 +208,7 @@ func (m UpdateNodeGroupSpecRequest) HasChanges() bool {
 		m.VmType.Set ||
 		m.ImageStorageSize.Set ||
 		m.ImageStorageIops.Set ||
+		m.MaxPods.Set ||
 		m.LocalDisks.Set ||
 		m.DataCache.Set ||
 		m.Scale.Set ||
@@ -278,6 +288,11 @@ func (m *NodeGroupSpecRequest) diffImageStorageSize(src *NodeGroupSpecRequest) o
 func (m *NodeGroupSpecRequest) diffImageStorageIops(src *NodeGroupSpecRequest) optional.Optional[int64] {
 	nilDiffers := src != nil && m == nil
 	return commonclient.DiffPrimitiveNonRequired(src.GetImageStorageIops(), m.GetImageStorageIops(), nilDiffers)
+}
+
+func (m *NodeGroupSpecRequest) diffMaxPods(src *NodeGroupSpecRequest) optional.Optional[int] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetMaxPods(), m.GetMaxPods(), nilDiffers)
 }
 
 func (m *NodeGroupSpecRequest) diffLocalDisks(src *NodeGroupSpecRequest) optional.OptionalNil[[]UpdateLocalDiskSpecRequest] {

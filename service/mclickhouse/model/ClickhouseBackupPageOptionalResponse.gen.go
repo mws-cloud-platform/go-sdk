@@ -11,8 +11,10 @@ import (
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Список резервных копий кластеров ClickHouse
 // Real OAPI model name: ClickhouseBackupPage
 type ClickhouseBackupPageOptionalResponse struct {
+	// Резервные копии кластеров ClickHouse на текущей странице.
 	Items []ClickhouseBackupOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
 	NextPageToken optional.Optional[commonmodel.NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`

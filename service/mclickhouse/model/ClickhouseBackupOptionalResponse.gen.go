@@ -22,7 +22,8 @@ type ClickhouseBackupOptionalResponse struct {
 	Kind     *string                                                        `json:"kind,omitempty" yaml:"kind,omitempty"`
 	Metadata optional.OptionalNil[ClickhouseBackupMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Spec     optional.OptionalNil[ClickhouseBackupSpecOptionalResponse]     `json:"spec,omitempty" yaml:"spec,omitempty"`
-	Status   *ClickhouseBackupStatusResponse                                `json:"status,omitempty" yaml:"status,omitempty"`
+	// Текущее состояние резервной копии.
+	Status *ClickhouseBackupStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
 func (m *ClickhouseBackupOptionalResponse) GetKind() *string {

@@ -35,6 +35,9 @@ func NodeGroupSpecRequestToOptionalResponse(request *NodeGroupSpecRequest) (*Nod
 	if request.ImageStorageIops != nil {
 		response.ImageStorageIops = optional.NewOptional(*request.ImageStorageIops)
 	}
+	if request.MaxPods != nil {
+		response.MaxPods = optional.NewOptional(*request.MaxPods)
+	}
 	for _, e := range request.LocalDisks {
 		tmp, err := LocalDiskSpecRequestToOptionalResponse(&e)
 		if err != nil {

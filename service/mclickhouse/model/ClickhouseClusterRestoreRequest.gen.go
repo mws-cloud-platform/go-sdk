@@ -9,6 +9,7 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 )
 
+// Параметры восстанавливаемого из резервной копии кластера
 // Real OAPI model name: ClickhouseClusterRestore
 type ClickhouseClusterRestoreRequest struct {
 	// Параметры восстанавливаемого кластера.

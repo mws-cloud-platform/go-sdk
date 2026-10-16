@@ -12,6 +12,7 @@ import (
 
 // Real OAPI model name: ClickhouseClusterUserPage
 type ClickhouseClusterUserPageResponse struct {
+	// Пользователи ClickHouse на текущей странице.
 	Items []ClickhouseClusterUserResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
 	NextPageToken *commonmodel.NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`

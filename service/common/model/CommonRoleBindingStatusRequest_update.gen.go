@@ -3,16 +3,23 @@
 package model
 
 import (
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateCommonRoleBindingStatusRequest struct {
 	UpdateResourceStatusRequest
+	// Состояние обработки привязки роли системой.
+	RoleBinding optional.OptionalNil[UpdateCommonRoleBindingStatusSpecRequest] `json:"roleBinding" yaml:"roleBinding"`
 }
 
 func (m *CommonRoleBindingStatusRequest) AsUpdateModel() UpdateCommonRoleBindingStatusRequest {
 	var u UpdateCommonRoleBindingStatusRequest
 	u.Ready = optional.NewOptional(m.Ready.AsUpdateModel())
+	if m.RoleBinding != nil {
+		u.RoleBinding = optional.NewOptionalNil(m.RoleBinding.AsUpdateModel())
+	}
 	return u
 }
 
@@ -22,6 +29,7 @@ func (m *CommonRoleBindingStatusRequest) Diff(src *CommonRoleBindingStatusReques
 	upd := UpdateCommonRoleBindingStatusRequest{}
 	if !nilDiffers {
 		upd.Ready = m.diffReady(src)
+		upd.RoleBinding = m.diffRoleBinding(src)
 	}
 	return upd
 }
@@ -35,12 +43,18 @@ func (m *CommonRoleBindingStatusRequest) WithChanges(u UpdateCommonRoleBindingSt
 	if u.Ready.IsSet() {
 		out.Ready = out.Ready.WithChanges(u.Ready.Value)
 	}
+	if u.RoleBinding.IsSet() {
+		out.RoleBinding = ptr.Get(out.RoleBinding.WithChanges(u.RoleBinding.Value))
+	} else if u.RoleBinding.IsNull() {
+		out.RoleBinding = nil
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateCommonRoleBindingStatusRequest) HasChanges() bool {
-	return m.Ready.Set
+	return m.Ready.Set ||
+		m.RoleBinding.Set
 }
 
 func (m *CommonRoleBindingStatusRequest) diffReady(src *CommonRoleBindingStatusRequest) optional.Optional[UpdateResourceStatusReadyRequest] {
@@ -50,5 +64,15 @@ func (m *CommonRoleBindingStatusRequest) diffReady(src *CommonRoleBindingStatusR
 	return optional.Optional[UpdateResourceStatusReadyRequest]{
 		Value: value,
 		Set:   value.HasChanges(),
+	}
+}
+
+func (m *CommonRoleBindingStatusRequest) diffRoleBinding(src *CommonRoleBindingStatusRequest) optional.OptionalNil[UpdateCommonRoleBindingStatusSpecRequest] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetRoleBinding().Diff(src.GetRoleBinding())
+	return optional.OptionalNil[UpdateCommonRoleBindingStatusSpecRequest]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
 	}
 }

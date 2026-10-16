@@ -56,6 +56,8 @@ func (c *Mk8sReleaseChannel) listMk8sReleaseChannelsInvoker(ctx context.Context,
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryListMk8sReleaseChannels(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerListMk8sReleaseChannels(httpReq, request)
 
@@ -80,6 +82,17 @@ func (c *Mk8sReleaseChannel) listMk8sReleaseChannelsInvoker(ctx context.Context,
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *Mk8sReleaseChannel) queryListMk8sReleaseChannels(request *client.ListMk8sReleaseChannelsRequest) string {
+	q := make(url.Values)
+	if request.PageSize != nil {
+		q.Add("pageSize", conv.IntToString(*request.PageSize))
+	}
+	if request.PageToken != nil {
+		q.Add("pageToken", conv.StringToString(*request.PageToken))
+	}
+	return q.Encode()
 }
 
 func (c *Mk8sReleaseChannel) headerListMk8sReleaseChannels(req *http.Request, request *client.ListMk8sReleaseChannelsRequest) {

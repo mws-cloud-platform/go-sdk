@@ -16,6 +16,98 @@ import (
 	"go.mws.cloud/go-sdk/service/mclickhouse/client"
 )
 
+// ListClickhouseClusterBackupsInProject возвращает постраничный список резервных копий кластеров ClickHouse.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: GET /mclickhouse/v1/projects/{project}/backups
+func (c *ClickhouseClusterBackup) ListClickhouseClusterBackupsInProject(ctx context.Context, request client.ListClickhouseClusterBackupsInProjectRequest) (r *client.ListClickhouseClusterBackupsInProjectResponse, err error) {
+	ctx = c.setListClickhouseClusterBackupsInProjectAttributes(ctx)
+	r = &client.ListClickhouseClusterBackupsInProjectResponse{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.listClickhouseClusterBackupsInProjectInvoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *ClickhouseClusterBackup) setListClickhouseClusterBackupsInProjectAttributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "ListClickhouseClusterBackupsInProject"),
+		commonattribute.String(commonattribute.PathTemplate, "/mclickhouse/v1/projects/{project}/backups"),
+		commonattribute.String(commonattribute.ProjectName, "mclickhouse"),
+		commonattribute.String(commonattribute.ServiceName, "clickhouseClusterBackup"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *ClickhouseClusterBackup) listClickhouseClusterBackupsInProjectInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.ListClickhouseClusterBackupsInProjectRequest)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"mclickhouse",
+		"v1",
+		"projects",
+		url.PathEscape(request.Project),
+		"backups")
+
+	ctx = valuesctx.With(ctx, "project", request.Project)
+
+	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	httpReq.URL.RawQuery = c.queryListClickhouseClusterBackupsInProject(request)
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerListClickhouseClusterBackupsInProject(httpReq, request)
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeListClickhouseClusterBackupsInProjectResponse(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.ListClickhouseClusterBackupsInProjectResponse)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *ClickhouseClusterBackup) queryListClickhouseClusterBackupsInProject(request *client.ListClickhouseClusterBackupsInProjectRequest) string {
+	q := make(url.Values)
+	if request.PageSize != nil {
+		q.Add("pageSize", conv.IntToString(*request.PageSize))
+	}
+	if request.PageToken != nil {
+		q.Add("pageToken", conv.StringToString(*request.PageToken))
+	}
+	if request.Filter != nil {
+		q.Add("filter", conv.StringToString(*request.Filter))
+	}
+	if request.OrderBy != nil {
+		q.Add("orderBy", conv.StringToString(*request.OrderBy))
+	}
+	return q.Encode()
+}
+
+func (c *ClickhouseClusterBackup) headerListClickhouseClusterBackupsInProject(req *http.Request, request *client.ListClickhouseClusterBackupsInProjectRequest) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
+}
+
 // ListClickhouseClusterBackups возвращает постраничный список резервных копий указанного кластера ClickHouse.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -111,6 +203,84 @@ func (c *ClickhouseClusterBackup) queryListClickhouseClusterBackups(request *cli
 }
 
 func (c *ClickhouseClusterBackup) headerListClickhouseClusterBackups(req *http.Request, request *client.ListClickhouseClusterBackupsRequest) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
+}
+
+// GetClickhouseClusterFromBackup возвращает информацию о кластере ClickHouse по резервной копии.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}:getCluster
+func (c *ClickhouseClusterBackup) GetClickhouseClusterFromBackup(ctx context.Context, request client.GetClickhouseClusterFromBackupRequest) (r *client.GetClickhouseClusterFromBackupResponse, err error) {
+	ctx = c.setGetClickhouseClusterFromBackupAttributes(ctx)
+	r = &client.GetClickhouseClusterFromBackupResponse{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.getClickhouseClusterFromBackupInvoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *ClickhouseClusterBackup) setGetClickhouseClusterFromBackupAttributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "GetClickhouseClusterFromBackup"),
+		commonattribute.String(commonattribute.PathTemplate, "/mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}:getCluster"),
+		commonattribute.String(commonattribute.ProjectName, "mclickhouse"),
+		commonattribute.String(commonattribute.ServiceName, "clickhouseClusterBackup"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *ClickhouseClusterBackup) getClickhouseClusterFromBackupInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.GetClickhouseClusterFromBackupRequest)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"mclickhouse",
+		"v1",
+		"projects",
+		url.PathEscape(request.Project),
+		"clusters",
+		url.PathEscape(request.Cluster),
+		"backups",
+		url.PathEscape(request.Backup)+":getCluster")
+
+	ctx = valuesctx.With(ctx, "project", request.Project)
+	ctx = valuesctx.With(ctx, "cluster", request.Cluster)
+	ctx = valuesctx.With(ctx, "backup", request.Backup)
+
+	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerGetClickhouseClusterFromBackup(httpReq, request)
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeGetClickhouseClusterFromBackupResponse(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.GetClickhouseClusterFromBackupResponse)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *ClickhouseClusterBackup) headerGetClickhouseClusterFromBackup(req *http.Request, request *client.GetClickhouseClusterFromBackupRequest) {
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 

@@ -5,11 +5,7 @@ package client
 import (
 	"context"
 
-	"github.com/go-faster/jx"
-
-	"go.mws.cloud/go-sdk/internal/conv"
 	mwsinternalerrors "go.mws.cloud/go-sdk/internal/errors"
-	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mk8s/model"
@@ -37,6 +33,10 @@ type ListMk8sVersionsRequest struct {
 	ClusterName *string // query: "clusterName"
 	// Имя группы узлов
 	NodeGroupName *string // query: "nodeGroupName"
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
+	PageSize *int // query: "pageSize"
+	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
+	PageToken *string // query: "pageToken"
 }
 
 func (m *ListMk8sVersionsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
@@ -51,9 +51,14 @@ func (m *ListMk8sVersionsRequest) SetProject(project string) {
 	m.Project = project
 }
 
+func (m ListMk8sVersionsRequest) WithPageToken(token *string) ListMk8sVersionsRequest {
+	m.PageToken = token
+	return m
+}
+
 type ListMk8sVersionsResponse struct {
 	Code        int
-	Response200 *ListMk8sVersionsResponse200
+	Response200 *model.VersionListResponse
 	Response400 *commonmodel.ApiError
 	Response403 *commonmodel.ApiError
 	Response404 *commonmodel.ApiError
@@ -91,100 +96,4 @@ func (m *ListMk8sVersionsResponse) SetErrorWrapper(f func(err error) error) {
 	if m != nil {
 		m.errorWrapper = f
 	}
-}
-
-// ListMk8sVersionsResponse200 is a nested type
-type ListMk8sVersionsResponse200 struct {
-	Items []model.VersionResponse `json:"items" yaml:"items"`
-}
-
-func (m *ListMk8sVersionsResponse200) GetItems() []model.VersionResponse {
-	if m != nil {
-		return m.Items
-	}
-	return nil
-}
-
-func (m *ListMk8sVersionsResponse200) SetItems(val []model.VersionResponse) {
-	m.Items = val
-}
-
-func (m *ListMk8sVersionsResponse200) Clone() *ListMk8sVersionsResponse200 {
-	if m == nil {
-		return nil
-	}
-
-	clone := *m
-	if m.Items != nil {
-		clone.Items = make([]model.VersionResponse, len(m.Items))
-		for i, v := range m.Items {
-			clone.Items[i] = *v.Clone()
-		}
-	}
-	return &clone
-}
-
-func (m ListMk8sVersionsResponse200) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	if err := m.Encode(&e); err != nil {
-		return nil, err
-	}
-	return e.Bytes(), nil
-}
-
-func (m *ListMk8sVersionsResponse200) Encode(e *jx.Encoder) error {
-	if m == nil {
-		e.Null()
-		return nil
-	}
-	e.ObjStart()
-	if err := m.encodeFields(e); err != nil {
-		return err
-	}
-	e.ObjEnd()
-	return nil
-}
-
-func (m *ListMk8sVersionsResponse200) encodeFields(e *jx.Encoder) error {
-	e.FieldStart("items")
-	e.ArrStart()
-	for _, elem := range m.Items {
-		if err := elem.Encode(e); err != nil {
-			return err
-		}
-	}
-	e.ArrEnd()
-	return nil
-}
-
-func (m *ListMk8sVersionsResponse200) UnmarshalJSON(b []byte) error {
-	return m.Decode(jx.DecodeBytes(b))
-}
-
-func (m *ListMk8sVersionsResponse200) Decode(d *jx.Decoder) error {
-	if m == nil {
-		return conv.NewDecodeToNilError("ListMk8sVersionsResponse200")
-	}
-
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "items":
-			c := make([]model.VersionResponse, 0)
-			if err := d.Arr(reserrors.PathAccumulatorErrorAsIndexArrFuncWrap(func(d *jx.Decoder) error {
-				var v model.VersionResponse
-				if err := v.Decode(d); err != nil {
-					return err
-				}
-				c = append(c, v)
-				return nil
-			})); err != nil {
-				return err
-			}
-
-			m.Items = c
-			return nil
-		default:
-			return d.Skip()
-		}
-	}))
 }

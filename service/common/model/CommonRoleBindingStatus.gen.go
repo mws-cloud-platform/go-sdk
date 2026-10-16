@@ -4,6 +4,7 @@ package model
 
 import (
 	"github.com/go-faster/jx"
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -12,6 +13,10 @@ import (
 // Текущее состояние привязки роли, вычисляемое системой.
 type CommonRoleBindingStatus struct {
 	ResourceStatus `yaml:"-,inline"`
+	// Состояние обработки привязки роли системой.
+	RoleBinding *CommonRoleBindingStatusSpec `json:"roleBinding,omitempty" yaml:"roleBinding,omitempty"`
+	// Состояние активности привязки роли
+	Active *CommonRoleBindingActiveStatus `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
 func (m *CommonRoleBindingStatus) GetReady() ResourceStatusReady {
@@ -21,6 +26,34 @@ func (m *CommonRoleBindingStatus) GetReady() ResourceStatusReady {
 	return ResourceStatusReady{}
 }
 
+func (m *CommonRoleBindingStatus) GetRoleBinding() *CommonRoleBindingStatusSpec {
+	if m != nil {
+		return m.RoleBinding
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingStatus) GetRoleBindingOr(val CommonRoleBindingStatusSpec) CommonRoleBindingStatusSpec {
+	if m != nil && m.RoleBinding != nil {
+		return *m.RoleBinding
+	}
+	return val
+}
+
+func (m *CommonRoleBindingStatus) GetActive() *CommonRoleBindingActiveStatus {
+	if m != nil {
+		return m.Active
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingStatus) GetActiveOr(val CommonRoleBindingActiveStatus) CommonRoleBindingActiveStatus {
+	if m != nil && m.Active != nil {
+		return *m.Active
+	}
+	return val
+}
+
 func (m *CommonRoleBindingStatus) Clone() *CommonRoleBindingStatus {
 	if m == nil {
 		return nil
@@ -28,6 +61,8 @@ func (m *CommonRoleBindingStatus) Clone() *CommonRoleBindingStatus {
 
 	clone := *m
 	clone.ResourceStatus = *m.ResourceStatus.Clone()
+	clone.RoleBinding = m.RoleBinding.Clone()
+	clone.Active = m.Active.Clone()
 
 	return &clone
 }
@@ -60,6 +95,19 @@ func (m *CommonRoleBindingStatus) encodeFields(e *jx.Encoder) error {
 	if err := m.Ready.Encode(e); err != nil {
 		return err
 	}
+	if m.RoleBinding != nil {
+		e.FieldStart("roleBinding")
+		if err := m.RoleBinding.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Active != nil {
+		e.FieldStart("active")
+		if err := m.Active.Encode(e); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -86,6 +134,30 @@ func (m *CommonRoleBindingStatus) Decode(d *jx.Decoder) error {
 			m.Ready = v
 			requiredFilled["ready"] = true
 			return nil
+		case "roleBinding":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CommonRoleBindingStatusSpec
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RoleBinding = &v
+			return nil
+		case "active":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CommonRoleBindingActiveStatus
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Active = &v
+			return nil
 		default:
 			return d.Skip()
 		}
@@ -95,4 +167,16 @@ func (m *CommonRoleBindingStatus) Decode(d *jx.Decoder) error {
 	}
 
 	return conv.ValidateRequired(requiredFilled)
+}
+
+// Defaults
+
+func (m *CommonRoleBindingStatus) WithDefaults() CommonRoleBindingStatus {
+	var out CommonRoleBindingStatus
+	if m != nil {
+		out = *m
+	}
+
+	out.Active = ptr.Get(out.Active.WithDefaults())
+	return out
 }

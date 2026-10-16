@@ -12,11 +12,19 @@ import (
 
 // Real OAPI model name: OutputModalities
 type OutputModalitiesResponse struct {
-	Text          bool `json:"text" yaml:"text"`
-	Embedding     bool `json:"embedding" yaml:"embedding"`
-	Audio         bool `json:"audio" yaml:"audio"`
-	Image         bool `json:"image" yaml:"image"`
-	Reranking     bool `json:"reranking" yaml:"reranking"`
+	// Признак того, что модель поддерживает текстовый вывод.
+	Text bool `json:"text" yaml:"text"`
+	// Признак того, что модель поддерживает вывод эмбеддингов.
+	Embedding bool `json:"embedding" yaml:"embedding"`
+	// Признак того, что модель поддерживает аудиовывод.
+	Audio bool `json:"audio" yaml:"audio"`
+	// Признак того, что модель поддерживает вывод изображений.
+	Image bool `json:"image" yaml:"image"`
+	// Признак того, что модель поддерживает переранжирование результатов.
+	Reranking bool `json:"reranking" yaml:"reranking"`
+	// Признак того, что модель поддерживает принятие решений.
+	Decision *bool `json:"decision,omitempty" yaml:"decision,omitempty"`
+	// Признак того, что модель поддерживает транскрипцию.
 	Transcription bool `json:"transcription" yaml:"transcription"`
 }
 
@@ -75,6 +83,24 @@ func (m *OutputModalitiesResponse) SetReranking(val bool) {
 	m.Reranking = val
 }
 
+func (m *OutputModalitiesResponse) GetDecision() *bool {
+	if m != nil {
+		return m.Decision
+	}
+	return nil
+}
+
+func (m *OutputModalitiesResponse) SetDecision(val *bool) {
+	m.Decision = val
+}
+
+func (m *OutputModalitiesResponse) GetDecisionOr(val bool) bool {
+	if m != nil && m.Decision != nil {
+		return *m.Decision
+	}
+	return val
+}
+
 func (m *OutputModalitiesResponse) GetTranscription() bool {
 	if m != nil {
 		return m.Transcription
@@ -92,6 +118,10 @@ func (m *OutputModalitiesResponse) Clone() *OutputModalitiesResponse {
 	}
 
 	clone := *m
+	if m.Decision != nil {
+		cloneDecision := *m.Decision
+		clone.Decision = &cloneDecision
+	}
 	return &clone
 }
 
@@ -133,6 +163,11 @@ func (m *OutputModalitiesResponse) encodeFields(e *jx.Encoder) error {
 
 	e.FieldStart("reranking")
 	e.Bool(m.Reranking)
+
+	if m.Decision != nil {
+		e.FieldStart("decision")
+		e.Bool(*m.Decision)
+	}
 
 	e.FieldStart("transcription")
 	e.Bool(m.Transcription)
@@ -189,6 +224,14 @@ func (m *OutputModalitiesResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Reranking = v
+			return nil
+		case "decision":
+			v, err := decode.Bool(d)
+			if err != nil {
+				return err
+			}
+
+			m.Decision = &v
 			return nil
 		case "transcription":
 			v, err := decode.Bool(d)

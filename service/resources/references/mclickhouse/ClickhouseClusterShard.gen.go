@@ -5,6 +5,7 @@ package mclickhouse
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -18,9 +19,12 @@ import (
 )
 
 var (
-	ClickhouseClusterShardRefTemplate = resparsers.Template{
+	ClickhouseClusterShardShardValidatePattern   = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterShardClusterValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterShardRefTemplate            = resparsers.Template{
 		{
 			Value:       "shard",
+			Pattern:     ClickhouseClusterShardShardValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -31,6 +35,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     ClickhouseClusterShardClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -66,6 +71,12 @@ func NewClickhouseClusterShardID(project, cluster, shard string) (ClickhouseClus
 	}
 	if project == "" {
 		return ClickhouseClusterShardID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if match := ClickhouseClusterShardShardValidatePattern.Match([]byte(shard)); !match {
+		return ClickhouseClusterShardID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "shard", shard)
+	}
+	if match := ClickhouseClusterShardClusterValidatePattern.Match([]byte(cluster)); !match {
+		return ClickhouseClusterShardID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
 	}
 	m := ClickhouseClusterShardID{
 		shard:   shard,
@@ -244,21 +255,13 @@ func (m *ClickhouseClusterShardID) parse() error {
 }
 
 func NewClickhouseClusterShardRef(project, cluster, shard string) (ClickhouseClusterShardRef, error) {
-	if shard == "" {
-		return ClickhouseClusterShardRef{}, reserrors.NewFieldIsEmptyError("shard")
+	id, err := NewClickhouseClusterShardID(project, cluster, shard)
+	if err != nil {
+		return ClickhouseClusterShardRef{}, err
 	}
-	if cluster == "" {
-		return ClickhouseClusterShardRef{}, reserrors.NewFieldIsEmptyError("cluster")
-	}
-	if project == "" {
-		return ClickhouseClusterShardRef{}, reserrors.NewFieldIsEmptyError("project")
-	}
+
 	m := ClickhouseClusterShardRef{
-		id: ClickhouseClusterShardID{
-			shard:   shard,
-			cluster: cluster,
-			project: project,
-		},
+		id: id,
 	}
 	m.id.path = m.absolutePath()
 	return m, nil

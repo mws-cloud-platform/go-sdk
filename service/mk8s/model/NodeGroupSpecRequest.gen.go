@@ -29,6 +29,8 @@ type NodeGroupSpecRequest struct {
 	ImageStorageSize *bytesize.ByteSize `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
 	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров
 	ImageStorageIops *int64 `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
+	// Максимальное число подов, которые могут быть запущены на каждом узле группы
+	MaxPods *int `json:"maxPods,omitempty" yaml:"maxPods,omitempty"`
 	// Параметры локальных дисков для каждого узла в группе узлов
 	LocalDisks []LocalDiskSpecRequest `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
 	// Признак того, что группа узлов предназначена для кэширования данных. При значении true оператор устанавливает метку csi.mws.ru/data-cache=true на узлы группы (дополнительно требуется заполнение поля localDisks)
@@ -129,6 +131,24 @@ func (m *NodeGroupSpecRequest) SetImageStorageIops(val *int64) {
 func (m *NodeGroupSpecRequest) GetImageStorageIopsOr(val int64) int64 {
 	if m != nil && m.ImageStorageIops != nil {
 		return *m.ImageStorageIops
+	}
+	return val
+}
+
+func (m *NodeGroupSpecRequest) GetMaxPods() *int {
+	if m != nil {
+		return m.MaxPods
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecRequest) SetMaxPods(val *int) {
+	m.MaxPods = val
+}
+
+func (m *NodeGroupSpecRequest) GetMaxPodsOr(val int) int {
+	if m != nil && m.MaxPods != nil {
+		return *m.MaxPods
 	}
 	return val
 }
@@ -262,6 +282,10 @@ func (m *NodeGroupSpecRequest) Clone() *NodeGroupSpecRequest {
 	if m.ImageStorageIops != nil {
 		cloneImageStorageIops := *m.ImageStorageIops
 		clone.ImageStorageIops = &cloneImageStorageIops
+	}
+	if m.MaxPods != nil {
+		cloneMaxPods := *m.MaxPods
+		clone.MaxPods = &cloneMaxPods
 	}
 	if m.LocalDisks != nil {
 		clone.LocalDisks = make([]LocalDiskSpecRequest, len(m.LocalDisks))
@@ -641,6 +665,11 @@ func (m *NodeGroupSpecRequest) encodeFields(e *jx.Encoder) error {
 		e.Int64(*m.ImageStorageIops)
 	}
 
+	if m.MaxPods != nil {
+		e.FieldStart("maxPods")
+		e.Int(*m.MaxPods)
+	}
+
 	if m.LocalDisks != nil {
 		e.FieldStart("localDisks")
 		e.ArrStart()
@@ -775,6 +804,14 @@ func (m *NodeGroupSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.ImageStorageIops = &v
+			return nil
+		case "maxPods":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.MaxPods = &v
 			return nil
 		case "localDisks":
 			if d.Next() == jx.Null {
@@ -1308,6 +1345,9 @@ func (m *NodeGroupSpecRequest) WithDefaults() NodeGroupSpecRequest {
 	}
 	if out.ImageStorageIops == nil {
 		out.ImageStorageIops = ptr.Get(int64(1000))
+	}
+	if out.MaxPods == nil {
+		out.MaxPods = ptr.Get(110)
 	}
 	if out.DataCache == nil {
 		out.DataCache = ptr.Get(false)

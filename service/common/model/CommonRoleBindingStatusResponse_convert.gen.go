@@ -12,5 +12,10 @@ func CommonRoleBindingStatusRequestToResponse(request *CommonRoleBindingStatusRe
 		return nil, err
 	}
 	response.Ready = *tmpReady
+	tmpRoleBinding, err := CommonRoleBindingStatusSpecRequestToResponse(request.RoleBinding)
+	if err != nil {
+		return nil, err
+	}
+	response.RoleBinding = tmpRoleBinding
 	return &response, nil
 }

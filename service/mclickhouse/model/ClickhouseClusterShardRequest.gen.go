@@ -24,7 +24,8 @@ type ClickhouseClusterShardRequest struct {
 	// Вес шарда.
 	Weight *int `json:"weight,omitempty" yaml:"weight,omitempty"`
 	// Описание эндпоинтов шардов.
-	Endpoints []ClickhouseEndpointRequest        `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
+	Endpoints []ClickhouseEndpointRequest `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
+	// Описание узла кластера.
 	Instances []ClickhouseClusterInstanceRequest `json:"instances" yaml:"instances"`
 }
 

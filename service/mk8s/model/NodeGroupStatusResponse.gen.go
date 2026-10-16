@@ -32,6 +32,8 @@ type NodeGroupStatusResponse struct {
 	ImageStorageSize *bytesize.ByteSize `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
 	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров
 	ImageStorageIops *int64 `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
+	// Максимальное количество Pod, которые можно запланировать на каждом узле группы
+	MaxPods *int `json:"maxPods,omitempty" yaml:"maxPods,omitempty"`
 	// Параметры локальных дисков для каждого узла в группе узлов
 	LocalDisks []LocalDiskStatusResponse `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
 	// Включено ли кэширование данных для группы узлов. Принимает значение false, если пользователь не задавал значение для кэширования при создании диска в Managed Kubernetes
@@ -135,6 +137,20 @@ func (m *NodeGroupStatusResponse) GetImageStorageIops() *int64 {
 func (m *NodeGroupStatusResponse) GetImageStorageIopsOr(val int64) int64 {
 	if m != nil && m.ImageStorageIops != nil {
 		return *m.ImageStorageIops
+	}
+	return val
+}
+
+func (m *NodeGroupStatusResponse) GetMaxPods() *int {
+	if m != nil {
+		return m.MaxPods
+	}
+	return nil
+}
+
+func (m *NodeGroupStatusResponse) GetMaxPodsOr(val int) int {
+	if m != nil && m.MaxPods != nil {
+		return *m.MaxPods
 	}
 	return val
 }
@@ -297,6 +313,10 @@ func (m *NodeGroupStatusResponse) Clone() *NodeGroupStatusResponse {
 	if m.ImageStorageIops != nil {
 		cloneImageStorageIops := *m.ImageStorageIops
 		clone.ImageStorageIops = &cloneImageStorageIops
+	}
+	if m.MaxPods != nil {
+		cloneMaxPods := *m.MaxPods
+		clone.MaxPods = &cloneMaxPods
 	}
 	if m.LocalDisks != nil {
 		clone.LocalDisks = make([]LocalDiskStatusResponse, len(m.LocalDisks))
@@ -739,6 +759,11 @@ func (m *NodeGroupStatusResponse) encodeFields(e *jx.Encoder) error {
 		e.Int64(*m.ImageStorageIops)
 	}
 
+	if m.MaxPods != nil {
+		e.FieldStart("maxPods")
+		e.Int(*m.MaxPods)
+	}
+
 	if m.LocalDisks != nil {
 		e.FieldStart("localDisks")
 		e.ArrStart()
@@ -909,6 +934,14 @@ func (m *NodeGroupStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.ImageStorageIops = &v
+			return nil
+		case "maxPods":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.MaxPods = &v
 			return nil
 		case "localDisks":
 			if d.Next() == jx.Null {

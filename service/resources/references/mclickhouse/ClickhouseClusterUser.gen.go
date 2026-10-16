@@ -5,6 +5,7 @@ package mclickhouse
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -18,9 +19,12 @@ import (
 )
 
 var (
-	ClickhouseClusterUserRefTemplate = resparsers.Template{
+	ClickhouseClusterUserUserValidatePattern    = regexp.MustCompile(`^[a-zA-Z0-9_][a-zA-Z0-9_-]{0,31}$`)
+	ClickhouseClusterUserClusterValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterUserRefTemplate            = resparsers.Template{
 		{
 			Value:       "user",
+			Pattern:     ClickhouseClusterUserUserValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -31,6 +35,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     ClickhouseClusterUserClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -66,6 +71,12 @@ func NewClickhouseClusterUserID(project, cluster, user string) (ClickhouseCluste
 	}
 	if project == "" {
 		return ClickhouseClusterUserID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if match := ClickhouseClusterUserUserValidatePattern.Match([]byte(user)); !match {
+		return ClickhouseClusterUserID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "user", user)
+	}
+	if match := ClickhouseClusterUserClusterValidatePattern.Match([]byte(cluster)); !match {
+		return ClickhouseClusterUserID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
 	}
 	m := ClickhouseClusterUserID{
 		user:    user,
@@ -244,21 +255,13 @@ func (m *ClickhouseClusterUserID) parse() error {
 }
 
 func NewClickhouseClusterUserRef(project, cluster, user string) (ClickhouseClusterUserRef, error) {
-	if user == "" {
-		return ClickhouseClusterUserRef{}, reserrors.NewFieldIsEmptyError("user")
+	id, err := NewClickhouseClusterUserID(project, cluster, user)
+	if err != nil {
+		return ClickhouseClusterUserRef{}, err
 	}
-	if cluster == "" {
-		return ClickhouseClusterUserRef{}, reserrors.NewFieldIsEmptyError("cluster")
-	}
-	if project == "" {
-		return ClickhouseClusterUserRef{}, reserrors.NewFieldIsEmptyError("project")
-	}
+
 	m := ClickhouseClusterUserRef{
-		id: ClickhouseClusterUserID{
-			user:    user,
-			cluster: cluster,
-			project: project,
-		},
+		id: id,
 	}
 	m.id.path = m.absolutePath()
 	return m, nil

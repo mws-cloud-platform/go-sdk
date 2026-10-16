@@ -13,6 +13,7 @@ import (
 	clienterrors "go.mws.cloud/go-sdk/internal/client/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 	"go.mws.cloud/go-sdk/service/mk8s/client"
+	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
 
 func decodeListMk8sVersionsResponse(resp *http.Response) (*client.ListMk8sVersionsResponse, error) {
@@ -27,7 +28,7 @@ func decodeListMk8sVersionsResponse(resp *http.Response) (*client.ListMk8sVersio
 		case "application/json":
 			result := &client.ListMk8sVersionsResponse{
 				Code:        resp.StatusCode,
-				Response200: &client.ListMk8sVersionsResponse200{},
+				Response200: &model.VersionListResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {

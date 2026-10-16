@@ -5,6 +5,7 @@ package mclickhouse
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -18,9 +19,13 @@ import (
 )
 
 var (
-	ClickhouseClusterCoordinatorInstanceRefTemplate = resparsers.Template{
+	ClickhouseClusterCoordinatorInstanceInstanceValidatePattern    = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterCoordinatorInstanceCoordinatorValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterCoordinatorInstanceClusterValidatePattern     = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterCoordinatorInstanceRefTemplate                = resparsers.Template{
 		{
 			Value:       "instance",
+			Pattern:     ClickhouseClusterCoordinatorInstanceInstanceValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -31,6 +36,7 @@ var (
 		},
 		{
 			Value:       "coordinator",
+			Pattern:     ClickhouseClusterCoordinatorInstanceCoordinatorValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -41,6 +47,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     ClickhouseClusterCoordinatorInstanceClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -79,6 +86,15 @@ func NewClickhouseClusterCoordinatorInstanceID(project, cluster, coordinator, in
 	}
 	if project == "" {
 		return ClickhouseClusterCoordinatorInstanceID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if match := ClickhouseClusterCoordinatorInstanceInstanceValidatePattern.Match([]byte(instance)); !match {
+		return ClickhouseClusterCoordinatorInstanceID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "instance", instance)
+	}
+	if match := ClickhouseClusterCoordinatorInstanceCoordinatorValidatePattern.Match([]byte(coordinator)); !match {
+		return ClickhouseClusterCoordinatorInstanceID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "coordinator", coordinator)
+	}
+	if match := ClickhouseClusterCoordinatorInstanceClusterValidatePattern.Match([]byte(cluster)); !match {
+		return ClickhouseClusterCoordinatorInstanceID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
 	}
 	m := ClickhouseClusterCoordinatorInstanceID{
 		instance:    instance,
@@ -267,25 +283,13 @@ func (m *ClickhouseClusterCoordinatorInstanceID) parse() error {
 }
 
 func NewClickhouseClusterCoordinatorInstanceRef(project, cluster, coordinator, instance string) (ClickhouseClusterCoordinatorInstanceRef, error) {
-	if instance == "" {
-		return ClickhouseClusterCoordinatorInstanceRef{}, reserrors.NewFieldIsEmptyError("instance")
+	id, err := NewClickhouseClusterCoordinatorInstanceID(project, cluster, coordinator, instance)
+	if err != nil {
+		return ClickhouseClusterCoordinatorInstanceRef{}, err
 	}
-	if coordinator == "" {
-		return ClickhouseClusterCoordinatorInstanceRef{}, reserrors.NewFieldIsEmptyError("coordinator")
-	}
-	if cluster == "" {
-		return ClickhouseClusterCoordinatorInstanceRef{}, reserrors.NewFieldIsEmptyError("cluster")
-	}
-	if project == "" {
-		return ClickhouseClusterCoordinatorInstanceRef{}, reserrors.NewFieldIsEmptyError("project")
-	}
+
 	m := ClickhouseClusterCoordinatorInstanceRef{
-		id: ClickhouseClusterCoordinatorInstanceID{
-			instance:    instance,
-			coordinator: coordinator,
-			cluster:     cluster,
-			project:     project,
-		},
+		id: id,
 	}
 	m.id.path = m.absolutePath()
 	return m, nil

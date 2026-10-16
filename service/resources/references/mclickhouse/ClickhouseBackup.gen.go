@@ -5,6 +5,7 @@ package mclickhouse
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -18,9 +19,12 @@ import (
 )
 
 var (
-	ClickhouseBackupRefTemplate = resparsers.Template{
+	ClickhouseBackupBackupValidatePattern  = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseBackupClusterValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseBackupRefTemplate            = resparsers.Template{
 		{
 			Value:       "backup",
+			Pattern:     ClickhouseBackupBackupValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -31,6 +35,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     ClickhouseBackupClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -66,6 +71,12 @@ func NewClickhouseBackupID(project, cluster, backup string) (ClickhouseBackupID,
 	}
 	if project == "" {
 		return ClickhouseBackupID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if match := ClickhouseBackupBackupValidatePattern.Match([]byte(backup)); !match {
+		return ClickhouseBackupID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "backup", backup)
+	}
+	if match := ClickhouseBackupClusterValidatePattern.Match([]byte(cluster)); !match {
+		return ClickhouseBackupID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
 	}
 	m := ClickhouseBackupID{
 		backup:  backup,
@@ -244,21 +255,13 @@ func (m *ClickhouseBackupID) parse() error {
 }
 
 func NewClickhouseBackupRef(project, cluster, backup string) (ClickhouseBackupRef, error) {
-	if backup == "" {
-		return ClickhouseBackupRef{}, reserrors.NewFieldIsEmptyError("backup")
+	id, err := NewClickhouseBackupID(project, cluster, backup)
+	if err != nil {
+		return ClickhouseBackupRef{}, err
 	}
-	if cluster == "" {
-		return ClickhouseBackupRef{}, reserrors.NewFieldIsEmptyError("cluster")
-	}
-	if project == "" {
-		return ClickhouseBackupRef{}, reserrors.NewFieldIsEmptyError("project")
-	}
+
 	m := ClickhouseBackupRef{
-		id: ClickhouseBackupID{
-			backup:  backup,
-			cluster: cluster,
-			project: project,
-		},
+		id: id,
 	}
 	m.id.path = m.absolutePath()
 	return m, nil

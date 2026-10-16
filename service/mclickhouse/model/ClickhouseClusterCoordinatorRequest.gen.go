@@ -19,7 +19,8 @@ type ClickhouseClusterCoordinatorRequest struct {
 	// Тип координатора. Если не указано, то при наличии более одного узла, используется ClickHouse Keeper.
 	Type *ClickhouseCoordinatorType `json:"type,omitempty" yaml:"type,omitempty"`
 	// Параметры виртуальной машины, на которой будет работать ClickHouse Keeper. Необязательный параметр в standalone-конфигурации.
-	Resources ClickhouseCoordinatorHWResourcesRequest       `json:"resources" yaml:"resources"`
+	Resources ClickhouseCoordinatorHWResourcesRequest `json:"resources" yaml:"resources"`
+	// Описание узлов координатора.
 	Instances []ClickhouseClusterCoordinatorInstanceRequest `json:"instances" yaml:"instances"`
 }
 

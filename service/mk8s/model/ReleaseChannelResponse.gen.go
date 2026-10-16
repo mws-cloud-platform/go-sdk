@@ -13,7 +13,8 @@ import (
 // Real OAPI model name: ReleaseChannel
 type ReleaseChannelResponse struct {
 	// Имя релизного канала. По умолчанию — stable
-	Name        string  `json:"name" yaml:"name"`
+	Name string `json:"name" yaml:"name"`
+	// Описание релизного канала
 	Description *string `json:"description,omitempty" yaml:"description,omitempty"`
 	// Доступность релизного канала. Если значение равно false, то канал недоступен для выбора
 	Enabled bool `json:"enabled" yaml:"enabled"`

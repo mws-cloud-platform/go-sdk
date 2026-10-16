@@ -3,16 +3,28 @@
 package model
 
 import (
+	"go.mws.cloud/util-toolset/pkg/utils/ptr"
+
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateCommonRoleBindingStatus struct {
 	UpdateResourceStatus
+	// Состояние обработки привязки роли системой.
+	RoleBinding optional.OptionalNil[UpdateCommonRoleBindingStatusSpec] `json:"roleBinding" yaml:"roleBinding"`
+	// Состояние активности привязки роли
+	Active optional.OptionalNil[UpdateCommonRoleBindingActiveStatus] `json:"active" yaml:"active"`
 }
 
 func (m *CommonRoleBindingStatus) AsUpdateModel() UpdateCommonRoleBindingStatus {
 	var u UpdateCommonRoleBindingStatus
 	u.Ready = optional.NewOptional(m.Ready.AsUpdateModel())
+	if m.RoleBinding != nil {
+		u.RoleBinding = optional.NewOptionalNil(m.RoleBinding.AsUpdateModel())
+	}
+	if m.Active != nil {
+		u.Active = optional.NewOptionalNil(m.Active.AsUpdateModel())
+	}
 	return u
 }
 
@@ -22,6 +34,8 @@ func (m *CommonRoleBindingStatus) Diff(src *CommonRoleBindingStatus) UpdateCommo
 	upd := UpdateCommonRoleBindingStatus{}
 	if !nilDiffers {
 		upd.Ready = m.diffReady(src)
+		upd.RoleBinding = m.diffRoleBinding(src)
+		upd.Active = m.diffActive(src)
 	}
 	return upd
 }
@@ -35,12 +49,24 @@ func (m *CommonRoleBindingStatus) WithChanges(u UpdateCommonRoleBindingStatus) C
 	if u.Ready.IsSet() {
 		out.Ready = out.Ready.WithChanges(u.Ready.Value)
 	}
+	if u.RoleBinding.IsSet() {
+		out.RoleBinding = ptr.Get(out.RoleBinding.WithChanges(u.RoleBinding.Value))
+	} else if u.RoleBinding.IsNull() {
+		out.RoleBinding = nil
+	}
+	if u.Active.IsSet() {
+		out.Active = ptr.Get(out.Active.WithChanges(u.Active.Value))
+	} else if u.Active.IsNull() {
+		out.Active = nil
+	}
 	return out
 }
 
 // HasChanges returns true if any field has Set == true
 func (m UpdateCommonRoleBindingStatus) HasChanges() bool {
-	return m.Ready.Set
+	return m.Ready.Set ||
+		m.RoleBinding.Set ||
+		m.Active.Set
 }
 
 func (m *CommonRoleBindingStatus) diffReady(src *CommonRoleBindingStatus) optional.Optional[UpdateResourceStatusReady] {
@@ -50,5 +76,25 @@ func (m *CommonRoleBindingStatus) diffReady(src *CommonRoleBindingStatus) option
 	return optional.Optional[UpdateResourceStatusReady]{
 		Value: value,
 		Set:   value.HasChanges(),
+	}
+}
+
+func (m *CommonRoleBindingStatus) diffRoleBinding(src *CommonRoleBindingStatus) optional.OptionalNil[UpdateCommonRoleBindingStatusSpec] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetRoleBinding().Diff(src.GetRoleBinding())
+	return optional.OptionalNil[UpdateCommonRoleBindingStatusSpec]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
+	}
+}
+
+func (m *CommonRoleBindingStatus) diffActive(src *CommonRoleBindingStatus) optional.OptionalNil[UpdateCommonRoleBindingActiveStatus] {
+	nilDiffers := src != nil && m == nil
+	value := m.GetActive().Diff(src.GetActive())
+	return optional.OptionalNil[UpdateCommonRoleBindingActiveStatus]{
+		Value: value,
+		Set:   nilDiffers || value.HasChanges(),
+		Null:  nilDiffers,
 	}
 }

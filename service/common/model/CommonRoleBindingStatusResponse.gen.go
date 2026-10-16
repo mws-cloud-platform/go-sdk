@@ -13,6 +13,10 @@ import (
 // Real OAPI model name: CommonRoleBindingStatus
 type CommonRoleBindingStatusResponse struct {
 	ResourceStatusResponse `yaml:"-,inline"`
+	// Состояние обработки привязки роли системой.
+	RoleBinding *CommonRoleBindingStatusSpecResponse `json:"roleBinding,omitempty" yaml:"roleBinding,omitempty"`
+	// Состояние активности привязки роли
+	Active *CommonRoleBindingActiveStatusResponse `json:"active,omitempty" yaml:"active,omitempty"`
 }
 
 func (m *CommonRoleBindingStatusResponse) GetReady() ResourceStatusReadyResponse {
@@ -22,6 +26,34 @@ func (m *CommonRoleBindingStatusResponse) GetReady() ResourceStatusReadyResponse
 	return ResourceStatusReadyResponse{}
 }
 
+func (m *CommonRoleBindingStatusResponse) GetRoleBinding() *CommonRoleBindingStatusSpecResponse {
+	if m != nil {
+		return m.RoleBinding
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingStatusResponse) GetRoleBindingOr(val CommonRoleBindingStatusSpecResponse) CommonRoleBindingStatusSpecResponse {
+	if m != nil && m.RoleBinding != nil {
+		return *m.RoleBinding
+	}
+	return val
+}
+
+func (m *CommonRoleBindingStatusResponse) GetActive() *CommonRoleBindingActiveStatusResponse {
+	if m != nil {
+		return m.Active
+	}
+	return nil
+}
+
+func (m *CommonRoleBindingStatusResponse) GetActiveOr(val CommonRoleBindingActiveStatusResponse) CommonRoleBindingActiveStatusResponse {
+	if m != nil && m.Active != nil {
+		return *m.Active
+	}
+	return val
+}
+
 func (m *CommonRoleBindingStatusResponse) Clone() *CommonRoleBindingStatusResponse {
 	if m == nil {
 		return nil
@@ -29,6 +61,8 @@ func (m *CommonRoleBindingStatusResponse) Clone() *CommonRoleBindingStatusRespon
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
+	clone.RoleBinding = m.RoleBinding.Clone()
+	clone.Active = m.Active.Clone()
 
 	return &clone
 }
@@ -61,6 +95,19 @@ func (m *CommonRoleBindingStatusResponse) encodeFields(e *jx.Encoder) error {
 	if err := m.Ready.Encode(e); err != nil {
 		return err
 	}
+	if m.RoleBinding != nil {
+		e.FieldStart("roleBinding")
+		if err := m.RoleBinding.Encode(e); err != nil {
+			return err
+		}
+	}
+
+	if m.Active != nil {
+		e.FieldStart("active")
+		if err := m.Active.Encode(e); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -82,6 +129,30 @@ func (m *CommonRoleBindingStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Ready = v
+			return nil
+		case "roleBinding":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CommonRoleBindingStatusSpecResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.RoleBinding = &v
+			return nil
+		case "active":
+			if d.Next() == jx.Null {
+				return d.Null()
+			}
+
+			var v CommonRoleBindingActiveStatusResponse
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Active = &v
 			return nil
 		default:
 			return d.Skip()

@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwserrors "go.mws.cloud/go-sdk/mws/errors"
+	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
 
 type Mk8sVersionSugared struct {
@@ -25,7 +26,7 @@ func (x *Mk8sVersionSugared) Impl() Mk8sVersion {
 // ListMk8sVersions позволяет получить список доступных версий Kubernetes.
 //
 // Путь: GET /mk8s/v1/projects/{project}/releaseChannels/{releaseChannelName}/versions
-func (x *Mk8sVersionSugared) ListMk8sVersions(ctx context.Context, request ListMk8sVersionsRequest) (*ListMk8sVersionsResponse200, error) {
+func (x *Mk8sVersionSugared) ListMk8sVersions(ctx context.Context, request ListMk8sVersionsRequest) (*model.VersionListResponse, error) {
 	resp, err := x.impl.ListMk8sVersions(ctx, request)
 	if err != nil {
 		return nil, err
@@ -34,7 +35,7 @@ func (x *Mk8sVersionSugared) ListMk8sVersions(ctx context.Context, request ListM
 	return x.respHandlerListMk8sVersions(resp)
 }
 
-func (x *Mk8sVersionSugared) respHandlerListMk8sVersions(resp *ListMk8sVersionsResponse) (*ListMk8sVersionsResponse200, error) {
+func (x *Mk8sVersionSugared) respHandlerListMk8sVersions(resp *ListMk8sVersionsResponse) (*model.VersionListResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}

@@ -19,7 +19,8 @@ type ClickhouseClusterCoordinatorInstanceResourceResponse struct {
 	// Идентификатор узла координатора.
 	Id mclickhouse.ClickhouseClusterCoordinatorInstanceID `json:"id" yaml:"id"`
 	// Зона доступности.
-	Zone   rm.ZoneRef                `json:"zone" yaml:"zone"`
+	Zone rm.ZoneRef `json:"zone" yaml:"zone"`
+	// Исправность узла.
 	Health *ClickhouseInstanceHealth `json:"health,omitempty" yaml:"health,omitempty"`
 }
 

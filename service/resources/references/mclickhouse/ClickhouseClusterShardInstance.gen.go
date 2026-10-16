@@ -5,6 +5,7 @@ package mclickhouse
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -18,9 +19,13 @@ import (
 )
 
 var (
-	ClickhouseClusterShardInstanceRefTemplate = resparsers.Template{
+	ClickhouseClusterShardInstanceInstanceValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterShardInstanceShardValidatePattern    = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterShardInstanceClusterValidatePattern  = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterShardInstanceRefTemplate             = resparsers.Template{
 		{
 			Value:       "instance",
+			Pattern:     ClickhouseClusterShardInstanceInstanceValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -31,6 +36,7 @@ var (
 		},
 		{
 			Value:       "shard",
+			Pattern:     ClickhouseClusterShardInstanceShardValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -41,6 +47,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     ClickhouseClusterShardInstanceClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -79,6 +86,15 @@ func NewClickhouseClusterShardInstanceID(project, cluster, shard, instance strin
 	}
 	if project == "" {
 		return ClickhouseClusterShardInstanceID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if match := ClickhouseClusterShardInstanceInstanceValidatePattern.Match([]byte(instance)); !match {
+		return ClickhouseClusterShardInstanceID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "instance", instance)
+	}
+	if match := ClickhouseClusterShardInstanceShardValidatePattern.Match([]byte(shard)); !match {
+		return ClickhouseClusterShardInstanceID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "shard", shard)
+	}
+	if match := ClickhouseClusterShardInstanceClusterValidatePattern.Match([]byte(cluster)); !match {
+		return ClickhouseClusterShardInstanceID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
 	}
 	m := ClickhouseClusterShardInstanceID{
 		instance: instance,
@@ -267,25 +283,13 @@ func (m *ClickhouseClusterShardInstanceID) parse() error {
 }
 
 func NewClickhouseClusterShardInstanceRef(project, cluster, shard, instance string) (ClickhouseClusterShardInstanceRef, error) {
-	if instance == "" {
-		return ClickhouseClusterShardInstanceRef{}, reserrors.NewFieldIsEmptyError("instance")
+	id, err := NewClickhouseClusterShardInstanceID(project, cluster, shard, instance)
+	if err != nil {
+		return ClickhouseClusterShardInstanceRef{}, err
 	}
-	if shard == "" {
-		return ClickhouseClusterShardInstanceRef{}, reserrors.NewFieldIsEmptyError("shard")
-	}
-	if cluster == "" {
-		return ClickhouseClusterShardInstanceRef{}, reserrors.NewFieldIsEmptyError("cluster")
-	}
-	if project == "" {
-		return ClickhouseClusterShardInstanceRef{}, reserrors.NewFieldIsEmptyError("project")
-	}
+
 	m := ClickhouseClusterShardInstanceRef{
-		id: ClickhouseClusterShardInstanceID{
-			instance: instance,
-			shard:    shard,
-			cluster:  cluster,
-			project:  project,
-		},
+		id: id,
 	}
 	m.id.path = m.absolutePath()
 	return m, nil

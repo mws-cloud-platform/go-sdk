@@ -6,6 +6,7 @@ import (
 	"context"
 
 	mwserrors "go.mws.cloud/go-sdk/mws/errors"
+	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
 
 type Mk8sReleaseChannelSugared struct {
@@ -25,7 +26,7 @@ func (x *Mk8sReleaseChannelSugared) Impl() Mk8sReleaseChannel {
 // ListMk8sReleaseChannels позволяет получить список доступных релизных каналов.
 //
 // Путь: GET /mk8s/v1/projects/{project}/releaseChannels
-func (x *Mk8sReleaseChannelSugared) ListMk8sReleaseChannels(ctx context.Context, request ListMk8sReleaseChannelsRequest) (*ListMk8sReleaseChannelsResponse200, error) {
+func (x *Mk8sReleaseChannelSugared) ListMk8sReleaseChannels(ctx context.Context, request ListMk8sReleaseChannelsRequest) (*model.ReleaseChannelListResponse, error) {
 	resp, err := x.impl.ListMk8sReleaseChannels(ctx, request)
 	if err != nil {
 		return nil, err
@@ -34,7 +35,7 @@ func (x *Mk8sReleaseChannelSugared) ListMk8sReleaseChannels(ctx context.Context,
 	return x.respHandlerListMk8sReleaseChannels(resp)
 }
 
-func (x *Mk8sReleaseChannelSugared) respHandlerListMk8sReleaseChannels(resp *ListMk8sReleaseChannelsResponse) (*ListMk8sReleaseChannelsResponse200, error) {
+func (x *Mk8sReleaseChannelSugared) respHandlerListMk8sReleaseChannels(resp *ListMk8sReleaseChannelsResponse) (*model.ReleaseChannelListResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}

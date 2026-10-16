@@ -5,6 +5,7 @@ package mclickhouse
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -18,9 +19,12 @@ import (
 )
 
 var (
-	ClickhouseBucketRefTemplate = resparsers.Template{
+	ClickhouseBucketBucketValidatePattern  = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseBucketClusterValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseBucketRefTemplate            = resparsers.Template{
 		{
 			Value:       "bucket",
+			Pattern:     ClickhouseBucketBucketValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -31,6 +35,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     ClickhouseBucketClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -66,6 +71,12 @@ func NewClickhouseBucketID(project, cluster, bucket string) (ClickhouseBucketID,
 	}
 	if project == "" {
 		return ClickhouseBucketID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if match := ClickhouseBucketBucketValidatePattern.Match([]byte(bucket)); !match {
+		return ClickhouseBucketID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "bucket", bucket)
+	}
+	if match := ClickhouseBucketClusterValidatePattern.Match([]byte(cluster)); !match {
+		return ClickhouseBucketID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
 	}
 	m := ClickhouseBucketID{
 		bucket:  bucket,
@@ -244,21 +255,13 @@ func (m *ClickhouseBucketID) parse() error {
 }
 
 func NewClickhouseBucketRef(project, cluster, bucket string) (ClickhouseBucketRef, error) {
-	if bucket == "" {
-		return ClickhouseBucketRef{}, reserrors.NewFieldIsEmptyError("bucket")
+	id, err := NewClickhouseBucketID(project, cluster, bucket)
+	if err != nil {
+		return ClickhouseBucketRef{}, err
 	}
-	if cluster == "" {
-		return ClickhouseBucketRef{}, reserrors.NewFieldIsEmptyError("cluster")
-	}
-	if project == "" {
-		return ClickhouseBucketRef{}, reserrors.NewFieldIsEmptyError("project")
-	}
+
 	m := ClickhouseBucketRef{
-		id: ClickhouseBucketID{
-			bucket:  bucket,
-			cluster: cluster,
-			project: project,
-		},
+		id: id,
 	}
 	m.id.path = m.absolutePath()
 	return m, nil

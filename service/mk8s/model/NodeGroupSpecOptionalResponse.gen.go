@@ -29,6 +29,8 @@ type NodeGroupSpecOptionalResponse struct {
 	ImageStorageSize optional.Optional[bytesize.ByteSize] `json:"imageStorageSize,omitempty" yaml:"imageStorageSize,omitempty"`
 	// Количество операций ввода-вывода в секунду (IOPS) для хранилища образов и контейнеров
 	ImageStorageIops optional.Optional[int64] `json:"imageStorageIops,omitempty" yaml:"imageStorageIops,omitempty"`
+	// Максимальное число подов, которые могут быть запущены на каждом узле группы
+	MaxPods optional.Optional[int] `json:"maxPods,omitempty" yaml:"maxPods,omitempty"`
 	// Параметры локальных дисков для каждого узла в группе узлов
 	LocalDisks optional.OptionalNil[[]LocalDiskSpecOptionalResponse] `json:"localDisks,omitempty" yaml:"localDisks,omitempty"`
 	// Признак того, что группа узлов предназначена для кэширования данных. При значении true оператор устанавливает метку csi.mws.ru/data-cache=true на узлы группы (дополнительно требуется заполнение поля localDisks)
@@ -117,6 +119,20 @@ func (m *NodeGroupSpecOptionalResponse) GetImageStorageIops() *int64 {
 func (m *NodeGroupSpecOptionalResponse) GetImageStorageIopsOr(val int64) int64 {
 	if m != nil && m.ImageStorageIops.IsSet() {
 		return m.ImageStorageIops.Value
+	}
+	return val
+}
+
+func (m *NodeGroupSpecOptionalResponse) GetMaxPods() *int {
+	if m != nil && m.MaxPods.IsSet() {
+		return &m.MaxPods.Value
+	}
+	return nil
+}
+
+func (m *NodeGroupSpecOptionalResponse) GetMaxPodsOr(val int) int {
+	if m != nil && m.MaxPods.IsSet() {
+		return m.MaxPods.Value
 	}
 	return val
 }
@@ -587,6 +603,11 @@ func (m *NodeGroupSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 		e.Int64(m.ImageStorageIops.Value)
 	}
 
+	if m.MaxPods.IsSet() {
+		e.FieldStart("maxPods")
+		e.Int(m.MaxPods.Value)
+	}
+
 	if m.LocalDisks.IsSet() {
 		e.FieldStart("localDisks")
 		if m.LocalDisks.IsNull() {
@@ -722,6 +743,14 @@ func (m *NodeGroupSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.ImageStorageIops.SetTo(v)
+			return nil
+		case "maxPods":
+			v, err := decode.Int(d)
+			if err != nil {
+				return err
+			}
+
+			m.MaxPods.SetTo(v)
 			return nil
 		case "localDisks":
 			if d.Next() == jx.Null {

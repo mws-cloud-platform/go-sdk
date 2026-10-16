@@ -5,6 +5,7 @@ package mclickhouse
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/go-faster/jx"
 
@@ -18,9 +19,12 @@ import (
 )
 
 var (
-	ClickhouseClusterDatabaseRefTemplate = resparsers.Template{
+	ClickhouseClusterDatabaseDatabaseValidatePattern = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterDatabaseClusterValidatePattern  = regexp.MustCompile(`^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$`)
+	ClickhouseClusterDatabaseRefTemplate             = resparsers.Template{
 		{
 			Value:       "database",
+			Pattern:     ClickhouseClusterDatabaseDatabaseValidatePattern,
 			IsConstant:  false,
 			SearchAfter: false,
 		},
@@ -31,6 +35,7 @@ var (
 		},
 		{
 			Value:       "cluster",
+			Pattern:     ClickhouseClusterDatabaseClusterValidatePattern,
 			IsConstant:  false,
 			SearchAfter: true,
 		},
@@ -66,6 +71,12 @@ func NewClickhouseClusterDatabaseID(project, cluster, database string) (Clickhou
 	}
 	if project == "" {
 		return ClickhouseClusterDatabaseID{}, reserrors.NewFieldIsEmptyError("project")
+	}
+	if match := ClickhouseClusterDatabaseDatabaseValidatePattern.Match([]byte(database)); !match {
+		return ClickhouseClusterDatabaseID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "database", database)
+	}
+	if match := ClickhouseClusterDatabaseClusterValidatePattern.Match([]byte(cluster)); !match {
+		return ClickhouseClusterDatabaseID{}, fmt.Errorf("%w %s: %s", resparsers.ErrPatternMatches, "cluster", cluster)
 	}
 	m := ClickhouseClusterDatabaseID{
 		database: database,
@@ -244,21 +255,13 @@ func (m *ClickhouseClusterDatabaseID) parse() error {
 }
 
 func NewClickhouseClusterDatabaseRef(project, cluster, database string) (ClickhouseClusterDatabaseRef, error) {
-	if database == "" {
-		return ClickhouseClusterDatabaseRef{}, reserrors.NewFieldIsEmptyError("database")
+	id, err := NewClickhouseClusterDatabaseID(project, cluster, database)
+	if err != nil {
+		return ClickhouseClusterDatabaseRef{}, err
 	}
-	if cluster == "" {
-		return ClickhouseClusterDatabaseRef{}, reserrors.NewFieldIsEmptyError("cluster")
-	}
-	if project == "" {
-		return ClickhouseClusterDatabaseRef{}, reserrors.NewFieldIsEmptyError("project")
-	}
+
 	m := ClickhouseClusterDatabaseRef{
-		id: ClickhouseClusterDatabaseID{
-			database: database,
-			cluster:  cluster,
-			project:  project,
-		},
+		id: id,
 	}
 	m.id.path = m.absolutePath()
 	return m, nil

@@ -26,6 +26,30 @@ func (x *ClickhouseClusterBackupSugared) Impl() ClickhouseClusterBackup {
 	return x.impl
 }
 
+// ListClickhouseClusterBackupsInProject возвращает постраничный список резервных копий кластеров ClickHouse.
+//
+// Путь: GET /mclickhouse/v1/projects/{project}/backups
+func (x *ClickhouseClusterBackupSugared) ListClickhouseClusterBackupsInProject(ctx context.Context, request ListClickhouseClusterBackupsInProjectRequest) (*model.ClickhouseBackupPageOptionalResponse, error) {
+	resp, err := x.impl.ListClickhouseClusterBackupsInProject(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return x.respHandlerListClickhouseClusterBackupsInProject(resp)
+}
+
+func (x *ClickhouseClusterBackupSugared) respHandlerListClickhouseClusterBackupsInProject(resp *ListClickhouseClusterBackupsInProjectResponse) (*model.ClickhouseBackupPageOptionalResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
 // ListClickhouseClusterBackups возвращает постраничный список резервных копий указанного кластера ClickHouse.
 //
 // Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups
@@ -48,6 +72,51 @@ func (x *ClickhouseClusterBackupSugared) respHandlerListClickhouseClusterBackups
 	}
 
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+// GetClickhouseClusterFromBackup возвращает информацию о кластере ClickHouse по резервной копии.
+//
+// Путь: GET /mclickhouse/v1/projects/{project}/clusters/{cluster}/backups/{backup}:getCluster
+func (x *ClickhouseClusterBackupSugared) GetClickhouseClusterFromBackup(ctx context.Context, request GetClickhouseClusterFromBackupRequest, opts ...Option) (*model.ClickhouseClusterOptionalResponse, error) {
+	config := newConfig(opts...)
+
+	resp, err := x.impl.GetClickhouseClusterFromBackup(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	sugaredResponse, err := x.respHandlerGetClickhouseClusterFromBackup(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if !config.wait {
+		return sugaredResponse, nil
+	}
+
+	return x.waitGetClickhouseClusterFromBackup(ctx, request, config.waitOptions...)
+}
+
+func (x *ClickhouseClusterBackupSugared) respHandlerGetClickhouseClusterFromBackup(resp *GetClickhouseClusterFromBackupResponse) (*model.ClickhouseClusterOptionalResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+func (x *ClickhouseClusterBackupSugared) waitGetClickhouseClusterFromBackup(ctx context.Context, request GetClickhouseClusterFromBackupRequest, opts ...wait.WaiterOption) (*model.ClickhouseClusterOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.ClickhouseClusterOptionalResponse, bool, error) {
+		response, err := x.GetClickhouseClusterFromBackup(ctx, request)
+		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
+		return response, stop, err
+	}
+	waiter := wait.NewWaiter(callback, opts...)
+	return waiter.Wait(ctx)
 }
 
 // DeleteClickhouseClusterBackup удаляет указанную резервную копию кластера ClickHouse.

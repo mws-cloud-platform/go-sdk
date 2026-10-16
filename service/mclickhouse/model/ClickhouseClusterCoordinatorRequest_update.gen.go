@@ -22,6 +22,8 @@ type UpdateClickhouseClusterCoordinatorRequest struct {
 	Type optional.Optional[ClickhouseCoordinatorType] `json:"type" yaml:"type"`
 	// Параметры виртуальной машины, на которой будет работать ClickHouse Keeper. Необязательный параметр в standalone-конфигурации.
 	Resources optional.Optional[UpdateClickhouseCoordinatorHWResourcesRequest] `json:"resources" yaml:"resources"`
+	// Описание узлов координатора.
+	//
 	// Неизменяемое поле. Можно установить значение только при создании.
 	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Instances optional.Optional[[]UpdateClickhouseClusterCoordinatorInstanceRequest] `json:"instances" yaml:"instances"`

@@ -25,7 +25,8 @@ type ClickhouseClusterShardOptionalResponse struct {
 	Weight optional.Optional[int] `json:"weight,omitempty" yaml:"weight,omitempty"`
 	// Описание эндпоинтов шардов.
 	Endpoints optional.Optional[[]ClickhouseEndpointOptionalResponse] `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
-	Instances []ClickhouseClusterInstanceOptionalResponse             `json:"instances" yaml:"instances"`
+	// Описание узла кластера.
+	Instances []ClickhouseClusterInstanceOptionalResponse `json:"instances" yaml:"instances"`
 }
 
 func (m *ClickhouseClusterShardOptionalResponse) GetName() string {

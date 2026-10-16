@@ -12,6 +12,10 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 )
 
+// Исправность экземпляра ClickHouse
+//   - `ALIVE`   - Узел может обрабатывать запросы
+//   - `FAILED`  - Узел сломан. Потенциально не может обрабатывать запросы
+//   - `UNKNOWN` - Узел в неизвестном состоянии
 type ClickhouseInstanceHealth string
 
 const (

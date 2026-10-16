@@ -16,6 +16,7 @@ import (
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
+// Текущее состояние резервной копии.
 // Real OAPI model name: ClickhouseBackupStatus
 type ClickhouseBackupStatusResponse struct {
 	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
@@ -60,7 +61,7 @@ func (m *ClickhouseBackupStatusResponse) Clone() *ClickhouseBackupStatusResponse
 type ClickhouseBackupStatusBackupResponse struct {
 	// Причина создания резервной копии в CPL.
 	Trigger ClickhouseBackupStatusBackupTriggerResponse `json:"trigger" yaml:"trigger"`
-	// Причина создания резервной копии в CPL.
+	// Тип резервной копии.
 	Type ClickhouseBackupStatusBackupTypeResponse `json:"type" yaml:"type"`
 	// Начало снятия резервной копии.
 	StartTime *time.Time `json:"startTime,omitempty" yaml:"startTime,omitempty"`

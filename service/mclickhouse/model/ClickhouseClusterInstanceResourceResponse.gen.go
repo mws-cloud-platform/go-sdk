@@ -26,7 +26,8 @@ type ClickhouseClusterInstanceResourceResponse struct {
 	Zone rm.ZoneRef `json:"zone" yaml:"zone"`
 	// Список эндпойнтов для подключения к узлу.
 	Endpoints []ClickhouseEndpointResourceResponse `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
-	Health    *ClickhouseInstanceHealth            `json:"health,omitempty" yaml:"health,omitempty"`
+	// Исправность узла.
+	Health *ClickhouseInstanceHealth `json:"health,omitempty" yaml:"health,omitempty"`
 }
 
 func (m *ClickhouseClusterInstanceResourceResponse) GetId() mclickhouse.ClickhouseClusterShardInstanceID {
