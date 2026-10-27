@@ -1,6 +1,7 @@
 package retry
 
 import (
+	"cmp"
 	"context"
 	"errors"
 	"time"
@@ -24,6 +25,7 @@ func New(options ...Option) commonclient.Interceptor {
 	i := &retryInvoker{
 		retryer:                 cfg.retryer,
 		failOnExhaustedAttempts: cfg.failOnExhaustedAttempts,
+		maxAttempts:             cmp.Or(cfg.maxAttempts, defaultAttempts),
 	}
 	return i.interceptor
 }
@@ -31,6 +33,7 @@ func New(options ...Option) commonclient.Interceptor {
 type retryInvoker struct {
 	retryer                 Retryer
 	failOnExhaustedAttempts bool
+	maxAttempts             int
 }
 
 func (i *retryInvoker) interceptor(ctx context.Context, request any, response commonclient.APIResp, invoker commonclient.Invoker) error {
@@ -39,7 +42,7 @@ func (i *retryInvoker) interceptor(ctx context.Context, request any, response co
 	var (
 		err, invokerErr error
 		attempt         int
-		maxAttempts     = defaultAttempts
+		maxAttempts     = i.maxAttempts
 		retryer         = i.retryer
 	)
 	for attempt < maxAttempts {

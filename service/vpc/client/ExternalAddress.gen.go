@@ -305,7 +305,7 @@ type UpsertExternalAddressRequest struct {
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения внешнего IP-адреса
-	Body *model.ExternalAddressRequest // body
+	Body model.ExternalAddressRequest // body
 }
 
 func (m *UpsertExternalAddressRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
@@ -340,7 +340,7 @@ type UpdateExternalAddressRequest struct {
 	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
 	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения внешнего IP-адреса
-	Body *model.UpdateExternalAddressRequest // body
+	Body model.UpdateExternalAddressRequest // body
 }
 
 func (m *UpdateExternalAddressRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {

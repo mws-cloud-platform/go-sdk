@@ -22,21 +22,25 @@ func TestRetry(t *testing.T) {
 		Response commonclient.APIResp
 		Invoker  commonclient.Invoker
 		Error    error
+		Attempts int
 	}{
 		{
 			Name:     "success",
 			Invoker:  okInvoker,
 			Response: okResponse{},
+			Attempts: 1,
 		},
 		{
-			Name:    "invoker error no retry",
-			Invoker: errInvoker,
-			Error:   errInvoke,
+			Name:     "invoker error no retry",
+			Invoker:  errInvoker,
+			Error:    errInvoke,
+			Attempts: 1,
 		},
 		{
 			Name:     "api error no retry",
 			Invoker:  okInvoker,
 			Response: errResponse{err: errResponses, code: 500},
+			Attempts: 1,
 		},
 		{
 			Name:     "retry error",
@@ -44,6 +48,7 @@ func TestRetry(t *testing.T) {
 			Invoker:  okInvoker,
 			Response: errResponse{err: errResponses, code: 500},
 			Error:    errRetry,
+			Attempts: 1,
 		},
 		{
 			Name:     "context canceled",
@@ -52,12 +57,14 @@ func TestRetry(t *testing.T) {
 			Invoker:  okInvoker,
 			Response: errResponse{err: errResponses, code: 500},
 			Error:    context.Canceled,
+			Attempts: 1,
 		},
 		{
 			Name:     "api error retry",
 			Options:  []retry.Option{retry.WithRetryer(okRetryer{})},
 			Invoker:  okInvoker,
 			Response: errResponse{err: errResponses, code: 500},
+			Attempts: 3,
 		},
 		{
 			Name:     "api error retry fail",
@@ -65,6 +72,7 @@ func TestRetry(t *testing.T) {
 			Invoker:  okInvoker,
 			Response: errResponse{err: errResponses, code: 500},
 			Error:    errors.RetryAttemptsExhaustedError{},
+			Attempts: 3,
 		},
 		{
 			Name:     "invoker error retry",
@@ -72,6 +80,7 @@ func TestRetry(t *testing.T) {
 			Invoker:  errInvoker,
 			Response: errResponse{err: errResponses, code: 500},
 			Error:    errInvoke,
+			Attempts: 3,
 		},
 		{
 			Name:     "invoker error retry fail",
@@ -79,6 +88,7 @@ func TestRetry(t *testing.T) {
 			Invoker:  errInvoker,
 			Response: errResponse{err: errResponses, code: 500},
 			Error:    errors.RetryAttemptsExhaustedError{},
+			Attempts: 3,
 		},
 		{
 			Name:     "retry with policy",
@@ -86,10 +96,38 @@ func TestRetry(t *testing.T) {
 			Invoker:  okInvoker,
 			Response: errResponse{err: &mwserrors.APIError{RetryPolicy: &mwserrors.RetryPolicy{}}, code: 500},
 			Error:    errors.RetryAttemptsExhaustedError{},
+			Attempts: 1,
+		},
+		{
+			Name:     "custom max attempts",
+			Options:  []retry.Option{retry.WithRetryer(okRetryer{}), retry.WithMaxAttempts(5)},
+			Invoker:  errInvoker,
+			Error:    errInvoke,
+			Attempts: 5,
+		},
+		{
+			Name:     "max attempts of one disables retries",
+			Options:  []retry.Option{retry.WithRetryer(okRetryer{}), retry.WithMaxAttempts(1)},
+			Invoker:  errInvoker,
+			Error:    errInvoke,
+			Attempts: 1,
+		},
+		{
+			Name:     "non-positive max attempts ignored",
+			Options:  []retry.Option{retry.WithRetryer(okRetryer{}), retry.WithMaxAttempts(-1)},
+			Invoker:  errInvoker,
+			Error:    errInvoke,
+			Attempts: 3,
 		},
 	} {
 		t.Run(v.Name, func(t *testing.T) {
 			t.Parallel()
+
+			calls := 0
+			invoker := func(ctx context.Context, req any, resp commonclient.APIResp) error {
+				calls++
+				return v.Invoker(ctx, req, resp)
+			}
 
 			interceptor := retry.New(v.Options...)
 			ctx := t.Context()
@@ -97,12 +135,13 @@ func TestRetry(t *testing.T) {
 				ctx = v.Ctx()
 			}
 
-			err := interceptor(ctx, nil, v.Response, v.Invoker)
+			err := interceptor(ctx, nil, v.Response, invoker)
 			if v.Error != nil {
 				require.ErrorIs(t, err, v.Error)
 			} else {
 				require.NoError(t, err)
 			}
+			require.Equal(t, v.Attempts, calls)
 		})
 	}
 }

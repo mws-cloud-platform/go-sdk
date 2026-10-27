@@ -79,6 +79,21 @@ func (mr *MockTopicMockRecorder) GetTopic(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTopic", reflect.TypeOf((*MockTopic)(nil).GetTopic), arg0, arg1)
 }
 
+// ListTopicPartitions mocks base method.
+func (m *MockTopic) ListTopicPartitions(arg0 context.Context, arg1 client.ListTopicPartitionsRequest) (*client.ListTopicPartitionsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListTopicPartitions", arg0, arg1)
+	ret0, _ := ret[0].(*client.ListTopicPartitionsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTopicPartitions indicates an expected call of ListTopicPartitions.
+func (mr *MockTopicMockRecorder) ListTopicPartitions(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTopicPartitions", reflect.TypeOf((*MockTopic)(nil).ListTopicPartitions), arg0, arg1)
+}
+
 // ListTopics mocks base method.
 func (m *MockTopic) ListTopics(arg0 context.Context, arg1 client.ListTopicsRequest) (*client.ListTopicsResponse, error) {
 	m.ctrl.T.Helper()

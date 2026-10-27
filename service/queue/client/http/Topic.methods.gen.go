@@ -108,6 +108,98 @@ func (c *Topic) headerListTopics(req *http.Request, request *client.ListTopicsRe
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
+// ListTopicPartitions возвращает постраничный список партиций указанного топика с их смещениями и размером в байтах.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: GET /queue/v1/projects/{project}/topics/{topic}/partitions
+func (c *Topic) ListTopicPartitions(ctx context.Context, request client.ListTopicPartitionsRequest) (r *client.ListTopicPartitionsResponse, err error) {
+	ctx = c.setListTopicPartitionsAttributes(ctx)
+	r = &client.ListTopicPartitionsResponse{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.listTopicPartitionsInvoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *Topic) setListTopicPartitionsAttributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "ListTopicPartitions"),
+		commonattribute.String(commonattribute.PathTemplate, "/queue/v1/projects/{project}/topics/{topic}/partitions"),
+		commonattribute.String(commonattribute.ProjectName, "queue"),
+		commonattribute.String(commonattribute.ServiceName, "topic"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *Topic) listTopicPartitionsInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.ListTopicPartitionsRequest)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"queue",
+		"v1",
+		"projects",
+		url.PathEscape(request.Project),
+		"topics",
+		url.PathEscape(request.Topic),
+		"partitions")
+
+	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	httpReq.URL.RawQuery = c.queryListTopicPartitions(request)
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerListTopicPartitions(httpReq, request)
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeListTopicPartitionsResponse(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.ListTopicPartitionsResponse)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *Topic) queryListTopicPartitions(request *client.ListTopicPartitionsRequest) string {
+	q := make(url.Values)
+	if request.PageToken != nil {
+		q.Add("pageToken", conv.StringToString(*request.PageToken))
+	}
+	if request.PageSize != nil {
+		q.Add("pageSize", conv.IntToString(*request.PageSize))
+	}
+	if request.Filter != nil {
+		q.Add("filter", conv.StringToString(*request.Filter))
+	}
+	if request.OrderBy != nil {
+		q.Add("orderBy", conv.StringToString(*request.OrderBy))
+	}
+	return q.Encode()
+}
+
+func (c *Topic) headerListTopicPartitions(req *http.Request, request *client.ListTopicPartitionsRequest) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
+}
+
 // DeleteTopic позволяет удалить топик.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

@@ -9,6 +9,7 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 func (m UpdatePostgresClusterSpecRequest) MarshalJSON() ([]byte, error) {
@@ -33,6 +34,13 @@ func (m *UpdatePostgresClusterSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *UpdatePostgresClusterSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Region.IsSet() {
+		e.FieldStart("region")
+		if err := m.Region.Value.Encode(e); err != nil {
+			return err
+		}
+	}
+
 	if m.Version.IsSet() {
 		e.FieldStart("version")
 		e.Str(m.Version.Value)
@@ -122,6 +130,14 @@ func (m *UpdatePostgresClusterSpecRequest) Decode(d *jx.Decoder) error {
 
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region.SetTo(v)
+			return nil
 		case "version":
 			v, err := decode.Str(d)
 			if err != nil {

@@ -28,6 +28,20 @@ func TestTopicSugared_ListTopics(t *testing.T) {
 	require.True(t, mwserrors.IsDecodeBodyError(err))
 }
 
+func TestTopicSugared_ListTopicPartitions(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockTopic(ctrl)
+	mockClient.EXPECT().ListTopicPartitions(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewTopicSugared(mockClient)
+
+	_, err := sugared.ListTopicPartitions(context.Background(), client.ListTopicPartitionsRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
 func TestTopicSugared_DeleteTopic(t *testing.T) {
 	t.Parallel()
 	ctrl := gomock.NewController(t)

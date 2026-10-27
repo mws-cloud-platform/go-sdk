@@ -318,11 +318,9 @@ func (c *ExternalAddress) upsertExternalAddressInvoker(ctx context.Context, anyR
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerUpsertExternalAddress(httpReq, request)
 
-	if request.Body != nil {
-		err = commonclient.SetJSONBody(httpReq, request.Body)
-		if err != nil {
-			return err
-		}
+	err = commonclient.SetJSONBody(httpReq, &request.Body)
+	if err != nil {
+		return err
 	}
 
 	httpResp, err := c.client.Do(httpReq)
@@ -414,11 +412,9 @@ func (c *ExternalAddress) createExternalAddressInvoker(ctx context.Context, anyR
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerCreateExternalAddress(httpReq, request)
 
-	if request.Body != nil {
-		err = commonclient.SetJSONBody(httpReq, request.Body)
-		if err != nil {
-			return err
-		}
+	err = commonclient.SetJSONBody(httpReq, &request.Body)
+	if err != nil {
+		return err
 	}
 
 	httpResp, err := c.client.Do(httpReq)
@@ -511,11 +507,9 @@ func (c *ExternalAddress) updateExternalAddressInvoker(ctx context.Context, anyR
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerUpdateExternalAddress(httpReq, request)
 
-	if request.Body != nil {
-		err = commonclient.SetJSONBody(httpReq, request.Body)
-		if err != nil {
-			return err
-		}
+	err = commonclient.SetJSONBody(httpReq, &request.Body)
+	if err != nil {
+		return err
 	}
 
 	httpResp, err := c.client.Do(httpReq)

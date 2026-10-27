@@ -214,7 +214,7 @@ func decodeGetApiKeyResponse(resp *http.Response) (*client.GetApiKeyResponse, er
 		case "application/json":
 			result := &client.GetApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.ApiKeyResponse{},
+				Response200: &model.ApiKeyOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -312,7 +312,7 @@ func decodeUpsertApiKeyResponse(resp *http.Response) (*client.UpsertApiKeyRespon
 		case "application/json":
 			result := &client.UpsertApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.ApiKeyResponse{},
+				Response200: &model.ApiKeyOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -329,7 +329,7 @@ func decodeUpsertApiKeyResponse(resp *http.Response) (*client.UpsertApiKeyRespon
 		case "application/json":
 			result := &client.UpsertApiKeyResponse{
 				Code:        resp.StatusCode,
-				Response201: &model.ApiKeyResponse{},
+				Response201: &model.ApiKeyOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {

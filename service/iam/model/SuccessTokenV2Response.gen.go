@@ -15,6 +15,7 @@ import (
 
 // Real OAPI model name: SuccessTokenV2
 type SuccessTokenV2Response struct {
+	// Выпущенный IAM-токен доступа.
 	AccessToken sensitive.Sensitive[string] `json:"accessToken" yaml:"accessToken"`
 	// Момент времени, после которого токен перестанет считаться действительным.
 	ExpirationTs *time.Time `json:"expirationTs,omitempty" yaml:"expirationTs,omitempty"`

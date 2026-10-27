@@ -86,7 +86,7 @@ func (x *ApiKeySugared) respHandlerDeleteApiKey(resp *DeleteApiKeyResponse) erro
 }
 
 func (x *ApiKeySugared) waitDeleteApiKey(ctx context.Context, request GetApiKeyRequest, opts ...wait.WaiterOption) error {
-	callback := func(ctx context.Context) (*model.ApiKeyResponse, bool, error) {
+	callback := func(ctx context.Context) (*model.ApiKeyOptionalResponse, bool, error) {
 		_, err := x.GetApiKey(ctx, request)
 		if mwserrors.IsAPIErrorNotFoundStatus(err) {
 			return nil, true, nil
@@ -101,7 +101,7 @@ func (x *ApiKeySugared) waitDeleteApiKey(ctx context.Context, request GetApiKeyR
 // GetApiKey позволяет получить информацию об API-ключе.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}
-func (x *ApiKeySugared) GetApiKey(ctx context.Context, request GetApiKeyRequest, opts ...Option) (*model.ApiKeyResponse, error) {
+func (x *ApiKeySugared) GetApiKey(ctx context.Context, request GetApiKeyRequest, opts ...Option) (*model.ApiKeyOptionalResponse, error) {
 	config := newConfig(opts...)
 
 	resp, err := x.impl.GetApiKey(ctx, request)
@@ -121,7 +121,7 @@ func (x *ApiKeySugared) GetApiKey(ctx context.Context, request GetApiKeyRequest,
 	return x.waitGetApiKey(ctx, request, config.waitOptions...)
 }
 
-func (x *ApiKeySugared) respHandlerGetApiKey(resp *GetApiKeyResponse) (*model.ApiKeyResponse, error) {
+func (x *ApiKeySugared) respHandlerGetApiKey(resp *GetApiKeyResponse) (*model.ApiKeyOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -133,8 +133,8 @@ func (x *ApiKeySugared) respHandlerGetApiKey(resp *GetApiKeyResponse) (*model.Ap
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-func (x *ApiKeySugared) waitGetApiKey(ctx context.Context, request GetApiKeyRequest, opts ...wait.WaiterOption) (*model.ApiKeyResponse, error) {
-	callback := func(ctx context.Context) (*model.ApiKeyResponse, bool, error) {
+func (x *ApiKeySugared) waitGetApiKey(ctx context.Context, request GetApiKeyRequest, opts ...wait.WaiterOption) (*model.ApiKeyOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.ApiKeyOptionalResponse, bool, error) {
 		response, err := x.GetApiKey(ctx, request)
 		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
 		return response, stop, err
@@ -146,7 +146,7 @@ func (x *ApiKeySugared) waitGetApiKey(ctx context.Context, request GetApiKeyRequ
 // UpsertApiKey позволяет создать или обновить API-ключ.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}
-func (x *ApiKeySugared) UpsertApiKey(ctx context.Context, request UpsertApiKeyRequest) (*model.ApiKeyResponse, error) {
+func (x *ApiKeySugared) UpsertApiKey(ctx context.Context, request UpsertApiKeyRequest) (*model.ApiKeyOptionalResponse, error) {
 	resp, err := x.impl.UpsertApiKey(ctx, request)
 	if err != nil {
 		return nil, err
@@ -155,7 +155,7 @@ func (x *ApiKeySugared) UpsertApiKey(ctx context.Context, request UpsertApiKeyRe
 	return x.respHandlerUpsertApiKey(resp)
 }
 
-func (x *ApiKeySugared) respHandlerUpsertApiKey(resp *UpsertApiKeyResponse) (*model.ApiKeyResponse, error) {
+func (x *ApiKeySugared) respHandlerUpsertApiKey(resp *UpsertApiKeyResponse) (*model.ApiKeyOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -175,7 +175,7 @@ func (x *ApiKeySugared) respHandlerUpsertApiKey(resp *UpsertApiKeyResponse) (*mo
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}?createOnly=true
-func (x *ApiKeySugared) CreateApiKey(ctx context.Context, request UpsertApiKeyRequest) (*model.ApiKeyResponse, error) {
+func (x *ApiKeySugared) CreateApiKey(ctx context.Context, request UpsertApiKeyRequest) (*model.ApiKeyOptionalResponse, error) {
 	resp, err := x.impl.CreateApiKey(ctx, request)
 	if err != nil {
 		return nil, err
@@ -188,7 +188,7 @@ func (x *ApiKeySugared) CreateApiKey(ctx context.Context, request UpsertApiKeyRe
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}/apiKeys/{apiKey}?updateOnly=true
-func (x *ApiKeySugared) UpdateApiKey(ctx context.Context, request UpdateApiKeyRequest) (*model.ApiKeyResponse, error) {
+func (x *ApiKeySugared) UpdateApiKey(ctx context.Context, request UpdateApiKeyRequest) (*model.ApiKeyOptionalResponse, error) {
 	resp, err := x.impl.UpdateApiKey(ctx, request)
 	if err != nil {
 		return nil, err

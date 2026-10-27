@@ -12,11 +12,14 @@ import (
 	"go.mws.cloud/go-sdk/internal/decode"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 // Параметры кластера.
 // Real OAPI model name: PostgresClusterSpec
 type PostgresClusterSpecRequest struct {
+	// Регион, которому принадлежит кластер.
+	Region *rm.RegionRef `json:"region,omitempty" yaml:"region,omitempty"`
 	// Версия продукта
 	Version string `json:"version" yaml:"version"`
 	// Состояние кластера — включен или выключен.
@@ -32,6 +35,24 @@ type PostgresClusterSpecRequest struct {
 	PostgresParameters map[string]string `json:"postgresParameters,omitempty" yaml:"postgresParameters,omitempty"`
 	// Выгрузка пользовательских логов кластера — включена или выключена.
 	LoggingEnabled *bool `json:"loggingEnabled,omitempty" yaml:"loggingEnabled,omitempty"`
+}
+
+func (m *PostgresClusterSpecRequest) GetRegion() *rm.RegionRef {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *PostgresClusterSpecRequest) SetRegion(val *rm.RegionRef) {
+	m.Region = val
+}
+
+func (m *PostgresClusterSpecRequest) GetRegionOr(val rm.RegionRef) rm.RegionRef {
+	if m != nil && m.Region != nil {
+		return *m.Region
+	}
+	return val
 }
 
 func (m *PostgresClusterSpecRequest) GetVersion() string {
@@ -167,6 +188,7 @@ func (m *PostgresClusterSpecRequest) Clone() *PostgresClusterSpecRequest {
 	}
 
 	clone := *m
+	clone.Region = m.Region.Clone()
 	if m.Endpoints != nil {
 		clone.Endpoints = make([]PostgresEndpointRequest, len(m.Endpoints))
 		for i, v := range m.Endpoints {
@@ -198,6 +220,10 @@ func (m *PostgresClusterSpecRequest) Clone() *PostgresClusterSpecRequest {
 func (m *PostgresClusterSpecRequest) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if err := m.Region.Parse(ctx); err != nil {
+		return reserrors.NewPathAccumulatorError("Region", err)
 	}
 
 	for index := range m.Endpoints {
@@ -237,6 +263,13 @@ func (m *PostgresClusterSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *PostgresClusterSpecRequest) encodeFields(e *jx.Encoder) error {
+	if m.Region != nil {
+		e.FieldStart("region")
+		if err := m.Region.Encode(e); err != nil {
+			return err
+		}
+	}
+
 	e.FieldStart("version")
 	e.Str(m.Version)
 
@@ -315,6 +348,14 @@ func (m *PostgresClusterSpecRequest) Decode(d *jx.Decoder) error {
 	}
 	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "region":
+			var v rm.RegionRef
+			if err := v.Decode(d); err != nil {
+				return err
+			}
+
+			m.Region = &v
+			return nil
 		case "version":
 			v, err := decode.Str(d)
 			if err != nil {

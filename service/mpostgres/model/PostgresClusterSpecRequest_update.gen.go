@@ -14,9 +14,15 @@ import (
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
+	"go.mws.cloud/go-sdk/service/resources/references/rm"
 )
 
 type UpdatePostgresClusterSpecRequest struct {
+	// Регион, которому принадлежит кластер.
+	//
+	// Неизменяемое поле. Можно установить значение только при создании.
+	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
+	Region optional.Optional[rm.RegionRef] `json:"region" yaml:"region"`
 	// Версия продукта
 	Version optional.Optional[string] `json:"version" yaml:"version"`
 	// Состояние кластера — включен или выключен.
@@ -39,6 +45,9 @@ type UpdatePostgresClusterSpecRequest struct {
 
 func (m *PostgresClusterSpecRequest) AsUpdateModel() UpdatePostgresClusterSpecRequest {
 	var u UpdatePostgresClusterSpecRequest
+	if m.Region != nil {
+		u.Region = optional.NewOptional(m.GetRegionOr(rm.RegionRef{}))
+	}
 	u.Version = optional.NewOptional(m.GetVersion())
 	u.Active = optional.NewOptional(m.GetActive())
 	u.Endpoints = optional.NewOptional(func() []UpdatePostgresEndpointRequest {
@@ -82,6 +91,7 @@ func (m *PostgresClusterSpecRequest) Diff(src *PostgresClusterSpecRequest) Updat
 	nilDiffers := src != nil && m == nil
 	upd := UpdatePostgresClusterSpecRequest{}
 	if !nilDiffers {
+		upd.Region = m.diffRegion(src)
 		upd.Version = m.diffVersion(src)
 		upd.Active = m.diffActive(src)
 		upd.Endpoints = m.diffEndpoints(src)
@@ -101,6 +111,9 @@ func (m *PostgresClusterSpecRequest) WithChanges(u UpdatePostgresClusterSpecRequ
 		out = *m
 	}
 
+	if u.Region.IsSet() {
+		out.Region = ptr.Get(u.Region.Value)
+	}
 	if u.Version.IsSet() {
 		out.Version = u.Version.Value
 	}
@@ -137,7 +150,8 @@ func (m *PostgresClusterSpecRequest) WithChanges(u UpdatePostgresClusterSpecRequ
 
 // HasChanges returns true if any field has Set == true
 func (m UpdatePostgresClusterSpecRequest) HasChanges() bool {
-	return m.Version.Set ||
+	return m.Region.Set ||
+		m.Version.Set ||
 		m.Active.Set ||
 		m.Endpoints.Set ||
 		m.InstanceTemplate.Set ||
@@ -151,6 +165,12 @@ func (m UpdatePostgresClusterSpecRequest) HasChanges() bool {
 func (m *UpdatePostgresClusterSpecRequest) Parse(ctx context.Context) error {
 	if m == nil {
 		return nil
+	}
+
+	if m.Region.IsSet() {
+		if err := m.Region.Value.Parse(ctx); err != nil {
+			return reserrors.NewPathAccumulatorError("Region", err)
+		}
 	}
 
 	if m.Endpoints.IsSet() {
@@ -168,6 +188,11 @@ func (m *UpdatePostgresClusterSpecRequest) Parse(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (m *PostgresClusterSpecRequest) diffRegion(src *PostgresClusterSpecRequest) optional.Optional[rm.RegionRef] {
+	nilDiffers := src != nil && m == nil
+	return commonclient.DiffPrimitiveNonRequired(src.GetRegion(), m.GetRegion(), nilDiffers)
 }
 
 func (m *PostgresClusterSpecRequest) diffVersion(src *PostgresClusterSpecRequest) optional.Optional[string] {

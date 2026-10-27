@@ -50,6 +50,30 @@ func (x *TopicSugared) respHandlerListTopics(resp *ListTopicsResponse) (*model.T
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+// ListTopicPartitions возвращает постраничный список партиций указанного топика с их смещениями и размером в байтах.
+//
+// Путь: GET /queue/v1/projects/{project}/topics/{topic}/partitions
+func (x *TopicSugared) ListTopicPartitions(ctx context.Context, request ListTopicPartitionsRequest) (*model.TopicPartitionListResponse, error) {
+	resp, err := x.impl.ListTopicPartitions(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return x.respHandlerListTopicPartitions(resp)
+}
+
+func (x *TopicSugared) respHandlerListTopicPartitions(resp *ListTopicPartitionsResponse) (*model.TopicPartitionListResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
 // DeleteTopic позволяет удалить топик.
 //
 // Путь: DELETE /queue/v1/projects/{project}/topics/{topic}

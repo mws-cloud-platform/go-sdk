@@ -23,3 +23,13 @@ func WithFailOnExhaustedAttempts(fail bool) Option {
 		cfg.failOnExhaustedAttempts = fail
 	})
 }
+
+// WithMaxAttempts sets the maximum number of attempts. Non-positive values
+// mean the default value.
+func WithMaxAttempts(maxAttempts int) Option {
+	return optionFunc(func(cfg *config) {
+		if maxAttempts > 0 {
+			cfg.maxAttempts = maxAttempts
+		}
+	})
+}

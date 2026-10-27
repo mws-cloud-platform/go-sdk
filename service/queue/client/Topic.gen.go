@@ -16,6 +16,10 @@ type Topic interface {
 	//
 	// Путь: GET /queue/v1/projects/{project}/topics
 	ListTopics(context.Context, ListTopicsRequest) (*ListTopicsResponse, error)
+	// ListTopicPartitions возвращает постраничный список партиций указанного топика с их смещениями и размером в байтах.
+	//
+	// Путь: GET /queue/v1/projects/{project}/topics/{topic}/partitions
+	ListTopicPartitions(context.Context, ListTopicPartitionsRequest) (*ListTopicPartitionsResponse, error)
 	// DeleteTopic позволяет удалить топик.
 	//
 	// Путь: DELETE /queue/v1/projects/{project}/topics/{topic}
@@ -114,6 +118,87 @@ func (m *ListTopicsResponse) GetErr() (err error) {
 }
 
 func (m *ListTopicsResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
+}
+
+type ListTopicPartitionsRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
+	// Путь к проекту.
+	Project string // path: "project"
+	// Имя топика
+	Topic string // path: "topic"
+	// Строка, из предыдущего ответа на аналогичный запрос, для получения следующей страницы с объектами. Не задано для получения первой страницы
+	PageToken *string // query: "pageToken"
+	// Максимальное количество объектов, которые клиент готов принять. Сервис определяет значение по умолчанию и верхнюю границу
+	PageSize *int // query: "pageSize"
+	// Строка фильтра.
+	// Для фильтрации используется ограниченная реализация AIP-160 (https://google.aip.dev/160).
+	// Она включает в себя операции =, !=, OR, AND и (), фильтрацию свойств вложенных объектов и wildcard-поиск подстрок
+	Filter *string // query: "filter"
+	// Строка сортировки.
+	// Для сортировки используется реализация AIP-132 (https://google.aip.dev/132#ordering).
+	// Указывается перечислением полей с направлением сортировки (asc, desc) через запятую.
+	// По умолчанию используется сортировка по возрастанию (asc)
+	OrderBy *string // query: "orderBy"
+}
+
+func (m *ListTopicPartitionsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
+	m.Authorization = authorization
+}
+
+func (m ListTopicPartitionsRequest) GetProject() string {
+	return m.Project
+}
+
+func (m *ListTopicPartitionsRequest) SetProject(project string) {
+	m.Project = project
+}
+
+func (m ListTopicPartitionsRequest) WithPageToken(token *string) ListTopicPartitionsRequest {
+	m.PageToken = token
+	return m
+}
+
+type ListTopicPartitionsResponse struct {
+	Code        int
+	Response200 *model.TopicPartitionListResponse
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *ListTopicPartitionsResponse) GetCode() int {
+	return m.Code
+}
+
+func (m *ListTopicPartitionsResponse) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *ListTopicPartitionsResponse) SetErrorWrapper(f func(err error) error) {
 	if m != nil {
 		m.errorWrapper = f
 	}

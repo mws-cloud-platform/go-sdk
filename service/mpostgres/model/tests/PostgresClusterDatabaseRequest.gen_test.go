@@ -25,6 +25,6 @@ func TestPostgresClusterDatabaseRequestMarshalling(t *testing.T) {
 
 func initPostgresClusterDatabaseRequest() model.PostgresClusterDatabaseRequest {
 	var v model.PostgresClusterDatabaseRequest
-	v.Spec.Owner = mpostgres.NewMustPostgresClusterUserRef("projectID", "fbr", "a")
+	v.Spec.Owner = mpostgres.NewMustPostgresClusterUserRef("projectID", "y", "9vBs7")
 	return v
 }

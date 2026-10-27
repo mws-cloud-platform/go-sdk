@@ -252,7 +252,7 @@ func createExternalAddress(ctx context.Context, sdk *mws.SDK, externalAddressNam
 
 	externalAddress, err := externalAddressClient.CreateExternalAddress(ctx, vpcclient.UpsertExternalAddressRequest{
 		ExternalAddress: externalAddressName,
-		Body: &vpcmodel.ExternalAddressRequest{
+		Body: vpcmodel.ExternalAddressRequest{
 			Spec: vpcmodel.VpcExternalAddressSpecRequest{},
 		},
 	}, vpcclient.WithWait())

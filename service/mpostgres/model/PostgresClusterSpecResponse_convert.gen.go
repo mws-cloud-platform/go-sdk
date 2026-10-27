@@ -11,6 +11,7 @@ func PostgresClusterSpecRequestToResponse(request *PostgresClusterSpecRequest) (
 		return nil, nil
 	}
 	var response PostgresClusterSpecResponse
+	response.Region = request.Region
 	response.Version = request.Version
 	response.Active = request.Active
 	for _, e := range request.Endpoints {

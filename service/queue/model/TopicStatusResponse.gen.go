@@ -15,6 +15,8 @@ import (
 // Real OAPI model name: TopicStatus
 type TopicStatusResponse struct {
 	commonmodel.ResourceStatusResponse `yaml:"-,inline"`
+	// Размер данных топика в байтах (суммарный размер всех партиций)
+	SizeBytes *int64 `json:"sizeBytes,omitempty" yaml:"sizeBytes,omitempty"`
 	// Эффективная конфигурация топика, которая используется сервером.
 	// Конфигурация, заданная пользователем и дополненная внутренними значениями по умолчанию.
 	// Все значения параметров конфигурации передаются как строки.
@@ -26,6 +28,20 @@ func (m *TopicStatusResponse) GetReady() commonmodel.ResourceStatusReadyResponse
 		return m.ResourceStatusResponse.GetReady()
 	}
 	return commonmodel.ResourceStatusReadyResponse{}
+}
+
+func (m *TopicStatusResponse) GetSizeBytes() *int64 {
+	if m != nil {
+		return m.SizeBytes
+	}
+	return nil
+}
+
+func (m *TopicStatusResponse) GetSizeBytesOr(val int64) int64 {
+	if m != nil && m.SizeBytes != nil {
+		return *m.SizeBytes
+	}
+	return val
 }
 
 func (m *TopicStatusResponse) GetConfig() map[string]string {
@@ -49,6 +65,10 @@ func (m *TopicStatusResponse) Clone() *TopicStatusResponse {
 
 	clone := *m
 	clone.ResourceStatusResponse = *m.ResourceStatusResponse.Clone()
+	if m.SizeBytes != nil {
+		cloneSizeBytes := *m.SizeBytes
+		clone.SizeBytes = &cloneSizeBytes
+	}
 	if m.Config != nil {
 		clone.Config = make(map[string]string, len(m.Config))
 		for k, v := range m.Config {
@@ -87,6 +107,11 @@ func (m *TopicStatusResponse) encodeFields(e *jx.Encoder) error {
 	if err := m.Ready.Encode(e); err != nil {
 		return err
 	}
+	if m.SizeBytes != nil {
+		e.FieldStart("sizeBytes")
+		e.Int64(*m.SizeBytes)
+	}
+
 	if m.Config != nil {
 		e.FieldStart("config")
 		e.ObjStart()
@@ -117,6 +142,14 @@ func (m *TopicStatusResponse) Decode(d *jx.Decoder) error {
 			}
 
 			m.Ready = v
+			return nil
+		case "sizeBytes":
+			v, err := decode.Int64(d)
+			if err != nil {
+				return err
+			}
+
+			m.SizeBytes = &v
 			return nil
 		case "config":
 			c := make(map[string]string)

@@ -229,7 +229,7 @@ func (m *GetApiKeyRequest) SetProject(project string) {
 
 type GetApiKeyResponse struct {
 	Code        int
-	Response200 *model.ApiKeyResponse
+	Response200 *model.ApiKeyOptionalResponse
 	Response400 *commonmodel.ApiError
 	Response403 *commonmodel.ApiError
 	Response404 *commonmodel.ApiError
@@ -327,8 +327,8 @@ func (m *UpdateApiKeyRequest) SetProject(project string) {
 
 type UpsertApiKeyResponse struct {
 	Code        int
-	Response200 *model.ApiKeyResponse
-	Response201 *model.ApiKeyResponse
+	Response200 *model.ApiKeyOptionalResponse
+	Response201 *model.ApiKeyOptionalResponse
 	Response400 *commonmodel.ApiError
 	Response403 *commonmodel.ApiError
 	Response404 *commonmodel.ApiError

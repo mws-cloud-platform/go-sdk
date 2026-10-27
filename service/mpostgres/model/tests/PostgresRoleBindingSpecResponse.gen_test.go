@@ -25,6 +25,6 @@ func TestPostgresRoleBindingSpecResponseMarshalling(t *testing.T) {
 
 func initPostgresRoleBindingSpecResponse() model.PostgresRoleBindingSpecResponse {
 	var v model.PostgresRoleBindingSpecResponse
-	v.UserId = mpostgres.NewMustPostgresClusterUserRef("projectID", "fbr", "a")
+	v.UserId = mpostgres.NewMustPostgresClusterUserRef("projectID", "y", "9vBs7")
 	return v
 }

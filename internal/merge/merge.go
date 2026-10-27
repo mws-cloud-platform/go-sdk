@@ -1,8 +1,6 @@
 package merge
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 )
 
@@ -54,14 +52,14 @@ func SliceSensitive[T, U any](
 
 	dm := make(map[string]sensitive.Sensitive[T], len(dst))
 	for _, t := range dst {
-		dm[getNameT(ptr.Get(t.Value()))] = t
+		dm[getNameT(new(t.Value()))] = t
 	}
 
 	out := make([]sensitive.Sensitive[T], 0, len(src))
 	for _, u := range src {
 		var t *T
-		if m, ok := dm[getNameU(ptr.Get(u.Value()))]; ok {
-			t = ptr.Get(m.Value())
+		if m, ok := dm[getNameU(new(u.Value()))]; ok {
+			t = new(m.Value())
 		}
 		out = append(out, sensitive.New(withChanges(t, u.Value())))
 	}
@@ -104,7 +102,7 @@ func MapSensitive[T, U any](
 	for k, v := range src {
 		var t *T
 		if dv, ok := dst[k]; ok {
-			t = ptr.Get(dv.Value())
+			t = new(dv.Value())
 		}
 		out[k] = sensitive.New(withChanges(t, v.Value()))
 	}
