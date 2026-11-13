@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -67,18 +66,18 @@ func (m *StorageDiskSpecRequest) WithChanges(u UpdateStorageDiskSpecRequest) Sto
 	}
 
 	if u.Size.IsSet() {
-		out.Size = ptr.Get(u.Size.Value)
+		out.Size = new(u.Size.Value)
 	}
 	if u.Source.IsSet() {
-		out.Source = ptr.Get(out.Source.WithChanges(u.Source.Value))
+		out.Source = new(out.Source.WithChanges(u.Source.Value))
 	} else if u.Source.IsNull() {
 		out.Source = nil
 	}
 	if u.DiskType.IsSet() {
-		out.DiskType = ptr.Get(u.DiskType.Value)
+		out.DiskType = new(u.DiskType.Value)
 	}
 	if u.Iops.IsSet() {
-		out.Iops = ptr.Get(u.Iops.Value)
+		out.Iops = new(u.Iops.Value)
 	}
 	return out
 }
@@ -178,10 +177,10 @@ func (m *StorageDiskSpecSourceRequest) WithChanges(u UpdateStorageDiskSpecSource
 	}
 
 	if u.Image.IsSet() {
-		out.Image = ptr.Get(u.Image.Value)
+		out.Image = new(u.Image.Value)
 	}
 	if u.DiskBackup.IsSet() {
-		out.DiskBackup = ptr.Get(u.DiskBackup.Value)
+		out.DiskBackup = new(u.DiskBackup.Value)
 	}
 	return out
 }

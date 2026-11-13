@@ -45,12 +45,8 @@ func (m *UpdateCatalogSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.ServiceAccount.IsSet() {
 		e.FieldStart("serviceAccount")
-		if m.ServiceAccount.IsNull() {
-			e.Null()
-		} else {
-			if err := m.ServiceAccount.Value.Encode(e); err != nil {
-				return err
-			}
+		if err := m.ServiceAccount.Value.Encode(e); err != nil {
+			return err
 		}
 	}
 	return nil
@@ -84,11 +80,6 @@ func (m *UpdateCatalogSpecRequest) Decode(d *jx.Decoder) error {
 			m.Properties.SetTo(c)
 			return nil
 		case "serviceAccount":
-			if d.Next() == jx.Null {
-				m.ServiceAccount.SetToNull()
-				return d.Null()
-			}
-
 			var v UpdateCatalogSpecServiceAccountRequest
 			if err := v.Decode(d); err != nil {
 				return err

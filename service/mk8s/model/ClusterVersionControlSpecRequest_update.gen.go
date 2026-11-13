@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
@@ -53,10 +51,10 @@ func (m *ClusterVersionControlSpecRequest) WithChanges(u UpdateClusterVersionCon
 		out.ReleaseChannel = u.ReleaseChannel.Value
 	}
 	if u.Version.IsSet() {
-		out.Version = ptr.Get(u.Version.Value)
+		out.Version = new(u.Version.Value)
 	}
 	if u.MaintenanceWindow.IsSet() {
-		out.MaintenanceWindow = ptr.Get(out.MaintenanceWindow.WithChanges(u.MaintenanceWindow.Value))
+		out.MaintenanceWindow = new(out.MaintenanceWindow.WithChanges(u.MaintenanceWindow.Value))
 	} else if u.MaintenanceWindow.IsNull() {
 		out.MaintenanceWindow = nil
 	}

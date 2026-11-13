@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/gpt/model"
 )
 
 func TestUpdateDeploymentRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initDeploymentRequest()).AsUpdateModel()
+	expected := new(initDeploymentRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

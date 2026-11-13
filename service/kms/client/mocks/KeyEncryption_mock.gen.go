@@ -93,3 +93,33 @@ func (mr *MockKeyEncryptionMockRecorder) ReEncrypt(arg0, arg1 any) *gomock.Call 
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReEncrypt", reflect.TypeOf((*MockKeyEncryption)(nil).ReEncrypt), arg0, arg1)
 }
+
+// Sign mocks base method.
+func (m *MockKeyEncryption) Sign(arg0 context.Context, arg1 client.SignRequest) (*client.SignResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Sign", arg0, arg1)
+	ret0, _ := ret[0].(*client.SignResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Sign indicates an expected call of Sign.
+func (mr *MockKeyEncryptionMockRecorder) Sign(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Sign", reflect.TypeOf((*MockKeyEncryption)(nil).Sign), arg0, arg1)
+}
+
+// Verify mocks base method.
+func (m *MockKeyEncryption) Verify(arg0 context.Context, arg1 client.VerifyRequest) (*client.VerifyResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Verify", arg0, arg1)
+	ret0, _ := ret[0].(*client.VerifyResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Verify indicates an expected call of Verify.
+func (mr *MockKeyEncryptionMockRecorder) Verify(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Verify", reflect.TypeOf((*MockKeyEncryption)(nil).Verify), arg0, arg1)
+}

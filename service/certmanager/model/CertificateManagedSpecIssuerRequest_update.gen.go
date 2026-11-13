@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -37,7 +35,7 @@ func (m *CertificateManagedSpecIssuerRequest) WithChanges(u UpdateCertificateMan
 	}
 
 	if u.Acme.IsSet() {
-		out.Acme = ptr.Get(out.Acme.WithChanges(u.Acme.Value))
+		out.Acme = new(out.Acme.WithChanges(u.Acme.Value))
 	} else if u.Acme.IsNull() {
 		out.Acme = nil
 	}

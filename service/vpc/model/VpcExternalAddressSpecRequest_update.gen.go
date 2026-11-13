@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -56,10 +54,10 @@ func (m *VpcExternalAddressSpecRequest) WithChanges(u UpdateVpcExternalAddressSp
 	}
 
 	if u.Region.IsSet() {
-		out.Region = ptr.Get(u.Region.Value)
+		out.Region = new(u.Region.Value)
 	}
 	if u.NatGateway.IsSet() {
-		out.NatGateway = ptr.Get(u.NatGateway.Value)
+		out.NatGateway = new(u.NatGateway.Value)
 	}
 	return out
 }

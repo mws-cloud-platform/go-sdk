@@ -4,7 +4,6 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -63,16 +62,16 @@ func (m *NlbHealthCheckRequest) WithChanges(u UpdateNlbHealthCheckRequest) NlbHe
 		out.Protocol = out.Protocol.WithChanges(u.Protocol.Value)
 	}
 	if u.Interval.IsSet() {
-		out.Interval = ptr.Get(u.Interval.Value)
+		out.Interval = new(u.Interval.Value)
 	}
 	if u.Timeout.IsSet() {
 		out.Timeout = u.Timeout.Value
 	}
 	if u.UnhealthyThreshold.IsSet() {
-		out.UnhealthyThreshold = ptr.Get(u.UnhealthyThreshold.Value)
+		out.UnhealthyThreshold = new(u.UnhealthyThreshold.Value)
 	}
 	if u.HealthyThreshold.IsSet() {
-		out.HealthyThreshold = ptr.Get(u.HealthyThreshold.Value)
+		out.HealthyThreshold = new(u.HealthyThreshold.Value)
 	}
 	return out
 }

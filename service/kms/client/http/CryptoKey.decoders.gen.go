@@ -356,6 +356,121 @@ func decodeRotateCryptoKeyResponse(resp *http.Response) (*client.RotateCryptoKey
 	}
 }
 
+func decodeGetCryptoKeyPublicKeyResponse(resp *http.Response) (*client.GetCryptoKeyPublicKeyResponse, error) {
+	ct, err := commonclient.GetContentType(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	switch resp.StatusCode {
+	case 200:
+		switch ct {
+		case "application/json":
+			result := &client.GetCryptoKeyPublicKeyResponse{
+				Code:        resp.StatusCode,
+				Response200: &model.CryptoKeyPublicKeyResponse{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 400:
+		switch ct {
+		case "application/json":
+			result := &client.GetCryptoKeyPublicKeyResponse{
+				Code:        resp.StatusCode,
+				Response400: &commonmodel.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response400); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 403:
+		switch ct {
+		case "application/json":
+			result := &client.GetCryptoKeyPublicKeyResponse{
+				Code:        resp.StatusCode,
+				Response403: &commonmodel.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response403); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 404:
+		switch ct {
+		case "application/json":
+			result := &client.GetCryptoKeyPublicKeyResponse{
+				Code:        resp.StatusCode,
+				Response404: &commonmodel.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response404); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 412:
+		switch ct {
+		case "application/json":
+			result := &client.GetCryptoKeyPublicKeyResponse{
+				Code:        resp.StatusCode,
+				Response412: &commonmodel.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response412); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	case 500:
+		switch ct {
+		case "application/json":
+			result := &client.GetCryptoKeyPublicKeyResponse{
+				Code:        resp.StatusCode,
+				Response500: &commonmodel.ApiError{},
+			}
+
+			if err = devpclient.ReadJSON(resp.Body, result.Response500); err != nil {
+				return nil, clienterrors.NewDecodeBodyError(ct, err)
+			}
+
+			return result, nil
+		default:
+			_, _ = io.Copy(io.Discard, resp.Body)
+			return nil, clienterrors.InvalidContentType(ct)
+		}
+	default:
+		data, err := io.ReadAll(resp.Body)
+		return nil, errors.Join(err, clienterrors.UnexpectedStatusCodeWithData(resp.StatusCode, data))
+	}
+}
+
 func decodeCancelScheduledDestructionOfCryptoKeyResponse(resp *http.Response) (*client.CancelScheduledDestructionOfCryptoKeyResponse, error) {
 	ct, err := commonclient.GetContentType(resp)
 	if err != nil {

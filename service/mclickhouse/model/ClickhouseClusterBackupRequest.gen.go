@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -151,10 +150,10 @@ func (m *ClickhouseClusterBackupRequest) WithDefaults() ClickhouseClusterBackupR
 	}
 
 	if out.Hour == nil {
-		out.Hour = ptr.Get(1)
+		out.Hour = new(1)
 	}
 	if out.RetainPeriodDays == nil {
-		out.RetainPeriodDays = ptr.Get(7)
+		out.RetainPeriodDays = new(2)
 	}
 	return out
 }

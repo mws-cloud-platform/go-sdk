@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -188,10 +187,10 @@ func (m *KafkaTopicSpecRequest) WithDefaults() KafkaTopicSpecRequest {
 	}
 
 	if out.Partitions == nil {
-		out.Partitions = ptr.Get(int32(-1))
+		out.Partitions = new(int32(-1))
 	}
 	if out.ReplicationFactor == nil {
-		out.ReplicationFactor = ptr.Get(int32(-1))
+		out.ReplicationFactor = new(int32(-1))
 	}
 	return out
 }

@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -52,7 +50,7 @@ func (m *DiskBackupSpecRequest) WithChanges(u UpdateDiskBackupSpecRequest) DiskB
 		out.Source = out.Source.WithChanges(u.Source.Value)
 	}
 	if u.OsType.IsSet() {
-		out.OsType = ptr.Get(u.OsType.Value)
+		out.OsType = new(u.OsType.Value)
 	}
 	return out
 }

@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -50,7 +48,7 @@ func (m *PostgresExternalAccessSpecRequest) WithChanges(u UpdatePostgresExternal
 		out.Allowed = u.Allowed.Value
 	}
 	if u.Ref.IsSet() {
-		out.Ref = ptr.Get(u.Ref.Value)
+		out.Ref = new(u.Ref.Value)
 	}
 	return out
 }

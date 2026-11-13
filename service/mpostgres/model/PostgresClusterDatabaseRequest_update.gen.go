@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -46,7 +44,7 @@ func (m *PostgresClusterDatabaseRequest) WithChanges(u UpdatePostgresClusterData
 	}
 
 	if u.Metadata.IsSet() {
-		out.Metadata = ptr.Get(out.Metadata.WithChanges(u.Metadata.Value))
+		out.Metadata = new(out.Metadata.WithChanges(u.Metadata.Value))
 	} else if u.Metadata.IsNull() {
 		out.Metadata = nil
 	}
@@ -146,16 +144,16 @@ func (m *PostgresClusterDatabaseMetadataRequest) WithChanges(u UpdatePostgresClu
 	}
 
 	if u.DisplayName.IsSet() {
-		out.DisplayName = ptr.Get(u.DisplayName.Value)
+		out.DisplayName = new(u.DisplayName.Value)
 	}
 	if u.Usages.IsSet() {
 		out.Usages = merge.Slice(out.Usages, u.Usages.Value, (*commonmodel.TypedUsageRequest).WithChanges, (*commonmodel.TypedUsageRequest).GetName, (*commonmodel.UpdateTypedUsageRequest).GetName)
 	}
 	if u.Etag.IsSet() {
-		out.Etag = ptr.Get(u.Etag.Value)
+		out.Etag = new(u.Etag.Value)
 	}
 	if u.Description.IsSet() {
-		out.Description = ptr.Get(u.Description.Value)
+		out.Description = new(u.Description.Value)
 	}
 	return out
 }

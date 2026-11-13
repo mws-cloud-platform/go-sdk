@@ -79,6 +79,21 @@ func (mr *MockCryptoKeyMockRecorder) GetCryptoKey(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCryptoKey", reflect.TypeOf((*MockCryptoKey)(nil).GetCryptoKey), arg0, arg1)
 }
 
+// GetCryptoKeyPublicKey mocks base method.
+func (m *MockCryptoKey) GetCryptoKeyPublicKey(arg0 context.Context, arg1 client.GetCryptoKeyPublicKeyRequest) (*client.GetCryptoKeyPublicKeyResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCryptoKeyPublicKey", arg0, arg1)
+	ret0, _ := ret[0].(*client.GetCryptoKeyPublicKeyResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCryptoKeyPublicKey indicates an expected call of GetCryptoKeyPublicKey.
+func (mr *MockCryptoKeyMockRecorder) GetCryptoKeyPublicKey(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCryptoKeyPublicKey", reflect.TypeOf((*MockCryptoKey)(nil).GetCryptoKeyPublicKey), arg0, arg1)
+}
+
 // ListCryptoKeys mocks base method.
 func (m *MockCryptoKey) ListCryptoKeys(arg0 context.Context, arg1 client.ListCryptoKeysRequest) (*client.ListCryptoKeysResponse, error) {
 	m.ctrl.T.Helper()

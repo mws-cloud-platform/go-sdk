@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -39,7 +37,7 @@ func (m *CryptoKeyVersionSpecRequest) WithChanges(u UpdateCryptoKeyVersionSpecRe
 	}
 
 	if u.UsagePolicy.IsSet() {
-		out.UsagePolicy = ptr.Get(out.UsagePolicy.WithChanges(u.UsagePolicy.Value))
+		out.UsagePolicy = new(out.UsagePolicy.WithChanges(u.UsagePolicy.Value))
 	} else if u.UsagePolicy.IsNull() {
 		out.UsagePolicy = nil
 	}
@@ -93,7 +91,7 @@ func (m *CryptoKeyVersionSpecUsagePolicyRequest) WithChanges(u UpdateCryptoKeyVe
 	}
 
 	if u.Enabled.IsSet() {
-		out.Enabled = ptr.Get(u.Enabled.Value)
+		out.Enabled = new(u.Enabled.Value)
 	}
 	return out
 }

@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
@@ -151,7 +150,7 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 		out.Subnet = out.Subnet.WithChanges(u.Subnet.Value)
 	}
 	if u.Network.IsSet() {
-		out.Network = ptr.Get(out.Network.WithChanges(u.Network.Value))
+		out.Network = new(out.Network.WithChanges(u.Network.Value))
 	} else if u.Network.IsNull() {
 		out.Network = nil
 	}
@@ -159,13 +158,13 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 		out.VmType = out.VmType.WithChanges(u.VmType.Value)
 	}
 	if u.ImageStorageSize.IsSet() {
-		out.ImageStorageSize = ptr.Get(u.ImageStorageSize.Value)
+		out.ImageStorageSize = new(u.ImageStorageSize.Value)
 	}
 	if u.ImageStorageIops.IsSet() {
-		out.ImageStorageIops = ptr.Get(u.ImageStorageIops.Value)
+		out.ImageStorageIops = new(u.ImageStorageIops.Value)
 	}
 	if u.MaxPods.IsSet() {
-		out.MaxPods = ptr.Get(u.MaxPods.Value)
+		out.MaxPods = new(u.MaxPods.Value)
 	}
 	if u.LocalDisks.IsSet() {
 		out.LocalDisks = merge.Slice(out.LocalDisks, u.LocalDisks.Value, (*LocalDiskSpecRequest).WithChanges, (*LocalDiskSpecRequest).GetName, (*UpdateLocalDiskSpecRequest).GetName)
@@ -173,7 +172,7 @@ func (m *NodeGroupSpecRequest) WithChanges(u UpdateNodeGroupSpecRequest) NodeGro
 		out.LocalDisks = nil
 	}
 	if u.DataCache.IsSet() {
-		out.DataCache = ptr.Get(u.DataCache.Value)
+		out.DataCache = new(u.DataCache.Value)
 	}
 	if u.Scale.IsSet() {
 		out.Scale = out.Scale.WithChanges(u.Scale.Value)
@@ -419,10 +418,10 @@ func (m *NodeGroupSpecRolloutStrategyRequest) WithChanges(u UpdateNodeGroupSpecR
 	}
 
 	if u.MaxSurge.IsSet() {
-		out.MaxSurge = ptr.Get(u.MaxSurge.Value)
+		out.MaxSurge = new(u.MaxSurge.Value)
 	}
 	if u.MaxUnavailable.IsSet() {
-		out.MaxUnavailable = ptr.Get(u.MaxUnavailable.Value)
+		out.MaxUnavailable = new(u.MaxUnavailable.Value)
 	}
 	return out
 }
@@ -478,12 +477,12 @@ func (m *NodeGroupSpecScaleRequest) WithChanges(u UpdateNodeGroupSpecScaleReques
 	}
 
 	if u.Fixed.IsSet() {
-		out.Fixed = ptr.Get(u.Fixed.Value)
+		out.Fixed = new(u.Fixed.Value)
 	} else if u.Fixed.IsNull() {
 		out.Fixed = nil
 	}
 	if u.Autoscaling.IsSet() {
-		out.Autoscaling = ptr.Get(out.Autoscaling.WithChanges(u.Autoscaling.Value))
+		out.Autoscaling = new(out.Autoscaling.WithChanges(u.Autoscaling.Value))
 	} else if u.Autoscaling.IsNull() {
 		out.Autoscaling = nil
 	}

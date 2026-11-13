@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/auditlogs/model"
 )
 
 func TestUpdateStorageTypedResourceMetadataRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initStorageTypedResourceMetadataRequest()).AsUpdateModel()
+	expected := new(initStorageTypedResourceMetadataRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

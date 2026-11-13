@@ -3,15 +3,11 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 type UpdateVpcNetworkSpecRequest struct {
-	// Неизменяемое поле. Можно установить значение только при создании.
-	// При обновлении значение не следует заполнять, либо оно должно совпадать с текущим.
 	Mtu            optional.Optional[int32] `json:"mtu" yaml:"mtu"`
 	InternetAccess optional.Optional[bool]  `json:"internetAccess" yaml:"internetAccess"`
 }
@@ -45,10 +41,10 @@ func (m *VpcNetworkSpecRequest) WithChanges(u UpdateVpcNetworkSpecRequest) VpcNe
 	}
 
 	if u.Mtu.IsSet() {
-		out.Mtu = ptr.Get(u.Mtu.Value)
+		out.Mtu = new(u.Mtu.Value)
 	}
 	if u.InternetAccess.IsSet() {
-		out.InternetAccess = ptr.Get(u.InternetAccess.Value)
+		out.InternetAccess = new(u.InternetAccess.Value)
 	}
 	return out
 }

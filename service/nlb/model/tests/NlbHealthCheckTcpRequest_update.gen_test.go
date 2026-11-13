@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/nlb/model"
 )
 
 func TestUpdateNlbHealthCheckTcpRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initNlbHealthCheckTcpRequest()).AsUpdateModel()
+	expected := new(initNlbHealthCheckTcpRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

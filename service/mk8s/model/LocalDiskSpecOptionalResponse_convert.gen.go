@@ -13,7 +13,7 @@ func LocalDiskSpecRequestToOptionalResponse(request *LocalDiskSpecRequest) (*Loc
 	var response LocalDiskSpecOptionalResponse
 	response.Name = request.Name
 	if request.DeviceName != nil {
-		response.DeviceName = optional.NewOptionalNil(*request.DeviceName)
+		response.DeviceName = optional.NewOptional(*request.DeviceName)
 	}
 	response.Size = request.Size
 	return &response, nil

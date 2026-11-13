@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -132,13 +130,13 @@ func (m *IcebergRoleBindingSpecResourceRequest) WithChanges(u UpdateIcebergRoleB
 		out.Catalog = u.Catalog.Value
 	}
 	if u.Namespace.IsSet() {
-		out.Namespace = ptr.Get(u.Namespace.Value)
+		out.Namespace = new(u.Namespace.Value)
 	}
 	if u.Table.IsSet() {
-		out.Table = ptr.Get(u.Table.Value)
+		out.Table = new(u.Table.Value)
 	}
 	if u.View.IsSet() {
-		out.View = ptr.Get(u.View.Value)
+		out.View = new(u.View.Value)
 	}
 	return out
 }

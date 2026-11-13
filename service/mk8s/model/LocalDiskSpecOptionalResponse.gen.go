@@ -17,7 +17,7 @@ type LocalDiskSpecOptionalResponse struct {
 	// Уникальное имя диска в рамках виртуальной машины
 	Name string `json:"name" yaml:"name"`
 	// Имя устройства в /dev/disk/by-id/mws-*. Если не указано — mws-{name}
-	DeviceName optional.OptionalNil[string] `json:"deviceName,omitempty" yaml:"deviceName,omitempty"`
+	DeviceName optional.Optional[string] `json:"deviceName,omitempty" yaml:"deviceName,omitempty"`
 	// Размер диска. Должен быть кратен 248GB
 	Size bytesize.ByteSize `json:"size" yaml:"size"`
 }
@@ -34,14 +34,14 @@ func (m *LocalDiskSpecOptionalResponse) SetName(val string) {
 }
 
 func (m *LocalDiskSpecOptionalResponse) GetDeviceName() *string {
-	if m != nil && m.DeviceName.IsSet() && !m.DeviceName.IsNull() {
+	if m != nil && m.DeviceName.IsSet() {
 		return &m.DeviceName.Value
 	}
 	return nil
 }
 
 func (m *LocalDiskSpecOptionalResponse) GetDeviceNameOr(val string) string {
-	if m != nil && m.DeviceName.IsSet() && !m.DeviceName.IsNull() {
+	if m != nil && m.DeviceName.IsSet() {
 		return m.DeviceName.Value
 	}
 	return val
@@ -97,11 +97,7 @@ func (m *LocalDiskSpecOptionalResponse) encodeFields(e *jx.Encoder) error {
 
 	if m.DeviceName.IsSet() {
 		e.FieldStart("deviceName")
-		if m.DeviceName.IsNull() {
-			e.Null()
-		} else {
-			e.Str(m.DeviceName.Value)
-		}
+		e.Str(m.DeviceName.Value)
 	}
 
 	e.FieldStart("size")
@@ -129,11 +125,6 @@ func (m *LocalDiskSpecOptionalResponse) Decode(d *jx.Decoder) error {
 			m.Name = v
 			return nil
 		case "deviceName":
-			if d.Next() == jx.Null {
-				m.DeviceName.SetToNull()
-				return d.Null()
-			}
-
 			v, err := decode.Str(d)
 			if err != nil {
 				return err

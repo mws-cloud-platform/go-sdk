@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -47,7 +45,7 @@ func (m *ClickhouseClusterUserSpecRequest) WithChanges(u UpdateClickhouseCluster
 	}
 
 	if u.Role.IsSet() {
-		out.Role = ptr.Get(u.Role.Value)
+		out.Role = new(u.Role.Value)
 	}
 	if u.Password.IsSet() {
 		out.Password = u.Password.Value

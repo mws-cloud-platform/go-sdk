@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -44,12 +42,12 @@ func (m *CertificateSpecRequest) WithChanges(u UpdateCertificateSpecRequest) Cer
 	}
 
 	if u.SelfManaged.IsSet() {
-		out.SelfManaged = ptr.Get(out.SelfManaged.WithChanges(u.SelfManaged.Value))
+		out.SelfManaged = new(out.SelfManaged.WithChanges(u.SelfManaged.Value))
 	} else if u.SelfManaged.IsNull() {
 		out.SelfManaged = nil
 	}
 	if u.Managed.IsSet() {
-		out.Managed = ptr.Get(out.Managed.WithChanges(u.Managed.Value))
+		out.Managed = new(out.Managed.WithChanges(u.Managed.Value))
 	} else if u.Managed.IsNull() {
 		out.Managed = nil
 	}

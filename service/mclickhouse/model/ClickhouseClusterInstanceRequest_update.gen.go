@@ -6,8 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -74,7 +72,7 @@ func (m *ClickhouseClusterInstanceRequest) WithChanges(u UpdateClickhouseCluster
 		out.Name = u.Name.Value
 	}
 	if u.Count.IsSet() {
-		out.Count = ptr.Get(u.Count.Value)
+		out.Count = new(u.Count.Value)
 	}
 	if u.Zone.IsSet() {
 		out.Zone = u.Zone.Value

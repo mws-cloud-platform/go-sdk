@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -250,7 +249,7 @@ func (m *ClickhouseClusterInstanceRequest) WithDefaults() ClickhouseClusterInsta
 	}
 
 	if out.Count == nil {
-		out.Count = ptr.Get(1)
+		out.Count = new(1)
 	}
 	return out
 }

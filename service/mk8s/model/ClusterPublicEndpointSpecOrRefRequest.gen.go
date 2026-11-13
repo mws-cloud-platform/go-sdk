@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -170,6 +169,6 @@ func (m *ClusterPublicEndpointSpecOrRefRequest) WithDefaults() ClusterPublicEndp
 		out = *m
 	}
 
-	out.Spec = ptr.Get(out.Spec.WithDefaults())
+	out.Spec = new(out.Spec.WithDefaults())
 	return out
 }

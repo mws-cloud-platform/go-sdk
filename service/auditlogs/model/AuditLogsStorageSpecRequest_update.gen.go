@@ -5,7 +5,6 @@ package model
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -92,7 +91,7 @@ func (m *AuditLogsStorageSpecRetentionRequest) WithChanges(u UpdateAuditLogsStor
 	}
 
 	if u.Size.IsSet() {
-		out.Size = ptr.Get(u.Size.Value)
+		out.Size = new(u.Size.Value)
 	}
 	if u.Period.IsSet() {
 		out.Period = u.Period.Value

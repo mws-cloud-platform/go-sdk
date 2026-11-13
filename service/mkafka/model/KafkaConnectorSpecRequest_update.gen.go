@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -45,10 +43,10 @@ func (m *KafkaConnectorSpecRequest) WithChanges(u UpdateKafkaConnectorSpecReques
 	}
 
 	if u.Active.IsSet() {
-		out.Active = ptr.Get(u.Active.Value)
+		out.Active = new(u.Active.Value)
 	}
 	if u.S3SinkConnector.IsSet() {
-		out.S3SinkConnector = ptr.Get(out.S3SinkConnector.WithChanges(u.S3SinkConnector.Value))
+		out.S3SinkConnector = new(out.S3SinkConnector.WithChanges(u.S3SinkConnector.Value))
 	} else if u.S3SinkConnector.IsNull() {
 		out.S3SinkConnector = nil
 	}

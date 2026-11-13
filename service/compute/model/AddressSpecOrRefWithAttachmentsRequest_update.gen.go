@@ -6,8 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -52,7 +50,7 @@ func (m *AddressSpecOrRefWithAttachmentsRequest) WithChanges(u UpdateAddressSpec
 		out.Address = out.Address.WithChanges(u.Address.Value)
 	}
 	if u.OneToOneNat.IsSet() {
-		out.OneToOneNat = ptr.Get(out.OneToOneNat.WithChanges(u.OneToOneNat.Value))
+		out.OneToOneNat = new(out.OneToOneNat.WithChanges(u.OneToOneNat.Value))
 	} else if u.OneToOneNat.IsNull() {
 		out.OneToOneNat = nil
 	}

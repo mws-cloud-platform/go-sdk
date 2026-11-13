@@ -5,8 +5,6 @@ package model
 import (
 	"maps"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -61,16 +59,16 @@ func (m *OsSpecRequest) WithChanges(u UpdateOsSpecRequest) OsSpecRequest {
 	}
 
 	if u.Hostname.IsSet() {
-		out.Hostname = ptr.Get(u.Hostname.Value)
+		out.Hostname = new(u.Hostname.Value)
 	}
 	if u.LocalDomain.IsSet() {
-		out.LocalDomain = ptr.Get(u.LocalDomain.Value)
+		out.LocalDomain = new(u.LocalDomain.Value)
 	}
 	if u.StandardDnsRecords.IsSet() {
-		out.StandardDnsRecords = ptr.Get(u.StandardDnsRecords.Value)
+		out.StandardDnsRecords = new(u.StandardDnsRecords.Value)
 	}
 	if u.Metadata.IsSet() {
-		out.Metadata = ptr.Get(out.Metadata.WithChanges(u.Metadata.Value))
+		out.Metadata = new(out.Metadata.WithChanges(u.Metadata.Value))
 	} else if u.Metadata.IsNull() {
 		out.Metadata = nil
 	}

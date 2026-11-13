@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -57,7 +55,7 @@ func (m *AcmeIssuerRequest) WithChanges(u UpdateAcmeIssuerRequest) AcmeIssuerReq
 		out.ChallengeType = u.ChallengeType.Value
 	}
 	if u.Profile.IsSet() {
-		out.Profile = ptr.Get(u.Profile.Value)
+		out.Profile = new(u.Profile.Value)
 	}
 	return out
 }

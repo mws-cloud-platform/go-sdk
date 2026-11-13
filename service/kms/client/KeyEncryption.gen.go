@@ -12,6 +12,14 @@ import (
 )
 
 type KeyEncryption interface {
+	// Verify позволяет проверить подпись с использованием указанного асимметричного KMS ключа.
+	//
+	// Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:verify
+	Verify(context.Context, VerifyRequest) (*VerifyResponse, error)
+	// Sign позволяет подписать данные с использованием указанного асимметричного KMS ключа.
+	//
+	// Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:sign
+	Sign(context.Context, SignRequest) (*SignResponse, error)
 	// GenerateDataKey позволяет сгенерировать ключ шифрования данных.
 	//
 	// Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:generateDataKey
@@ -28,6 +36,142 @@ type KeyEncryption interface {
 	//
 	// Путь: POST /kms/v1/projects/{project}/cryptoKeys/{destinationKey}:reEncrypt
 	ReEncrypt(context.Context, ReEncryptRequest) (*ReEncryptResponse, error)
+}
+
+type VerifyRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
+	// Путь к проекту.
+	Project string // path: "project"
+	// Название крипто-ключа
+	Key  string               // path: "key"
+	Body *model.VerifyRequest // body
+}
+
+func (m *VerifyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
+	m.Authorization = authorization
+}
+
+func (m VerifyRequest) GetProject() string {
+	return m.Project
+}
+
+func (m *VerifyRequest) SetProject(project string) {
+	m.Project = project
+}
+
+type VerifyResponse struct {
+	Code        int
+	Response200 *model.VerifyResponse
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *VerifyResponse) GetCode() int {
+	return m.Code
+}
+
+func (m *VerifyResponse) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response412 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *VerifyResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
+}
+
+type SignRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
+	// Путь к проекту.
+	Project string // path: "project"
+	// Название крипто-ключа
+	Key  string             // path: "key"
+	Body *model.SignRequest // body
+}
+
+func (m *SignRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
+	m.Authorization = authorization
+}
+
+func (m SignRequest) GetProject() string {
+	return m.Project
+}
+
+func (m *SignRequest) SetProject(project string) {
+	m.Project = project
+}
+
+type SignResponse struct {
+	Code        int
+	Response200 *model.SignResponse
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *SignResponse) GetCode() int {
+	return m.Code
+}
+
+func (m *SignResponse) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response412 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *SignResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
 }
 
 type GenerateDataKeyRequest struct {

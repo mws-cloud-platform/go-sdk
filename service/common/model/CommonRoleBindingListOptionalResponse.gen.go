@@ -15,7 +15,7 @@ import (
 
 // Real OAPI model name: CommonRoleBindingList
 type CommonRoleBindingListOptionalResponse struct {
-	// List of public role bindings
+	// Список привязок ролей
 	Items []CommonRoleBindingOptionalResponse `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
 	NextPageToken optional.Optional[NextPageToken] `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`

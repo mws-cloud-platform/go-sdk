@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -191,7 +190,7 @@ func (m *NodeGroupVersionControlSpecRequest) WithDefaults() NodeGroupVersionCont
 	}
 
 	if out.AutoUpdate == nil {
-		out.AutoUpdate = ptr.Get(true)
+		out.AutoUpdate = new(true)
 	}
 	return out
 }

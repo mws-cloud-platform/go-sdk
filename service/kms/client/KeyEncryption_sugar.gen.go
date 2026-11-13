@@ -23,6 +23,54 @@ func (x *KeyEncryptionSugared) Impl() KeyEncryption {
 	return x.impl
 }
 
+// Verify позволяет проверить подпись с использованием указанного асимметричного KMS ключа.
+//
+// Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:verify
+func (x *KeyEncryptionSugared) Verify(ctx context.Context, request VerifyRequest) (*model.VerifyResponse, error) {
+	resp, err := x.impl.Verify(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return x.respHandlerVerify(resp)
+}
+
+func (x *KeyEncryptionSugared) respHandlerVerify(resp *VerifyResponse) (*model.VerifyResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
+// Sign позволяет подписать данные с использованием указанного асимметричного KMS ключа.
+//
+// Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:sign
+func (x *KeyEncryptionSugared) Sign(ctx context.Context, request SignRequest) (*model.SignResponse, error) {
+	resp, err := x.impl.Sign(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return x.respHandlerSign(resp)
+}
+
+func (x *KeyEncryptionSugared) respHandlerSign(resp *SignResponse) (*model.SignResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
 // GenerateDataKey позволяет сгенерировать ключ шифрования данных.
 //
 // Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:generateDataKey

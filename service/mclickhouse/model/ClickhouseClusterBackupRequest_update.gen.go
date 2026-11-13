@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -45,10 +43,10 @@ func (m *ClickhouseClusterBackupRequest) WithChanges(u UpdateClickhouseClusterBa
 	}
 
 	if u.Hour.IsSet() {
-		out.Hour = ptr.Get(u.Hour.Value)
+		out.Hour = new(u.Hour.Value)
 	}
 	if u.RetainPeriodDays.IsSet() {
-		out.RetainPeriodDays = ptr.Get(u.RetainPeriodDays.Value)
+		out.RetainPeriodDays = new(u.RetainPeriodDays.Value)
 	}
 	return out
 }

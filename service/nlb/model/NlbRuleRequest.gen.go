@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -253,6 +252,6 @@ func (m *NlbRuleRequest) WithDefaults() NlbRuleRequest {
 		out = *m
 	}
 
-	out.HealthCheck = ptr.Get(out.HealthCheck.WithDefaults())
+	out.HealthCheck = new(out.HealthCheck.WithDefaults())
 	return out
 }

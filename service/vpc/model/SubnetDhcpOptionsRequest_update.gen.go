@@ -6,7 +6,6 @@ import (
 	"slices"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -54,7 +53,7 @@ func (m *SubnetDhcpOptionsRequest) WithChanges(u UpdateSubnetDhcpOptionsRequest)
 	}
 
 	if u.DomainName.IsSet() {
-		out.DomainName = ptr.Get(u.DomainName.Value)
+		out.DomainName = new(u.DomainName.Value)
 	} else if u.DomainName.IsNull() {
 		out.DomainName = nil
 	}

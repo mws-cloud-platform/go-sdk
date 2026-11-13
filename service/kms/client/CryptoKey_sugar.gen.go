@@ -98,6 +98,32 @@ func (x *CryptoKeySugared) respHandlerRotateCryptoKey(resp *RotateCryptoKeyRespo
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
+// GetCryptoKeyPublicKey возвращает публичную часть асимметричного ключа в формате PEM.
+// Если параметр `version` не указан, используется основная версия ключа.
+// .
+//
+// Путь: GET /kms/v1/projects/{project}/cryptoKeys/{key}:getPublicKey
+func (x *CryptoKeySugared) GetCryptoKeyPublicKey(ctx context.Context, request GetCryptoKeyPublicKeyRequest) (*model.CryptoKeyPublicKeyResponse, error) {
+	resp, err := x.impl.GetCryptoKeyPublicKey(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return x.respHandlerGetCryptoKeyPublicKey(resp)
+}
+
+func (x *CryptoKeySugared) respHandlerGetCryptoKeyPublicKey(resp *GetCryptoKeyPublicKeyResponse) (*model.CryptoKeyPublicKeyResponse, error) {
+	if err := resp.GetErr(); err != nil {
+		return nil, err
+	}
+
+	if resp.Response200 != nil {
+		return resp.Response200, nil
+	}
+
+	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
+}
+
 // CancelScheduledDestructionOfCryptoKey отмена запланированного уничтожение выбранного KMS ключа.
 //
 // Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:cancelScheduledDestruction

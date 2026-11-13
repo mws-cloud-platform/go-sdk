@@ -8,7 +8,6 @@ import (
 	"slices"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -90,7 +89,7 @@ func (m *ImageSpecRequest) WithChanges(u UpdateImageSpecRequest) ImageSpecReques
 	}
 
 	if u.Family.IsSet() {
-		out.Family = ptr.Get(u.Family.Value)
+		out.Family = new(u.Family.Value)
 	}
 	if u.Regions.IsSet() {
 		out.Regions = slices.Clone(u.Regions.Value)
@@ -99,16 +98,16 @@ func (m *ImageSpecRequest) WithChanges(u UpdateImageSpecRequest) ImageSpecReques
 		out.Source = out.Source.WithChanges(u.Source.Value)
 	}
 	if u.Activity.IsSet() {
-		out.Activity = ptr.Get(u.Activity.Value)
+		out.Activity = new(u.Activity.Value)
 	}
 	if u.MinDiskSize.IsSet() {
-		out.MinDiskSize = ptr.Get(u.MinDiskSize.Value)
+		out.MinDiskSize = new(u.MinDiskSize.Value)
 	}
 	if u.OsType.IsSet() {
-		out.OsType = ptr.Get(u.OsType.Value)
+		out.OsType = new(u.OsType.Value)
 	}
 	if u.Encryption.IsSet() {
-		out.Encryption = ptr.Get(out.Encryption.WithChanges(u.Encryption.Value))
+		out.Encryption = new(out.Encryption.WithChanges(u.Encryption.Value))
 	} else if u.Encryption.IsNull() {
 		out.Encryption = nil
 	}
@@ -244,13 +243,13 @@ func (m *ImageSpecSourceRequest) WithChanges(u UpdateImageSpecSourceRequest) Ima
 	}
 
 	if u.ExternalUrl.IsSet() {
-		out.ExternalUrl = ptr.Get(u.ExternalUrl.Value)
+		out.ExternalUrl = new(u.ExternalUrl.Value)
 	}
 	if u.DiskId.IsSet() {
-		out.DiskId = ptr.Get(u.DiskId.Value)
+		out.DiskId = new(u.DiskId.Value)
 	}
 	if u.ImageId.IsSet() {
-		out.ImageId = ptr.Get(u.ImageId.Value)
+		out.ImageId = new(u.ImageId.Value)
 	}
 	return out
 }

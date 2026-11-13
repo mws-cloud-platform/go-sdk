@@ -14,6 +14,34 @@ import (
 	clientmocks "go.mws.cloud/go-sdk/service/kms/client/mocks"
 )
 
+func TestKeyEncryptionSugared_Verify(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockKeyEncryption(ctrl)
+	mockClient.EXPECT().Verify(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewKeyEncryptionSugared(mockClient)
+
+	_, err := sugared.Verify(context.Background(), client.VerifyRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
+func TestKeyEncryptionSugared_Sign(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockKeyEncryption(ctrl)
+	mockClient.EXPECT().Sign(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewKeyEncryptionSugared(mockClient)
+
+	_, err := sugared.Sign(context.Background(), client.SignRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
 func TestKeyEncryptionSugared_GenerateDataKey(t *testing.T) {
 	t.Parallel()
 	ctrl := gomock.NewController(t)

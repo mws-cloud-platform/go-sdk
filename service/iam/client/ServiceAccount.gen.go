@@ -212,7 +212,7 @@ func (m *GetServiceAccountRequest) SetProject(project string) {
 
 type GetServiceAccountResponse struct {
 	Code        int
-	Response200 *model.ServiceAccountResponse
+	Response200 *model.ServiceAccountOptionalResponse
 	Response400 *commonmodel.ApiError
 	Response404 *commonmodel.ApiError
 	Response500 *commonmodel.ApiError
@@ -316,8 +316,8 @@ func (m *UpdateServiceAccountRequest) getServiceAccountRequest() GetServiceAccou
 
 type UpsertServiceAccountResponse struct {
 	Code        int
-	Response200 *model.ServiceAccountResponse
-	Response201 *model.ServiceAccountResponse
+	Response200 *model.ServiceAccountOptionalResponse
+	Response201 *model.ServiceAccountOptionalResponse
 	Response400 *commonmodel.ApiError
 	Response404 *commonmodel.ApiError
 	Response409 *commonmodel.ApiError

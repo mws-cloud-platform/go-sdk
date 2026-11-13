@@ -5,8 +5,6 @@ package model
 import (
 	"time"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -66,16 +64,16 @@ func (m *AuthorizedKeySpecRequest) WithChanges(u UpdateAuthorizedKeySpecRequest)
 	}
 
 	if u.PublicKey.IsSet() {
-		out.PublicKey = ptr.Get(u.PublicKey.Value)
+		out.PublicKey = new(u.PublicKey.Value)
 	}
 	if u.KeyAlgorithm.IsSet() {
 		out.KeyAlgorithm = u.KeyAlgorithm.Value
 	}
 	if u.ExpirationTime.IsSet() {
-		out.ExpirationTime = ptr.Get(u.ExpirationTime.Value)
+		out.ExpirationTime = new(u.ExpirationTime.Value)
 	}
 	if u.Active.IsSet() {
-		out.Active = ptr.Get(u.Active.Value)
+		out.Active = new(u.Active.Value)
 	}
 	return out
 }

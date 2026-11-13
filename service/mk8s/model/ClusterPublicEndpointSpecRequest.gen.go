@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -189,7 +188,7 @@ func (m *ClusterPublicEndpointSpecRequest) WithDefaults() ClusterPublicEndpointS
 	}
 
 	if out.Version == nil {
-		out.Version = ptr.Get(ClusterPublicEndpointSpecVersionRequest_IPV4)
+		out.Version = new(ClusterPublicEndpointSpecVersionRequest_IPV4)
 	}
 	return out
 }

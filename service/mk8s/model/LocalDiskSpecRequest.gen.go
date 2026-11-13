@@ -137,10 +137,6 @@ func (m *LocalDiskSpecRequest) Decode(d *jx.Decoder) error {
 			requiredFilled["name"] = true
 			return nil
 		case "deviceName":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			v, err := decode.Str(d)
 			if err != nil {
 				return err

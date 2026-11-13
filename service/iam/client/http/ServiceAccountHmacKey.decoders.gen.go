@@ -214,7 +214,7 @@ func decodeGetHmacKeyResponse(resp *http.Response) (*client.GetHmacKeyResponse, 
 		case "application/json":
 			result := &client.GetHmacKeyResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.HmacKeyResponse{},
+				Response200: &model.HmacKeyOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -312,7 +312,7 @@ func decodeUpsertHmacKeyResponse(resp *http.Response) (*client.UpsertHmacKeyResp
 		case "application/json":
 			result := &client.UpsertHmacKeyResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.HmacKeyResponse{},
+				Response200: &model.HmacKeyOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -329,7 +329,7 @@ func decodeUpsertHmacKeyResponse(resp *http.Response) (*client.UpsertHmacKeyResp
 		case "application/json":
 			result := &client.UpsertHmacKeyResponse{
 				Code:        resp.StatusCode,
-				Response201: &model.HmacKeyResponse{},
+				Response201: &model.HmacKeyOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {

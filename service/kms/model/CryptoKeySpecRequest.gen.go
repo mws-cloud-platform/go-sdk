@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -24,6 +23,10 @@ type CryptoKeySpecRequest struct {
 	// Политика использования ключа. Определяет, разрешены ли криптографические операции с этим ключом.
 	UsagePolicy *CryptoKeySpecUsagePolicyRequest `json:"usagePolicy,omitempty" yaml:"usagePolicy,omitempty"`
 	// Параметры политики, управляющие ротацией криптографического ключа.
+	// Применимо только к симметричным ключам. Для асимметричных ключей автоматическая ротация
+	// не поддерживается, поэтому секция 'rotationPolicy' должна отсутствовать в запросах
+	// (указание объекта или явного `null` приведёт к ошибке валидации) и никогда не возвращается
+	// в ответах для асимметричных ключей.
 	RotationPolicy *CryptoKeySpecRotationPolicyRequest `json:"rotationPolicy,omitempty" yaml:"rotationPolicy,omitempty"`
 	// Идентификатор основной версии криптографического ключа.
 	// Используется только когда автоматическая ротация отключена.
@@ -610,11 +613,11 @@ func (m *CryptoKeySpecRequest) WithDefaults() CryptoKeySpecRequest {
 	}
 
 	if out.DefaultAlgorithm == nil {
-		out.DefaultAlgorithm = ptr.Get(CryptoKeyAlgorithm_AES_256_GCM)
+		out.DefaultAlgorithm = new(CryptoKeyAlgorithm_AES_256_GCM)
 	}
-	out.DestructionPolicy = ptr.Get(out.DestructionPolicy.WithDefaults())
-	out.UsagePolicy = ptr.Get(out.UsagePolicy.WithDefaults())
-	out.RotationPolicy = ptr.Get(out.RotationPolicy.WithDefaults())
+	out.DestructionPolicy = new(out.DestructionPolicy.WithDefaults())
+	out.UsagePolicy = new(out.UsagePolicy.WithDefaults())
+	out.RotationPolicy = new(out.RotationPolicy.WithDefaults())
 	return out
 }
 
@@ -625,7 +628,7 @@ func (m *CryptoKeySpecDestructionPolicyRequest) WithDefaults() CryptoKeySpecDest
 	}
 
 	if out.DefaultDestructionIntervalDays == nil {
-		out.DefaultDestructionIntervalDays = ptr.Get(int32(1))
+		out.DefaultDestructionIntervalDays = new(int32(1))
 	}
 	return out
 }
@@ -637,7 +640,7 @@ func (m *CryptoKeySpecRotationPolicyRequest) WithDefaults() CryptoKeySpecRotatio
 	}
 
 	if out.Enabled == nil {
-		out.Enabled = ptr.Get(true)
+		out.Enabled = new(false)
 	}
 	return out
 }
@@ -649,7 +652,7 @@ func (m *CryptoKeySpecUsagePolicyRequest) WithDefaults() CryptoKeySpecUsagePolic
 	}
 
 	if out.Enabled == nil {
-		out.Enabled = ptr.Get(true)
+		out.Enabled = new(true)
 	}
 	return out
 }

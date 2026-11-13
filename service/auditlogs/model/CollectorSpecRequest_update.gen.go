@@ -6,8 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -92,7 +90,7 @@ func (m *CollectorSpecRequest) WithChanges(u UpdateCollectorSpecRequest) Collect
 		out.Services = merge.InapplicableSlice(u.Services.Value, (*CollectorServiceRequest).WithChanges)
 	}
 	if u.ServiceAccount.IsSet() {
-		out.ServiceAccount = ptr.Get(u.ServiceAccount.Value)
+		out.ServiceAccount = new(u.ServiceAccount.Value)
 	}
 	return out
 }
@@ -210,10 +208,10 @@ func (m *CollectorSpecDestinationRequest) WithChanges(u UpdateCollectorSpecDesti
 	}
 
 	if u.Storage.IsSet() {
-		out.Storage = ptr.Get(u.Storage.Value)
+		out.Storage = new(u.Storage.Value)
 	}
 	if u.ObjectStorage.IsSet() {
-		out.ObjectStorage = ptr.Get(out.ObjectStorage.WithChanges(u.ObjectStorage.Value))
+		out.ObjectStorage = new(out.ObjectStorage.WithChanges(u.ObjectStorage.Value))
 	} else if u.ObjectStorage.IsNull() {
 		out.ObjectStorage = nil
 	}

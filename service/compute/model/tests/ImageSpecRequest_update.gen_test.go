@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
 
 func TestUpdateImageSpecRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initImageSpecRequest()).AsUpdateModel()
+	expected := new(initImageSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

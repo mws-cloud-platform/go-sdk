@@ -6,8 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -71,7 +69,7 @@ func (m *NlbRuleRequest) WithChanges(u UpdateNlbRuleRequest) NlbRuleRequest {
 		out.ProtoPort = u.ProtoPort.Value
 	}
 	if u.TargetPort.IsSet() {
-		out.TargetPort = ptr.Get(u.TargetPort.Value)
+		out.TargetPort = new(u.TargetPort.Value)
 	} else if u.TargetPort.IsNull() {
 		out.TargetPort = nil
 	}
@@ -79,7 +77,7 @@ func (m *NlbRuleRequest) WithChanges(u UpdateNlbRuleRequest) NlbRuleRequest {
 		out.TargetAddressGroups = merge.InapplicableSlice(u.TargetAddressGroups.Value, (*commonmodel.VpcAddressGroupSpecOrRefRequest).WithChanges)
 	}
 	if u.HealthCheck.IsSet() {
-		out.HealthCheck = ptr.Get(out.HealthCheck.WithChanges(u.HealthCheck.Value))
+		out.HealthCheck = new(out.HealthCheck.WithChanges(u.HealthCheck.Value))
 	} else if u.HealthCheck.IsNull() {
 		out.HealthCheck = nil
 	}

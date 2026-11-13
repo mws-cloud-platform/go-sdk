@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -49,12 +47,12 @@ func (m *RouteNextHopRequest) WithChanges(u UpdateRouteNextHopRequest) RouteNext
 	}
 
 	if u.NatGateway.IsSet() {
-		out.NatGateway = ptr.Get(u.NatGateway.Value)
+		out.NatGateway = new(u.NatGateway.Value)
 	} else if u.NatGateway.IsNull() {
 		out.NatGateway = nil
 	}
 	if u.Address.IsSet() {
-		out.Address = ptr.Get(out.Address.WithChanges(u.Address.Value))
+		out.Address = new(out.Address.WithChanges(u.Address.Value))
 	} else if u.Address.IsNull() {
 		out.Address = nil
 	}

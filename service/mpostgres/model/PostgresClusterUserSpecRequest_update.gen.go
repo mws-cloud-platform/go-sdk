@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
@@ -74,7 +72,7 @@ func (m *PostgresClusterUserSpecRequest) WithChanges(u UpdatePostgresClusterUser
 		out.Password = u.Password.Value
 	}
 	if u.Role.IsSet() {
-		out.Role = ptr.Get(u.Role.Value)
+		out.Role = new(u.Role.Value)
 	} else if u.Role.IsNull() {
 		out.Role = nil
 	}
@@ -82,7 +80,7 @@ func (m *PostgresClusterUserSpecRequest) WithChanges(u UpdatePostgresClusterUser
 		out.AdditionalRoles = merge.InapplicableSlice(u.AdditionalRoles.Value, (*PostgresUserAdditionalRoleRequest).WithChanges)
 	}
 	if u.AccessControlPolicy.IsSet() {
-		out.AccessControlPolicy = ptr.Get(u.AccessControlPolicy.Value)
+		out.AccessControlPolicy = new(u.AccessControlPolicy.Value)
 	}
 	return out
 }

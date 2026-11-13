@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/mclickhouse/model"
 )
 
 func TestUpdateClickhouseClusterBackupRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initClickhouseClusterBackupRequest()).AsUpdateModel()
+	expected := new(initClickhouseClusterBackupRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

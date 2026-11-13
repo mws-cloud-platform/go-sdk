@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/metastore/model"
+	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 func TestCatalogSpecRequestMarshalling(t *testing.T) {
@@ -24,5 +25,7 @@ func TestCatalogSpecRequestMarshalling(t *testing.T) {
 
 func initCatalogSpecRequest() model.CatalogSpecRequest {
 	var v model.CatalogSpecRequest
+	v.Properties = make(map[string]string)
+	v.ServiceAccount.Ref = iam.NewMustServiceAccountRef("projectID", "serviceAccountID")
 	return v
 }

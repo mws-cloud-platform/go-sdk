@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -76,12 +75,12 @@ func (m *GenerateDataKeyResponse) Clone() *GenerateDataKeyResponse {
 	}
 	if m.DataKeyPlaintext != nil {
 		if m.DataKeyPlaintext.Value() != nil {
-			clone.DataKeyPlaintext = ptr.Get(sensitive.New(make([]byte, len(m.DataKeyPlaintext.Value()))))
+			clone.DataKeyPlaintext = new(sensitive.New(make([]byte, len(m.DataKeyPlaintext.Value()))))
 			for i, v := range m.DataKeyPlaintext.Value() {
 				clone.DataKeyPlaintext.Value()[i] = v
 			}
 		} else {
-			clone.DataKeyPlaintext = ptr.Get(sensitive.New([]byte(nil)))
+			clone.DataKeyPlaintext = new(sensitive.New([]byte(nil)))
 		}
 	}
 	return &clone
@@ -157,7 +156,7 @@ func (m *GenerateDataKeyResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.DataKeyPlaintext = ptr.Get(sensitive.New(v))
+			m.DataKeyPlaintext = new(sensitive.New(v))
 			return nil
 		default:
 			return d.Skip()

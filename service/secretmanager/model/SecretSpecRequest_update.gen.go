@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -56,15 +54,15 @@ func (m *SecretSpecRequest) WithChanges(u UpdateSecretSpecRequest) SecretSpecReq
 	}
 
 	if u.Active.IsSet() {
-		out.Active = ptr.Get(u.Active.Value)
+		out.Active = new(u.Active.Value)
 	}
 	if u.CurrentSecretVersion.IsSet() {
-		out.CurrentSecretVersion = ptr.Get(u.CurrentSecretVersion.Value)
+		out.CurrentSecretVersion = new(u.CurrentSecretVersion.Value)
 	} else if u.CurrentSecretVersion.IsNull() {
 		out.CurrentSecretVersion = nil
 	}
 	if u.Encryption.IsSet() {
-		out.Encryption = ptr.Get(out.Encryption.WithChanges(u.Encryption.Value))
+		out.Encryption = new(out.Encryption.WithChanges(u.Encryption.Value))
 	} else if u.Encryption.IsNull() {
 		out.Encryption = nil
 	}

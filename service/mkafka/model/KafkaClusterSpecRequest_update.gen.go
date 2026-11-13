@@ -6,8 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -100,13 +98,13 @@ func (m *KafkaClusterSpecRequest) WithChanges(u UpdateKafkaClusterSpecRequest) K
 	}
 
 	if u.Active.IsSet() {
-		out.Active = ptr.Get(u.Active.Value)
+		out.Active = new(u.Active.Value)
 	}
 	if u.Version.IsSet() {
 		out.Version = u.Version.Value
 	}
 	if u.Region.IsSet() {
-		out.Region = ptr.Get(u.Region.Value)
+		out.Region = new(u.Region.Value)
 	}
 	if u.Endpoints.IsSet() {
 		out.Endpoints = merge.Slice(out.Endpoints, u.Endpoints.Value, (*KafkaEndpointRequest).WithChanges, (*KafkaEndpointRequest).GetName, (*UpdateKafkaEndpointRequest).GetName)
@@ -115,20 +113,20 @@ func (m *KafkaClusterSpecRequest) WithChanges(u UpdateKafkaClusterSpecRequest) K
 		out.Instances = out.Instances.WithChanges(u.Instances.Value)
 	}
 	if u.ProductConfig.IsSet() {
-		out.ProductConfig = ptr.Get(u.ProductConfig.Value)
+		out.ProductConfig = new(u.ProductConfig.Value)
 	}
 	if u.MaintenanceWindow.IsSet() {
-		out.MaintenanceWindow = ptr.Get(out.MaintenanceWindow.WithChanges(u.MaintenanceWindow.Value))
+		out.MaintenanceWindow = new(out.MaintenanceWindow.WithChanges(u.MaintenanceWindow.Value))
 	} else if u.MaintenanceWindow.IsNull() {
 		out.MaintenanceWindow = nil
 	}
 	if u.SchemaRegistry.IsSet() {
-		out.SchemaRegistry = ptr.Get(out.SchemaRegistry.WithChanges(u.SchemaRegistry.Value))
+		out.SchemaRegistry = new(out.SchemaRegistry.WithChanges(u.SchemaRegistry.Value))
 	} else if u.SchemaRegistry.IsNull() {
 		out.SchemaRegistry = nil
 	}
 	if u.Balancer.IsSet() {
-		out.Balancer = ptr.Get(out.Balancer.WithChanges(u.Balancer.Value))
+		out.Balancer = new(out.Balancer.WithChanges(u.Balancer.Value))
 	} else if u.Balancer.IsNull() {
 		out.Balancer = nil
 	}

@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -300,7 +299,7 @@ func (m *ClickhouseClusterShardRequest) WithDefaults() ClickhouseClusterShardReq
 	}
 
 	if out.Weight == nil {
-		out.Weight = ptr.Get(1)
+		out.Weight = new(1)
 	}
 	return out
 }

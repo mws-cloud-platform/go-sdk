@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
 
 func TestUpdateStorageDiskSpecOrRefWithAttachmentsRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initStorageDiskSpecOrRefWithAttachmentsRequest()).AsUpdateModel()
+	expected := new(initStorageDiskSpecOrRefWithAttachmentsRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

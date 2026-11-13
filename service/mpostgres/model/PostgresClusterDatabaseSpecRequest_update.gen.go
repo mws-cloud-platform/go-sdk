@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -93,16 +91,16 @@ func (m *PostgresClusterDatabaseSpecRequest) WithChanges(u UpdatePostgresCluster
 		out.Owner = u.Owner.Value
 	}
 	if u.LcCollate.IsSet() {
-		out.LcCollate = ptr.Get(u.LcCollate.Value)
+		out.LcCollate = new(u.LcCollate.Value)
 	}
 	if u.LcCtype.IsSet() {
-		out.LcCtype = ptr.Get(u.LcCtype.Value)
+		out.LcCtype = new(u.LcCtype.Value)
 	}
 	if u.Template.IsSet() {
-		out.Template = ptr.Get(u.Template.Value)
+		out.Template = new(u.Template.Value)
 	}
 	if u.DeletionProtection.IsSet() {
-		out.DeletionProtection = ptr.Get(u.DeletionProtection.Value)
+		out.DeletionProtection = new(u.DeletionProtection.Value)
 	}
 	if u.Extensions.IsSet() {
 		out.Extensions = merge.Slice(out.Extensions, u.Extensions.Value, (*PostgresExtensionSpecRequest).WithChanges, (*PostgresExtensionSpecRequest).GetName, (*UpdatePostgresExtensionSpecRequest).GetName)

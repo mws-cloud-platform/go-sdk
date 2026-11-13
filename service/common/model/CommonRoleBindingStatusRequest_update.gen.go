@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -44,7 +42,7 @@ func (m *CommonRoleBindingStatusRequest) WithChanges(u UpdateCommonRoleBindingSt
 		out.Ready = out.Ready.WithChanges(u.Ready.Value)
 	}
 	if u.RoleBinding.IsSet() {
-		out.RoleBinding = ptr.Get(out.RoleBinding.WithChanges(u.RoleBinding.Value))
+		out.RoleBinding = new(out.RoleBinding.WithChanges(u.RoleBinding.Value))
 	} else if u.RoleBinding.IsNull() {
 		out.RoleBinding = nil
 	}

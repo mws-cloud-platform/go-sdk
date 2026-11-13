@@ -5,8 +5,6 @@ package model
 import (
 	"slices"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -69,13 +67,13 @@ func (m *CertificateManagedSpecRequest) WithChanges(u UpdateCertificateManagedSp
 	}
 
 	if u.PreferredChallengeType.IsSet() {
-		out.PreferredChallengeType = ptr.Get(u.PreferredChallengeType.Value)
+		out.PreferredChallengeType = new(u.PreferredChallengeType.Value)
 	}
 	if u.Provider.IsSet() {
-		out.Provider = ptr.Get(u.Provider.Value)
+		out.Provider = new(u.Provider.Value)
 	}
 	if u.Issuer.IsSet() {
-		out.Issuer = ptr.Get(out.Issuer.WithChanges(u.Issuer.Value))
+		out.Issuer = new(out.Issuer.WithChanges(u.Issuer.Value))
 	} else if u.Issuer.IsNull() {
 		out.Issuer = nil
 	}

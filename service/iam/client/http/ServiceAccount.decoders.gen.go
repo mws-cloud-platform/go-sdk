@@ -180,7 +180,7 @@ func decodeGetServiceAccountResponse(resp *http.Response) (*client.GetServiceAcc
 		case "application/json":
 			result := &client.GetServiceAccountResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.ServiceAccountResponse{},
+				Response200: &model.ServiceAccountOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -261,7 +261,7 @@ func decodeUpsertServiceAccountResponse(resp *http.Response) (*client.UpsertServ
 		case "application/json":
 			result := &client.UpsertServiceAccountResponse{
 				Code:        resp.StatusCode,
-				Response200: &model.ServiceAccountResponse{},
+				Response200: &model.ServiceAccountOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response200); err != nil {
@@ -278,7 +278,7 @@ func decodeUpsertServiceAccountResponse(resp *http.Response) (*client.UpsertServ
 		case "application/json":
 			result := &client.UpsertServiceAccountResponse{
 				Code:        resp.StatusCode,
-				Response201: &model.ServiceAccountResponse{},
+				Response201: &model.ServiceAccountOptionalResponse{},
 			}
 
 			if err = devpclient.ReadJSON(resp.Body, result.Response201); err != nil {

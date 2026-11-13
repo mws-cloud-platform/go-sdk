@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -55,15 +53,15 @@ func (m *PostgresNetworkAddressRequest) WithChanges(u UpdatePostgresNetworkAddre
 	}
 
 	if u.Ref.IsSet() {
-		out.Ref = ptr.Get(u.Ref.Value)
+		out.Ref = new(u.Ref.Value)
 	}
 	if u.Spec.IsSet() {
-		out.Spec = ptr.Get(out.Spec.WithChanges(u.Spec.Value))
+		out.Spec = new(out.Spec.WithChanges(u.Spec.Value))
 	} else if u.Spec.IsNull() {
 		out.Spec = nil
 	}
 	if u.ExternalAccess.IsSet() {
-		out.ExternalAccess = ptr.Get(out.ExternalAccess.WithChanges(u.ExternalAccess.Value))
+		out.ExternalAccess = new(out.ExternalAccess.WithChanges(u.ExternalAccess.Value))
 	} else if u.ExternalAccess.IsNull() {
 		out.ExternalAccess = nil
 	}

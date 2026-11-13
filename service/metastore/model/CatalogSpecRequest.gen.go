@@ -14,14 +14,12 @@ import (
 )
 
 // Спецификация Iceberg-каталога.
-// При создании необходимо передать `properties.location` и `serviceAccount`.
-// При обновлении `properties.location` и `serviceAccount` можно передавать частично или не передавать. Отсутствующие поля сохраняются.
 // Real OAPI model name: CatalogSpec
 type CatalogSpecRequest struct {
-	// Дополнительные настройки каталога
-	Properties map[string]string `json:"properties,omitempty" yaml:"properties,omitempty"`
+	// Дополнительные настройки каталога. Для расположения данных в Object Storage обязательно задайте значение параметра `location`.
+	Properties map[string]string `json:"properties" yaml:"properties"`
 	// Сервисный аккаунт, используемый для доступа к Object Storage
-	ServiceAccount *CatalogSpecServiceAccountRequest `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`
+	ServiceAccount CatalogSpecServiceAccountRequest `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
 func (m *CatalogSpecRequest) GetProperties() map[string]string {
@@ -35,29 +33,15 @@ func (m *CatalogSpecRequest) SetProperties(val map[string]string) {
 	m.Properties = val
 }
 
-func (m *CatalogSpecRequest) GetPropertiesOr(val map[string]string) map[string]string {
-	if m != nil && m.Properties != nil {
-		return m.Properties
-	}
-	return val
-}
-
-func (m *CatalogSpecRequest) GetServiceAccount() *CatalogSpecServiceAccountRequest {
+func (m *CatalogSpecRequest) GetServiceAccount() CatalogSpecServiceAccountRequest {
 	if m != nil {
 		return m.ServiceAccount
 	}
-	return nil
+	return CatalogSpecServiceAccountRequest{}
 }
 
-func (m *CatalogSpecRequest) SetServiceAccount(val *CatalogSpecServiceAccountRequest) {
+func (m *CatalogSpecRequest) SetServiceAccount(val CatalogSpecServiceAccountRequest) {
 	m.ServiceAccount = val
-}
-
-func (m *CatalogSpecRequest) GetServiceAccountOr(val CatalogSpecServiceAccountRequest) CatalogSpecServiceAccountRequest {
-	if m != nil && m.ServiceAccount != nil {
-		return *m.ServiceAccount
-	}
-	return val
 }
 
 func (m *CatalogSpecRequest) Clone() *CatalogSpecRequest {
@@ -72,7 +56,7 @@ func (m *CatalogSpecRequest) Clone() *CatalogSpecRequest {
 			clone.Properties[k] = v
 		}
 	}
-	clone.ServiceAccount = m.ServiceAccount.Clone()
+	clone.ServiceAccount = *m.ServiceAccount.Clone()
 	return &clone
 }
 
@@ -152,21 +136,17 @@ func (m *CatalogSpecRequest) Encode(e *jx.Encoder) error {
 }
 
 func (m *CatalogSpecRequest) encodeFields(e *jx.Encoder) error {
-	if m.Properties != nil {
-		e.FieldStart("properties")
-		e.ObjStart()
-		for key, elem := range m.Properties {
-			e.FieldStart(key)
-			e.Str(elem)
-		}
-		e.ObjEnd()
+	e.FieldStart("properties")
+	e.ObjStart()
+	for key, elem := range m.Properties {
+		e.FieldStart(key)
+		e.Str(elem)
 	}
+	e.ObjEnd()
 
-	if m.ServiceAccount != nil {
-		e.FieldStart("serviceAccount")
-		if err := m.ServiceAccount.Encode(e); err != nil {
-			return err
-		}
+	e.FieldStart("serviceAccount")
+	if err := m.ServiceAccount.Encode(e); err != nil {
+		return err
 	}
 	return nil
 }
@@ -180,7 +160,11 @@ func (m *CatalogSpecRequest) Decode(d *jx.Decoder) error {
 		return conv.NewDecodeToNilError("CatalogSpecRequest")
 	}
 
-	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
+	requiredFilled := map[string]bool{
+		"properties":     false,
+		"serviceAccount": false,
+	}
+	err := d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "properties":
 			c := make(map[string]string)
@@ -197,23 +181,26 @@ func (m *CatalogSpecRequest) Decode(d *jx.Decoder) error {
 			}
 
 			m.Properties = c
+			requiredFilled["properties"] = true
 			return nil
 		case "serviceAccount":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			var v CatalogSpecServiceAccountRequest
 			if err := v.Decode(d); err != nil {
 				return err
 			}
 
-			m.ServiceAccount = &v
+			m.ServiceAccount = v
+			requiredFilled["serviceAccount"] = true
 			return nil
 		default:
 			return d.Skip()
 		}
 	}))
+	if err != nil {
+		return err
+	}
+
+	return conv.ValidateRequired(requiredFilled)
 }
 
 func (m CatalogSpecServiceAccountRequest) MarshalJSON() ([]byte, error) {

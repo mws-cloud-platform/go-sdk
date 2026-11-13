@@ -5,7 +5,6 @@ package model
 import (
 	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -258,19 +257,19 @@ func (m *ClickhouseStorageConfigurationRequest) WithDefaults() ClickhouseStorage
 	}
 
 	if out.HybridStorageEnabled == nil {
-		out.HybridStorageEnabled = ptr.Get(false)
+		out.HybridStorageEnabled = new(false)
 	}
 	if out.MoveFactor == nil {
-		out.MoveFactor = ptr.Get(float64(0.1))
+		out.MoveFactor = new(float64(0.1))
 	}
 	if out.DataCachingEnabled == nil {
-		out.DataCachingEnabled = ptr.Get(false)
+		out.DataCachingEnabled = new(false)
 	}
 	if out.CacheMaxSize == nil {
-		out.CacheMaxSize = ptr.Get(bytesize.MustParseString("1Gb"))
+		out.CacheMaxSize = new(bytesize.MustParseString("1Gb"))
 	}
 	if out.MaxDataPartSizeSsd == nil {
-		out.MaxDataPartSizeSsd = ptr.Get(bytesize.MustParseString("10Gb"))
+		out.MaxDataPartSizeSsd = new(bytesize.MustParseString("10Gb"))
 	}
 	return out
 }

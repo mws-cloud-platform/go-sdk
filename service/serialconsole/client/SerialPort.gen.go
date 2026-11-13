@@ -34,6 +34,14 @@ func (m *GetSerialPortOutputRequest) SetAuthorization(authorization sensitive.Se
 	m.Authorization = authorization
 }
 
+func (m GetSerialPortOutputRequest) GetProject() string {
+	return m.Project
+}
+
+func (m *GetSerialPortOutputRequest) SetProject(project string) {
+	m.Project = project
+}
+
 type GetSerialPortOutputResponse struct {
 	Code        int
 	Response200 *model.SerialPortOutputResponse

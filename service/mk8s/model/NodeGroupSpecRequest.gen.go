@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -1341,16 +1340,16 @@ func (m *NodeGroupSpecRequest) WithDefaults() NodeGroupSpecRequest {
 	}
 
 	if out.ImageStorageSize == nil {
-		out.ImageStorageSize = ptr.Get(bytesize.MustParseString("15Gb"))
+		out.ImageStorageSize = new(bytesize.MustParseString("15Gb"))
 	}
 	if out.ImageStorageIops == nil {
-		out.ImageStorageIops = ptr.Get(int64(1000))
+		out.ImageStorageIops = new(int64(1000))
 	}
 	if out.MaxPods == nil {
-		out.MaxPods = ptr.Get(110)
+		out.MaxPods = new(110)
 	}
 	if out.DataCache == nil {
-		out.DataCache = ptr.Get(false)
+		out.DataCache = new(false)
 	}
 	out.VersionControl = out.VersionControl.WithDefaults()
 	out.RolloutStrategy = out.RolloutStrategy.WithDefaults()
@@ -1364,10 +1363,10 @@ func (m *NodeGroupSpecRolloutStrategyRequest) WithDefaults() NodeGroupSpecRollou
 	}
 
 	if out.MaxSurge == nil {
-		out.MaxSurge = ptr.Get(1)
+		out.MaxSurge = new(1)
 	}
 	if out.MaxUnavailable == nil {
-		out.MaxUnavailable = ptr.Get(0)
+		out.MaxUnavailable = new(0)
 	}
 	return out
 }

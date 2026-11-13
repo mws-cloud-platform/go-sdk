@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -61,16 +59,16 @@ func (m *CollectorTypedResourceMetadataRequest) WithChanges(u UpdateCollectorTyp
 	}
 
 	if u.DisplayName.IsSet() {
-		out.DisplayName = ptr.Get(u.DisplayName.Value)
+		out.DisplayName = new(u.DisplayName.Value)
 	}
 	if u.Usages.IsSet() {
 		out.Usages = merge.Slice(out.Usages, u.Usages.Value, (*commonmodel.TypedUsageRequest).WithChanges, (*commonmodel.TypedUsageRequest).GetName, (*commonmodel.UpdateTypedUsageRequest).GetName)
 	}
 	if u.Etag.IsSet() {
-		out.Etag = ptr.Get(u.Etag.Value)
+		out.Etag = new(u.Etag.Value)
 	}
 	if u.Description.IsSet() {
-		out.Description = ptr.Get(u.Description.Value)
+		out.Description = new(u.Description.Value)
 	}
 	return out
 }

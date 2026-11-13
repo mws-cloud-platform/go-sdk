@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -52,7 +51,7 @@ func (m *ClusterPrimaryEndpointSpecRequest) WithChanges(u UpdateClusterPrimaryEn
 	}
 
 	if u.IpAddress.IsSet() {
-		out.IpAddress = ptr.Get(u.IpAddress.Value)
+		out.IpAddress = new(u.IpAddress.Value)
 	} else if u.IpAddress.IsNull() {
 		out.IpAddress = nil
 	}

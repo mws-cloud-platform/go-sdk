@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -39,7 +37,7 @@ func (m *NodeGroupSpecNetworkRequest) WithChanges(u UpdateNodeGroupSpecNetworkRe
 	}
 
 	if u.PrimaryInterface.IsSet() {
-		out.PrimaryInterface = ptr.Get(out.PrimaryInterface.WithChanges(u.PrimaryInterface.Value))
+		out.PrimaryInterface = new(out.PrimaryInterface.WithChanges(u.PrimaryInterface.Value))
 	} else if u.PrimaryInterface.IsNull() {
 		out.PrimaryInterface = nil
 	}
@@ -91,7 +89,7 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) WithChanges(u UpdateNodeGr
 	}
 
 	if u.ExternalIpv4.IsSet() {
-		out.ExternalIpv4 = ptr.Get(out.ExternalIpv4.WithChanges(u.ExternalIpv4.Value))
+		out.ExternalIpv4 = new(out.ExternalIpv4.WithChanges(u.ExternalIpv4.Value))
 	} else if u.ExternalIpv4.IsNull() {
 		out.ExternalIpv4 = nil
 	}
@@ -143,7 +141,7 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) WithChanges(u 
 	}
 
 	if u.Enabled.IsSet() {
-		out.Enabled = ptr.Get(u.Enabled.Value)
+		out.Enabled = new(u.Enabled.Value)
 	}
 	return out
 }

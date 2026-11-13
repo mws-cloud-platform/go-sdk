@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -45,12 +43,12 @@ func (m *PostgresClusterBackupRequest) WithChanges(u UpdatePostgresClusterBackup
 	}
 
 	if u.Daily.IsSet() {
-		out.Daily = ptr.Get(out.Daily.WithChanges(u.Daily.Value))
+		out.Daily = new(out.Daily.WithChanges(u.Daily.Value))
 	} else if u.Daily.IsNull() {
 		out.Daily = nil
 	}
 	if u.RetainPeriodDays.IsSet() {
-		out.RetainPeriodDays = ptr.Get(u.RetainPeriodDays.Value)
+		out.RetainPeriodDays = new(u.RetainPeriodDays.Value)
 	}
 	return out
 }

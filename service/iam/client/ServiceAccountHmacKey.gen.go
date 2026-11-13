@@ -223,7 +223,7 @@ func (m *GetHmacKeyRequest) SetProject(project string) {
 
 type GetHmacKeyResponse struct {
 	Code        int
-	Response200 *model.HmacKeyResponse
+	Response200 *model.HmacKeyOptionalResponse
 	Response400 *commonmodel.ApiError
 	Response403 *commonmodel.ApiError
 	Response404 *commonmodel.ApiError
@@ -317,8 +317,8 @@ func (m *UpdateHmacKeyRequest) SetProject(project string) {
 
 type UpsertHmacKeyResponse struct {
 	Code        int
-	Response200 *model.HmacKeyResponse
-	Response201 *model.HmacKeyResponse
+	Response200 *model.HmacKeyOptionalResponse
+	Response201 *model.HmacKeyOptionalResponse
 	Response400 *commonmodel.ApiError
 	Response403 *commonmodel.ApiError
 	Response404 *commonmodel.ApiError

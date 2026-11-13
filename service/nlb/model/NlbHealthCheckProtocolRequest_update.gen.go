@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -50,17 +48,17 @@ func (m *NlbHealthCheckProtocolRequest) WithChanges(u UpdateNlbHealthCheckProtoc
 	}
 
 	if u.Http.IsSet() {
-		out.Http = ptr.Get(out.Http.WithChanges(u.Http.Value))
+		out.Http = new(out.Http.WithChanges(u.Http.Value))
 	} else if u.Http.IsNull() {
 		out.Http = nil
 	}
 	if u.Https.IsSet() {
-		out.Https = ptr.Get(out.Https.WithChanges(u.Https.Value))
+		out.Https = new(out.Https.WithChanges(u.Https.Value))
 	} else if u.Https.IsNull() {
 		out.Https = nil
 	}
 	if u.Tcp.IsSet() {
-		out.Tcp = ptr.Get(out.Tcp.WithChanges(u.Tcp.Value))
+		out.Tcp = new(out.Tcp.WithChanges(u.Tcp.Value))
 	} else if u.Tcp.IsNull() {
 		out.Tcp = nil
 	}

@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -303,7 +302,7 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceRequest) WithDefaults() NodeGroupSp
 		out = *m
 	}
 
-	out.ExternalIpv4 = ptr.Get(out.ExternalIpv4.WithDefaults())
+	out.ExternalIpv4 = new(out.ExternalIpv4.WithDefaults())
 	return out
 }
 
@@ -314,7 +313,7 @@ func (m *NodeGroupSpecNetworkPrimaryInterfaceExternalIpv4Request) WithDefaults()
 	}
 
 	if out.Enabled == nil {
-		out.Enabled = ptr.Get(false)
+		out.Enabled = new(false)
 	}
 	return out
 }

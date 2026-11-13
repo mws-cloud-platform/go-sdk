@@ -8,7 +8,6 @@ import (
 	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -227,10 +226,10 @@ func (m *HardwareSpecRequest) WithDefaults() HardwareSpecRequest {
 	}
 
 	if out.Power == nil {
-		out.Power = ptr.Get(HardwareSpecPowerRequest_ON)
+		out.Power = new(HardwareSpecPowerRequest_ON)
 	}
 	if out.GracefulShutdownTimeout == nil {
-		out.GracefulShutdownTimeout = ptr.Get(duration.MustParseString("90s"))
+		out.GracefulShutdownTimeout = new(duration.MustParseString("90s"))
 	}
 	return out
 }

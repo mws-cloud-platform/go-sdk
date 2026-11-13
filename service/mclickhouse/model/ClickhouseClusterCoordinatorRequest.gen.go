@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -217,7 +216,7 @@ func (m *ClickhouseClusterCoordinatorRequest) WithDefaults() ClickhouseClusterCo
 	}
 
 	if out.Type == nil {
-		out.Type = ptr.Get(ClickhouseCoordinatorType_CLICKHOUSE_KEEPER)
+		out.Type = new(ClickhouseCoordinatorType_CLICKHOUSE_KEEPER)
 	}
 	return out
 }

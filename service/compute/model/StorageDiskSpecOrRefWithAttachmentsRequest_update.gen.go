@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -65,10 +63,10 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) WithChanges(u UpdateStorage
 		out.Name = u.Name.Value
 	}
 	if u.Boot.IsSet() {
-		out.Boot = ptr.Get(u.Boot.Value)
+		out.Boot = new(u.Boot.Value)
 	}
 	if u.DeviceName.IsSet() {
-		out.DeviceName = ptr.Get(u.DeviceName.Value)
+		out.DeviceName = new(u.DeviceName.Value)
 	}
 	if u.Disk.IsSet() {
 		out.Disk = out.Disk.WithChanges(u.Disk.Value)

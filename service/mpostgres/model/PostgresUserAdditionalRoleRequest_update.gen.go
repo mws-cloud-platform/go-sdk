@@ -5,8 +5,6 @@ package model
 import (
 	"time"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -47,10 +45,10 @@ func (m *PostgresUserAdditionalRoleRequest) WithChanges(u UpdatePostgresUserAddi
 	}
 
 	if u.Name.IsSet() {
-		out.Name = ptr.Get(u.Name.Value)
+		out.Name = new(u.Name.Value)
 	}
 	if u.ExpiresAt.IsSet() {
-		out.ExpiresAt = ptr.Get(u.ExpiresAt.Value)
+		out.ExpiresAt = new(u.ExpiresAt.Value)
 	}
 	return out
 }

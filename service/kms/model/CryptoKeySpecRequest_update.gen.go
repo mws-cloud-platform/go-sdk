@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -22,6 +20,10 @@ type UpdateCryptoKeySpecRequest struct {
 	// Политика использования ключа. Определяет, разрешены ли криптографические операции с этим ключом.
 	UsagePolicy optional.OptionalNil[UpdateCryptoKeySpecUsagePolicyRequest] `json:"usagePolicy" yaml:"usagePolicy"`
 	// Параметры политики, управляющие ротацией криптографического ключа.
+	// Применимо только к симметричным ключам. Для асимметричных ключей автоматическая ротация
+	// не поддерживается, поэтому секция 'rotationPolicy' должна отсутствовать в запросах
+	// (указание объекта или явного `null` приведёт к ошибке валидации) и никогда не возвращается
+	// в ответах для асимметричных ключей.
 	RotationPolicy optional.OptionalNil[UpdateCryptoKeySpecRotationPolicyRequest] `json:"rotationPolicy" yaml:"rotationPolicy"`
 	// Идентификатор основной версии криптографического ключа.
 	// Используется только когда автоматическая ротация отключена.
@@ -69,25 +71,25 @@ func (m *CryptoKeySpecRequest) WithChanges(u UpdateCryptoKeySpecRequest) CryptoK
 	}
 
 	if u.DefaultAlgorithm.IsSet() {
-		out.DefaultAlgorithm = ptr.Get(u.DefaultAlgorithm.Value)
+		out.DefaultAlgorithm = new(u.DefaultAlgorithm.Value)
 	}
 	if u.DestructionPolicy.IsSet() {
-		out.DestructionPolicy = ptr.Get(out.DestructionPolicy.WithChanges(u.DestructionPolicy.Value))
+		out.DestructionPolicy = new(out.DestructionPolicy.WithChanges(u.DestructionPolicy.Value))
 	} else if u.DestructionPolicy.IsNull() {
 		out.DestructionPolicy = nil
 	}
 	if u.UsagePolicy.IsSet() {
-		out.UsagePolicy = ptr.Get(out.UsagePolicy.WithChanges(u.UsagePolicy.Value))
+		out.UsagePolicy = new(out.UsagePolicy.WithChanges(u.UsagePolicy.Value))
 	} else if u.UsagePolicy.IsNull() {
 		out.UsagePolicy = nil
 	}
 	if u.RotationPolicy.IsSet() {
-		out.RotationPolicy = ptr.Get(out.RotationPolicy.WithChanges(u.RotationPolicy.Value))
+		out.RotationPolicy = new(out.RotationPolicy.WithChanges(u.RotationPolicy.Value))
 	} else if u.RotationPolicy.IsNull() {
 		out.RotationPolicy = nil
 	}
 	if u.PrimaryKeyVersionRef.IsSet() {
-		out.PrimaryKeyVersionRef = ptr.Get(u.PrimaryKeyVersionRef.Value)
+		out.PrimaryKeyVersionRef = new(u.PrimaryKeyVersionRef.Value)
 	} else if u.PrimaryKeyVersionRef.IsNull() {
 		out.PrimaryKeyVersionRef = nil
 	}
@@ -193,7 +195,7 @@ func (m *CryptoKeySpecDestructionPolicyRequest) WithChanges(u UpdateCryptoKeySpe
 	}
 
 	if u.DefaultDestructionIntervalDays.IsSet() {
-		out.DefaultDestructionIntervalDays = ptr.Get(u.DefaultDestructionIntervalDays.Value)
+		out.DefaultDestructionIntervalDays = new(u.DefaultDestructionIntervalDays.Value)
 	}
 	return out
 }
@@ -244,10 +246,10 @@ func (m *CryptoKeySpecRotationPolicyRequest) WithChanges(u UpdateCryptoKeySpecRo
 	}
 
 	if u.Enabled.IsSet() {
-		out.Enabled = ptr.Get(u.Enabled.Value)
+		out.Enabled = new(u.Enabled.Value)
 	}
 	if u.RotationIntervalDays.IsSet() {
-		out.RotationIntervalDays = ptr.Get(u.RotationIntervalDays.Value)
+		out.RotationIntervalDays = new(u.RotationIntervalDays.Value)
 	}
 	return out
 }
@@ -300,7 +302,7 @@ func (m *CryptoKeySpecUsagePolicyRequest) WithChanges(u UpdateCryptoKeySpecUsage
 	}
 
 	if u.Enabled.IsSet() {
-		out.Enabled = ptr.Get(u.Enabled.Value)
+		out.Enabled = new(u.Enabled.Value)
 	}
 	return out
 }

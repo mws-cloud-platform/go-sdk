@@ -4,7 +4,6 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -64,19 +63,19 @@ func (m *ClickhouseStorageConfigurationRequest) WithChanges(u UpdateClickhouseSt
 	}
 
 	if u.HybridStorageEnabled.IsSet() {
-		out.HybridStorageEnabled = ptr.Get(u.HybridStorageEnabled.Value)
+		out.HybridStorageEnabled = new(u.HybridStorageEnabled.Value)
 	}
 	if u.MoveFactor.IsSet() {
-		out.MoveFactor = ptr.Get(u.MoveFactor.Value)
+		out.MoveFactor = new(u.MoveFactor.Value)
 	}
 	if u.DataCachingEnabled.IsSet() {
-		out.DataCachingEnabled = ptr.Get(u.DataCachingEnabled.Value)
+		out.DataCachingEnabled = new(u.DataCachingEnabled.Value)
 	}
 	if u.CacheMaxSize.IsSet() {
-		out.CacheMaxSize = ptr.Get(u.CacheMaxSize.Value)
+		out.CacheMaxSize = new(u.CacheMaxSize.Value)
 	}
 	if u.MaxDataPartSizeSsd.IsSet() {
-		out.MaxDataPartSizeSsd = ptr.Get(u.MaxDataPartSizeSsd.Value)
+		out.MaxDataPartSizeSsd = new(u.MaxDataPartSizeSsd.Value)
 	}
 	return out
 }

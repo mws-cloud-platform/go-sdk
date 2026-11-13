@@ -5,8 +5,6 @@ package model
 import (
 	"time"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -50,10 +48,10 @@ func (m *ApiKeySpecRequest) WithChanges(u UpdateApiKeySpecRequest) ApiKeySpecReq
 	}
 
 	if u.ExpireTime.IsSet() {
-		out.ExpireTime = ptr.Get(u.ExpireTime.Value)
+		out.ExpireTime = new(u.ExpireTime.Value)
 	}
 	if u.Active.IsSet() {
-		out.Active = ptr.Get(u.Active.Value)
+		out.Active = new(u.Active.Value)
 	}
 	return out
 }

@@ -5,7 +5,6 @@ package model
 import (
 	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -249,10 +248,10 @@ func (m *NlbHealthCheckRequest) WithDefaults() NlbHealthCheckRequest {
 	}
 
 	if out.UnhealthyThreshold == nil {
-		out.UnhealthyThreshold = ptr.Get(2)
+		out.UnhealthyThreshold = new(2)
 	}
 	if out.HealthyThreshold == nil {
-		out.HealthyThreshold = ptr.Get(2)
+		out.HealthyThreshold = new(2)
 	}
 	return out
 }

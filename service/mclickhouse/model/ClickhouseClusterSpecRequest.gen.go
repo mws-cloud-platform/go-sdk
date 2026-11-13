@@ -8,7 +8,6 @@ import (
 	"slices"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -563,10 +562,10 @@ func (m *ClickhouseClusterSpecRequest) WithDefaults() ClickhouseClusterSpecReque
 	}
 
 	if out.Active == nil {
-		out.Active = ptr.Get(true)
+		out.Active = new(true)
 	}
-	out.Coordinator = ptr.Get(out.Coordinator.WithDefaults())
-	out.Storage = ptr.Get(out.Storage.WithDefaults())
-	out.Backup = ptr.Get(out.Backup.WithDefaults())
+	out.Coordinator = new(out.Coordinator.WithDefaults())
+	out.Storage = new(out.Storage.WithDefaults())
+	out.Backup = new(out.Backup.WithDefaults())
 	return out
 }

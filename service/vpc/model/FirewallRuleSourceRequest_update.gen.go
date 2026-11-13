@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -38,7 +36,7 @@ func (m *FirewallRuleSourceRequest) WithChanges(u UpdateFirewallRuleSourceReques
 	}
 
 	if u.Spec.IsSet() {
-		out.Spec = ptr.Get(out.Spec.WithChanges(u.Spec.Value))
+		out.Spec = new(out.Spec.WithChanges(u.Spec.Value))
 	} else if u.Spec.IsNull() {
 		out.Spec = nil
 	}

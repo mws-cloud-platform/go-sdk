@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -43,7 +41,7 @@ func (m *DiskBackupSourceRequest) WithChanges(u UpdateDiskBackupSourceRequest) D
 	}
 
 	if u.Disk.IsSet() {
-		out.Disk = ptr.Get(out.Disk.WithChanges(u.Disk.Value))
+		out.Disk = new(out.Disk.WithChanges(u.Disk.Value))
 	} else if u.Disk.IsNull() {
 		out.Disk = nil
 	}

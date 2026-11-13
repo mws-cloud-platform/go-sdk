@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/mkafka/model"
 )
 
 func TestUpdateKafkaConnectorSpecRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initKafkaConnectorSpecRequest()).AsUpdateModel()
+	expected := new(initKafkaConnectorSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

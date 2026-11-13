@@ -7,13 +7,17 @@ import (
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
-func DiffPrimitiveRequired[T comparable](from, to T, nilDiffers bool) Optional[T] {
-	return NewDirectOptional(to, nilDiffers || from != to)
+func DiffPrimitiveRequired[T comparable](from, to T, nilDiffers bool) optional.Optional[T] {
+	return optional.Optional[T]{
+		Value: to,
+		Set:   nilDiffers || from != to,
+	}
 }
 
-func DiffPrimitiveNonRequired[T comparable](from, to *T, nilDiffers bool) Optional[T] {
+func DiffPrimitiveNonRequired[T comparable](from, to *T, nilDiffers bool) optional.Optional[T] {
 	var value T
 	if to != nil {
 		value = *to
@@ -23,23 +27,33 @@ func DiffPrimitiveNonRequired[T comparable](from, to *T, nilDiffers bool) Option
 		hasChanges = *to != *from
 	}
 
-	return NewDirectOptional(value, hasChanges)
+	return optional.Optional[T]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func DiffPrimitiveNullable[T comparable](from, to *T, nilDiffers bool) OptionalNil[T] {
+func DiffPrimitiveNullable[T comparable](from, to *T, nilDiffers bool) optional.OptionalNil[T] {
 	res := DiffPrimitiveNonRequired(from, to, nilDiffers)
-	return NewDirectOptionalNil(res.Value, res.Set, to == nil)
+	return optional.OptionalNil[T]{
+		Value: res.Value,
+		Set:   res.Set,
+		Null:  to == nil,
+	}
 }
 
 type Equatable[T any] interface {
 	Equal(other T) bool
 }
 
-func DiffEquatableIfaceRequired[T Equatable[T]](from, to T, nilDiffers bool) Optional[T] {
-	return NewDirectOptional(to, nilDiffers || !from.Equal(to))
+func DiffEquatableIfaceRequired[T Equatable[T]](from, to T, nilDiffers bool) optional.Optional[T] {
+	return optional.Optional[T]{
+		Value: to,
+		Set:   nilDiffers || !from.Equal(to),
+	}
 }
 
-func DiffEquatableIfaceNonRequired[T Equatable[T]](from, to *T, nilDiffers bool) Optional[T] {
+func DiffEquatableIfaceNonRequired[T Equatable[T]](from, to *T, nilDiffers bool) optional.Optional[T] {
 	var value T
 	if to != nil {
 		value = *to
@@ -51,20 +65,34 @@ func DiffEquatableIfaceNonRequired[T Equatable[T]](from, to *T, nilDiffers bool)
 		hasChanges = !valTo.Equal(valFrom)
 	}
 
-	return NewDirectOptional(value, hasChanges)
+	return optional.Optional[T]{
+		Value: value,
+		Set:   hasChanges,
+	}
 }
 
-func DiffEquatableIfaceNullable[T Equatable[T]](from, to *T, nilDiffers bool) OptionalNil[T] {
+func DiffEquatableIfaceNullable[T Equatable[T]](from, to *T, nilDiffers bool) optional.OptionalNil[T] {
 	res := DiffEquatableIfaceNonRequired(from, to, nilDiffers)
-	return NewDirectOptionalNil(res.Value, res.Set, to == nil)
+	return optional.OptionalNil[T]{
+		Value: res.Value,
+		Set:   res.Set,
+		Null:  to == nil,
+	}
 }
 
-func DiffRawData[T ~[]byte](from, to T) Optional[T] {
-	return NewDirectOptional(to, !slices.Equal(from, to))
+func DiffRawData[T ~[]byte](from, to T) optional.Optional[T] {
+	return optional.Optional[T]{
+		Value: to,
+		Set:   !slices.Equal(from, to),
+	}
 }
 
-func DiffRawDataNullable[T ~[]byte](from, to T) OptionalNil[T] {
-	return NewDirectOptionalNil(to, !slices.Equal(from, to), to == nil)
+func DiffRawDataNullable[T ~[]byte](from, to T) optional.OptionalNil[T] {
+	return optional.OptionalNil[T]{
+		Value: to,
+		Set:   !slices.Equal(from, to),
+		Null:  to == nil,
+	}
 }
 
 func GetChangesArrayPrimitive[T comparable](from, to []T) ([]T, bool) {

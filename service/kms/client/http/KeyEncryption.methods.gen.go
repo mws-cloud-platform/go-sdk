@@ -16,6 +16,164 @@ import (
 	"go.mws.cloud/go-sdk/service/kms/client"
 )
 
+// Verify позволяет проверить подпись с использованием указанного асимметричного KMS ключа.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:verify
+func (c *KeyEncryption) Verify(ctx context.Context, request client.VerifyRequest) (r *client.VerifyResponse, err error) {
+	ctx = c.setVerifyAttributes(ctx)
+	r = &client.VerifyResponse{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.verifyInvoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *KeyEncryption) setVerifyAttributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "Verify"),
+		commonattribute.String(commonattribute.PathTemplate, "/kms/v1/projects/{project}/cryptoKeys/{key}:verify"),
+		commonattribute.String(commonattribute.ProjectName, "kms"),
+		commonattribute.String(commonattribute.ServiceName, "keyEncryption"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *KeyEncryption) verifyInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.VerifyRequest)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"kms",
+		"v1",
+		"projects",
+		url.PathEscape(request.Project),
+		"cryptoKeys",
+		url.PathEscape(request.Key)+":verify")
+
+	httpReq, err := http.NewRequestWithContext(ctx, "POST", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerVerify(httpReq, request)
+
+	if request.Body != nil {
+		err = commonclient.SetJSONBody(httpReq, request.Body)
+		if err != nil {
+			return err
+		}
+	}
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeVerifyResponse(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.VerifyResponse)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *KeyEncryption) headerVerify(req *http.Request, request *client.VerifyRequest) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
+}
+
+// Sign позволяет подписать данные с использованием указанного асимметричного KMS ключа.
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:sign
+func (c *KeyEncryption) Sign(ctx context.Context, request client.SignRequest) (r *client.SignResponse, err error) {
+	ctx = c.setSignAttributes(ctx)
+	r = &client.SignResponse{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.signInvoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *KeyEncryption) setSignAttributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "Sign"),
+		commonattribute.String(commonattribute.PathTemplate, "/kms/v1/projects/{project}/cryptoKeys/{key}:sign"),
+		commonattribute.String(commonattribute.ProjectName, "kms"),
+		commonattribute.String(commonattribute.ServiceName, "keyEncryption"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *KeyEncryption) signInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.SignRequest)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"kms",
+		"v1",
+		"projects",
+		url.PathEscape(request.Project),
+		"cryptoKeys",
+		url.PathEscape(request.Key)+":sign")
+
+	httpReq, err := http.NewRequestWithContext(ctx, "POST", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerSign(httpReq, request)
+
+	if request.Body != nil {
+		err = commonclient.SetJSONBody(httpReq, request.Body)
+		if err != nil {
+			return err
+		}
+	}
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeSignResponse(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.SignResponse)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *KeyEncryption) headerSign(req *http.Request, request *client.SignRequest) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
+}
+
 // GenerateDataKey позволяет сгенерировать ключ шифрования данных.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

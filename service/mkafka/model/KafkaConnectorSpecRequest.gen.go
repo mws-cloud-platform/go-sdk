@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -154,8 +153,8 @@ func (m *KafkaConnectorSpecRequest) WithDefaults() KafkaConnectorSpecRequest {
 	}
 
 	if out.Active == nil {
-		out.Active = ptr.Get(true)
+		out.Active = new(true)
 	}
-	out.S3SinkConnector = ptr.Get(out.S3SinkConnector.WithDefaults())
+	out.S3SinkConnector = new(out.S3SinkConnector.WithDefaults())
 	return out
 }

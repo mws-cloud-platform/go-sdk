@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"maps"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -126,19 +124,19 @@ func (m *ClickhouseClusterSpecRequest) WithChanges(u UpdateClickhouseClusterSpec
 	}
 
 	if u.Active.IsSet() {
-		out.Active = ptr.Get(u.Active.Value)
+		out.Active = new(u.Active.Value)
 	}
 	if u.Version.IsSet() {
 		out.Version = u.Version.Value
 	}
 	if u.Region.IsSet() {
-		out.Region = ptr.Get(u.Region.Value)
+		out.Region = new(u.Region.Value)
 	}
 	if u.Endpoints.IsSet() {
 		out.Endpoints = merge.InapplicableSlice(u.Endpoints.Value, (*ClickhouseEndpointRequest).WithChanges)
 	}
 	if u.Coordinator.IsSet() {
-		out.Coordinator = ptr.Get(out.Coordinator.WithChanges(u.Coordinator.Value))
+		out.Coordinator = new(out.Coordinator.WithChanges(u.Coordinator.Value))
 	} else if u.Coordinator.IsNull() {
 		out.Coordinator = nil
 	}
@@ -149,7 +147,7 @@ func (m *ClickhouseClusterSpecRequest) WithChanges(u UpdateClickhouseClusterSpec
 		out.Config = maps.Clone(u.Config.Value)
 	}
 	if u.Storage.IsSet() {
-		out.Storage = ptr.Get(out.Storage.WithChanges(u.Storage.Value))
+		out.Storage = new(out.Storage.WithChanges(u.Storage.Value))
 	} else if u.Storage.IsNull() {
 		out.Storage = nil
 	}
@@ -157,12 +155,12 @@ func (m *ClickhouseClusterSpecRequest) WithChanges(u UpdateClickhouseClusterSpec
 		out.BootstrapAdmin = out.BootstrapAdmin.WithChanges(u.BootstrapAdmin.Value)
 	}
 	if u.Backup.IsSet() {
-		out.Backup = ptr.Get(out.Backup.WithChanges(u.Backup.Value))
+		out.Backup = new(out.Backup.WithChanges(u.Backup.Value))
 	} else if u.Backup.IsNull() {
 		out.Backup = nil
 	}
 	if u.MaintenanceWindow.IsSet() {
-		out.MaintenanceWindow = ptr.Get(out.MaintenanceWindow.WithChanges(u.MaintenanceWindow.Value))
+		out.MaintenanceWindow = new(out.MaintenanceWindow.WithChanges(u.MaintenanceWindow.Value))
 	} else if u.MaintenanceWindow.IsNull() {
 		out.MaintenanceWindow = nil
 	}

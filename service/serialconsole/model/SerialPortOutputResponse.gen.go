@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -311,7 +310,7 @@ func (m *SerialPortOutputResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.Output = ptr.Get(sensitive.New(v))
+			m.Output = new(sensitive.New(v))
 			return nil
 		default:
 			return d.Skip()

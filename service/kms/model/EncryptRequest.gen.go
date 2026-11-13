@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -87,12 +86,12 @@ func (m *EncryptRequest) Clone() *EncryptRequest {
 	}
 	if m.AssociatedData != nil {
 		if m.AssociatedData.Value() != nil {
-			clone.AssociatedData = ptr.Get(sensitive.New(make([]byte, len(m.AssociatedData.Value()))))
+			clone.AssociatedData = new(sensitive.New(make([]byte, len(m.AssociatedData.Value()))))
 			for i, v := range m.AssociatedData.Value() {
 				clone.AssociatedData.Value()[i] = v
 			}
 		} else {
-			clone.AssociatedData = ptr.Get(sensitive.New([]byte(nil)))
+			clone.AssociatedData = new(sensitive.New([]byte(nil)))
 		}
 	}
 	return &clone
@@ -174,7 +173,7 @@ func (m *EncryptRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.AssociatedData = ptr.Get(sensitive.New(v))
+			m.AssociatedData = new(sensitive.New(v))
 			return nil
 		default:
 			return d.Skip()

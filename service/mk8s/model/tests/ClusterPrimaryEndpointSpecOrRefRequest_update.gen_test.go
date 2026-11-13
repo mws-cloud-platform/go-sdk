@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
 
 func TestUpdateClusterPrimaryEndpointSpecOrRefRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initClusterPrimaryEndpointSpecOrRefRequest()).AsUpdateModel()
+	expected := new(initClusterPrimaryEndpointSpecOrRefRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

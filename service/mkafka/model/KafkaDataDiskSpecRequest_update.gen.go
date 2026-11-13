@@ -4,7 +4,6 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -54,10 +53,10 @@ func (m *KafkaDataDiskSpecRequest) WithChanges(u UpdateKafkaDataDiskSpecRequest)
 		out.Size = u.Size.Value
 	}
 	if u.Type.IsSet() {
-		out.Type = ptr.Get(u.Type.Value)
+		out.Type = new(u.Type.Value)
 	}
 	if u.Iops.IsSet() {
-		out.Iops = ptr.Get(u.Iops.Value)
+		out.Iops = new(u.Iops.Value)
 	}
 	return out
 }

@@ -4,7 +4,6 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -52,10 +51,10 @@ func (m *HardwareSpecRequest) WithChanges(u UpdateHardwareSpecRequest) HardwareS
 	}
 
 	if u.Power.IsSet() {
-		out.Power = ptr.Get(u.Power.Value)
+		out.Power = new(u.Power.Value)
 	}
 	if u.GracefulShutdownTimeout.IsSet() {
-		out.GracefulShutdownTimeout = ptr.Get(u.GracefulShutdownTimeout.Value)
+		out.GracefulShutdownTimeout = new(u.GracefulShutdownTimeout.Value)
 	}
 	return out
 }

@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -44,7 +42,7 @@ func (m *ObjectStorageRequest) WithChanges(u UpdateObjectStorageRequest) ObjectS
 		out.Bucket = u.Bucket.Value
 	}
 	if u.BasePath.IsSet() {
-		out.BasePath = ptr.Get(u.BasePath.Value)
+		out.BasePath = new(u.BasePath.Value)
 	}
 	return out
 }

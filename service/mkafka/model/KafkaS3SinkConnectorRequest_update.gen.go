@@ -5,8 +5,6 @@ package model
 import (
 	"slices"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -110,39 +108,39 @@ func (m *KafkaS3SinkConnectorRequest) WithChanges(u UpdateKafkaS3SinkConnectorRe
 	}
 
 	if u.Topics.IsSet() {
-		out.Topics = ptr.Get(u.Topics.Value)
+		out.Topics = new(u.Topics.Value)
 	}
 	if u.TopicsRegex.IsSet() {
-		out.TopicsRegex = ptr.Get(u.TopicsRegex.Value)
+		out.TopicsRegex = new(u.TopicsRegex.Value)
 	}
 	if u.S3Properties.IsSet() {
-		out.S3Properties = ptr.Get(out.S3Properties.WithChanges(u.S3Properties.Value))
+		out.S3Properties = new(out.S3Properties.WithChanges(u.S3Properties.Value))
 	} else if u.S3Properties.IsNull() {
 		out.S3Properties = nil
 	}
 	if u.TasksMax.IsSet() {
-		out.TasksMax = ptr.Get(u.TasksMax.Value)
+		out.TasksMax = new(u.TasksMax.Value)
 	}
 	if u.InputFormat.IsSet() {
-		out.InputFormat = ptr.Get(u.InputFormat.Value)
+		out.InputFormat = new(u.InputFormat.Value)
 	}
 	if u.OutputFormat.IsSet() {
-		out.OutputFormat = ptr.Get(u.OutputFormat.Value)
+		out.OutputFormat = new(u.OutputFormat.Value)
 	}
 	if u.FileCompressionType.IsSet() {
-		out.FileCompressionType = ptr.Get(u.FileCompressionType.Value)
+		out.FileCompressionType = new(u.FileCompressionType.Value)
 	}
 	if u.OutputFields.IsSet() {
 		out.OutputFields = slices.Clone(u.OutputFields.Value)
 	}
 	if u.OutputEnvelope.IsSet() {
-		out.OutputEnvelope = ptr.Get(u.OutputEnvelope.Value)
+		out.OutputEnvelope = new(u.OutputEnvelope.Value)
 	}
 	if u.ErrorHandling.IsSet() {
-		out.ErrorHandling = ptr.Get(u.ErrorHandling.Value)
+		out.ErrorHandling = new(u.ErrorHandling.Value)
 	}
 	if u.DlqTopic.IsSet() {
-		out.DlqTopic = ptr.Get(u.DlqTopic.Value)
+		out.DlqTopic = new(u.DlqTopic.Value)
 	}
 	return out
 }

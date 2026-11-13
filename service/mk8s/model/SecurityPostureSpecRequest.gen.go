@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -114,7 +113,7 @@ func (m *SecurityPostureSpecRequest) WithDefaults() SecurityPostureSpecRequest {
 	}
 
 	if out.Enabled == nil {
-		out.Enabled = ptr.Get(true)
+		out.Enabled = new(true)
 	}
 	return out
 }

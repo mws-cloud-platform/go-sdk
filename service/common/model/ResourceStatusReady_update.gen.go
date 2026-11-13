@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -46,7 +44,7 @@ func (m *ResourceStatusReady) WithChanges(u UpdateResourceStatusReady) ResourceS
 		out.State = u.State.Value
 	}
 	if u.Message.IsSet() {
-		out.Message = ptr.Get(u.Message.Value)
+		out.Message = new(u.Message.Value)
 	}
 	return out
 }

@@ -5,7 +5,6 @@ package model
 import (
 	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -190,7 +189,7 @@ func (m *KafkaDataDiskSpecRequest) WithDefaults() KafkaDataDiskSpecRequest {
 	}
 
 	if out.Type == nil {
-		out.Type = ptr.Get(KafkaDataDiskType_NETWORK_STANDARD_SSD)
+		out.Type = new(KafkaDataDiskType_NETWORK_STANDARD_SSD)
 	}
 	return out
 }

@@ -11,16 +11,12 @@ func CatalogSpecRequestToOptionalResponse(request *CatalogSpecRequest) (*Catalog
 		return nil, nil
 	}
 	var response CatalogSpecOptionalResponse
-	if request.Properties != nil {
-		response.Properties = optional.NewOptional(request.Properties)
+	response.Properties = optional.NewOptional(request.Properties)
+	tmpServiceAccount, err := CatalogSpecServiceAccountRequestToOptionalResponse(&request.ServiceAccount)
+	if err != nil {
+		return nil, err
 	}
-	if request.ServiceAccount != nil {
-		tmpServiceAccount, err := CatalogSpecServiceAccountRequestToOptionalResponse(request.ServiceAccount)
-		if err != nil {
-			return nil, err
-		}
-		response.ServiceAccount = optional.NewOptionalNil(*tmpServiceAccount)
-	}
+	response.ServiceAccount = optional.NewOptionalNil(*tmpServiceAccount)
 	return &response, nil
 }
 

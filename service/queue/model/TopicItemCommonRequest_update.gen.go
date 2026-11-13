@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -39,7 +37,7 @@ func (m *TopicItemCommonRequest) WithChanges(u UpdateTopicItemCommonRequest) Top
 	}
 
 	if u.PartitionCount.IsSet() {
-		out.PartitionCount = ptr.Get(u.PartitionCount.Value)
+		out.PartitionCount = new(u.PartitionCount.Value)
 	}
 	return out
 }

@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -68,12 +67,12 @@ func (m *ClusterSpecRequest) WithChanges(u UpdateClusterSpecRequest) ClusterSpec
 		out.VersionControl = out.VersionControl.WithChanges(u.VersionControl.Value)
 	}
 	if u.Plugins.IsSet() {
-		out.Plugins = ptr.Get(out.Plugins.WithChanges(u.Plugins.Value))
+		out.Plugins = new(out.Plugins.WithChanges(u.Plugins.Value))
 	} else if u.Plugins.IsNull() {
 		out.Plugins = nil
 	}
 	if u.SecurityPosture.IsSet() {
-		out.SecurityPosture = ptr.Get(out.SecurityPosture.WithChanges(u.SecurityPosture.Value))
+		out.SecurityPosture = new(out.SecurityPosture.WithChanges(u.SecurityPosture.Value))
 	} else if u.SecurityPosture.IsNull() {
 		out.SecurityPosture = nil
 	}
@@ -207,7 +206,7 @@ func (m *ClusterSpecNetworkRequest) WithChanges(u UpdateClusterSpecNetworkReques
 		out.PrimaryEndpoint = out.PrimaryEndpoint.WithChanges(u.PrimaryEndpoint.Value)
 	}
 	if u.PublicEndpoint.IsSet() {
-		out.PublicEndpoint = ptr.Get(out.PublicEndpoint.WithChanges(u.PublicEndpoint.Value))
+		out.PublicEndpoint = new(out.PublicEndpoint.WithChanges(u.PublicEndpoint.Value))
 	} else if u.PublicEndpoint.IsNull() {
 		out.PublicEndpoint = nil
 	}

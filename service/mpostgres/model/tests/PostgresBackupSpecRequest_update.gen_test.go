@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/mpostgres/model"
 )
 
 func TestUpdatePostgresBackupSpecRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initPostgresBackupSpecRequest()).AsUpdateModel()
+	expected := new(initPostgresBackupSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

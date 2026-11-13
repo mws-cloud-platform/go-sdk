@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
+	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
 func TestSlice(t *testing.T) {
@@ -26,13 +26,13 @@ func TestSlice(t *testing.T) {
 		},
 		{
 			Name:     "empty_dst",
-			Src:      []updateModel{{name: commonclient.NewOptional("foo")}},
+			Src:      []updateModel{{name: optional.NewOptional("foo")}},
 			Expected: []model{{name: "foo"}},
 		},
 		{
 			Name:     "no_common",
 			Dst:      []model{{name: "qux"}, {name: "www"}},
-			Src:      []updateModel{{name: commonclient.NewOptional("foo")}, {name: commonclient.NewOptional("bar")}},
+			Src:      []updateModel{{name: optional.NewOptional("foo")}, {name: optional.NewOptional("bar")}},
 			Expected: []model{{name: "foo"}, {name: "bar"}},
 		},
 		{
@@ -42,8 +42,8 @@ func TestSlice(t *testing.T) {
 				{name: "foo", number: 42},
 			},
 			Src: []updateModel{
-				{name: commonclient.NewOptional("bar")},
-				{name: commonclient.NewOptional("foo"), number: commonclient.NewOptional(24)},
+				{name: optional.NewOptional("bar")},
+				{name: optional.NewOptional("foo"), number: optional.NewOptional(24)},
 			},
 			Expected: []model{
 				{name: "bar"},
@@ -58,9 +58,9 @@ func TestSlice(t *testing.T) {
 				{name: "baz", number: -1},
 			},
 			Src: []updateModel{
-				{name: commonclient.NewOptional("bar"), number: commonclient.NewOptional(24)},
-				{name: commonclient.NewOptional("baz"), number: commonclient.NewOptional(1)},
-				{name: commonclient.NewOptional("foo")},
+				{name: optional.NewOptional("bar"), number: optional.NewOptional(24)},
+				{name: optional.NewOptional("baz"), number: optional.NewOptional(1)},
+				{name: optional.NewOptional("foo")},
 			},
 			Expected: []model{
 				{name: "bar", number: 24},
@@ -123,7 +123,7 @@ func TestMap(t *testing.T) {
 				"foo": {name: "hello", number: 42},
 			},
 			Src: map[string]updateModel{
-				"foo": {name: commonclient.NewOptional("world")},
+				"foo": {name: optional.NewOptional("world")},
 				"bar": {},
 			},
 			Expected: map[string]model{
@@ -138,8 +138,8 @@ func TestMap(t *testing.T) {
 				"bar": {name: "bar"},
 			},
 			Src: map[string]updateModel{
-				"foo": {name: commonclient.NewOptional("world")},
-				"bar": {number: commonclient.NewOptional(24)},
+				"foo": {name: optional.NewOptional("world")},
+				"bar": {number: optional.NewOptional(24)},
 			},
 			Expected: map[string]model{
 				"foo": {name: "world", number: 42},
@@ -189,20 +189,20 @@ func TestInapplicableSlice(t *testing.T) {
 		},
 		{
 			Name:     "single_one_field",
-			Src:      []updateModel{{number: commonclient.NewOptional(20)}},
+			Src:      []updateModel{{number: optional.NewOptional(20)}},
 			Expected: []model{{number: 20}},
 		},
 		{
 			Name:     "single_multiple_fields",
-			Src:      []updateModel{{name: commonclient.NewOptional("foo"), number: commonclient.NewOptional(20)}},
+			Src:      []updateModel{{name: optional.NewOptional("foo"), number: optional.NewOptional(20)}},
 			Expected: []model{{name: "foo", number: 20}},
 		},
 		{
 			Name: "multiple",
 			Src: []updateModel{
-				{name: commonclient.NewOptional("bar")},
-				{name: commonclient.NewOptional("foo"), number: commonclient.NewOptional(20)},
-				{number: commonclient.NewOptional(42)},
+				{name: optional.NewOptional("bar")},
+				{name: optional.NewOptional("foo"), number: optional.NewOptional(20)},
+				{number: optional.NewOptional(42)},
 			},
 			Expected: []model{
 				{name: "bar"},
@@ -253,8 +253,8 @@ func (m *model) withChanges(u updateModel) model {
 }
 
 type updateModel struct {
-	name   commonclient.Optional[string]
-	number commonclient.Optional[int]
+	name   optional.Optional[string]
+	number optional.Optional[int]
 }
 
 func (u *updateModel) getName() string {

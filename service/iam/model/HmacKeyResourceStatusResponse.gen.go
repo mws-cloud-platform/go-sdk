@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -172,7 +171,7 @@ func (m *HmacKeyResourceStatusResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.SecretAccessKey = ptr.Get(sensitive.New(v))
+			m.SecretAccessKey = new(sensitive.New(v))
 			return nil
 		case "lastAuthTime":
 			v, err := decode.DateTime(d)

@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/certmanager/model"
 )
 
 func TestUpdateCertificateManagedSpecRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initCertificateManagedSpecRequest()).AsUpdateModel()
+	expected := new(initCertificateManagedSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

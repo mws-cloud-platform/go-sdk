@@ -155,6 +155,8 @@ func (c *ServiceEndpoint) deleteServiceEndpointInvoker(ctx context.Context, anyR
 		return err
 	}
 
+	httpReq.URL.RawQuery = c.queryDeleteServiceEndpoint(request)
+
 	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
 	c.headerDeleteServiceEndpoint(httpReq, request)
 
@@ -179,6 +181,14 @@ func (c *ServiceEndpoint) deleteServiceEndpointInvoker(ctx context.Context, anyR
 	*respPtr = *decodedResp
 
 	return nil
+}
+
+func (c *ServiceEndpoint) queryDeleteServiceEndpoint(request *client.DeleteServiceEndpointRequest) string {
+	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
+	return q.Encode()
 }
 
 func (c *ServiceEndpoint) headerDeleteServiceEndpoint(req *http.Request, request *client.DeleteServiceEndpointRequest) {
@@ -349,6 +359,9 @@ func (c *ServiceEndpoint) upsertServiceEndpointInvoker(ctx context.Context, anyR
 
 func (c *ServiceEndpoint) queryUpsertServiceEndpoint(request *client.UpsertServiceEndpointRequest) string {
 	q := make(url.Values)
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -444,6 +457,9 @@ func (c *ServiceEndpoint) createServiceEndpointInvoker(ctx context.Context, anyR
 func (c *ServiceEndpoint) queryCreateServiceEndpoint(request *client.UpsertServiceEndpointRequest) string {
 	q := make(url.Values)
 	q.Add("createOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 
@@ -539,6 +555,9 @@ func (c *ServiceEndpoint) updateServiceEndpointInvoker(ctx context.Context, anyR
 func (c *ServiceEndpoint) queryUpdateServiceEndpoint(request *client.UpdateServiceEndpointRequest) string {
 	q := make(url.Values)
 	q.Add("updateOnly", "true")
+	if request.ValidateOnly != nil {
+		q.Add("validateOnly", conv.BoolToString(*request.ValidateOnly))
+	}
 	return q.Encode()
 }
 

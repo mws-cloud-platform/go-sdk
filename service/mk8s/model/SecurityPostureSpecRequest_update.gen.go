@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -39,7 +37,7 @@ func (m *SecurityPostureSpecRequest) WithChanges(u UpdateSecurityPostureSpecRequ
 	}
 
 	if u.Enabled.IsSet() {
-		out.Enabled = ptr.Get(u.Enabled.Value)
+		out.Enabled = new(u.Enabled.Value)
 	}
 	return out
 }

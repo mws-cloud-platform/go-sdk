@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -55,7 +53,7 @@ func (m *EgressNatSpecRequest) WithChanges(u UpdateEgressNatSpecRequest) EgressN
 		out.External = out.External.WithChanges(u.External.Value)
 	}
 	if u.PortAllocation.IsSet() {
-		out.PortAllocation = ptr.Get(out.PortAllocation.WithChanges(u.PortAllocation.Value))
+		out.PortAllocation = new(out.PortAllocation.WithChanges(u.PortAllocation.Value))
 	} else if u.PortAllocation.IsNull() {
 		out.PortAllocation = nil
 	}

@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/secretmanager/model"
 )
 
 func TestUpdateSecretSpecRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initSecretSpecRequest()).AsUpdateModel()
+	expected := new(initSecretSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

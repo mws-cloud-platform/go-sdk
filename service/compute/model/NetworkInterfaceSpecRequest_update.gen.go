@@ -6,8 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -77,10 +75,10 @@ func (m *NetworkInterfaceSpecRequest) WithChanges(u UpdateNetworkInterfaceSpecRe
 		out.Name = u.Name.Value
 	}
 	if u.Primary.IsSet() {
-		out.Primary = ptr.Get(u.Primary.Value)
+		out.Primary = new(u.Primary.Value)
 	}
 	if u.IpForwardingEnabled.IsSet() {
-		out.IpForwardingEnabled = ptr.Get(u.IpForwardingEnabled.Value)
+		out.IpForwardingEnabled = new(u.IpForwardingEnabled.Value)
 	}
 	if u.Addresses.IsSet() {
 		out.Addresses = merge.InapplicableSlice(u.Addresses.Value, (*AddressSpecOrRefWithAttachmentsRequest).WithChanges)

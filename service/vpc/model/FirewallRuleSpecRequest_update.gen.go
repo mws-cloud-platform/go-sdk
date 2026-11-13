@@ -5,8 +5,6 @@ package model
 import (
 	"slices"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -72,13 +70,13 @@ func (m *FirewallRuleSpecRequest) WithChanges(u UpdateFirewallRuleSpecRequest) F
 		out.Direction = u.Direction.Value
 	}
 	if u.Priority.IsSet() {
-		out.Priority = ptr.Get(u.Priority.Value)
+		out.Priority = new(u.Priority.Value)
 	}
 	if u.Action.IsSet() {
 		out.Action = u.Action.Value
 	}
 	if u.Active.IsSet() {
-		out.Active = ptr.Get(u.Active.Value)
+		out.Active = new(u.Active.Value)
 	}
 	if u.Source.IsSet() {
 		out.Source = out.Source.WithChanges(u.Source.Value)

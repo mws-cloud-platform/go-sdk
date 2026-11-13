@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestUpdateCommonRoleBindingStatusSpecMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initCommonRoleBindingStatusSpec()).AsUpdateModel()
+	expected := new(initCommonRoleBindingStatusSpec()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

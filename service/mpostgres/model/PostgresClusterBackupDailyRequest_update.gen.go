@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -39,7 +37,7 @@ func (m *PostgresClusterBackupDailyRequest) WithChanges(u UpdatePostgresClusterB
 	}
 
 	if u.Hour.IsSet() {
-		out.Hour = ptr.Get(u.Hour.Value)
+		out.Hour = new(u.Hour.Value)
 	}
 	return out
 }

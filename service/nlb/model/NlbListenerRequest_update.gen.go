@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -47,12 +45,12 @@ func (m *NlbListenerRequest) WithChanges(u UpdateNlbListenerRequest) NlbListener
 	}
 
 	if u.Internal.IsSet() {
-		out.Internal = ptr.Get(out.Internal.WithChanges(u.Internal.Value))
+		out.Internal = new(out.Internal.WithChanges(u.Internal.Value))
 	} else if u.Internal.IsNull() {
 		out.Internal = nil
 	}
 	if u.External.IsSet() {
-		out.External = ptr.Get(out.External.WithChanges(u.External.Value))
+		out.External = new(out.External.WithChanges(u.External.Value))
 	} else if u.External.IsNull() {
 		out.External = nil
 	}

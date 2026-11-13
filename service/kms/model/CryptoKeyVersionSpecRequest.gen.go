@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -209,7 +208,7 @@ func (m *CryptoKeyVersionSpecRequest) WithDefaults() CryptoKeyVersionSpecRequest
 		out = *m
 	}
 
-	out.UsagePolicy = ptr.Get(out.UsagePolicy.WithDefaults())
+	out.UsagePolicy = new(out.UsagePolicy.WithDefaults())
 	return out
 }
 
@@ -220,7 +219,7 @@ func (m *CryptoKeyVersionSpecUsagePolicyRequest) WithDefaults() CryptoKeyVersion
 	}
 
 	if out.Enabled == nil {
-		out.Enabled = ptr.Get(true)
+		out.Enabled = new(true)
 	}
 	return out
 }

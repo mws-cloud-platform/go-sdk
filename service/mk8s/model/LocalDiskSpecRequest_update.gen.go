@@ -4,7 +4,6 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -14,7 +13,7 @@ type UpdateLocalDiskSpecRequest struct {
 	// Уникальное имя диска в рамках виртуальной машины
 	Name optional.Optional[string] `json:"name" yaml:"name"`
 	// Имя устройства в /dev/disk/by-id/mws-*. Если не указано — mws-{name}
-	DeviceName optional.OptionalNil[string] `json:"deviceName" yaml:"deviceName"`
+	DeviceName optional.Optional[string] `json:"deviceName" yaml:"deviceName"`
 	// Размер диска. Должен быть кратен 248GB
 	Size optional.Optional[bytesize.ByteSize] `json:"size" yaml:"size"`
 }
@@ -23,7 +22,7 @@ func (m *LocalDiskSpecRequest) AsUpdateModel() UpdateLocalDiskSpecRequest {
 	var u UpdateLocalDiskSpecRequest
 	u.Name = optional.NewOptional(m.GetName())
 	if m.DeviceName != nil {
-		u.DeviceName = optional.NewOptionalNil(m.GetDeviceNameOr(""))
+		u.DeviceName = optional.NewOptional(m.GetDeviceNameOr(""))
 	}
 	u.Size = optional.NewOptional(m.GetSize())
 	return u
@@ -51,9 +50,7 @@ func (m *LocalDiskSpecRequest) WithChanges(u UpdateLocalDiskSpecRequest) LocalDi
 		out.Name = u.Name.Value
 	}
 	if u.DeviceName.IsSet() {
-		out.DeviceName = ptr.Get(u.DeviceName.Value)
-	} else if u.DeviceName.IsNull() {
-		out.DeviceName = nil
+		out.DeviceName = new(u.DeviceName.Value)
 	}
 	if u.Size.IsSet() {
 		out.Size = u.Size.Value
@@ -86,9 +83,9 @@ func (m *LocalDiskSpecRequest) diffName(src *LocalDiskSpecRequest) optional.Opti
 	return commonclient.DiffPrimitiveRequired(src.GetName(), m.GetName(), nilDiffers)
 }
 
-func (m *LocalDiskSpecRequest) diffDeviceName(src *LocalDiskSpecRequest) optional.OptionalNil[string] {
+func (m *LocalDiskSpecRequest) diffDeviceName(src *LocalDiskSpecRequest) optional.Optional[string] {
 	nilDiffers := src != nil && m == nil
-	return commonclient.DiffPrimitiveNullable(src.GetDeviceName(), m.GetDeviceName(), nilDiffers)
+	return commonclient.DiffPrimitiveNonRequired(src.GetDeviceName(), m.GetDeviceName(), nilDiffers)
 }
 
 func (m *LocalDiskSpecRequest) diffSize(src *LocalDiskSpecRequest) optional.Optional[bytesize.ByteSize] {

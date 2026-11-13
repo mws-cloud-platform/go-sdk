@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -57,13 +56,13 @@ func (m *SubnetSpecRequest) WithChanges(u UpdateSubnetSpecRequest) SubnetSpecReq
 	}
 
 	if u.Region.IsSet() {
-		out.Region = ptr.Get(u.Region.Value)
+		out.Region = new(u.Region.Value)
 	}
 	if u.Cidr.IsSet() {
 		out.Cidr = u.Cidr.Value
 	}
 	if u.DhcpOptions.IsSet() {
-		out.DhcpOptions = ptr.Get(out.DhcpOptions.WithChanges(u.DhcpOptions.Value))
+		out.DhcpOptions = new(out.DhcpOptions.WithChanges(u.DhcpOptions.Value))
 	} else if u.DhcpOptions.IsNull() {
 		out.DhcpOptions = nil
 	}

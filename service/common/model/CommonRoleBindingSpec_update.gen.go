@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -58,7 +56,7 @@ func (m *CommonRoleBindingSpec) WithChanges(u UpdateCommonRoleBindingSpec) Commo
 		out.Role = u.Role.Value
 	}
 	if u.SupportRequestId.IsSet() {
-		out.SupportRequestId = ptr.Get(u.SupportRequestId.Value)
+		out.SupportRequestId = new(u.SupportRequestId.Value)
 	}
 	return out
 }

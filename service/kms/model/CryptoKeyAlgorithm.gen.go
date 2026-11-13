@@ -15,11 +15,26 @@ import (
 type CryptoKeyAlgorithm string
 
 const (
-	CryptoKeyAlgorithm_AES_128_GCM CryptoKeyAlgorithm = "AES_128_GCM"
-	CryptoKeyAlgorithm_AES_192_GCM CryptoKeyAlgorithm = "AES_192_GCM"
-	CryptoKeyAlgorithm_AES_256_GCM CryptoKeyAlgorithm = "AES_256_GCM"
+	CryptoKeyAlgorithm_AES_128_GCM               CryptoKeyAlgorithm = "AES_128_GCM"
+	CryptoKeyAlgorithm_AES_192_GCM               CryptoKeyAlgorithm = "AES_192_GCM"
+	CryptoKeyAlgorithm_AES_256_GCM               CryptoKeyAlgorithm = "AES_256_GCM"
+	CryptoKeyAlgorithm_RSA_2048_ENC_OAEP_SHA_256 CryptoKeyAlgorithm = "RSA_2048_ENC_OAEP_SHA_256"
+	CryptoKeyAlgorithm_RSA_3072_ENC_OAEP_SHA_256 CryptoKeyAlgorithm = "RSA_3072_ENC_OAEP_SHA_256"
+	CryptoKeyAlgorithm_RSA_4096_ENC_OAEP_SHA_256 CryptoKeyAlgorithm = "RSA_4096_ENC_OAEP_SHA_256"
+	CryptoKeyAlgorithm_RSA_2048_SIGN_PSS_SHA_256 CryptoKeyAlgorithm = "RSA_2048_SIGN_PSS_SHA_256"
+	CryptoKeyAlgorithm_RSA_2048_SIGN_PSS_SHA_384 CryptoKeyAlgorithm = "RSA_2048_SIGN_PSS_SHA_384"
+	CryptoKeyAlgorithm_RSA_2048_SIGN_PSS_SHA_512 CryptoKeyAlgorithm = "RSA_2048_SIGN_PSS_SHA_512"
+	CryptoKeyAlgorithm_RSA_3072_SIGN_PSS_SHA_256 CryptoKeyAlgorithm = "RSA_3072_SIGN_PSS_SHA_256"
+	CryptoKeyAlgorithm_RSA_3072_SIGN_PSS_SHA_384 CryptoKeyAlgorithm = "RSA_3072_SIGN_PSS_SHA_384"
+	CryptoKeyAlgorithm_RSA_3072_SIGN_PSS_SHA_512 CryptoKeyAlgorithm = "RSA_3072_SIGN_PSS_SHA_512"
+	CryptoKeyAlgorithm_RSA_4096_SIGN_PSS_SHA_256 CryptoKeyAlgorithm = "RSA_4096_SIGN_PSS_SHA_256"
+	CryptoKeyAlgorithm_RSA_4096_SIGN_PSS_SHA_384 CryptoKeyAlgorithm = "RSA_4096_SIGN_PSS_SHA_384"
+	CryptoKeyAlgorithm_RSA_4096_SIGN_PSS_SHA_512 CryptoKeyAlgorithm = "RSA_4096_SIGN_PSS_SHA_512"
+	CryptoKeyAlgorithm_ECDSA_NIST_P256_SHA_256   CryptoKeyAlgorithm = "ECDSA_NIST_P256_SHA_256"
+	CryptoKeyAlgorithm_ECDSA_NIST_P384_SHA_384   CryptoKeyAlgorithm = "ECDSA_NIST_P384_SHA_384"
+	CryptoKeyAlgorithm_ECDSA_NIST_P521_SHA_512   CryptoKeyAlgorithm = "ECDSA_NIST_P521_SHA_512"
 
-	ErrUnknownCryptoKeyAlgorithm = consterr.Error(`unknown kind, want one of "AES_128_GCM", "AES_192_GCM", "AES_256_GCM"`)
+	ErrUnknownCryptoKeyAlgorithm = consterr.Error(`unknown kind, want one of "AES_128_GCM", "AES_192_GCM", "AES_256_GCM", "RSA_2048_ENC_OAEP_SHA_256", "RSA_3072_ENC_OAEP_SHA_256", "RSA_4096_ENC_OAEP_SHA_256", "RSA_2048_SIGN_PSS_SHA_256", "RSA_2048_SIGN_PSS_SHA_384", "RSA_2048_SIGN_PSS_SHA_512", "RSA_3072_SIGN_PSS_SHA_256", "RSA_3072_SIGN_PSS_SHA_384", "RSA_3072_SIGN_PSS_SHA_512", "RSA_4096_SIGN_PSS_SHA_256", "RSA_4096_SIGN_PSS_SHA_384", "RSA_4096_SIGN_PSS_SHA_512", "ECDSA_NIST_P256_SHA_256", "ECDSA_NIST_P384_SHA_384", "ECDSA_NIST_P521_SHA_512"`)
 )
 
 func NewCryptoKeyAlgorithm(s string) (CryptoKeyAlgorithm, error) {
@@ -41,6 +56,36 @@ func (m CryptoKeyAlgorithm) IsValid() bool {
 	case CryptoKeyAlgorithm_AES_192_GCM:
 		return true
 	case CryptoKeyAlgorithm_AES_256_GCM:
+		return true
+	case CryptoKeyAlgorithm_RSA_2048_ENC_OAEP_SHA_256:
+		return true
+	case CryptoKeyAlgorithm_RSA_3072_ENC_OAEP_SHA_256:
+		return true
+	case CryptoKeyAlgorithm_RSA_4096_ENC_OAEP_SHA_256:
+		return true
+	case CryptoKeyAlgorithm_RSA_2048_SIGN_PSS_SHA_256:
+		return true
+	case CryptoKeyAlgorithm_RSA_2048_SIGN_PSS_SHA_384:
+		return true
+	case CryptoKeyAlgorithm_RSA_2048_SIGN_PSS_SHA_512:
+		return true
+	case CryptoKeyAlgorithm_RSA_3072_SIGN_PSS_SHA_256:
+		return true
+	case CryptoKeyAlgorithm_RSA_3072_SIGN_PSS_SHA_384:
+		return true
+	case CryptoKeyAlgorithm_RSA_3072_SIGN_PSS_SHA_512:
+		return true
+	case CryptoKeyAlgorithm_RSA_4096_SIGN_PSS_SHA_256:
+		return true
+	case CryptoKeyAlgorithm_RSA_4096_SIGN_PSS_SHA_384:
+		return true
+	case CryptoKeyAlgorithm_RSA_4096_SIGN_PSS_SHA_512:
+		return true
+	case CryptoKeyAlgorithm_ECDSA_NIST_P256_SHA_256:
+		return true
+	case CryptoKeyAlgorithm_ECDSA_NIST_P384_SHA_384:
+		return true
+	case CryptoKeyAlgorithm_ECDSA_NIST_P521_SHA_512:
 		return true
 	}
 	return false

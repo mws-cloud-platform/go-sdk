@@ -24,6 +24,12 @@ type CryptoKey interface {
 	//
 	// Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:rotate
 	RotateCryptoKey(context.Context, RotateCryptoKeyRequest) (*RotateCryptoKeyResponse, error)
+	// GetCryptoKeyPublicKey возвращает публичную часть асимметричного ключа в формате PEM.
+	// Если параметр `version` не указан, используется основная версия ключа.
+	// .
+	//
+	// Путь: GET /kms/v1/projects/{project}/cryptoKeys/{key}:getPublicKey
+	GetCryptoKeyPublicKey(context.Context, GetCryptoKeyPublicKeyRequest) (*GetCryptoKeyPublicKeyResponse, error)
 	// CancelScheduledDestructionOfCryptoKey отмена запланированного уничтожение выбранного KMS ключа.
 	//
 	// Путь: POST /kms/v1/projects/{project}/cryptoKeys/{key}:cancelScheduledDestruction
@@ -258,6 +264,75 @@ func (m *RotateCryptoKeyResponse) GetErr() (err error) {
 }
 
 func (m *RotateCryptoKeyResponse) SetErrorWrapper(f func(err error) error) {
+	if m != nil {
+		m.errorWrapper = f
+	}
+}
+
+type GetCryptoKeyPublicKeyRequest struct {
+	// Токен авторизации IAM
+	Authorization sensitive.Sensitive[string] // header: "Authorization"
+	// Путь к проекту.
+	Project string // path: "project"
+	// Название крипто-ключа
+	Key string // path: "key"
+	// Номер версии крипто-ключа. Если не указан, используется основная версия
+	Version *int32 // query: "version"
+}
+
+func (m *GetCryptoKeyPublicKeyRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
+	m.Authorization = authorization
+}
+
+func (m GetCryptoKeyPublicKeyRequest) GetProject() string {
+	return m.Project
+}
+
+func (m *GetCryptoKeyPublicKeyRequest) SetProject(project string) {
+	m.Project = project
+}
+
+type GetCryptoKeyPublicKeyResponse struct {
+	Code        int
+	Response200 *model.CryptoKeyPublicKeyResponse
+	Response400 *commonmodel.ApiError
+	Response403 *commonmodel.ApiError
+	Response404 *commonmodel.ApiError
+	Response412 *commonmodel.ApiError
+	Response500 *commonmodel.ApiError
+
+	errorWrapper func(err error) error
+}
+
+func (m *GetCryptoKeyPublicKeyResponse) GetCode() int {
+	return m.Code
+}
+
+func (m *GetCryptoKeyPublicKeyResponse) GetErr() (err error) {
+	defer func() {
+		if err != nil && m.errorWrapper != nil {
+			err = m.errorWrapper(err)
+		}
+	}()
+	if m.Response400 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response400)
+	}
+	if m.Response403 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response403)
+	}
+	if m.Response404 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response404)
+	}
+	if m.Response412 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response412)
+	}
+	if m.Response500 != nil {
+		return mwsinternalerrors.WrapAPIGenError(m.Code, m.Response500)
+	}
+	return nil
+}
+
+func (m *GetCryptoKeyPublicKeyResponse) SetErrorWrapper(f func(err error) error) {
 	if m != nil {
 		m.errorWrapper = f
 	}

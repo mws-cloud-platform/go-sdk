@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -49,10 +47,10 @@ func (m *DeploymentSpecRequest) WithChanges(u UpdateDeploymentSpecRequest) Deplo
 	}
 
 	if u.IsActive.IsSet() {
-		out.IsActive = ptr.Get(u.IsActive.Value)
+		out.IsActive = new(u.IsActive.Value)
 	}
 	if u.Model.IsSet() {
-		out.Model = ptr.Get(u.Model.Value)
+		out.Model = new(u.Model.Value)
 	}
 	return out
 }

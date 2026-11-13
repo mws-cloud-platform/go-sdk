@@ -24,6 +24,10 @@ type CryptoKeySpecOptionalResponse struct {
 	// Политика использования ключа. Определяет, разрешены ли криптографические операции с этим ключом.
 	UsagePolicy optional.OptionalNil[CryptoKeySpecUsagePolicyOptionalResponse] `json:"usagePolicy,omitempty" yaml:"usagePolicy,omitempty"`
 	// Параметры политики, управляющие ротацией криптографического ключа.
+	// Применимо только к симметричным ключам. Для асимметричных ключей автоматическая ротация
+	// не поддерживается, поэтому секция 'rotationPolicy' должна отсутствовать в запросах
+	// (указание объекта или явного `null` приведёт к ошибке валидации) и никогда не возвращается
+	// в ответах для асимметричных ключей.
 	RotationPolicy optional.OptionalNil[CryptoKeySpecRotationPolicyOptionalResponse] `json:"rotationPolicy,omitempty" yaml:"rotationPolicy,omitempty"`
 	// Идентификатор основной версии криптографического ключа.
 	// Используется только когда автоматическая ротация отключена.

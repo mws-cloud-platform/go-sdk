@@ -6,8 +6,6 @@ import (
 	"context"
 	"maps"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -15,20 +13,16 @@ import (
 )
 
 type UpdateCatalogSpecRequest struct {
-	// Дополнительные настройки каталога
+	// Дополнительные настройки каталога. Для расположения данных в Object Storage обязательно задайте значение параметра `location`.
 	Properties optional.Optional[map[string]string] `json:"properties" yaml:"properties"`
 	// Сервисный аккаунт, используемый для доступа к Object Storage
-	ServiceAccount optional.OptionalNil[UpdateCatalogSpecServiceAccountRequest] `json:"serviceAccount" yaml:"serviceAccount"`
+	ServiceAccount optional.Optional[UpdateCatalogSpecServiceAccountRequest] `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
 func (m *CatalogSpecRequest) AsUpdateModel() UpdateCatalogSpecRequest {
 	var u UpdateCatalogSpecRequest
-	if m.Properties != nil {
-		u.Properties = optional.NewOptional(m.GetProperties())
-	}
-	if m.ServiceAccount != nil {
-		u.ServiceAccount = optional.NewOptionalNil(m.ServiceAccount.AsUpdateModel())
-	}
+	u.Properties = optional.NewOptional(m.GetProperties())
+	u.ServiceAccount = optional.NewOptional(m.ServiceAccount.AsUpdateModel())
 	return u
 }
 
@@ -53,9 +47,7 @@ func (m *CatalogSpecRequest) WithChanges(u UpdateCatalogSpecRequest) CatalogSpec
 		out.Properties = maps.Clone(u.Properties.Value)
 	}
 	if u.ServiceAccount.IsSet() {
-		out.ServiceAccount = ptr.Get(out.ServiceAccount.WithChanges(u.ServiceAccount.Value))
-	} else if u.ServiceAccount.IsNull() {
-		out.ServiceAccount = nil
+		out.ServiceAccount = out.ServiceAccount.WithChanges(u.ServiceAccount.Value)
 	}
 	return out
 }
@@ -71,7 +63,7 @@ func (m *UpdateCatalogSpecRequest) Parse(ctx context.Context) error {
 		return nil
 	}
 
-	if m.ServiceAccount.IsSet() && !m.ServiceAccount.IsNull() {
+	if m.ServiceAccount.IsSet() {
 		if err := m.ServiceAccount.Value.Parse(ctx); err != nil {
 			return reserrors.NewPathAccumulatorError("ServiceAccount", err)
 		}
@@ -88,13 +80,13 @@ func (m *CatalogSpecRequest) diffProperties(src *CatalogSpecRequest) optional.Op
 	}
 }
 
-func (m *CatalogSpecRequest) diffServiceAccount(src *CatalogSpecRequest) optional.OptionalNil[UpdateCatalogSpecServiceAccountRequest] {
-	nilDiffers := src != nil && m == nil
-	value := m.GetServiceAccount().Diff(src.GetServiceAccount())
-	return optional.OptionalNil[UpdateCatalogSpecServiceAccountRequest]{
+func (m *CatalogSpecRequest) diffServiceAccount(src *CatalogSpecRequest) optional.Optional[UpdateCatalogSpecServiceAccountRequest] {
+	from := src.GetServiceAccount()
+	to := m.GetServiceAccount()
+	value := to.Diff(&from)
+	return optional.Optional[UpdateCatalogSpecServiceAccountRequest]{
 		Value: value,
-		Set:   nilDiffers || value.HasChanges(),
-		Null:  nilDiffers,
+		Set:   value.HasChanges(),
 	}
 }
 

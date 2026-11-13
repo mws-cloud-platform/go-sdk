@@ -144,6 +144,8 @@ type DeleteServiceEndpointRequest struct {
 	Network string // path: "network"
 	// Имя точки доступа Private Link
 	ServiceEndpoint string // path: "serviceEndpoint"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 }
 
 func (m *DeleteServiceEndpointRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {
@@ -309,6 +311,8 @@ type UpsertServiceEndpointRequest struct {
 	Network string // path: "network"
 	// Имя точки доступа Private Link
 	ServiceEndpoint string // path: "serviceEndpoint"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения точки доступа Private Link
 	Body model.ServiceEndpointRequest // body
 }
@@ -345,6 +349,8 @@ type UpdateServiceEndpointRequest struct {
 	Network string // path: "network"
 	// Имя точки доступа Private Link
 	ServiceEndpoint string // path: "serviceEndpoint"
+	// Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+	ValidateOnly *bool // query: "validateOnly"
 	// Данные для создания или изменения точки доступа Private Link
 	Body model.UpdateServiceEndpointRequest // body
 }

@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -49,10 +47,10 @@ func (m *ClickhouseEndpointExternalAddressSpecOrRefRequest) WithChanges(u Update
 	}
 
 	if u.Ref.IsSet() {
-		out.Ref = ptr.Get(u.Ref.Value)
+		out.Ref = new(u.Ref.Value)
 	}
 	if u.Spec.IsSet() {
-		out.Spec = ptr.Get(ClickhouseEndpointExternalAddressSpecRequest(u.Spec.Value))
+		out.Spec = new(ClickhouseEndpointExternalAddressSpecRequest(u.Spec.Value))
 	} else if u.Spec.IsNull() {
 		out.Spec = nil
 	}

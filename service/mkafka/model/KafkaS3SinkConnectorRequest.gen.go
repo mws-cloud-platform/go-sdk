@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -788,22 +787,22 @@ func (m *KafkaS3SinkConnectorRequest) WithDefaults() KafkaS3SinkConnectorRequest
 	}
 
 	if out.TasksMax == nil {
-		out.TasksMax = ptr.Get(int32(1))
+		out.TasksMax = new(int32(1))
 	}
 	if out.InputFormat == nil {
-		out.InputFormat = ptr.Get(KafkaS3SinkConnectorInputFormatRequest_JSON)
+		out.InputFormat = new(KafkaS3SinkConnectorInputFormatRequest_JSON)
 	}
 	if out.OutputFormat == nil {
-		out.OutputFormat = ptr.Get(KafkaS3SinkConnectorOutputFormatRequest_JSONL)
+		out.OutputFormat = new(KafkaS3SinkConnectorOutputFormatRequest_JSONL)
 	}
 	if out.FileCompressionType == nil {
-		out.FileCompressionType = ptr.Get(KafkaS3SinkConnectorFileCompressionTypeRequest_NONE)
+		out.FileCompressionType = new(KafkaS3SinkConnectorFileCompressionTypeRequest_NONE)
 	}
 	if out.OutputEnvelope == nil {
-		out.OutputEnvelope = ptr.Get(true)
+		out.OutputEnvelope = new(true)
 	}
 	if out.ErrorHandling == nil {
-		out.ErrorHandling = ptr.Get(KafkaS3SinkConnectorErrorHandlingRequest_DLQ)
+		out.ErrorHandling = new(KafkaS3SinkConnectorErrorHandlingRequest_DLQ)
 	}
 	return out
 }

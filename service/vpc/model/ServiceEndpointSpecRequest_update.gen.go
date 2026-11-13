@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
@@ -48,12 +46,12 @@ func (m *ServiceEndpointSpecRequest) WithChanges(u UpdateServiceEndpointSpecRequ
 	}
 
 	if u.Target.IsSet() {
-		out.Target = ptr.Get(out.Target.WithChanges(u.Target.Value))
+		out.Target = new(out.Target.WithChanges(u.Target.Value))
 	} else if u.Target.IsNull() {
 		out.Target = nil
 	}
 	if u.Address.IsSet() {
-		out.Address = ptr.Get(out.Address.WithChanges(u.Address.Value))
+		out.Address = new(out.Address.WithChanges(u.Address.Value))
 	} else if u.Address.IsNull() {
 		out.Address = nil
 	}

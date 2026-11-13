@@ -5,8 +5,6 @@ package model
 import (
 	"maps"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -50,7 +48,7 @@ func (m *SecretVersionSpecRequest) WithChanges(u UpdateSecretVersionSpecRequest)
 	}
 
 	if u.Active.IsSet() {
-		out.Active = ptr.Get(u.Active.Value)
+		out.Active = new(u.Active.Value)
 	}
 	if u.Data.IsSet() {
 		out.Data = SecretVersionDataSpec(maps.Clone(u.Data.Value))

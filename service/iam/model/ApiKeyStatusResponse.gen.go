@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -164,7 +163,7 @@ func (m *ApiKeyStatusResponse) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.ApiKey = ptr.Get(sensitive.New(v))
+			m.ApiKey = new(sensitive.New(v))
 			return nil
 		case "lastAuthTime":
 			v, err := decode.DateTime(d)

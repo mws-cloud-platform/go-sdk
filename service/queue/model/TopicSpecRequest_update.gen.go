@@ -5,8 +5,6 @@ package model
 import (
 	"maps"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -49,7 +47,7 @@ func (m *TopicSpecRequest) WithChanges(u UpdateTopicSpecRequest) TopicSpecReques
 	}
 
 	if u.PartitionCount.IsSet() {
-		out.PartitionCount = ptr.Get(u.PartitionCount.Value)
+		out.PartitionCount = new(u.PartitionCount.Value)
 	}
 	if u.Config.IsSet() {
 		out.Config = maps.Clone(u.Config.Value)

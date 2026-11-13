@@ -56,6 +56,20 @@ func TestCryptoKeySugared_RotateCryptoKey(t *testing.T) {
 	require.True(t, mwserrors.IsDecodeBodyError(err))
 }
 
+func TestCryptoKeySugared_GetCryptoKeyPublicKey(t *testing.T) {
+	t.Parallel()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := clientmocks.NewMockCryptoKey(ctrl)
+	mockClient.EXPECT().GetCryptoKeyPublicKey(gomock.Any(), gomock.Any()).Times(1).Return(nil, mwserrors.NewDecodeBodyError("", nil))
+
+	sugared := client.NewCryptoKeySugared(mockClient)
+
+	_, err := sugared.GetCryptoKeyPublicKey(context.Background(), client.GetCryptoKeyPublicKeyRequest{})
+	require.True(t, mwserrors.IsDecodeBodyError(err))
+}
+
 func TestCryptoKeySugared_CancelScheduledDestructionOfCryptoKey(t *testing.T) {
 	t.Parallel()
 	ctrl := gomock.NewController(t)

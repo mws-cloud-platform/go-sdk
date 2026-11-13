@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"maps"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -112,7 +110,7 @@ func (m *PostgresClusterSpecRequest) WithChanges(u UpdatePostgresClusterSpecRequ
 	}
 
 	if u.Region.IsSet() {
-		out.Region = ptr.Get(u.Region.Value)
+		out.Region = new(u.Region.Value)
 	}
 	if u.Version.IsSet() {
 		out.Version = u.Version.Value
@@ -130,12 +128,12 @@ func (m *PostgresClusterSpecRequest) WithChanges(u UpdatePostgresClusterSpecRequ
 		out.Instances = merge.InapplicableSlice(u.Instances.Value, (*PostgresInstanceRequest).WithChanges)
 	}
 	if u.Backup.IsSet() {
-		out.Backup = ptr.Get(out.Backup.WithChanges(u.Backup.Value))
+		out.Backup = new(out.Backup.WithChanges(u.Backup.Value))
 	} else if u.Backup.IsNull() {
 		out.Backup = nil
 	}
 	if u.MaintenanceWindow.IsSet() {
-		out.MaintenanceWindow = ptr.Get(out.MaintenanceWindow.WithChanges(u.MaintenanceWindow.Value))
+		out.MaintenanceWindow = new(out.MaintenanceWindow.WithChanges(u.MaintenanceWindow.Value))
 	} else if u.MaintenanceWindow.IsNull() {
 		out.MaintenanceWindow = nil
 	}
@@ -143,7 +141,7 @@ func (m *PostgresClusterSpecRequest) WithChanges(u UpdatePostgresClusterSpecRequ
 		out.PostgresParameters = maps.Clone(u.PostgresParameters.Value)
 	}
 	if u.LoggingEnabled.IsSet() {
-		out.LoggingEnabled = ptr.Get(u.LoggingEnabled.Value)
+		out.LoggingEnabled = new(u.LoggingEnabled.Value)
 	}
 	return out
 }

@@ -6,8 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -75,7 +73,7 @@ func (m *KafkaEndpointRequest) WithChanges(u UpdateKafkaEndpointRequest) KafkaEn
 		out.BrokerAddresses = merge.InapplicableSlice(u.BrokerAddresses.Value, (*KafkaEndpointBrokerAddressRequest).WithChanges)
 	}
 	if u.ExternalAccess.IsSet() {
-		out.ExternalAccess = ptr.Get(out.ExternalAccess.WithChanges(u.ExternalAccess.Value))
+		out.ExternalAccess = new(out.ExternalAccess.WithChanges(u.ExternalAccess.Value))
 	} else if u.ExternalAccess.IsNull() {
 		out.ExternalAccess = nil
 	}

@@ -147,10 +147,6 @@ func (m *LocalDiskStatusResponse) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(reserrors.PathAccumulatorErrorObjBytesFuncWrap(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "name":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			v, err := decode.Str(d)
 			if err != nil {
 				return err
@@ -159,10 +155,6 @@ func (m *LocalDiskStatusResponse) Decode(d *jx.Decoder) error {
 			m.Name = &v
 			return nil
 		case "deviceName":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			v, err := decode.Str(d)
 			if err != nil {
 				return err
@@ -171,10 +163,6 @@ func (m *LocalDiskStatusResponse) Decode(d *jx.Decoder) error {
 			m.DeviceName = &v
 			return nil
 		case "size":
-			if d.Next() == jx.Null {
-				return d.Null()
-			}
-
 			var v bytesize.ByteSize
 			if err := v.Decode(d); err != nil {
 				return err

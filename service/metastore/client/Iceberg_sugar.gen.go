@@ -145,10 +145,7 @@ func (x *IcebergSugared) waitGetIcebergCatalogInfo(ctx context.Context, request 
 	return waiter.Wait(ctx)
 }
 
-// UpsertIcebergCatalog создание или частичное обновление настроек Iceberg-каталога.
-// Поле `spec` обязательно. При создании каталога необходимо передать `properties.location` и `serviceAccount.ref`.
-// При обновлении допускается частичный `spec`: непереданные поля сохраняются, а переданные поля заменяют соответствующие значения.
-// В ответе `spec` возвращается в том виде, в каком был прислан.
+// UpsertIcebergCatalog создание или обновление настроек Iceberg-каталога.
 //
 // Путь: POST /metastore/v1/projects/{project}/icebergCatalogs/{catalogName}
 func (x *IcebergSugared) UpsertIcebergCatalog(ctx context.Context, request UpsertIcebergCatalogRequest, opts ...Option) (*model.IcebergCatalogOptionalResponse, error) {
@@ -197,10 +194,7 @@ func (x *IcebergSugared) waitUpsertIcebergCatalog(ctx context.Context, request G
 	return waiter.Wait(ctx)
 }
 
-// CreateIcebergCatalog создание или частичное обновление настроек Iceberg-каталога.
-// Поле `spec` обязательно. При создании каталога необходимо передать `properties.location` и `serviceAccount.ref`.
-// При обновлении допускается частичный `spec`: непереданные поля сохраняются, а переданные поля заменяют соответствующие значения.
-// В ответе `spec` возвращается в том виде, в каком был прислан.
+// CreateIcebergCatalog создание или обновление настроек Iceberg-каталога.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /metastore/v1/projects/{project}/icebergCatalogs/{catalogName}?createOnly=true
@@ -224,10 +218,7 @@ func (x *IcebergSugared) CreateIcebergCatalog(ctx context.Context, request Upser
 	return x.waitUpsertIcebergCatalog(ctx, request.getIcebergCatalogInfoRequest(), config.waitOptions...)
 }
 
-// UpdateIcebergCatalog создание или частичное обновление настроек Iceberg-каталога.
-// Поле `spec` обязательно. При создании каталога необходимо передать `properties.location` и `serviceAccount.ref`.
-// При обновлении допускается частичный `spec`: непереданные поля сохраняются, а переданные поля заменяют соответствующие значения.
-// В ответе `spec` возвращается в том виде, в каком был прислан.
+// UpdateIcebergCatalog создание или обновление настроек Iceberg-каталога.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /metastore/v1/projects/{project}/icebergCatalogs/{catalogName}?updateOnly=true

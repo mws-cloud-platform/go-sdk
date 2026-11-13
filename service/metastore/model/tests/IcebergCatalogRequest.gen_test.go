@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.mws.cloud/go-sdk/service/metastore/model"
+	"go.mws.cloud/go-sdk/service/resources/references/iam"
 )
 
 func TestIcebergCatalogRequestMarshalling(t *testing.T) {
@@ -24,5 +25,7 @@ func TestIcebergCatalogRequestMarshalling(t *testing.T) {
 
 func initIcebergCatalogRequest() model.IcebergCatalogRequest {
 	var v model.IcebergCatalogRequest
+	v.Spec.Properties = make(map[string]string)
+	v.Spec.ServiceAccount.Ref = iam.NewMustServiceAccountRef("projectID", "serviceAccountID")
 	return v
 }

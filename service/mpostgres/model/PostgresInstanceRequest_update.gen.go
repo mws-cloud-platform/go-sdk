@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -46,7 +44,7 @@ func (m *PostgresInstanceRequest) WithChanges(u UpdatePostgresInstanceRequest) P
 		out.Count = u.Count.Value
 	}
 	if u.Zone.IsSet() {
-		out.Zone = ptr.Get(u.Zone.Value)
+		out.Zone = new(u.Zone.Value)
 	}
 	return out
 }

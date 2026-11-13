@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -39,7 +37,7 @@ func (m *ClusterPublicEndpointSpecRequest) WithChanges(u UpdateClusterPublicEndp
 	}
 
 	if u.Version.IsSet() {
-		out.Version = ptr.Get(u.Version.Value)
+		out.Version = new(u.Version.Value)
 	}
 	return out
 }

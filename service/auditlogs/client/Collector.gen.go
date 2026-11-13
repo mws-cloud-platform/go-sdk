@@ -334,7 +334,9 @@ type ListCollectorsRequest struct {
 	// Для сортировки используется реализация AIP-132 (https://google.aip.dev/132#ordering).
 	// Указывается перечислением полей с направлением сортировки (asc, desc) через запятую.
 	// По умолчанию используется сортировка по возрастанию (asc)
-	OrderBy *string // query: "orderBy"
+	OrderBy           *string // query: "orderBy"
+	XForwardedPort    *string // header: "X-Forwarded-Port"
+	XForwardedForPort *string // header: "X-Forwarded-For-Port"
 }
 
 func (m *ListCollectorsRequest) SetAuthorization(authorization sensitive.Sensitive[string]) {

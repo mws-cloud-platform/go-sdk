@@ -6,8 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -93,7 +91,7 @@ func (m *ClickhouseClusterShardRequest) WithChanges(u UpdateClickhouseClusterSha
 		out.Resources = out.Resources.WithChanges(u.Resources.Value)
 	}
 	if u.Weight.IsSet() {
-		out.Weight = ptr.Get(u.Weight.Value)
+		out.Weight = new(u.Weight.Value)
 	}
 	if u.Endpoints.IsSet() {
 		out.Endpoints = merge.InapplicableSlice(u.Endpoints.Value, (*ClickhouseEndpointRequest).WithChanges)

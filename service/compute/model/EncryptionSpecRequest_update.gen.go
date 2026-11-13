@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -46,7 +44,7 @@ func (m *EncryptionSpecRequest) WithChanges(u UpdateEncryptionSpecRequest) Encry
 	}
 
 	if u.CryptoKeyId.IsSet() {
-		out.CryptoKeyId = ptr.Get(u.CryptoKeyId.Value)
+		out.CryptoKeyId = new(u.CryptoKeyId.Value)
 	}
 	return out
 }

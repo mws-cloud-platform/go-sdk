@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -53,7 +51,7 @@ func (m *NlbHealthCheckHttpsRequest) WithChanges(u UpdateNlbHealthCheckHttpsRequ
 		out.Path = u.Path.Value
 	}
 	if u.ExpectedCode.IsSet() {
-		out.ExpectedCode = ptr.Get(u.ExpectedCode.Value)
+		out.ExpectedCode = new(u.ExpectedCode.Value)
 	}
 	return out
 }

@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
@@ -46,7 +44,7 @@ func (m *NlbRequest) WithChanges(u UpdateNlbRequest) NlbRequest {
 	}
 
 	if u.Metadata.IsSet() {
-		out.Metadata = ptr.Get(out.Metadata.WithChanges(u.Metadata.Value))
+		out.Metadata = new(out.Metadata.WithChanges(u.Metadata.Value))
 	} else if u.Metadata.IsNull() {
 		out.Metadata = nil
 	}

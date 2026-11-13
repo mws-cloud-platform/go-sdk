@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
 
 func TestUpdateNodeLabelSpecRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initNodeLabelSpecRequest()).AsUpdateModel()
+	expected := new(initNodeLabelSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

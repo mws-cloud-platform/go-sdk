@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -224,7 +223,7 @@ func (m *StorageDiskSpecOrRefWithAttachmentsRequest) WithDefaults() StorageDiskS
 	}
 
 	if out.Boot == nil {
-		out.Boot = ptr.Get(false)
+		out.Boot = new(false)
 	}
 	return out
 }

@@ -86,7 +86,7 @@ func (x *ServiceAccountSugared) respHandlerDeleteServiceAccount(resp *DeleteServ
 }
 
 func (x *ServiceAccountSugared) waitDeleteServiceAccount(ctx context.Context, request GetServiceAccountRequest, opts ...wait.WaiterOption) error {
-	callback := func(ctx context.Context) (*model.ServiceAccountResponse, bool, error) {
+	callback := func(ctx context.Context) (*model.ServiceAccountOptionalResponse, bool, error) {
 		_, err := x.GetServiceAccount(ctx, request)
 		if mwserrors.IsAPIErrorNotFoundStatus(err) {
 			return nil, true, nil
@@ -101,7 +101,7 @@ func (x *ServiceAccountSugared) waitDeleteServiceAccount(ctx context.Context, re
 // GetServiceAccount позволяет получить информацию о сервисном аккаунте.
 //
 // Путь: GET /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}
-func (x *ServiceAccountSugared) GetServiceAccount(ctx context.Context, request GetServiceAccountRequest, opts ...Option) (*model.ServiceAccountResponse, error) {
+func (x *ServiceAccountSugared) GetServiceAccount(ctx context.Context, request GetServiceAccountRequest, opts ...Option) (*model.ServiceAccountOptionalResponse, error) {
 	config := newConfig(opts...)
 
 	resp, err := x.impl.GetServiceAccount(ctx, request)
@@ -121,7 +121,7 @@ func (x *ServiceAccountSugared) GetServiceAccount(ctx context.Context, request G
 	return x.waitGetServiceAccount(ctx, request, config.waitOptions...)
 }
 
-func (x *ServiceAccountSugared) respHandlerGetServiceAccount(resp *GetServiceAccountResponse) (*model.ServiceAccountResponse, error) {
+func (x *ServiceAccountSugared) respHandlerGetServiceAccount(resp *GetServiceAccountResponse) (*model.ServiceAccountOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -133,8 +133,8 @@ func (x *ServiceAccountSugared) respHandlerGetServiceAccount(resp *GetServiceAcc
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-func (x *ServiceAccountSugared) waitGetServiceAccount(ctx context.Context, request GetServiceAccountRequest, opts ...wait.WaiterOption) (*model.ServiceAccountResponse, error) {
-	callback := func(ctx context.Context) (*model.ServiceAccountResponse, bool, error) {
+func (x *ServiceAccountSugared) waitGetServiceAccount(ctx context.Context, request GetServiceAccountRequest, opts ...wait.WaiterOption) (*model.ServiceAccountOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.ServiceAccountOptionalResponse, bool, error) {
 		response, err := x.GetServiceAccount(ctx, request)
 		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
 		return response, stop, err
@@ -146,7 +146,7 @@ func (x *ServiceAccountSugared) waitGetServiceAccount(ctx context.Context, reque
 // UpsertServiceAccount позволяет создать или обновить сервисный аккаунт.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}
-func (x *ServiceAccountSugared) UpsertServiceAccount(ctx context.Context, request UpsertServiceAccountRequest, opts ...Option) (*model.ServiceAccountResponse, error) {
+func (x *ServiceAccountSugared) UpsertServiceAccount(ctx context.Context, request UpsertServiceAccountRequest, opts ...Option) (*model.ServiceAccountOptionalResponse, error) {
 	config := newConfig(opts...)
 
 	resp, err := x.impl.UpsertServiceAccount(ctx, request)
@@ -166,7 +166,7 @@ func (x *ServiceAccountSugared) UpsertServiceAccount(ctx context.Context, reques
 	return x.waitUpsertServiceAccount(ctx, request.getServiceAccountRequest(), config.waitOptions...)
 }
 
-func (x *ServiceAccountSugared) respHandlerUpsertServiceAccount(resp *UpsertServiceAccountResponse) (*model.ServiceAccountResponse, error) {
+func (x *ServiceAccountSugared) respHandlerUpsertServiceAccount(resp *UpsertServiceAccountResponse) (*model.ServiceAccountOptionalResponse, error) {
 	if err := resp.GetErr(); err != nil {
 		return nil, err
 	}
@@ -182,8 +182,8 @@ func (x *ServiceAccountSugared) respHandlerUpsertServiceAccount(resp *UpsertServ
 	return nil, mwserrors.NewAPIError(resp.Code, mwserrors.Unknown, "unexpected result")
 }
 
-func (x *ServiceAccountSugared) waitUpsertServiceAccount(ctx context.Context, request GetServiceAccountRequest, opts ...wait.WaiterOption) (*model.ServiceAccountResponse, error) {
-	callback := func(ctx context.Context) (*model.ServiceAccountResponse, bool, error) {
+func (x *ServiceAccountSugared) waitUpsertServiceAccount(ctx context.Context, request GetServiceAccountRequest, opts ...wait.WaiterOption) (*model.ServiceAccountOptionalResponse, error) {
+	callback := func(ctx context.Context) (*model.ServiceAccountOptionalResponse, bool, error) {
 		response, err := x.GetServiceAccount(ctx, request)
 		stop := string(ptr.Get(response.GetStatus().GetReady()).GetState()) != "PROCESSING"
 		return response, stop, err
@@ -196,7 +196,7 @@ func (x *ServiceAccountSugared) waitUpsertServiceAccount(ctx context.Context, re
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}?createOnly=true
-func (x *ServiceAccountSugared) CreateServiceAccount(ctx context.Context, request UpsertServiceAccountRequest, opts ...Option) (*model.ServiceAccountResponse, error) {
+func (x *ServiceAccountSugared) CreateServiceAccount(ctx context.Context, request UpsertServiceAccountRequest, opts ...Option) (*model.ServiceAccountOptionalResponse, error) {
 	config := newConfig(opts...)
 
 	resp, err := x.impl.CreateServiceAccount(ctx, request)
@@ -220,7 +220,7 @@ func (x *ServiceAccountSugared) CreateServiceAccount(ctx context.Context, reques
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 //
 // Путь: POST /iam/v1/projects/{project}/serviceAccounts/{serviceAccount}?updateOnly=true
-func (x *ServiceAccountSugared) UpdateServiceAccount(ctx context.Context, request UpdateServiceAccountRequest, opts ...Option) (*model.ServiceAccountResponse, error) {
+func (x *ServiceAccountSugared) UpdateServiceAccount(ctx context.Context, request UpdateServiceAccountRequest, opts ...Option) (*model.ServiceAccountOptionalResponse, error) {
 	config := newConfig(opts...)
 
 	resp, err := x.impl.UpdateServiceAccount(ctx, request)

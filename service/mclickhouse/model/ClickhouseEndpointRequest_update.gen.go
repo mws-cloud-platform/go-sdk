@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -48,7 +46,7 @@ func (m *ClickhouseEndpointRequest) WithChanges(u UpdateClickhouseEndpointReques
 		out.Address = out.Address.WithChanges(u.Address.Value)
 	}
 	if u.ExternalAddress.IsSet() {
-		out.ExternalAddress = ptr.Get(out.ExternalAddress.WithChanges(u.ExternalAddress.Value))
+		out.ExternalAddress = new(out.ExternalAddress.WithChanges(u.ExternalAddress.Value))
 	} else if u.ExternalAddress.IsNull() {
 		out.ExternalAddress = nil
 	}

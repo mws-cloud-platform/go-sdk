@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -264,8 +263,8 @@ func (m *KafkaControllerInstanceSpecRequest) WithDefaults() KafkaControllerInsta
 	}
 
 	if out.CombinedWithBroker == nil {
-		out.CombinedWithBroker = ptr.Get(false)
+		out.CombinedWithBroker = new(false)
 	}
-	out.Disk = ptr.Get(out.Disk.WithDefaults())
+	out.Disk = new(out.Disk.WithDefaults())
 	return out
 }

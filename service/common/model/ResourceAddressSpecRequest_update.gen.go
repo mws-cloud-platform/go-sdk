@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/ipaddress"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
@@ -67,7 +66,7 @@ func (m *ResourceAddressSpecRequest) WithChanges(u UpdateResourceAddressSpecRequ
 		out.Subnet = u.Subnet.Value
 	}
 	if u.IpAddress.IsSet() {
-		out.IpAddress = ptr.Get(u.IpAddress.Value)
+		out.IpAddress = new(u.IpAddress.Value)
 	}
 	if u.Dns.IsSet() {
 		out.Dns = merge.Slice(out.Dns, u.Dns.Value, (*VpcAddressDnsSpecRequest).WithChanges, (*VpcAddressDnsSpecRequest).GetName, (*UpdateVpcAddressDnsSpecRequest).GetName)

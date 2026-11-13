@@ -6,8 +6,6 @@ import (
 	"encoding/json"
 	"slices"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -42,7 +40,7 @@ func (m *PluginsSpecRequest) WithChanges(u UpdatePluginsSpecRequest) PluginsSpec
 	}
 
 	if u.Cni.IsSet() {
-		out.Cni = ptr.Get(out.Cni.WithChanges(u.Cni.Value))
+		out.Cni = new(out.Cni.WithChanges(u.Cni.Value))
 	} else if u.Cni.IsNull() {
 		out.Cni = nil
 	}

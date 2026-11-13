@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -148,10 +147,10 @@ func (m *VpcNetworkSpecRequest) WithDefaults() VpcNetworkSpecRequest {
 	}
 
 	if out.Mtu == nil {
-		out.Mtu = ptr.Get(int32(1500))
+		out.Mtu = new(int32(1500))
 	}
 	if out.InternetAccess == nil {
-		out.InternetAccess = ptr.Get(true)
+		out.InternetAccess = new(true)
 	}
 	return out
 }

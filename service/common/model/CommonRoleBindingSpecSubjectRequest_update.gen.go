@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -73,24 +71,24 @@ func (m *CommonRoleBindingSpecSubjectRequest) WithChanges(u UpdateCommonRoleBind
 	}
 
 	if u.User.IsSet() {
-		out.User = ptr.Get(u.User.Value)
+		out.User = new(u.User.Value)
 	}
 	if u.ServiceAccount.IsSet() {
-		out.ServiceAccount = ptr.Get(u.ServiceAccount.Value)
+		out.ServiceAccount = new(u.ServiceAccount.Value)
 	}
 	if u.ServiceAgent.IsSet() {
-		out.ServiceAgent = ptr.Get(u.ServiceAgent.Value)
+		out.ServiceAgent = new(u.ServiceAgent.Value)
 	}
 	if u.UserFederation.IsSet() {
-		out.UserFederation = ptr.Get(out.UserFederation.WithChanges(u.UserFederation.Value))
+		out.UserFederation = new(out.UserFederation.WithChanges(u.UserFederation.Value))
 	} else if u.UserFederation.IsNull() {
 		out.UserFederation = nil
 	}
 	if u.UserGroup.IsSet() {
-		out.UserGroup = ptr.Get(u.UserGroup.Value)
+		out.UserGroup = new(u.UserGroup.Value)
 	}
 	if u.Employee.IsSet() {
-		out.Employee = ptr.Get(u.Employee.Value)
+		out.Employee = new(u.Employee.Value)
 	}
 	return out
 }

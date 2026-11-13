@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -177,6 +176,6 @@ func (m *CommonRoleBindingStatus) WithDefaults() CommonRoleBindingStatus {
 		out = *m
 	}
 
-	out.Active = ptr.Get(out.Active.WithDefaults())
+	out.Active = new(out.Active.WithDefaults())
 	return out
 }

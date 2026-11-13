@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-faster/jx"
 	"go.mws.cloud/go-sdk/pkg/apimodels/cidraddress"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -460,6 +459,6 @@ func (m *ClusterSpecRequest) WithDefaults() ClusterSpecRequest {
 		out = *m
 	}
 
-	out.SecurityPosture = ptr.Get(out.SecurityPosture.WithDefaults())
+	out.SecurityPosture = new(out.SecurityPosture.WithDefaults())
 	return out
 }

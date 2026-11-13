@@ -5,8 +5,6 @@ package model
 import (
 	"slices"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -62,17 +60,17 @@ func (m *ClusterAvailabilitySpecRequest) WithChanges(u UpdateClusterAvailability
 	}
 
 	if u.Standalone.IsSet() {
-		out.Standalone = ptr.Get(out.Standalone.WithChanges(u.Standalone.Value))
+		out.Standalone = new(out.Standalone.WithChanges(u.Standalone.Value))
 	} else if u.Standalone.IsNull() {
 		out.Standalone = nil
 	}
 	if u.ZonalHa.IsSet() {
-		out.ZonalHa = ptr.Get(out.ZonalHa.WithChanges(u.ZonalHa.Value))
+		out.ZonalHa = new(out.ZonalHa.WithChanges(u.ZonalHa.Value))
 	} else if u.ZonalHa.IsNull() {
 		out.ZonalHa = nil
 	}
 	if u.Regional.IsSet() {
-		out.Regional = ptr.Get(out.Regional.WithChanges(u.Regional.Value))
+		out.Regional = new(out.Regional.WithChanges(u.Regional.Value))
 	} else if u.Regional.IsNull() {
 		out.Regional = nil
 	}

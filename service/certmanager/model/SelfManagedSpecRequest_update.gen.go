@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/apimodels/sensitive"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -54,7 +52,7 @@ func (m *SelfManagedSpecRequest) WithChanges(u UpdateSelfManagedSpecRequest) Sel
 		out.PrivateKey = u.PrivateKey.Value
 	}
 	if u.ChainedCert.IsSet() {
-		out.ChainedCert = ptr.Get(u.ChainedCert.Value)
+		out.ChainedCert = new(u.ChainedCert.Value)
 	}
 	return out
 }

@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -195,7 +194,7 @@ func (m *NlbHealthCheckProtocolRequest) WithDefaults() NlbHealthCheckProtocolReq
 		out = *m
 	}
 
-	out.Http = ptr.Get(out.Http.WithDefaults())
-	out.Https = ptr.Get(out.Https.WithDefaults())
+	out.Http = new(out.Http.WithDefaults())
+	out.Https = new(out.Https.WithDefaults())
 	return out
 }

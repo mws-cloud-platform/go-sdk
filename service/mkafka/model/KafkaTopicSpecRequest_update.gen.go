@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -51,13 +49,13 @@ func (m *KafkaTopicSpecRequest) WithChanges(u UpdateKafkaTopicSpecRequest) Kafka
 	}
 
 	if u.Partitions.IsSet() {
-		out.Partitions = ptr.Get(u.Partitions.Value)
+		out.Partitions = new(u.Partitions.Value)
 	}
 	if u.ReplicationFactor.IsSet() {
-		out.ReplicationFactor = ptr.Get(u.ReplicationFactor.Value)
+		out.ReplicationFactor = new(u.ReplicationFactor.Value)
 	}
 	if u.Config.IsSet() {
-		out.Config = ptr.Get(u.Config.Value)
+		out.Config = new(u.Config.Value)
 	}
 	return out
 }

@@ -4,7 +4,6 @@ package model
 
 import (
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -151,10 +150,10 @@ func (m *KafkaBalancerSpecRequest) WithDefaults() KafkaBalancerSpecRequest {
 	}
 
 	if out.Enabled == nil {
-		out.Enabled = ptr.Get(false)
+		out.Enabled = new(false)
 	}
 	if out.AutoRebalance == nil {
-		out.AutoRebalance = ptr.Get(false)
+		out.AutoRebalance = new(false)
 	}
 	return out
 }

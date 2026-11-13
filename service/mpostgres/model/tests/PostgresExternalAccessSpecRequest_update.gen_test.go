@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/mpostgres/model"
 )
 
 func TestUpdatePostgresExternalAccessSpecRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initPostgresExternalAccessSpecRequest()).AsUpdateModel()
+	expected := new(initPostgresExternalAccessSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

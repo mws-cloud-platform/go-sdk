@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -48,10 +46,10 @@ func (m *EventSourceSpecRequest) WithChanges(u UpdateEventSourceSpecRequest) Eve
 	}
 
 	if u.Project.IsSet() {
-		out.Project = ptr.Get(u.Project.Value)
+		out.Project = new(u.Project.Value)
 	}
 	if u.Organization.IsSet() {
-		out.Organization = ptr.Get(u.Organization.Value)
+		out.Organization = new(u.Organization.Value)
 	}
 	return out
 }

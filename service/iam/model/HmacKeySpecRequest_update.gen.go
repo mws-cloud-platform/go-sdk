@@ -5,8 +5,6 @@ package model
 import (
 	"time"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -44,7 +42,7 @@ func (m *HmacKeySpecRequest) WithChanges(u UpdateHmacKeySpecRequest) HmacKeySpec
 	}
 
 	if u.ExpirationTime.IsSet() {
-		out.ExpirationTime = ptr.Get(u.ExpirationTime.Value)
+		out.ExpirationTime = new(u.ExpirationTime.Value)
 	}
 	return out
 }

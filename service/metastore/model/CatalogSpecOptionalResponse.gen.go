@@ -15,11 +15,9 @@ import (
 )
 
 // Спецификация Iceberg-каталога.
-// При создании необходимо передать `properties.location` и `serviceAccount`.
-// При обновлении `properties.location` и `serviceAccount` можно передавать частично или не передавать. Отсутствующие поля сохраняются.
 // Real OAPI model name: CatalogSpec
 type CatalogSpecOptionalResponse struct {
-	// Дополнительные настройки каталога
+	// Дополнительные настройки каталога. Для расположения данных в Object Storage обязательно задайте значение параметра `location`.
 	Properties optional.Optional[map[string]string] `json:"properties,omitempty" yaml:"properties,omitempty"`
 	// Сервисный аккаунт, используемый для доступа к Object Storage
 	ServiceAccount optional.OptionalNil[CatalogSpecServiceAccountOptionalResponse] `json:"serviceAccount,omitempty" yaml:"serviceAccount,omitempty"`

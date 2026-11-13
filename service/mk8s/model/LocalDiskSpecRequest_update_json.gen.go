@@ -40,11 +40,7 @@ func (m *UpdateLocalDiskSpecRequest) encodeFields(e *jx.Encoder) error {
 
 	if m.DeviceName.IsSet() {
 		e.FieldStart("deviceName")
-		if m.DeviceName.IsNull() {
-			e.Null()
-		} else {
-			e.Str(m.DeviceName.Value)
-		}
+		e.Str(m.DeviceName.Value)
 	}
 
 	if m.Size.IsSet() {
@@ -74,11 +70,6 @@ func (m *UpdateLocalDiskSpecRequest) Decode(d *jx.Decoder) error {
 			m.Name.SetTo(v)
 			return nil
 		case "deviceName":
-			if d.Next() == jx.Null {
-				m.DeviceName.SetToNull()
-				return d.Null()
-			}
-
 			v, err := decode.Str(d)
 			if err != nil {
 				return err

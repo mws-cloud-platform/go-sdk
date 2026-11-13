@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/iam/model"
 )
 
 func TestUpdateServiceAccountSpecRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initServiceAccountSpecRequest()).AsUpdateModel()
+	expected := new(initServiceAccountSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

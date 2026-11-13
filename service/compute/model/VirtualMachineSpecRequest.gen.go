@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -337,7 +336,7 @@ func (m *VirtualMachineSpecRequest) WithDefaults() VirtualMachineSpecRequest {
 		out = *m
 	}
 
-	out.Hardware = ptr.Get(out.Hardware.WithDefaults())
-	out.Os = ptr.Get(out.Os.WithDefaults())
+	out.Hardware = new(out.Hardware.WithDefaults())
+	out.Os = new(out.Os.WithDefaults())
 	return out
 }

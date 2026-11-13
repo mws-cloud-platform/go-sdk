@@ -6,7 +6,6 @@ import (
 	"slices"
 
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/duration"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -65,7 +64,7 @@ func (m *WeeklyMaintenanceWindowRequest) WithChanges(u UpdateWeeklyMaintenanceWi
 		out.Hour = u.Hour.Value
 	}
 	if u.Duration.IsSet() {
-		out.Duration = ptr.Get(u.Duration.Value)
+		out.Duration = new(u.Duration.Value)
 	} else if u.Duration.IsNull() {
 		out.Duration = nil
 	}

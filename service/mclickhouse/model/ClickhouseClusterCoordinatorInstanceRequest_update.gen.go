@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -47,7 +45,7 @@ func (m *ClickhouseClusterCoordinatorInstanceRequest) WithChanges(u UpdateClickh
 	}
 
 	if u.Count.IsSet() {
-		out.Count = ptr.Get(u.Count.Value)
+		out.Count = new(u.Count.Value)
 	}
 	if u.Zone.IsSet() {
 		out.Zone = u.Zone.Value

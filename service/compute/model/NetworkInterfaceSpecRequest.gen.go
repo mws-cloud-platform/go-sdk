@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -243,10 +242,10 @@ func (m *NetworkInterfaceSpecRequest) WithDefaults() NetworkInterfaceSpecRequest
 	}
 
 	if out.Primary == nil {
-		out.Primary = ptr.Get(true)
+		out.Primary = new(true)
 	}
 	if out.IpForwardingEnabled == nil {
-		out.IpForwardingEnabled = ptr.Get(false)
+		out.IpForwardingEnabled = new(false)
 	}
 	return out
 }

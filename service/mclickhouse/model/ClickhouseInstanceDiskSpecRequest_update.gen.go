@@ -4,7 +4,6 @@ package model
 
 import (
 	"go.mws.cloud/go-sdk/pkg/apimodels/units/bytesize"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -55,7 +54,7 @@ func (m *ClickhouseInstanceDiskSpecRequest) WithChanges(u UpdateClickhouseInstan
 		out.Type = u.Type.Value
 	}
 	if u.Iops.IsSet() {
-		out.Iops = ptr.Get(u.Iops.Value)
+		out.Iops = new(u.Iops.Value)
 	}
 	return out
 }

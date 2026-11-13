@@ -6,8 +6,6 @@ import (
 	"context"
 	"time"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -74,7 +72,7 @@ func (m *PostgresRoleBindingSpecRequest) WithChanges(u UpdatePostgresRoleBinding
 		out.UserId = u.UserId.Value
 	}
 	if u.DatabaseId.IsSet() {
-		out.DatabaseId = ptr.Get(u.DatabaseId.Value)
+		out.DatabaseId = new(u.DatabaseId.Value)
 	} else if u.DatabaseId.IsNull() {
 		out.DatabaseId = nil
 	}
@@ -82,7 +80,7 @@ func (m *PostgresRoleBindingSpecRequest) WithChanges(u UpdatePostgresRoleBinding
 		out.Role = u.Role.Value
 	}
 	if u.ExpiresAt.IsSet() {
-		out.ExpiresAt = ptr.Get(u.ExpiresAt.Value)
+		out.ExpiresAt = new(u.ExpiresAt.Value)
 	}
 	return out
 }

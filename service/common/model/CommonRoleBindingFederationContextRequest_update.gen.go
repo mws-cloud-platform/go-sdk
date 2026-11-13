@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -45,10 +43,10 @@ func (m *CommonRoleBindingFederationContextRequest) WithChanges(u UpdateCommonRo
 	}
 
 	if u.Subject.IsSet() {
-		out.Subject = ptr.Get(u.Subject.Value)
+		out.Subject = new(u.Subject.Value)
 	}
 	if u.Attribute.IsSet() {
-		out.Attribute = ptr.Get(out.Attribute.WithChanges(u.Attribute.Value))
+		out.Attribute = new(out.Attribute.WithChanges(u.Attribute.Value))
 	} else if u.Attribute.IsNull() {
 		out.Attribute = nil
 	}

@@ -5,8 +5,6 @@ package model
 import (
 	"context"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -50,7 +48,7 @@ func (m *CommonRoleBindingFederation) WithChanges(u UpdateCommonRoleBindingFeder
 		out.Id = u.Id.Value
 	}
 	if u.Context.IsSet() {
-		out.Context = ptr.Get(out.Context.WithChanges(u.Context.Value))
+		out.Context = new(out.Context.WithChanges(u.Context.Value))
 	} else if u.Context.IsNull() {
 		out.Context = nil
 	}

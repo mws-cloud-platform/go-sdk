@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"github.com/go-faster/jx"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -128,22 +127,22 @@ func (m *ReEncryptRequest) Clone() *ReEncryptRequest {
 	clone.SourceKeyRef = m.SourceKeyRef.Clone()
 	if m.SourceAssociatedData != nil {
 		if m.SourceAssociatedData.Value() != nil {
-			clone.SourceAssociatedData = ptr.Get(sensitive.New(make([]byte, len(m.SourceAssociatedData.Value()))))
+			clone.SourceAssociatedData = new(sensitive.New(make([]byte, len(m.SourceAssociatedData.Value()))))
 			for i, v := range m.SourceAssociatedData.Value() {
 				clone.SourceAssociatedData.Value()[i] = v
 			}
 		} else {
-			clone.SourceAssociatedData = ptr.Get(sensitive.New([]byte(nil)))
+			clone.SourceAssociatedData = new(sensitive.New([]byte(nil)))
 		}
 	}
 	if m.DestinationAssociatedData != nil {
 		if m.DestinationAssociatedData.Value() != nil {
-			clone.DestinationAssociatedData = ptr.Get(sensitive.New(make([]byte, len(m.DestinationAssociatedData.Value()))))
+			clone.DestinationAssociatedData = new(sensitive.New(make([]byte, len(m.DestinationAssociatedData.Value()))))
 			for i, v := range m.DestinationAssociatedData.Value() {
 				clone.DestinationAssociatedData.Value()[i] = v
 			}
 		} else {
-			clone.DestinationAssociatedData = ptr.Get(sensitive.New([]byte(nil)))
+			clone.DestinationAssociatedData = new(sensitive.New([]byte(nil)))
 		}
 	}
 	if m.DestinationVersion != nil {
@@ -253,7 +252,7 @@ func (m *ReEncryptRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.SourceAssociatedData = ptr.Get(sensitive.New(v))
+			m.SourceAssociatedData = new(sensitive.New(v))
 			return nil
 		case "destinationAssociatedData":
 			v, err := d.Base64()
@@ -261,7 +260,7 @@ func (m *ReEncryptRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 
-			m.DestinationAssociatedData = ptr.Get(sensitive.New(v))
+			m.DestinationAssociatedData = new(sensitive.New(v))
 			return nil
 		case "destinationVersion":
 			v, err := decode.Int32(d)

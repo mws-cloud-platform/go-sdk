@@ -6,8 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -82,12 +80,12 @@ func (m *VirtualMachineSpecRequest) WithChanges(u UpdateVirtualMachineSpecReques
 		out.VmType = u.VmType.Value
 	}
 	if u.Hardware.IsSet() {
-		out.Hardware = ptr.Get(out.Hardware.WithChanges(u.Hardware.Value))
+		out.Hardware = new(out.Hardware.WithChanges(u.Hardware.Value))
 	} else if u.Hardware.IsNull() {
 		out.Hardware = nil
 	}
 	if u.Os.IsSet() {
-		out.Os = ptr.Get(out.Os.WithChanges(u.Os.Value))
+		out.Os = new(out.Os.WithChanges(u.Os.Value))
 	} else if u.Os.IsNull() {
 		out.Os = nil
 	}
@@ -98,7 +96,7 @@ func (m *VirtualMachineSpecRequest) WithChanges(u UpdateVirtualMachineSpecReques
 		out.Network = out.Network.WithChanges(u.Network.Value)
 	}
 	if u.ServiceAccount.IsSet() {
-		out.ServiceAccount = ptr.Get(u.ServiceAccount.Value)
+		out.ServiceAccount = new(u.ServiceAccount.Value)
 	} else if u.ServiceAccount.IsNull() {
 		out.ServiceAccount = nil
 	}

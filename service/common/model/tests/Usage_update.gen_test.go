@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
 
 func TestUpdateUsageMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initUsage()).AsUpdateModel()
+	expected := new(initUsage()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

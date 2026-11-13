@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/compute/model"
 )
 
 func TestUpdateStorageSpecRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initStorageSpecRequest()).AsUpdateModel()
+	expected := new(initStorageSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

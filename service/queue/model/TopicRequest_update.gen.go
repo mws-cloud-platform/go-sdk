@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/pkg/optional"
 	commonmodel "go.mws.cloud/go-sdk/service/common/model"
 )
@@ -43,7 +41,7 @@ func (m *TopicRequest) WithChanges(u UpdateTopicRequest) TopicRequest {
 	}
 
 	if u.Metadata.IsSet() {
-		out.Metadata = ptr.Get(out.Metadata.WithChanges(u.Metadata.Value))
+		out.Metadata = new(out.Metadata.WithChanges(u.Metadata.Value))
 	} else if u.Metadata.IsNull() {
 		out.Metadata = nil
 	}

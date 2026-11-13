@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/service/mk8s/model"
 )
 
 func TestUpdatePluginsSpecRequestMarshalling(t *testing.T) {
 	t.Parallel()
-	expected := ptr.Get(initPluginsSpecRequest()).AsUpdateModel()
+	expected := new(initPluginsSpecRequest()).AsUpdateModel()
 	b, err := json.Marshal(expected)
 	require.NoError(t, err)
 

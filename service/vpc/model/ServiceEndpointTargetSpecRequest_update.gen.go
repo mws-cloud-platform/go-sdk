@@ -3,8 +3,6 @@
 package model
 
 import (
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
 
@@ -38,7 +36,7 @@ func (m *ServiceEndpointTargetSpecRequest) WithChanges(u UpdateServiceEndpointTa
 	}
 
 	if u.ObjectStorage.IsSet() {
-		out.ObjectStorage = ptr.Get(CloudEndpointCommonSpecRequest(u.ObjectStorage.Value))
+		out.ObjectStorage = new(CloudEndpointCommonSpecRequest(u.ObjectStorage.Value))
 	} else if u.ObjectStorage.IsNull() {
 		out.ObjectStorage = nil
 	}

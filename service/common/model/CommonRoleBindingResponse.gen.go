@@ -14,6 +14,7 @@ import (
 	resmodels "go.mws.cloud/go-sdk/pkg/resources/models"
 )
 
+// Привязка роли — это связь субъекта (пользователя, сервисного аккаунта, группы пользователей или другой сущности) и роли, определяющая права субъекта на проект или организацию
 // Real OAPI model name: CommonRoleBinding
 type CommonRoleBindingResponse struct {
 	Kind     *string                            `json:"kind,omitempty" yaml:"kind,omitempty"`

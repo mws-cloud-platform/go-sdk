@@ -6,8 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
 	"go.mws.cloud/go-sdk/pkg/optional"
 )
@@ -50,7 +48,7 @@ func (m *RestoringClickhouseClusterRequest) WithChanges(u UpdateRestoringClickho
 	}
 
 	if u.Metadata.IsSet() {
-		out.Metadata = ptr.Get(out.Metadata.WithChanges(u.Metadata.Value))
+		out.Metadata = new(out.Metadata.WithChanges(u.Metadata.Value))
 	} else if u.Metadata.IsNull() {
 		out.Metadata = nil
 	}

@@ -267,10 +267,7 @@ func (c *Iceberg) headerGetIcebergCatalogInfo(req *http.Request, request *client
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
-// UpsertIcebergCatalog создание или частичное обновление настроек Iceberg-каталога.
-// Поле `spec` обязательно. При создании каталога необходимо передать `properties.location` и `serviceAccount.ref`.
-// При обновлении допускается частичный `spec`: непереданные поля сохраняются, а переданные поля заменяют соответствующие значения.
-// В ответе `spec` возвращается в том виде, в каком был прислан.
+// UpsertIcebergCatalog создание или обновление настроек Iceberg-каталога.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
 // Путь: POST /metastore/v1/projects/{project}/icebergCatalogs/{catalogName}
@@ -363,10 +360,7 @@ func (c *Iceberg) headerUpsertIcebergCatalog(req *http.Request, request *client.
 	}
 }
 
-// CreateIcebergCatalog создание или частичное обновление настроек Iceberg-каталога.
-// Поле `spec` обязательно. При создании каталога необходимо передать `properties.location` и `serviceAccount.ref`.
-// При обновлении допускается частичный `spec`: непереданные поля сохраняются, а переданные поля заменяют соответствующие значения.
-// В ответе `spec` возвращается в том виде, в каком был прислан.
+// CreateIcebergCatalog создание или обновление настроек Iceberg-каталога.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //
@@ -461,10 +455,7 @@ func (c *Iceberg) headerCreateIcebergCatalog(req *http.Request, request *client.
 	}
 }
 
-// UpdateIcebergCatalog создание или частичное обновление настроек Iceberg-каталога.
-// Поле `spec` обязательно. При создании каталога необходимо передать `properties.location` и `serviceAccount.ref`.
-// При обновлении допускается частичный `spec`: непереданные поля сохраняются, а переданные поля заменяют соответствующие значения.
-// В ответе `spec` возвращается в том виде, в каком был прислан.
+// UpdateIcebergCatalog создание или обновление настроек Iceberg-каталога.
 // Данный метод не описан в OpenAPI-спецификации, он был сгенерирован на основе операции upsert, для удобства.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

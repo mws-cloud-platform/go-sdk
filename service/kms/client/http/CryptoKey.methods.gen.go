@@ -268,6 +268,90 @@ func (c *CryptoKey) headerRotateCryptoKey(req *http.Request, request *client.Rot
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
 }
 
+// GetCryptoKeyPublicKey возвращает публичную часть асимметричного ключа в формате PEM.
+// Если параметр `version` не указан, используется основная версия ключа.
+// .
+// Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
+//
+// Путь: GET /kms/v1/projects/{project}/cryptoKeys/{key}:getPublicKey
+func (c *CryptoKey) GetCryptoKeyPublicKey(ctx context.Context, request client.GetCryptoKeyPublicKeyRequest) (r *client.GetCryptoKeyPublicKeyResponse, err error) {
+	ctx = c.setGetCryptoKeyPublicKeyAttributes(ctx)
+	r = &client.GetCryptoKeyPublicKeyResponse{}
+
+	if err = c.client.Intercept(ctx, &request, r, c.getCryptoKeyPublicKeyInvoker); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+func (c *CryptoKey) setGetCryptoKeyPublicKeyAttributes(ctx context.Context) context.Context {
+	a := []commonattribute.KeyValue{
+		commonattribute.String(commonattribute.Method, "GetCryptoKeyPublicKey"),
+		commonattribute.String(commonattribute.PathTemplate, "/kms/v1/projects/{project}/cryptoKeys/{key}:getPublicKey"),
+		commonattribute.String(commonattribute.ProjectName, "kms"),
+		commonattribute.String(commonattribute.ServiceName, "cryptoKey"),
+	}
+
+	return commonattribute.WithContext(ctx, a...)
+}
+
+func (c *CryptoKey) getCryptoKeyPublicKeyInvoker(ctx context.Context, anyReq any, response commonclient.APIResp) error {
+	request := anyReq.(*client.GetCryptoKeyPublicKeyRequest)
+
+	requestURL, _ := url.JoinPath(c.serverURL.String(),
+		"kms",
+		"v1",
+		"projects",
+		url.PathEscape(request.Project),
+		"cryptoKeys",
+		url.PathEscape(request.Key)+":getPublicKey")
+
+	httpReq, err := http.NewRequestWithContext(ctx, "GET", requestURL, http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	httpReq.URL.RawQuery = c.queryGetCryptoKeyPublicKey(request)
+
+	commonclient.AddOutgoingMetadataToHeader(ctx, httpReq)
+	c.headerGetCryptoKeyPublicKey(httpReq, request)
+
+	httpResp, err := c.client.Do(httpReq)
+	if err != nil {
+		return mwserrors.NewTransportError(err)
+	}
+
+	defer func() {
+		cErr := httpResp.Body.Close()
+		if cErr != nil {
+			err = errors.Join(err, cErr)
+		}
+	}()
+
+	decodedResp, err := decodeGetCryptoKeyPublicKeyResponse(httpResp)
+	if err != nil {
+		return err
+	}
+
+	respPtr := response.(*client.GetCryptoKeyPublicKeyResponse)
+	*respPtr = *decodedResp
+
+	return nil
+}
+
+func (c *CryptoKey) queryGetCryptoKeyPublicKey(request *client.GetCryptoKeyPublicKeyRequest) string {
+	q := make(url.Values)
+	if request.Version != nil {
+		q.Add("version", conv.Int32ToString(*request.Version))
+	}
+	return q.Encode()
+}
+
+func (c *CryptoKey) headerGetCryptoKeyPublicKey(req *http.Request, request *client.GetCryptoKeyPublicKeyRequest) {
+	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
+}
+
 // CancelScheduledDestructionOfCryptoKey отмена запланированного уничтожение выбранного KMS ключа.
 // Гарантируется, что либо будет заполнено одно из полей ответа, либо вернется ошибка.
 //

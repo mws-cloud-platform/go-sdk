@@ -5,8 +5,6 @@ package model
 import (
 	"time"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	"go.mws.cloud/go-sdk/pkg/optional"
@@ -93,28 +91,28 @@ func (m *TypedResourceMetadata) WithChanges(u UpdateTypedResourceMetadata) Typed
 	}
 
 	if u.DisplayName.IsSet() {
-		out.DisplayName = ptr.Get(u.DisplayName.Value)
+		out.DisplayName = new(u.DisplayName.Value)
 	}
 	if u.CreateTime.IsSet() {
-		out.CreateTime = ptr.Get(u.CreateTime.Value)
+		out.CreateTime = new(u.CreateTime.Value)
 	}
 	if u.UpdateTime.IsSet() {
-		out.UpdateTime = ptr.Get(u.UpdateTime.Value)
+		out.UpdateTime = new(u.UpdateTime.Value)
 	}
 	if u.DeleteTime.IsSet() {
-		out.DeleteTime = ptr.Get(u.DeleteTime.Value)
+		out.DeleteTime = new(u.DeleteTime.Value)
 	}
 	if u.PurgeTime.IsSet() {
-		out.PurgeTime = ptr.Get(u.PurgeTime.Value)
+		out.PurgeTime = new(u.PurgeTime.Value)
 	}
 	if u.Usages.IsSet() {
 		out.Usages = merge.Slice(out.Usages, u.Usages.Value, (*TypedUsage).WithChanges, (*TypedUsage).GetName, (*UpdateTypedUsage).GetName)
 	}
 	if u.Etag.IsSet() {
-		out.Etag = ptr.Get(u.Etag.Value)
+		out.Etag = new(u.Etag.Value)
 	}
 	if u.Description.IsSet() {
-		out.Description = ptr.Get(u.Description.Value)
+		out.Description = new(u.Description.Value)
 	}
 	return out
 }

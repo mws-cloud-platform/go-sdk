@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-faster/jx"
 	"go.mws.cloud/util-toolset/pkg/utils/consterr"
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
 
 	"go.mws.cloud/go-sdk/internal/conv"
 	"go.mws.cloud/go-sdk/internal/decode"
@@ -466,7 +465,7 @@ func (m *FirewallRuleSpecRequest) WithDefaults() FirewallRuleSpecRequest {
 	}
 
 	if out.Active == nil {
-		out.Active = ptr.Get(true)
+		out.Active = new(true)
 	}
 	return out
 }

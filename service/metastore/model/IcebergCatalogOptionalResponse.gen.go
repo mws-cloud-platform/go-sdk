@@ -16,14 +16,12 @@ import (
 	"go.mws.cloud/go-sdk/service/resources/references/metastore"
 )
 
-// Ресурс Iceberg-каталога. При создании обязательны `properties.location` и `serviceAccount.ref`; при обновлении допускается частичный `spec`.
+// Ресурс Iceberg-каталога.
 // Real OAPI model name: IcebergCatalog
 type IcebergCatalogOptionalResponse struct {
 	Kind     *string                                                      `json:"kind,omitempty" yaml:"kind,omitempty"`
 	Metadata optional.OptionalNil[IcebergCatalogMetadataOptionalResponse] `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	// Спецификация Iceberg-каталога.
-	// При создании необходимо передать `properties.location` и `serviceAccount`.
-	// При обновлении `properties.location` и `serviceAccount` можно передавать частично или не передавать. Отсутствующие поля сохраняются.
 	Spec CatalogSpecOptionalResponse `json:"spec" yaml:"spec"`
 	// Текущее состояние ресурса, вычисляемое системой.
 	Status *commonmodel.ResourceStatusResponse `json:"status,omitempty" yaml:"status,omitempty"`

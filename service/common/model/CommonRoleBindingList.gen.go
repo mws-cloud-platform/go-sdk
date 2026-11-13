@@ -13,7 +13,7 @@ import (
 )
 
 type CommonRoleBindingList struct {
-	// List of public role bindings
+	// Список привязок ролей
 	Items []CommonRoleBinding `json:"items" yaml:"items"`
 	// Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
 	NextPageToken *NextPageToken `json:"nextPageToken,omitempty" yaml:"nextPageToken,omitempty"`

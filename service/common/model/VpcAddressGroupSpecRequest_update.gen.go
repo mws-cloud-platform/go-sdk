@@ -6,8 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mws.cloud/util-toolset/pkg/utils/ptr"
-
 	commonclient "go.mws.cloud/go-sdk/internal/client"
 	"go.mws.cloud/go-sdk/internal/merge"
 	reserrors "go.mws.cloud/go-sdk/internal/resources/errors"
@@ -61,7 +59,7 @@ func (m *VpcAddressGroupSpecRequest) WithChanges(u UpdateVpcAddressGroupSpecRequ
 	}
 
 	if u.Region.IsSet() {
-		out.Region = ptr.Get(u.Region.Value)
+		out.Region = new(u.Region.Value)
 	}
 	if u.Addresses.IsSet() {
 		out.Addresses = merge.InapplicableSlice(u.Addresses.Value, (*ResourceAddressSpecOrRefRequest).WithChanges)

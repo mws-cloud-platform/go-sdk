@@ -558,4 +558,10 @@ func (c *Collector) queryListCollectors(request *client.ListCollectorsRequest) s
 
 func (c *Collector) headerListCollectors(req *http.Request, request *client.ListCollectorsRequest) {
 	req.Header.Add("Authorization", conv.StringToString(request.Authorization.Value()))
+	if request.XForwardedPort != nil {
+		req.Header.Add("X-Forwarded-Port", conv.StringToString(*request.XForwardedPort))
+	}
+	if request.XForwardedForPort != nil {
+		req.Header.Add("X-Forwarded-For-Port", conv.StringToString(*request.XForwardedForPort))
+	}
 }
